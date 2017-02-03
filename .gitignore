@@ -1,0 +1,5 @@
+### project-related files
+dv/localsettings.py
+
+### generic stuff
+__pycache__/

@@ -1,0 +1,3 @@
+django-model-utils>=2.6.1,<2.7
+pyexcel>=0.4.2,<0.5
+pyexcel-xlsx>=0.3.0,<0.4
