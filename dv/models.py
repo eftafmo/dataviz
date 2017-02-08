@@ -298,6 +298,7 @@ class Project(_MainModel):
     IMPORT_SOURCE = 'Project'
     IMPORT_MAPPING = {
         'state': ('name', 'BeneficiaryState'),
+        'programme': 'ProgrammeCode',
         'outcome': 'OutcomeCode',
         'status': 'ProjectStatus',
         'code': 'ProjectCode',
@@ -327,6 +328,7 @@ class Project(_MainModel):
     )
 
     state = models.ForeignKey(State)
+    programme = models.ForeignKey(Programme)
     outcome = models.ForeignKey(Outcome)
 
     status = models.SmallIntegerField(choices=STATUS)
