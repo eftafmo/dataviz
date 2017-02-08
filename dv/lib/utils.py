@@ -1,6 +1,8 @@
+import binascii
 import re
 import six
 from collections import Iterable
+from django.utils import baseconv
 
 
 def camel_case_to__(txt):
@@ -28,3 +30,14 @@ def str_to_constant_name(txt):
 def is_iter(v):
     """Returns True only for non-string iterables."""
     return not isinstance(v, str) and isinstance(v, Iterable)
+
+def uniq_hash(s):
+    """
+    Create a short hash from a given string.
+    Be warned, this function is a liar: it's not really a hash as it's CRC-based,
+    and as such it has a high collision potential!
+    """
+    if not isinstance(s, bytes):
+        s = s.encode('utf-8')
+    crc = binascii.crc32(s)
+    return baseconv.base62.encode(crc)

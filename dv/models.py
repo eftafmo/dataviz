@@ -2,7 +2,8 @@ import re
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from model_utils import Choices
-from .lib.models import ImportableModelMixin
+from dv.lib.models import ImportableModelMixin
+from dv.lib import utils
 
 
 class _BaseManager(models.Manager):
@@ -227,42 +228,63 @@ class Programme_ProgrammeArea(_BaseModel):
         return "%s _ %s" % (self.programme.code, self.programme_area.code)
 
 
-class Outcome(_MainModel):
+class _FussyOutcomeCode(object):
+    @classmethod
+    def from_data(cls, data):
+        # fix non-unique FBL outcome codes
+        # FBL = Fund for bilateral cooperation
+        data = data.copy()
+        if data['OutcomeCode'] == 'FBL':
+            # derive a unique key from the outcome name
+            uniq = utils.uniq_hash(data['Outcome'])[:5]
+            code = '%sFBL%s' % (data['PACode'], uniq)
+            data['OutcomeCode'] = code
+
+        return super().from_data(data)
+
+
+class Outcome(_FussyOutcomeCode, _MainModel):
     IMPORT_SOURCE = 'ProgrammeOutcomes'
     IMPORT_MAPPING = {
         'programme_area': 'PACode',
         'code': 'OutcomeCode',
         'name': 'Outcome',
+        'fixed_budget_line': 'IsFixedBudgetline',
         # TODO: leftovers
-        #'BudgetLineType',
-        #'IsFixedBudgetline',
         #'IsProgrammeArea',
         #'IsForReportingOnly'
     }
 
     programme_area = models.ForeignKey(ProgrammeArea)
 
-    code = models.CharField(max_length=6, unique=True)
+    code = models.CharField(max_length=12, unique=True)
     name = models.CharField(max_length=512) # not unique
 
+    fixed_budget_line = models.BooleanField()
 
-class ProgrammeOutcome(_BaseModel):
+
+class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
     IMPORT_SOURCE = 'ProgrammeOutcomes'
     IMPORT_MAPPING = {
         'programme': 'ProgrammeCode',
         'outcome': 'OutcomeCode',
+        'state': ('name', 'BeneficiaryState'),
         'allocation': 'GrantAmount',
         'co_financing': 'ProgrammeCoFinancing',
     }
 
     programme = models.ForeignKey(Programme, null=True) # because "Reserve FM2004-09"
     outcome = models.ForeignKey(Outcome)
+    state = models.ForeignKey(State)
 
     # TODO: fix decimal fields
     #allocation = models.PositiveIntegerField()
     #co_financing = models.PositiveIntegerField()
     allocation = models.FloatField()
     co_financing = models.FloatField()
+
+    class Meta:
+        unique_together = ('programme', 'outcome', 'state')
 
     def __str__(self):
         return "%s _ %s" % (self.programme.code, self.outcome.code)
