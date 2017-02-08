@@ -1,6 +1,7 @@
 import logging
 from django.db import models
 from django.db.models.base import ModelBase
+from enumfields import EnumField
 from dv.lib import utils
 
 
@@ -41,7 +42,14 @@ class ImportableModelMixin(object):
 
             if not field.is_relation:
                 # direct assignment?
-                if field.choices:
+                if isinstance(field, EnumField):
+                    # we replaced model_utils.choices with enumfields.EnumField,
+                    # so below doesn't really apply
+
+                    # TODO: this is pretty. pretty ugly.
+                    val = getattr(type(field.choices[0][0]),
+                                  utils.str_to_constant_name(val))
+                elif field.choices:
                     # this logic is based on the assumption that the choices are
                     # a `model_utils.Choices` instance, and on the convention
                     # that the choices' "constant name" is derived from the data

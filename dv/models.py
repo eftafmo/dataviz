@@ -1,7 +1,7 @@
 import re
 from django.db import models
+from enumfields import EnumField, Enum
 from django.utils.translation import ugettext_lazy as _
-from model_utils import Choices
 from dv.lib.models import ImportableModelMixin
 from dv.lib import utils
 
@@ -54,10 +54,13 @@ class _MainModel(_BaseModel):
         abstract = True
 
 
-GRANT_TYPE = Choices(
-    (1, 'EEA', _('EEA')),
-    (2, 'NORWAY', _('Norway')),
-)
+class FINANCIAL_MECHANISM(Enum):
+    EEA = 'eea'
+    NORWAY = 'norway'
+
+    class Labels:
+        EEA = _('EEA')
+        NORWAY = _('Norway')
 
 
 class State(_MainModel):
@@ -103,7 +106,7 @@ class PrioritySector(_MainModel):
         data[type_column] = data[type_column].split()[0]
         return super().from_data(data)
 
-    type = models.SmallIntegerField(choices=GRANT_TYPE)
+    type = EnumField(FINANCIAL_MECHANISM, max_length=6)
 
     code = models.CharField(max_length=4, unique=True)
     name = models.CharField(max_length=64) # not unique
@@ -156,10 +159,13 @@ class Programme(_MainModel):
         #IsNorway
     }
 
-    STATUS = Choices(
-        (1, 'APPROVED', 'Approved'),
-        (2, 'IMPLEMENTATION', 'Implementation'),
-    )
+    class STATUS(Enum):
+        APPROVED = 'approved'
+        IMPLEMENTATION = 'implementation'
+
+        class Labels:
+            APPROVED = _('Approved'),
+            IMPLEMENTATION = _('Implementation')
 
     #@classmethod
     #def from_data(cls, data):
@@ -176,7 +182,7 @@ class Programme(_MainModel):
     code = models.CharField(max_length=5, unique=True)
     name = models.CharField(max_length=256) # not unique
 
-    status = models.SmallIntegerField(choices=STATUS)
+    status = EnumField(STATUS, max_length=14)
 
     summary = models.TextField()
 
@@ -321,17 +327,21 @@ class Project(_MainModel):
         #'HasEnded'
     }
 
-    STATUS = Choices(
-        (1, 'IN_PROGRESS', 'In Progress'),
-        (2, 'COMPLETED', 'Completed'),
-        (0, 'TERMINATED', 'Terminated'),
-    )
+    class STATUS(Enum):
+        IN_PROGRESS = 'in progress'
+        COMPLETED = 'completed'
+        TERMINATED = 'terminated'
+
+        class Labels:
+            IN_PROGRESS = _('In Progress')
+            COMPLETED = _('Completed')
+            TERMINATED = _('Terminated')
 
     state = models.ForeignKey(State)
     programme = models.ForeignKey(Programme)
     outcome = models.ForeignKey(Outcome)
 
-    status = models.SmallIntegerField(choices=STATUS)
+    status = EnumField(STATUS, max_length=11)
 
     code = models.CharField(max_length=9, unique=True)
     name = models.CharField(max_length=512) # not unique
@@ -397,20 +407,27 @@ class OrganisationType(_BaseModel):
 
         return super().from_data(data)
 
-    CATEGORIES = Choices(
-        (1, 'PRIVATE_SECTOR', _('Private sector')),
-        (2, 'PUBLIC_SECTOR', _('Public sector')),
-        (3, 'CIVIL_SOCIETY', _('Civil society')),
-        (4, 'EDUCATION', _('Education')),
-        (5, 'INTERNATIONAL_INSTITUTIONS', _('International institutions')),
-        (6, 'OTHER', _('Other')),
-    )
+    class CATEGORY(Enum):
+        PRIVATE_SECTOR = 'private sector'
+        PUBLIC_SECTOR = 'public sector'
+        CIVIL_SOCIETY = 'civil society'
+        EDUCATION = 'education'
+        INTERNATIONAL_INSTITUTIONS = 'international institutions'
+        OTHER = 'other'
 
-    category = models.SmallIntegerField(choices=CATEGORIES)
+        class Labels:
+            PRIVATE_SECTOR = _('Private sector')
+            PUBLIC_SECTOR = _('Public sector')
+            CIVIL_SOCIETY = _('Civil society')
+            EDUCATION = _('Education')
+            INTERNATIONAL_INSTITUTIONS = _('International institutions')
+            OTHER = _('Other')
+
+    category = EnumField(CATEGORY, max_length=26)
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return "%s / %s" % (self.CATEGORIES[self.category], self.name)
+        return "%s / %s" % (self.category, self.name)
 
 
 class Organisation(_BaseModel):
@@ -429,13 +446,16 @@ class Organisation(_BaseModel):
     #'NUTSCode',
     #'NUTSLevel',
 
-    ORGANISATION_TYPE = Choices(
-        (1, 'PROGRAMME', _('Programme')),
-        (2, 'PROJECT', _('Project')),
-    )
+    class ORGANISATION_TYPE(Enum):
+        PROGRAMME = 'programme'
+        PROJECT = 'project'
+
+        class Labels:
+            PROGRAMME = _('Programme')
+            PROJECT = _('Project')
 
     # TODO: find a better name for this
-    ptype = models.SmallIntegerField(choices=ORGANISATION_TYPE)
+    ptype = EnumField(ORGANISATION_TYPE, max_length=9)
     # TODO: and this
     orgtype = models.ForeignKey(OrganisationType, null=True)
     # TODO: the countries can be different from member states.
@@ -481,19 +501,28 @@ class OrganisationRole(_BaseModel):
             return
         return super().from_data(data)
 
-    ROLE = Choices(
-        (1, 'NFP', _('National Focal Point')),
-        (2, 'DS', _('Donor State')),
-        (3, 'PO', _('Programme Operator')),
-        (4, 'DPP', _('Donor Programme Partner')),
-        (5, 'PP', _('Programme Partner')),
-        (6, 'PJPT', _('Project Promoter')),
-        (7, 'PJDPP', _('Donor Project Partner')),
-        (8, 'PJPP', _('Project Partner')),
-    )
+    class ROLE(Enum):
+        NFP = 'national focal point'
+        DS = 'donor state'
+        PO = 'programme operator'
+        DPP = 'donor programme partner'
+        PP = 'programme partner'
+        PJPT = 'project promoter'
+        PJDPP = 'donor project partner'
+        PJPP = 'project partner'
+
+        class Labels:
+            NFP = _('National Focal Point')
+            DS = _('Donor State')
+            PO = _('Programme Operator')
+            DPP = _('Donor Programme Partner')
+            PP = _('Programme Partner')
+            PJPT = _('Project Promoter')
+            PJDPP = _('Donor Project Partner')
+            PJPP = _('Project Partner')
 
     organisation = models.ForeignKey(Organisation)
-    role = models.SmallIntegerField(choices=ROLE)
+    role = EnumField(ROLE, max_length=23)
 
     # TODO 1: this shouldn't be stored in case the org is a project one
     # TODO 2: this makes no sense, both of them nullable
