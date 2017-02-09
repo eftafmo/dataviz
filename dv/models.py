@@ -70,7 +70,7 @@ class State(_MainModel):
         'code': 'Abbreviation',
     }
 
-    code = models.CharField(max_length=2, unique=True)
+    code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=64, unique=True)
 
     # these should be moved away
@@ -108,7 +108,7 @@ class PrioritySector(_MainModel):
 
     type = EnumField(FINANCIAL_MECHANISM, max_length=6)
 
-    code = models.CharField(max_length=4, unique=True)
+    code = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=64) # not unique
 
 
@@ -126,7 +126,7 @@ class ProgrammeArea(_MainModel):
 
     priority_sector = models.ForeignKey(PrioritySector)
 
-    code = models.CharField(max_length=4, unique=True)
+    code = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=256) # not unique
     short_name = models.CharField(max_length=32) # not unique
 
@@ -179,7 +179,7 @@ class Programme(_MainModel):
     programme_areas = models.ManyToManyField(ProgrammeArea,
                                              through="Programme_ProgrammeArea")
 
-    code = models.CharField(max_length=5, unique=True)
+    code = models.CharField(max_length=5, primary_key=True)
     name = models.CharField(max_length=256) # not unique
 
     status = EnumField(STATUS, max_length=14)
@@ -263,7 +263,7 @@ class Outcome(_FussyOutcomeCode, _MainModel):
 
     programme_area = models.ForeignKey(ProgrammeArea)
 
-    code = models.CharField(max_length=12, unique=True)
+    code = models.CharField(max_length=12, primary_key=True)
     name = models.CharField(max_length=512) # not unique
 
     fixed_budget_line = models.BooleanField()
@@ -343,7 +343,7 @@ class Project(_MainModel):
 
     status = EnumField(STATUS, max_length=11)
 
-    code = models.CharField(max_length=9, unique=True)
+    code = models.CharField(max_length=9, primary_key=True)
     name = models.CharField(max_length=512) # not unique
 
     # TODO: make this a standalone table
@@ -361,7 +361,7 @@ class Indicator(_MainModel):
         'name': 'Indicator',
     }
 
-    code = models.CharField(max_length=5, unique=True)
+    code = models.CharField(max_length=5, primary_key=True)
     name = models.CharField(max_length=128, unique=True)
 
 
