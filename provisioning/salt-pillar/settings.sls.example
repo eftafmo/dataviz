@@ -1,0 +1,3 @@
+root_dir: /var/local/dataviz
+user: dataviz
+project_name: dataviz

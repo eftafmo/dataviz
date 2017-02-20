@@ -1,0 +1,5 @@
+salt-call:
+  local: True
+  config_dir: ./salt-config
+  file_root: ./salt-roots
+  pillar_root: ./salt-pillar

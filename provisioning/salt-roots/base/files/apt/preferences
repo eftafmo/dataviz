@@ -1,0 +1,11 @@
+Package: *
+Pin: release n=jessie, o=Debian
+Pin-Priority: 500
+
+Package: *
+Pin: release n=stretch, o=Debian
+Pin-Priority: 499
+
+Package: *
+Pin: release o=Debian
+Pin-Priority: 10

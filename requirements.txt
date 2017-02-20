@@ -1,3 +1,7 @@
+# packages we want installed from PyPi
 pyexcel>=0.4.2,<0.5
 pyexcel-xlsx>=0.3.0,<0.4
 django-enumfields>=0.8.2,<0.9
+
+# keep system-wide requirements in a separate file
+-r sysrequirements.txt
