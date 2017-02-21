@@ -4,6 +4,8 @@
 {% set settings = {
   'root_dir': _root,
   'user': pillar['user'],
+  'group': pillar['group'],
+  'www_user': pillar['www_user'],
   'project_name': pillar['project_name'],
   'repo_dir': salt['file.join'](_root, 'repo'),
   'webroot_dir': salt['file.join'](_root, 'webroot'),

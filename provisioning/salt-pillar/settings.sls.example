@@ -1,3 +1,5 @@
 root_dir: /var/local/dataviz
-user: dataviz
 project_name: dataviz
+user: dataviz
+group: dataviz
+www_user: www-data

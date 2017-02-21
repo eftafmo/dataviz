@@ -1,5 +1,6 @@
 include:
   - base.apt
+  - .base
 
 {%- from "application/map.jinja" import settings, IS_DEV with context %}
 {%- from "application/uwsgi.sls" import socket_file %}
@@ -19,7 +20,8 @@ nginx-installed:
     - enable: True
     - require:
         - pkg: {{ nginx_pkg }}
-        - sls: application.app
+    - watch:
+        - user: application-webserver-user
 
 nginx-conf:
   file.managed:

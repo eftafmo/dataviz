@@ -1,5 +1,6 @@
 include:
   - base.apt
+  - .base
 
 {%- from "application/map.jinja" import settings, IS_DEV with context -%}
 
