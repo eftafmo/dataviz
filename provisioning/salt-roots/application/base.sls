@@ -4,7 +4,7 @@
 application-user:
   user.present:
     - name: {{ settings.user }}
-    - group: {{ settings.group }}
+    - gid: {{ settings.group }}
 {#
 {%- if not IS_DEV %}
     # set the project root as user's home on production
