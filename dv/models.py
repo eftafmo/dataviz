@@ -149,14 +149,13 @@ class Programme(_MainModel):
         'code': 'ProgrammeCode',
         'name': 'Programme',
         'summary': 'ProgrammeSummary',
-        'allocation': 'AllocatedProgrammeGrant',
+        'allocation_eea': 'AllocatedProgrammeGrantEEA',
+        'allocation_norway': 'AllocatedProgrammeGrantNorway',
         'co_financing': 'ProgrammeCoFinancing',
         'status': 'ProgrammeStatus',
         # TODO: leftovers
         #IsDirectlyContracted
         #IsTAProgramme
-        #IsEEA
-        #IsNorway
     }
 
     class STATUS(Enum):
@@ -186,10 +185,24 @@ class Programme(_MainModel):
 
     summary = models.TextField()
 
-    allocation = models.PositiveIntegerField()
+    allocation_eea = models.PositiveIntegerField()
+    allocation_norway = models.PositiveIntegerField()
+
+    @property
+    def allocation(self):
+        return self.allocation_eea + self.allocation_norway
+
     # TODO: another decimal field. must... fix...
     #co_financing = models.PositiveIntegerField()
     co_financing = models.FloatField()
+
+    @property
+    def is_eea(self):
+        return self.allocation_eea != 0
+
+    @property
+    def is_norway(self):
+        return self.allocation_norway != 0
 
 
 class Programme_ProgrammeArea(_BaseModel):
@@ -317,8 +330,6 @@ class Project(_MainModel):
         #'NUTSLevel',
         #'PlannedSummary',
         #'ActualSummary',
-        #'IsEEA',
-        #'IsNorway',
         #'IsPublished',
         #'IsSmallGrantScheme',
         #'IsPredefined',
@@ -352,6 +363,9 @@ class Project(_MainModel):
     allocation = models.PositiveIntegerField()
     programme_co_financing = models.PositiveIntegerField()
     project_co_financing = models.PositiveIntegerField()
+
+    is_eea = models.BooleanField()
+    is_norway = models.BooleanField()
 
 
 class Indicator(_MainModel):
