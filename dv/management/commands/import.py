@@ -1,16 +1,24 @@
 import argparse
+import io
 import pickle
 import pyexcel
 import os.path
+import zipfile
 from functools import partial
 from itertools import cycle
+from urllib.parse import urlparse
+from urllib.request import urlopen
 from django.core.management.base import BaseCommand, CommandError
 from dv.models import (
+    NUTS,
     State, PrioritySector, ProgrammeArea, Programme, Programme_ProgrammeArea,
     Outcome, ProgrammeOutcome, Project, Indicator, ProgrammeIndicator,
     OrganisationType, Organisation, OrganisationRole,
 )
 from dv.lib.utils import is_iter
+
+
+NUTS_FILE = "http://ec.europa.eu/eurostat/ramon/documents/nuts/NUTS_2013.zip"
 
 
 class Command(BaseCommand):
@@ -25,18 +33,40 @@ class Command(BaseCommand):
         if not os.path.exists(fname):
             raise CommandError('Cannot open file "%s".' % fname)
 
+        # TODO: use the cache dir here.
         cname = fname + '.cache'
         if os.path.exists(cname):
             with open(cname, 'rb') as cached:
                 book = pickle.load(cached)
         else:
             book = pyexcel.get_book(file_name=fname)
-            with open(cached, 'wb') as out:
+            with open(cname, 'wb') as cached:
                 pickle.dump(book, cached)
 
+        # momentarily using the other file's directory for caching
+        fname = os.path.join(
+            os.path.dirname(fname),
+            os.path.basename(urlparse(NUTS_FILE).path)
+        )
+        cname = fname + '.cache'
+        if os.path.exists(cname):
+            with open(cname, 'rb') as cached:
+                nuts_book = pickle.load(cached)
+        else:
+            with urlopen(NUTS_FILE) as f:
+                with zipfile.ZipFile(io.BytesIO(f.read())) as z:
+                    zf = z.namelist()[0]
+                    nuts_book = pyexcel.get_book(file_content=z.open(zf).read(),
+                                                 file_type=zf.split('.')[-1])
+            with open(cname, 'wb') as cached:
+                pickle.dump(nuts_book, cached)
+
         models = (
-            State, PrioritySector, ProgrammeArea, Programme, Programme_ProgrammeArea,
-            Outcome, ProgrammeOutcome, Project,
+            NUTS, State,
+            PrioritySector, ProgrammeArea,
+            Programme, Programme_ProgrammeArea,
+            Outcome, ProgrammeOutcome,
+            Project,
             Indicator, ProgrammeIndicator,
             OrganisationType, Organisation, OrganisationRole,
         )
@@ -56,16 +86,23 @@ class Command(BaseCommand):
             # we can now use the first row as the header
             sheet.name_columns_by_row(0)
 
+        # column names for nuts
+        for sheet in nuts_book:
+            sheet.name_columns_by_row(0)
+
         def _convert_nulls(record):
             for k, v in record.items():
                 if v in ('NULL', 'None'):
                     record[k] = None
 
         for model in models:
-            _inline('importing "%s" into %s …  ' % (model.IMPORT_SOURCE,
-                                                    model._meta.label))
-            sheet = book[model.IMPORT_SOURCE]
+            if model == NUTS:
+                sheet = nuts_book[0]
+            else:
+                sheet = book[model.IMPORT_SOURCE]
 
+            _inline('importing "%s" into %s …  ' % (sheet.name,
+                                                    model._meta.label))
 
             # we'll often have duplicates in a single sheet,
             # so keep track of uniques

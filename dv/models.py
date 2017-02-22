@@ -63,6 +63,22 @@ class FINANCIAL_MECHANISM(Enum):
         NORWAY = _('Norway')
 
 
+# TODO: fix NUTS data issues and use this as foreign key below
+class NUTS(_MainModel):
+    IMPORT_MAPPING = {
+        'code': 'NUTS CODE',
+        'label': 'NUTS LABEL',
+    }
+
+    code = models.CharField(max_length=2, primary_key=True)
+    label = models.CharField(max_length=128)
+
+    @property
+    def level(self):
+        """The NUTS level."""
+        return len(self.code) - 2
+
+
 class State(_MainModel):
     IMPORT_SOURCE = 'BeneficiaryState'
     IMPORT_MAPPING = {
@@ -323,11 +339,11 @@ class Project(_MainModel):
         'code': 'ProjectCode',
         'name': 'Project',
         'allocation': 'GrantAmount',
+        #'geotarget': 'NUTSCode',
         'nuts': 'NUTSCode',
+
         # TODO: leftovers
         #'Predefined',
-        #'GeographicalTarget',
-        #'NUTSLevel',
         #'PlannedSummary',
         #'ActualSummary',
         #'IsPublished',
@@ -357,7 +373,7 @@ class Project(_MainModel):
     code = models.CharField(max_length=9, primary_key=True)
     name = models.CharField(max_length=512) # not unique
 
-    # TODO: make this a standalone table
+    #geotarget = models.ForeignKey(NUTS)
     nuts = models.CharField(max_length=5)
 
     allocation = models.PositiveIntegerField()
@@ -450,15 +466,15 @@ class Organisation(_BaseModel):
         'id': 'IdOrganisation',
         'name': 'Organisation',
         'ptype': 'IsProgrammeOrProjectOrg',
-        'orgtype': ('name', 'OrganisationType')
+        'orgtype': ('name', 'OrganisationType'),
+        #'geotarget': 'NUTSCode',
+        'nuts': 'NUTSCode',
+
         # TODO: use proper states/countries table
         #'country': ('name', 'Country'),
     }
     # TODO: leftovers
     #'City',
-    #'GeographicalTarget',
-    #'NUTSCode',
-    #'NUTSLevel',
 
     class ORGANISATION_TYPE(Enum):
         PROGRAMME = 'programme'
@@ -477,6 +493,8 @@ class Organisation(_BaseModel):
     #country = models.ForeignKey(State)
     country = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
+    #geotarget = models.ForeignKey(NUTS)
+    nuts = models.CharField(max_length=5)
 
     class Meta(_BaseModel.Meta):
         # TODO: this isn't unique, as organisations are duplicate
