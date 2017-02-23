@@ -504,7 +504,7 @@ class Organisation(_BaseModel):
         pass
 
     def __str__(self):
-        return "%s _ %s" % (self.country.code, self.name)
+        return "%s _ %s" % (self.country, self.name)
 
 
 class OrganisationRole(_BaseModel):
