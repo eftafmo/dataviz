@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+{% load render_bundle from webpack_loader %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Example</title>
+        {% render_bundle 'app_css' 'css' %}
+    </head>
+
+    <body>
+        <h1>Webpacked</h1>
+        {% render_bundle 'app_js' 'js' %}
+    </body>
+</html>
