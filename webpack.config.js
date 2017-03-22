@@ -38,7 +38,7 @@ module.exports = {
         chunkFilename: "[id].[hash].js",
     },
     resolve: {
-        modules: ['node_modules', 'bower_components'],
+        modules: ['node_modules'],
         extensions: ['.js', '.jsx', '.css']
     },
     module: {
@@ -46,7 +46,7 @@ module.exports = {
             {
                 test: /\.js?$/,
                 include: path.resolve(rootAssetPath, 'js'),
-                exclude: /(node_modules|bower_components|__tests__)/,
+                exclude: /(node_modules|__tests__)/,
                 loaders: ['babel-loader'],
             },
             {
