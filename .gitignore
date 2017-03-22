@@ -7,7 +7,6 @@ static/
 ### generic stuff
 __pycache__/
 node_modules/
-*~
 
 .vagrant/
 Vagrantfile
