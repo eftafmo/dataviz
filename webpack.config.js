@@ -44,7 +44,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js?$/,
+                test: /\.jsx?$/,
                 include: path.resolve(rootAssetPath, 'js'),
                 exclude: /(node_modules|__tests__)/,
                 loaders: ['babel-loader'],
