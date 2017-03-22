@@ -47,7 +47,23 @@ module.exports = {
                 test: /\.jsx?$/,
                 include: path.resolve(rootAssetPath, 'js'),
                 exclude: /(node_modules|__tests__)/,
-                loaders: ['babel-loader'],
+                use: [
+                    {
+                        loader: 'babel-loader'//,
+                        /*
+                        // TODO: enable this and remove .babelrc
+                        options: {
+                            "presets": [
+                                ["es2015", {"modules": false}]
+                            ],
+                            "plugins": [
+                                "transform-decorators-legacy",
+                                "transform-class-properties"
+                            ]
+                        }
+                        */
+                    }
+                ]
             },
             {
                 test: /\.css$/,
