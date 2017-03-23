@@ -1,7 +1,6 @@
 var debug = process.env.NODE_ENV !== "production";
 var webpack = require('webpack');
 var path = require('path');
-var _ = require('lodash');
 var BundleTracker = require('webpack-bundle-tracker');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -85,7 +84,7 @@ module.exports = {
             */
         ]
     },
-    plugins: _.concat([
+    plugins: [
             new CleanWebpackPlugin(['assets/bundles', 'static/bundles/'], {
                 verbose: true,
                 exclude: ['webpack-stats.json']
@@ -99,8 +98,8 @@ module.exports = {
                 ignorePaths: ['/js', '/css'],
             })
             */
-        ],
-        debug ? [
+        ].concat(
+            debug ? [
                 new webpack.HotModuleReplacementPlugin()
             ] : [
                 new webpack.optimize.OccurrenceOrderPlugin(),
