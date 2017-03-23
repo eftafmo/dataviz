@@ -20,90 +20,90 @@ var publicPath = publicHost + (debug ? '/assets/bundles/' : '/static/bundles/');
 
 
 module.exports = {
-    context: __dirname,
-    devtool: debug ? "inline-sourcemap" : false,
-    entry: {
-        app_js: [
-            path.resolve(rootAssetPath, "js/index")
-        ],
-        app_css: [
-            path.resolve(rootAssetPath, 'css/index')
-        ]
-    },
-    output: {
-        path: outputPath,
-        publicPath: publicPath,
-        filename: "[name]-[hash].js",
-        chunkFilename: "[id].[hash].js",
-    },
-    resolve: {
-        modules: ['node_modules'],
-        extensions: ['.js', '.jsx', '.css']
-    },
-    module: {
-        rules: [
-            {
-                test: /\.jsx?$/,
-                include: path.resolve(rootAssetPath, 'js'),
-                exclude: /(node_modules|__tests__)/,
-                use: [
-                    {
-                        loader: 'babel-loader'//,
-                        /*
-                        // TODO: enable this and remove .babelrc
-                        options: {
-                            "presets": [
-                                ["es2015", {"modules": false}]
-                            ],
-                            "plugins": [
-                                "transform-decorators-legacy",
-                                "transform-class-properties"
-                            ]
-                        }
-                        */
-                    }
-                ]
-            },
-            {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract(
-                    {
-                        fallback: "style-loader",
-                        use: "css-loader"
-                    }
-                    ),
-            },
+  context: __dirname,
+  devtool: debug ? "inline-sourcemap" : false,
+  entry: {
+    app_js: [
+      path.resolve(rootAssetPath, "js/index")
+    ],
+    app_css: [
+      path.resolve(rootAssetPath, 'css/index')
+    ]
+  },
+  output: {
+    path: outputPath,
+    publicPath: publicPath,
+    filename: "[name]-[hash].js",
+    chunkFilename: "[id].[hash].js",
+  },
+  resolve: {
+    modules: ['node_modules'],
+    extensions: ['.js', '.jsx', '.css']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        include: path.resolve(rootAssetPath, 'js'),
+        exclude: /(node_modules|__tests__)/,
+        use: [
+          {
+            loader: 'babel-loader'//,
             /*
-            {
-                test: /\.(jpe?g|png|gif|svg)$/,
-                loaders: [
-                    'file?context=' + relativeRootAssetPath + '&name=[path][name].[hash].[ext]',
-                    'image?bypassOnDebug&optimizationLevel=7&interlaced=false',
-                ]
-            },
+            // TODO: enable this and remove .babelrc
+            options: {
+              "presets": [
+                ["es2015", {"modules": false}]
+              ],
+              "plugins": [
+                "transform-decorators-legacy",
+                "transform-class-properties"
+              ]
+            }
             */
+          }
         ]
-    },
-    plugins: [
-            new CleanWebpackPlugin(['assets/bundles', 'static/bundles/'], {
-                verbose: true,
-                exclude: ['webpack-stats.json']
-            }),
-            new webpack.NoEmitOnErrorsPlugin(),
-            new BundleTracker({path: outputPath, filename: "webpack-stats.json"}),
-            new ExtractTextPlugin('[name].[hash].css'),
-            /*
-            new ManifestRevisionPlugin(path.resolve(outputPath, 'manifest.json'), {
-                rootAssetPath: relativeRootAssetPath,
-                ignorePaths: ['/js', '/css'],
-            })
-            */
-        ].concat(
-            debug ? [
-                new webpack.HotModuleReplacementPlugin()
-            ] : [
-                new webpack.optimize.OccurrenceOrderPlugin(),
-                new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-            ]
-    ),
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract(
+          {
+            fallback: "style-loader",
+            use: "css-loader"
+          }
+          ),
+      },
+      /*
+      {
+        test: /\.(jpe?g|png|gif|svg)$/,
+        loaders: [
+          'file?context=' + relativeRootAssetPath + '&name=[path][name].[hash].[ext]',
+          'image?bypassOnDebug&optimizationLevel=7&interlaced=false',
+        ]
+      },
+      */
+    ]
+  },
+  plugins: [
+      new CleanWebpackPlugin(['assets/bundles', 'static/bundles/'], {
+        verbose: true,
+        exclude: ['webpack-stats.json']
+      }),
+      new webpack.NoEmitOnErrorsPlugin(),
+      new BundleTracker({path: outputPath, filename: "webpack-stats.json"}),
+      new ExtractTextPlugin('[name].[hash].css'),
+      /*
+      new ManifestRevisionPlugin(path.resolve(outputPath, 'manifest.json'), {
+        rootAssetPath: relativeRootAssetPath,
+        ignorePaths: ['/js', '/css'],
+      })
+      */
+    ].concat(
+      debug ? [
+        new webpack.HotModuleReplacementPlugin()
+      ] : [
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+      ]
+  ),
 };
