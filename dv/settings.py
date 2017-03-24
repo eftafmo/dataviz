@@ -12,9 +12,19 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# project's base directory (the repo root)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEBUG = bool(os.environ.get('EDW_RUN_WEB_DEBUG'))
+# root directory, where project is deployed
+ROOT_DIR = os.path.dirname(BASE_DIR)
+
+# more useful dirs:
+# the web server's vhost root
+WEBROOT_DIR = os.path.join(ROOT_DIR, 'webroot')
+# used for building webpack bundles for now
+BUILD_DIR = os.path.join(ROOT_DIR, 'build')
+
+# TODO: handle this nicely
+DEBUG = bool(os.environ.get('DEBUG'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -33,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dv',
     'webpack_loader',
+    'dv',
 ]
 
 MIDDLEWARE = [
@@ -102,21 +112,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
 STATIC_URL = '/static/'
-# TODO configure static path based on env
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATS_FILE = os.path.join(BASE_DIR, 'assets' if DEBUG else 'static', 'bundles', 'webpack-stats.json')
-
+STATIC_ROOT = os.path.join(WEBROOT_DIR, 'static')
 STATICFILES_DIRS = (
-    ('bundles', os.path.join(BASE_DIR, 'assets/bundles')),
+    # include webpack output
+    ('bundles', os.path.join(BUILD_DIR, 'webpack-bundles')),
 )
 
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'bundles/',
-        'STATS_FILE': STATS_FILE,
-        'POLL_INTERVAL': 1,
+        'STATS_FILE': os.path.join(BUILD_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 10,
         'CACHE': not DEBUG,
     }
 }

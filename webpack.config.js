@@ -1,5 +1,10 @@
-var debug = process.env.NODE_ENV !== "production";
+const DEBUG = process.env.NODE_ENV !== "production";
+
+// load in the package data to read the conf
+var _package = require('./package.json'),
+    config = _package.config;
 var webpack = require('webpack');
+
 var path = require('path');
 var BundleTracker = require('webpack-bundle-tracker');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -11,29 +16,30 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 // TODO research a new and easy way to track bundled images
 // var ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
 
-var rootAssetPath = path.resolve("assets");
-var outputPath = path.resolve(rootAssetPath, "bundles");
-// TODO configure static path from env.
-// TODO configure production publichost to a proper url
-var publicHost = debug ? 'http://localhost:2992' : 'http://localhost';
-var publicPath = publicHost + (debug ? '/assets/bundles/' : '/static/bundles/');
+var asset_dir = path.resolve(config['asset-dir']);
+var build_dir = path.resolve(config['build-dir']);
+var output_dir = path.resolve(build_dir, "webpack-bundles");
 
+var public_path = '/assets/';
+// on development serve the files from the devserver
+if (DEBUG)
+  public_path = `http://${config['dev-server-host']}:${config['dev-server-port']}${public_path}`;
 
 module.exports = {
   context: __dirname,
-  devtool: debug ? "inline-sourcemap" : false,
+  devtool: DEBUG ? "inline-sourcemap" : false,
   entry: {
-    app_js: [
-      path.resolve(rootAssetPath, "js/index")
+    scripts: [
+      path.resolve(asset_dir, "js/main.js")
     ],
-    app_css: [
-      path.resolve(rootAssetPath, 'css/index')
+    styles: [
+      path.resolve(asset_dir, 'css/main.css')
     ]
   },
   output: {
-    path: outputPath,
-    publicPath: publicPath,
-    filename: "[name]-[hash].js",
+    path: output_dir,
+    publicPath: public_path,
+    filename: "[name].[hash].js",
     chunkFilename: "[id].[hash].js",
   },
   resolve: {
@@ -44,7 +50,7 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        include: path.resolve(rootAssetPath, 'js'),
+        include: path.resolve(asset_dir, 'js'),
         exclude: /(node_modules|__tests__)/,
         use: [
           {
@@ -71,7 +77,7 @@ module.exports = {
             fallback: "style-loader",
             use: "css-loader"
           }
-          ),
+        ),
       },
       /*
       {
@@ -85,12 +91,12 @@ module.exports = {
     ]
   },
   plugins: [
-      new CleanWebpackPlugin(['assets/bundles', 'static/bundles/'], {
-        verbose: true,
-        exclude: ['webpack-stats.json']
-      }),
+      // new CleanWebpackPlugin(['assets/bundles', 'static/bundles/'], {
+      //   verbose: true,
+      //   exclude: ['webpack-stats.json']
+      // }),
       new webpack.NoEmitOnErrorsPlugin(),
-      new BundleTracker({path: outputPath, filename: "webpack-stats.json"}),
+      new BundleTracker({path: build_dir, filename: "webpack-stats.json"}),
       new ExtractTextPlugin('[name].[hash].css'),
       /*
       new ManifestRevisionPlugin(path.resolve(outputPath, 'manifest.json'), {
@@ -99,11 +105,16 @@ module.exports = {
       })
       */
     ].concat(
-      debug ? [
+      DEBUG ? [
         new webpack.HotModuleReplacementPlugin()
       ] : [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
       ]
   ),
+  devServer: {
+    contentBase: asset_dir,
+    host: config['dev-server-host'],
+    port: config['dev-server-port'],
+  },
 };

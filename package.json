@@ -1,6 +1,6 @@
 {
   "name": "dataviz",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Norway grants data visualization",
   "main": "index.js",
   "directories": {
@@ -24,17 +24,19 @@
     "webpack-bundle-tracker": "^0.2.0",
     "webpack-dev-server": "^2.4.2"
   },
+  "config": {
+    "dev-server-host": "0.0.0.0",
+    "dev-server-port": "2992",
+    "asset-dir": "assets",
+    "build-dir": "../build"
+  },
   "scripts": {
-    "start": "webpack-dev-server --debug --content-base assets/bundles/ --host 0.0.0.0 --port 2992 --inline --hot",
+    "start": "webpack-dev-server --progress --inline --hot",
     "build": "webpack --progress --profile --colors --display-error-details --bail",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EEA-Norway-Grants/dataviz.git"
-  },
-  "keywords": [
-    "eea"
-  ],
-  "license": ""
+  }
 }

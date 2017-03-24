@@ -1,8 +1,5 @@
 ### project-related files
 dv/localsettings.py
-assets/bundles/
-static/
-!static/stub
 
 ### generic stuff
 __pycache__/
