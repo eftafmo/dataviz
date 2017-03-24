@@ -1,3 +1,5 @@
 "use strict";
 
-alert('it works');
+require("../css/main.css");
+
+document.write('science, it works');

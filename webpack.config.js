@@ -72,7 +72,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
+        loader: DEBUG ? 'style-loader!css-loader' : ExtractTextPlugin.extract(
           {
             fallback: "style-loader",
             use: "css-loader"
@@ -97,7 +97,6 @@ module.exports = {
       // }),
       new webpack.NoEmitOnErrorsPlugin(),
       new BundleTracker({path: build_dir, filename: "webpack-stats.json"}),
-      new ExtractTextPlugin(DEBUG ? "[name].css" : "[name].[hash:8].css"),
       /*
       new ManifestRevisionPlugin(path.resolve(outputPath, 'manifest.json'), {
         rootAssetPath: relativeRootAssetPath,
@@ -108,6 +107,7 @@ module.exports = {
       DEBUG ? [
         new webpack.HotModuleReplacementPlugin()
       ] : [
+        new ExtractTextPlugin("[name].[hash:8].css"),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
       ]
