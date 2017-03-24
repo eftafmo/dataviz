@@ -39,8 +39,8 @@ module.exports = {
   output: {
     path: output_dir,
     publicPath: public_path,
-    filename: "[name].[hash].js",
-    chunkFilename: "[id].[hash].js",
+    filename: DEBUG ? "[name].js" : "[name].[hash:8].js",
+    chunkFilename: DEBUG ? "[id].js" : "[id].[chunkhash:8].js",
   },
   resolve: {
     modules: ['node_modules'],
@@ -97,7 +97,7 @@ module.exports = {
       // }),
       new webpack.NoEmitOnErrorsPlugin(),
       new BundleTracker({path: build_dir, filename: "webpack-stats.json"}),
-      new ExtractTextPlugin('[name].[hash].css'),
+      new ExtractTextPlugin(DEBUG ? "[name].css" : "[name].[hash:8].css"),
       /*
       new ManifestRevisionPlugin(path.resolve(outputPath, 'manifest.json'), {
         rootAssetPath: relativeRootAssetPath,
