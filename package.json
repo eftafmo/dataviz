@@ -22,6 +22,7 @@
     "css-loader": "^0.27.3",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.11.1",
+    "friendly-errors-webpack-plugin": "^1.6.1",
     "style-loader": "^0.14.0",
     "vue-loader": "^11.3.4",
     "vue-template-compiler": "^2.2.6",
@@ -36,7 +37,8 @@
     "build-dir": "../build"
   },
   "scripts": {
-    "start": "webpack-dev-server --progress --inline --hot",
+    "start": "webpack-dev-server --hot --inline",
+    "dev": "webpack-dev-server --hot --inline",
     "build": "webpack --progress --profile --colors --display-error-details --bail",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -3,11 +3,13 @@ const DEBUG = process.env.NODE_ENV !== "production";
 // load in the package data to read the conf
 var _package = require('./package.json'),
     config = _package.config;
-var webpack = require('webpack');
 
-var path = require('path');
+var webpack = require('webpack'),
+    path = require('path');
+
 var BundleTracker = require('webpack-bundle-tracker');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
+var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 // Separate js and css bundles apart. See: https://github.com/webpack-contrib/extract-text-webpack-plugin
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -123,7 +125,8 @@ module.exports = {
       */
     ].concat(
       DEBUG ? [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new FriendlyErrorsWebpackPlugin(),
       ] : [
         new ExtractTextPlugin("[name].[hash:8].css"),
         new webpack.optimize.OccurrenceOrderPlugin(),
@@ -132,6 +135,7 @@ module.exports = {
   ),
   devServer: {
     contentBase: asset_dir,
+    quiet: true, // required for FriendlyErrorsWebpackPlugin()
     host: config['dev-server-host'],
     port: config['dev-server-port'],
   },
