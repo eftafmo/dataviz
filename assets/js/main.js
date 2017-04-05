@@ -10,6 +10,14 @@ import * as d3 from "d3";
 import {sankey as d3_sankey} from "d3-sankey";
 import Vue from "vue";
 
+import MainApp from './MainApp.vue'
+
+new Vue({
+  el: '#content',
+  render: h => h(MainApp)
+})
+
+
 require("../css/sankey.css");
 
 let margin = {top: 10, right: 10, bottom: 10, left: 10},
