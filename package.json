@@ -9,7 +9,6 @@
   "dependencies": {
     "d3": "^4.7.4",
     "d3-sankey": "^0.4.2",
-    "normalize.css": "^6.0.0",
     "vue": "^2.2.6"
   },
   "devDependencies": {
