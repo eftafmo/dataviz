@@ -1,9 +1,14 @@
 "use strict";
 
+require("../css/normalize.css");
 require("../css/main.css");
+require("../css/layout.css");
+require("../css/header.css");
+require("../css/footer.css");
+
 import * as d3 from "d3";
 import {sankey as d3_sankey} from "d3-sankey";
-
+import Vue from "vue";
 
 require("../css/sankey.css");
 

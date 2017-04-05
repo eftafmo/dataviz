@@ -1,0 +1,40 @@
+.header {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+}
+
+
+
+.header-menu ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.header-menu ul::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.header-menu ul > li {
+  float: left;
+}
+.header-menu a {
+  display: block;
+  padding: 1em;
+  border-bottom: 2px solid transparent;
+  color: inherit;
+}
+.header-menu a:hover {
+  text-decoration: none;
+  border-bottom-color: #50B9FF;
+}
+.header-menu a.active {
+  border-bottom-color: #005494;
+  color: #005494;
+  font-weight: 600;
+  cursor: default;
+}

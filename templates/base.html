@@ -7,15 +7,36 @@
   {% render_bundle 'styles' 'css' %}
 </head>
 <body>
-  <header>
-    -- Header --
+  <header class="header">
+    <div class="container">
+      <nav class="header-menu">
+        <ul>
+          <li><a href="#" class="active">Grants</a></li>
+          <li><a href="#">Partners</a></li>
+          <li><a href="#">Projects</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
-  <div id="content">
+
+  <div id="content" class="body">
+    <div class="container">
+      <div class="body-inner">
 {% block content %}
 {% endblock %}
+      </div>
+    </div>
   </div>
-  <footer>
-    -- Footer --
+  <footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+          <div class="small muted">
+            <p>EEA Grants - Norway Grants, Financial Mechanism Office, Tel: +32 (0) 2 286 1701, Fax: +32 (0) 2 286 1889, Email: <a href="mailto:info-fmo@efta.int" target="_self">info-fmo@efta.int</a></p>
+            <p>Postal address: 12-16 Rue Joseph II, 1000 Brussels, Belgium, Visiting address: 47-48, Boulevard du Régent 1000 Brussels, Belgium</p>
+            <p><a href="http://eeagrants.org/cookies">Cookie policy</a></p>
+          </div>
+        </div>
+      </div>
   </footer>
   {% render_bundle 'scripts' 'js' %}
 </body>

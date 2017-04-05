@@ -5,10 +5,27 @@
 }
 
 body {
+  margin: 0;
   font-family: 'Open sans', sans-serif;
   font-size: 1.5rem;
   line-height: 1.3334;
   color: #444;
 }
 
+small,
+.small {
+  font-size: 12px;
+  line-height: 1.25;
+}
 
+.muted {
+  color: #898989;
+}
+
+a {
+  color: #3D90F3;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
