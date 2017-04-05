@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <tag :dismissable="true">Domnul Gică Hagi</tag>
+    <tag :dismissable="true" v-on:dismiss="dismiss">Domnul Gică Hagi</tag>
     Test output of {{ example.name }}.
   </div>
 </template>
@@ -25,6 +25,11 @@ export default {
       example: {
 	      name: 'a test app',
       }
+    }
+  },
+  methods: {
+  dismiss: function() {
+      console.log('MainAppEvent');
     }
   }
 }

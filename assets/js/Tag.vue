@@ -30,9 +30,10 @@
     },
     methods: {
       dismiss: function(event) {
-        console.log('this', this);
-        console.log('event', event);
-        alert('dismiss tag');
+        this.$emit('dismiss');
+        // console.log('this', this);
+        // console.log('event', event);
+        // alert('dismiss tag');
       }
     }
   })
