@@ -1,4 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600');
+
+:root {
+  font-family: 'Open sans', sans-serif;
+  font-size: 10px;
+}
+
 body {
   background-color: #fff;
   color: #000;
+  font-size: 1.5rem;
 }
+
+
