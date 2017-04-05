@@ -44,7 +44,10 @@ module.exports = {
   },
   resolve: {
     modules: ['node_modules'],
-    extensions: ['.js', '.jsx', '.css']
+    extensions: ['.js', '.jsx', '.css'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js',
+    },
   },
   module: {
     rules: [
@@ -69,6 +72,14 @@ module.exports = {
             */
           }
         ]
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+          }
+        }
       },
       {
         test: /\.css$/,
