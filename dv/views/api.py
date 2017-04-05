@@ -1,4 +1,4 @@
-from collections import defaultdict, namedtuple
+from collections import OrderedDict, defaultdict, namedtuple
 from dv.lib.http import CsvResponse, JsonResponse
 from dv.models import State, ProgrammeArea
 
@@ -26,22 +26,33 @@ def beneficiaries_fm_gross_allocation(request):
 
 def sectors_areas_allocation(request):
     """
-    Returns a dict of
+    Returns a list of
     {
-        "priority sector": {
-            "programme area": {
-                "financial mechanism": gross-allocation,
-                ...
+        name: "priority sector",
+        children: [
+            {
+                name: "programme area",
+                allocation: {
+                    "financial mechanism": amount,
+                    ...
+                },
             },
             ...
-        },
-        ...
-    }
+        ]
+    },
+    ...
     """
-    items = ProgrammeArea.objects.select_related('priority_sector').only(
-        'priority_sector__type', 'priority_sector__name',
-        'short_name', 'name', 'gross_allocation'
-    ).order_by('priority_sector__name', 'priority_sector__type', 'short_name')
+    items = (
+        ProgrammeArea.objects.select_related('priority_sector')
+        .exclude(gross_allocation=0)
+        .only(
+            'priority_sector__type', 'priority_sector__name',
+            'short_name', 'name', 'gross_allocation'
+        )
+        .order_by(
+            'priority_sector__name', 'priority_sector__type', 'short_name'
+        )
+    )
 
     sectors = defaultdict(lambda: defaultdict(dict))
 
@@ -57,4 +68,18 @@ def sectors_areas_allocation(request):
         area = sector[area_name]
         area[fm] = allocation
 
-    return JsonResponse(sectors)
+    out = tuple(
+        OrderedDict((
+            ("name", sector),
+            ("children", tuple(
+                OrderedDict((
+                    ("name", area),
+                    ("allocation", allocations)
+                ))
+                for area, allocations in areas.items()
+            ))
+        ))
+        for sector, areas in sectors.items()
+    )
+
+    return JsonResponse(out, json_dumps_params={"indent": 2})
