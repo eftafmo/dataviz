@@ -90,6 +90,13 @@ module.exports = {
           }
         ),
       },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        loader: 'file-loader',
+        options: {
+          name: 'public/fonts/[name].[ext]'
+        }
+      }
       /*
       {
         test: /\.(jpe?g|png|gif|svg)$/,

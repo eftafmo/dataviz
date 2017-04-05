@@ -1,7 +1,8 @@
 <template>
-<div id="app">
-  Test output of {{ example.name }}.
-</div>
+  <div id="app">
+    <tag :dismissable="true">Domnul Gică Hagi</tag>
+    Test output of {{ example.name }}.
+  </div>
 </template>
 
 
@@ -12,16 +13,17 @@
 
 <script>
 //import ExampleComponent from './ExampleComponent.vue';
+import Tag from './Tag.vue';
 
 export default {
   name: 'app',
   components: {
-    //ExampleComponent,
+    'tag': Tag,
   },
   data () {
     return {
       example: {
-	name: 'a test app',
+	      name: 'a test app',
       }
     }
   }

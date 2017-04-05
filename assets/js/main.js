@@ -10,12 +10,12 @@ import * as d3 from "d3";
 import {sankey as d3_sankey} from "d3-sankey";
 import Vue from "vue";
 
-import MainApp from './MainApp.vue'
+import MainApp from './MainApp.vue';
 
 new Vue({
   el: '#content',
   render: h => h(MainApp)
-})
+});
 
 
 require("../css/sankey.css");
