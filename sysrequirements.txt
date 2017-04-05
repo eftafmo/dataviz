@@ -2,7 +2,6 @@
 # instead of inside a virtualenv
 # NOTE: don't rename this file unless updating the related salt state
 
-psycopg2
 # TODO: don't keep it from system, but stick to 1.11
 # in the future
 django
