@@ -8,7 +8,7 @@
 }
 
 
-
+/* Menu */
 .header-menu ul {
   list-style: none;
   padding-left: 0;
@@ -37,4 +37,45 @@
   color: #005494;
   font-weight: 600;
   cursor: default;
+}
+
+/* Search */
+.header-search input,
+.header-search button {
+  padding: .3334em .6667em;
+  border: 0;
+  border-radius: 1em;
+  vertical-align: middle;
+  font: inherit;
+  background: transparent;
+}
+.header-search input:not(:placeholder-shown),
+.header-search input:focus {
+  outline: none;
+  background: #F2F2F2;
+}
+.header-search button {
+  padding: 0;
+  height: 2em;
+  width: 2em;
+  line-height: 2em;
+  text-align: center;
+  cursor: pointer;
+}
+.header-search input:focus + button,
+.header-search button:hover,
+.header-search button:focus {
+  background-color: #50b9ff;
+  color: #fff;
+}
+.header-search button .icon {
+  vertical-align: -.1em;
+}
+
+/* Toggle buttons */
+.header-toggle {
+  padding: .33334em;
+  border: 0;
+  background: transparent;
+  font-size: 1.2em;
 }

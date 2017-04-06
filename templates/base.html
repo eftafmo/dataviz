@@ -9,13 +9,36 @@
 <body>
   <header class="header">
     <div class="container">
-      <nav class="header-menu">
-        <ul>
-          <li><a href="#" class="active">Grants</a></li>
-          <li><a href="#">Partners</a></li>
-          <li><a href="#">Projects</a></li>
-        </ul>
-      </nav>
+      <div class="header-inner">
+
+        <div class="header-logo">
+          <a href="#">
+            <img src="" alt="EEAG logo">
+          </a>
+        </div>
+
+        <nav class="header-menu">
+          <ul>
+            <li><a href="#" class="active">Grants</a></li>
+            <li><a href="#">Partners</a></li>
+            <li><a href="#">Projects</a></li>
+          </ul>
+        </nav>
+
+        <form class="header-search">
+          <input type="search" placeholder="Search">
+          <button type="submit" title="Search">
+            <span class="icon icon-search"></span>
+          </button>
+        </form>
+
+        <button type="button" class="header-toggle header-search-toggle" title="Search">
+          <span class="icon icon-search"></span>
+        </button>
+        <button type="button" class="header-toggle header-menu-toggle" title="Menu">
+          <span class="icon icon-menu"></span>
+        </button>
+      </div>
     </div>
   </header>
 
