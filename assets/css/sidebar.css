@@ -1,0 +1,77 @@
+/* Sidebar results */
+.sidebar-results {
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 5px rgba(0,0,0,.2);
+  background: #fff;
+}
+@media (max-width: 768px) {
+  .sidebar-results {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
+@media (min-width: 769px) {
+  .sidebar-results {
+    position: sticky;
+    top: 40px;
+    width: 320px;
+  }
+}
+
+/* Sidebar results Tabs */
+.sidebar-tabs {
+}
+.sidebar-tab-menu {
+  border-bottom: 1px solid #ddd;
+  position: relative;
+}
+.sidebar-tab-menu::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: .6667em;
+  bottom: .6667em;
+  border-left: 1px solid #ddd;
+}
+.sidebar-tab-menu::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.sidebar-tab-menu a {
+  box-sizing: border-box;
+  float: left;
+  display: block;
+  width: 50%;
+  padding: .6667em .5em;
+  text-align: center;
+  position: relative;
+  color: #898989;
+  cursor: pointer;
+  background: transparent;
+}
+.sidebar-tab-menu a::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -1px;
+  left: 1em;
+  right: 1em;
+  height: 3px;
+  background: transparent;
+}
+.sidebar-tab-menu a:hover {
+  text-decoration: none;
+  color: #50B9FF;
+}
+.sidebar-tab-menu a:hover::after {
+  background: #50B9FF;
+}
+.sidebar-tab-menu a.active {
+  color: #005494;
+  font-weight: 600;
+}
+.sidebar-tab-menu a.active::after {
+  background: #005494;
+}

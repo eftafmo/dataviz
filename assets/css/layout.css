@@ -2,8 +2,14 @@
   max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 769px) {
+  .container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }
 
 .body-inner {
@@ -21,12 +27,15 @@
 @media (min-width: 769px) {
   .main {
     flex-grow: 2;
+    margin-right: 3rem;
   }
 }
 
 /* Aside */
 @media (min-width: 769px) {
   .aside {
-    width: 320px;
+    flex-shrink: 0;
+    min-width: 240px;
+    /*width: 320px;*/
   }
 }
