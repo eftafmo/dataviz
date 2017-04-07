@@ -22,7 +22,7 @@
   </defs>
   <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
   </g>
-  <g class="legend" :transform="`translate(${radius * 2 + radius / 2},${radius / 2})`">
+  <g class="legend" :transform="`translate(${radius * 2 + radius / 2},${margin})`">
   </g>
 </svg>
 </template>
@@ -202,10 +202,9 @@ export default Vue.extend({
       return func(d.data.id);
     },
 
-    getLabelID(item) {
-      return `l${this._uid}-${item}`;
-    },
     getArcID: (node) => `a${node.depth}-${node.data.id}`,
+    getLabelID: (node) => `l${node.depth}-${node.data.id}`,
+
     getRoot() {
       // sum needs to be recomputed every time,
       this.root.sum((d) => {
@@ -253,7 +252,7 @@ export default Vue.extend({
 
       // and then, transition to...
 	.transition()
-        .duration(750)
+        .duration(500)
       // .. full opacity / invisibility
         .attr("opacity", (d) => d.data.enabled ? 1 : 0)
       // and new coordinates
@@ -275,20 +274,39 @@ export default Vue.extend({
     _getAnim: () => {
       const anim = document.getElementById('dropshadow-anim-in'),
 	    parent = anim.parentNode;
-
-      // this makes sure the animation is really stopped
-      parent.removeChild(anim);
-      parent.appendChild(anim);
-
+      // make sure the animation is stopped
+      parent.appendChild(parent.removeChild(anim));
       return anim;
     },
 
+    _getOther(obj) {
+      // convenience function returning the label when given the arc
+      // and vice-versa
+      const selector = obj.classed('arc') ? this.getLabelID : this.getArcID;
+      return d3.select("#" + selector(obj.datum()));
+    },
     mouseover(item) {
-      d3.select(item).moveToFront();
-      this._getAnim().beginElement();
+      const $this = this,
+            _this = d3.select(item),
+            _other = $this._getOther(_this),
+            arc = _this.classed('arc') ? _this : _other;
+
+      // if we want pretty shadows the element needs to be brought to front
+      arc.moveToFront();
+      // let the other be "hovered" too
+      _other.classed("hovered", true);
+      // and start the shadow animation
+      $this._getAnim().beginElement();
     },
     mouseout(item) {
-      this._getAnim();
+      const $this = this,
+            _this = d3.select(item),
+            _other = $this._getOther(_this);
+
+      // makethe other be unhovered
+      _other.classed("hovered", false);
+       // and reset the shadow animation
+      $this._getAnim();
     },
 
     drawChart() {
@@ -297,6 +315,7 @@ export default Vue.extend({
 
       const arc = $this.svg.select("g.chart")
 	    .selectAll(".arc")
+      // always use $this.getRoot() to make sure the data is properly partitioned
 	    .data($this.getRoot().descendants().slice(1))
 	    .enter().append("path")
 	    .each(function(d) {
@@ -313,21 +332,50 @@ export default Vue.extend({
 
       // we need to perform our transitions on this current selection
       // or things get weird
-      this._arcs = arc;
+      $this._arcs = arc;
+
+      arc.append("title").text(function(d) { return d.data.name; });
 
       arc
-        .on('click', function(d, i, nodes) { $this.click(this); })
+        .on('click', function() { $this.click(this); })
         .on('mouseover', function() { $this.mouseover(this); })
         .on('mouseout', function() { $this.mouseout(this); })
-
-	.append("title").text(function(d) { return d.data.name; });
     },
 
     drawLegend() {
       const $this = this,
-	    label_size = this.label_size,
-	    label_spacing = this.label_spacing;
-      const root = this.root;
+	    label_size = $this.label_size,
+	    label_spacing = $this.label_spacing;
+
+      // draw the legend
+      const label = $this.svg.select("g.legend")
+	  .selectAll(".label")
+      // we can access root directly here because we don't care about partitioning (yet?)
+	  .data($this.root.children)
+	  .enter().append("g")
+	  .attr("id", $this.getLabelID)
+	  .attr("class", "label")
+	  .attr("transform", function(d, i) {
+	    let y = (label_size + label_spacing) * i;
+	    return `translate(0,${y})`
+	  });
+
+      this._labels = label;
+
+      label.append("rect")
+	.attr("width", label_size)
+	.attr("height", label_size)
+	.attr("fill", $this._colour)
+
+      label.append('text')
+	.attr('x', label_size + label_spacing)
+	.attr('y', label_size)
+	.text(function(d) { return d.data.name; });
+
+      label
+        .on('click', function() { $this.click(this); })
+        .on('mouseover', function() { $this.mouseover(this); })
+        .on('mouseout', function() { $this.mouseout(this); })
     },
 
     doStuff() {
