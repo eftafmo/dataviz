@@ -6,6 +6,10 @@
   padding-right: 15px;
 }
 
+.body-inner {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
 @media (min-width: 769px) {
   .body-inner {
     display: flex;
@@ -13,4 +17,16 @@
   }
 }
 
+/* Main */
+@media (min-width: 769px) {
+  .main {
+    flex-grow: 2;
+  }
+}
 
+/* Aside */
+@media (min-width: 769px) {
+  .aside {
+    width: 320px;
+  }
+}
