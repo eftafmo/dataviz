@@ -1,4 +1,5 @@
 from collections import OrderedDict, defaultdict, namedtuple
+from django.utils.text import slugify
 from dv.lib.http import CsvResponse, JsonResponse
 from dv.models import State, ProgrammeArea
 
@@ -59,7 +60,7 @@ def sectors_areas_allocation(request):
     for item in items:
         sector_name, area_name, fm, allocation = (
             item.priority_sector.name,
-            item.short_name,
+            item.name,
             str(item.priority_sector.type),
             round(item.gross_allocation),
         )
@@ -70,9 +71,11 @@ def sectors_areas_allocation(request):
 
     out = tuple(
         OrderedDict((
+            ("id", slugify(sector)),
             ("name", sector),
             ("children", tuple(
                 OrderedDict((
+                    ("id", slugify(area)),
                     ("name", area),
                     ("allocation", allocations)
                 ))
