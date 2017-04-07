@@ -6,9 +6,11 @@
 {% endblock %}
 
 {% block aside %}
-  <div class="sidebar sidebar-results">
+  <div id="sidebar-results" class="sidebar sidebar-results">
+
     <div class="sidebar-header">
-      Sidebar header
+      {{ message }}
+      <span v-bind:id="message">Asta totusi se randeaza</span>
     </div>
 
     <div class="sidebar-tabs">
@@ -22,7 +24,7 @@
           <span class="counter">156</span>
         </a>
       </nav>
-      
+
     </div>
-  </div>  
+  </div>
 {% endblock %}
