@@ -37,11 +37,8 @@
 </style>
 
 <script>
-/*
 import Vue from 'vue';
 import * as d3 from 'd3';
-*/
-
 
 // https://github.com/wbkd/d3-extended (..?)
 d3.selection.prototype.moveToFront = function() {
@@ -70,8 +67,7 @@ d3.selection.prototype.moveBelow = function() {
   });
 };
 
-//export default Vue.extend({
-module.exports = {
+export default Vue.extend({
   props: {
     datasource: String,
     width: Number,
@@ -350,6 +346,6 @@ module.exports = {
       deep: true,
     },
   },
-};
+});
 
 </script>
