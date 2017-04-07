@@ -8,20 +8,14 @@ require("../js/header.js");
 import * as d3 from "d3";
 import {sankey as d3_sankey} from "d3-sankey";
 import Vue from "vue";
+import SidebarResults from "./SidebarResults.vue";
 
-var SidebarResults = new Vue({
-  el: '#sidebar-results',
-  data: {
-    message: 'this is the header'
-  }
+import MainApp from './MainApp.vue';
+
+new Vue({
+  el: '#content',
+  render: h => h(MainApp)
 });
-
-// import MainApp from './MainApp.vue';
-
-// new Vue({
-//   el: '#content',
-//   render: h => h(MainApp)
-// });
 
 
 require("../css/sankey.css");
