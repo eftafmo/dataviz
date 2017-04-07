@@ -5,14 +5,12 @@ require("../css/main.css");
 
 require("../js/header.js");
 
-import * as d3 from "d3";
-import {sankey as d3_sankey} from "d3-sankey";
-import Vue from "vue";
+// we import component modules only for side effects (tag registration).
+import './components/Tag.vue';
+// we import the default export from app modules,
 import SidebarResults from "./SidebarResults.vue";
 
-import MainApp from './MainApp.vue';
-
-new Vue({
-  el: '#content',
-  render: h => h(MainApp)
+// and instantiate and target them specifically.
+new SidebarResults({
+  el: '#sidebar-results',
 });

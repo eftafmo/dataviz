@@ -1,10 +1,11 @@
 <template>
-  <div id="sidebar-results" class="sidebar sidebar-results" 
+  <div id="sidebar-results" class="sidebar sidebar-results"
        v-on:click="expand">
 
     <div class="sidebar-header">
       {{ message }}
       <span v-bind:id="message">Asta totusi se randeaza</span>
+      <tag :dismissable="true">it</tag> <tag>works</tag>
     </div>
 
     <div class="sidebar-tabs">
@@ -24,17 +25,22 @@
 </template>
 
 <style>
-  
+
 </style>
 
 <script>
   import Vue from 'vue';
 
   export default Vue.extend({
-    data () {
+    data() {
       return {
         message: "Am triumfat"
-      }
-    }
-  })
+      };
+    },
+    methods: {
+      expand() {
+        console.log("i think i just expanded something");
+      },
+    },
+  });
 </script>

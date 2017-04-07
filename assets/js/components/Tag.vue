@@ -21,7 +21,12 @@
 <script>
   import Vue from 'vue';
 
-  export default Vue.extend({
+/*
+   even if this is imported only for side effects externally,
+   it still needs a default export or vue won't be able to inject
+   its default render function (using the local template)
+*/
+  export default Vue.component('tag', {
     props: {
       dismissable: {
         type: Boolean,
