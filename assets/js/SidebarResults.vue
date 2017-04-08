@@ -12,12 +12,15 @@
 
     <div class="sidebar-tabs">
       <nav class="sidebar-tab-menu">
-        <a class="sidebar-tab-menu-item active"
-           v-on:click="selectTab">
+        <a class="sidebar-tab-menu-item"
+           v-on:click="selectTab('results')"
+           v-bind:class="{ active: (selectedTab == 'results') }">
           Results
           <span class="counter">14</span>
         </a>
-        <a class="sidebar-tab-menu-item">
+        <a class="sidebar-tab-menu-item"
+           v-on:click="selectTab('programmes')"
+           v-bind:class="{ active: (selectedTab == 'programmes') }">
           Programmes
           <span class="counter">156</span>
         </a>
@@ -25,7 +28,10 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <sidebar-result-tab v-bind:selected="selectedTab"/>
+      <sidebar-result-tab id="results" 
+                          v-bind:selected="(selectedTab == 'results')"/>
+      <sidebar-result-tab id="programmes"
+                          v-bind:selected="(selectedTab == 'programmes')"/>
     </div>
   </div>
 </template>
@@ -45,7 +51,7 @@
         message: "Am triumfat",
         onMobile: false,
         isMobileExpanded: false,
-        selectedTab: false
+        selectedTab: undefined
       }
     },
 
@@ -72,8 +78,8 @@
 
     methods: {
 
-      selectTab() {
-        this.selectedTab = true;
+      selectTab(tab) {
+        this.selectedTab = tab;
       },
 
       mobileExpand() {
