@@ -1,7 +1,13 @@
 <template>
   <div id="sidebar-results" class="sidebar sidebar-results">
     <div class="sidebar-header">
-      Header
+
+
+      <strong>€1.798.100.000</strong>
+      <small>€0.000.000 for bilateral relations</small>      
+
+
+
       <button type="button" id="close-sidebar-results" class="no-btn"
               title="Close results"
               v-if="isMobileExpanded"
@@ -15,14 +21,14 @@
         <a class="sidebar-tab-menu-item"
            v-on:click="selectTab('results')"
            v-bind:class="{ active: (selectedTab == 'results') }">
-          Results
           <span class="counter">14</span>
+          Results
         </a>
         <a class="sidebar-tab-menu-item"
            v-on:click="selectTab('programmes')"
            v-bind:class="{ active: (selectedTab == 'programmes') }">
-          Programmes
           <span class="counter">156</span>
+          Programmes
         </a>
       </nav>
     </div>
