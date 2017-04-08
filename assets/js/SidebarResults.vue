@@ -12,7 +12,8 @@
 
     <div class="sidebar-tabs">
       <nav class="sidebar-tab-menu">
-        <a class="sidebar-tab-menu-item active">
+        <a class="sidebar-tab-menu-item active"
+           v-on:click="selectTab">
           Results
           <span class="counter">14</span>
         </a>
@@ -24,8 +25,7 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <sidebar-result-tab>
-      </sidebar-result-tab>
+      <sidebar-result-tab v-bind:selected="selectedTab"/>
     </div>
   </div>
 </template>
@@ -44,7 +44,8 @@
 
         message: "Am triumfat",
         onMobile: false,
-        isMobileExpanded: false
+        isMobileExpanded: false,
+        selectedTab: false
       }
     },
 
@@ -70,6 +71,10 @@
     },
 
     methods: {
+
+      selectTab() {
+        this.selectedTab = true;
+      },
 
       mobileExpand() {
         if (!this.isMobileExpanded) {

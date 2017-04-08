@@ -1,5 +1,9 @@
 <template>
-  <div class="sidebar-tab-pane">
+  <div class="sidebar-tab-pane" 
+       v-bind:class="{ 
+        'is-selected': selected,
+        'is-loading': loading
+       }">
     <ul class="no-list"
         v-if="results">
       <li v-for="result in results">
@@ -29,8 +33,20 @@
 
   var SidebarResultTab = Vue.component('sidebar-result-tab', {
 
+    props: {
+      selected: {
+        type: Boolean,
+        default: false
+      }
+    },
+
+    watch: {
+      selected () { this.loadResults(); }
+    },
+
     data () {
       return {
+        loading: false,
         results: [
           {
             title: 'First result title',
@@ -48,7 +64,13 @@
     methods: {
 
       loadResults() {
-        this.$el.classList.add('is-loading');
+        var self = this;
+        self.loading = true;
+
+        window.setTimeout(function() {
+          // simulate ajax call
+          self.loading = false;
+        }, 1000);
       }
 
     }

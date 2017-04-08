@@ -31,6 +31,43 @@
   }
 }
 
+/* Sidebar tab pane */
+.sidebar-tab-pane {
+  display: none;
+  position: relative;
+  overflow: auto;
+}
+.sidebar-tab-pane::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+  background: rgba(255, 255, 255, .8);
+}
+.sidebar-tab-pane::after {
+  content: url('../imgs/loading.svg');
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -20px;
+  margin-left: -20px;
+  display: none;
+}
+.sidebar-tab-pane.is-loading {
+  min-height: 180px;
+}
+.sidebar-tab-pane.is-loading::before,
+.sidebar-tab-pane.is-loading::after { display: block; }
+
+.sidebar-tab-pane.is-selected {
+  display: block;
+}
+
+
+
 /* Sidebar close */
 #close-sidebar-results {
   position: absolute;
@@ -112,3 +149,5 @@
 .sidebar-tab-menu a.active::after {
   background: #005494;
 }
+
+
