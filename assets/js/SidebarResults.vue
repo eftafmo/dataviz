@@ -21,7 +21,16 @@
           <span class="counter">156</span>
         </a>
       </nav>
+    </div>
 
+    <div class="sidebar-tab-content">
+      <div class="sidebar-tab-pane active">
+        <ul class="no-list">
+          <li>
+            Some result
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -82,7 +91,10 @@
         if (this.isMobileExpanded) {
           console.log('collapse');
           this.isMobileExpanded = false;
-          this.$el.classList.remove('is-expanded-on-mobile');
+
+          var el = this.$el;
+
+          el.classList.remove('is-expanded-on-mobile');
         }
       }
     }

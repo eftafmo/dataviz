@@ -9,10 +9,18 @@
     position: fixed;
     bottom: 1rem;
     right: 1rem;
+    z-index: 200;
+
+    width: 180px;
+    /*min-width: 200px;*/
+    transition: width .3s, height .3s;
+    overflow: hidden;
+    height: 3rem;
   }
 
   .sidebar-results.is-expanded-on-mobile {
-    height: 200px;
+    height: calc(100% - 2rem);
+    width: calc(100% - 2rem);
   }
 }
 @media (min-width: 769px) {
