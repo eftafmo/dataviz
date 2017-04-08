@@ -24,13 +24,8 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <div class="sidebar-tab-pane active">
-        <ul class="no-list">
-          <li>
-            Some result
-          </li>
-        </ul>
-      </div>
+      <sidebar-result-tab>
+      </sidebar-result-tab>
     </div>
   </div>
 </template>

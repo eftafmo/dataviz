@@ -38,7 +38,11 @@ a {
 a:hover {
   text-decoration: underline;
 }
+a.muted:hover {
+  color: #3D90F3;
+}
 
+.align-center { text-align: center; }
 
 /* page sections */
 .page-title {

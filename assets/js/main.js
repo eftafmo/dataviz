@@ -7,6 +7,7 @@ require("../js/header.js");
 
 // we import component modules only for side effects (tag registration).
 import './components/Tag.vue';
+import './components/SidebarResultTab.vue';
 // we import the default export from app modules,
 import SidebarResults from "./SidebarResults.vue";
 
