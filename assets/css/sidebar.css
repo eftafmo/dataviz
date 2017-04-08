@@ -10,6 +10,10 @@
     bottom: 1rem;
     right: 1rem;
   }
+
+  .sidebar-results.is-expanded-on-mobile {
+    height: 200px;
+  }
 }
 @media (min-width: 769px) {
   .sidebar-results {

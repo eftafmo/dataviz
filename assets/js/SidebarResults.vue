@@ -1,11 +1,10 @@
 <template>
-  <div id="sidebar-results" class="sidebar sidebar-results"
-       v-on:click="expand">
-
+  <div id="sidebar-results" class="sidebar sidebar-results">
     <div class="sidebar-header">
-      {{ message }}
-      <span v-bind:id="message">Asta totusi se randeaza</span>
-      <tag :dismissable="true">it</tag> <tag>works</tag>
+      Header
+      <button type="button" v-on:click="mobileCollapse">
+        <span class="icon icon-close"></span>        
+      </button>
     </div>
 
     <div class="sidebar-tabs">
@@ -32,28 +31,58 @@
   import Vue from 'vue';
 
   var SidebarResults = Vue.extend({
+
     data() {
       return {
         message: "Am triumfat",
-        onMobile: false
+        onMobile: false,
+        isMobileExpanded: false
       }
     },
+
     watch: {
-      onMobile () {
-        console.log('captured change');
-        this.expand();
+      onMobile (matches) {
+        if (matches) {
+          this.$el.addEventListener('click', this.mobileExpand, false);
+        } else {
+          this.$el.removeEventListener('click', this.mobileExpand, false);
+          this.mobileCollapse();
+        }
       }
     },
+
     created () {
-      var mqMobile = window.matchMedia ('(max-width: 768px)');
+      // Add a media query listener handle mobile events
+      var mq = window.matchMedia ('(max-width: 768px)');
       var self = this;
-      mqMobile.addListener(function(mq) { self.onMobile = mq.matches; });
+
+      mq.addListener(function(mq) { self.onMobile = mq.matches; });
+
+      this.onMobile = mq.matches; // initial check;
     },
+
     methods: {
-      expand() {
-        console.log('expand');
-      }      
+
+      mobileExpand() {
+        if (!this.isMobileExpanded) {
+          console.log('expand');
+          this.isMobileExpanded = true;
+          this.$el.classList.add('is-expanded-on-mobile');
+        }
+      },
+
+      mobileCollapse(e) {
+        e = e || window.event;
+        e.stopPropagation(); // event will trigger expand and cancel collapse
+
+        if (this.isMobileExpanded) {
+          console.log('collapse');
+          this.isMobileExpanded = false;
+          this.$el.classList.remove('is-expanded-on-mobile');
+        }
+      }
     }
+
   });
 
   export default SidebarResults;
