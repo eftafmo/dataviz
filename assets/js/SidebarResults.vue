@@ -2,8 +2,11 @@
   <div id="sidebar-results" class="sidebar sidebar-results">
     <div class="sidebar-header">
       Header
-      <button type="button" v-on:click="mobileCollapse">
-        <span class="icon icon-close"></span>        
+      <button type="button" id="close-sidebar-results" class="no-btn"
+              title="Close results"
+              v-if="isMobileExpanded"
+              v-on:click="mobileCollapse">
+        <span class="icon icon-close"></span>
       </button>
     </div>
 
@@ -34,6 +37,7 @@
 
     data() {
       return {
+
         message: "Am triumfat",
         onMobile: false,
         isMobileExpanded: false

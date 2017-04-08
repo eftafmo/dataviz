@@ -23,6 +23,20 @@
   }
 }
 
+/* Sidebar close */
+#close-sidebar-results {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  font-size: 2rem;
+  color: #898989;
+}
+@media (min-width: 769px) {
+  #close-sidebar-results {
+    display: none;
+  }
+}
+
 /* Sidebar results Tabs */
 .sidebar-tabs {
 }
