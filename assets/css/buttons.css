@@ -1,0 +1,62 @@
+/* Buttons */
+button {
+  cursor: pointer;
+}
+.btn {
+  display: inline-block;
+  padding: .53334em .66667em;
+  background: transparent;
+  border: 2px solid;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  cursor: pointer;
+}
+.btn[disabled],
+.btn.disabled {
+  cursor: default;
+  outline: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #50B9FF;
+  border-color: transparent;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #3D90F3;
+}
+.btn-primary[disabled],
+.btn-primary.disabled {
+  background: #898989;
+  color: #ddd;
+}
+
+.btn-default {
+  background: transparent;
+  border-color: #50B9FF;
+}
+.btn-default:hover {
+  border-color: #3D90F3;
+}
+.btn-default[disabled],
+.btn-default.disabled {
+  border-color: #898989;
+  color: #898989;
+}
+
+.btn-min {
+  min-width: 10em;
+}
+
+.no-btn {
+  font: inherit;
+  background: transparent;
+  padding: 0;
+  border: 0;
+}
