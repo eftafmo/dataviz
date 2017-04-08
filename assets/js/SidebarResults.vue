@@ -31,16 +31,30 @@
 <script>
   import Vue from 'vue';
 
-  export default Vue.extend({
+  var SidebarResults = Vue.extend({
     data() {
       return {
-        message: "Am triumfat"
-      };
+        message: "Am triumfat",
+        onMobile: false
+      }
+    },
+    watch: {
+      onMobile () {
+        console.log('captured change');
+        this.expand();
+      }
+    },
+    created () {
+      var mqMobile = window.matchMedia ('(max-width: 768px)');
+      var self = this;
+      mqMobile.addListener(function(mq) { self.onMobile = mq.matches; });
     },
     methods: {
       expand() {
-        console.log("i think i just expanded something");
-      },
-    },
+        console.log('expand');
+      }      
+    }
   });
+
+  export default SidebarResults;
 </script>
