@@ -54,9 +54,21 @@ button {
   min-width: 10em;
 }
 
+.btn-link,
+.btn-anchor,
 .no-btn {
   font: inherit;
   background: transparent;
   padding: 0;
   border: 0;
+}
+
+.btn-link,
+.btn-anchor {
+  color: #3D90F3;
+}
+
+.btn-link:hover,
+.btn-anchor:hover {
+  text-decoration: underline;
 }
