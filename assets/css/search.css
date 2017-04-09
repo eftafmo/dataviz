@@ -97,3 +97,56 @@
     bottom: -2rem;
   }
 }
+
+
+/* Search results listing */
+.search-results-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ddd;
+}
+.search-results-header::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.search-results-count {
+  float: left;
+  font-size: larger;
+  color: #005494;
+}
+.search-results-options {
+  float: right;
+  color: #898989;
+}
+
+@media (min-width: 769px) {
+  #toggle-sidebar-filters { display: none; }
+}
+
+
+.search-results-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #ddd; 
+}
+
+
+/* Search result */
+.search-result {
+  margin: 2rem 0;
+}
+.search-result .country {
+  font-size: smaller;
+}
+.search-result .country img {
+  vertical-align: middle;
+}
+.search-result .title {
+  margin: 0 0 .5rem;
+  font-weight: normal;
+}
+.search-result .description {
+  margin: 0;
+  font-size: smaller;
+}
