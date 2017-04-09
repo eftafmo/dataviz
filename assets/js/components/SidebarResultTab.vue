@@ -4,11 +4,15 @@
         'is-selected': selected,
         'is-loading': loading
        }">
-    <ul class="no-list"
-        v-if="results">
+    <ul class="sidebar-tab-result-list" v-if="results">
       <li v-for="result in results">
-        <h4>{{ result.title }}</h4>
-        <p>{{ result.description }}</p>
+        <a class="sidebar-result-news" :href="result.url" target="_blank">
+          <img class="thumbnail" :src="result.thumbnailURL" alt="Thumbnail">
+          <div class="body">
+            <h4 class="title">{{ result.title }}</h4>
+            <time>{{ result.publishDate }}</time>
+          </div>
+        </a>
       </li>
     </ul>
 
@@ -49,13 +53,17 @@
         loading: false,
         results: [
           {
-            title: 'First result title',
-            description: 'First result description'
+            title: 'Funding lifeline for greek asylum service',
+            publishDate: '24 February 2016',
+            thumbnailURL: '',
+            url: '#'
           },
 
           {
-            title: 'Second result title',
-            description: 'Second result description'
+            title: 'Bringing ancient history to light: a crosscultural treasure hunt',
+            publishDate: '12 January 2016',
+            thumbnailURL: '',
+            url: '#'
           }
         ]
       }
