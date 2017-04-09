@@ -1,0 +1,28 @@
+/* form controls */
+.input-box input,
+.input-box textarea,
+.input-box select {
+  padding: .53334em .66667em;
+  border: 2px solid #ddd;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: middle;
+}
+.input-box input:hover,
+.input-box input:focus,
+.input-box textarea:hover,
+.input-box textarea:focus,
+.input-box select:hover,
+.input-box select:focus {
+  border-color: #50B9FF;
+}
+
+.input-box input[disabled],
+.input-box textarea[disabled],
+.input-box select[disabled] {
+  border-color: transparent;
+  background-color: #ddd;
+  color: #898989;
+  cursor: default;
+}
