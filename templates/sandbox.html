@@ -1,5 +1,48 @@
 {% extends "_layout-sidebar.html" %}
 
+{% block top %}
+<div class="global-filters">
+  <div class="container">
+    <div class="global-filters-inner">
+      
+      <div class="filters-label">
+        Showing data for:
+      </div>
+
+
+      <ul class="list-filters">
+        <li>
+          <span class="tag">
+            <span class="muted">Country:</span>
+            <span class="clip-tag">Poland</span>
+            <span class="icon icon-close"></span>
+          </span>
+        </li>
+        <li>
+          <span class="tag">
+            <span class="muted">Priority sector:</span>
+            <span class="clip-tag">Environmental protection and management</span>
+            <span class="icon icon-close"></span>
+          </span>
+        </li>
+      </ul>
+
+
+
+      <!-- <button class="toggle-filters">
+        expand
+      </button> -->
+
+      <button class="no-btn muted" id="reset-filters">
+        Reset filters
+        <span class="icon icon-close"></span>
+      </button>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
 {% block main %}
 
   <h1 class="page-title">Sandbox</h1>
