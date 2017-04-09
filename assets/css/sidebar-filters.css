@@ -1,7 +1,9 @@
 .sidebar-filters {
+  position: relative;
   border: 1px solid #ddd;
   /*box-shadow: 0 1px 5px rgba(0,0,0,.2);*/
   background: #fff;
+  z-index: 10;
 }
 @media (max-width: 768px) {
   .sidebar-filters {
@@ -17,20 +19,28 @@
 }
 @media (min-width: 769px) {
   .sidebar-filters {
-    margin-top: -7rem;
+    margin-top: -7.4rem;
     width: 320px;
   }
 }
 
 .sidebar-filters .sidebar-header {
+  display: flex;
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #ddd;
 }
-
 .sidebar-filters .sidebar-title {
+  flex-grow: 2;
   margin: 0;
   font-weight: normal;
   color: #005494;
+}
+.sidebar-filters .sidebar-header button {
+  margin-left: 1rem;
+}
+
+@media (min-width: 769px) {
+  #toggle-sidebar-filters-close { display: none; }
 }
 
 .sidebar-filters .sidebar-body {
