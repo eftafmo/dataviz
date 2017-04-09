@@ -32,20 +32,20 @@
 }
 
 /* Sidebar header */
-.sidebar-header {
+.sidebar-results .sidebar-header {
   padding: 1rem;
   text-align: center;
 }
-.sidebar-header strong {
+.sidebar-results .sidebar-header strong {
   color: #005494;
   font-size: larger;
 }
-.sidebar-header small {
+.sidebar-results .sidebar-header small {
   display: block;
   color: #2FB82A;
 }
 @media (max-width: 768px) {
-  .sidebar-header {
+  .sidebar-results .sidebar-header {
     padding-bottom: 0;
   }
 }

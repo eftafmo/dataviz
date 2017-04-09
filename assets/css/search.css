@@ -22,14 +22,32 @@
 }
 
 /* Search form */
+.search-form .input-box input {
+  width: 100%;
+  border-color: transparent;
+}
 @media (max-width: 768px) {
   .search-form {
     display: flex;
   }
-  .search-form input {
+  .search-form .input-box {
     flex-grow: 2;
   }
   .search-form button {
+  }
+}
+@media (min-width: 769px) {
+  .search-form::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .search-form .input-box,
+  .search-form button {
+    float: left;
+  }
+  .search-form .input-box {
+    width: 480px;
   }
 }
 

@@ -6,7 +6,9 @@
       <div class="search-top-inner">
         <h1 class="page-title">Search</h1>
         <form action="" class="search-form">
-          <input type="search" placeholder="Search" autofocus>
+          <span class="input-box">
+            <input type="search" placeholder="Search" autofocus>
+          </span>
           <button type="submit" class="btn btn-primary">Search</button>
         </form>
 
@@ -65,8 +67,26 @@
 {% endblock %}
 
 {% block aside %}
+  <div id="sidebar-filters" class="sidebar sidebar-filters">
+    <div class="sidebar-header">
+      <h3 class="sidebar-title">Search filters</h3>
+      <button class="no-btn small muted" type="reset">Reset</button>
+    </div>
+    <div class="sidebar-body">
 
-  Search filters
-  <div id="sidebar-filters">
+      <div class="input-group">
+        <div class="input-box input-block">
+          <label for="">Funding period</label>
+          <select name="" id="">
+            <option value="">2009 - 2014</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        some checkboxes        
+      </div>
+
+    </div>
   </div>
 {% endblock %}

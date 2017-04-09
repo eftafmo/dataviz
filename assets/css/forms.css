@@ -2,6 +2,7 @@
 .input-box input,
 .input-box textarea,
 .input-box select {
+  box-sizing: border-box;
   padding: .53334em .66667em;
   border: 2px solid #ddd;
   font-family: inherit;
@@ -25,4 +26,22 @@
   background-color: #ddd;
   color: #898989;
   cursor: default;
+}
+
+.input-box select {
+  -webkit-appearance: none;
+  padding-right: 2em;
+  border-radius: 0;
+  background: url(../imgs/icon-dropdown.svg) right center no-repeat;
+  background-size: 1.5em;
+}
+
+.input-block label {
+  display: block;
+  margin-bottom: 1rem;
+}
+.input-block input,
+.input-block textarea,
+.input-block select {
+  width: 100%;
 }
