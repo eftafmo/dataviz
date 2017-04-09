@@ -1,0 +1,72 @@
+{% extends "_layout-sidebar.html" %}
+
+{% block top %}
+  <div class="search-top">
+    <div class="container">
+      <div class="search-top-inner">
+        <h1 class="page-title">Search</h1>
+        <form action="" class="search-form">
+          <input type="search" placeholder="Search" autofocus>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <div class="search-tabs">
+          <span class="muted">Search for:</span>
+          <a href="#programmes" class="is-selected">Programmes</a>
+          <a href="#projects">Projects</a>
+          <a href="#organizations">Organizations</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block main %}
+
+  254 results found
+
+  10 results per page | Sorted by Country A-Z
+
+  <button type="button" class="btn btn-default" id="toggle-filters">
+    Filter results
+  </button>
+
+  <hr>
+
+  <ul class="no-list">
+    <li>
+      <div class="search-result">
+        <small>
+          <img src="" alt="flag"> Country
+        </small>
+        <h4><a href="#result">Programme title</a></h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, rerum, blanditiis? Molestias accusantium provident, porro quidem assumenda commodi illum explicabo. Fugit atque quos illo, esse. Reiciendis dolores repellendus ipsam aut?</p>
+      </div>
+    </li>
+  </ul>
+
+  Search results
+
+  <hr>
+
+  <div class="pagination">
+    <a href="" class="pagination-next">Next</a>
+    <a href="" class="pagination-previous">Previous</a>
+    <div class="pagination-pages">
+      <a href="">1</a>
+      <a href="" class="is-current-page">2</a>
+      <a href="">3</a>
+      <a href="">4</a>
+      <a href="">5</a>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block aside %}
+
+  Search filters
+  <div id="sidebar-filters">
+  </div>
+{% endblock %}

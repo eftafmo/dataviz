@@ -12,12 +12,12 @@
   }
 }
 
-.body-inner {
+.page-body-inner {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
 @media (min-width: 769px) {
-  .body-inner {
+  .page-body-inner {
     display: flex;
     align-items: stretch;
   }
