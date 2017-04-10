@@ -1,15 +1,20 @@
-from django.http import HttpResponse
-from django.template.loader import render_to_string
+from django.shortcuts import render_to_response
 
 
 def home(request):
-    html = render_to_string('homepage.html')
-    return HttpResponse(html)
+    return render_to_response('homepage.html')
+
+def grants(request):
+    return render_to_response('grants.html')
+
+def partners(request):
+    return render_to_response('partners.html')
+
+def projects(request):
+    return render_to_response('projects.html')
 
 def search(request):
-    html = render_to_string('search.html')
-    return HttpResponse(html)
+    return render_to_response('search.html')
 
 def sandbox(request):
-    html = render_to_string('sandbox.html')
-    return HttpResponse(html)
+    return render_to_response('sandbox.html')
