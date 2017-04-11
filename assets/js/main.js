@@ -18,4 +18,5 @@ new SidebarResults({
 
 // but we might want to do instantiation in the template,
 // so we need to expose stuff globally
+require("expose-loader?Mechanisms!./modules/Mechanisms.vue");
 require("expose-loader?Sectors!./modules/Sectors.vue");

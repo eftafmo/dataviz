@@ -4,6 +4,9 @@
 {% endblock %}
 
 {% block main %}
+<div id="financial-mechanisms">
+</div>
+
 <div id="priority-sectors">
 </div>
 {% endblock %}
@@ -13,6 +16,19 @@
 
 {% block finally %}
 <script>
+new Mechanisms({
+  el: '#financial-mechanisms',
+  data: {
+    width: 500,
+    height: 100,
+    datasource: '{% url "api:sector-allocation" %}',
+    data: {
+      EEA: 993500000,
+      Norway: 804600000,
+    },
+  },
+});
+
 new Sectors({
   el: '#priority-sectors',
   data: {
