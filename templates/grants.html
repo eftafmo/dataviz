@@ -4,7 +4,22 @@
 {% endblock %}
 
 {% block main %}
+<div id="priority-sectors">
+</div>
 {% endblock %}
 
 {% block aside %}
+{% endblock %}
+
+{% block finally %}
+<script>
+new Sectors({
+  el: '#priority-sectors',
+  data: {
+    width: 500,
+    height: 200,
+    datasource: '{% url "api:sector-allocation" %}',
+  },
+});
+</script>
 {% endblock %}

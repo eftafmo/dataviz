@@ -15,3 +15,7 @@ import SidebarResults from "./SidebarResults.vue";
 new SidebarResults({
   el: '#sidebar-results',
 });
+
+// but we might want to do instantiation in the template,
+// so we need to expose stuff globally
+require("expose-loader?Sectors!./modules/Sectors.vue");
