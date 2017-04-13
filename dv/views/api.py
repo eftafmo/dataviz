@@ -85,4 +85,4 @@ def sectors_areas_allocation(request):
         for sector, areas in sectors.items()
     )
 
-    return JsonResponse(out, json_dumps_params={"indent": 2})
+    return JsonResponse(out)

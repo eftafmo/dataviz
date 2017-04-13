@@ -5,10 +5,14 @@ from django.http import HttpResponse, JsonResponse
 
 class JsonResponse(JsonResponse):
     """
-    Like Django's JsonResponse, but serializes "unsafe" data by default.
+    Like Django's JsonResponse, but serializes "unsafe" data by default
+    and sets other defaults.
     """
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('safe', False)
+        kwargs.setdefault('json_dumps_params', {})
+        kwargs['json_dumps_params'].setdefault('indent', 2)
+
         super(JsonResponse, self).__init__(*args, **kwargs)
 
 
