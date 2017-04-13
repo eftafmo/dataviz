@@ -19,7 +19,10 @@ export default Vue.extend({
     datasource: String,
     data: Object,
     width: Number,
-    height: Number,
+    minHeight: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data() {
@@ -28,6 +31,7 @@ export default Vue.extend({
       colour: d3.scaleOrdinal()
                 .domain(d3.keys(FMColours))
                 .range(d3.values(FMColours)),
+      height: this.minHeight,
     };
   },
 
@@ -83,7 +87,7 @@ export default Vue.extend({
       stack.keys(keys);
 
       const height = 20;
-      $this.height = height * data.length;
+      $this.height = Math.max(this.minHeight, height * data.length);
 
       y.rangeRound([0, $this.height]);
       y.domain(data.map( (d) => d.name ))
