@@ -239,8 +239,10 @@ export default Vue.extend({
           _node.data.enabled = false;
       }
 
-      // we need to set ourselves below, or we'll cover the secondaries
-      _this.moveToBack();
+      // we need to set the arc below, or it will cover the secondaries
+      const arc = _this.classed("arc") ? _this :
+                  d3.select('#' + $this.getArcID(node));
+      arc.moveToBack();
 
       $this._arcs
 	.data($this.getRoot().descendants().slice(1))

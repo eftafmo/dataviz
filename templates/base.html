@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+
   <title>{% block title %}{% endblock %}</title>
   {% render_bundle 'styles' 'css' %}
 </head>
@@ -19,13 +19,15 @@
           </a>
         </div>
 
+{% with current_view=request.resolver_match.view_name %}
         <nav class="header-menu">
           <ul>
-            <li><a href="#" class="active">Grants</a></li>
-            <li><a href="#">Partners</a></li>
-            <li><a href="#">Projects</a></li>
+            <li><a href="{% url 'frontend:grants' %}"{% if current_view == 'frontend:grants' %} class="active"{% endif %}>Grants</a></li>
+            <li><a href="{% url 'frontend:partners' %}"{% if current_view == 'frontend:partners' %} class="active"{% endif %}>Partners</a></li>
+            <li><a href="{% url 'frontend:projects' %}"{% if current_view == 'frontend:projects' %} class="active"{% endif %}>Projects</a></li>
           </ul>
         </nav>
+{% endwith %}
 
         <form class="header-search">
           <input type="search" placeholder="Search">
@@ -45,7 +47,7 @@
   </header>
 
   {% block top %}{% endblock %}
-  
+
   <div id="content" class="page-body">
     <div class="container">
       <div class="page-body-inner">
@@ -66,5 +68,7 @@
       </div>
   </footer>
   {% render_bundle 'scripts' 'js' %}
+{% block finally %}
+{% endblock %}
 </body>
 </html>

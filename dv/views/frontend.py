@@ -1,20 +1,20 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 
 
 def home(request):
-    return render_to_response('homepage.html')
+    return render(request, 'homepage.html')
 
 def grants(request):
-    return render_to_response('grants.html')
+    return render(request, 'grants.html')
 
 def partners(request):
-    return render_to_response('partners.html')
+    return render(request, 'partners.html')
 
 def projects(request):
-    return render_to_response('projects.html')
+    return render(request, 'projects.html')
 
 def search(request):
-    return render_to_response('search.html')
+    return render(request, 'search.html')
 
 def sandbox(request):
-    return render_to_response('sandbox.html')
+    return render(request, 'sandbox.html')
