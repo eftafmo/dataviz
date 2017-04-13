@@ -5,9 +5,13 @@
 
 {% block main %}
 <div id="financial-mechanisms">
+  <mechanisms :width="500" :height="100" :data="data">
+  </mechanisms>
 </div>
 
 <div id="priority-sectors">
+  <sectors :width="500" :height="200" datasource="{% url "api:sector-allocation" %}">
+  </sectors>
 </div>
 {% endblock %}
 
@@ -16,12 +20,13 @@
 
 {% block finally %}
 <script>
-new Mechanisms({
+new Vue({
   el: '#financial-mechanisms',
+  components: {
+      mechanisms: components.Mechanisms,
+  },
   data: {
-    width: 500,
-    height: 100,
-    datasource: '{% url "api:sector-allocation" %}',
+    //datasource: '{#% url "api:fm-allocation" %#}',
     data: {
       EEA: 993500000,
       Norway: 804600000,
@@ -29,12 +34,12 @@ new Mechanisms({
   },
 });
 
-new Sectors({
+new Vue({
   el: '#priority-sectors',
+  components: {
+      sectors: components.Sectors,
+  },
   data: {
-    width: 500,
-    height: 200,
-    datasource: '{% url "api:sector-allocation" %}',
   },
 });
 </script>

@@ -5,8 +5,18 @@ require("../css/main.css");
 
 require("../js/header.js");
 
-// we import component modules only for side effects (tag registration).
-import './components/Tag.vue';
+// register widget components
+import './widgets/index.js';
+
+// expose components globally
+require("expose-loader?components!./components/index.js");
+
+// expose vue globally
+// TODO: in a cleaner way?
+import Vue from 'vue';
+window.Vue = Vue;
+
+
 import './components/SidebarResultTab.vue';
 // we import the default export from app modules,
 import SidebarResults from "./SidebarResults.vue";
@@ -15,8 +25,3 @@ import SidebarResults from "./SidebarResults.vue";
 new SidebarResults({
   el: '#sidebar-results',
 });
-
-// but we might want to do instantiation in the template,
-// so we need to expose stuff globally
-require("expose-loader?Mechanisms!./modules/Mechanisms.vue");
-require("expose-loader?Sectors!./modules/Sectors.vue");
