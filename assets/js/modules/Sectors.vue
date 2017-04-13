@@ -244,8 +244,45 @@ export default Vue.extend({
                   d3.select('#' + $this.getArcID(node));
       arc.moveToBack();
 
-      $this._arcs
-	.data($this.getRoot().descendants().slice(1))
+      const label = _this.classed("label") ? _this :
+                  d3.select('#' + $this.getLabelID(node));
+      label.moveToBack();
+
+      $this._labels
+      .data($this.getRoot().descendants().slice(1))
+        .style("display", (d) => { return d.data.enabled ? "inline" : "none"; })
+        .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
+        .transition()
+        .duration(10)
+        .attr("opacity", (d) => d.data.enabled ? 1 : 0)
+        .on("end", function(d) {
+          if (d.depth == 1) {
+            this.style.display = "none";
+          }
+        });
+
+     let j=0;
+     let order = [];
+
+     $this._labels.attr("transform", function(d, i) {
+      var label_size = $this.label_size;
+      var label_spacing = $this.label_spacing;
+      if((d.depth == 1)||(this.style.opacity == '0') ){
+         return `translate(0,0)`
+      } else {
+         order[i]= j;
+          j++;
+       var y = (label_size + label_spacing) *  order[i];
+      return `translate(0,${y})`
+      }
+    });
+     // WIP
+    // .on('click', function() { $this.reset();});
+
+
+
+     $this._arcs
+	   .data($this.getRoot().descendants().slice(1))
       // enable stuff that's about to get animated, and hide the other stuff
       // abruptly, it looks better this way
         .style("display", (d) => { return d.data.enabled ? "inline" : "none"; })
@@ -253,15 +290,15 @@ export default Vue.extend({
         .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
 
       // and then, transition to...
-	.transition()
+	     .transition()
         .duration(500)
       // .. full opacity / invisibility
         .attr("opacity", (d) => d.data.enabled ? 1 : 0)
       // and new coordinates
         .attrTween('d', function(d) {
-	  const interpolate = d3.interpolate(
-		this._prev, $this._extract_coords(d)
-	  );
+	       const interpolate = d3.interpolate(
+		      this._prev, $this._extract_coords(d)
+	       );
           this._prev = interpolate(0);
           return function(x) {
             return $this._arc(interpolate(x));
@@ -269,8 +306,11 @@ export default Vue.extend({
         })
       // finally, hide the level 1 as well
         .on("end", function(d) {
-          if (d.depth == 1) this.style.display = "none";
+          if (d.depth == 1) {
+            this.style.display = "none";
+          }
         });
+
     },
 
     _getAnim: () => {
@@ -329,8 +369,8 @@ export default Vue.extend({
 	    .attr("d", $this._arc)
 	    .attr("fill", $this._colour)
       // level 2 items are hidden and really hidden
-            .attr("opacity", (d) => d.depth == 1 ? 1 : 0)
-            .style("display", (d) => d.depth == 1 ? "inline" : "none")
+      .attr("opacity", (d) => d.depth == 1 ? 1 : 0)
+      .style("display", (d) => d.depth == 1 ? "inline" : "none")
 
       // we need to perform our transitions on this current selection
       // or things get weird
@@ -350,25 +390,24 @@ export default Vue.extend({
 	    label_spacing = $this.label_spacing;
 
       // draw the legend
-      const label = $this.svg.select("g.legend")
+       const label = $this.svg.select("g.legend")
 	  .selectAll(".label")
       // we can access root directly here because we don't care about partitioning (yet?)
-	  .data($this.root.children)
+	  .data($this.getRoot().descendants().slice(1))
 	  .enter().append("g")
 	  .attr("id", $this.getLabelID)
 	  .attr("class", "label")
+    .attr("opacity", (d) => d.depth == 1 ? 1 : 0)
+    .style("display", (d) => d.depth == 1 ? "inline" : "none")
 	  .attr("transform", function(d, i) {
-	    let y = (label_size + label_spacing) * i;
-	    return `translate(0,${y})`
-	  });
-
+      let y = (label_size + label_spacing) * i;
+      return `translate(0,${y})`
+    });
       this._labels = label;
-
       label.append("rect")
 	.attr("width", label_size)
 	.attr("height", label_size)
 	.attr("fill", $this._colour)
-
       label.append('text')
 	.attr('x', label_size + label_spacing)
 	.attr('y', label_size)
@@ -379,6 +418,15 @@ export default Vue.extend({
         .on('mouseover', function() { $this.mouseover(this); })
         .on('mouseout', function() { $this.mouseout(this); })
     },
+
+    // WIP - reset the chart
+    // reset(){
+
+    // const $this = this;
+    // const arc = $this.svg.select("g.chart").selectAll(".arc").remove();
+    // const label = $this.svg.select("g.legend").selectAll(".label").remove();
+    //  $this.doStuff();
+    // },
 
     doStuff() {
       const $this = this;
