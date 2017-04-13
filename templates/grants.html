@@ -5,13 +5,30 @@
 
 {% block main %}
 <div id="financial-mechanisms">
-  <mechanisms :width="500" :height="100" :data="data">
+  <mechanisms
+      :width="500"
+      :height="100"
+      :data="data"
+  >
   </mechanisms>
 </div>
 
 <div id="priority-sectors">
-  <sectors :width="500" :height="200" datasource="{% url "api:sector-allocation" %}">
+  <sectors
+      :width="500"
+      :height="200"
+      datasource="{% url "api:sector-allocation" %}"
+  >
   </sectors>
+</div>
+
+<div id="beneficiary-states">
+  <beneficiaries
+      :width="500"
+      :height="700"
+      datasource="{% url "api:beneficiary-allocation" %}"
+  >
+  </beneficiaries>
 </div>
 {% endblock %}
 
@@ -38,6 +55,15 @@ new Vue({
   el: '#priority-sectors',
   components: {
       sectors: components.Sectors,
+  },
+  data: {
+  },
+});
+
+new Vue({
+  el: '#beneficiary-states',
+  components: {
+    beneficiaries: components.Beneficiaries,
   },
   data: {
   },

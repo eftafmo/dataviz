@@ -86,3 +86,17 @@ def sectors_areas_allocation(request):
     )
 
     return JsonResponse(out)
+
+def beneficiary_allocation(request):
+    fields = OrderedDict((
+        ('id', 'code'),
+        ('name', 'name'),
+        ('EEA', 'gross_allocation_eea'),
+        ('Norway', 'gross_allocation_norway'),
+    ))
+
+    states = (
+        State.objects.all().values_list(*fields.values())
+    )
+
+    return CsvResponse(states, fields.keys())
