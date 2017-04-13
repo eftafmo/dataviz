@@ -96,18 +96,23 @@ module.exports = {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         loader: 'file-loader',
         options: {
-          name: 'public/fonts/[name].[ext]'
+          name: '[path][name].[hash:8].[ext]',
+          context: asset_dir,
         }
-      }
-      /*
+      },
       {
         test: /\.(jpe?g|png|gif|svg)$/,
         loaders: [
-          'file?context=' + relativeRootAssetPath + '&name=[path][name].[hash].[ext]',
-          'image?bypassOnDebug&optimizationLevel=7&interlaced=false',
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[hash:8].[ext]',
+              context: asset_dir,
+            }
+          },
+          // 'image?bypassOnDebug&optimizationLevel=7&interlaced=false',
         ]
       },
-      */
     ]
   },
   plugins: [
