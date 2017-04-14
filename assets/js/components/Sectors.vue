@@ -1,5 +1,5 @@
 <template>
-<svg class="pie-thing" :width="width" :height="height">
+<svg class="pie-thing" :width="width" :height="2*height">
   <defs>
     <filter id="dropshadow" x="-50%" y="-50%"  height="200%" width="200%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="3">
@@ -22,8 +22,10 @@
   </defs>
   <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
   </g>
-  <g class="legend" :transform="`translate(${radius * 2 + radius / 2},${margin})`">
-  </g>
+  <foreignObject :transform="`translate(${radius * 2 + radius / 2},${margin})`">
+    <div class="legend"></div>
+  </foreignObject>
+
 </svg>
 </template>
 
@@ -238,7 +240,7 @@ export default Vue.extend({
 
       $this._labels
       .data($this.getRoot().descendants().slice(1))
-        .style("display", (d) => { return d.data.enabled ? "inline" : "none"; })
+        .style("display", (d) => { return d.data.enabled ? "block" : "none"; })
         .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
         .transition()
         .duration(10)
@@ -378,25 +380,33 @@ export default Vue.extend({
 	    label_spacing = $this.label_spacing;
 
       // draw the legend
-       const label = $this.svg.select("g.legend")
-	  .selectAll(".label")
+       const label = $this.svg.select('foreignObject').select(".legend")
+    .selectAll(".label")
       // we can access root directly here because we don't care about partitioning (yet?)
 	  .data($this.getRoot().descendants().slice(1))
-	  .enter().append("g")
+	  .enter().append("xhtml:div")
 	  .attr("id", $this.getLabelID)
 	  .attr("class", "label")
-    .attr("opacity", (d) => d.depth == 1 ? 1 : 0)
-    .style("display", (d) => d.depth == 1 ? "inline" : "none")
-	  .attr("transform", function(d, i) {
-      let y = (label_size + label_spacing) * i;
-      return `translate(0,${y})`
-    });
+      .style('white-space','nowrap')
+    .style("opacity", (d) => d.depth == 1 ? 1 : 0)
+    .style("display", (d) => d.depth == 1 ? "block" : "none");
+	  // .attr("transform", function(d, i) {
+   //    let y = (label_size + label_spacing) * i;
+   //    return `translate(0,${y})`
+   //  });
       this._labels = label;
-      label.append("rect")
-	.attr("width", label_size)
-	.attr("height", label_size)
-	.attr("fill", $this._colour)
-      label.append('text')
+      label.append("xhtml:span")
+	// .attr("width", label_size)
+	// .attr("height", label_size)
+  .style('width', label_size + 'px')
+  .style('height', label_size + 'px')
+  .style('display', 'inline-block')
+  .style('background', $this._colour)
+  .style ('margin-right', '5px')
+      label.append('xhtml:span')
+  .style('color', $this._colour)
+  .style('white-space','nowrap')
+  .style('display', 'inline')
 	.attr('x', label_size + label_spacing)
 	.attr('y', label_size)
 	.text(function(d) { return d.data.name; });
