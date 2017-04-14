@@ -28,6 +28,7 @@
     "style-loader": "^0.14.0",
     "svg-sprite-loader": "^0.3.0",
     "vue-loader": "^11.3.4",
+    "vue-style-loader": "^3.0.0",
     "vue-template-compiler": "^2.2.6",
     "webpack": "^2.2.1",
     "webpack-bundle-tracker": "^0.2.0",

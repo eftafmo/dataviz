@@ -27,6 +27,14 @@ var public_path = '/assets/';
 if (DEBUG)
   public_path = `http://${config['dev-server-host']}:${config['dev-server-port']}${public_path}`;
 
+// set up a single ExtractTextPlugin instance
+const cssExtractor = new ExtractTextPlugin({
+  filename: "[name].[hash:8].css",
+  //allChunks: true, // ? (TODO)
+  disable: DEBUG,
+});
+
+
 module.exports = {
   context: __dirname,
   devtool: DEBUG ? "inline-sourcemap" : false,
@@ -71,19 +79,22 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          loaders: {
+          loaders: Object.assign({
             js: 'babel-loader',
-          }
-        }
+          }, DEBUG ? {} : {
+            css: cssExtractor.extract({
+              use: "css-loader",
+              fallback: "vue-style-loader",
+            }),
+          }),
+        },
       },
       {
         test: /\.css$/,
-        loader: DEBUG ? 'style-loader!css-loader' : ExtractTextPlugin.extract(
-          {
-            fallback: "style-loader",
-            use: "css-loader"
-          }
-        ),
+        loader: DEBUG ? 'style-loader!css-loader' : cssExtractor.extract({
+          use: "css-loader",
+          fallback: "style-loader",
+        }),
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
@@ -126,7 +137,7 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new FriendlyErrorsWebpackPlugin(),
       ] : [
-        new ExtractTextPlugin("[name].[hash:8].css"),
+        cssExtractor,
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
       ]
