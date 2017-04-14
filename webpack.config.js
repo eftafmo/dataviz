@@ -49,7 +49,7 @@ module.exports = {
       'node_modules',
       asset_dir,
     ],
-    extensions: ['.js', '.jsx', '.css'],
+    extensions: ['.js', '.jsx', '.vue', '.css'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
     },
