@@ -381,35 +381,30 @@ export default Vue.extend({
 
       // draw the legend
        const label = $this.svg.select('foreignObject').select(".legend")
-    .selectAll(".label")
-      // we can access root directly here because we don't care about partitioning (yet?)
-	  .data($this.getRoot().descendants().slice(1))
-	  .enter().append("xhtml:div")
-	  .attr("id", $this.getLabelID)
-	  .attr("class", "label")
+      .selectAll(".label")
+        // we can access root directly here because we don't care about partitioning (yet?)
+  	  .data($this.getRoot().descendants().slice(1))
+  	  .enter().append("xhtml:div")
+  	  .attr("id", $this.getLabelID)
+  	  .attr("class", "label")
       .style('white-space','nowrap')
-    .style("opacity", (d) => d.depth == 1 ? 1 : 0)
-    .style("display", (d) => d.depth == 1 ? "block" : "none");
-	  // .attr("transform", function(d, i) {
-   //    let y = (label_size + label_spacing) * i;
-   //    return `translate(0,${y})`
-   //  });
-      this._labels = label;
-      label.append("xhtml:span")
-	// .attr("width", label_size)
-	// .attr("height", label_size)
-  .style('width', label_size + 'px')
-  .style('height', label_size + 'px')
-  .style('display', 'inline-block')
-  .style('background', $this._colour)
-  .style ('margin-right', '5px')
-      label.append('xhtml:span')
-  .style('color', $this._colour)
-  .style('white-space','nowrap')
-  .style('display', 'inline')
-	.attr('x', label_size + label_spacing)
-	.attr('y', label_size)
-	.text(function(d) { return d.data.name; });
+      .style("opacity", (d) => d.depth == 1 ? 1 : 0)
+      .style("display", (d) => d.depth == 1 ? "block" : "none");
+
+        this._labels = label;
+        label.append("xhtml:span")
+        .style('width', label_size + 'px')
+        .style('height', label_size + 'px')
+        .style('display', 'inline-block')
+        .style('background', $this._colour)
+        .style ('margin-right', '5px')
+            label.append('xhtml:span')
+        .style('color', $this._colour)
+        .style('white-space','nowrap')
+        .style('display', 'inline')
+      	.attr('x', label_size + label_spacing)
+      	.attr('y', label_size)
+      	.text(function(d) { return d.data.name; });
 
       label
         .on('click', function() { $this.click(this); })
