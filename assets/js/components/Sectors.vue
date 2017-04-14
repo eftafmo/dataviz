@@ -235,6 +235,8 @@ export default Vue.extend({
           _node.data.enabled = false;
       }
 
+
+
       // we need to set the arc below, or it will cover the secondaries
       const arc = _this.classed("arc") ? _this :
                   d3.select('#' + $this.getArcID(node));
@@ -246,20 +248,32 @@ export default Vue.extend({
 
       $this._labels
       .data($this.getRoot().descendants().slice(1))
+          .transition()
+        .duration(400)
         .style("display", (d) => { return d.data.enabled ? "block" : "none"; })
         .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
-        .transition()
-        .duration(10)
         .attr("opacity", (d) => d.data.enabled ? 1 : 0)
-        .on("end", function(d) {
-          if (d.depth == 1) {
+        .on("end", function(d, i) {
+          if (d.depth == 1 && d.data.enabled == false) {
+            console.log(d);
             this.style.display = "none";
+          }
+        })
+        .style('font-size', function(d){
+          if (d.depth == 1 && d.data.enabled == true) {
+            return '16px'
+          }
+        })
+        .style('margin-bottom', function(d){
+            if (d.depth == 1 && d.data.enabled == true) {
+            return '1rem'
           }
         });
 
+
      let j=0;
      let order = [];
-
+     // console.log($this._labels._groups[0])
      $this._labels.attr("transform", function(d, i) {
       var label_size = $this.label_size;
       var label_spacing = $this.label_spacing;
