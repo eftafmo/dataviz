@@ -1,6 +1,10 @@
 "use strict";
 
-export const FMColours = {
-  EEA: "rgb(35, 97, 146)",
-  Norway: "rgb(166, 25, 46)",
-};
+import FMs from 'js/constants/financial-mechanisms.json5';
+
+const FMColours = {};
+for(let fm in FMs) {
+  FMColours[fm] = FMs[fm].colour;
+}
+
+export {FMColours};

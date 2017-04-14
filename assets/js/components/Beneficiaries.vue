@@ -1,10 +1,24 @@
 <template>
 <svg class="bar-thing" :width="width" :height="height">
-  <g class="chart"></g>
+  <!-- TODO: move this to html? -->
+  <g class="fms">
+    <g v-for="(fm, k, index) in fms"
+       @click="filterFM(fm, $event)"
+       :class="'fm ' + fm.id"
+       :transform="`translate(${+index * 150},0)`"> {{ index }}
+      <!-- add a transparent rect to give it some clicking room -->
+      <rect width="26" height="16" transform="translate(-3,-3)" fill="transparent" />
+      <rect width="10" height="10" :fill="fm.colour" />
+      <text x="20" dy=".71em">{{ fm.name }}</text>
+    </g>
+  </g>
+  <g class="chart" transform="translate(0, 30)">
+  </g>
 </svg>
 </template>
 
 <style>
+.fms .fm { cursor: pointer; }
 .chart {}
 </style>
 
@@ -13,6 +27,7 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 
 import {FMColours} from '../constants.js';
+import FMs from 'js/constants/financial-mechanisms.json5';
 
 // load all country flags as sprites
 import _countries from 'js/constants/countries.json5';
@@ -45,6 +60,7 @@ export default Vue.extend({
 
   data() {
     return {
+      fms: FMs,
       // TODO: make this a mixin
       colour: d3.scaleOrdinal()
                 .domain(d3.keys(FMColours))
@@ -59,6 +75,10 @@ export default Vue.extend({
   },
 
   methods: {
+    filterFM(fm, e)  {
+      console.log(fm);
+      console.log(e);
+    },
     main() {
       const $this = this;
 
@@ -152,7 +172,10 @@ export default Vue.extend({
         }
       });
 
-      const beneficiary = $this.svg.select("g.chart")
+
+      const chart = $this.svg.select("g.chart")
+
+      const beneficiary = chart
 	    .selectAll(".beneficiary")
             .data(xdata)
             .enter().append("g")
@@ -191,7 +214,7 @@ export default Vue.extend({
       //   .append("text")
       //   .text((d) => d.data.name)
 
-      $this.svg.append("g")
+      chart.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(${reserved},0)`)
         .call(customYAxis)
