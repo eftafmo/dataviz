@@ -60,23 +60,7 @@ module.exports = {
         test: /\.jsx?$/,
         include: path.resolve(asset_dir, 'js'),
         exclude: /(node_modules|__tests__)/,
-        use: [
-          {
-            loader: 'babel-loader'//,
-            /*
-            // TODO: enable this and remove .babelrc
-            options: {
-              "presets": [
-                ["es2015", {"modules": false}]
-              ],
-              "plugins": [
-                "transform-decorators-legacy",
-                "transform-class-properties"
-              ]
-            }
-            */
-          }
-        ]
+        loader: 'babel-loader',
       },
       {
         // make all files ending in .json5 use the `json5-loader`
@@ -88,6 +72,7 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
+            js: 'babel-loader',
           }
         }
       },
