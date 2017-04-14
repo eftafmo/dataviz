@@ -1,32 +1,32 @@
 <template>
-<svg class="pie-thing" :width="width" :height="2*height">
-  <defs>
-    <filter id="dropshadow" x="-50%" y="-50%"  height="200%" width="200%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="3">
-      </feGaussianBlur>
-      <feComponentTransfer>
-        <feFuncA type="linear" slope="0">
-          <animate id="dropshadow-anim-in"
-            attributeName="slope" attributeType="XML"
-            begin="indefinite" dur="0.1" end="indefinite" fill="freeze"
-            from="0" to="1"
-          />
-        </feFuncA>
-      </feComponentTransfer>
-      <feOffset dx="2" dy="2" />
-      <feMerge>
-        <feMergeNode />
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-  <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
-  </g>
-  <foreignObject :transform="`translate(${radius * 2 + radius / 2},${margin})`">
-    <div class="legend"></div>
-  </foreignObject>
-
-</svg>
+<div class="pie-thing">
+  <svg :width="width/2" :height="height">
+    <defs>
+      <filter id="dropshadow" x="-50%" y="-50%"  height="200%" width="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3">
+        </feGaussianBlur>
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0">
+            <animate id="dropshadow-anim-in"
+              attributeName="slope" attributeType="XML"
+              begin="indefinite" dur="0.1" end="indefinite" fill="freeze"
+              from="0" to="1"
+            />
+          </feFuncA>
+        </feComponentTransfer>
+        <feOffset dx="2" dy="2" />
+        <feMerge>
+          <feMergeNode />
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
+    </g>
+  </svg>
+  <div class="legend" :transform="`translate(${radius * 2 + radius / 2},${margin})`">
+  </div>
+</div>
 </template>
 
 <style>
@@ -35,6 +35,12 @@
 .arc, .label { cursor: pointer; }
 .arc:hover, .arc.hovered { filter: url(#dropshadow); }
 .label:hover rect, .label.hovered rect { filter: url(#dropshadow); }
+.pie-thing {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
 
 </style>
 
@@ -380,7 +386,7 @@ export default Vue.extend({
 	    label_spacing = $this.label_spacing;
 
       // draw the legend
-       const label = $this.svg.select('foreignObject').select(".legend")
+      const label = $this.svg.select(".legend")
       .selectAll(".label")
         // we can access root directly here because we don't care about partitioning (yet?)
   	  .data($this.getRoot().descendants().slice(1))
@@ -391,20 +397,21 @@ export default Vue.extend({
       .style("opacity", (d) => d.depth == 1 ? 1 : 0)
       .style("display", (d) => d.depth == 1 ? "block" : "none");
 
-        this._labels = label;
-        label.append("xhtml:span")
-        .style('width', label_size + 'px')
-        .style('height', label_size + 'px')
-        .style('display', 'inline-block')
-        .style('background', $this._colour)
-        .style ('margin-right', '5px')
-            label.append('xhtml:span')
-        .style('color', $this._colour)
-        .style('white-space','nowrap')
-        .style('display', 'inline')
-      	.attr('x', label_size + label_spacing)
-      	.attr('y', label_size)
-      	.text(function(d) { return d.data.name; });
+      this._labels = label;
+      label.append("xhtml:span")
+      .style('width', label_size + 'px')
+      .style('height', label_size + 'px')
+      .style('display', 'inline-block')
+      .style('background', $this._colour)
+      .style ('margin-right', '5px')
+
+      label.append('xhtml:span')
+      .style('color', $this._colour)
+      .style('white-space','nowrap')
+      .style('display', 'inline')
+      .attr('x', label_size + label_spacing)
+      .attr('y', label_size)
+      .text(function(d) { return d.data.name; });
 
       label
         .on('click', function() { $this.click(this); })
