@@ -1,0 +1,24 @@
+// a simple list for now
+[
+  // beneficiaries
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czech Republic',
+  'Estonia',
+  'Greece',
+  'Hungary',
+  'Latvia',
+  'Lithuania',
+  'Malta',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Slovakia',
+  'Slovenia',
+  'Spain',
+  // donors
+  'Iceland',
+  'Liechtenstein',
+  'Norway',
+ ]

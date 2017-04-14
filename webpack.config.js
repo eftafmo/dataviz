@@ -45,7 +45,10 @@ module.exports = {
     chunkFilename: DEBUG ? "[id].js" : "[id].[chunkhash:8].js",
   },
   resolve: {
-    modules: ['node_modules'],
+    modules: [
+      'node_modules',
+      asset_dir,
+    ],
     extensions: ['.js', '.jsx', '.css'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',

@@ -14,6 +14,24 @@ import * as d3 from 'd3';
 
 import {FMColours} from '../constants.js';
 
+// load all country flags as sprites
+import _countries from 'js/constants/countries.json5';
+
+function _get_flag_name(c) {
+  const flag = c.toLowerCase().replace(/ /g, '');
+  return `flag-${flag}`;
+}
+
+const _req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
+// we could load all of _req.keys(), but we want things to fail
+// if there's a mismatch between country names and png files
+for (let _c of _countries) {
+  const req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
+  req(`./${_get_flag_name(_c)}.png`);
+}
+// TODO: compare _req.keys() with _countries and warn if necessary
+
+
 export default Vue.extend({
   props: {
     datasource: String,
@@ -82,6 +100,34 @@ export default Vue.extend({
             .paddingInner(0.5)
             .align(1);
 
+      // customize the axis to add country flags
+      function customYAxis(g) {
+        const axis = d3.axisLeft(y)
+              .tickSize(0)
+
+        g.call(axis);
+
+        const ticks = g.selectAll('.axis .tick');
+        // colorize domain bar
+        g.select('.axis .domain').attr('stroke', '#ccc');
+        // remove invisible ticks
+        ticks.select('line').remove();
+        // move text
+        ticks.select('text').attr('x', -30);
+        ticks
+          .append('use')
+          .attr('xlink:href', (d) => `#${_get_flag_name(d)}`)
+          .attr('viewBox', '0 0 30 20')
+          .attr('transform', 'translate(-23,-6) scale(0.035,0.035)');
+
+        /*
+        s.select(".domain").remove();
+        s.selectAll(".tick line").filter(Number).attr("stroke", "#777").attr("stroke-dasharray", "2,2");
+        s.selectAll(".tick text").attr("x", 4).attr("dy", -4);
+        if (s !== g) g.selectAll(".tick text").attrTween("x", null).attrTween("dy", null);
+        */
+      }
+
       x.domain([0, d3.max(data, (d) => d.total)]);
       var keys = data.columns.slice(2);
       stack.keys(keys);
@@ -148,7 +194,7 @@ export default Vue.extend({
       $this.svg.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(${reserved},0)`)
-        .call(d3.axisLeft(y))
+        .call(customYAxis)
     },
   },
   watch: {
