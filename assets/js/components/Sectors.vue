@@ -216,7 +216,7 @@ export default Vue.extend({
     },
 
     _extract_coords: (d) => (
-	{x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1}
+	   {x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1}
     ),
 
     click(item) {
@@ -247,15 +247,19 @@ export default Vue.extend({
       label.moveToBack();
 
       $this._labels
-      .data($this.getRoot().descendants().slice(1))
-          .transition()
+       .data($this.getRoot().descendants().slice(1))
+       .on("click", function(d){
+            if (d.depth == 1 && d.data.enabled == true) {
+           $this.reset()
+          }
+        })
+        .transition()
         .duration(400)
         .style("display", (d) => { return d.data.enabled ? "block" : "none"; })
         .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
         .attr("opacity", (d) => d.data.enabled ? 1 : 0)
         .on("end", function(d, i) {
           if (d.depth == 1 && d.data.enabled == false) {
-            console.log(d);
             this.style.display = "none";
           }
         })
@@ -264,8 +268,14 @@ export default Vue.extend({
             return '16px'
           }
         })
+        .style('margin-left', function(d){
+          if (d.depth == 1 && d.data.enabled == true) {
+            return '-10px'
+          }
+        })
         .style('margin-bottom', function(d){
             if (d.depth == 1 && d.data.enabled == true) {
+            _this.append('span').text('×').style('margin-left', '5px').style('color','#ccc');
             return '1rem'
           }
         });
@@ -273,7 +283,7 @@ export default Vue.extend({
 
      let j=0;
      let order = [];
-     // console.log($this._labels._groups[0])
+
      $this._labels.attr("transform", function(d, i) {
       var label_size = $this.label_size;
       var label_spacing = $this.label_spacing;
@@ -286,9 +296,6 @@ export default Vue.extend({
       return `translate(0,${y})`
       }
     });
-     // WIP
-    // .on('click', function() { $this.reset();});
-
 
 
      $this._arcs
@@ -434,13 +441,13 @@ export default Vue.extend({
     },
 
     // WIP - reset the chart
-    // reset(){
-
-    // const $this = this;
-    // const arc = $this.svg.select("g.chart").selectAll(".arc").remove();
-    // const label = $this.svg.select("g.legend").selectAll(".label").remove();
-    //  $this.doStuff();
-    // },
+    // TODO - make this smoother
+    reset(){
+    const $this = this;
+    const arc = $this.svg.select("g.chart").selectAll(".arc").remove();
+    const label = $this.svg.select(".legend").selectAll(".label").remove();
+     $this.doStuff();
+    },
 
     doStuff() {
       const $this = this;
