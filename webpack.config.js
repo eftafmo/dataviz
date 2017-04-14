@@ -79,6 +79,11 @@ module.exports = {
         ]
       },
       {
+        // make all files ending in .json5 use the `json5-loader`
+        test: /\.json5$/,
+        loader: 'json5-loader'
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
