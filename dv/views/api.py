@@ -59,7 +59,7 @@ def sectors_areas_allocation(request):
 
     for item in items:
         sector_name, area_name, fm, allocation = (
-            item.priority_sector.name,
+            item.priority_sector.name.capitalize(),
             item.name,
             str(item.priority_sector.type),
             round(item.gross_allocation),

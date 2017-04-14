@@ -40,6 +40,9 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 
+import {SectorColours} from 'js/constants.js';
+
+
 // https://github.com/wbkd/d3-extended (..?)
 d3.selection.prototype.moveToFront = function() {
   return this.each(function(){
@@ -85,24 +88,6 @@ export default Vue.extend({
       default: 5,
     },
   },
-  data: () => ({
-    // TODO: move this someplace nice
-    colours: {
-      "environmental-protection-and-management": "#90A522",
-      "climate-change": "#F58345",
-      "carbon-capture-and-storage": "#75489D",
-      "green-industry-innovation": "#C4016A",
-      "human-and-social-development": "#00AFF0",
-      "civil-society": "#0BA245",
-      "decent-work-and-tripartite-dialogue": "#6D7D94",
-      "protecting-cultural-heritage": "#692800",
-      "research-and-scholarship": "#F2C009",
-      "justice-and-home-affairs": "#096C93",
-
-      "technical-assistance": "#cccccc",
-      "other": "#cccccc",
-    },
-  }),
   computed: {
     radius() {
       return Math.min(this.width, this.height) / 2 - this.margin;
@@ -111,13 +96,15 @@ export default Vue.extend({
     _primary_colour() {
       const keys = [],
             values = [];
-      for (let k in this.colours) {
+      for (let k in SectorColours) {
         keys.push(k);
-        values.push(this.colours[k]);
+        values.push(SectorColours[k]);
       }
       return d3.scaleOrdinal()
         .domain(keys)
         .range(values)
+      // fail hard on missing values
+        .unknown(null)
     },
     _partition() {
       return d3.partition().size([this.radius * 2, this.radius * 2]);
@@ -157,8 +144,9 @@ export default Vue.extend({
 
       // generate children colours
       for (let d of data) {
-        this._secondary_colours[d.id] = this._mkcolourscale(
-          this.colours[d.id], d.children.length
+        // TODO: make colours id-based
+        this._secondary_colours[d.name] = this._mkcolourscale(
+          SectorColours[d.name], d.children.length
         );
       }
     },
@@ -197,9 +185,9 @@ export default Vue.extend({
       const func = (
         d.depth == 1 ?
           this._primary_colour :
-          this._secondary_colours[d.parent.data.id]
+          this._secondary_colours[d.parent.data.name]
       );
-      return func(d.data.id);
+      return func(d.data.name);
     },
 
     getArcID: (node) => `a${node.depth}-${node.data.id}`,
