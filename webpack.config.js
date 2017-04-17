@@ -34,6 +34,15 @@ const cssExtractor = new ExtractTextPlugin({
   disable: DEBUG,
 });
 
+const bubleLoader = {
+  loader: 'buble-loader',
+  options: {
+    transforms: {
+      modules: false,
+      dangerousForOf: true,
+    },
+  },
+};
 
 module.exports = {
   context: __dirname,
@@ -68,7 +77,7 @@ module.exports = {
         test: /\.jsx?$/,
         include: path.resolve(asset_dir, 'js'),
         exclude: /(node_modules|__tests__)/,
-        loader: 'babel-loader',
+        loader: bubleLoader
       },
       {
         // make all files ending in .json5 use the `json5-loader`
@@ -80,7 +89,7 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: Object.assign({
-            js: 'babel-loader',
+            js: bubleLoader,
           }, DEBUG ? {} : {
             css: cssExtractor.extract({
               use: "css-loader",
