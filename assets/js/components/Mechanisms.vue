@@ -1,65 +1,78 @@
 <template>
-<svg class="bar-thing" :width="width" :height="height">
-  <g class="chart"></g>
-</svg>
+<div class="bar-thing">
+  <svg :width="width" :height="height">
+    <g class="chart"></g>
+  </svg>
+  <div v-if="data" class="legend">
+    <ul class="fms">
+      <li v-for="(fm, k, index) in fms"
+          @click="filterFM(fm, $event)"
+          :class="'fm ' + fm.id"
+      >
+        <span :style="{backgroundColor: colour(fm.id)}"></span>
+        {{ fm.name }}
+        - {{ format(fm.value) }}
+      </li>
+    </ul>
+  </div>
+</div>
 </template>
 
+
 <style>
-.chart {}
+.fm { cursor: pointer; }
+.legend .fm span {
+  width: 10px; height: 10px;
+  display: inline-block;
+}
 </style>
+
 
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
 
-import {FMColours} from '../constants.js';
+import BaseMixin from './mixins/Base.vue';
+import WithFMsMixin from './mixins/WithFMs.vue';
+
+import FMs from 'js/constants/financial-mechanisms.json5';
+
 
 export default Vue.extend({
+  mixins: [BaseMixin, WithFMsMixin],
+
   props: {
-    datasource: String,
-    data: Object,
     width: Number,
     height: Number,
   },
 
-  data() {
-    return {
-      colour: d3.scaleOrdinal()
-                .domain(d3.keys(FMColours))
-                .range(d3.values(FMColours)),
-    };
-  },
-
-  mounted() {
-    this.svg = d3.select(this.$el);
-    this.main();
+  computed: {
+    fms() {
+      const fms = Object.assign({}, FMs);
+      for (let fm in fms) {
+        fms[fm].value = this.data[fm] || 0;
+      }
+      return fms;
+    },
   },
 
   methods: {
     main() {
-      const $this = this;
-
-      if ($this.data) {
-        $this.drawChart($this.data);
-      } else {
-        d3.json($this.datasource, function(error, data) {
-	  if (error) throw error;
-
-          $this.drawChart(data);
-        });
-      }
+      this.renderChart();
     },
 
-    drawChart(data) {
-      const $this = this;
+    renderChart() {
+      const $this = this,
+            _root = d3.select(this.$el),
+            chart = _root.select("svg").select("g.chart");
 
       var x = d3.scaleLinear()
           .rangeRound([0, this.width])
-          .domain([0, d3.sum(d3.values(data))]);
+          .domain([0, d3.sum(d3.values($this.data))]);
 
-      const bar = $this.svg.select("g.chart")
+      const bar = chart
 	    .selectAll(".bar")
-            .data(d3.entries(data))
+            .data(d3.entries($this.data))
             .enter().append("rect")
             .attr("x", (d) => 0)
             .attr("y", (d) => 0)
@@ -73,11 +86,6 @@ export default Vue.extend({
             .transition()
             .duration(500)
             .attr("width", (d) => x(d.value));
-    },
-  },
-  watch: {
-    datasource: {
-      handler: 'main',
     },
   },
 });
