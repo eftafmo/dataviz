@@ -37,7 +37,7 @@ const cssExtractor = new ExtractTextPlugin({
 
 module.exports = {
   context: __dirname,
-  devtool: DEBUG ? "inline-sourcemap" : false,
+  devtool: DEBUG ? "inline-source-map" : false,
   entry: {
     scripts: [
       path.resolve(asset_dir, "js/main.js")
