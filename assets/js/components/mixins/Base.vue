@@ -88,11 +88,12 @@ export default {
     format: d3.formatLocale({
       // see https://github.com/d3/d3-format/blob/master/locale/
       // TODO: derive and extend the browser locale?
+      // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
       "decimal": ",", // that's the european way
-      "thousands": "\u202f", // narrow nbsp, 'cause it's pretty and safe
+      "thousands": ".", // dot, the european way
       "grouping": [3],
-      "currency": ["", "\u00a0€"], // nbsp
-      "percent": "\u202f%", // narrow nbsp
+      "currency": ["€", ""],
+      "percent": "%",
     }).format("$,d"), // currency; thousand separators; decimal int.
   },
   watch: {
