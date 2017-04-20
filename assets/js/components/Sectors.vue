@@ -78,6 +78,8 @@ d3.selection.prototype.moveBelow = function() {
   });
 };
 
+var coords=[];
+
 export default Vue.extend({
   props: {
     datasource: String,
@@ -119,8 +121,8 @@ export default Vue.extend({
     },
     _angle() {
       return d3.scaleLinear()
-	.domain([0, this.radius * 2])
-	.range([0, Math.PI * 2]);
+    	.domain([0, this.radius * 2])
+    	.range([0, Math.PI * 2]);
     },
     _arc() {
       const $this = this;
@@ -225,8 +227,13 @@ export default Vue.extend({
       const _this = d3.select(item),
             node = _this.datum();
 
-      if (node.depth > 1) return;
+      //get the corresponding label for the arc when clicking an arc
+      let _this_label = _this;
+      if (item.classList.contains('arc')) {
+       _this_label = $this._getOther(_this);
+      }
 
+      if (node.depth > 1) return;
       let _enable_nodes = node.descendants();
       for (let _node of root.descendants()) {
         if (_enable_nodes.indexOf(_node) != -1)
@@ -235,14 +242,10 @@ export default Vue.extend({
           _node.data.enabled = false;
       }
 
-
-
       // we need to set the arc below, or it will cover the secondaries
       const arc = _this.classed("arc") ? _this :
                   d3.select('#' + $this.getArcID(node));
       arc.moveToBack();
-
-
 
       $this._labels
        .data($this.getRoot().descendants().slice(1))
@@ -251,26 +254,14 @@ export default Vue.extend({
            $this.reset(item)
           }
         })
-        .transition()
-        .duration(400)
         .style("display", (d) => { return d.data.enabled ? "block" : "none"; })
         .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
-        .on("end", function(d, i) {
-          if (d.depth == 1 && d.data.enabled == false) {
-            this.style.display = "none";
-          }
-        })
-        .attr('class', function(d){
-          if (d.depth == 1 && d.data.enabled == true) {
-            _this.append('span').text('×').attr('class', 'sectors-close-indicator');
-            return 'label sectors-legend-title'
-          }
-          else {
-            return 'label'
+        .attr('dummy', function(d){
+        if (d.depth == 1 && d.data.enabled == true) {
+            _this_label.attr('class','label sectors-legend-title');
+            _this_label.append('span').text('×').attr('class', 'sectors-close-indicator');
           }
         });
-
-
 
      $this._arcs
 	   .data($this.getRoot().descendants().slice(1))
@@ -284,7 +275,7 @@ export default Vue.extend({
         .duration(500)
       // .. full opacity / invisibility
         .attr("opacity", (d) => d.data.enabled ? 1 : 0)
-      // and new coordinates
+      // and new coordinates`
         .attrTween('d', function(d) {
 	       const interpolate = d3.interpolate(
 		      this._prev, $this._extract_coords(d)
@@ -317,6 +308,12 @@ export default Vue.extend({
       const selector = obj.classed('arc') ? this.getLabelID : this.getArcID;
       return d3.select("#" + selector(obj.datum()));
     },
+
+    _getLabel(obj) {
+       const selector = this.getLabelID ;
+      return d3.select("#" + selector(obj.datum()));
+    },
+
     mouseover(item) {
       const $this = this,
             _this = d3.select(item),
@@ -343,16 +340,16 @@ export default Vue.extend({
 
     drawChart() {
       const $this = this,
-	    radius = $this.radius;
-
+      radius = $this.radius;
       const arc = $this.svg.select("g.chart")
 	    .selectAll(".arc")
       // always use $this.getRoot() to make sure the data is properly partitioned
 	    .data($this.getRoot().descendants().slice(1))
 	    .enter().append("path")
-	    .each(function(d) {
+	    .each(function(d,i) {
 	      // cache current coordinates
 	      this._prev = $this._extract_coords(d);
+        coords[i]=this._prev;
 	    })
 	    .attr("id", $this.getArcID)
 	    .attr("class", "arc")
@@ -413,7 +410,6 @@ export default Vue.extend({
             root = $this.root;
       const _this = d3.select(item),
             node = _this.datum();
-
       if (node.depth > 1) return;
 
       let _enable_nodes = node.descendants();
@@ -425,25 +421,60 @@ export default Vue.extend({
                   d3.select('#' + $this.getArcID(node));
       arc.moveToBack();
 
+
+      //get the corresponding label for the arc when clicking an arc
+      let _this_label = _this;
+      if (item.classList.contains('arc')) {
+       _this_label = $this._getOther(_this);
+      }
+
       $this._labels
         .data($this.getRoot().descendants().slice(1))
-        .transition()
-        .duration(400)
         .style("display", (d) => { return d.data.enabled ? "none" : "block"; })
         .style("opacity", function(d) { return !d.data.enabled ? this.opacity : 0; })
         .style('display', function(d){
            if (d.depth == 2 && d.data.enabled == false) {
-            _this.attr('class','label');
+            _this_label.attr('class','label');
             return "none"
           }
         });
+
+
       $this._labels
         .on('click', function() { $this.click(this); })
         .on('mouseover', function() { $this.mouseover(this); })
         .on('mouseout', function() { $this.mouseout(this); })
 
+      //remove the X span from the label
       const close_indicator = $this.svg.select(".sectors-close-indicator")
       close_indicator.remove();
+
+      $this._arcs
+     .data($this.getRoot().descendants().slice(1))
+      // enable stuff that's about to get animated, and hide the other stuff
+        .style("display", (d) => { return d.data.enabled ? "none" : "inline"; })
+      // reset that stuff's visibility while at it, but don't touch the rest
+        .style("opacity", function(d) { return !d.data.enabled ? this.opacity : 0; })
+      // and then, transition to...
+       .transition()
+        .duration(400)
+      // .. full opacity / invisibility
+        .attr("opacity", (d) => d.data.enabled ? 0 : 1)
+        .attrTween('d', function(d,i) {
+         const interpolate = d3.interpolate(
+          this._prev, coords[i]
+         );
+          this._prev = interpolate(0);
+          return function(x) {
+            return $this._arc(interpolate(x));
+          }
+        })
+         .on("end", function(d) {
+          if (d.depth == 2) {
+            this.style.display = "none";
+          }
+        });
+
     },
 
     doStuff() {
