@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 from django.db import models
 from enumfields import EnumField, Enum
