@@ -16,6 +16,8 @@
 @import url('sidebar-results.css');
 @import url('sidebar-filters.css');
 
+@import url('components.css');
+
 :root {
   font-size: 10px;
 }

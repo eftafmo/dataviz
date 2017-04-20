@@ -242,60 +242,34 @@ export default Vue.extend({
                   d3.select('#' + $this.getArcID(node));
       arc.moveToBack();
 
-      const label = _this.classed("label") ? _this :
-                  d3.select('#' + $this.getLabelID(node));
-      label.moveToBack();
+
 
       $this._labels
        .data($this.getRoot().descendants().slice(1))
        .on("click", function(d){
             if (d.depth == 1 && d.data.enabled == true) {
-           $this.reset()
+           $this.reset(item)
           }
         })
         .transition()
         .duration(400)
         .style("display", (d) => { return d.data.enabled ? "block" : "none"; })
         .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
-        .attr("opacity", (d) => d.data.enabled ? 1 : 0)
         .on("end", function(d, i) {
           if (d.depth == 1 && d.data.enabled == false) {
             this.style.display = "none";
           }
         })
-        .style('font-size', function(d){
+        .attr('class', function(d){
           if (d.depth == 1 && d.data.enabled == true) {
-            return '16px'
+            _this.append('span').text('×').attr('class', 'sectors-close-indicator');
+            return 'label sectors-legend-title'
           }
-        })
-        .style('margin-left', function(d){
-          if (d.depth == 1 && d.data.enabled == true) {
-            return '-10px'
-          }
-        })
-        .style('margin-bottom', function(d){
-            if (d.depth == 1 && d.data.enabled == true) {
-            _this.append('span').text('×').style('margin-left', '5px').style('color','#ccc');
-            return '1rem'
+          else {
+            return 'label'
           }
         });
 
-
-     let j=0;
-     let order = [];
-
-     $this._labels.attr("transform", function(d, i) {
-      var label_size = $this.label_size;
-      var label_spacing = $this.label_spacing;
-      if((d.depth == 1)||(this.style.opacity == '0') ){
-         return `translate(0,0)`
-      } else {
-         order[i]= j;
-          j++;
-       var y = (label_size + label_spacing) *  order[i];
-      return `translate(0,${y})`
-      }
-    });
 
 
      $this._arcs
@@ -305,7 +279,6 @@ export default Vue.extend({
         .style("display", (d) => { return d.data.enabled ? "inline" : "none"; })
       // reset that stuff's visibility while at it, but don't touch the rest
         .style("opacity", function(d) { return !d.data.enabled ? 0 : this.opacity; })
-
       // and then, transition to...
 	     .transition()
         .duration(500)
@@ -405,31 +378,25 @@ export default Vue.extend({
       const $this = this,
 	    label_size = $this.label_size,
 	    label_spacing = $this.label_spacing;
-
       // draw the legend
       const label = $this.svg.select(".legend")
       .selectAll(".label")
         // we can access root directly here because we don't care about partitioning (yet?)
   	  .data($this.getRoot().descendants().slice(1))
-  	  .enter().append("xhtml:div")
+  	  .enter().append("div")
   	  .attr("id", $this.getLabelID)
   	  .attr("class", "label")
-      .style('white-space','nowrap')
       .style("opacity", (d) => d.depth == 1 ? 1 : 0)
       .style("display", (d) => d.depth == 1 ? "block" : "none");
 
       this._labels = label;
-      label.append("xhtml:span")
+      label.append("span")
       .style('width', label_size + 'px')
       .style('height', label_size + 'px')
-      .style('display', 'inline-block')
       .style('background', $this._colour)
-      .style ('margin-right', '5px')
 
-      label.append('xhtml:span')
+      label.append('span')
       .style('color', $this._colour)
-      .style('white-space','nowrap')
-      .style('display', 'inline')
       .attr('x', label_size + label_spacing)
       .attr('y', label_size)
       .text(function(d) { return d.data.name; });
@@ -441,12 +408,42 @@ export default Vue.extend({
     },
 
     // WIP - reset the chart
-    // TODO - make this smoother
-    reset(){
-    const $this = this;
-    const arc = $this.svg.select("g.chart").selectAll(".arc").remove();
-    const label = $this.svg.select(".legend").selectAll(".label").remove();
-     $this.doStuff();
+    reset(item){
+    const $this = this,
+            root = $this.root;
+      const _this = d3.select(item),
+            node = _this.datum();
+
+      if (node.depth > 1) return;
+
+      let _enable_nodes = node.descendants();
+      for (let _node of root.descendants()) {
+          _node.data.enabled = false;
+      }
+      // we need to set the arc below, or it will cover the secondaries
+      const arc = _this.classed("arc") ? _this :
+                  d3.select('#' + $this.getArcID(node));
+      arc.moveToBack();
+
+      $this._labels
+        .data($this.getRoot().descendants().slice(1))
+        .transition()
+        .duration(400)
+        .style("display", (d) => { return d.data.enabled ? "none" : "block"; })
+        .style("opacity", function(d) { return !d.data.enabled ? this.opacity : 0; })
+        .style('display', function(d){
+           if (d.depth == 2 && d.data.enabled == false) {
+            _this.attr('class','label');
+            return "none"
+          }
+        });
+      $this._labels
+        .on('click', function() { $this.click(this); })
+        .on('mouseover', function() { $this.mouseover(this); })
+        .on('mouseout', function() { $this.mouseout(this); })
+
+      const close_indicator = $this.svg.select(".sectors-close-indicator")
+      close_indicator.remove();
     },
 
     doStuff() {

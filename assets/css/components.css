@@ -1,0 +1,18 @@
+.sectors-legend-title {
+    font-size: 16px;
+    margin-left: -10px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.sectors-close-indicator {
+ margin-left: 5px;
+ color: #ccc;
+}
+
+
+.label span {
+    display: inline-block;
+    margin-right: 5px;
+}
+
