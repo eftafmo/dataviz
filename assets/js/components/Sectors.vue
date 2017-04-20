@@ -42,6 +42,42 @@
   margin-bottom: 2rem;
 }
 
+.sectors-close-indicator {
+ margin-left: 5px;
+ color: #ccc;
+}
+
+
+.label span {
+    display: inline-block;
+    margin-right: 5px;
+    white-space: normal;
+}
+
+.label span:first-of-type {
+        position: absolute;
+    right: 100%;
+    top: 5px;
+}
+
+
+.label {
+    position: relative;
+    white-space: nowrap;
+    margin-left:15px;
+    transition: all 400ms;
+}
+.sectors-legend-title {
+    font-size: 16px;
+    margin-left: 0;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.legend {
+    max-width: 600px;
+}
+
 </style>
 
 <script>
