@@ -14,5 +14,10 @@
 .label span {
     display: inline-block;
     margin-right: 5px;
+    white-space: normal;
 }
 
+
+.label {
+    white-space: nowrap;
+}
