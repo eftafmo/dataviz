@@ -4,15 +4,14 @@
     <g class="chart"></g>
   </svg>
   <div v-if="data" class="legend">
-    <ul class="fms">
+    <ul class="fms clearfix">
       <li v-for="(fm, k, index) in fms"
           @click="toggleFm(fm, $event.target)"
           class="fm"
           :class="[fm.id, getFilterClass(fm)]"
       >
-        <span :style="{backgroundColor: colour(fm.id)}"></span>
-        {{ fm.name }}
-        - {{ format(fm.value) }}
+        <span class="value" :style="{color: colour(fm.id)}">{{ format(fm.value) }}</span>
+        <span class="name">{{ fm.name }}</span>
       </li>
     </ul>
   </div>
@@ -21,6 +20,9 @@
 
 
 <style>
+.bar-thing,.fms {
+  text-align: center;
+}
 .fm { cursor: pointer; }
 
 .legend .fm {
@@ -35,9 +37,28 @@
   text-shadow: 0 0 1px #999;
 }
 
-.legend .fm span {
-  width: 10px; height: 10px;
+
+.fm {
+  list-style-type: none;
   display: inline-block;
+}
+
+.fm:first-of-type {
+  border-right: 1px solid #aaa;
+  padding-right:2rem;
+}
+
+.fm:last-of-type {
+  padding-left: 2rem;
+}
+
+.value {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.fm .name {
+  display: block;
 }
 
 
