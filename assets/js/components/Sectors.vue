@@ -406,7 +406,7 @@ export default Vue.extend({
 
     // WIP - reset the chart
     reset(item){
-    const $this = this,
+     const $this = this,
             root = $this.root;
       const _this = d3.select(item),
             node = _this.datum();
@@ -416,11 +416,6 @@ export default Vue.extend({
       for (let _node of root.descendants()) {
           _node.data.enabled = false;
       }
-      // we need to set the arc below, or it will cover the secondaries
-      const arc = _this.classed("arc") ? _this :
-                  d3.select('#' + $this.getArcID(node));
-      arc.moveToBack();
-
 
       //get the corresponding label for the arc when clicking an arc
       let _this_label = _this;
