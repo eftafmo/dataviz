@@ -52,23 +52,8 @@ import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
-
-// load all country flags as sprites
-import _countries from 'js/constants/countries.json5';
-
-function _get_flag_name(c) {
-  const flag = c.toLowerCase().replace(/ /g, '');
-  return `flag-${flag}`;
-}
-
-const _req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
-// we could load all of _req.keys(), but we want things to fail
-// if there's a mismatch between country names and png files
-// (possible TODO: compare _req.keys() with _countries and warn if necessary )
-for (let _c of _countries) {
-  const req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
-  req(`./${_get_flag_name(_c)}.png`);
-}
+// this one's mostly loaded for side-effects
+import {get_flag_name} from './mixins/WithCountries';
 
 
 export default Vue.extend({
@@ -156,7 +141,7 @@ export default Vue.extend({
         ticks.select('text').attr('x', -30);
       ticks
         .append('use')
-        .attr('xlink:href', (d) => `#${_get_flag_name(d)}`)
+        .attr('xlink:href', (d) => `#${get_flag_name(d)}`)
         .attr('viewBox', '0 0 30 20')
         .attr('transform', 'translate(-23,-6) scale(0.035,0.035)');
     },
