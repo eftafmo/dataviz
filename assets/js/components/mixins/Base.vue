@@ -16,16 +16,23 @@ export default {
 
   data() {
     return {
-      data: this.initial && this.processData(this.initial) || undefined,
+      dataset: (this.initial
+                && this.processDataset(this.initial)
+                || undefined),
       filters: FILTERS,
     };
   },
 
   computed: {
+    data() {
+      // convenience property, should be overriden by each component
+      return this.dataset;
+    },
+
     hasData() {
-      return !!(this.data
+      return !!(this.dataset
                 // safeguard because empty vue observables evaluate to true
-                && Object.keys(this.data).length);
+                && Object.keys(this.dataset).length);
     },
     isReady() {
       return !!(this.hasData
@@ -53,17 +60,20 @@ export default {
 
     fetchData() {
       if (!this.datasource) throw "Missing datasource."
-      const $this = this;
 
-      d3.json(this.datasource, function(error, data) {
+      d3.json(this.datasource, (error, ds) => {
         if (error) throw error;
-        $this.data = $this.processData(data);
+        this.dataset = this.processDataset(ds);
       });
     },
 
-    processData(data) {
-      // override this as needed.
-      return data;
+    processDataset(ds) {
+      /*
+       * preliminary processing of initial data.
+       * override it as needed.
+       */
+
+      return ds;
     },
 
     /*
@@ -103,7 +113,7 @@ export default {
     }).format("$,d"), // currency; thousand separators; decimal int.
   },
   watch: {
-    'data': {
+    'dataset': {
       handler() {
         if (this.isReady) this.main();
       },

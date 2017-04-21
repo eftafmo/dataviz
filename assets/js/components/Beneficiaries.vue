@@ -101,6 +101,15 @@ export default Vue.extend({
   },
 
   computed: {
+    data() {
+      // return sorted data
+      // (and make a copy to avoid mutating things)
+      const clone = this.dataset.slice(0);
+      // this one's set by the csv parser
+      clone.columns = this.dataset.columns;
+      return clone.sort((a, b) => b.total - a.total);
+    },
+
     x() {
       return d3.scaleLinear()
                .range([0, this.width - this.reserved])
@@ -129,12 +138,6 @@ export default Vue.extend({
       d.total = total;
 
       return d;
-    },
-
-    processData(data) {
-      // sort it from the start.
-      // (sorting it later would cause data to mutate, which is bad)
-      return data.sort((a, b) => b.total - a.total);
     },
 
     yAxis(g) {

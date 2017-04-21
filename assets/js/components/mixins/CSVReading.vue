@@ -10,11 +10,10 @@ export default {
   methods: {
     fetchData() {
       if (!this.datasource) throw "Missing datasource."
-      const $this = this;
 
-      d3.csv($this.datasource, this.processRow, function(error, data) {
+      d3.csv(this.datasource, this.processRow, (error, ds) => {
         if (error) throw error;
-        $this.data = $this.processData(data);
+        this.dataset = this.processDataset(ds);
       });
     },
 
