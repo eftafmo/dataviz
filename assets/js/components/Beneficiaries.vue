@@ -18,10 +18,47 @@
 
 
 <style>
-.legend .fm span {
-  width: 10px; height: 10px;
+.bar-thing,.fms {
+  text-align: center;
+}
+.fm { cursor: pointer; }
+
+.legend .fm {
+  transition: all .5s ease;
+}
+.legend .fm.disabled {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+.legend .fm.selected {
+  text-shadow: 0 0 1px #999;
+}
+
+
+.fm {
+  list-style-type: none;
   display: inline-block;
 }
+
+.fm:first-of-type {
+  border-right: 1px solid #aaa;
+  padding-right:2rem;
+}
+
+.fm:last-of-type {
+  padding-left: 2rem;
+}
+
+.value {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.fm .name {
+  display: block;
+}
+
 </style>
 
 
