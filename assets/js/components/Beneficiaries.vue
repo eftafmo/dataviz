@@ -27,6 +27,18 @@
     display: inline-block;
     margin-right: 2rem;
   }
+  .legend .fm {
+    transition: all .5s ease;
+  }
+  .legend .fm.disabled {
+    filter: grayscale(100%);
+    opacity: 0.5;
+  }
+
+  .legend .fm.selected {
+    text-shadow: 0 0 1px #999;
+  }
+
 }
 
 </style>
