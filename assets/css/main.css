@@ -88,3 +88,8 @@ a.muted:hover {
   font-weight: normal;
   font-size: 2.4rem;
 }
+
+.grant-dataviz {
+  padding-top: 2rem;
+  border-top: 1px solid #ddd;
+}

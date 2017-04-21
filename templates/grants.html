@@ -4,24 +4,24 @@
 {% endblock %}
 
 {% block main %}
-<div id="financial-mechanisms">
+<div class="grant-dataviz" id="financial-mechanisms">
   <mechanisms
-      :width="500"
+      :width="800"
       :initial="data"
   >
   </mechanisms>
 </div>
 
-<div id="priority-sectors">
+<div class="grant-dataviz" id="priority-sectors">
   <sectors
-      :width="500"
+      :width="800"
       :height="200"
       datasource="{% url "api:sector-allocation" %}"
   >
   </sectors>
 </div>
 
-<div id="beneficiary-states">
+<div class="grant-dataviz" id="beneficiary-states">
   <beneficiaries
       :width="500"
       :min-height="200"

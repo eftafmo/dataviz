@@ -1,5 +1,6 @@
 <template>
 <div class="bar-thing">
+  <h2>Funding across beneficiary states</h2>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="fms" class="clearfix">
       <template slot="fm-content" scope="x">
@@ -12,6 +13,7 @@
     <g class="chart"></g>
   </svg>
 </div>
+
 </template>
 
 
