@@ -17,8 +17,8 @@
 </template>
 
 
-<style>
-#beneficiary-states .legend .fm span {
+<style scoped>
+.legend .fm span {
 width: 10px; height: 10px;
 display: inline-block;
 }
