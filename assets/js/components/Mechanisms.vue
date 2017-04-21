@@ -36,8 +36,6 @@
     text-shadow: 0 0 1px #999;
   }
 
-
-
   .legend .fm {
     list-style-type: none;
     display: inline-block;
