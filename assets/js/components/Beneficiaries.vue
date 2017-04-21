@@ -1,33 +1,36 @@
 <template>
-<svg class="bar-thing" :width="width" :height="height">
-  <!-- TODO: move this to html? -->
-  <g class="fms">
-    <g v-for="(fm, k, index) in fms"
-       @click="filterFM(fm, $event)"
-       :class="'fm ' + fm.id"
-       :transform="`translate(${+index * 150},0)`"> {{ index }}
-      <!-- add a transparent rect to give it some clicking room -->
-      <rect width="26" height="16" transform="translate(-3,-3)" fill="transparent" />
-      <rect width="10" height="10" :fill="fm.colour" />
-      <text x="20" dy=".71em">{{ fm.name }}</text>
-    </g>
-  </g>
-  <g class="chart" transform="translate(0, 30)">
-  </g>
-</svg>
+<div class="bar-thing">
+  <div v-if="hasData" class="legend">
+    <fm-legend :fms="fms" class="clearfix">
+      <template slot="fm-content" scope="x">
+        <span :style="{backgroundColor: x.fm.colour}"></span>
+        {{ x.fm.name }}
+      </template>
+    </fm-legend>
+  </div>
+  <svg :width="width" :height="height">
+    <g class="chart"></g>
+  </svg>
+</div>
 </template>
 
+
 <style>
-.fms .fm { cursor: pointer; }
-.chart {}
+.legend .fm span {
+  width: 10px; height: 10px;
+  display: inline-block;
+}
 </style>
+
 
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
 
-import {FMColours} from '../constants.js';
-import FMs from 'js/constants/financial-mechanisms.json5';
+import BaseMixin from './mixins/Base';
+import ChartMixin from './mixins/Chart';
+import CSVReadingMixin from './mixins/CSVReading';
+import WithFMsMixin from './mixins/WithFMs';
 
 // load all country flags as sprites
 import _countries from 'js/constants/countries.json5';
@@ -40,148 +43,134 @@ function _get_flag_name(c) {
 const _req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
 // we could load all of _req.keys(), but we want things to fail
 // if there's a mismatch between country names and png files
+// (possible TODO: compare _req.keys() with _countries and warn if necessary )
 for (let _c of _countries) {
   const req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
   req(`./${_get_flag_name(_c)}.png`);
 }
-// TODO: compare _req.keys() with _countries and warn if necessary
 
 
 export default Vue.extend({
+  mixins: [
+    BaseMixin, CSVReadingMixin,
+    ChartMixin, WithFMsMixin,
+  ],
+
   props: {
-    datasource: String,
-    data: Object,
     width: Number,
     minHeight: {
       type: Number,
       default: 0,
     },
+    itemHeight: {
+      type: Number,
+      default: 20,
+    },
+    reserved: {
+      // reserved for country labels. TODO: change this name
+      type: Number,
+      default: 120,
+    },
   },
 
   data() {
     return {
-      fms: FMs,
-      // TODO: make this a mixin
-      colour: d3.scaleOrdinal()
-                .domain(d3.keys(FMColours))
-                .range(d3.values(FMColours)),
       height: this.minHeight,
     };
   },
 
-  mounted() {
-    this.svg = d3.select(this.$el);
-    this.main();
+  computed: {
+    x() {
+      return d3.scaleLinear()
+               .range([0, this.width - this.reserved])
+               .domain([0, d3.max(this.data, (d) => d.total)]);
+    },
+
+    y() {
+      return d3.scaleBand()
+               .paddingInner(0.5) // TODO: propify
+               .align(1)  // TODO: propify
+               .rangeRound([0, this.height])
+               .domain(this.data.map( (d) => d.name ));
+    },
   },
 
   methods: {
-    filterFM(fm, e)  {
-      console.log(fm);
-      console.log(e);
-    },
-    main() {
-      const $this = this;
-
-      if ($this.data) {
-        $this.drawChart($this.data);
-      } else {
-        d3.csv($this.datasource, function(d, i, columns) {
-          let total = 0,
-              column;
-          for (let j=2; j<columns.length; ++j) {
-            column = columns[j];
-            // (also make sure they're all ints)
-            total += d[column] = +d[column];
-          }
-          d.total = total;
-          return d;
-        }, function(error, data) {
-	  if (error) throw error;
-
-          $this.drawChart(data);
-        });
+    processRow(d, i, columns) {
+      let total = 0,
+          column;
+      // compute a total for each row
+      for (let j=2; j<columns.length; ++j) {
+        column = columns[j];
+        // (also make sure they're all ints)
+        total += d[column] = +d[column];
       }
+      d.total = total;
+
+      return d;
     },
 
-    drawChart(data) {
-      const $this = this;
+    processData(data) {
+      // sort it from the start.
+      // (sorting it later would cause data to mutate, which is bad)
+      return data.sort((a, b) => b.total - a.total);
+    },
 
-      data.sort((a, b) => b.total - a.total);
+    yAxis(g) {
+      // customizes the axis to add country flags
+      const axis = d3.axisLeft(this.y)
+                     .tickSize(0)
 
-      // reserved for country labels
-      const reserved = 120;
+      g.call(axis);
 
-      const stack = d3.stack();
-
-      const x = d3.scaleLinear()
-            .range([0, this.width - reserved]);
-
-      const y = d3.scaleBand()
-            .paddingInner(0.5)
-            .align(1);
-
-      // customize the axis to add country flags
-      function customYAxis(g) {
-        const axis = d3.axisLeft(y)
-              .tickSize(0)
-
-        g.call(axis);
-
-        const ticks = g.selectAll('.axis .tick');
-        // colorize domain bar
-        g.select('.axis .domain').attr('stroke', '#ccc');
-        // remove invisible ticks
-        ticks.select('line').remove();
-        // move text
+      const ticks = g.selectAll('.axis .tick');
+      // colorize domain bar
+      g.select('.axis .domain').attr('stroke', '#ccc');
+      // remove invisible ticks
+      ticks.select('line').remove();
+      // move text
         ticks.select('text').attr('x', -30);
-        ticks
-          .append('use')
-          .attr('xlink:href', (d) => `#${_get_flag_name(d)}`)
-          .attr('viewBox', '0 0 30 20')
-          .attr('transform', 'translate(-23,-6) scale(0.035,0.035)');
+      ticks
+        .append('use')
+        .attr('xlink:href', (d) => `#${_get_flag_name(d)}`)
+        .attr('viewBox', '0 0 30 20')
+        .attr('transform', 'translate(-23,-6) scale(0.035,0.035)');
+    },
 
-        /*
-        s.select(".domain").remove();
-        s.selectAll(".tick line").filter(Number).attr("stroke", "#777").attr("stroke-dasharray", "2,2");
-        s.selectAll(".tick text").attr("x", 4).attr("dy", -4);
-        if (s !== g) g.selectAll(".tick text").attrTween("x", null).attrTween("dy", null);
-        */
-      }
+    renderChart() {
+      const $this = this;
 
-      x.domain([0, d3.max(data, (d) => d.total)]);
-      var keys = data.columns.slice(2);
-      stack.keys(keys);
+      // resize the chart to fit the data
+      this.height = Math.max(this.minHeight,
+                              this.itemHeight * this.data.length);
 
-      const height = 20;
-      $this.height = Math.max(this.minHeight, height * data.length);
+      const stack = d3.stack()
+                      .keys(this.data.columns.slice(2))
 
-      y.rangeRound([0, $this.height]);
-      y.domain(data.map( (d) => d.name ))
-
-      // d3.stack returns items grouped by columns (keys),
-      // but we want them grouped by row
-      const _stacked = stack(data);
-      const xdata = d3.transpose(_stacked);
+      // transpose because we want items grouped by row.
+      // (d3.stack returns items grouped by columns (keys))
+      const _stacked = stack(this.data),
+            data = d3.transpose(_stacked);
 
       // but this loses items' keys, so fix it
       _stacked.forEach((d) => {
-        for (let item of xdata) {
+        for (let item of data) {
           item[d.index].key = d.key;
           // and while at it, set data at row level too
           if (!item.data) item.data = item[d.index].data;
         }
       });
 
-
-      const chart = $this.svg.select("g.chart")
+      const chart = $this.chart;
 
       const beneficiary = chart
 	    .selectAll(".beneficiary")
-            .data(xdata)
+            .data(data)
             .enter().append("g")
               .attr("class", "beneficiary")
               .attr("transform", (d, i) => {
-                return `translate(0,${y(d.data.name)})`;
+                const y = $this.y(d.data.name);
+                return `translate(0,${y})`;
               })
 
       // beneficiary
@@ -202,11 +191,11 @@ export default Vue.extend({
         .data((d) => d)
         .enter().append("rect")
           .attr("fill", (d) => $this.colour(d.key))
-          .attr("x", (d) => x(d[0]))
+          .attr("x", (d) => $this.x(d[0]))
           .attr("y", 0)
-          .attr("width", (d) => x(d[1]) - x(d[0]))
-          .attr("height", y.bandwidth)
-          .attr("transform", `translate(${reserved},0)`)
+          .attr("width", (d) => $this.x(d[1]) - $this.x(d[0]))
+          .attr("height", $this.y.bandwidth)
+          .attr("transform", `translate(${$this.reserved},0)`)
 
       // we might want to add the titles manually
       // if giving up the y() scale
@@ -216,8 +205,8 @@ export default Vue.extend({
 
       chart.append("g")
         .attr("class", "axis")
-        .attr("transform", `translate(${reserved},0)`)
-        .call(customYAxis)
+        .attr("transform", `translate(${$this.reserved},0)`)
+        .call($this.yAxis)
     },
   },
   watch: {
