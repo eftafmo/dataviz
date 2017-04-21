@@ -1,6 +1,5 @@
 <template>
 <div class="beneficiaries-viz">
-  <h2>Funding across beneficiary states</h2>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="fms" class="clearfix">
       <template slot="fm-content" scope="x">

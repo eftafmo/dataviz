@@ -93,3 +93,10 @@ a.muted:hover {
   padding-top: 2rem;
   border-top: 1px solid #ddd;
 }
+
+.grant-dataviz h2 {
+  text-align: left;
+  font-weight: 400;
+  color: rgb(35, 97, 146);
+  margin-top: 1rem;
+}

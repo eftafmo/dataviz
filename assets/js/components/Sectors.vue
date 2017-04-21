@@ -1,6 +1,6 @@
 <template>
-<div class="pie-thing">
-  <svg :width="width/2" :height="height">
+<div class="sectors-viz">
+  <svg :width="width" :height="height">
     <defs>
       <filter id="dropshadow" x="-50%" y="-50%"  height="200%" width="200%">
         <feGaussianBlur in="SourceAlpha" stdDeviation="3">
@@ -29,53 +29,53 @@
 </div>
 </template>
 
-<style>
+<style lang="less">
 .chart {}
 .legend {}
 .arc, .label { cursor: pointer; }
 .arc:hover, .arc.hovered { filter: url(#dropshadow); }
 .label:hover rect, .label.hovered rect { filter: url(#dropshadow); }
-.pie-thing {
+.sectors-viz {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   margin-bottom: 2rem;
-}
 
-.sectors-close-indicator {
- margin-left: 5px;
- color: #ccc;
-}
+  .sectors-close-indicator {
+   margin-left: 5px;
+   color: #ccc;
+  }
 
+  .label span {
+      display: inline-block;
+      margin-right: 5px;
+      white-space: normal;
+  }
 
-.label span {
-    display: inline-block;
-    margin-right: 5px;
-    white-space: normal;
-}
-
-.label span:first-of-type {
-        position: absolute;
-    right: 100%;
-    top: 5px;
-}
+  .label span:first-of-type {
+          position: absolute;
+      right: 100%;
+      top: 5px;
+  }
 
 
-.label {
-    position: relative;
-    white-space: nowrap;
-    margin-left:15px;
-    transition: all 400ms;
-}
-.sectors-legend-title {
-    font-size: 16px;
-    margin-left: 0;
-    margin-bottom: 1rem;
-    cursor: pointer;
-}
+  .label {
+    font-size: 1.8rem;
+      position: relative;
+      white-space: nowrap;
+      margin-left:15px;
+      transition: all 400ms;
+  }
+  .sectors-legend-title {
+      font-size: 2rem;
+      margin-left: 0;
+      margin-bottom: 1rem;
+      cursor: pointer;
+  }
 
-.legend {
-    max-width: 600px;
+  .legend {
+      max-width: 600px;
+  }
 }
 
 </style>

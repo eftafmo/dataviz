@@ -1,6 +1,5 @@
 <template>
 <div class="fms-viz">
-<h2>Funding by financial mechanism</h2>
   <svg :width="width" :height="height">
     <g class="chart"></g>
   </svg>
@@ -17,12 +16,6 @@
 
 
 <style lang="less">
-h2 {
-  text-align: left;
-  font-weight: 400;
-  color: rgb(35, 97, 146);
-  margin-top: 1rem;
-}
 .fms-viz {
    text-align: center;
   .fms {

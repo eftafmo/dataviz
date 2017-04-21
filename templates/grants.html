@@ -5,6 +5,7 @@
 
 {% block main %}
 <div class="grant-dataviz" id="financial-mechanisms">
+<h2>Funding by financial mechanism</h2>
   <mechanisms
       :width="800"
       :initial="data"
@@ -13,15 +14,17 @@
 </div>
 
 <div class="grant-dataviz" id="priority-sectors">
+<h2>Allocation by priority sector</h2>
   <sectors
-      :width="800"
-      :height="200"
+      :width="350"
+      :height="300"
       datasource="{% url "api:sector-allocation" %}"
   >
   </sectors>
 </div>
 
 <div class="grant-dataviz" id="beneficiary-states">
+<h2>Funding across beneficiary states</h2>
   <beneficiaries
       :width="500"
       :min-height="200"
