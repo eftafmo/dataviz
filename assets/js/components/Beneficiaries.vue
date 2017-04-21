@@ -9,10 +9,13 @@
     </fm-legend>
   </div>
   <svg :width="width" :height="height">
-    <g class="chart"></g>
+    <g class="chart">
+      <g class="domain" :transform="`translate(${reserved},0)`">
+        <line :y2="height" />
+      </g>
+    </g>
   </svg>
 </div>
-
 </template>
 
 
@@ -39,6 +42,21 @@
     text-shadow: 0 0 1px #999;
   }
 
+  svg .domain line {
+    stroke: #ccc;
+    shape-rendering: crispEdges;
+  }
+
+  .chart {
+    .beneficiary {
+      text {
+        font-size: 10px;
+        font-family: sans-serif;
+        fill: #333;
+        text-anchor: end;
+      }
+    }
+  }
 }
 
 </style>
@@ -87,12 +105,41 @@ export default Vue.extend({
 
   computed: {
     data() {
-      // return sorted data
-      // (and make a copy to avoid mutating things)
-      const clone = this.dataset.slice(0);
-      // this one's set by the csv parser
-      clone.columns = this.dataset.columns;
-      return clone.sort((a, b) => b.total - a.total);
+      // massage data so it's appropriate for a stacked barchart
+
+      const keys = this.filters.fm ?
+                   [this.filters.fm] :
+                   this.dataset.columns.slice(2); // skips id & name
+      const stack = d3.stack()
+                      .keys(keys);
+
+      // transpose because we want items grouped by row.
+      // (d3.stack returns items grouped by columns (keys))
+      const data = d3.transpose(stack(this.dataset));
+
+      // add some useful properties
+      data.forEach( (row, i) => {
+        Object.assign(row, {
+          id: this.dataset[i].id,
+          country: this.dataset[i].name,
+          total: d3.sum(row, (d) => d[1] - d[0]),
+        });
+
+        row.forEach( (item, j) => {
+          // the fm, per-item
+          item.fm = keys[j];
+          // it will be useful to know the country at this level too
+          item.country = row.country;
+          // also clear old data
+          delete item.data;
+        })
+      });
+
+      // sort by total
+      data.sort((a, b) => b.total - a.total);
+
+      // and return filtered
+      return data.filter((d) => d.total != 0);
     },
 
     x() {
@@ -106,121 +153,107 @@ export default Vue.extend({
                .paddingInner(0.5) // TODO: propify
                .align(1)  // TODO: propify
                .rangeRound([0, this.height])
-               .domain(this.data.map( (d) => d.name ));
+               .domain(this.data.map( (d) => d.country ));
     },
   },
 
   methods: {
-    processRow(d, i, columns) {
-      let total = 0,
-          column;
-      // compute a total for each row
-      for (let j=2; j<columns.length; ++j) {
-        column = columns[j];
-        // (also make sure they're all ints)
-        total += d[column] = +d[column];
-      }
-      d.total = total;
+    renderItems(context) {
+      // this could receive both a selection and a transition
+      const selection = context.selection ? context.selection() : context;
 
-      return d;
-    },
+      const items = selection.selectAll("rect.fm").data(
+        (d) => d, // re-bind local data (to create a join)
+        (d) => [d.country, d.fm] // the key
+      );
 
-    yAxis(g) {
-      // customizes the axis to add country flags
-      const axis = d3.axisLeft(this.y)
-                     .tickSize(0)
+      items.enter().append("rect") // ENTER-only
+        .attr("class", (d) => "fm " + d.fm)
+        .attr("fill", (d) => this.colour(d.fm))
+        .attr("y", 0) // this is handled in the parent
+        .attr("height", this.y.bandwidth)
 
-      g.call(axis);
+      .merge(items) // ENTER + UPDATE
+        .attr("x", (d) => this.x(d[0]))
+        .attr("width", (d) => this.x(d[1]) - this.x(d[0]));
 
-      const ticks = g.selectAll('.axis .tick');
-      // colorize domain bar
-      g.select('.axis .domain').attr('stroke', '#ccc');
-      // remove invisible ticks
-      ticks.select('line').remove();
-      // move text
-        ticks.select('text').attr('x', -30);
-      ticks
-        .append('use')
-        .attr('xlink:href', (d) => `#${get_flag_name(d)}`)
-        .attr('viewBox', '0 0 30 20')
-        .attr('transform', 'translate(-23,-6) scale(0.035,0.035)');
+      items.exit() // EXIT
+        .remove();
     },
 
     renderChart() {
-      const $this = this;
+      const data = this.data;
 
       // resize the chart to fit the data
-      this.height = Math.max(this.minHeight,
-                              this.itemHeight * this.data.length);
+      this.height = Math.max(this.minHeight, // TODO: lose min-height?
+                             this.itemHeight * data.length);
 
-      const stack = d3.stack()
-                      .keys(this.data.columns.slice(2))
+      const chart = this.chart;
 
-      // transpose because we want items grouped by row.
-      // (d3.stack returns items grouped by columns (keys))
-      const _stacked = stack(this.data),
-            data = d3.transpose(_stacked);
+      /*
+       * main stuff
+       */
+      const beneficiaries = chart
+	    .selectAll("g.beneficiary")
+            .data(data, (d) => d.country); /* JOIN */
 
-      // but this loses items' keys, so fix it
-      _stacked.forEach((d) => {
-        for (let item of data) {
-          item[d.index].key = d.key;
-          // and while at it, set data at row level too
-          if (!item.data) item.data = item[d.index].data;
-        }
-      });
+      beneficiaries.exit() /* EXIT */
+        .remove();
 
-      const chart = $this.chart;
+      // insert the rows instead of appending
+      // (makes sure the domain line stays on top)
+      const bentered = beneficiaries.enter().insert("g") /* ENTER */
+        .attr("class", (d) => "beneficiary " + d.country);
 
-      const beneficiary = chart
-	    .selectAll(".beneficiary")
-            .data(data)
-            .enter().append("g")
-              .attr("class", "beneficiary")
-              .attr("transform", (d, i) => {
-                const y = $this.y(d.data.name);
-                return `translate(0,${y})`;
-              })
+      const bmerged = bentered.merge(beneficiaries) /* ENTER _and_ UPDATE */
+        .attr("transform", (d) => `translate(0,${this.y(d.country)})`);
 
-      // beneficiary
-      //   .transition()
-      //   .duration(1000)
-      //   .attrTween("transform" , (d, i) => {
-      //     const interpolate = d3.interpolate($this.height / 2,i * (height + spacing));
-      //     return (y) => `translate(0, ${interpolate(y)})`;
-      //   });
+      /*
+       * render the "legend" part
+       */
+      // (it's not really a legend 'cause it's part of the row. you get it.)
+      const _padding = 5,
+            // this could be smarter, but whatever
+            __flg = { // the image dimensions
+              w: 60,
+              h: 40,
+            },
+            _flag = { // our dimensions
+              w: __flg.w * this.y.bandwidth() / __flg.h,
+              h: this.y.bandwidth(),
+            }
 
-      beneficiary
-        .append("title")
-        .text((d) => d.data.name);
+      const country = bentered.append("g")
+            .attr("transform",
+                  `translate(${this.reserved - (_padding + _flag.w)},0)`
+                 );
 
-      beneficiary
-        .selectAll("rect")
-      // this is needed to re-iterate on inner data
-        .data((d) => d)
-        .enter().append("rect")
-          .attr("fill", (d) => $this.colour(d.key))
-          .attr("x", (d) => $this.x(d[0]))
-          .attr("y", 0)
-          .attr("width", (d) => $this.x(d[1]) - $this.x(d[0]))
-          .attr("height", $this.y.bandwidth)
-          .attr("transform", `translate(${$this.reserved},0)`)
+      country.append("text")
+        .text((d) => d.country)
+        .attr("x", -_padding)
+      // v-align
+        .attr("y", this.y.bandwidth() * this.y.paddingInner())
+        .attr("dy", ".32em"); // magical self-centering offset
 
-      // we might want to add the titles manually
-      // if giving up the y() scale
-      // beneficiary
-      //   .append("text")
-      //   .text((d) => d.data.name)
+      country.append("use")
+        .attr("xlink:href", (d) => `#${get_flag_name(d.country)}`)
+        .attr("width", _flag.w)
+        .attr("height", _flag.h);
 
-      chart.append("g")
-        .attr("class", "axis")
-        .attr("transform", `translate(${$this.reserved},0)`)
-        .call($this.yAxis)
+      /*
+       * render data items
+       */
+      const items = bentered.append("g")
+            .attr("class", "items")
+            .attr("transform", (d) => `translate(${this.reserved},0)`);
+
+      // but we want to run the item rendering both in ENTER and UPDATE
+      items.merge(beneficiaries.select("g.items"))
+        .call(this.renderItems);
     },
-  },
-  watch: {
-    datasource: {
-      handler: 'main',
+
+    handleFilterFm() {
+      this.render();
     },
   },
 });
