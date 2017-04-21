@@ -3,17 +3,13 @@
   <svg :width="width" :height="height">
     <g class="chart"></g>
   </svg>
-  <div v-if="data" class="legend">
-    <ul class="fms clearfix">
-      <li v-for="(fm, k, index) in fms"
-          @click="toggleFm(fm, $event.target)"
-          class="fm"
-          :class="[fm.id, getFilterClass(fm)]"
-      >
-        <span class="value" :style="{color: colour(fm.id)}">{{ format(fm.value) }}</span>
-        <span class="name">{{ fm.name }}</span>
-      </li>
-    </ul>
+  <div v-if="hasData" class="legend">
+    <fm-legend :fms="fms" class="clearfix">
+      <template slot="fm-content" scope="x">
+        <span class="value" :style="{color: colour(x.fm)}">{{ format(value(x.fm)) }}</span>
+        <span class="name">{{ x.fm.name }}</span>
+      </template>
+    </fm-legend>
   </div>
 </div>
 </template>
@@ -23,6 +19,7 @@
 .bar-thing,.fms {
   text-align: center;
 }
+
 .fm { cursor: pointer; }
 
 .legend .fm {
@@ -70,13 +67,14 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 
 import BaseMixin from './mixins/Base.vue';
+import ChartMixin from './mixins/Chart.vue';
 import WithFMsMixin from './mixins/WithFMs.vue';
 
 import FMs from 'js/constants/financial-mechanisms.json5';
 
 
 export default Vue.extend({
-  mixins: [BaseMixin, WithFMsMixin],
+  mixins: [BaseMixin, ChartMixin, WithFMsMixin],
 
   props: {
     width: Number,
@@ -91,19 +89,10 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    fms() {
-      const fms = Object.assign({}, FMs);
-      for (let fm in fms) {
-        fms[fm].value = this.data[fm] || 0;
-      }
-      return fms;
-    },
-  },
-
   methods: {
-    main() {
-      this.renderChart();
+    value(fm) {
+      const fmid = this.getFmId(fm);
+      return this.data[fmid] || 0;
     },
 
     renderChart() {
@@ -113,11 +102,11 @@ export default Vue.extend({
 
       var x = d3.scaleLinear()
           .rangeRound([0, this.width])
-          .domain([0, d3.sum(d3.values($this.data))]);
+          .domain([0, d3.sum(d3.values(this.data))]);
 
       const fms = chart
 	    .selectAll(".fm")
-            .data(d3.entries($this.data))
+            .data(d3.entries(this.data))
             .enter().append("rect")
             .attr("class", (d) => "fm " + d.key);
 
@@ -133,77 +122,35 @@ export default Vue.extend({
             `scale(-1,1) translate(-${this.width},0)`
           );
         })
-        .attr("fill", (d) => $this.colour(d.key))
+        .attr("fill", (d) => this.colour(d))
         .transition()
         .duration(500)
-        .attr("width", (d) => x(d.value));
+        .attr("width", (d) => x(this.value(d)));
 
       fms
-        .append("title").text((d) => $this.format(d.value));
+        .append("title").text((d) => this.format(this.value(d)));
       fms
-        .append("desc").text((d) => $this.fms[d.key].name);
+        .append("desc").text((d) => this.fms[d.key].name);
 
       fms
         .on("click", function (d) {
-          $this.toggleFm($this.fms[d.key], this);
+          $this.toggleFm(d, this);
         });
 
       // remember the current selection, we'll use it for transitionsc
       this._chart_fms = fms;
     },
 
-    getFmId(fm) {
-      // silly utility func to return FM's id regardless of input type
-
-      // is this the id already?
-      if (typeof fm == "string") return fm;
-      if (typeof fm == "object") {
-        // regular fm object?
-        if (fm.id) return fm.id;
-        // a result of d3.entries()?
-        if (fm.key) return fm.key;
-      }
-      throw `Can't get FM id for ${typeof fm}.`
-    },
-
-    toggleFm(fm, etarget) {
-      const fmid = this.getFmId(fm);
-      this.filters.fm = this.filters.fm == fmid ?
-                         null : fmid;
-    },
-
-    getFilterClass(fm) {
-      if (!this.filters.fm)
-        return;
-
-      if (this.isSelected(fm))
-        return "selected";
-
-      if (this.isDisabled(fm))
-        return "disabled";
-    },
-
-    isSelected(fm) {
-      if (!this.filters.fm) return;
-      return this.filters.fm == this.getFmId(fm);
-    },
-    isDisabled(fm) {
-      if (!this.filters.fm) return;
-      return this.filters.fm != this.getFmId(fm);
-    },
-
     handleFilterFm(val, old) {
       // transition the chart to disabled / selected.
       // (the legend is handled by vue.)
-
-      const $this = this;
 
       // TODO: handle the case when !this.isReady()
       this._chart_fms
         .transition()
         .duration(500)
-        .attr("fill", (d) => (this.isDisabled(d.key) ?
-                              $this.disabled_colour : $this.colour(d.key))
+        .attr("fill", (d) => (this.isDisabled(d) ?
+                              this.disabled_colour : this.colour(d))
         );
     },
   },

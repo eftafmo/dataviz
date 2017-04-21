@@ -16,19 +16,25 @@ export default {
 
   data() {
     return {
-      data: this.initial && this.processData(this.initial) || {},
+      data: this.initial && this.processData(this.initial) || undefined,
       filters: FILTERS,
     };
   },
 
   computed: {
+    hasData() {
+      return !!(this.data
+                // safeguard because empty vue observables evaluate to true
+                && Object.keys(this.data).length);
+    },
     isReady() {
-      return !!(this.data && this.$el);
+      return !!(this.hasData
+                && this.$el);
     },
   },
 
   created() {
-    if (!this.data) this.fetchData();
+    if (!this.hasData) this.fetchData();
   },
 
   mounted() {
@@ -39,7 +45,7 @@ export default {
     main() {
       /*
        * main entry point.
-       * implementation make sure this it only gets called when on ready
+       * implementations need to make sure this only gets called on ready
        */
 
       throw "Not implemented";
@@ -99,7 +105,7 @@ export default {
   watch: {
     'data': {
       handler() {
-        if (this.isReady) main();
+        if (this.isReady) this.main();
       },
     },
     'filters.fm': 'handleFilterFm',
