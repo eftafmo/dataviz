@@ -1,5 +1,5 @@
 <template>
-<div class="bar-thing">
+<div class="fms-viz">
 <h2>Funding by financial mechanism</h2>
   <svg :width="width" :height="height">
     <g class="chart"></g>
@@ -16,56 +16,59 @@
 </template>
 
 
-<style>
+<style lang="less">
 h2 {
   text-align: left;
   font-weight: 400;
   color: rgb(35, 97, 146);
   margin-top: 1rem;
 }
-.bar-thing,.fms {
-  text-align: center;
+.fms-viz {
+   text-align: center;
+  .fms {
+    text-align: center;
+  }
+
+  .fm { cursor: pointer; }
+
+  .legend .fm {
+    transition: all .5s ease;
+  }
+  .legend .fm.disabled {
+    filter: grayscale(100%);
+    opacity: 0.5;
+  }
+
+  .legend .fm.selected {
+    text-shadow: 0 0 1px #999;
+  }
+
+
+
+  .legend .fm {
+    list-style-type: none;
+    display: inline-block;
+  }
+
+  .legend .fm {
+    border-right: 1px solid #aaa;
+    padding-right:2rem;
+  }
+
+  .legend .fm:last-of-type {
+    padding-left: 2rem;
+    border-right: none;
+  }
+
+  .legend .value {
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .legend .fm .name {
+    display: block;
+  }
 }
-
-.fm { cursor: pointer; }
-
-.legend .fm {
-  transition: all .5s ease;
-}
-.legend .fm.disabled {
-  filter: grayscale(100%);
-  opacity: 0.5;
-}
-
-.legend .fm.selected {
-  text-shadow: 0 0 1px #999;
-}
-
-
-.legend .fm {
-  list-style-type: none;
-  display: inline-block;
-}
-
-.legend .fm {
-  border-right: 1px solid #aaa;
-  padding-right:2rem;
-}
-
-.legend .fm:last-of-type {
-  padding-left: 2rem;
-  border-right: none;
-}
-
-.legend .value {
-  font-size: 1.8rem;
-  font-weight: bold;
-}
-
-.legend .fm .name {
-  display: block;
-}
-
 
 </style>
 

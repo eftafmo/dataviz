@@ -117,6 +117,19 @@ module.exports = {
           // 'image?bypassOnDebug&optimizationLevel=7&interlaced=false',
         ]
       },
+      {
+          test: /\.less$/,
+          use: [{
+              loader: "style-loader"
+          }, {
+                loader: "css-loader"
+          }, {
+               loader: "less-loader", options: {
+                  strictMath: true,
+                   noIeCompat: true
+                }
+          }]
+        }
     ]
   },
   plugins: [

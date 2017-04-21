@@ -1,5 +1,5 @@
 <template>
-<div class="bar-thing">
+<div class="beneficiaries-viz">
   <h2>Funding across beneficiary states</h2>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="fms" class="clearfix">
@@ -17,10 +17,17 @@
 </template>
 
 
-<style scoped>
-.legend .fm span {
-width: 10px; height: 10px;
-display: inline-block;
+<style lang="less">
+.beneficiaries-viz {
+  .legend .fm span {
+    width: 10px; height: 10px;
+    display: inline-block;
+  }
+  .legend li {
+    list-style-type: none;
+    display: inline-block;
+    margin-right: 2rem;
+  }
 }
 
 </style>
