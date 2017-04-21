@@ -42,26 +42,27 @@ h2 {
 }
 
 
-.fm {
+.legend .fm {
   list-style-type: none;
   display: inline-block;
 }
 
-.fm:first-of-type {
+.legend .fm {
   border-right: 1px solid #aaa;
   padding-right:2rem;
 }
 
-.fm:last-of-type {
+.legend .fm:last-of-type {
   padding-left: 2rem;
+  border-right: none;
 }
 
-.value {
+.legend .value {
   font-size: 1.8rem;
   font-weight: bold;
 }
 
-.fm .name {
+.legend .fm .name {
   display: block;
 }
 
