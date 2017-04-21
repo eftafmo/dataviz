@@ -345,11 +345,6 @@ export default Vue.extend({
       return d3.select("#" + selector(obj.datum()));
     },
 
-    _getLabel(obj) {
-       const selector = this.getLabelID ;
-      return d3.select("#" + selector(obj.datum()));
-    },
-
     mouseover(item) {
       const $this = this,
             _this = d3.select(item),
