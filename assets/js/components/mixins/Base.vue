@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 // site-wide navigation filters
 const FILTERS = {
   fm: null,
-  state: null,
+  region: null,
   sector: null,
 };
 
@@ -118,6 +118,7 @@ export default {
         if (this.isReady) this.main();
       },
     },
+    // make sure every key exists from the start
     'filters.fm': 'handleFilterFm',
     'filters.region': 'handleFilterRegion',
     'filters.sector': 'handleFilterSector',

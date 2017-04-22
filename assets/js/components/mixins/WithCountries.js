@@ -1,12 +1,12 @@
 /*
- * This isn't really a mixin.
- * It just imports all country flags as svg sprites,
+ * First, import all country flags as svg sprites,
  * using webpack's svg-sprite-loader.
  */
 
 import countries from 'js/constants/countries.json5';
 
-function get_flag_name(c) {
+// TODO: get this from country iso
+export function get_flag_name(c) {
   const flag = c.toLowerCase().replace(/ /g, '');
   return `flag-${flag}`;
 }
@@ -19,4 +19,12 @@ for (let c of countries) {
   req(`./${get_flag_name(c)}.png`);
 }
 
-export {get_flag_name};
+export default {
+  methods: {
+    toggleBeneficiary(b, etarget) {
+      // TODO: handle NUTS sub-units
+      this.filters.region = this.filters.region == b ?
+                            null : b;
+    },
+  },
+};

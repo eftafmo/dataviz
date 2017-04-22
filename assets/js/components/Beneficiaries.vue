@@ -49,6 +49,13 @@
 
   .chart {
     .beneficiary {
+      cursor: pointer;
+      pointer-events: all;
+
+      ._fill {
+        fill: none;
+      }
+
       text {
         font-size: 10px;
         font-family: sans-serif;
@@ -70,14 +77,13 @@ import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
-// this one's mostly loaded for side-effects
-import {get_flag_name} from './mixins/WithCountries';
+import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
 
 
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin,
+    ChartMixin, WithFMsMixin, WithCountriesMixin,
   ],
 
   props: {
@@ -132,8 +138,6 @@ export default Vue.extend({
 
           // the fm, per-item
           item.fm = keys[j];
-          // it's useful to store the country too
-          item.country = row.country;
 
           // also clear old data
           delete item.data;
@@ -146,7 +150,7 @@ export default Vue.extend({
 
         Object.assign(row, {
           id: this.dataset[i].id,
-          country: this.dataset[i].name,
+          name: this.dataset[i].name,
           total: d3.sum(row, (d) => d.value),
         });
       });
@@ -169,7 +173,7 @@ export default Vue.extend({
                .paddingInner(0.5) // TODO: propify
                .align(0.5)  // TODO: propify
                .rangeRound([0, this.xheight])
-               .domain(this.data.map( (d) => d.country ));
+               .domain(this.data.map( (d) => d.id ));
     },
   },
 
@@ -181,7 +185,7 @@ export default Vue.extend({
 
       const items = selection.selectAll("rect.fm").data(
         (d) => d, // re-bind local data (to create a join)
-        (d) => [d.country, d.fm] // the key
+        (d) => d.fm // the key
       );
 
       items.enter().append("rect") // ENTER-only
@@ -204,7 +208,8 @@ export default Vue.extend({
     },
 
     renderChart() {
-      const data = this.data;
+      const $this = this,
+            data = this.data;
 
       const chart = this.chart;
       // using 2 transitions makes things easier to follow
@@ -242,18 +247,18 @@ export default Vue.extend({
        */
       const beneficiaries = chart
 	    .selectAll("g.beneficiary")
-            .data(data, (d) => d.country); /* JOIN */
+            .data(data, (d) => d.name); /* JOIN */
 
       // insert the rows instead of appending
       // (makes sure the domain line stays on top)
       const bentered = beneficiaries.enter().insert("g") /* ENTER */
-        .attr("class", (d) => "beneficiary " + d.country)
+        .attr("class", (d) => "beneficiary " + d.id)
         .attr("transform", `translate(0,${this.xheight})`)
 
       bentered.merge(beneficiaries) /* ENTER _and_ UPDATE */
         .transition(t)
         .attr("opacity", 1)
-        .attr("transform", (d) => `translate(0,${this.y(d.country)})`);
+        .attr("transform", (d) => `translate(0,${this.y(d.id)})`);
 
       beneficiaries.exit() /* EXIT */
         .transition(t)
@@ -270,12 +275,17 @@ export default Vue.extend({
           (d_) => d_.fm + ":\t" + this.format(d_.value)
         ).join("\n")
       )
+      // draw a transparent rectangle to get continuos mouse-overing
+      bentered.append("rect")
+        .attr("class", "_fill")
+        .attr("width", this.width)
+        .attr("height", this.y.bandwidth())
 
       /*
        * render the "legend" part
        */
       // (it's not really a legend 'cause it's part of the row. you get it.)
-      const _padding = 5,
+      const _padding = 5, // TODO: propify
             // this could be smarter, but whatever
             __flg = { // the image dimensions
               w: 60,
@@ -292,14 +302,14 @@ export default Vue.extend({
                  );
 
       country.append("text")
-        .text((d) => d.country)
-        .attr("x", -_padding)
+        .text((d) => d.name)
+        .attr("x", - _padding)
       // v-align
         .attr("y", this.y.bandwidth() * this.y.paddingInner())
         .attr("dy", ".32em"); // magical self-centering offset
 
       country.append("use")
-        .attr("xlink:href", (d) => `#${get_flag_name(d.country)}`)
+        .attr("xlink:href", (d) => `#${get_flag_name(d.name)}`)
         .attr("width", _flag.w)
         .attr("height", _flag.h);
 
@@ -320,6 +330,14 @@ export default Vue.extend({
                    .select("g.items")
         .transition(t_)
         .call(this.renderItems);
+
+      /*
+       * and finally, events
+       */
+      bentered
+        .on("click", function (d) {
+          $this.toggleBeneficiary(d.id, this);
+        });
     },
 
     handleFilterFm() {
