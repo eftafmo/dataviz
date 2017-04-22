@@ -263,6 +263,15 @@ export default Vue.extend({
         //.remove();
 
       /*
+       *
+       */
+      bentered.append("title").text(
+        (d) => d.map(
+          (d_) => d_.fm + ":\t" + this.format(d_.value)
+        ).join("\n")
+      )
+
+      /*
        * render the "legend" part
        */
       // (it's not really a legend 'cause it's part of the row. you get it.)
