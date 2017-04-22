@@ -11,7 +11,7 @@
   <svg :width="width" :height="height">
     <g class="chart">
       <g class="domain" :transform="`translate(${reserved},0)`">
-        <line :y2="height" />
+        <line />
       </g>
     </g>
   </svg>
@@ -99,6 +99,7 @@ export default Vue.extend({
 
   data() {
     return {
+      xheight: 0,
       height: this.minHeight,
     };
   },
@@ -117,28 +118,43 @@ export default Vue.extend({
       // (d3.stack returns items grouped by columns (keys))
       const data = d3.transpose(stack(this.dataset));
 
-      // add some useful properties
+      // iterate to add some useful properties
       data.forEach( (row, i) => {
+        // these will be removed
+        const _zeroes = [];
+
+        row.forEach( (item, j) => {
+          const value = item[1] - item[0];
+          if (value == 0) {
+            _zeroes.push(j);
+          }
+          item.value = value;
+
+          // the fm, per-item
+          item.fm = keys[j];
+          // it's useful to store the country too
+          item.country = row.country;
+
+          // also clear old data
+          delete item.data;
+        });
+
+        if(_zeroes) {
+          _zeroes.reverse();
+          _zeroes.forEach((i) => row.splice(i, 1));
+        }
+
         Object.assign(row, {
           id: this.dataset[i].id,
           country: this.dataset[i].name,
-          total: d3.sum(row, (d) => d[1] - d[0]),
+          total: d3.sum(row, (d) => d.value),
         });
-
-        row.forEach( (item, j) => {
-          // the fm, per-item
-          item.fm = keys[j];
-          // it will be useful to know the country at this level too
-          item.country = row.country;
-          // also clear old data
-          delete item.data;
-        })
       });
 
       // sort by total
       data.sort((a, b) => b.total - a.total);
 
-      // and return filtered
+      // return filtered
       return data.filter((d) => d.total != 0);
     },
 
@@ -151,8 +167,8 @@ export default Vue.extend({
     y() {
       return d3.scaleBand()
                .paddingInner(0.5) // TODO: propify
-               .align(1)  // TODO: propify
-               .rangeRound([0, this.height])
+               .align(0.5)  // TODO: propify
+               .rangeRound([0, this.xheight])
                .domain(this.data.map( (d) => d.country ));
     },
   },
@@ -160,7 +176,8 @@ export default Vue.extend({
   methods: {
     renderItems(context) {
       // this could receive both a selection and a transition
-      const selection = context.selection ? context.selection() : context;
+      const selection = context.selection ? context.selection() : context,
+            t = context;
 
       const items = selection.selectAll("rect.fm").data(
         (d) => d, // re-bind local data (to create a join)
@@ -174,21 +191,51 @@ export default Vue.extend({
         .attr("height", this.y.bandwidth)
 
       .merge(items) // ENTER + UPDATE
+        .transition(t)
         .attr("x", (d) => this.x(d[0]))
         .attr("width", (d) => this.x(d[1]) - this.x(d[0]));
 
       items.exit() // EXIT
-        .remove();
+        .transition(t)
+      // get down to 0 if the first, or up the end if not
+        .attr("x", (d) => this.x(d[0]))
+        .attr("width", 0)
+        //.remove();
     },
 
     renderChart() {
       const data = this.data;
 
-      // resize the chart to fit the data
-      this.height = Math.max(this.minHeight, // TODO: lose min-height?
-                             this.itemHeight * data.length);
-
       const chart = this.chart;
+      // using 2 transitions makes things easier to follow
+      // (the removal / repositioning will be slightly delayed)
+      const t = d3.transition(),
+            t_ = d3.transition();
+      // don't animate anything the first time
+      if (this._rendered) {
+        t.duration(750);
+        t_.duration(350);
+      }
+      else {
+        t.duration(0);
+        t_.duration(0);
+        this._rendered = true;
+      }
+
+      // resize the chart to fit the data
+      this.xheight = Math.max(this.minHeight, // TODO: lose min-height?
+                              this.itemHeight * data.length);
+      // TODO: decide what to do with this:
+      // - keep it immutable to max?
+      // - jump suddenly at transition end?
+      // - animate?
+      // anyway, if we need extra-room, take immediate action
+      this.height = Math.max(this.height, this.xheight)
+
+      // most important thing first: animate the line!
+      chart.select(".domain line")
+        .transition(t)
+        .attr("y2", this.xheight);
 
       /*
        * main stuff
@@ -197,16 +244,23 @@ export default Vue.extend({
 	    .selectAll("g.beneficiary")
             .data(data, (d) => d.country); /* JOIN */
 
-      beneficiaries.exit() /* EXIT */
-        .remove();
-
       // insert the rows instead of appending
       // (makes sure the domain line stays on top)
       const bentered = beneficiaries.enter().insert("g") /* ENTER */
-        .attr("class", (d) => "beneficiary " + d.country);
+        .attr("class", (d) => "beneficiary " + d.country)
+        .attr("transform", `translate(0,${this.xheight})`)
 
-      const bmerged = bentered.merge(beneficiaries) /* ENTER _and_ UPDATE */
+      bentered.merge(beneficiaries) /* ENTER _and_ UPDATE */
+        .transition(t)
+        .attr("opacity", 1)
         .attr("transform", (d) => `translate(0,${this.y(d.country)})`);
+
+      beneficiaries.exit() /* EXIT */
+        .transition(t)
+        .attr("opacity", 0)
+        .attr("transform", `translate(0,${this.xheight})`)
+        // don't remove, save some dom operations
+        //.remove();
 
       /*
        * render the "legend" part
@@ -243,12 +297,19 @@ export default Vue.extend({
       /*
        * render data items
        */
-      const items = bentered.append("g")
+      const items = bentered.append("g") // we're still in ENTER here,
             .attr("class", "items")
             .attr("transform", (d) => `translate(${this.reserved},0)`);
 
       // but we want to run the item rendering both in ENTER and UPDATE
       items.merge(beneficiaries.select("g.items"))
+        .transition(t_)
+        .call(this.renderItems);
+      // aand we also want to run it in EXIT, but with empty data
+      // (normally the old data gets sent, so the items don't get disappeared)
+      beneficiaries.exit().each( (d) => (d.splice(0)) )
+                   .select("g.items")
+        .transition(t_)
         .call(this.renderItems);
     },
 
