@@ -2,6 +2,8 @@
 
 # basic prerequisites
 application-user:
+  group.present:
+    - name: {{ settings.group }}
   user.present:
     - name: {{ settings.user }}
     - gid: {{ settings.group }}
@@ -12,18 +14,29 @@ application-user:
 {%- endif %}
 #}
     - empty_password: True
+    - require:
+        - group: {{ settings.group }}
+
+application-root-dir:
+  # creating this first because the order below is unpredictable
+  file.directory:
+    - name: {{ settings.root_dir }}
+    - user: {{ settings.user }}
+    - group: {{ settings.group }}
+    - require:
+        - user: application-user
 
 application-dirs:
   file.directory:
     - names:
-        - {{ settings.root_dir }}
         - {{ settings.webroot_dir }}
         - {{ settings.etc_dir }}
         - {{ settings.run_dir }}
         - {{ settings.log_dir }}
     - user: {{ settings.user }}
+    - group: {{ settings.group }}
     - require:
-        - user: application-user
+        - file: application-root-dir
 
 application-webserver-user:
   # add httpd user to app's user group
