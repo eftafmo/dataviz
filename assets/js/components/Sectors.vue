@@ -53,21 +53,22 @@
   }
 
   .label span:first-of-type {
-          position: absolute;
+      position: absolute;
       right: 100%;
-      top: 5px;
+      top: 0;
   }
 
 
   .label {
-    font-size: 1.8rem;
-      position: relative;
-      white-space: nowrap;
-      margin-left:15px;
-      transition: all 400ms;
+    font-size: 1.4rem;
+    margin-bottom: .7rem;
+    position: relative;
+    white-space: nowrap;
+    margin-left:15px;
+    transition: all 400ms;
   }
   .sectors-legend-title {
-      font-size: 2rem;
+      font-size: 1.6rem;
       margin-left: 0;
       margin-bottom: 1rem;
       cursor: pointer;
@@ -75,6 +76,7 @@
 
   .legend {
       max-width: 600px;
+      margin-left: 5rem;
   }
 }
 
@@ -166,7 +168,7 @@ export default Vue.extend({
         .startAngle(function(d) { return $this._angle(d.x0) })
         .endAngle(function(d) { return $this._angle(d.x1) })
         .outerRadius($this.radius)
-        .innerRadius($this.radius * 70 / 100);
+        .innerRadius($this.radius * 65 / 100);
         //.outerRadius((d) => d.y0/2)
         //.innerRadius((d) => d.y1/2);
     },
@@ -419,12 +421,11 @@ export default Vue.extend({
 
       this._labels = label;
       label.append("span")
-      .style('width', label_size + 'px')
-      .style('height', label_size + 'px')
+      .style('width', 1.7*label_size + 'px')
+      .style('height', 1.7*label_size + 'px')
       .style('background', $this._colour)
 
       label.append('span')
-      .style('color', $this._colour)
       .attr('x', label_size + label_spacing)
       .attr('y', label_size)
       .text(function(d) { return d.data.name; });
