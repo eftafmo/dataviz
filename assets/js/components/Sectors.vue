@@ -24,8 +24,9 @@
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
-  <div class="legend" :transform="`translate(${radius * 2 + radius / 2},${margin})`">
-  </div>
+<!--   <div class="legend" :transform="`translate(${radius * 2 + radius / 2},${margin})`">
+  </div> -->
+  <div class="legend"></div>
 </div>
 </template>
 

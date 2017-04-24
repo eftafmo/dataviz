@@ -92,6 +92,7 @@ a.muted:hover {
 .grant-dataviz {
   padding-top: 2rem;
   border-top: 1px solid #ddd;
+  position: relative;
 }
 
 .grant-dataviz h2 {
