@@ -83,3 +83,49 @@ app-setup:
         ALLOWED_HOSTS = ["{{ settings.hostname }}"]
     - require:
         - file: app-pre-setup
+  pkg.installed:
+    - name: npm
+    - fromrepo: stretch
+    - require:
+      - pkgrepo: apt-release-stretch
+  npm.bootstrap:
+    - name: {{ settings.repo_dir }}
+    - user: {{ settings.user }}
+    - require:
+      - pkg: npm
+
+{%- if IS_DEV -%}
+
+{%- set service = "webpack-%s.service" % settings['project_name'] %}
+{%- set service_file = salt['file.join']('/etc/systemd/system/', service) %}
+
+app-webpack-service:
+  file.managed:
+    - name: {{ service_file }}
+    - source: salt://application/files/webpack.service
+    - template: jinja
+    - context:
+        settings: {{ settings|json }}
+        IS_DEV: IS_DEV
+  # this one's needed to avoid silly fails
+  pkg.installed:
+    - name: nodejs-legacy
+    - fromrepo: stretch
+    - require:
+      - pkgrepo: apt-release-stretch
+  # reload systemd config
+  module.wait:
+    - name: service.systemctl_reload
+    - watch:
+        - file: {{ service_file }}
+  service.running:
+    - name: {{ service }}
+    - enable: True
+    - require:
+        - file: {{ service_file }}
+        - npm: app-setup
+        - pkg: nodejs-legacy
+    - watch:
+        - file: {{ service_file }}
+
+{%- endif -%}

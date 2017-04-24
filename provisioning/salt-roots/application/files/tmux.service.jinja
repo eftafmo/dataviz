@@ -26,4 +26,4 @@ ExecStart={{ tmux }} send-keys -t "{{ sess }}:{{ name }}" '{{ command }}' ENTER
 # move our new window's pane into the default window
 ExecStart={{ tmux }} join-pane -t "{{ sess }}:0" -s "{{ sess }}:{{ name }}" -h
 # and arrange panes a bit
-ExecStart={{ tmux }} select-layout -t "{{ sess }}" main-horizontal
+ExecStart={{ tmux }} select-layout -t "{{ sess }}" even-horizontal
