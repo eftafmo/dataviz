@@ -1,35 +1,24 @@
+{%- set name = "uWSGI app" %}
+{%- set command  = "/usr/bin/uwsgi --ini " + conf_file %}
+
+{%- if IS_DEV -%}
+{%- include 'application/files/tmux.service.jinja' with context %}
+{%- else -%}
+
 [Unit]
-Description=Weee uWSGI app
+Description={{ settings['project_name'] }} {{ name }}
 After=syslog.target
-
-{%- set cmd  = "/usr/bin/uwsgi --ini " + conf_file -%}
-
-{%- if opts['id'] == 'dev' -%}
-{# dev will run uwsgi under a tmux session #}
-{%- set sess = settings['project_name'] %}
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/bin/tmux new-session -s {{ sess }} -d
-# using send-keys to keep the session running, and keep the command in history
-ExecStart=/usr/bin/tmux send-keys -t {{ sess }} '{{ cmd }}' ENTER
-ExecStop=/usr/bin/tmux kill-session -t {{ sess }}
-User={{ settings.user }}
-
-{%- else %}
 
 [Service]
 Type=notify
-ExecStart={{ cmd }}
+ExecStart={{ command }}
 User={{ settings.user }}
-#Group=www-data
+Group={{ settings.group }}
 Restart=on-failure
 KillSignal=SIGQUIT
 StandardError=syslog
 NotifyAccess=all
 
-{%- endif %}
-
 [Install]
 WantedBy=multi-user.target
+{%- endif %}

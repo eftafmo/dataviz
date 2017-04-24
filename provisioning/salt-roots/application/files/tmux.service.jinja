@@ -1,0 +1,29 @@
+{#-
+  this is supposed to be only run on dev under a tmux session.
+  it expects {{ name }}, {{ command }}, and {{ settings }}
+  to exist in the context
+-#}
+[Unit]
+Description={{ settings['project_name'] }} {{ name }}
+After=syslog.target
+
+[Install]
+WantedBy=multi-user.target
+
+{%- set tmux = "/usr/bin/tmux" %}
+{%- set sess = settings['project_name'] %}
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User={{ settings.user }}
+# start a new session, but don't fail if it exists
+ExecStart=-{{ tmux }} new-session -s "{{ sess }}" -d
+# create a new window named specifically
+ExecStart={{ tmux }} new-window -t "{{ sess }}" -n "{{ name }}"
+# send-keys will keep the session running, and keep the command in history
+ExecStart={{ tmux }} send-keys -t "{{ sess }}:{{ name }}" '{{ command }}' ENTER
+# move our new window's pane into the default window
+ExecStart={{ tmux }} join-pane -t "{{ sess }}:0" -s "{{ sess }}:{{ name }}" -h
+# and arrange panes a bit
+ExecStart={{ tmux }} select-layout -t "{{ sess }}" main-horizontal
