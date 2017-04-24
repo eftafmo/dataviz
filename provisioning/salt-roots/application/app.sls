@@ -6,24 +6,31 @@ include:
 
 {%- set _reqs = 'requirements%s.txt' % ('.dev' if IS_DEV else '') %}
 {%- set reqs_file = salt['file.join'](settings.repo_dir, _reqs) %}
-{%- set sys_reqs_file = salt['file.join'](settings.repo_dir, 'sysrequirements.txt') %}
 
-# install some requirements system-wide
-{% set sys_reqs = salt['cmd.shell'](
-    """grep -o '^[a-zA-Z0-9_-]\+' """ + sys_reqs_file
-).splitlines() %}
-
-{% if sys_reqs %}
-app-system-requirements:
-  pkg.installed:
-    - pkgs:
-{%- for req in sys_reqs %}
-        - python3-{{ req }}
-{% endfor %}
-    - fromrepo: stretch
-    - require:
-      - pkgrepo: apt-release-stretch
-{% endif %}
+{#
+## NOTE: this was a good idea but is too frail:
+##       1) the repo needs to exist prior to `sys_reqs` being evaluated
+##       2) the relationship between repo names and pypi names is unpredictable
+## TODO: improve it.
+##
+# {%- set sys_reqs_file = salt['file.join'](settings.repo_dir, 'sysrequirements.txt') %}
+# # install some requirements system-wide
+# {% set sys_reqs = salt['cmd.shell'](
+#     """grep -o '^[a-zA-Z0-9_-]\+' """ + sys_reqs_file
+# ).splitlines() %}
+#
+# {% if sys_reqs %}
+# app-system-requirements:
+#   pkg.installed:
+#     - pkgs:
+# {%- for req in sys_reqs %}
+#         - python3-{{ req }}
+# {% endfor %}
+#     - fromrepo: stretch
+#     - require:
+#       - pkgrepo: apt-release-stretch
+# {% endif %}
+#}
 
 app-virtualenv:
   virtualenv.managed:

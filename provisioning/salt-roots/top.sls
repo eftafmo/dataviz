@@ -3,5 +3,5 @@ base:
     - base
     - utils
     - python
-    - postgresql
+    #- postgresql
     - application
