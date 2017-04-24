@@ -1,8 +1,25 @@
 include:
   - base.apt
   - python
+  - .base
 
-{%- from "application/map.jinja" import settings, IS_DEV with context -%}
+{%- from "application/map.jinja" import settings, IS_DEV with context %}
+
+# TODO: checkout from git on production / staging,
+# but use the already-mounted directory on dev
+app-repo:
+  pkg.installed:
+    - name: git
+  git.latest:
+    - name: {{ settings.repo }}
+    - target: {{ settings.repo_dir }}
+    - user: {{ settings.user }}
+    # make sure this works even when upstream history was rewritten
+    - force_reset: True
+    - force_fetch: True
+    - require:
+      - pkg: git
+
 
 {%- set _reqs = 'requirements%s.txt' % ('.dev' if IS_DEV else '') %}
 {%- set reqs_file = salt['file.join'](settings.repo_dir, _reqs) %}
@@ -43,10 +60,4 @@ app-virtualenv:
       - pkg: python-virtualenv
       - user: application-user
       - file: application-dirs
-
-# TODO: checkout from git on production / staging,
-# but use the already-mounted directory on dev
-
-# app-deployment-deps:
-#   pkg.installed:
-#     - name: git
+      - git: app-repo
