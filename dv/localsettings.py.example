@@ -13,6 +13,9 @@ SECRET_KEY = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# this needs to be properly set up
+ALLOWED_HOSTS = []
+
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 DATABASES = {

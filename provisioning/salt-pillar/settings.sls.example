@@ -4,3 +4,4 @@ repo: https://github.com/EEA-Norway-Grants/dataviz.git
 user: dataviz
 group: dataviz
 www_user: www-data
+hostname: dataviz.dev

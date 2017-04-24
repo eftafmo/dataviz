@@ -19,6 +19,7 @@ app-repo:
     - force_fetch: True
     - require:
       - pkg: git
+      - file: application-dirs
 
 
 {%- set _reqs = 'requirements%s.txt' % ('.dev' if IS_DEV else '') %}
@@ -61,3 +62,24 @@ app-virtualenv:
       - user: application-user
       - file: application-dirs
       - git: app-repo
+
+# TODO: move away local knowledge of project structure
+{%- set lsettings_file = salt['file.join'](settings.repo_dir, "dv/localsettings.py") %}
+
+# also TODO: this should be set up from pillar variables and local templates
+app-pre-setup:
+  file.copy:
+    - name: {{ lsettings_file }}
+    - source: {{ lsettings_file }}.example
+    - require:
+        - git: app-repo
+
+app-setup:
+  file.replace:
+    - name: {{ lsettings_file }}
+    - pattern: |-
+        ^ALLOWED_HOSTS *= *\[\]$
+    - repl: |-
+        ALLOWED_HOSTS = ["{{ settings.hostname }}"]
+    - require:
+        - file: app-pre-setup

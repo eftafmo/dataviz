@@ -1,6 +1,7 @@
 include:
   - base.apt
   - .base
+  - .app
 
 {%- from "application/map.jinja" import settings, IS_DEV with context -%}
 
@@ -8,6 +9,7 @@ include:
 {%- set service_file = salt['file.join']('/etc/systemd/system/', service) %}
 {%- set conf_file = salt['file.join'](settings['etc_dir'], 'uwsgi.ini') %}
 {%- set socket_file = salt['file.join'](settings['run_dir'], 'uwsgi.socket') %}
+# TODO: move away local knowledge of project structure
 {%- set wsgi_file = 'dv/wsgi.py' %}
 
 uwsgi-installed:
@@ -58,7 +60,8 @@ uwsgi-service:
     - require:
         - file: {{ service_file }}
         - file: uwsgi-conf
-        - file: application-dirs
+        - virtualenv: app-virtualenv
+        - file: app-setup
     - watch:
         - file: {{ service_file }}
         - file: uwsgi-conf
