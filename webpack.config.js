@@ -169,5 +169,8 @@ module.exports = {
     quiet: true, // required for FriendlyErrorsWebpackPlugin()
     host: config['dev-server-host'],
     port: config['dev-server-port'],
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
 };
