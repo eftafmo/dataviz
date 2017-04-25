@@ -11,19 +11,26 @@ After=syslog.target
 WantedBy=multi-user.target
 
 {%- set tmux = "/usr/bin/tmux" %}
-{%- set sess = settings['project_name'] %}
+{%- set session = settings['project_name'] %}
+{%- set window = "%s:%s" % (session, name) %}
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 User={{ settings.user }}
 # start a new session, but don't fail if it exists
-ExecStart=-{{ tmux }} new-session -s "{{ sess }}" -d
+ExecStart=-{{ tmux }} new-session -s "{{ session }}" -d
 # create a new window named specifically
-ExecStart={{ tmux }} new-window -t "{{ sess }}" -n "{{ name }}"
+ExecStart={{ tmux }} new-window -t "{{ session }}" -n "{{ name }}"
 # send-keys will keep the session running, and keep the command in history
-ExecStart={{ tmux }} send-keys -t "{{ sess }}:{{ name }}" '{{ command }}' ENTER
-# move our new window's pane into the default window
-ExecStart={{ tmux }} join-pane -t "{{ sess }}:0" -s "{{ sess }}:{{ name }}" -h
-# and arrange panes a bit
-ExecStart={{ tmux }} select-layout -t "{{ sess }}" even-horizontal
+ExecStart={{ tmux }} send-keys -t "{{ session }}:{{ name }}" '{{ command }}' ENTER
+## this part commented out so we can use the window name in ExecStop below
+## (would otherwise need to perform pane tracking, which takes some scripting)
+# # move our new window's pane into the default window
+# ExecStart={{ tmux }} join-pane -t "{{ session }}:0" -s "{{ window }}" -h
+# # and arrange panes a bit
+# ExecStart={{ tmux }} select-layout -t "{{ session }}" even-horizontal
+
+# without this systemd would take care of killing the server
+KillMode=none
+ExecStop={{ tmux }} kill-window -t "{{ window }}"

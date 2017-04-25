@@ -2,6 +2,7 @@ include:
   - base.apt
   - python
   - .base
+  - .uwsgi
 
 {%- from "application/map.jinja" import settings, IS_DEV with context %}
 
@@ -20,7 +21,10 @@ app-repo:
     - require:
       - pkg: git
       - file: application-dirs
-
+    - watch_in:
+        - npm: app-setup
+        - module: app-webpack-service
+        - module: uwsgi-service
 
 {%- set _reqs = 'requirements%s.txt' % ('.dev' if IS_DEV else '') %}
 {%- set reqs_file = salt['file.join'](settings.repo_dir, _reqs) %}
