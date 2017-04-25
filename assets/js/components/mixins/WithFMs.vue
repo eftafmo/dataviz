@@ -42,16 +42,16 @@ export default {
 
     getFmId(fm) {
       // silly utility func to return FM's id regardless of input type
-
+      let fmid;
       // is this the id already?
-      if (typeof fm == "string") return fm;
-      if (typeof fm == "object") {
+      if (typeof fm == "string") fmid = fm;
+      else if (typeof fm == "object") {
         // regular fm object?
-        if (fm.id !== undefined) return fm.id;
+        if (fm.id !== undefined) fmid = fm.id;
         // a result of d3.entries()?
-        if (fm.key !== undefined) return fm.key;
+        else if (fm.key !== undefined) fmid = fm.key;
       }
-      throw `Can't get FM id for ${typeof fm}.`
+      return FMs[fmid] ? fmid : null;
     },
 
     toggleFm(fm, etarget) {
@@ -75,7 +75,8 @@ export default {
       .domain(d3.keys(FMColours))
       .range(d3.values(FMColours)),
     colour(fm) {
-      return this._colour(this.getFmId(fm));
+      const fmid = this.getFmId(fm);
+      if (fmid) return this._colour(this.getFmId(fm));
     },
   },
 };
