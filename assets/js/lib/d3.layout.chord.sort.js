@@ -12,7 +12,9 @@
 //////////////// Created by Mike Bostock ///////////////////
 ////////////////////////////////////////////////////////////
 
-customChordLayout = function() {
+import * as d3 from 'd3';
+
+export default function() {
 	var ε = 1e-6, ε2 = ε * ε, π = Math.PI, τ = 2 * π, τε = τ - ε, halfπ = π / 2, d3_radians = π / 180, d3_degrees = 180 / π;
   var chord = {}, chords, groups, matrix, n, padding = 0, sortGroups, sortSubgroups, sortChords;
   function relayout() {

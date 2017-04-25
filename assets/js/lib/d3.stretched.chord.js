@@ -11,7 +11,7 @@
 //////////////// Created by Mike Bostock ///////////////////
 ////////////////////////////////////////////////////////////
 
-stretchedChord = function() {
+export default function() {
   var source = d3_source,
       target = d3_target,
       radius = d3_svg_chordRadius,
