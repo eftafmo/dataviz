@@ -23,6 +23,21 @@
 
 /* Menu */
 @media (max-width: 768px) {
+
+  @keyframes anim {
+    0% {
+      display: none;
+      opacity: 0;
+    }
+    1% {
+      display: block;
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
   .header-menu {
     display: none;
     position: absolute;
@@ -33,10 +48,16 @@
     padding: 1.5rem;
     border-top: 1px solid #ddd;
     text-align: right;
+    opacity: 0;
+    transition: opacity .3s ease-in-out, -webkit-transform .3s ease-in-out;
   }
+
   .header-menu.is-open {
-    display: block;
+      display: block;
+      opacity: 1;
+      animation: anim .3s ease-in-out
   }
+
   .header-menu ul {
     list-style: none;
     padding-left: 0;
@@ -52,7 +73,7 @@
     color: inherit;
   }
   .header-menu a:hover {
-    text-decoration: none; 
+    text-decoration: none;
   }
   .header-menu a.active {
     box-shadow: inset -3px 0 0 #005494;
@@ -141,7 +162,7 @@
 @media (max-width: 768px) {
   .header-search input {
     box-sizing: border-box;
-    width: 100%; 
+    width: 100%;
     padding: 1.5rem;
     border-radius: 0;
   }
