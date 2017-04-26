@@ -60,17 +60,6 @@ export default {
                          null : fmid;
     },
 
-    triggerclick() {
-      var select = event.target;
-      var selected_opt= select.options[select.selectedIndex];
-      selected_opt.click();
-    },
-
-    resetfilter(){
-     var reset_element = document.querySelector('option.selected');
-     reset_element.click();
-    },
-
     _colour: d3.scaleOrdinal()
       .domain(d3.keys(FMColours))
       .range(d3.values(FMColours)),

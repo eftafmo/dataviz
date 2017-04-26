@@ -8,6 +8,9 @@
       </template>
     </fm-legend>
   </div>
+  <div v-if="hasData" class="dropdown">
+    <dropdown :filter="filter" :title="title" :items="data"></dropdown>
+  </div>
   <svg :width="width" :height="height">
     <g class="chart">
       <g class="domain" :transform="`translate(${reserved},0)`">
@@ -78,13 +81,17 @@ import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
-
+import Dropdown from './includes/DropdownFilter.vue';
 
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin, WithCountriesMixin,
+    ChartMixin, WithFMsMixin, WithCountriesMixin
   ],
+
+  components: {
+    'dropdown': Dropdown,
+  },
 
   props: {
     width: Number,
@@ -111,6 +118,15 @@ export default Vue.extend({
   },
 
   computed: {
+
+    title(){
+      var title = "Select a beneficiary state"
+      return title
+    },
+    filter(){
+       var filter = "region"
+       return filter
+    },
     data() {
       // massage data so it's appropriate for a stacked barchart
 
@@ -210,7 +226,6 @@ export default Vue.extend({
     renderChart() {
       const $this = this,
             data = this.data;
-
       const chart = this.chart;
       // using 2 transitions makes things easier to follow
       // (the removal / repositioning will be slightly delayed)

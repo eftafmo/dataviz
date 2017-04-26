@@ -1,12 +1,6 @@
 <script>
 import * as d3 from 'd3';
-
-// site-wide navigation filters
-const FILTERS = {
-  fm: null,
-  region: null,
-  sector: null,
-};
+import {FILTERS} from '../global/filters.js'
 
 export default {
   props: {
