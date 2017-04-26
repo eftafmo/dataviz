@@ -38,7 +38,6 @@ export default Vue.extend({
       name: String,
     },
     title: String,
-    filters: String,
   },
 
   methods: {
