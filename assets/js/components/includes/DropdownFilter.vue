@@ -42,10 +42,11 @@ export default Vue.extend({
   },
 
   methods: {
-    getIndex(items){
+    getIndex(){
       let select = event.target;
       let selected_opt = select.options[select.selectedIndex].id;
-      FILTERS[this.filter] = selected_opt
+      FILTERS[this.filter] = selected_opt || null
+      console.log(FILTERS);
     }
   },
 
