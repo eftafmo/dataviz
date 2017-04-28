@@ -9,7 +9,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown :filter="filter" :title="title" :items="data"></dropdown>
+    <dropdown filter="region" title="Select a beneficiary state" :items="data"></dropdown>
   </div>
   <svg :width="width" :height="height">
     <g class="chart">
@@ -118,15 +118,6 @@ export default Vue.extend({
   },
 
   computed: {
-
-    title(){
-      var title = "Select a beneficiary state"
-      return title
-    },
-    filter(){
-       var filter = "region"
-       return filter
-    },
     data() {
       // massage data so it's appropriate for a stacked barchart
 

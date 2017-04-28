@@ -12,7 +12,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown :filter="filter" :title="title" :items="fms"></dropdown>
+    <dropdown filter="fm" title="Select a financial mechanism" :items="fms"></dropdown>
   </div>
 </div>
 </template>
@@ -97,20 +97,6 @@ export default Vue.extend({
       type: String,
       default: "#ccc",
     },
-  },
-
-  computed : {
-
-    title(){
-      var title = "Select a financial mechanism"
-      return title
-    },
-
-    filter(){
-       var filter = "fm"
-       return filter
-    },
-
   },
 
   methods: {

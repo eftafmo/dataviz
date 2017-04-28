@@ -1,6 +1,6 @@
 <template>
   <select @change="getIndex(items)">
-  <option v-bind="title">
+  <option>
   {{title}}
   </option>
     <option :id="item.id" v-for="(item, id, index) in items">
@@ -38,15 +38,14 @@ export default Vue.extend({
       name: String,
     },
     title: String,
+    filter: String,
   },
 
   methods: {
     getIndex(items){
-      var select = event.target;
-      var selected_opt = select.options[select.selectedIndex].id;
-      var filter = select.getAttribute('filter');
-      FILTERS[filter] = selected_opt
-      console.log(selected_opt);
+      let select = event.target;
+      let selected_opt = select.options[select.selectedIndex].id;
+      FILTERS[this.filter] = selected_opt
     }
   },
 
