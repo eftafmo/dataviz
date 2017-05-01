@@ -4,9 +4,11 @@
 import Mechanisms from './Mechanisms';
 import Sectors from './Sectors';
 import Beneficiaries from './Beneficiaries';
+import Globalfilter from './globalfilter'
 
 export {
   Mechanisms,
   Sectors,
   Beneficiaries,
+  Globalfilter,
 };

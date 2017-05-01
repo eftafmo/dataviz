@@ -4,6 +4,13 @@
 {% endblock %}
 
 {% block main %}
+
+<div class="grant-dataviz" id="global-filters">
+  <globalfilter>
+  sds
+  </globalfilter>
+</div>
+
 <div class="grant-dataviz" id="financial-mechanisms">
 <h2>Funding by financial mechanism</h2>
   <mechanisms
@@ -59,6 +66,16 @@ new Vue({
   el: '#priority-sectors',
   components: {
       sectors: components.Sectors,
+  },
+  data: {
+  },
+});
+
+
+new Vue({
+  el: '#global-filters',
+  components: {
+      globalfilter: components.Globalfilter,
   },
   data: {
   },
