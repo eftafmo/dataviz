@@ -3,7 +3,9 @@
   <option>
   {{title}}
   </option>
-    <option :id="item.id" v-for="(item, id, index) in items">
+    <option :selected="item.id == getFilterValue()"
+            :id="item.id"
+             v-for="(item, id, index) in items">
        {{item.name}}
     </option>
   </select>
@@ -41,13 +43,21 @@ export default Vue.extend({
     filter: String,
   },
 
+  computed : {
+
+    },
+
   methods: {
     getIndex(){
       let select = event.target;
       let selected_opt = select.options[select.selectedIndex].id;
       FILTERS[this.filter] = selected_opt || null
-      console.log(FILTERS);
-    }
+    },
+
+    getFilterValue(){
+      return FILTERS[this.filter]
+    },
+
   },
 
 
