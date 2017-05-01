@@ -1,25 +1,30 @@
 <template>
     <div class="global-filters">
+    <transition name="bounce">
       <div v-if="checkFilter()" class="container">
         <div class="global-filters-inner">
-          <div class="filters-label">
-            Showing data for:
-          </div>
+            <div class="filters-label">
+              Showing data for:
+            </div>
             <ul class="list-filters">
-              <li class="filter-item"
-               v-for="(item, type, value) in items"
-               :filter="type"
-               v-if="item != null"
-               @click="removeFilter()">
-                {{item}}
-                <span class="icon icon-close"></span>
-              </li>
+             <transition-group name="list" tag="p">
+                <li class="filter-item"
+                     v-for="(item, type, value) in items"
+                     :filter="type"
+                     v-if="item != null"
+                     @click="removeFilter()"
+                     v-bind:key="item">
+                  {{item}}
+                  <span class="icon icon-close"></span>
+                </li>
+              </transition-group>
             </ul>
             <button @click="resetFilters()" class="no-btn muted" id="reset-filters">
               Reset filters <span class="icon icon-close"></span>
             </button>
         </div>
       </div>
+    </transition>
     </div>
 </template>
 
@@ -31,11 +36,56 @@
   margin-left: .5rem;
 }
 
+.list-filters {
+  overflow: hidden;
+}
+
 .global-filters {
   padding: 0;
 
   .container {
     padding: .5em 3rem;
+  }
+}
+
+.filter-item {
+  display: inline-block;
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+.bounce-leave-active {
+  animation: bounce-out .5s;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes bounce-out {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(0);
   }
 }
 
