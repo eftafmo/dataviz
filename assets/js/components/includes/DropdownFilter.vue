@@ -1,12 +1,14 @@
 <template>
-  <select @change="getIndex(items)">
-  <option>
-  {{title}}
-  </option>
-    <option :selected="item.id == getFilterValue()"
-            :id="item.id"
-             v-for="(item, id, index) in items">
-       {{item.name}}
+  <select @change="setFilter">
+    <option value="">
+      {{ title }}
+    </option>
+    <option
+        v-for="(item, id, index) in items"
+        :value="item.id"
+        :selected="item.id == current"
+    >
+      {{item.name}}
     </option>
   </select>
 </template>
@@ -44,23 +46,17 @@ export default Vue.extend({
   },
 
   computed : {
-
+    current() {
+      return FILTERS[this.filter];
     },
-
-  methods: {
-    getIndex(){
-      let select = event.target;
-      let selected_opt = select.options[select.selectedIndex].id;
-      FILTERS[this.filter] = selected_opt || null
-    },
-
-    getFilterValue(){
-      return FILTERS[this.filter]
-    },
-
   },
 
-
+  methods: {
+    setFilter(e) {
+      const select = e.target;
+      FILTERS[this.filter] = select.value || null;
+    },
+  },
 });
 
 </script>
