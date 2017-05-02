@@ -7,7 +7,6 @@
 
 <div class="grant-dataviz" id="global-filters">
   <globalfilter>
-  sds
   </globalfilter>
 </div>
 
@@ -23,7 +22,7 @@
 <div class="grant-dataviz" id="priority-sectors">
 <h2>Allocation by priority sector</h2>
   <sectors
-      :width="250"
+      :width="250"z
       :height="300"
       datasource="{% url "api:sector-allocation" %}"
   >
@@ -70,7 +69,6 @@ new Vue({
   data: {
   },
 });
-
 
 new Vue({
   el: '#global-filters',

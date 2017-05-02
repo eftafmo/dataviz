@@ -44,7 +44,7 @@
   padding: 0;
 
   .container {
-    padding: .5em 3rem;
+    padding: 0 3rem;
   }
 }
 

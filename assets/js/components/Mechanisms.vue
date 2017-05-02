@@ -12,7 +12,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="fm" title="Select a financial mechanism" :items="fms"></dropdown>
+    <dropdown filter="fm" title="Both financial mechanisms" :items="fms"></dropdown>
   </div>
 </div>
 </template>
