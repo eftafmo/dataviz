@@ -3,17 +3,7 @@
   <svg :width="width" :height="height">
     <defs>
       <filter id="dropshadow" x="-50%" y="-50%"  height="200%" width="200%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="3">
-        </feGaussianBlur>
-        <feComponentTransfer>
-          <feFuncA type="linear" slope="0">
-            <animate id="dropshadow-anim-in"
-              attributeName="slope" attributeType="XML"
-              begin="indefinite" dur="0.1" end="indefinite" fill="freeze"
-              from="0" to="1"
-            />
-          </feFuncA>
-        </feComponentTransfer>
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
         <feOffset dx="2" dy="2" />
         <feMerge>
           <feMergeNode />
@@ -333,14 +323,6 @@ export default Vue.extend({
 
     },
 
-    _getAnim: () => {
-      const anim = document.getElementById('dropshadow-anim-in'),
-	    parent = anim.parentNode;
-      // make sure the animation is stopped
-      parent.appendChild(parent.removeChild(anim));
-      return anim;
-    },
-
     _getOther(obj) {
       // convenience function returning the label when given the arc
       // and vice-versa
@@ -358,18 +340,14 @@ export default Vue.extend({
       arc.moveToFront();
       // let the other be "hovered" too
       _other.classed("hovered", true);
-      // and start the shadow animation
-      $this._getAnim().beginElement();
     },
     mouseout(item) {
       const $this = this,
             _this = d3.select(item),
             _other = $this._getOther(_this);
 
-      // makethe other be unhovered
+      // make the other be unhovered
       _other.classed("hovered", false);
-       // and reset the shadow animation
-      $this._getAnim();
     },
 
     drawChart() {
