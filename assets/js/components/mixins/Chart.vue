@@ -1,7 +1,13 @@
 <script>
 import * as d3 from 'd3';
+import Dropdown from '../includes/DropdownFilter.vue';
 
 export default {
+
+  components: {
+    'dropdown': Dropdown,
+  },
+
   mounted() {
     this.chart = d3.select(this.$el).select('.chart');
     this.legend = d3.select(this.$el).select('.legend');

@@ -32,7 +32,7 @@
 
 <script>
 import Vue from 'vue';
-import {FILTERS} from '../global/filters.js'
+import {FILTERS} from '../../globals.js'
 
 export default Vue.extend({
 

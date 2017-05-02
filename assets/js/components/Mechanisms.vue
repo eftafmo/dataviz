@@ -74,17 +74,12 @@ import * as d3 from 'd3';
 import BaseMixin from './mixins/Base.vue';
 import ChartMixin from './mixins/Chart.vue';
 import WithFMsMixin from './mixins/WithFMs.vue';
-import Dropdown from './includes/DropdownFilter.vue';
 
 import FMs from 'js/constants/financial-mechanisms.json5';
 
 
 export default Vue.extend({
   mixins: [BaseMixin, ChartMixin, WithFMsMixin],
-
-  components: {
-    'dropdown': Dropdown,
-  },
 
   props: {
     width: Number,

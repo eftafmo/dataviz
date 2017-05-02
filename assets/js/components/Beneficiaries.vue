@@ -81,17 +81,12 @@ import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
-import Dropdown from './includes/DropdownFilter.vue';
 
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
     ChartMixin, WithFMsMixin, WithCountriesMixin
   ],
-
-  components: {
-    'dropdown': Dropdown,
-  },
 
   props: {
     width: Number,

@@ -1,6 +1,6 @@
 <script>
 import * as d3 from 'd3';
-import {FILTERS} from '../global/filters.js'
+import {FILTERS} from '../../globals.js'
 
 export default {
   props: {

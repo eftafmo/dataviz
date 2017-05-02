@@ -12,14 +12,14 @@
                      v-for="(item, type, value) in items"
                      :filter="type"
                      v-if="item != null"
-                     @click="removeFilter()"
+                     @click="removeFilter"
                      v-bind:key="item">
                   {{item}}
                   <span class="icon icon-close"></span>
                 </li>
               </transition-group>
             </ul>
-            <button @click="resetFilters()" class="no-btn muted" id="reset-filters">
+            <button @click="resetFilters" class="no-btn muted" id="reset-filters">
               Reset filters <span class="icon icon-close"></span>
             </button>
         </div>
@@ -95,7 +95,7 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import {FILTERS} from './global/filters.js'
+import {FILTERS} from '../globals.js'
 
 export default Vue.extend({
 
@@ -106,8 +106,8 @@ export default Vue.extend({
    },
 
   methods: {
-    removeFilter(){
-      var remove_el = event.target.getAttribute('filter')
+    removeFilter(e){
+      const remove_el = e.target.getAttribute('filter')
       FILTERS[remove_el] = null;
     },
 
