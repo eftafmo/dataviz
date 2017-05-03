@@ -8,6 +8,9 @@
       </template>
     </fm-legend>
   </div>
+  <div v-if="hasData" class="dropdown">
+    <dropdown filter="region" title="Select a beneficiary state" :items="data"></dropdown>
+  </div>
   <svg :width="width" :height="height">
     <g class="chart">
       <g class="domain" :transform="`translate(${reserved},0)`">
@@ -79,11 +82,10 @@ import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
 
-
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin, WithCountriesMixin,
+    ChartMixin, WithFMsMixin, WithCountriesMixin
   ],
 
   props: {
@@ -210,7 +212,6 @@ export default Vue.extend({
     renderChart() {
       const $this = this,
             data = this.data;
-
       const chart = this.chart;
       // using 2 transitions makes things easier to follow
       // (the removal / repositioning will be slightly delayed)
