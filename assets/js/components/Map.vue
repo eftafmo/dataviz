@@ -11,6 +11,7 @@
       <g class="territories" />
       <path class="coastline" /> <!-- make sure coastline is on top, just in case -->
     </g>
+    <g class="regions" />
     <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
       <g class="frames" />
     </g>
@@ -20,6 +21,17 @@
 
 <style lang="less">
 .map-viz {
+  // defs
+  @terrain: #f9f9cc;
+  .with-boundary {
+    stroke: #7f9fc8;
+    stroke-width: 0.5;
+  }
+  .hovered {
+    stroke: #005494;
+  }
+
+  // styles
   .chart {
     .base {
       .sphere {
@@ -40,14 +52,29 @@
     }
 
     .terrain {
-      stroke: #7f9fc8;
-      stroke-width: .5;
+      .with-boundary;
 
       .coastline {
         fill: none;
       }
       .countries {
-        fill: #f9f9cc;
+        fill: @terrain;
+      }
+    }
+
+    .regions {
+      .with-boundary;
+      cursor: pointer;
+
+      .donor {
+        fill: rgb(35, 97, 146),
+      }
+      .beneficiary {
+        fill: #ddd;
+        &:hover {
+          .hovered;
+          fill: #9dccec;
+        }
       }
     }
 
@@ -75,7 +102,7 @@ import * as topojson from 'topojson-client';
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
+import WithCountriesMixin, {get_flag_name, COUNTRIES} from './mixins/WithCountries';
 
 
 // TODO: pass these through webpack maybe?
@@ -141,6 +168,14 @@ export default Vue.extend({
         if (error) throw error;
         this.layers = data;
         this.renderBase();
+      });
+      callback(null);
+    });
+    this.queue.defer( (callback) => {
+      d3.json(NUTS, (error, data) => {
+        if (error) throw error;
+        this.borders = data;
+        this.renderRegions();
       });
       callback(null);
     });
@@ -216,8 +251,32 @@ export default Vue.extend({
       };
     },
 
+    renderRegions() {
+      // bail out if no data, or not mounted, or already rendered
+      if (!this.borders || !this.$el || this._regions_rendered) return;
+      this._regions_rendered = true;
+
+      const data = this.borders,
+            layers = data.objects;
+
+      const _mesh = (obj, filter) => topojson.mesh(data, obj, filter),
+            _features = (obj) => topojson.feature(data, obj).features;
+
+      const regions = this.chart.select('.regions'),
+
+            path = this.path;
+
+      regions.selectAll("path")
+             .data(_features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ))
+             .enter()
+             .append("path")
+             .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
+             .attr("d", path);
+    },
+
     main() {
       this.renderBase();
+      this.renderRegions();
     },
   },
 });
