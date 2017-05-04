@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block main %}
-
 <div class="grant-dataviz" id="global-filters">
   <globalfilter>
   </globalfilter>
@@ -27,6 +26,11 @@
       datasource="{% url "api:sector-allocation" %}"
   >
   </sectors>
+</div>
+
+<div class="grant-dataviz" id="funding-map">
+<h2>Funding map</h2>
+  <xmap />
 </div>
 
 <div class="grant-dataviz" id="beneficiary-states">
@@ -65,6 +69,15 @@ new Vue({
   el: '#priority-sectors',
   components: {
       sectors: components.Sectors,
+  },
+  data: {
+  },
+});
+
+new Vue({
+  el: '#funding-map',
+  components: {
+      xmap: components.Map,
   },
   data: {
   },

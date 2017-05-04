@@ -1,8 +1,13 @@
 <script>
 import * as d3 from 'd3';
-import {FILTERS} from '../../globals.js'
+import {FILTERS, Q} from '../../globals.js'
 
 export default {
+  beforeCreate() {
+    // adding the queue here since it needs not be observable
+    this.queue = Q;
+  },
+
   props: {
     datasource: String, // TODO: required?
     initial: Object,
