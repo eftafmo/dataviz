@@ -310,7 +310,7 @@ export default Vue.extend({
         .attr("dy", ".32em"); // magical self-centering offset
 
       country.append("use")
-        .attr("xlink:href", (d) => `#${get_flag_name(d.name)}`)
+        .attr("xlink:href", (d) => `#${get_flag_name(d.id)}`)
         .attr("width", _flag.w)
         .attr("height", _flag.h);
 

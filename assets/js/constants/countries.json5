@@ -1,24 +1,82 @@
-// a simple list for now
-[
-  // beneficiaries
-  'Bulgaria',
-  'Croatia',
-  'Cyprus',
-  'Czech Republic',
-  'Estonia',
-  'Greece',
-  'Hungary',
-  'Latvia',
-  'Lithuania',
-  'Malta',
-  'Poland',
-  'Portugal',
-  'Romania',
-  'Slovakia',
-  'Slovenia',
-  'Spain',
-  // donors
-  'Iceland',
-  'Liechtenstein',
-  'Norway',
- ]
+{
+  donors: {
+    IS: {
+      id: "IS",
+      name: "Iceland",
+    },
+    LI: {
+      id: "LI",
+      name: "Liechtenstein",
+    },
+    NO: {
+      id: "NO",
+      name: "Norway",
+    },
+  },
+  beneficiaries: {
+    BG: {
+      id: "BG",
+      name: "Bulgaria",
+    },
+    HR: {
+      id: "HR",
+      name: "Croatia",
+    },
+    CY: {
+      id: "CY",
+      name: "Cyprus",
+    },
+    CZ: {
+      id: "CZ",
+      name: "Czech Republic",
+    },
+    EE: {
+      id: "EE",
+      name: "Estonia",
+    },
+    GR: {
+      id: "GR",
+      name: "Greece",
+    },
+    HU: {
+      id: "HU",
+      name: "Hungary",
+    },
+    LV: {
+      id: "LV",
+      name: "Latvia",
+    },
+    LT: {
+      id: "LT",
+      name: "Lithuania",
+    },
+    MT: {
+      id: "MT",
+      name: "Malta",
+    },
+    PL: {
+      id: "PL",
+      name: "Poland",
+    },
+    PT: {
+      id: "PT",
+      name: "Portugal",
+    },
+    RO: {
+      id: "RO",
+      name: "Romania",
+    },
+    SK: {
+      id: "SK",
+      name: "Slovakia",
+    },
+    SI: {
+      id: "SI",
+      name: "Slovenia",
+    },
+    ES: {
+      id: "ES",
+      name: "Spain",
+    },
+  },
+}
