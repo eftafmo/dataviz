@@ -2,11 +2,6 @@
 <div class="map-viz">
   <svg :width="width" :height="height">
     <defs>
-      <linearGradient id="multi-fm">
-        <stop offset="5%" :stop-color="colour('EEA')" />
-        <stop offset="95%" :stop-color="colour('Norway')" />
-      </linearGradient>
-
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
         <rect x="0" y="0" width="50" height="25" :fill="colour('Norway')" />
         <rect x="0" y="25" width="50" height="25" :fill="colour('EEA')" />
@@ -15,23 +10,25 @@
 
     <g class="chart">
 
-    <g class="base">
-      <path class="sphere" />
-      <path class="graticule" />
-      <g class="frames" />
-    </g>
-    <g class="terrain">
-      <g class="countries" />
-      <g class="territories" />
-      <path class="coastline" /> <!-- make sure coastline is on top, just in case -->
-    </g>
-    <g class="regions" />
-    <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
-      <g class="frames" />
-    </g>
+      <g class="base">
+        <path class="sphere" />
+        <path class="graticule" />
+        <g class="frames" />
+      </g>
+
+      <g class="terrain">
+        <g class="countries" />
+        <g class="territories" />
+        <path class="coastline" /> <!-- make sure coastline is on top, just in case -->
+      </g>
+
+      <g class="regions" />
+
+      <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
+        <g class="frames" />
+      </g>
 
     </g>
-
   </svg>
 </div>
 </template>
@@ -39,10 +36,14 @@
 <style lang="less">
 .map-viz {
   // defs
+  @water: #cbe9f6;
   @terrain: #f9f9cc;
+  @beneficiary: #ddd;
+  @hovered: #9dccec;
   .with-boundary {
     stroke: #7f9fc8;
     stroke-width: 0.5;
+    stroke-linejoin: round;
   }
   .hovered {
     stroke: #005494;
@@ -52,11 +53,11 @@
   .chart {
     .base {
       .sphere {
-        fill: #cbe9f6; // beautiful planet
+        fill: @water;
         stroke: none;
       }
       .graticule {
-        stroke: #333; // with beautiful lines
+        stroke: #333;
         stroke-width: .2;
         stroke-opacity: .5;
         fill: none;
@@ -91,10 +92,10 @@
       }
 
       .beneficiary {
-        fill: #ddd;
+        fill: @beneficiary;
         &:hover {
           .hovered;
-          fill: #9dccec;
+          fill: @hovered;
         }
       }
     }
@@ -108,11 +109,6 @@
     }
   }
 }
-
-//
-aside {display: none !important;}
-
-
 </style>
 
 <script>
@@ -339,6 +335,11 @@ export default Vue.extend({
       countries
         .filter( (d) => d.id == "LI" )
         .call(magnifyLiechtenstein);
+
+      countries
+        .on("mouseover",
+            function(){ d3.select(this).raise(); }
+        );
 
       countries
         .filter( (d) => COUNTRIES[d.id].type == "beneficiary" )
