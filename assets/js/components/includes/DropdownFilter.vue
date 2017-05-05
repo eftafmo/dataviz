@@ -27,7 +27,11 @@
     option {
       color: black;
     }
+    @media (max-width: 600px){
+      top: 8px;
+    }
   }
+
 </style>
 
 <script>
