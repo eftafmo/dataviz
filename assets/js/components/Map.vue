@@ -1,6 +1,18 @@
 <template>
 <div class="map-viz">
   <svg :width="width" :height="height" class="chart">
+    <defs>
+      <linearGradient id="multi-fm">
+        <stop offset="5%" :stop-color="colour('EEA')" />
+        <stop offset="95%" :stop-color="colour('Norway')" />
+      </linearGradient>
+
+      <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+        <rect x="0" y="0" width="50" height="25" :fill="colour('Norway')" />
+        <rect x="0" y="25" width="50" height="25" :fill="colour('EEA')" />
+      </pattern>
+
+    </defs>
     <g class="base">
       <path class="sphere" />
       <path class="graticule" />
@@ -69,6 +81,10 @@
       .donor {
         fill: rgb(35, 97, 146),
       }
+      .donor.NO {
+        fill: url(#multi-fm);
+      }
+
       .beneficiary {
         fill: #ddd;
         &:hover {
@@ -263,15 +279,55 @@ export default Vue.extend({
             _features = (obj) => topojson.feature(data, obj).features;
 
       const regions = this.chart.select('.regions'),
-
             path = this.path;
+
+      const scaleLi = 5,
+            $this = this;
+
+      function drawFrameLi(d) {
+        const scale = scaleLi,
+              center = path.centroid(d),
+              cx = center[0],
+              cy = center[1],
+              bounds = path.bounds(d),
+              b1 = bounds[0],
+              b2 = bounds[1],
+              dx = b2[0] - b1[0],
+              dy = b2[1] - b1[1],
+              r = Math.max(dx, dy) / 2 * scale * 1.5;
+
+        $this.chart.select(".top").select(".frames")
+             .append("circle")
+             .attr("cx", cx)
+             .attr("cy", cy)
+             .attr("r", r);
+      }
+
+      function magnifyLiechtenstein(sel) {
+        sel
+          .attr("vector-effect","non-scaling-stroke")
+          .attr("transform", (d) => {
+            const scale = scaleLi,
+                  center = path.centroid(d),
+                  cx = center[0],
+                  cy = center[1],
+                  tx = -cx * (scale - 1),
+                  ty = -cy * (scale - 1);
+
+            return `translate(${tx},${ty}) scale(${scale})`;
+          })
+          .each(drawFrameLi);
+      }
 
       regions.selectAll("path")
              .data(_features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ))
              .enter()
              .append("path")
              .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
-             .attr("d", path);
+             .attr("d", path)
+
+             .filter( (d) => d.id == "LI" )
+             .call(magnifyLiechtenstein);
     },
 
     main() {
