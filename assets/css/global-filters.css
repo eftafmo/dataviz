@@ -58,6 +58,6 @@
     display: block;
   }
   #reset-filters {
-    display: none;
+    /*display: none;*/
   }
 }
