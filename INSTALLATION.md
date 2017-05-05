@@ -7,7 +7,7 @@ cp salt-pillar/settings.sls.example salt-pillar/settings.sls
 
 salt-call state.apply
 
-# you may want to edit dv/localsettings.py
-# and `systemctl restart uwsgi-dataviz.service`
+# if you edit dv/localsettings.py don't forget to 
+systemctl restart uwsgi-dataviz.service
 
 ```
