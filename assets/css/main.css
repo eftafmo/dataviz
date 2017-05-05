@@ -105,3 +105,9 @@ a.muted:hover {
 h2 {
   font-size: 2rem;
 }
+
+@media (max-width: 600px){
+  #funding-map {
+    display: none;
+  }
+}
