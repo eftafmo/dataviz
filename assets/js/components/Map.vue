@@ -1,6 +1,6 @@
 <template>
 <div class="map-viz">
-  <svg :width="width" :height="height" class="chart">
+  <svg :width="width" :height="height">
     <defs>
       <linearGradient id="multi-fm">
         <stop offset="5%" :stop-color="colour('EEA')" />
@@ -11,8 +11,10 @@
         <rect x="0" y="0" width="50" height="25" :fill="colour('Norway')" />
         <rect x="0" y="25" width="50" height="25" :fill="colour('EEA')" />
       </pattern>
-
     </defs>
+
+    <g class="chart">
+
     <g class="base">
       <path class="sphere" />
       <path class="graticule" />
@@ -27,6 +29,9 @@
     <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
       <g class="frames" />
     </g>
+
+    </g>
+
   </svg>
 </div>
 </template>
@@ -198,6 +203,11 @@ export default Vue.extend({
   },
 
   methods: {
+    main() {
+      this.renderBase();
+      this.renderRegions();
+    },
+
     renderBase() {
       // bail out if no data, or not mounted, or already rendered
       if (!this.layers || !this.$el || this._base_rendered) return;
@@ -272,7 +282,8 @@ export default Vue.extend({
       if (!this.borders || !this.$el || this._regions_rendered) return;
       this._regions_rendered = true;
 
-      const data = this.borders,
+      const $this = this,
+            data = this.borders,
             layers = data.objects;
 
       const _mesh = (obj, filter) => topojson.mesh(data, obj, filter),
@@ -281,8 +292,7 @@ export default Vue.extend({
       const regions = this.chart.select('.regions'),
             path = this.path;
 
-      const scaleLi = 5,
-            $this = this;
+      const scaleLi = 5;
 
       function drawFrameLi(d) {
         const scale = scaleLi,
@@ -319,20 +329,70 @@ export default Vue.extend({
           .each(drawFrameLi);
       }
 
-      regions.selectAll("path")
+      const countries = regions.selectAll("path")
              .data(_features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ))
              .enter()
              .append("path")
              .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
-             .attr("d", path)
+             .attr("d", path);
 
-             .filter( (d) => d.id == "LI" )
-             .call(magnifyLiechtenstein);
+      countries
+        .filter( (d) => d.id == "LI" )
+        .call(magnifyLiechtenstein);
+
+      countries
+        .filter( (d) => COUNTRIES[d.id].type == "beneficiary" )
+        .on("click", function (d) {
+          $this.toggleBeneficiary(d.id, this);
+        });
     },
 
-    main() {
-      this.renderBase();
-      this.renderRegions();
+    handleFilterRegion(val, old) {
+      const $this = this,
+            chart = this.chart;
+
+      const zoom = d3.zoom()
+                     .on("zoom", () => {
+                       chart.attr("transform", d3.event.transform);
+                     });
+
+      chart
+        .transition()
+        .duration(500)
+        .call(zoom.transform,
+              transformer);
+
+      function transformer() {
+        const tr = d3.zoomIdentity;
+
+        if (!val) return tr; // zooms out
+
+        const spacing = .1 * Math.min($this.width, $this.height);
+
+        const region = chart.select(".regions").select("." + val),
+              bounds = $this.path.bounds(region.datum()),
+              x1 = bounds[0][0],
+              x2 = bounds[1][0],
+
+              y1 = bounds[0][1],
+              y2 = bounds[1][1],
+
+              dx = x2 - x1,
+              dy = y2 - y1,
+
+              _x = (x1 + x2) / 2,
+              _y = (y1 + y2) / 2,
+
+              w = $this.width,
+              h = $this.height,
+
+              k = Math.min((w - spacing) / dx,
+                           (h - spacing) / dy),
+              x = w / 2 - _x * k,
+              y = h / 2 - _y * k;
+
+        return tr.translate(x, y).scale(k);
+      }
     },
   },
 });
