@@ -337,7 +337,7 @@ export default Vue.extend({
         .call(magnifyLiechtenstein);
 
       countries
-        .on("mouseover",
+        .on("mouseenter",
             function(){ d3.select(this).raise(); }
         );
 
