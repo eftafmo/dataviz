@@ -1,13 +1,13 @@
 <template>
-    <div class="global-filters">
+    <div class="global-filters" :class="{active: hasFilters}">
     <transition name="bounce">
-      <div v-if="checkFilter()" class="container">
+      <div class="container">
         <div class="global-filters-inner">
             <div class="filters-label">
               Showing data for:
             </div>
             <ul class="list-filters">
-             <transition-group name="list" tag="p">
+             <transition-group name="list">
                 <li class="filter-item"
                      v-for="(item, type, value) in items"
                      :filter="type"
@@ -42,9 +42,17 @@
 
 .global-filters {
   padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 300ms;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
 
   .container {
-    padding: 0 3rem;
+    padding: .5rem 3rem;
   }
 }
 
@@ -105,6 +113,15 @@ export default Vue.extend({
      }
    },
 
+  computed : {
+    hasFilters() {
+      for (const filter in FILTERS) {
+        if (FILTERS[filter]) return true;
+      }
+      return false;
+    },
+  },
+
   methods: {
     removeFilter(e){
       const remove_el = e.target.getAttribute('filter')
@@ -112,21 +129,10 @@ export default Vue.extend({
     },
 
     resetFilters(){
-      Object.keys(FILTERS).forEach(function(key) {
-         FILTERS[key]=null
-      });
+      for (const filter in FILTERS) {
+        FILTERS[filter] = null
+      }
     },
-
-    checkFilter(){
-      var return_val;
-      Object.keys(FILTERS).forEach(function(key) {
-          if(FILTERS[key]!=null){
-            console.log(FILTERS[key]);
-            return_val = true;
-          }
-      });
-      return return_val
-    }
   },
 
 
