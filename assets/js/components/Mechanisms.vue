@@ -45,13 +45,17 @@
   }
 
   .legend .fm {
-    border-right: 1px solid #aaa;
-    padding-right:2rem;
+    border-right: 1px solid #ccc;
+    padding: 0 2rem;
   }
 
   .legend .fm:last-of-type {
-    padding-left: 2rem;
+    padding-right: 0;
     border-right: none;
+  }
+
+  .legend .fm:first-of-type {
+    padding-left: 0;
   }
 
   .legend .value {
