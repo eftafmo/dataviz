@@ -562,3 +562,22 @@ class OrganisationRole(_BaseModel):
     programme = models.ForeignKey(Programme, null=True)
     # TODO: this structure smells
     project = models.ForeignKey(Project, null=True)
+
+
+class News(models.Model):
+    title = models.TextField(null=False, blank=False)
+    link = models.URLField(max_length=2000, null=False, blank=False)
+    created = models.DateTimeField(null=True)
+    updated = models.DateTimeField(null=True)
+
+    programmes = models.ManyToManyField(Programme)
+    project = models.ForeignKey(Project, null=True)
+    summary = models.TextField(null=True)
+    image = models.URLField(max_length=2000)
+    is_partnership = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.link
+
+    class Meta:
+        ordering = ('-created',)
