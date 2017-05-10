@@ -11,15 +11,16 @@ ENDPOINT = 'http://eeagrants.org/rest/articles?page={}'
 
 
 class Command(BaseCommand):
-    help = 'Import the file given as argument'
+    help = 'Import news from %s' % ENDPOINT
 
     def handle(self, *args, **options):
         page = 0
         data = []
-        News.objects.all().delete()
         while page == 0 or data:
             with urlopen(ENDPOINT.format(page)) as url:
                 data = json.loads(url.read().decode())['posts']
+                if page == 0:
+                    News.objects.all().delete()
                 print('Importing {} news from page {}'.format(len(data), page))
                 for item in data:
                     self._save(item)
