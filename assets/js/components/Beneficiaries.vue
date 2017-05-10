@@ -89,7 +89,6 @@ export default Vue.extend({
   ],
 
   props: {
-    width: Number,
     minHeight: {
       type: Number,
       default: 0,
@@ -107,6 +106,7 @@ export default Vue.extend({
 
   data() {
     return {
+      width: 500, // this will have to be recomputed using svgWidth
       xheight: 0,
       height: this.minHeight,
     };
