@@ -128,16 +128,16 @@ const NUTS = "/assets/data/nuts2006.topojson";
 
 
 export default Vue.extend({
+  mixins: [
+    BaseMixin, ChartMixin,
+    WithFMsMixin, WithCountriesMixin,
+  ],
+
   beforeCreate() {
     // placeholders for fetched topojson data
     this.layers = null;
     this.borders = null;
   },
-
-  mixins: [
-    BaseMixin, ChartMixin,
-    WithFMsMixin, WithCountriesMixin,
-  ],
 
   props: {
   },
