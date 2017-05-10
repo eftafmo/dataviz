@@ -108,6 +108,18 @@ h2 {
 
 @media (max-width: 600px){
   #funding-map {
-    display: none;
+    // display: none;
+  }
+}
+
+
+.beneficiaries-viz {
+  width: 100%;
+  max-width: 60%;
+}
+
+@media (max-width: 600px) {
+  .beneficiaries-viz {
+    max-width: 95%;
   }
 }

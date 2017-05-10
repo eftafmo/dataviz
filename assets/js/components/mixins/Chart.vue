@@ -8,14 +8,23 @@ export default {
     'dropdown': Dropdown,
   },
 
+  data: function() {
+    return {
+      width: 0,
+    }
+  },
+
   mounted() {
     this.chart = d3.select(this.$el).select('.chart');
     this.legend = d3.select(this.$el).select('.legend');
+    window.addEventListener('resize', this.calculateChartWidth);
+    // remember to init
+    this.calculateChartWidth();
   },
 
   methods: {
     main() {
-      this.render();
+      this.$nextTick(this.render);
     },
     render() {
       this.renderChart();
@@ -28,6 +37,16 @@ export default {
       // don't throw, not all visualisations implement this
       return;
     },
+    calculateChartWidth(event) {
+      const _chart = this.chart.node(),
+            elem = _chart.ownerSVGElement ? _chart.ownerSVGElement : _chart;
+      this.width = elem.getBoundingClientRect().width;
+      // console.log(this.width);
+    },
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.calculateChartWidth);
   },
 };
 </script>
