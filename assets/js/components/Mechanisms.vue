@@ -150,7 +150,6 @@ export default Vue.extend({
 
       // remember the current selection, we'll use it for transitions
       this._chart_fms = fms;
-      console.log(fms);
     },
 
     handleFilterFm(val, old) {
