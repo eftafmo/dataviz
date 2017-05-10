@@ -116,7 +116,7 @@ STATIC_ROOT = os.path.join(WEBROOT_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
     # include webpack output
-    ('bundles', os.path.join(BUILD_DIR, 'webpack-bundles')),
+    (os.path.join(BUILD_DIR, 'webpack-bundles')),
 )
 
 WEBPACK_LOADER = {
