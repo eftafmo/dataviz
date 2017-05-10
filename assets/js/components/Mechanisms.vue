@@ -1,6 +1,6 @@
 <template>
 <div class="fms-viz">
-  <svg :width="width" :height="height">
+  <svg viewBox="0 0 100 10"  preserveAspectRatio="none">
     <g class="chart"></g>
   </svg>
   <div v-if="hasData" class="legend">
@@ -20,7 +20,12 @@
 
 <style lang="less">
 .fms-viz {
-   text-align: center;
+  svg {
+    width: 100%;
+    height: 3rem;
+  }
+
+  text-align: center;
   .fms {
     text-align: center;
   }
@@ -86,17 +91,12 @@ export default Vue.extend({
   mixins: [BaseMixin, ChartMixin, WithFMsMixin],
 
   props: {
-    width: Number,
-    // refers to the chart height only
-    height: {
-      type: Number,
-      default: 40,
-    },
     disabled_colour: {
       type: String,
       default: "#ccc",
     },
   },
+
 
   methods: {
     value(fm) {
@@ -106,11 +106,13 @@ export default Vue.extend({
 
     renderChart() {
       const $this = this,
-            _root = d3.select(this.$el),
-            chart = _root.select("svg").select("g.chart");
+            chart = this.chart;
 
-      var x = d3.scaleLinear()
-          .rangeRound([0, this.width])
+      // we always use width 100, because viewBox and preserveAspectRatio=none
+      const width = 100;
+
+      const x = d3.scaleLinear()
+          .rangeRound([0, width])
           .domain([0, d3.sum(d3.values(this.data))]);
 
       const fms = chart
@@ -120,15 +122,15 @@ export default Vue.extend({
             .attr("class", (d) => "fm " + d.key);
 
       fms
-        .attr("x", (d) => 0)
-        .attr("y", (d) => 0)
+        .attr("x", 0)
+        .attr("y", 0)
       // skip this here to transition it below
       //.attr("width", (d) => x(d.value))
         .attr("height", "100%")
         .attr("transform", (d, i) => {
           // draw the second bar from right to left
           if (i == 1) return (
-            `scale(-1,1) translate(-${this.width},0)`
+            `scale(-1,1) translate(-${width},0)`
           );
         })
         .attr("fill", (d) => this.colour(d))
@@ -146,7 +148,7 @@ export default Vue.extend({
           $this.toggleFm(d, this);
         });
 
-      // remember the current selection, we'll use it for transitionsc
+      // remember the current selection, we'll use it for transitions
       this._chart_fms = fms;
     },
 
@@ -155,6 +157,7 @@ export default Vue.extend({
       // (the legend is handled by vue.)
 
       // TODO: handle the case when !this.isReady()
+      console.log(this._chart_fms)
       this._chart_fms
         .transition()
         .duration(500)
