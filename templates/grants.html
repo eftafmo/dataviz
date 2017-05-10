@@ -12,7 +12,6 @@
 <div class="grant-dataviz" id="financial-mechanisms">
 <h2>Funding by financial mechanism</h2>
   <mechanisms
-      :width="setWidth"
       :initial="data"
   >
   </mechanisms>
@@ -36,7 +35,6 @@
 <div class="grant-dataviz" id="beneficiary-states">
 <h2>Funding across beneficiary states</h2>
   <beneficiaries
-      :width="setWidth"
       :min-height="200"
       datasource="{% url "api:beneficiary-allocation" %}"
   >
@@ -61,16 +59,6 @@ new Vue({
     data: {
       EEA: 993500000,
       Norway: 804600000,
-    },
-  },
-  computed: {
-    setWidth:function(){
-      let container_width = document.querySelector('main.main').offsetWidth;
-      let element_width = 0.85 * container_width;
-      if (window.matchMedia("(max-width: 600px)").matches) {
-         element_width =container_width;
-      }
-      return element_width
     },
   },
 });
@@ -108,16 +96,6 @@ new Vue({
     beneficiaries: components.Beneficiaries,
   },
   data: {
-  },
-  computed: {
-    setWidth:function(){
-      let container_width = document.querySelector('main.main').offsetWidth;
-      let element_width = 0.65 * container_width;
-      if (window.matchMedia("(max-width: 600px)").matches) {
-         element_width = 0.95 * container_width;
-      }
-      return element_width
-    },
   },
 });
 </script>
