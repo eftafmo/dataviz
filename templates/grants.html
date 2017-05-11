@@ -4,41 +4,47 @@
 {% endblock %}
 
 {% block main %}
+<div class="lg-column">
+
 <div class="grant-dataviz" id="global-filters">
   <globalfilter>
   </globalfilter>
 </div>
 
-<div class="grant-dataviz" id="financial-mechanisms">
-<h2>Funding by financial mechanism</h2>
-  <mechanisms
-      :initial="data"
-  >
-  </mechanisms>
+  <div class="grant-dataviz" id="financial-mechanisms">
+  <h2>Funding by financial mechanism</h2>
+    <mechanisms
+        :initial="data"
+    >
+    </mechanisms>
+  </div>
+
+  <div class="grant-dataviz" id="priority-sectors">
+  <h2>Allocation by priority sector</h2>
+    <sectors
+        :width="250"
+        :height="300"
+        datasource="{% url "api:sector-allocation" %}"
+    >
+    </sectors>
+  </div>
+
 </div>
 
-<div class="grant-dataviz" id="priority-sectors">
-<h2>Allocation by priority sector</h2>
-  <sectors
-      :width="250"
-      :height="300"
-      datasource="{% url "api:sector-allocation" %}"
-  >
-  </sectors>
-</div>
+<div class="lg-column">
+  <div class="grant-dataviz" id="funding-map">
+  <h2>Funding map</h2>
+    <xmap />
+  </div>
 
-<div class="grant-dataviz" id="funding-map">
-<h2>Funding map</h2>
-  <xmap />
-</div>
-
-<div class="grant-dataviz" id="beneficiary-states">
-<h2>Funding across beneficiary states</h2>
-  <beneficiaries
-      :min-height="200"
-      datasource="{% url "api:beneficiary-allocation" %}"
-  >
-  </beneficiaries>
+  <div class="grant-dataviz" id="beneficiary-states">
+  <h2>Funding across beneficiary states</h2>
+    <beneficiaries
+        :min-height="200"
+        datasource="{% url "api:beneficiary-allocation" %}"
+    >
+    </beneficiaries>
+  </div>
 </div>
 {% endblock %}
 
