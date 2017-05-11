@@ -1,6 +1,6 @@
 <template>
 <div class="map-viz">
-  <svg :width="width" :height="height">
+  <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
         <rect x="0" y="0" width="50" height="25" :fill="colour('Norway')" />
@@ -17,7 +17,7 @@
       </g>
 
       <g class="terrain">
-        <g class="countries" />
+        <g class="countries" />r
         <g class="territories" />
         <path class="coastline" /> <!-- make sure coastline is on top, just in case -->
       </g>
@@ -42,7 +42,8 @@
   @hovered: #9dccec;
   .with-boundary {
     stroke: #7f9fc8;
-    stroke-width: 0.5;
+    // commented out this one because it's being set dynamically
+    //stroke-width: 0.5;
     stroke-linejoin: round;
   }
   .hovered {
@@ -58,7 +59,8 @@
       }
       .graticule {
         stroke: #333;
-        stroke-width: .2;
+        // commented out this one because it's being set dynamically
+        //stroke-width: .2;
         stroke-opacity: .5;
         fill: none;
       }
@@ -147,6 +149,11 @@ export default Vue.extend({
       width: 800,
       height: 800,
 
+      terrain_stroke: 0.5,
+      graticule_stroke: 0.2,
+
+      zoom: 1,
+
        // there's no data needed for this visualisation
       dataset: {},
       hasData: true,
@@ -154,6 +161,10 @@ export default Vue.extend({
   },
 
   computed: {
+    scaleFactor() {
+      return this.width / this.svgWidth / this.zoom;
+    },
+
     projection() {
       /*
        * "The European grid is a proposed, multipurpose Pan-European mapping standard.
@@ -199,9 +210,33 @@ export default Vue.extend({
   },
 
   methods: {
-    main() {
+    render() {
+      // no reason to run this explicitly
+      // because it's triggered by the change in svgWidth
+      this.setStyle();
+
       this.renderBase();
       this.renderRegions();
+    },
+
+    setStyle() {
+      let style = this.dynamicStyle;
+      if (!style) {
+        style = document.createElement("style");
+        this.$el.appendChild(style);
+        this.dynamicStyle = style;
+      }
+
+      const terrain_stroke = this.terrain_stroke * this.scaleFactor,
+            graticule_stroke = this.graticule_stroke * this.scaleFactor;
+
+      style.innerHTML = `
+        .map-viz .chart .terrain, .map-viz .chart .regions {
+          stroke-width: ${terrain_stroke};
+        }
+        .map-viz .chart .base .graticule {
+          stroke-width: ${graticule_stroke};
+        }`;
     },
 
     renderBase() {
@@ -355,6 +390,8 @@ export default Vue.extend({
       const zoom = d3.zoom()
                      .on("zoom", () => {
                        chart.attr("transform", d3.event.transform);
+                       this.zoom = d3.event.transform.k;
+                       this.setStyle();
                      });
 
       chart
@@ -395,6 +432,10 @@ export default Vue.extend({
         return tr.translate(x, y).scale(k);
       }
     },
+  },
+
+  watch: {
+    svgWidth: "setStyle",
   },
 });
 </script>
