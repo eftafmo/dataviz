@@ -17,7 +17,7 @@
       </g>
 
       <g class="terrain">
-        <g class="countries" />r
+        <g class="countries" />
         <g class="territories" />
         <path class="coastline" /> <!-- make sure coastline is on top, just in case -->
       </g>
