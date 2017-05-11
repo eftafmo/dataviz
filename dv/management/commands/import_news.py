@@ -14,12 +14,12 @@ class Command(BaseCommand):
     help = 'Import news from %s' % ENDPOINT
 
     def handle(self, *args, **options):
-        page = 0
+        page = 1
         data = []
-        while page == 0 or data:
+        while page == 1 or data:
             with urlopen(ENDPOINT.format(page)) as url:
                 data = json.loads(url.read().decode())['posts']
-                if page == 0:
+                if page == 1:
                     News.objects.all().delete()
                 print('Importing {} news from page {}'.format(len(data), page))
                 for item in data:
