@@ -1,6 +1,8 @@
 <script>
 import * as d3 from 'd3';
 import Dropdown from '../includes/DropdownFilter.vue';
+import d3Tip from "d3-tip";
+d3.tip = d3Tip;
 
 export default {
 

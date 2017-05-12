@@ -69,6 +69,34 @@
   }
 }
 
+.d3-tip.benef {
+  padding: 1rem 2rem;
+  background: white;
+  font-weight: 600;
+  box-shadow: 0px 0px 3px #aaa;
+
+  &:after {
+    content: '▼';
+    position: absolute;
+    left: 42%;
+    bottom: 15px;
+    width: 0;
+    height: 0;
+    color: white;
+    text-shadow: 0px 2px 3px #aaa;
+    font-size: 2em;
+    clear: both;
+  }
+
+  span {
+    font-weight: 400;
+    color: #aaa;
+    font-size: 12px;
+  }
+}
+
+
+
 </style>
 
 
@@ -271,16 +299,30 @@ export default Vue.extend({
       /*
        *
        */
-      bentered.append("title").text(
+      bentered.attr("title",
         (d) => d.map(
           (d_) => d_.fm + ":\t" + this.format(d_.value)
-        ).join("\n")
+        ).join("<br>")
       )
+
+      let tip = d3.tip()
+        .attr('class', 'd3-tip benef')
+        .html(function(d){return d})
+        .direction('n').offset([-20, 0]);
+
+      chart.call(tip)
+
+      bentered.on('mouseover', function(){
+        tip.show(d3.select(this).attr('title') + "<br> <span>Click to filter by beneficiary state</span>")
+      })
+      .on('mouseout', tip.hide);
+
       // draw a transparent rectangle to get continuos mouse-overing
       bentered.append("rect")
         .attr("class", "_fill")
         .attr("width", this.width)
         .attr("height", this.y.bandwidth())
+
 
       /*
        * render the "legend" part
