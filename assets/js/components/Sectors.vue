@@ -1,6 +1,6 @@
 <template>
 <div class="sectors-viz">
-  <svg :width="width" :height="height">
+  <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
       <filter id="dropshadow" x="-50%" y="-50%"  height="200%" width="200%">
         <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -14,13 +14,29 @@
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
-<!--   <div class="legend" :transform="`translate(${radius * 2 + radius / 2},${margin})`">
-  </div> -->
-  <div class="legend"></div>
+  <div class="legend">
+    <ul v-if="data.children">
+      <li v-for="sector in data.children" :class="sector.data.id">
+        {{ sector.data.name }} - {{ format(sector.value) }}
+        <ul v-if="sector.children">
+          <li v-for="area in sector.children" :class="area.data.id">
+            {{ area.data.name }} - {{ format(sector.value) }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </div>
 </template>
 
 <style lang="less">
+.sectors-viz {
+  svg {
+    width: 100%;
+    height: auto;
+  }
+}
+
 .chart {}
 .legend {}
 .arc, .label { cursor: pointer; }
@@ -71,63 +87,66 @@
   }
 }
 
+
+//
+aside {display: none}
+svg {border: 1px solid navy;}
+
 </style>
 
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
 
+import BaseMixin from './mixins/Base';
+import ChartMixin from './mixins/Chart';
 import {SectorColours} from 'js/constants.js';
 
 
-// https://github.com/wbkd/d3-extended (..?)
-d3.selection.prototype.moveToFront = function() {
-  return this.each(function(){
-    const lastChild = this.parentNode.lastChild;
-    if (lastChild && lastChild != this) {
-      this.parentNode.appendChild(this);
-    }
-  });
-};
-d3.selection.prototype.moveToBack = function() {
-  return this.each(function() {
-    const firstChild = this.parentNode.firstChild;
-    if (firstChild && firstChild != this) {
-      this.parentNode.insertBefore(this, firstChild);
-    }
-  });
-};
-d3.selection.prototype.moveBelow = function() {
-  return this.each(function() {
-    const previousSibling = this.previousSibling;
-    if (previousSibling) {
-      this.parentNode.insertBefore(this, previousSibling);
-    }
-    this.parentNode.appendChild(this);
-  });
-};
-
-var coords=[];
-
 export default Vue.extend({
-  props: {
-    datasource: String,
-    width: Number,
-    height: Number,
-    margin: {
-      type: Number,
-      default: 10,
-    },
-    label_size: {
-      type: Number,
-      default: 10,
-    },
-    label_spacing: {
-      type: Number,
-      default: 5,
-    },
+  mixins: [
+    BaseMixin, ChartMixin,
+  ],
+
+  data() {
+    return {
+      width: 500,
+      height: 500,
+
+      margin: 10,
+
+      label_size: 10,
+      label_spacing: 5,
+    };
   },
+
   computed: {
+    data() {
+      const tree = d3.hierarchy( { children: this.dataset } );
+      tree.sum( (d) => {
+        // only last level has allocation
+        if (!d.allocation) return 0;
+        // filter out disabled items
+        if (d.enabled === false) return 0;
+
+        return d3.sum(
+          d3.entries(d.allocation),
+          (item) => {
+            // allocation is grouped by FM, so filter if needed
+            if (this.filters.fm
+                && item.key != this.filters.fm) return 0;
+
+            return item.value;
+          }
+        );
+      } );
+
+      console.log(tree);
+
+
+      return tree;
+    },
+
     radius() {
       return Math.min(this.width, this.height) / 2 - this.margin;
     },
@@ -150,45 +169,39 @@ export default Vue.extend({
     },
     _angle() {
       return d3.scaleLinear()
-    	.domain([0, this.radius * 2])
-    	.range([0, Math.PI * 2]);
+               .domain([0, this.radius * 2])
+               .range([0, Math.PI * 2]);
     },
     _arc() {
-      const $this = this;
       return d3.arc()
-        .startAngle(function(d) { return $this._angle(d.x0) })
-        .endAngle(function(d) { return $this._angle(d.x1) })
-        .outerRadius($this.radius)
-        .innerRadius($this.radius * 65 / 100);
+        .startAngle( (d) => this._angle(d.x0) )
+        .endAngle( (d) => this._angle(d.x1) )
+        .outerRadius(this.radius)
+        .innerRadius(this.radius * 65 / 100);
         //.outerRadius((d) => d.y0/2)
         //.innerRadius((d) => d.y1/2);
     },
-    _format: () => d3.format(",d"),
   },
 
   mounted() {
-    this.svg = d3.select(this.$el);
     this.root = null;
     this._secondary_colours = {};
-    this.doStuff();
   },
 
   methods: {
-    setUp(data) {
-      // prepare data hierarchy
-      this.root = d3.hierarchy({children: data});
-      for (let node of this.root.descendants()) {
-        node.data.enabled = true;
-      }
+    _extract_coords: (d) => (
+      {x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1}
+    ),
 
-      // generate children colours
-      for (let d of data) {
-        // TODO: make colours id-based
-        this._secondary_colours[d.name] = this._mkcolourscale(
-          SectorColours[d.name], d.children.length
-        );
-      }
+    _colour(d) {
+      const func = (
+        d.depth == 1 ?
+          this._primary_colour :
+          this._secondary_colours[d.parent.data.name]
+      );
+      return func(d.data.name);
     },
+
     _mkcolourscale: (colour, length) => {
       if (length == 1) return d3.scaleOrdinal([colour]);
 
@@ -197,7 +210,7 @@ export default Vue.extend({
 	  end = d3.hsl(_c.h, _c.s, _c.l, _c.opacity);
 
       const _delta = d3.scaleLinear()
-      // these values are rather arbitrary but they look pretty
+            // these values are rather arbitrary but they look pretty
 	    .domain([2, 5])
 	    .range([0.1, 0.5])
 	    .clamp(true)
@@ -216,39 +229,64 @@ export default Vue.extend({
 	  .range([start, end])
 	  .interpolate(d3.interpolateHsl);
 
-
       return d3.scaleOrdinal(d3.range(length).map(_scale));
     },
 
-    _colour(d) {
-      const func = (
-        d.depth == 1 ?
-          this._primary_colour :
-          this._secondary_colours[d.parent.data.name]
-      );
-      return func(d.data.name);
+    renderChart() {
+      const $this = this,
+            // flatten data
+            data = this._partition(this.data)
+                       .descendants()
+                       .slice(1);
+
+
+
+
+      // generate children colours. TODO: move to processDataset
+      for (let d of this.data.children) {
+        // TODO: make colours id-based
+        const name = d.data.name;
+
+        this._secondary_colours[name] = this._mkcolourscale(
+          SectorColours[name], d.children.length
+        );
+      }
+
+
+      const arcs = this.chart
+	    .selectAll(".arc")
+	    .data(data, (d) => d.data.id); /* JOIN */
+
+      arcs
+	    .enter().append("path")
+	    .each(function(d, i) {
+	      // cache current coordinates
+	      this._prev = $this._extract_coords(d);
+	    })
+//	    .attr("id", $this.getArcID)
+	    .attr("class", "arc")
+	    .attr("d", this._arc)
+	    .attr("fill", this._colour)
+            // level 2 items are hidden and really hidden
+            .attr("opacity", (d) => d.depth == 1 ? 1 : 0);
+
+
+
+
     },
+
+
+
+
+/*
+      // prepare data hierarchy
+
+      for (let node of this.root.descendants()) {
+        node.data.enabled = true;
+      }
 
     getArcID: (node) => `a${node.depth}-${node.data.id}`,
     getLabelID: (node) => `l${node.depth}-${node.data.id}`,
-
-    getRoot() {
-      // sum needs to be recomputed every time,
-      this.root.sum((d) => {
-        if (!d.enabled || !d.allocation) return 0;
-        // TODO: apply filtering
-        return d3.sum(d3.values(d.allocation));
-      });
-
-      // along with re-partitioning
-      this._partition(this.root);
-
-      return this.root;
-    },
-
-    _extract_coords: (d) => (
-	   {x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1}
-    ),
 
     click(item) {
       const $this = this,
@@ -274,7 +312,7 @@ export default Vue.extend({
       // we need to set the arc below, or it will cover the secondaries
       const arc = _this.classed("arc") ? _this :
                   d3.select('#' + $this.getArcID(node));
-      arc.moveToBack();
+      arc.lower();
 
       $this._labels
        .data($this.getRoot().descendants().slice(1))
@@ -337,7 +375,7 @@ export default Vue.extend({
             arc = _this.classed('arc') ? _this : _other;
 
       // if we want pretty shadows the element needs to be brought to front
-      arc.moveToFront();
+      arc.raise();
       // let the other be "hovered" too
       _other.classed("hovered", true);
     },
@@ -353,23 +391,6 @@ export default Vue.extend({
     drawChart() {
       const $this = this,
       radius = $this.radius;
-      const arc = $this.svg.select("g.chart")
-	    .selectAll(".arc")
-      // always use $this.getRoot() to make sure the data is properly partitioned
-	    .data($this.getRoot().descendants().slice(1))
-	    .enter().append("path")
-	    .each(function(d,i) {
-	      // cache current coordinates
-	      this._prev = $this._extract_coords(d);
-        coords[i]=this._prev;
-	    })
-	    .attr("id", $this.getArcID)
-	    .attr("class", "arc")
-	    .attr("d", $this._arc)
-	    .attr("fill", $this._colour)
-      // level 2 items are hidden and really hidden
-      .attr("opacity", (d) => d.depth == 1 ? 1 : 0)
-      .style("display", (d) => d.depth == 1 ? "inline" : "none")
 
       // we need to perform our transitions on this current selection
       // or things get weird
@@ -487,17 +508,11 @@ export default Vue.extend({
       const $this = this;
       d3.json(this.datasource, function(error, data) {
 	if (error) throw error;
-        $this.setUp(data);
         $this.drawChart();
         $this.drawLegend();
       });
     },
-  },
-  watch: {
-    datasource: {
-      handler: 'doStuff',
-      deep: true,
-    },
+*/
   },
 });
 
