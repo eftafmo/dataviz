@@ -1,0 +1,43 @@
+.homepage-nav {
+  margin-bottom: 2rem;
+}
+
+.homepage-nav {
+  display: flex;
+  justify-content: center;
+}
+.homepage-nav a {
+  flex-grow: 1;
+  max-width: 15rem;
+  padding: 1rem;
+  color: inherit;
+  transition: .2s;
+}
+.homepage-nav a:hover {
+  text-decoration: none;
+}
+.homepage-nav a:active {
+  background: #f8f8f8;
+}
+
+@media (max-width: 480px) {
+  .homepage-nav a {
+    border-right: 1px solid #ddd;
+  }
+  .homepage-nav a:last-child {
+    border-right: 0;
+  }
+}
+@media (min-width: 481px) {
+  .homepage-nav {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+  .homepage-nav a {
+    margin: 0 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+  .homepage-nav a:hover {
+    box-shadow: 0 1px 3px rgba(0,0,0,.4);
+  }
+}
