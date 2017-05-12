@@ -76,19 +76,20 @@
   font-weight: 600;
   box-shadow: 0px 0px 3px #aaa;
   white-space: pre;
-  line-height: 2;
+  line-height: 1.5;
 
   &:after {
     content: '▼';
     position: absolute;
     left: 42%;
-    bottom: 25px;
+    bottom: 20px;
     width: 0;
     height: 0;
     color: white;
     text-shadow: 0px 2px 3px #aaa;
     font-size: 2em;
     clear: both;
+    pointer-events: none;
   }
 
   .action {
@@ -336,23 +337,6 @@ export default Vue.extend({
         ).join('\n')
       )
 
-      let tip = d3.tip()
-        .attr('class', 'd3-tip benef')
-        .html(function(d){return d})
-        .direction('n').offset([-20, 0]);
-
-      chart.call(tip)
-
-      bentered.on('mouseover', function(d){
-        tip.show(
-                  "<div class='title-container'><img src=/assets/imgs/"
-                  + d3.select(this).select('use').attr('href').substring(1) + ".png"
-                  + "/> <span class='name'>"+ d.name + "</span></div>"
-                  + d3.select(this).attr('title')
-                  + " <span class='action'>~Click to filter by beneficiary state</span>"
-                )
-      })
-      .on('mouseout', tip.hide);
 
       // draw a transparent rectangle to get continuos mouse-overing
       bentered.append("rect")
@@ -410,6 +394,26 @@ export default Vue.extend({
                    .select("g.items")
         .transition(t_)
         .call(this.renderItems);
+
+      // tooltip
+      let tip = d3.tip()
+        .attr('class', 'd3-tip benef')
+        .html(function(d){return d})
+        .direction('n').offset([-20, 0]);
+
+      chart.call(tip)
+
+      items.on('mouseover', function(d){
+        let show_items = d3.select(this.parentNode);
+        tip.show(
+                  "<div class='title-container'><img src=/assets/imgs/"
+                  + show_items.select('use').attr('href').substring(1) + ".png"
+                  + "/> <span class='name'>"+ d.name + "</span></div>"
+                  + show_items.attr('title')
+                  + " <span class='action'>~Click to filter by beneficiary state</span>"
+                )
+      })
+      .on('mouseout', tip.hide);
 
       /*
        * and finally, events
