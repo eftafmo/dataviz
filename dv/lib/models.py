@@ -1,13 +1,12 @@
 import logging
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.db.models.base import ModelBase
 from enumfields import EnumField
 from dv.lib import utils
 
 
 logger = logging.getLogger()
-
-_ass_cache = {}
 
 
 class ImportableModelMixin(object):
@@ -94,29 +93,13 @@ class ImportableModelMixin(object):
             try:
                 val = data.pop(column)
             except KeyError:
-                continue
+                logger.error("Column %s not found in sheet %s", column, cls.IMPORT_SOURCE)
+                raise
             else:
-                _assign(field, val, rel_field)
-
-
-        # and finally auto-match all left-overs
-        for k in list(data.keys()):
-            # convert the input data keys to camel_cased
-            k_ = utils.camel_case_to__(k)
-            if k_ == k:
-                continue
-            data[k_] = data.pop(k)
-
-        for field in fields.keys():
-            if field in values:
-                continue
-
-            try:
-                val = data.pop(field)
-            except KeyError:
-                continue
-            else:
-                _assign(field, val)
+                try:
+                    _assign(field, val, rel_field)
+                except ObjectDoesNotExist as e:
+                    logger.warning("Error while assigning val: {} to field: {}, rel_field: {} ({})".format(val, field, rel_field, e))
 
         if data:
             logger.debug("Unused input data: %s", data.keys())
