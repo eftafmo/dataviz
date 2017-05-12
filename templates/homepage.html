@@ -1,13 +1,26 @@
-{% extends "_layout-sidebar.html" %}
+{% extends "_layout.html" %}
 
 
 {% block main %}
-<div style="height: 120vh" class="grant-dataviz" id="overview"></div>
-{% endblock %}
+  <div class="grant-dataviz" id="overview"></div>
 
-{% block aside %}
-  <div id="sidebar-results">
-  </div>
+  <section class="section align-center">
+
+    <h2>Find out more</h2>
+
+    <nav class="homepage-nav">
+      <a href="{% url 'frontend:grants' %}">Our grants</a>
+      <a href="{% url 'frontend:partners' %}">Our partners</a>
+      <a href="{% url 'frontend:projects' %}">Our projects</a>
+    </nav>
+
+    <form class="homepage-search" action="">
+      <input type="search" placeholder="Programmes, Projects, News, Organizations, etc.">
+      <button type="submit">Search</button>
+    </form>
+
+  </section>
+
 {% endblock %}
 
 {% block finally %}

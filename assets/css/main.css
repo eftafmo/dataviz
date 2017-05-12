@@ -10,6 +10,9 @@
 @import url('pagination.css');
 
 
+@import url('homepage.css');
+
+
 @import url('buttons.css');
 @import url('forms.css');
 
@@ -108,7 +111,7 @@ h2 {
 
 @media (max-width: 600px){
   #funding-map {
-    // display: none;
+    /* display: none;*/
   }
 }
 
