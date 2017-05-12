@@ -70,6 +70,7 @@
 }
 
 .d3-tip.benef {
+  min-width: 320px;
   padding: 1rem 2rem;
   background: white;
   font-weight: 600;
@@ -88,10 +89,38 @@
     clear: both;
   }
 
-  span {
+  .action {
     font-weight: 400;
     color: #aaa;
     font-size: 12px;
+    display: block;
+    margin-top: 1rem;
+    text-align: right;
+  }
+
+  .title-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    margin-top: .5rem;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    border-bottom: 1px solid #eee;
+    img {
+      max-width: 30px;
+    }
+  }
+
+  .spacing {
+    margin: .6rem 0;
+    display: block;
+  }
+
+  .name{
+    margin: 0 .5rem;
+    font-size: 1.8rem;
   }
 }
 
@@ -301,8 +330,8 @@ export default Vue.extend({
        */
       bentered.attr("title",
         (d) => d.map(
-          (d_) => d_.fm + ":\t" + this.format(d_.value)
-        ).join("<br>")
+          (d_) => d_.fm + " grants" + ":\t" + this.format(d_.value)
+        ).join("<span class='spacing'></span>")
       )
 
       let tip = d3.tip()
@@ -312,8 +341,14 @@ export default Vue.extend({
 
       chart.call(tip)
 
-      bentered.on('mouseover', function(){
-        tip.show(d3.select(this).attr('title') + "<br> <span>Click to filter by beneficiary state</span>")
+      bentered.on('mouseover', function(d){
+        tip.show(
+                  "<div class='title-container'><img src=/assets/imgs/"
+                  + d3.select(this).select('use').attr('href').substring(1) + ".png"
+                  + "/> <span class='name'>"+ d.name + "</span></div>"
+                  + d3.select(this).attr('title')
+                  + " <span class='action'>~Click to filter by beneficiary state</span>"
+                )
       })
       .on('mouseout', tip.hide);
 
