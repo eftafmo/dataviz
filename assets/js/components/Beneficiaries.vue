@@ -215,18 +215,8 @@ export default Vue.extend({
       const chart = this.chart;
       // using 2 transitions makes things easier to follow
       // (the removal / repositioning will be slightly delayed)
-      const t = d3.transition(),
-            t_ = d3.transition();
-      // don't animate anything the first time
-      if (this._rendered) {
-        t.duration(750);
-        t_.duration(350);
-      }
-      else {
-        t.duration(0);
-        t_.duration(0);
-        this._rendered = true;
-      }
+      const t = this.getTransition(750),
+            t_ = this.getTransition(350);
 
       // resize the chart to fit the data
       this.xheight = Math.max(this.minHeight, // TODO: lose min-height?
