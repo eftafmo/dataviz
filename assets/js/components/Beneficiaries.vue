@@ -75,6 +75,8 @@
   background: white;
   font-weight: 600;
   box-shadow: 0px 0px 3px #aaa;
+  white-space: pre;
+  line-height: 2;
 
   &:after {
     content: '▼';
@@ -331,7 +333,7 @@ export default Vue.extend({
       bentered.attr("title",
         (d) => d.map(
           (d_) => d_.fm + " grants" + ":\t" + this.format(d_.value)
-        ).join("<span class='spacing'></span>")
+        ).join('\n')
       )
 
       let tip = d3.tip()
