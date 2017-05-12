@@ -39,3 +39,23 @@
     /*width: 320px;*/
   }
 }
+
+
+@media (min-width: 1400px) {
+  main.main {
+    display: flex;
+  }
+
+  main.main .lg-column {
+    margin: 1.5rem;
+  }
+
+  .grant-dataviz select{
+    top: 57px;
+    left: -4px;
+  }
+
+  .grant-dataviz h2 {
+    margin-bottom: 4rem;
+  }
+}
