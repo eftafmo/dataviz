@@ -49,7 +49,7 @@ export default {
   },
 
   beforeDestroy() {
-    window.removeEventListener('resize', this.calculateChartWidth);
+    window.removeEventListener('resize', this.calculateSVGWidth);
   },
 };
 </script>
