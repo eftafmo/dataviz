@@ -1,3 +1,5 @@
+/* nav */
+
 .homepage-nav {
   margin-bottom: 2rem;
 }
@@ -40,4 +42,32 @@
   .homepage-nav a:hover {
     box-shadow: 0 1px 3px rgba(0,0,0,.4);
   }
+}
+
+/* search */
+
+.homepage-search {
+  display: flex;
+  margin: 2rem auto;
+  align-items: strech;
+  justify-content: center;
+  max-width: 55rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.homepage-search input,
+.homepage-search button {
+  box-sizing: border-box;
+  padding: 1rem;
+  border: 0;
+  font: inherit;
+  line-height: inherit;
+  background: #fff;
+}
+.homepage-search input {
+  flex-grow: 4;
+}
+.homepage-search button {
+  flex-grow: 1;
+  background: #3D90F3;
+  color: #fff;
 }
