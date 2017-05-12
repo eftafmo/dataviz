@@ -11,3 +11,5 @@ Vagrantfile
 provisioning/salt-config/minion
 provisioning/salt-pillar/settings.sls
 
+### sublime
+*.sublime-*
