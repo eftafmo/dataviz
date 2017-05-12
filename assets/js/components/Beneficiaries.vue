@@ -82,7 +82,7 @@
     content: '▼';
     position: absolute;
     left: 42%;
-    bottom: 15px;
+    bottom: 25px;
     width: 0;
     height: 0;
     color: white;
