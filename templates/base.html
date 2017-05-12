@@ -49,6 +49,10 @@
   {% block top %}{% endblock %}
 
   <div id="content" class="page-body">
+    <div id="global-filters">
+      <globalfilter>
+      </globalfilter>
+    </div>
     <div class="container">
       <div class="page-body-inner">
 {% block content %}
@@ -70,5 +74,15 @@
   {% render_bundle 'scripts' 'js' %}
 {% block finally %}
 {% endblock %}
+<script>
+  new Vue({
+    el: '#global-filters',
+    components: {
+        globalfilter: components.GlobalFilters,
+    },
+    data: {
+    },
+  });
+</script>
 </body>
 </html>

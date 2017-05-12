@@ -6,11 +6,6 @@
 {% block main %}
 <div class="lg-column">
 
-<div class="grant-dataviz" id="global-filters">
-  <globalfilter>
-  </globalfilter>
-</div>
-
   <div class="grant-dataviz" id="financial-mechanisms">
   <h2>Funding by financial mechanism</h2>
     <mechanisms
@@ -82,15 +77,6 @@ new Vue({
   el: '#funding-map',
   components: {
       xmap: components.Map,
-  },
-  data: {
-  },
-});
-
-new Vue({
-  el: '#global-filters',
-  components: {
-      globalfilter: components.GlobalFilters,
   },
   data: {
   },
