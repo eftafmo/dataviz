@@ -126,3 +126,9 @@ h2 {
     max-width: 95%;
   }
 }
+
+#global-filters {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
