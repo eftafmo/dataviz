@@ -95,6 +95,10 @@ export default {
       const type = "sector";
       this.handleFilter(type, val, old);
     },
+    handleFilterArea(val, old) {
+      const type = "area";
+      this.handleFilter(type, val, old);
+    },
 
     /*
      * utility methods available to all instances,
@@ -121,6 +125,7 @@ export default {
     'filters.fm': 'handleFilterFm',
     'filters.region': 'handleFilterRegion',
     'filters.sector': 'handleFilterSector',
+    'filters.area': 'handleFilterArea',
   },
 };
 </script>
