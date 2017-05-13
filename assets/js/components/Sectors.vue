@@ -15,16 +15,32 @@
     </g>
   </svg>
   <div class="legend">
-    <ul v-if="data.children">
-      <li v-for="sector in data.children" :class="sector.data.id">
-        {{ sector.data.name }} - {{ format(sector.value) }}
-        <ul v-if="sector.children">
-          <li v-for="area in sector.children" :class="area.data.id">
-            {{ area.data.name }} - {{ format(sector.value) }}
+    <transition-group name="x" tag="ul">
+      <li
+          v-for="sector in data.children"
+          v-if="sector.value"
+          :key="getLabelID(sector)"
+          :id="getLabelID(sector)"
+          @click="click(sector)"
+      >
+        {{ sector.data.name }} -
+        <span :key="`v-${getLabelID(sector)}`">
+          {{ format(sector.value) }}
+        </span><!--
+        <transition-group name="x" tag="ul">
+          <li
+              v-for="area in sector.children"
+              v-if="area.value"
+              :key=getLabelID(area)
+              :id="getLabelID(area)">
+            {{ area.data.name }} -
+            <span :key="`v-${getLabelID(area)}`">
+              {{ format(area.value) }}
+            </span>
           </li>
-        </ul>
+        </transition-group>-->
       </li>
-    </ul>
+    </transition-group>
   </div>
 </div>
 </template>
@@ -32,17 +48,52 @@
 <style lang="less">
 .sectors-viz {
   svg {
-    width: 100%;
+    width: 50%;
     height: auto;
+    display: block;
   }
-}
+  .legend {
+    width: 50%;
+    height: auto;
+    position: relative;
+    left: 50%;
+    margin-top: -50%;
+  }
 
-.chart {}
-.legend {}
-.arc, .label { cursor: pointer; }
+  .chart, .legend {
+    cursor: pointer;
+  }
+
+  .legend {
+
+
+    // setup. these apply throughout the entire transition
+    .x-enter-active, .x-leave-active {
+      transition: opacity 1.5s;
+    }
+    // (dis)appearing item fades in/out
+    .x-enter, .x-leave-to {
+      opacity: 0;
+    }
+
+    // remaining items move about
+    // (this applies automatically when another item appears)
+    .x-move {
+      transition: transform .75s;
+    }
+    // setting this causes other items to get .x-move when one disappears
+    .x-leave-active {
+      position: absolute;
+    }
+  }
+
+/*
+
+
 .arc:hover, .arc.hovered { filter: url(#dropshadow); }
 .label:hover rect, .label.hovered rect { filter: url(#dropshadow); }
-.sectors-viz {
+
+
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -80,17 +131,12 @@
       margin-bottom: 1rem;
       cursor: pointer;
   }
-
-  .legend {
-      max-width: 600px;
-      margin-left: 5rem;
-  }
+  */
 }
 
 
 //
 aside {display: none}
-svg {border: 1px solid navy;}
 
 </style>
 
@@ -115,8 +161,10 @@ export default Vue.extend({
 
       margin: 10,
 
-      label_size: 10,
-      label_spacing: 5,
+      // percentage of mid-donut void
+      inner_radius: .65,
+
+      duration: 2000,
     };
   },
 
@@ -140,9 +188,6 @@ export default Vue.extend({
           }
         );
       } );
-
-      console.log(tree);
-
 
       return tree;
     },
@@ -174,12 +219,16 @@ export default Vue.extend({
     },
     _arc() {
       return d3.arc()
-        .startAngle( (d) => this._angle(d.x0) )
-        .endAngle( (d) => this._angle(d.x1) )
-        .outerRadius(this.radius)
-        .innerRadius(this.radius * 65 / 100);
+        // the Math.min/max part  is needed to avoid funkiness for edge items
+        .startAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x0))) )
+        .endAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x1))) )
+        //.outerRadius(this.radius)
+        //.innerRadius(this.radius * this.inner_radius);
         //.outerRadius((d) => d.y0/2)
         //.innerRadius((d) => d.y1/2);
+        .outerRadius((d) => d.depth == 1 ? this.radius * .75 : this.radius)
+        .innerRadius((d) => d.depth == 1 ? this.radius * .5 : this.radius * .75);
+
     },
   },
 
@@ -190,7 +239,11 @@ export default Vue.extend({
 
   methods: {
     _extract_coords: (d) => (
-      {x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1}
+      {
+        x0: d.x0, x1: d.x1,
+        y0: d.y0, y1: d.y1,
+        depth: d.depth,
+      }
     ),
 
     _colour(d) {
@@ -232,12 +285,25 @@ export default Vue.extend({
       return d3.scaleOrdinal(d3.range(length).map(_scale));
     },
 
+    _getID(node) {
+      // include parent id, because area clash makes boom
+      const parent = node.depth == 2 ? this._getID(node.parent) + "_" : "";
+      return parent + node.data.id;
+    },
+    getArcID(node) { return "a-" + this._getID(node); },
+    getLabelID(node) { return "l-" + this._getID(node); },
+
     renderChart() {
+
+setTimeout(()=> this.duration = 1000, 800)
+
+      this.rendered = true;
       const $this = this,
             // flatten data
             data = this._partition(this.data)
                        .descendants()
                        .slice(1);
+      const t = this.getTransition();
 
 
 
@@ -252,29 +318,81 @@ export default Vue.extend({
         );
       }
 
-
       const arcs = this.chart
 	    .selectAll(".arc")
-	    .data(data, (d) => d.data.id); /* JOIN */
+	    .data(data, this.getArcID); // JOIN
 
-      arcs
-	    .enter().append("path")
-	    .each(function(d, i) {
-	      // cache current coordinates
-	      this._prev = $this._extract_coords(d);
-	    })
-//	    .attr("id", $this.getArcID)
-	    .attr("class", "arc")
-	    .attr("d", this._arc)
-	    .attr("fill", this._colour)
-            // level 2 items are hidden and really hidden
-            .attr("opacity", (d) => d.depth == 1 ? 1 : 0);
+      const aentered = arcs.enter().append("path") // ENTER
+        .each(function(d) {
+	  // cache current coordinates
+	  this._prev = $this._extract_coords(d);
+	})
+        .attr("id", this.getArcID)
+	.attr("class", "arc")
+	.attr("d", this._arc)
+	.attr("fill", this._colour)
+        // level 2 items are hidden and really hidden
+        .attr("opacity", (d) => d.depth == 1 ? .7 : .5);
+
+      const aexit = arcs.exit(); // EXIT
+
+      /* transitions */
+      // this stuff is complicated, each selection group will need its own transition
+
+      arcs // UPDATE
+        .transition(t)
+        .attrTween('d', function(d) {
+	       const interpolate = d3.interpolate(
+		      this._prev, $this._extract_coords(d)
+	       );
+          this._prev = interpolate(0);
+          return function(x) {
+            return $this._arc(interpolate(x));
+          }
+        })
+
+      // send new items to back so existing arcs cover them
+      // during the transition and make them look animated
+      aentered.lower(); // ENTER
+
+      // send deleted items to back too
+      aexit // EXIT
+        .lower()
+        .transition(t)
+        .remove()
 
 
+/*
+        .transition(t)
+        .attr("opacity", 0)
+        //.remove();
+*/
 
-
+      /* events */
+      aentered
+        .on("click", this.click);
     },
 
+    click(d) {
+      const func = d.depth == 1 ? this.toggleSector : this.toggleArea;
+      func(d.data.id, this);
+    },
+
+    toggleSector(s, etarget) {
+      this.filters.sector = this.filters.sector == s ?
+                            null : s;
+      // always reset area on sector change
+      this.filters.area = null;
+    },
+
+    toggleArea(a, etarget) {
+      this.filters.area = this.filters.area == a ?
+                          null : a;
+    },
+
+    handleFilterFm() {
+      this.render();
+    },
 
 
 
@@ -284,9 +402,6 @@ export default Vue.extend({
       for (let node of this.root.descendants()) {
         node.data.enabled = true;
       }
-
-    getArcID: (node) => `a${node.depth}-${node.data.id}`,
-    getLabelID: (node) => `l${node.depth}-${node.data.id}`,
 
     click(item) {
       const $this = this,
@@ -343,15 +458,6 @@ export default Vue.extend({
       // .. full opacity / invisibility
         .attr("opacity", (d) => d.data.enabled ? 1 : 0)
       // and new coordinates`
-        .attrTween('d', function(d) {
-	       const interpolate = d3.interpolate(
-		      this._prev, $this._extract_coords(d)
-	       );
-          this._prev = interpolate(0);
-          return function(x) {
-            return $this._arc(interpolate(x));
-          }
-        })
       // finally, hide the level 1 as well
         .on("end", function(d) {
           if (d.depth == 1) {
@@ -502,15 +608,6 @@ export default Vue.extend({
           }
         });
 
-    },
-
-    doStuff() {
-      const $this = this;
-      d3.json(this.datasource, function(error, data) {
-	if (error) throw error;
-        $this.drawChart();
-        $this.drawLegend();
-      });
     },
 */
   },
