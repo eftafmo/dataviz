@@ -161,6 +161,15 @@ class Allocation(_MainModel):
 
     order = models.SmallIntegerField()
 
+    def __str__(self):
+        return "{} / {} / {} of gross: {} (net: {})".format(
+            self.financial_mechanism_id,
+            self.state_id,
+            self.programme_area_id,
+            self.gross_allocation,
+            self.net_allocation
+        )
+
 
 class Programme(_MainModel):
     IMPORT_SOURCE = 'Programme'
@@ -289,7 +298,7 @@ class Outcome(_FussyOutcomeCode, _MainModel):
         #'IsForReportingOnly'
     }
 
-    programme_area = models.ForeignKey(ProgrammeArea)
+    programme_area = models.ForeignKey(ProgrammeArea, related_name='outcomes')
 
     code = models.CharField(max_length=12, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
@@ -308,7 +317,7 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
     }
 
     programme = models.ForeignKey(Programme, null=True)  # because "Reserve FM2004-09"
-    outcome = models.ForeignKey(Outcome)
+    outcome = models.ForeignKey(Outcome, related_name='programmes')
     state = models.ForeignKey(State)
 
     # TODO: fix decimal fields

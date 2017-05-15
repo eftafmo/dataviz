@@ -91,6 +91,7 @@ class ImportableModelMixin(object):
                 rel_field, column = column
 
             try:
+                # TODO trimm ws?
                 val = data.pop(column)
             except KeyError:
                 logger.error("Column %s not found in sheet %s", column, cls.IMPORT_SOURCE)
