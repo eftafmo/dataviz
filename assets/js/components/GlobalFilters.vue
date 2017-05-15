@@ -15,7 +15,6 @@
                      @click="removeFilter"
                      v-bind:key="item">
                   {{item}}
-                  <span class="icon icon-close"></span>
                 </li>
               </transition-group>
             </ul>
@@ -58,6 +57,11 @@
 
 .filter-item {
   display: inline-block;
+    &:after {
+      content: "\E900";
+      font-family: 'eeag-icons' !important;
+      vertical-align: middle;
+  }
 }
 
 .list-enter-active, .list-leave-active {
