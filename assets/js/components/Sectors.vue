@@ -301,13 +301,10 @@ export default Vue.extend({
         // the Math.min/max part  is needed to avoid funkiness for edge items
         .startAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x0))) )
         .endAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x1))) )
-        //.outerRadius(this.radius)
-        //.innerRadius(this.radius * this.inner_radius);
-        //.outerRadius((d) => d.y0/2)
-        //.innerRadius((d) => d.y1/2);
-        .outerRadius((d) => d.depth == 1 ? this.radius * .75 : this.radius)
-        .innerRadius((d) => d.depth == 1 ? this.radius * .5 : this.radius * .75);
-
+        .outerRadius(this.radius)
+        .innerRadius(this.radius * this.inner_radius);
+        //.outerRadius((d) => d.depth == 1 ? this.radius * .75 * 1.1: this.radius)
+        //.innerRadius((d) => d.depth == 1 ? this.radius * .5 : this.radius * .75 * 0.9);
     },
   },
 
@@ -460,8 +457,10 @@ export default Vue.extend({
 	.attr("class", "arc")
 	.attr("d", this._arc)
 	.attr("fill", this._colour)
-        // level 2 items are hidden and really hidden
-        .attr("opacity", (d) => d.depth == 1 ? 1 : 1);
+        // level 2 items are hidden
+        .attr("opacity", (d) => d.depth == 2 ? 0 : null )
+        // and really hidden
+        .style("display", (d) => d.depth == 2 ? "none" : null );
 
       const aexit = arcs.exit(); // EXIT
 
@@ -470,6 +469,8 @@ export default Vue.extend({
       // (actually ^^ that is a lie, there are no enter animations, and exit
       // never happens, but the code below is ready in case the logic changes).
 
+      // NOTE: not merging with ENTER, because there's not ENTER transition now.
+      // will need to be handled if things change.
       const transitioning = arcs // UPDATE
         .transition(t)
         // we can't use this._arc directly as it yields funky distortions,
@@ -484,14 +485,26 @@ export default Vue.extend({
             return $this._arc(interpolate(x));
           }
         });
-      // we also need to reset possibly grayed out areas,
-      // and it needs to happen during this same transition §
+      // if we've selected a sector, let's show its areas
+      if (this.filters.sector) {
+        transitioning
+          .filter(
+            (d) => d.parent.data.id == this.filters.sector
+          )
+          .style("display", null)
+          .attr("opacity", 1);
+      }
+      // and hide the previous ones
       if (this._prevsector) {
         transitioning
           .filter(
             (d) => d.parent.data.id == this._prevsector
           )
-          .attr("fill", this._colour);
+          .attr("opacity", 0)
+          // and also reset possibly grayed out areas §
+          .attr("fill", this._colour)
+          // don't forget to re-disable it
+          .on("end", function() { this.style.display = "none"; });
 
         // we reset the prevsector during next tick only,
         // to avoid race conditions with handleFilterArea §
@@ -502,20 +515,19 @@ export default Vue.extend({
 
       // send new items to back so existing arcs cover them
       // during the transition and make them look animated
-      aentered.lower(); // ENTER
+      // (but make sure areas are in front of sectors)
+      aentered // ENTER
+        .filter( (d) => d.depth == 2 )
+        .lower();
+      aentered
+        .filter( (d) => d.depth == 1 )
+        .lower();
 
       // send deleted items to back too
       aexit // EXIT
         .lower()
         .transition(t)
         .remove()
-
-
-/*
-        .transition(t)
-        .attr("opacity", 0)
-        //.remove();
-*/
 
       /* events */
       aentered
@@ -528,11 +540,6 @@ export default Vue.extend({
     },
 
     toggleSector(s, etarget) {
-      // always reset area on sector change, but do some special-casing §
-      if(this.filters.area) {
-        this._prevsector = this.filters.sector;
-        this.filters.area = null;
-      }
       this.filters.sector = this.filters.sector == s ?
                             null : s;
     },
@@ -549,7 +556,13 @@ export default Vue.extend({
     },
 
     handleFilterSector(val, old) {
-      // we'll need this below
+      // remember the previos sector, it's used in various places,
+      // and clear it during render
+      this._prevsector = old;
+
+      // always reset area on sector change
+      this.filters.area = null;
+
       this.render();
     },
 
@@ -560,10 +573,13 @@ export default Vue.extend({
       // but WARNING, WARNING: transitions in d3 are element-exclusive, §
       // so in case the area filter was cleared by switching away
       // from the parent sector we can't handle this here.
-      // we'll let the default sector-triggered render() to take care of it. §
+      // we'll let the default sector-triggered render() take care of it. §
       if (val === null && this._prevsector) {
         return;
       }
+
+      // WARNING: TODO: if the user filters by area while the sector-filtering
+      // transition is in progress, something will break. bug hidden in here.
 
       if (val !== null && this.filters.sector === null)
         console.error("Filtered by area without a sector. Impossible 2.")
