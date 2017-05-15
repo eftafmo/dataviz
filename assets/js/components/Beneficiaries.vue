@@ -331,11 +331,6 @@ export default Vue.extend({
       /*
        *
        */
-      bentered.attr("title",
-        (d) => d.map(
-          (d_) => d_.fm + " grants" + ":\t" + this.format(d_.value)
-        ).join('\n')
-      )
 
 
       // draw a transparent rectangle to get continuos mouse-overing
@@ -395,25 +390,44 @@ export default Vue.extend({
         .transition(t_)
         .call(this.renderItems);
 
+
       // tooltip
       let tip = d3.tip()
         .attr('class', 'd3-tip benef')
-        .html(function(d){return d})
-        .direction('n').offset([-20, 0]);
+        .html(function(d){
+         return "<div class='title-container'><img src=/assets/imgs/"
+              + d3.select(this).select('use').attr('href').substring(1) + ".png"
+              + "/> <span class='name'>"+ d.name + "</span></div>"
+              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
+              + " <span class='action'>~Click to filter by beneficiary state</span>"
+        })
+        .direction('n')
+        tip.offset(function() {
+          //create a dummy elemeny to have cursor position as cx attribute and calculate the offset using it
+           let target = d3.select('#tipfollowscursor')
+                .attr('cx', d3.event.offsetX)
+                .node();
+          let mytarget = d3.select(target).attr('cx');
+          // TODO find a better way to do this (https://github.com/Caged/d3-tip/issues/53)
+          let finaltarget = parseInt(mytarget) -$this.width/2.1;
+          return [-20, finaltarget]
+        });
+        // .offset([-20, 0]);
+
 
       chart.call(tip)
 
-      items.on('mouseover', function(d){
-        let show_items = d3.select(this.parentNode);
-        tip.show(
-                  "<div class='title-container'><img src=/assets/imgs/"
-                  + show_items.select('use').attr('href').substring(1) + ".png"
-                  + "/> <span class='name'>"+ d.name + "</span></div>"
-                  + show_items.attr('title')
-                  + " <span class='action'>~Click to filter by beneficiary state</span>"
-                )
-      })
-      .on('mouseout', tip.hide);
+      bentered.append('circle').attr('id', 'tipfollowscursor')
+
+      bentered.on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
+      //append a rect to prevent the hover mouseover event to propagate to children
+        .append('rect')
+        .style('visibility', 'hidden')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('height', this.y.bandwidth())
+        .attr("width", this.width);
 
       /*
        * and finally, events
