@@ -55,6 +55,10 @@
                 v-if="area.value"
                 :key="getLabelID(area)"
                 :id="getLabelID(area)"
+                :class="{ inactive: filters.area &&
+                                    filters.sector == area.parent.data.id &&
+                                    filters.area != area.data.id
+                        }"
             >
               <a @click="click(area)">
                 {{ area.data.name }} -
@@ -74,6 +78,11 @@
 
 <style lang="less">
 .sectors-viz {
+  // defs
+  // these need to be synced with js
+  @duration: .5s;
+  @inactive_opacity: .7;
+
   svg {
     width: 50%;
     height: auto;
@@ -92,6 +101,13 @@
   }
 
   .legend {
+    .areas li {
+      transition: all @duration;
+    }
+    .areas li.inactive {
+      filter: grayscale(100%);
+      opacity: @inactive_opacity;
+    }
 
     /* animations:
      * -enter, -leave apply during the first frame only;
@@ -104,7 +120,7 @@
      */
 
     .item-enter-active, .item-leave-active {
-      transition: opacity 1s;
+      transition: opacity @duration;
     }
     // (dis)appearing item fades in/out
     .item-enter, .item-leave-to {
@@ -113,7 +129,7 @@
     // remaining items move about
     // (this applies automatically when another item appears)
     .item-move {
-      transition: transform 1s;
+      transition: transform @duration;
     }
     // setting this causes other items to get -move when one disappears
     .item-leave-active {
@@ -124,7 +140,7 @@
      */
     .areas-enter-active, .areas-leave-active {
       overflow: hidden;
-      transition: height 1s, opacity 1s;
+      transition: height @duration, opacity @duration;
     }
     .areas-enter, .areas-leave-to {
       opacity: 0;
@@ -211,7 +227,9 @@ export default Vue.extend({
       // percentage of mid-donut void
       inner_radius: .65,
 
+      // these need to be synced with the css
       duration: 500,
+      inactive_opacity: .7,
     };
   },
 
@@ -473,7 +491,8 @@ export default Vue.extend({
           .filter(
             (d) => d.parent.data.id == this._prevsector
           )
-          .attr("fill", this._colour);
+          .attr("fill", this._colour)
+          .attr("opacity", 1);
 
         // we reset the prevsector during next tick only,
         // to avoid race conditions with handleFilterArea §
@@ -555,7 +574,7 @@ export default Vue.extend({
                         .filter(
                           (d) => d.parent.data.id == this.filters.sector
                         );
-      // TODO: unify this with the default colour func
+      // TODO: unify this with the default colour func?
       const colourfunc = (val === null ? this._colour :
         (d) => {
           const c = this._colour(d);
@@ -568,12 +587,19 @@ export default Vue.extend({
           return d3.rgb(x, x, x);
         }
       );
+      const opacityfun = (val === null ? 1 :
+        (d) => {
+          if (d.data.id == this.filters.area) return 1;
+          else return this.inactive_opacity;
+        }
+      );
 
       areas
         .transition(this.getTransition())
         // TODO: if this was already grayed out it would be nice to pass
         // momentarily through the default colour
-        .attr("fill", colourfunc);
+        .attr("fill", colourfunc)
+        .attr("opacity", opacityfun);
     },
 
     handleFilterFm() {
