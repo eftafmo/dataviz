@@ -491,8 +491,7 @@ export default Vue.extend({
           .filter(
             (d) => d.parent.data.id == this._prevsector
           )
-          .attr("fill", this._colour)
-          .attr("opacity", 1);
+          .attr("fill", this._colour);
 
         // we reset the prevsector during next tick only,
         // to avoid race conditions with handleFilterArea §
@@ -583,14 +582,11 @@ export default Vue.extend({
           // a simple(istic) algorithm to transform the colour to grayscale:
           // compute the average of r, g, b
           const r = d3.rgb(c),
-                x = (r.r + r.g + r.b) / 3;
-          return d3.rgb(x, x, x);
-        }
-      );
-      const opacityfun = (val === null ? 1 :
-        (d) => {
-          if (d.data.id == this.filters.area) return 1;
-          else return this.inactive_opacity;
+                x = (r.r + r.g + r.b) / 3,
+                // we'll also simulate an opacity decrease here
+                // (we can't simply use opacity because there's a sector below)
+                y = x + (255 - x) * (1 - this.inactive_opacity);
+          return d3.rgb(y, y, y);
         }
       );
 
@@ -598,8 +594,7 @@ export default Vue.extend({
         .transition(this.getTransition())
         // TODO: if this was already grayed out it would be nice to pass
         // momentarily through the default colour
-        .attr("fill", colourfunc)
-        .attr("opacity", opacityfun);
+        .attr("fill", colourfunc);
     },
 
     handleFilterFm() {
