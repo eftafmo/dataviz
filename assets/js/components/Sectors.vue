@@ -14,31 +14,58 @@
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
-  <div class="legend">
-    <transition-group name="x" tag="ul">
+  <div class="legend" :style="{minHeight: svgWidth + 'px'}">
+    <!-- much repetition here, but not worth doing a recursive component -->
+    <transition-group
+        tag="ul"
+        class="sectors"
+        name="item"
+    >
       <li
           v-for="sector in data.children"
           v-if="sector.value"
           :key="getLabelID(sector)"
           :id="getLabelID(sector)"
-          @click="click(sector)"
       >
-        {{ sector.data.name }} -
-        <span :key="`v-${getLabelID(sector)}`">
-          {{ format(sector.value) }}
-        </span><!--
-        <transition-group name="x" tag="ul">
-          <li
-              v-for="area in sector.children"
-              v-if="area.value"
-              :key=getLabelID(area)
-              :id="getLabelID(area)">
-            {{ area.data.name }} -
-            <span :key="`v-${getLabelID(area)}`">
-              {{ format(area.value) }}
-            </span>
-          </li>
-        </transition-group>-->
+        <a @click="click(sector)">
+          {{ sector.data.name }} -
+
+          <span :key="`v-${getLabelID(sector)}`">
+            {{ format(sector.value) }}
+          </span>
+        </a>
+
+        <transition
+            v-on:before-enter="areasBeforeEnter"
+            v-on:before-leave="areasBeforeLeave"
+            v-on:after-enter="areasReset"
+            v-on:after-leave="areasReset"
+            v-on:enter-cancelled="areasCancelled"
+            v-on:leave-cancelled="areasCancelled"
+            name="areas"
+        >
+          <transition-group
+              v-show="filters.sector == sector.data.id"
+              tag="ul"
+              class="areas"
+              name="item"
+          >
+            <li
+                v-for="area in sector.children"
+                v-if="area.value"
+                :key="getLabelID(area)"
+                :id="getLabelID(area)"
+            >
+              <a @click="click(area)">
+                {{ area.data.name }} -
+
+                <span :key="`v-${getLabelID(area)}`">
+                  {{ format(area.value) }}
+                </span>
+              </a>
+            </li>
+          </transition-group>
+        </transition>
       </li>
     </transition-group>
   </div>
@@ -60,35 +87,55 @@
     margin-top: -50%;
   }
 
-  .chart, .legend {
+  .chart path, .legend a {
     cursor: pointer;
   }
 
   .legend {
 
+    /* animations:
+     * -enter, -leave apply during the first frame only;
+     * -*-active applies throughout the entire transition;
+     * -*-to appplies during the last frame only;
+     * -move applies only to items within a transition-group.
 
-    // setup. these apply throughout the entire transition
-    .x-enter-active, .x-leave-active {
+    /* these apply to all legend items, both sectors and areas.
+     * useful when triggered by external filters.
+     */
+
+    .item-enter-active, .item-leave-active {
       transition: opacity 1s;
     }
     // (dis)appearing item fades in/out
-    .x-enter, .x-leave-to {
+    .item-enter, .item-leave-to {
       opacity: 0;
     }
-
     // remaining items move about
     // (this applies automatically when another item appears)
-    .x-move {
+    .item-move {
       transition: transform 1s;
     }
-    // setting this causes other items to get .x-move when one disappears
-    .x-leave-active {
+    // setting this causes other items to get -move when one disappears
+    .item-leave-active {
       position: absolute;
+    }
+
+    /* the areas list appears when filtering by parent sector
+     */
+    .areas-enter-active, .areas-leave-active {
+      overflow: hidden;
+      transition: height 1s, opacity 1s;
+    }
+    .areas-enter, .areas-leave-to {
+      opacity: 0;
+    }
+    .areas-enter-to, .areas-leave {
+      opacity: 1;
     }
   }
 
-/*
 
+/*
 
 .arc:hover, .arc.hovered { filter: url(#dropshadow); }
 .label:hover rect, .label.hovered rect { filter: url(#dropshadow); }
@@ -249,9 +296,52 @@ export default Vue.extend({
   mounted() {
     this.root = null;
     this._secondary_colours = {};
+    // this one's used during transitioning below
+    this._areasCancelled = [];
   },
 
   methods: {
+    areasBeforeEnter(el) {
+      // get height from a clone, it's safer
+      const c = el.cloneNode(true);
+      c.style.visibility = "hidden";
+      c.style.removeProperty("display");
+      c.style.height = "auto";
+      el.parentNode.appendChild(c);
+      const h = c.clientHeight;
+      c.remove();
+
+      // start from 0, but only if we didn't interrupt another transition
+      const _idx = this._areasCancelled.indexOf(el);
+      if (_idx === -1)
+        el.style.height = "0px";
+      else
+        this._areasCancelled.splice(_idx, 1);
+
+
+      // using setTimeout is the only way to get predictable results
+      setTimeout( () => el.style.height = h + "px", 1);
+    },
+
+    areasBeforeLeave(el) {
+      // start from current height (unless another transition is in progress)
+      const _idx = this._areasCancelled.indexOf(el);
+      if (_idx === -1)
+        el.style.height = el.clientHeight + "px";
+      else
+        this._areasCancelled.splice(_idx, 1);
+
+      setTimeout( () => el.style.height = "0px", 1);
+    },
+
+    areasReset(el) {
+      el.style.removeProperty("height");
+    },
+
+    areasCancelled(el, x){
+      this._areasCancelled.push(el);
+    },
+
     processDataset(ds) {
       // add a reference to the parent sector to all areas
       // to keep track of filtering
