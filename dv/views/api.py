@@ -45,7 +45,7 @@ def grants(request):
             # Otherwise the prefetch is useless and this will take a *lot* of time
             'BilateralAlloc': sum(p.allocation
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'
-                    for p in o.programmes.all()),
+                    for p in o.programmes.all() if p.state_id == a.state_id),
         })
     return JsonResponse(out)
 
