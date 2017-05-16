@@ -97,6 +97,12 @@
     width: 50%;
     height: auto;
     display: block;
+    //TODO Define better breakpoints once all components are fluid
+    @media(min-width:1400px),(max-width:700px){
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
   .legend {
     width: 50%;
@@ -104,6 +110,11 @@
     position: relative;
     left: 50%;
     margin-top: -50%;
+    @media (min-width:1400px), (max-width:700px) {
+      width: 100%;
+      left: 0;
+      margin-top: 1rem;
+    }
   }
 
   .chart path, .legend a {
