@@ -26,10 +26,13 @@
           v-if="sector.value"
           :key="getLabelID(sector)"
           :id="getLabelID(sector)"
+          :style="{color: _colour(sector)}"
       >
         <a @click="click(sector)">
-          {{ sector.data.name }} -
-
+          <span :style="{background: _colour(sector)}"></span>
+          <span>
+            {{ sector.data.name }}
+          </span>
           <span :key="`v-${getLabelID(sector)}`">
             {{ format(sector.value) }}
           </span>
@@ -61,8 +64,10 @@
                         }"
             >
               <a @click="click(area)">
-                {{ area.data.name }} -
-
+                <span :style="{background: _colour(area)}"></span>
+                <span>
+                  {{ area.data.name }}
+                </span>
                 <span :key="`v-${getLabelID(area)}`">
                   {{ format(area.value) }}
                 </span>
@@ -79,6 +84,7 @@
 <style lang="less">
 .sectors-viz {
   // defs
+  @text-colour: #444;
   // these need to be synced with js
   @duration: .5s;
   @inactive_opacity: .7;
@@ -101,6 +107,53 @@
   }
 
   .legend {
+    ul {
+      &.areas {
+        margin-left: 2.6rem;
+        // the vertical spacing has to be on the inside
+        // because we animate height
+        li:first-of-type {
+          padding-top: 1rem;
+        }
+      }
+      list-style-type: none;
+      padding: 0;
+      font-size: 1.4rem;
+
+      li {
+        margin-bottom: 0.3rem;
+        a {
+          display: flex;
+          padding: .4rem;
+          text-decoration: none;
+          color: @text-colour;
+          border: 1px solid transparent;
+          border-radius: .2rem;
+
+          &:hover {
+            border: 1px solid #cdf;
+          }
+
+          span {
+            display: block;
+            flex-grow: 1;
+            margin: 0 0.2rem 0 0.2rem;
+          }
+          span:first-of-type {
+            flex: 0 0 1.8rem;
+            width: 1.8rem;
+            height: 1.8rem;
+            margin-left: 0;
+            margin-right: 0.6rem;
+          }
+          span:last-of-type {
+            margin-right: 0;
+            text-align: right;
+          }
+        }
+      }
+    }
+
     .areas li {
       transition: all @duration;
     }
@@ -142,12 +195,16 @@
       overflow: hidden;
       transition: height @duration, opacity @duration;
     }
+    /*
+    // things seem to look better without opacity
+    // TODO: test
     .areas-enter, .areas-leave-to {
       opacity: 0;
     }
     .areas-enter-to, .areas-leave {
       opacity: 1;
     }
+    */
   }
 
 
@@ -288,6 +345,7 @@ export default Vue.extend({
       // fail hard on missing values
         .unknown(null)
     },
+
     _partition() {
       return d3.partition().size([this.radius * 2, this.radius * 2]);
     },
@@ -380,7 +438,9 @@ export default Vue.extend({
       const func = (
         d.depth == 1 ?
           this._primary_colour :
-          this._secondary_colours[d.parent.data.name]
+          this._secondary_colours[d.parent.data.name] || (
+            () => console.error("Missing colour for " + d.parent.data.name)
+          )
       );
       return func(d.data.name);
     },
