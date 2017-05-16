@@ -19,7 +19,10 @@
           :class="{selected: filters.sector == sector.data.id}"
           :style="{color: _colour(sector)}"
       >
-        <a @click="click(sector)">
+        <a @click="click(sector)"
+           @mouseenter="highlight(sector)"
+           @mouseleave="unhighlight(sector)"
+        >
           <span :style="{background: _colour(sector)}"></span>
           <span>
             {{ sector.data.name }}
@@ -60,7 +63,10 @@
                                     filters.area != area.data.id
                         }"
             >
-              <a @click="click(area)">
+              <a @click="click(area)"
+                 @mouseenter="highlight(area)"
+                 @mouseleave="unhighlight(area)"
+              >
                 <span :style="{background: _colour(area)}"></span>
                 <span>
                   {{ area.data.name }}
@@ -84,6 +90,7 @@
   @text-colour: #444;
   // these need to be synced with js
   @duration: .5s;
+  @short_duration: .25s;
   @inactive_opacity: .7;
 
   svg {
@@ -150,9 +157,11 @@
           color: @text-colour;
           border: 1px solid transparent;
           border-radius: .2rem;
+          //transition: border-color @short_duration;
 
-          &:hover {
-            border-color: #cdf;
+          // not using :hover here because it's handled by the script
+          &.hovered {
+            border-color: #9ae;
           }
 
           * {
@@ -256,6 +265,7 @@ export default Vue.extend({
 
       // these need to be synced with the css
       duration: 500,
+      short_duration: 250,
       inactive_opacity: .7,
     };
   },
@@ -325,15 +335,14 @@ export default Vue.extend({
                .range([0, Math.PI * 2]);
     },
     _arc() {
-      return d3.arc()
-        // the Math.min/max part  is needed to avoid funkiness for edge items
-        .startAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x0))) )
-        .endAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x1))) )
-        .outerRadius(this.radius)
-        .innerRadius(this.radius * this.inner_radius);
-        //.outerRadius((d) => d.depth == 1 ? this.radius * .75 * 1.1: this.radius)
-        //.innerRadius((d) => d.depth == 1 ? this.radius * .5 : this.radius * .75 * 0.9);
+      return this._mkarc(this.radius,
+                         this.radius * this.inner_radius);
     },
+    _arcLarge() {
+      return this._mkarc(this.radius + this.margin,
+                         this.radius * this.inner_radius);
+    },
+
   },
 
   mounted() {
@@ -413,6 +422,19 @@ export default Vue.extend({
           )
       );
       return func(d.data.name);
+    },
+
+    _mkarc(outerradius, innerradius) {
+      const arc = d3.arc()
+        // the Math.min/max part  is needed to avoid funkiness for edge items
+        .startAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x0))) )
+        .endAngle( (d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x1))) )
+        .outerRadius(outerradius);
+
+      if (innerradius)
+        arc.innerRadius(innerradius);
+
+      return arc;
     },
 
     _mkcolourscale: (colour, length) => {
@@ -561,12 +583,36 @@ export default Vue.extend({
 
       /* events */
       aentered
-        .on("click", this.click);
+        .on("click", this.click)
+        .on("mouseover", this.highlight)
+        .on("mouseleave", this.unhighlight);
     },
 
     click(d) {
       const func = d.depth == 1 ? this.toggleSector : this.toggleArea;
       func(d.data.id, this);
+    },
+
+    _highlight(d, yes) {
+      const arc = this.getArcID(d),
+            label = this.getLabelID(d);
+
+      const arcfunc = yes ? this._arcLarge : this._arc;
+
+      d3.select(this.$el).select(`#${label}>a`)
+        .classed("hovered", yes);
+
+      d3.select(this.$el).select(`#${arc}`)
+        .transition(this.getTransition(this.short_duration))
+        .attr("d", arcfunc)
+    },
+
+    highlight(d) {
+      this._highlight(d, true);
+    },
+
+    unhighlight(d) {
+      this._highlight(d, false);
     },
 
     toggleSector(s, etarget) {
