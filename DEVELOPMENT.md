@@ -26,6 +26,24 @@ Important properties:
 Important methods:
 - processDataset():
   does preliminary processing of the received data. its output is assigned
-  to the `datasource` property;
+  to the `dataset` property;
 - processRow():
   only available to CSV-based components. does per-row pre-processing;
+
+
+## Logic flow / data transformations
+
+```
+- entrypoint 1:
+  --> parent binds `initial` -> component.initial (prop)
+      --> *
+
+- entrypoint 2:
+  --> parent binds `datasource` -> component.datasource (prop)
+      --> component fetches data from the url
+          --> *
+
+*:
+  this.dataset = this.processDataset(x) (where x = this.initial / fetched data);
+  this.data = vue-computed property, derived from dataset;
+```
