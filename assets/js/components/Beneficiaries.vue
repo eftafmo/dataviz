@@ -69,7 +69,7 @@
   }
 }
 
-.d3-tip.benef {
+.d3-tip {
   min-width: 320px;
   padding: 1rem 2rem;
   background: white;
@@ -390,36 +390,31 @@ export default Vue.extend({
         .transition(t_)
         .call(this.renderItems);
 
+      bentered.append('circle').attr('id', 'tipfollowscursor');
 
       // tooltip
       let tip = d3.tip()
         .attr('class', 'd3-tip benef')
         .html(function(d){
          return "<div class='title-container'><img src=/assets/imgs/"
-              + d3.select(this).select('use').attr('href').substring(1) + ".png"
+              + get_flag_name(d.id) + ".png"
               + "/> <span class='name'>"+ d.name + "</span></div>"
               + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
               + " <span class='action'>~Click to filter by beneficiary state</span>"
         })
-        .direction('n')
-        tip.offset(function() {
-          //create a dummy elemeny to have cursor position as cx attribute and calculate the offset using it
-           let target = d3.select('#tipfollowscursor')
-                .attr('cx', d3.event.offsetX)
-                .node();
-          let mytarget = d3.select(target).attr('cx');
-          // TODO find a better way to do this (https://github.com/Caged/d3-tip/issues/53)
-          let finaltarget = parseInt(mytarget) -$this.width/2.1;
-          return [-20, finaltarget]
-        });
-        // .offset([-20, 0]);
+        .direction('n');
 
 
       chart.call(tip)
 
-      bentered.append('circle').attr('id', 'tipfollowscursor')
 
-      bentered.on('mouseover', tip.show)
+      bentered.on('mousemove', function (d) {
+            var target = d3.select('#tipfollowscursor')
+                .attr('cx', d3.event.offsetX + 10)
+                .attr('cy', d3.event.offsetY - 30) // 5 pixels above the cursor
+                .node();
+            tip.show(d, target);
+        })
       .on('mouseout', tip.hide)
       //append a rect to prevent the hover mouseover event to propagate to children
         .append('rect')
