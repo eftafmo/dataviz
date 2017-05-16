@@ -157,7 +157,6 @@ export default Vue.extend({
       // (the legend is handled by vue.)
 
       // TODO: handle the case when !this.isReady()
-      console.log(this._chart_fms)
       this._chart_fms
         .transition()
         .duration(500)
