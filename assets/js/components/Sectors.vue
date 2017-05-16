@@ -158,6 +158,7 @@
           border: 1px solid transparent;
           border-radius: .2rem;
           //transition: border-color @short_duration;
+          transition: padding @short_duration;
 
           // not using :hover here because it's handled by the script
           &.hovered {
@@ -175,6 +176,7 @@
             height: 1.8rem;
             margin-left: 0;
             margin-right: 0.6rem;
+            transition: width @short_duration, height @short_duration, flex @short_duration;
           }
           *:last-child {
             margin-right: 0;
