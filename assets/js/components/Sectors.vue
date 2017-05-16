@@ -4,7 +4,7 @@
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
-  <div class="legend" :style="{minHeight: svgWidth + 'px'}">
+  <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
         tag="ul"
@@ -20,8 +20,8 @@
           :style="{color: _colour(sector)}"
       >
         <a @click="click(sector)"
-           @mouseenter="highlight(sector)"
-           @mouseleave="unhighlight(sector)"
+           @mouseenter="filters.sector == sector.data.id ? null : highlight(sector)"
+           @mouseleave="filters.sector == sector.data.id ? null : unhighlight(sector)"
         >
           <span :style="{background: _colour(sector)}"></span>
           <span>
@@ -417,9 +417,7 @@ export default Vue.extend({
       const func = (
         d.depth == 1 ?
           this._primary_colour :
-          this._secondary_colours[d.parent.data.name] || (
-            () => console.error("Missing colour for " + d.parent.data.name)
-          )
+          this._secondary_colours[d.parent.data.name]
       );
       return func(d.data.name);
     },
@@ -475,18 +473,10 @@ export default Vue.extend({
     getArcID(node) { return "a-" + this._getID(node); },
     getLabelID(node) { return "l-" + this._getID(node); },
 
-    renderChart() {
-      this.rendered = true;
-      const $this = this,
-            // flatten data
-            data = this._partition(this.data)
-                       .descendants()
-                       .slice(1);
-      const t = this.getTransition();
-
-
-      // generate children colours. TODO: move to processDataset
-      // or earlier. (fully pre-computed?)
+    beforeMain() {
+      // generate children colours.
+      // TODO: make this fully pre-computed
+      // (e.g. inside a WithSectors mixin)
       for (let d of this.data.children) {
         // TODO: make colours id-based
         const name = d.data.name;
@@ -495,6 +485,16 @@ export default Vue.extend({
           SectorColours[name], d.children.length
         );
       }
+    },
+
+    renderChart() {
+      this.rendered = true;
+      const $this = this,
+            // flatten data
+            data = this._partition(this.data)
+                       .descendants()
+                       .slice(1);
+      const t = this.getTransition();
 
       const arcs = this.chart
 	    .selectAll(".arc")
@@ -523,8 +523,14 @@ export default Vue.extend({
 
       // NOTE: not merging with ENTER, because there's not ENTER transition now.
       // will need to be handled if things change.
+
       const transitioning = arcs // UPDATE
         .transition(t)
+        .on("start",
+            () => this._transitioning = true )
+        .on("end",
+            () => this._transitioning = false )
+
         // we can't use this._arc directly as it yields funky distortions,
         // so we need a custom interpolation. attrTween to the rescue
         .attrTween('d', function(d) {
@@ -594,6 +600,11 @@ export default Vue.extend({
     },
 
     _highlight(d, yes) {
+      // avoid funny race conditions
+      // WARNING: TODO: [BUG] there's an unhandled race condition
+      // between this and click
+      if(this._transitioning) return;
+
       const arc = this.getArcID(d),
             label = this.getLabelID(d);
 
