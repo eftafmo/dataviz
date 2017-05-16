@@ -46,7 +46,8 @@
   // defs
   // - fills
   @water: #cbe9f6;
-  @terrain: #f9f9cc;
+  //@terrain: #f9f9cc;
+  @terrain: #fff;
   @beneficiary: #ddd;
   @hovered: #9dccec;
   @donor_inactive: #85adcb;
