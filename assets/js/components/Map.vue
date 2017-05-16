@@ -3,8 +3,16 @@
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-        <rect x="0" y="0" width="50" height="25" :fill="colour('Norway')" />
-        <rect x="0" y="25" width="50" height="25" :fill="colour('EEA')" />
+        <rect x="0" y="0" width="50" height="25"
+              class="Norway"
+              :fill="colour('Norway')"
+              :stroke="colour('Norway')"
+        />
+        <rect x="0" y="25" width="50" height="25"
+              class="EEA"
+              :fill="colour('EEA')"
+              :stroke="colour('EEA')"
+        />
       </pattern>
     </defs>
 
@@ -36,10 +44,13 @@
 <style lang="less">
 .map-viz {
   // defs
+  // - fills
   @water: #cbe9f6;
   @terrain: #f9f9cc;
   @beneficiary: #ddd;
   @hovered: #9dccec;
+  @donor_inactive: #85adcb;
+  // - strokes
   .with-boundary {
     stroke: #7f9fc8;
     // commented out this one because it's being set dynamically
@@ -86,12 +97,15 @@
       .with-boundary;
       cursor: pointer;
 
+      /*
+      // handled by d3
       .donor {
         fill: rgb(35, 97, 146),
       }
       .donor.NO {
         fill: url(#multi-fm);
       }
+      */
 
       .beneficiary {
         fill: @beneficiary;
@@ -151,6 +165,7 @@ export default Vue.extend({
 
       terrain_stroke: 0.5,
       graticule_stroke: 0.2,
+      donor_inactive_colour: "#85adcb",
 
       zoom: 1,
 
@@ -213,10 +228,12 @@ export default Vue.extend({
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
-      this.setStyle();
+      //this.setStyle();
 
       this.renderBase();
       this.renderRegions();
+
+      this.rendered = true;
     },
 
     setStyle() {
@@ -367,6 +384,9 @@ export default Vue.extend({
              .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
              .attr("d", path);
 
+      // remembering these for lazy reasons
+      this._countrySelection = countries;
+
       countries
         .filter( (d) => d.id == "LI" )
         .call(magnifyLiechtenstein);
@@ -381,6 +401,14 @@ export default Vue.extend({
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
         });
+
+      // hardcoding the donor colours a bit, because we want to
+      // transition them later
+      countries
+        .filter( (d) => COUNTRIES[d.id].type == "donor" )
+        .attr("fill", (d) => d.id == "NO" ?
+                             "url(#multi-fm)" : this.colour("EEA")
+        );
     },
 
     handleFilterRegion(val, old) {
@@ -431,6 +459,30 @@ export default Vue.extend({
 
         return tr.translate(x, y).scale(k);
       }
+    },
+
+    handleFilterFm(val, old) {
+      const t = this.getTransition();
+
+      const colourfuncEEA = val != "Norway" ?
+                            () => this.colour("EEA") :
+                            () => this.donor_inactive_colour;
+
+      const colourfuncNO = val === null ?
+                           (d) => this.colour(d) :
+                           () => this.colour(val);
+
+      this._countrySelection
+        .filter( (d) => COUNTRIES[d.id].type == "donor" && d.id != "NO" )
+        .transition(t)
+        .attr("fill", colourfuncEEA);
+
+      // Norway uses a pattern fill
+      d3.select(this.$el).select("svg > defs > pattern").selectAll("rect")
+        .datum(function() { return this.getAttribute("class"); })
+        .transition(t)
+        .attr("fill", colourfuncNO)
+        .attr("stroke", colourfuncNO);
     },
   },
 
