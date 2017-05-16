@@ -1,7 +1,7 @@
 <template>
     <div class="global-filters" :class="{active: hasFilters}">
     <transition name="bounce">
-      <div class="container">
+      <div v-if="hasFilters" class="container">
         <div class="global-filters-inner">
             <div class="filters-label">
               Showing data for:
