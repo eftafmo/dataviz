@@ -44,6 +44,7 @@
     border-bottom: 1px solid #eee;
     img {
       max-width: 30px;
+      box-shadow: 0px 0px 2px #aaa;
     }
   }
 
