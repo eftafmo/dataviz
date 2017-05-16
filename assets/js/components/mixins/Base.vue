@@ -44,10 +44,22 @@ export default {
   },
 
   mounted() {
-    if (this.isReady) this.main();
+    if (this.isReady) this._main();
   },
 
   methods: {
+    _main() {
+      this.beforeMain();
+      this.main();
+    },
+    beforeMain() {
+      /*
+       * some components will want to run initialisation code
+       * when data becomes available, but before main.
+       * this is the place to do it.
+       */
+      return;
+    },
     main() {
       /*
        * main entry point.
@@ -118,7 +130,7 @@ export default {
   watch: {
     'dataset': {
       handler() {
-        if (this.isReady) this.main();
+        if (this.isReady) this._main();
       },
     },
     // make sure every key exists from the start
