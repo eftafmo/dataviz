@@ -26,6 +26,7 @@
           v-if="sector.value"
           :key="getLabelID(sector)"
           :id="getLabelID(sector)"
+          :class="{selected: filters.sector == sector.data.id}"
           :style="{color: _colour(sector)}"
       >
         <a @click="click(sector)">
@@ -33,9 +34,15 @@
           <span>
             {{ sector.data.name }}
           </span>
-          <span :key="`v-${getLabelID(sector)}`">
+          <span
+              v-show="filters.sector != sector.data.id"
+              :key="`v-${getLabelID(sector)}`">
             {{ format(sector.value) }}
           </span>
+          <span
+              v-if="filters.sector == sector.data.id"
+              class="icon icon-close"
+          />
         </a>
 
         <transition
@@ -122,6 +129,30 @@
 
       li {
         margin-bottom: 0.3rem;
+
+        &.selected > a {
+          font-size: 120%;
+          border-style: none;
+          padding: 0;
+
+          span:first-child {
+            width: 2rem;
+            height: 2rem;
+            flex: 0 0 2rem;
+          }
+
+          &:hover {
+            span.icon-close {
+              color: #000;
+              font-weight: bold;
+            }
+          }
+        }
+
+        &.selected span.icon-close {
+          font-size: 120%;
+        }
+
         a {
           display: flex;
           padding: .4rem;
@@ -131,22 +162,22 @@
           border-radius: .2rem;
 
           &:hover {
-            border: 1px solid #cdf;
+            border-color: #cdf;
           }
 
-          span {
+          * {
             display: block;
             flex-grow: 1;
             margin: 0 0.2rem 0 0.2rem;
           }
-          span:first-of-type {
+          span:first-child {
             flex: 0 0 1.8rem;
             width: 1.8rem;
             height: 1.8rem;
             margin-left: 0;
             margin-right: 0.6rem;
           }
-          span:last-of-type {
+          *:last-child {
             margin-right: 0;
             text-align: right;
           }
