@@ -81,11 +81,12 @@ import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
+import TooltipMixin from './mixins/TooltipMixin';
 
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin, WithCountriesMixin
+    ChartMixin, WithFMsMixin, WithCountriesMixin, TooltipMixin,
   ],
 
   props: {
@@ -261,16 +262,14 @@ export default Vue.extend({
       /*
        *
        */
-      bentered.append("title").text(
-        (d) => d.map(
-          (d_) => d_.fm + ":\t" + this.format(d_.value)
-        ).join("\n")
-      )
+
+
       // draw a transparent rectangle to get continuos mouse-overing
       bentered.append("rect")
         .attr("class", "_fill")
         .attr("width", this.width)
         .attr("height", this.y.bandwidth())
+
 
       /*
        * render the "legend" part
@@ -321,6 +320,40 @@ export default Vue.extend({
                    .select("g.items")
         .transition(t_)
         .call(this.renderItems);
+
+      bentered.append('circle').attr('id', 'tipfollowscursor');
+
+      // tooltip
+      let tip = d3.tip()
+        .attr('class', 'd3-tip benef')
+        .html(function(d){
+         return "<div class='title-container'><img src=/assets/imgs/"
+              + get_flag_name(d.id) + ".png"
+              + "/> <span class='name'>"+ d.name + "</span></div>"
+              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
+              + " <span class='action'>~Click to filter by beneficiary state</span>"
+        })
+        .direction('n');
+
+
+      chart.call(tip)
+
+
+      bentered.on('mousemove', function (d) {
+            var target = d3.select('#tipfollowscursor')
+                .attr('cx', d3.event.offsetX + 10)
+                .attr('cy', d3.event.offsetY - 30) // 5 pixels above the cursor
+                .node();
+            tip.show(d, target);
+        })
+      .on('mouseout', tip.hide)
+      //append a rect to prevent the hover mouseover event to propagate to children
+        .append('rect')
+        .style('visibility', 'hidden')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('height', this.y.bandwidth())
+        .attr("width", this.width);
 
       /*
        * and finally, events
