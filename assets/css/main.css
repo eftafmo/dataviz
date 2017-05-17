@@ -32,6 +32,13 @@ body {
   color: #444;
 }
 
+/* this is the default in all browsers except for ie9.
+ * TODO: remove it and use normalize.css
+ */
+svg:not(:root) {
+  overflow: hidden;
+}
+
 hr {
   border: 0;
   border-top: 1px solid #ddd;
