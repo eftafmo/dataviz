@@ -17,8 +17,14 @@ export default {
       svgWidth: null,
       fontSize: null,
 
+      // these need to be synced with each component's css
+      // TODO: load them from a common json / less-file?
       // default transition duration
-      duration: 400,
+      duration: 500,
+      // alternate
+      short_duration: 250,
+      // opacity of filtered-out items
+      inactive_opacity: .7,
     }
   },
 

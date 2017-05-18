@@ -276,11 +276,6 @@ export default Vue.extend({
 
       // percentage of mid-donut void
       inner_radius: .65,
-
-      // these need to be synced with the css
-      duration: 500,
-      short_duration: 250,
-      inactive_opacity: .7,
     };
   },
 
