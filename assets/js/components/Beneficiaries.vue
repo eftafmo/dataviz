@@ -12,6 +12,13 @@
     <dropdown filter="region" title="Select a beneficiary state" :items="data"></dropdown>
   </div>
   <svg width="100%" :height="height + 'px'">
+    <filter id="grayscale">
+      <feColorMatrix type="matrix"
+                     values="0.3333 0.3333 0.3333 0 0
+                             0.3333 0.3333 0.3333 0 0
+                             0.3333 0.3333 0.3333 0 0
+                             0      0      0      1 0" />
+    </filter>
     <g class="chart" :transform="`translate(${legendWidth},0)`">
       <g class="beneficiaries" />
       <line class="domain" />
@@ -96,12 +103,8 @@
       }
 
       text {
-        // don't modify this value, it's essential for... everything.
-        // if you need to change this, do it on svg^^ instead
         font-size: .8em;
-
         font-family: 'Open sans', sans-serif;
-        fill: #333;
         text-anchor: end;
       }
     }
@@ -113,6 +116,7 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
+import {colour2gray} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
@@ -129,6 +133,7 @@ export default Vue.extend({
 
   data() {
     return {
+      label_colour: "#333",
       layout: {
         // these are all em-based values
         itemHeight: 1.4,
@@ -374,6 +379,7 @@ export default Vue.extend({
 
       country.append("text")
         .text((d) => d.name)
+        .attr("fill", this.label_colour)
         // v-align
         .attr("y", this.itemHeight / 2)
         .attr("dy", ".33em"); // magin self-centering offset
@@ -413,6 +419,53 @@ export default Vue.extend({
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
         });
+    },
+
+    handleFilterRegion(val) {
+      // gray out sibling beneficiaries (or activate them all)
+      const beneficiaries = this.chart
+                                .select("g.beneficiaries")
+                                .selectAll("g.beneficiary")
+                                .transition(this.getTransition());
+
+      const _inactivecolour = (c) => colour2gray(c, this.inactive_opacity);
+      const _activate = (selection, yes) => {
+        // activates or deactivates:
+
+        // the text
+        selection.select("g.label").select("text")
+          .attr("fill",
+                yes ?
+                  this.label_colour :
+                  _inactivecolour(this.label_colour)
+          );
+
+        // the flag. TODO: clone the filter per-element,
+        // and transition its matrix
+
+        selection.select("g.label").select("use")
+                 .attr("filter", yes ? null : "url('#grayscale')")
+                 .attr("opacity", yes ? 1 : this.inactive_opacity);
+
+        // the fm bars
+        selection.select("g.fms").selectAll("rect.fm")
+          .attr("fill",
+                yes ?
+                  (d) => this.colour(d.fm) :
+                  (d) => _inactivecolour(this.colour(d.fm))
+          );
+      };
+
+      const activate = (selection) => _activate(selection, true),
+            deactivate = (selection) => _activate(selection, false);
+
+      beneficiaries.filter(
+        (d) => val === null || d.id == val
+      ).call(activate);
+
+      beneficiaries.filter(
+        (d) => val !== null && d.id != val
+      ).call(deactivate);
     },
 
     handleFilterFm() {
