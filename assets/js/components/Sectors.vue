@@ -255,6 +255,7 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
+import {colour2gray} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
@@ -693,16 +694,9 @@ export default Vue.extend({
       const colourfunc = (val === null ? this._colour :
         (d) => {
           const c = this._colour(d);
-          if (d.data.id == this.filters.area) return c;
 
-          // a simple(istic) algorithm to transform the colour to grayscale:
-          // compute the average of r, g, b
-          const r = d3.rgb(c),
-                x = (r.r + r.g + r.b) / 3,
-                // we'll also simulate an opacity decrease here
-                // (we can't simply use opacity because there's a sector below)
-                y = x + (255 - x) * (1 - this.inactive_opacity);
-          return d3.rgb(y, y, y);
+          if (d.data.id == this.filters.area) return c;
+          else return color2gray(c, this.inactive_opacity);
         }
       );
 

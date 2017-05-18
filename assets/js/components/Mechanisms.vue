@@ -79,6 +79,7 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
+import {colour2gray} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base.vue';
 import ChartMixin from './mixins/Chart.vue';
@@ -97,6 +98,11 @@ export default Vue.extend({
     },
   },
 
+  data() {
+    return {
+      inactive_opacity: .7,
+    };
+  },
 
   methods: {
     value(fm) {
@@ -160,9 +166,11 @@ export default Vue.extend({
       this._chart_fms
         .transition()
         .duration(500)
-        .attr("fill", (d) => (this.isDisabled(d) ?
-                              this.disabled_colour : this.colour(d))
-        );
+        .attr("fill", (d) => (
+          this.isDisabled(d) ?
+            colour2gray(this.colour(d), this.inactive_opacity) :
+            this.colour(d)
+        ));
     },
   },
 });
