@@ -20,9 +20,17 @@
 
 <style lang="less">
 .fms-viz {
+
   svg {
     width: 100%;
     height: 3rem;
+
+    @media (min-width:600px)and(max-width:1400px){
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
   }
 
   text-align: center;
