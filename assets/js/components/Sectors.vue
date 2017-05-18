@@ -93,26 +93,30 @@
   @short_duration: .25s;
   @inactive_opacity: .7;
 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
   svg {
-    width: 50%;
+    width: 30%;
     height: auto;
     display: block;
+    margin-right: 3rem;
+    min-width: 200px;
+
     //TODO Define better breakpoints once all components are fluid
     @media(min-width:1400px),(max-width:700px){
-      width: 70%;
-      margin-left: auto;
-      margin-right: auto;
+       width: 50%;
+       margin-right: 0;
     }
   }
   .legend {
-    width: 50%;
+    display: block;
     height: auto;
     position: relative;
-    left: 50%;
-    margin-top: -50%;
     @media (min-width:1400px), (max-width:700px) {
       width: 100%;
-      left: 0;
       margin-top: 1rem;
     }
   }
