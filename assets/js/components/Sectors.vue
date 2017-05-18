@@ -604,7 +604,7 @@ export default Vue.extend({
       /* events */
       aentered
         .on("click", this.click)
-        .on("mouseover", this.highlight)
+        .on("mouseenter", this.highlight)
         .on("mouseleave", this.unhighlight);
     },
 
