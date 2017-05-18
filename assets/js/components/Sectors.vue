@@ -696,7 +696,7 @@ export default Vue.extend({
           const c = this._colour(d);
 
           if (d.data.id == this.filters.area) return c;
-          else return color2gray(c, this.inactive_opacity);
+          else return colour2gray(c, this.inactive_opacity);
         }
       );
 
