@@ -11,11 +11,10 @@
   <div v-if="hasData" class="dropdown">
     <dropdown filter="region" title="Select a beneficiary state" :items="data"></dropdown>
   </div>
-  <svg :width="width" :height="height">
-    <g class="chart">
-      <g class="domain" :transform="`translate(${reserved},0)`">
-        <line />
-      </g>
+  <svg width="100%" :height="height + 'px'">
+    <g class="chart" :transform="`translate(${legendWidth},0)`">
+      <g class="beneficiaries" />
+      <line class="domain" />
     </g>
   </svg>
 </div>
@@ -23,7 +22,18 @@
 
 
 <style lang="less">
+// defs
+@beneficiary_highlight: #e6e6e6;
+
 .beneficiaries-viz {
+  svg {
+    width: 100%;
+
+    // NOTE: this influences all inner layout
+    // (the chart is em-based!)
+    font-size: 1.6rem;
+  }
+
   .legend .fm span {
     width: 10px; height: 10px;
     display: inline-block;
@@ -45,30 +55,47 @@
     text-shadow: 0 0 1px #999;
   }
 
-  svg .domain line {
-    stroke: #ccc;
-    shape-rendering: crispEdges;
-  }
-
   .chart {
-    .beneficiary {
+    line.domain {
+      stroke: #ccc;
+      shape-rendering: crispEdges;
+      // don't interrupt hovering the items
+      pointer-events: none;
+    }
+
+    // NOTE: if you change the structure of this, you must also change
+    // how legendWidth() is computed
+    .beneficiaries .beneficiary {
       cursor: pointer;
       pointer-events: all;
 
-      ._fill {
+      rect {
+        shape-rendering: crispEdges;
+        stroke: none;
+      }
+
+      rect.bg {
         fill: none;
       }
 
+      &:hover {
+        .fms rect.bg {
+          fill: @beneficiary_highlight;
+        }
+      }
+
       text {
-        font-size: 10px;
-        font-family: sans-serif;
+        // don't modify this value, it's essential for... everything.
+        // if you need to change this, do it on svg^^ instead
+        font-size: .8em;
+
+        font-family: 'Open sans', sans-serif;
         fill: #333;
         text-anchor: end;
       }
     }
   }
 }
-
 </style>
 
 
@@ -80,7 +107,8 @@ import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
+import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
+
 
 export default Vue.extend({
   mixins: [
@@ -88,31 +116,101 @@ export default Vue.extend({
     ChartMixin, WithFMsMixin, WithCountriesMixin
   ],
 
-  props: {
-    minHeight: {
-      type: Number,
-      default: 0,
-    },
-    itemHeight: {
-      type: Number,
-      default: 20,
-    },
-    reserved: {
-      // reserved for country labels. TODO: change this name
-      type: Number,
-      default: 120,
-    },
-  },
-
   data() {
     return {
-      width: 500, // this will have to be recomputed using svgWidth
-      xheight: 0,
-      height: this.minHeight,
+      layout: {
+        // these are all em-based values
+        itemHeight: 1.4,
+        itemPadding: .6,
+        barHeight: .9,
+        flagHeight: 1.4,
+        flagPadding: .4,
+      },
+
+      // an amazing way to calculate "Czech Republic"
+      longestTxt: d3.values(COUNTRIES).reduce(function(longest, country) {
+        return longest.length > country.name.length ? longest : country.name;
+      }, ''),
     };
   },
 
   computed: {
+    // turn all dimensions to px, and round them 'cause things get messy otherwise
+    itemHeight() { return Math.round(this.fontSize * this.layout.itemHeight); },
+    itemPadding() { return Math.round(this.fontSize * this.layout.itemPadding); },
+    barHeight() { return Math.round(this.fontSize * this.layout.barHeight); },
+    flagHeight() { return Math.round(this.fontSize * this.layout.flagHeight); },
+    flagPadding() { return Math.round(this.fontSize * this.layout.flagPadding); },
+
+    barPadding() {
+      const padding = (this.itemHeight - this.barHeight) / 2;
+      // we really, really want this to be an int
+
+      if (parseInt(padding) != padding) {
+        // uh'oh. use some brute force
+        this.layout.itemHeight = (Math.ceil(padding) * 2 + this.barHeight) / this.fontSize;
+        return this.barPadding;
+      }
+      return padding;
+    },
+
+    flagWidth() {
+      // this could be smarter, but whatever
+      const w = 60, h = 40; // the image dimensions
+      return this.flagHeight * w / h;
+    },
+
+    flagBoundingWidth() {
+      return this.flagWidth + 2 * this.flagPadding;
+    },
+
+    width() {
+      return this.svgWidth;
+    },
+
+    height() {
+      // this is used in the template, so vue will try to call it
+      // before ready
+      if (!this.isReady) return 0;
+
+      const count = this.data.length,
+            height = this.itemHeight * count +
+                     this.itemPadding * (count - 1);
+
+      // only resize the chart if there's not enough drawing room
+      // (prevents the footer from dancing around during filtering)
+      this._height = this._height ? Math.max(this._height, height) :
+                                    height;
+      return this._height;
+    },
+
+    legendWidth() {
+      // compute the length of the largest text item in the "legend"
+      if (!this.isReady) return 0;
+
+      // this has to respect the structure of a beneficiary <g>
+      const fakeB = this.chart.select(".beneficiaries").append("g").attr("class", "beneficiary");
+      const txt = fakeB.append("g").attr("class", "label").append("text").attr("visibility", "hidden");
+
+      txt.text(this.longestTxt);
+      const txtwidth = txt.node().getBBox().width;
+      fakeB.remove();
+
+      // add a tiny bit of leeway, because custom font might not load so fast
+      return txtwidth * 1.1 + this.flagBoundingWidth;
+    },
+
+    x() {
+      return d3.scaleLinear()
+               .range([0, this.width - this.legendWidth - this.barPadding])
+               .domain([0, d3.max(this.data, (d) => d.total)]);
+    },
+
+    y() {
+      const _height = this.itemHeight + this.itemPadding;
+      return (d, i) => i * _height;
+    },
+
     data() {
       // massage data so it's appropriate for a stacked barchart
 
@@ -135,6 +233,7 @@ export default Vue.extend({
           const value = item[1] - item[0];
           if (value == 0) {
             _zeroes.push(j);
+
           }
           item.value = value;
 
@@ -163,28 +262,20 @@ export default Vue.extend({
       // return filtered
       return data.filter((d) => d.total != 0);
     },
-
-    x() {
-      return d3.scaleLinear()
-               .range([0, this.width - this.reserved])
-               .domain([0, d3.max(this.data, (d) => d.total)]);
-    },
-
-    y() {
-      return d3.scaleBand()
-               .paddingInner(0.5) // TODO: propify
-               .align(0.5)  // TODO: propify
-               .rangeRound([0, this.xheight])
-               .domain(this.data.map( (d) => d.id ));
-    },
   },
 
   methods: {
-    renderItems(context) {
+    renderFms(context) {
       // this could receive both a selection and a transition
       const selection = context.selection ? context.selection() : context,
             t = context;
 
+      // handle the bg, it's already created
+      selection.select("rect.bg")
+        .attr("width", (d) => this.x(d.total) + this.barPadding )
+        .attr("height", this.barHeight + this.barPadding * 2);
+
+      // the real deal
       const items = selection.selectAll("rect.fm").data(
         (d) => d, // re-bind local data (to create a join)
         (d) => d.fm // the key
@@ -193,8 +284,11 @@ export default Vue.extend({
       items.enter().append("rect") // ENTER-only
         .attr("class", (d) => "fm " + d.fm)
         .attr("fill", (d) => this.colour(d.fm))
-        .attr("y", 0) // this is handled in the parent
-        .attr("height", this.y.bandwidth)
+        // adding a stroke as well prevents what looks like a sub-pixel gap
+        // between fms. but needs to be done for background too, so, TODO
+        //.attr("stroke", (d) => this.colour(d.fm))
+        .attr("y", this.barPadding)
+        .attr("height", this.barHeight)
 
       .merge(items) // ENTER + UPDATE
         .transition(t)
@@ -203,7 +297,7 @@ export default Vue.extend({
 
       items.exit() // EXIT
         .transition(t)
-      // get down to 0 if the first, or up the end if not
+        // shrink down to 0 if the first item, or expand to the end otherwise
         .attr("x", (d) => this.x(d[0]))
         .attr("width", 0)
         //.remove();
@@ -218,43 +312,31 @@ export default Vue.extend({
       const t = this.getTransition(750),
             t_ = this.getTransition(350);
 
-      // resize the chart to fit the data
-      this.xheight = Math.max(this.minHeight, // TODO: lose min-height?
-                              this.itemHeight * data.length);
-      // TODO: decide what to do with this:
-      // - keep it immutable to max?
-      // - jump suddenly at transition end?
-      // - animate?
-      // anyway, if we need extra-room, take immediate action
-      this.height = Math.max(this.height, this.xheight)
-
       // most important thing first: animate the line!
-      chart.select(".domain line")
+      chart.select("line.domain")
         .transition(t)
-        .attr("y2", this.xheight);
+        .attr("y2", this.height);
 
       /*
        * main stuff
        */
-      const beneficiaries = chart
+      const beneficiaries = chart.select(".beneficiaries")
 	    .selectAll("g.beneficiary")
-            .data(data, (d) => d.name); /* JOIN */
+            .data(data, (d) => d.name ); /* JOIN */
 
-      // insert the rows instead of appending
-      // (makes sure the domain line stays on top)
-      const bentered = beneficiaries.enter().insert("g") /* ENTER */
+      const bentered = beneficiaries.enter().append("g") /* ENTER */
         .attr("class", (d) => "beneficiary " + d.id)
-        .attr("transform", `translate(0,${this.xheight})`)
+        .attr("transform", `translate(0,${this.height})`)
 
       bentered.merge(beneficiaries) /* ENTER _and_ UPDATE */
         .transition(t)
         .attr("opacity", 1)
-        .attr("transform", (d) => `translate(0,${this.y(d.id)})`);
+        .attr("transform", (d, i) => `translate(0,${this.y(d, i)})`);
 
       beneficiaries.exit() /* EXIT */
         .transition(t)
         .attr("opacity", 0)
-        .attr("transform", `translate(0,${this.xheight})`)
+        .attr("transform", `translate(0,${this.height})`)
         // don't remove, save some dom operations
         //.remove();
 
@@ -266,61 +348,52 @@ export default Vue.extend({
           (d_) => d_.fm + ":\t" + this.format(d_.value)
         ).join("\n")
       )
-      // draw a transparent rectangle to get continuos mouse-overing
-      bentered.append("rect")
-        .attr("class", "_fill")
-        .attr("width", this.width)
-        .attr("height", this.y.bandwidth())
 
       /*
-       * render the "legend" part
+       * render the row labels
        */
-      // (it's not really a legend 'cause it's part of the row. you get it.)
-      const _padding = 5, // TODO: propify
-            // this could be smarter, but whatever
-            __flg = { // the image dimensions
-              w: 60,
-              h: 40,
-            },
-            _flag = { // our dimensions
-              w: __flg.w * this.y.bandwidth() / __flg.h,
-              h: this.y.bandwidth(),
-            }
-
       const country = bentered.append("g")
-            .attr("transform",
-                  `translate(${this.reserved - (_padding + _flag.w)},0)`
-                 );
+              .attr("class", "label")
+              .attr("transform", `translate(-${this.flagBoundingWidth},0)`);
+
+      // place a transparent thingie behind the flag to aid continuous hovering
+      country.append("rect").attr("class", "bg")
+        .attr("width", this.flagBoundingWidth)
+        .attr("height", this.itemHeight);
 
       country.append("text")
         .text((d) => d.name)
-        .attr("x", - _padding)
-      // v-align
-        .attr("y", this.y.bandwidth() * this.y.paddingInner())
-        .attr("dy", ".32em"); // magical self-centering offset
+        // v-align
+        .attr("y", this.itemHeight / 2)
+        .attr("dy", ".33em"); // magin self-centering offset
 
       country.append("use")
         .attr("xlink:href", (d) => `#${get_flag_name(d.id)}`)
-        .attr("width", _flag.w)
-        .attr("height", _flag.h);
+        .attr("x", this.flagPadding)
+        .attr("y", (this.itemHeight - this.flagHeight) / 2)
+        .attr("width", this.flagWidth)
+        .attr("height", this.flagHeight);
 
       /*
-       * render data items
+       * render fm data
        */
-      const items = bentered.append("g") // we're still in ENTER here,
-            .attr("class", "items")
-            .attr("transform", (d) => `translate(${this.reserved},0)`);
+      const fms = bentered.append("g") // we're still in ENTER here,
+            .attr("class", "fms")
 
-      // but we want to run the item rendering both in ENTER and UPDATE
-      items.merge(beneficiaries.select("g.items"))
+      // while here, draw a full-width rectangle used for mouse-over effects.
+      // this will look like a border around the fms
+      const bg = fms.append("rect").attr("class", "bg"); // continued in renderFms
+
+      // we want to run the item rendering both in ENTER and UPDATE
+      fms.merge(beneficiaries.select("g.fms"))
         .transition(t_)
-        .call(this.renderItems);
+        .call(this.renderFms);
       // aand we also want to run it in EXIT, but with empty data
-      // (normally the old data gets sent, so the items don't get disappeared)
+      // (normally the old data gets sent, so the fms don't get disappeared)
       beneficiaries.exit().each( (d) => (d.splice(0)) )
-                   .select("g.items")
+                   .select("g.fms")
         .transition(t_)
-        .call(this.renderItems);
+        .call(this.renderFms);
 
       /*
        * and finally, events
@@ -334,6 +407,20 @@ export default Vue.extend({
     handleFilterFm() {
       this.render();
     },
+
+    changedDimension() {
+      // re-render on dimensions change
+      // (but don't mess with the initial render)
+      if (!this.rendered) return;
+      // and don't animate things
+      this.rendered = false;
+      this.render();
+    },
+  },
+
+  watch: {
+    svgWidth: "changedDimension",
+    fontSize: "changedDimension",
   },
 });
 
