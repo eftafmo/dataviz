@@ -10,9 +10,13 @@ export default {
   data: function() {
     return {
       rendered: false,
-      // settings this explicitly to null, so things fail with a bang
+
+      // these are to be recomputed on any layout changes.
+      // setting them explicitly to null, so things fail with a bang
       // if initialized too early
       svgWidth: null,
+      fontSize: null,
+
       // default transition duration
       duration: 400,
     }
@@ -21,15 +25,15 @@ export default {
   mounted() {
     this.chart = d3.select(this.$el).select('.chart');
     this.legend = d3.select(this.$el).select('.legend');
-    window.addEventListener('resize', this.calculateSVGWidth);
-    // don't forget to init
-    this.calculateSVGWidth();
+
+    this.computeDimensions();
+    window.addEventListener('resize', this.computeDimensions);
   },
 
   methods: {
     main() {
-      // we need to do this during next tick, or render will get run
-      // with zero svgWidth
+      // we need to do the rendering during next tick only,
+      // to allow computeDimensions() to do its work
       this.$nextTick(this.render);
     },
     render() {
@@ -45,10 +49,12 @@ export default {
       return;
     },
 
-    calculateSVGWidth(event) {
+    computeDimensions(event) {
       const chart = this.chart.node(),
-            elem = chart.ownerSVGElement ? chart.ownerSVGElement : chart;
-      this.svgWidth = elem.getBoundingClientRect().width;
+            svg = chart.ownerSVGElement ? chart.ownerSVGElement : chart;
+
+      this.svgWidth = svg.getBoundingClientRect().width;
+      this.fontSize = parseFloat(getComputedStyle(svg).fontSize);
     },
 
     getTransition(duration) {
@@ -62,7 +68,7 @@ export default {
   },
 
   beforeDestroy() {
-    window.removeEventListener('resize', this.calculateSVGWidth);
+    window.removeEventListener('resize', this.computeDimensions);
   },
 };
 </script>
