@@ -26,6 +26,17 @@
 @beneficiary_highlight: #e6e6e6;
 
 .beneficiaries-viz {
+
+  @media (min-width:1400px){
+      max-width: 100%;
+  }
+
+  @media (max-width: 1000px) {
+      max-width: 100%;
+  }
+
+  max-width: 70%;
+
   svg {
     width: 100%;
 
