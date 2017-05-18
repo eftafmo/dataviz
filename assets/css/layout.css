@@ -63,4 +63,8 @@
   .grant-dataviz h2 {
     margin-bottom: 4rem;
   }
+
+  .container {
+    max-width: 1380px;
+  }
 }
