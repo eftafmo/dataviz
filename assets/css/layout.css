@@ -44,10 +44,15 @@
 @media (min-width: 1400px) {
   main.main {
     display: flex;
+    margin-right: 2rem;
   }
 
   main.main .lg-column {
-    margin: 1.5rem;
+    width: 50%;
+  }
+
+  main.main .lg-column:first-of-type{
+    margin-right: 4rem;
   }
 
   .grant-dataviz select{
