@@ -1,9 +1,11 @@
 <template>
 <div class="sectors-viz" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
+</chart-container>
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
@@ -99,7 +101,11 @@
   align-items: center;
 
   svg {
-    width: 30%;
+    width: 100%;
+  }
+
+  .chart-container {
+    width: 40%;
     height: auto;
     display: block;
     margin-right: 3rem;
