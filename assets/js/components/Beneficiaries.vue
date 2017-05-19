@@ -432,7 +432,7 @@ export default Vue.extend({
            })
 
       tip.offset(function(e) {
-            return [-20,  d3.event.offsetX - $this.legendWidth - this.getBBox().width/2]
+            return [-20,  d3.event.layerX - $this.legendWidth - this.getBBox().width/2]
        }).direction('n');
 
 
