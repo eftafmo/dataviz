@@ -1,8 +1,10 @@
 <template>
 <div class="fms-viz">
-  <svg viewBox="0 0 100 10"  preserveAspectRatio="none">
-    <g class="chart"></g>
-  </svg>
+  <chart-container :width="width">
+    <svg viewBox="0 0 100 10"  preserveAspectRatio="none">
+      <g class="chart"></g>
+    </svg>
+  </chart-container>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="fms" class="clearfix">
       <template slot="fm-content" scope="x">
@@ -20,10 +22,17 @@
 
 <style lang="less">
 .fms-viz {
-
   svg {
     width: 100%;
     height: 3rem;
+  }
+  .chart-container {
+    width: 100%;
+    height: 3rem;
+
+   & > svg, & > canvas {
+      height: 100%;
+    }
 
     @media (min-width:600px)and(max-width:1400px){
       width: 90%;
@@ -109,6 +118,7 @@ export default Vue.extend({
   data() {
     return {
       inactive_opacity: .7,
+      width: 100,
     };
   },
 
@@ -123,10 +133,9 @@ export default Vue.extend({
             chart = this.chart;
 
       // we always use width 100, because viewBox and preserveAspectRatio=none
-      const width = 100;
 
       const x = d3.scaleLinear()
-          .rangeRound([0, width])
+          .rangeRound([0, this.width])
           .domain([0, d3.sum(d3.values(this.data))]);
 
       const fms = chart
@@ -144,7 +153,7 @@ export default Vue.extend({
         .attr("transform", (d, i) => {
           // draw the second bar from right to left
           if (i == 1) return (
-            `scale(-1,1) translate(-${width},0)`
+            `scale(-1,1) translate(-${this.width},0)`
           );
         })
         .attr("fill", (d) => this.colour(d))
