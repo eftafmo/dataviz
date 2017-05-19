@@ -1,5 +1,6 @@
 <template>
 <div class="map-viz">
+<chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
@@ -38,6 +39,7 @@
 
     </g>
   </svg>
+</chart-container>
 </div>
 </template>
 

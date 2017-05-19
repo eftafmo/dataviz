@@ -1,10 +1,12 @@
 <script>
 import * as d3 from 'd3';
-import Dropdown from '../includes/DropdownFilter.vue';
+import Dropdown from '../includes/DropdownFilter';
+import ChartContainer from '../includes/ChartContainer';
 
 export default {
   components: {
     'dropdown': Dropdown,
+    'chart-container': ChartContainer,
   },
 
   data: function() {
