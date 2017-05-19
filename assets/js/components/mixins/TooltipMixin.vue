@@ -12,7 +12,7 @@
   &:after {
     content: '▼';
     position: absolute;
-    left: 42%;
+    left: 45%;
     bottom: 20px;
     width: 0;
     height: 0;

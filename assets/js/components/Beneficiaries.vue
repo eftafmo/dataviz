@@ -366,12 +366,6 @@ export default Vue.extend({
       /*
        *
        */
-      //bentered.append("title").text(
-      //  (d) => d.map(
-      //    (d_) => d_.fm + ":\t" + this.format(d_.value)
-      //  ).join("\n")
-      //)
-
       /*
        * render the row labels
        */
@@ -426,30 +420,23 @@ export default Vue.extend({
         .call(this.renderFms);
 
       // add tooltip
-      bentered.append('circle').attr('id', 'tipfollowscursor');
       let tip = d3.tip()
             .attr('class', 'd3-tip benef')
-//            .html(function(d){
-//              return "<div class='title-container'>"
-//               + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
-//               + "<span class='name'>"+ d.name + "</span></div>"
-//               // TODO: 'grants' word should be taken from data
-//               + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
-//               + " <span class='action'>~Click to filter by beneficiary state</span>"
-//            })
-            .html(function(d){
-              return "<div class='title-container'>"
-               + "<img src=/assets/imgs/flag-romania.png/>"
-               + "<span class='name'>Romania</span></div>"
-               // TODO: 'grants' word should be taken from data
-               + " <span class='action'>~Click to filter by beneficiary state</span>"
-            })
-      tip.offset(function() {
-            // TODO: calculate 145
-            return [-20, 10 + d3.event.offsetX - 145 - this.getBBox().width/2]
-       }).direction('n');
-       chart.call(tip)
+           .html(function(d){
+             return "<div class='title-container'>"
+              + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
+              + "<span class='name'>"+ d.name + "</span></div>"
+              // TODO: 'grants' word should be taken from data
+              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
+              + " <span class='action'>~Click to filter by beneficiary state</span>"
+           })
 
+      tip.offset(function(e) {
+            return [-20,  d3.event.offsetX - $this.legendWidth - this.getBBox().width/2]
+       }).direction('n');
+
+
+       chart.call(tip)
 
        fg.on('mousemove', tip.show)
           .on('mouseout', tip.hide);
