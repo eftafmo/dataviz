@@ -2,6 +2,7 @@
 
 .d3-tip {
   min-width: 320px;
+  max-width: 420px;
   padding: 1rem 2rem;
   background: white;
   font-weight: 600;
@@ -45,6 +46,10 @@
     img {
       max-width: 30px;
       box-shadow: 0px 0px 2px #aaa;
+    }
+
+    span {
+          white-space: normal;
     }
   }
 
