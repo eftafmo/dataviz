@@ -343,19 +343,22 @@ export default Vue.extend({
               + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
               + " <span class='action'>~Click to filter by beneficiary state</span>"
         })
+        tip.offset(function() {
+        //create a dummy elemeny to have cursor position as cx attribute and calculate the offset using it
+            let target = d3.select('#tipfollowscursor')
+                 .attr('cx', d3.event.offsetX)
+                 .node();
+           let mytarget = d3.select(target).attr('cx');
+           let finaltarget = parseInt(mytarget) -$this.width/2.1;
+         return [-20, finaltarget]
+        })
         .direction('n');
 
 
       chart.call(tip)
 
 
-      bentered.on('mousemove', function (d) {
-            var target = d3.select('#tipfollowscursor')
-                .attr('cx', d3.event.offsetX + 10)
-                .attr('cy', d3.event.offsetY - 30) // 5 pixels above the cursor
-                .node();
-            tip.show(d, target);
-        })
+      bentered.on('mousemove', tip.show)
       .on('mouseout', tip.hide)
       //append a rect to prevent the hover mouseover event to propagate to children
         .append('rect')
