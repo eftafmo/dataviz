@@ -21,6 +21,7 @@
     border-color: #fff;
     background: #fff;
     color: #aaa;
+    font-family: inherit;
     &:focus {
       outline: none;
     }
