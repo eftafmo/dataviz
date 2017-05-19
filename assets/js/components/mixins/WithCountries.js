@@ -64,9 +64,9 @@ for (const code in COUNTRIES) {
 export default {
   methods: {
     toggleBeneficiary(b, etarget) {
-      // TODO: handle NUTS sub-units
-      this.filters.region = this.filters.region == b ?
-                            null : b;
+      // TODO: handle NUTS sub-units?
+      this.filters.beneficiary = this.filters.beneficiary == b ?
+                                 null : b;
     },
   },
 };

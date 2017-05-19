@@ -416,7 +416,7 @@ export default Vue.extend({
         );
     },
 
-    handleFilterRegion(val, old) {
+    handleFilterBeneficiary(val, old) {
       const $this = this,
             chart = this.chart;
 

@@ -9,7 +9,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="region" title="Select a beneficiary state" :items="data"></dropdown>
+    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="data"></dropdown>
   </div>
   <svg width="100%" :height="height + 'px'">
     <filter id="grayscale">
@@ -421,7 +421,7 @@ export default Vue.extend({
         });
     },
 
-    handleFilterRegion(val) {
+    handleFilterBeneficiary(val) {
       // gray out sibling beneficiaries (or activate them all)
       const beneficiaries = this.chart
                                 .select("g.beneficiaries")
