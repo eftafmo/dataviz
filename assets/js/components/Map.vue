@@ -31,7 +31,7 @@
         <path class="coastline" /> <!-- make sure coastline is on top, just in case -->
       </g>
 
-      <g class="regions" />
+      <g class="states" />
 
       <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
         <g class="frames" />
@@ -96,7 +96,7 @@
       }
     }
 
-    .regions {
+    .states {
       .with-boundary;
       cursor: pointer;
 
@@ -221,7 +221,7 @@ export default Vue.extend({
       d3.json(NUTS, (error, data) => {
         if (error) throw error;
         this.borders = data;
-        this.renderRegions();
+        this.renderStates();
       });
       callback(null);
     });
@@ -234,7 +234,7 @@ export default Vue.extend({
       //this.setStyle();
 
       this.renderBase();
-      this.renderRegions();
+      this.renderStates();
 
       this.rendered = true;
     },
@@ -251,7 +251,7 @@ export default Vue.extend({
             graticule_stroke = this.graticule_stroke * this.scaleFactor;
 
       style.innerHTML = `
-        .map-viz .chart .terrain, .map-viz .chart .regions {
+        .map-viz .chart .terrain, .map-viz .chart .states {
           stroke-width: ${terrain_stroke};
         }
         .map-viz .chart .base .graticule {
@@ -326,12 +326,14 @@ export default Vue.extend({
           .append("path")
           .attr("d", path);
       };
+
+      this.renderStates();
     },
 
-    renderRegions() {
+    renderStates() {
       // bail out if no data, or not mounted, or already rendered
-      if (!this.borders || !this.$el || this._regions_rendered) return;
-      this._regions_rendered = true;
+      if (!this.borders || !this.$el || this._states_rendered) return;
+      this._states_rendered = true;
 
       const $this = this,
             data = this.borders,
@@ -340,7 +342,7 @@ export default Vue.extend({
       const _mesh = (obj, filter) => topojson.mesh(data, obj, filter),
             _features = (obj) => topojson.feature(data, obj).features;
 
-      const regions = this.chart.select('.regions'),
+      const states = this.chart.select('.states'),
             path = this.path;
 
       const scaleLi = 5;
@@ -380,7 +382,7 @@ export default Vue.extend({
           .each(drawFrameLi);
       }
 
-      const countries = regions.selectAll("path")
+      const countries = states.selectAll("path")
              .data(_features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ))
              .enter()
              .append("path")
@@ -438,8 +440,8 @@ export default Vue.extend({
 
         const spacing = .1 * Math.min($this.width, $this.height);
 
-        const region = chart.select(".regions").select("." + val),
-              bounds = $this.path.bounds(region.datum()),
+        const state = chart.select(".states").select("." + val),
+              bounds = $this.path.bounds(state.datum()),
               x1 = bounds[0][0],
               x2 = bounds[1][0],
 
