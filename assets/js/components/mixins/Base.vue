@@ -99,8 +99,8 @@ export default {
       const type = "fm";
       this.handleFilter(type, val, old);
     },
-    handleFilterRegion(val, old) {
-      const type = "region";
+    handleFilterBeneficiary(val, old) {
+      const type = "beneficiary";
       this.handleFilter(type, val, old);
     },
     handleFilterSector(val, old) {
@@ -135,7 +135,7 @@ export default {
     },
     // make sure every key exists from the start
     'filters.fm': 'handleFilterFm',
-    'filters.region': 'handleFilterRegion',
+    'filters.beneficiary': 'handleFilterBeneficiary',
     'filters.sector': 'handleFilterSector',
     'filters.area': 'handleFilterArea',
   },
