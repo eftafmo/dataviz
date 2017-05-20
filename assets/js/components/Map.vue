@@ -32,6 +32,7 @@
       </g>
 
       <g class="states" />
+      <g class="regions" />
 
       <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
         <g class="frames" />
@@ -48,9 +49,9 @@
   // defs
   // - fills
   @water: #cbe9f6;
-  //@terrain: #f9f9cc;
   @terrain: #fff;
   @beneficiary: #ddd;
+  @region: #f9f9cc;
   @hovered: #9dccec;
   @donor_inactive: #85adcb;
   // - strokes
@@ -66,6 +67,10 @@
 
   // styles
   .chart {
+    .transitioning {
+      pointer-events: none;
+    }
+
     .base {
       .sphere {
         fill: @water;
@@ -119,6 +124,19 @@
       }
     }
 
+    .regions {
+      .with-boundary;
+      cursor: pointer;
+      fill: @region;
+
+      path {
+        &:hover {
+          stroke: black;
+          //.hovered;
+        }
+      }
+    }
+
     .top {
       .frames {
         fill: none;
@@ -155,7 +173,9 @@ export default Vue.extend({
   beforeCreate() {
     // placeholders for fetched topojson data
     this.layers = null;
-    this.borders = null;
+    this.regions = null;
+    // cache for geojson data
+    this._regions_cache = {};
   },
 
   props: {
@@ -220,14 +240,32 @@ export default Vue.extend({
     this.queue.defer( (callback) => {
       d3.json(NUTS, (error, data) => {
         if (error) throw error;
-        this.borders = data;
+        this.regions = data;
         this.renderStates();
+        this._populateCache();
       });
       callback(null);
     });
   },
 
   methods: {
+    _populateCache() {
+      // cache the geojson data, because extracting it from topojson
+      // is an expensive operation
+      const data = this.regions,
+            layer = 'nuts3',
+            cache = this._regions_cache;
+
+      const countries = Object.keys(COUNTRIES);
+      countries.forEach( (c) => cache[c] = [] );
+
+      const features = topojson.feature(data, data.objects[layer]).features;
+      for (const f of features) {
+        const c = f.id.substr(0,2);
+        if (countries.indexOf(c) == -1) continue;
+        cache[c].push(f);
+      }
+    },
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
@@ -251,7 +289,9 @@ export default Vue.extend({
             graticule_stroke = this.graticule_stroke * this.scaleFactor;
 
       style.innerHTML = `
-        .map-viz .chart .terrain, .map-viz .chart .states {
+        .map-viz .chart .terrain,
+        .map-viz .chart .states,
+        .map-viz .chart .regions {
           stroke-width: ${terrain_stroke};
         }
         .map-viz .chart .base .graticule {
@@ -332,11 +372,11 @@ export default Vue.extend({
 
     renderStates() {
       // bail out if no data, or not mounted, or already rendered
-      if (!this.borders || !this.$el || this._states_rendered) return;
+      if (!this.regions || !this.$el || this._states_rendered) return;
       this._states_rendered = true;
 
       const $this = this,
-            data = this.borders,
+            data = this.regions,
             layers = data.objects;
 
       const _mesh = (obj, filter) => topojson.mesh(data, obj, filter),
@@ -416,20 +456,73 @@ export default Vue.extend({
         );
     },
 
+    renderRegions(state, t) {
+      // renders NUTS-lvl3 data
+
+      // only render the current state, but capture the rest for exit()
+      const containers = this.chart.select('.regions').selectAll('g')
+                             .data(
+                               state ? [state] : [],
+                               (d) => d
+                             );
+
+      const conentered = containers.enter()
+                                   .append('g')
+                                   .attr('class', (d) => d )
+                                   .attr('opacity', 0);
+
+
+      const regions = conentered.selectAll('path')
+                                .data(
+                                  state ? this._regions_cache[state] : [],
+                                  (d) => d.id
+                                );
+
+      regions.enter().append('path')
+             .attr('d', this.path)
+             .on("mouseenter",
+                 function(){ d3.select(this).raise(); }
+             )
+             .append('title')
+             .text( (d) => d.properties.name);
+
+
+      containers.merge(conentered)
+                .style('display', null)
+                .classed('transitioning', true)
+                .transition(t)
+                .attr('opacity', 1)
+                .on('end', function() {
+                  d3.select(this)
+                    .classed('transitioning', false);
+                });
+
+      containers.exit()
+                .classed('transitioning', true)
+                .transition(t)
+                .attr('opacity', 0)
+                .on('end', function() {
+                  d3.select(this)
+                    .style('display', 'none')
+                    .classed('transitioning', false);
+                });
+    },
+
     handleFilterBeneficiary(val, old) {
       const $this = this,
-            chart = this.chart;
+            chart = this.chart,
+            t = this.getTransition();
 
       const zoom = d3.zoom()
                      .on("zoom", () => {
                        chart.attr("transform", d3.event.transform);
                        this.zoom = d3.event.transform.k;
                        this.setStyle();
-                     });
+                     })
+                     .on("start", () => this.renderRegions(val, t) )
 
       chart
-        .transition()
-        .duration(500)
+        .transition(t)
         .call(zoom.transform,
               transformer);
 
