@@ -41,10 +41,10 @@
   },
   {
     name: "Technical assistance",
-    colour: "rgb(119, 43, 112)",
+    colour: "rgb(179, 179, 179)",
   },
   {
     name: "Other",
-    colour: "rgb(111, 111, 111)",
+    colour: "rgb(119, 43, 112)",
   },
 ]
