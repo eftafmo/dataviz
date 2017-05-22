@@ -513,6 +513,28 @@ export default Vue.extend({
       }
     },
 
+    createTooltip() {
+    const $this = this;
+       // add tooltip
+    let tip = d3.tip()
+          .attr('class', 'd3-tip sect')
+          .html(function(d){
+             return "<div class='title-container'>"
+              + "<span>"+d.data.name+"</span></div>"
+              + $this.format(d.value)
+              // TODO: 'grant allocation' should be taken from data
+              + " grant allocation"
+              + " <span class='action'>~Click to filter by priority sector </span>"
+           })
+          .offset([15,30])
+          .direction('s');
+
+       this.tip = tip;
+
+       this.chart.call(this.tip)
+       return this.tip
+    },
+
     renderChart() {
       this.rendered = true;
       const $this = this,
@@ -607,28 +629,6 @@ export default Vue.extend({
         .filter( (d) => d.depth == 1 )
         .lower();
 
-
-
-
-       // add tooltip
-      let tip = d3.tip()
-          .attr('class', 'd3-tip sect')
-           .html(function(d){
-             return "<div class='title-container'>"
-              + "<span>"+d.data.name+"</span></div>"
-              + $this.format(d.value)
-              // TODO: 'grant allocation' should be taken from data
-              + " grant allocation"
-              + " <span class='action'>~Click to filter by priority sector </span>"
-           })
-          .offset([15,30])
-          .direction('s');
-
-
-       this.chart.call(tip)
-
-       aentered.on('mouseover', tip.show)
-               .on('mouseout', tip.hide);
       /*
 
       // send deleted items to back too
@@ -641,7 +641,9 @@ export default Vue.extend({
       aentered
         .on("click", this.click)
         .on("mouseenter", this.highlight)
-        .on("mouseleave", this.unhighlight);
+        .on("mouseleave", this.unhighlight)
+        .on('mouseover', this.tip.show)
+        .on('mouseout', this.tip.hide);
     },
 
     click(d) {

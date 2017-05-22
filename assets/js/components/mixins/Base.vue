@@ -50,6 +50,7 @@ export default {
   methods: {
     _main() {
       this.beforeMain();
+      this.createTooltip();
       this.main();
     },
     beforeMain() {
@@ -60,6 +61,11 @@ export default {
        */
       return;
     },
+
+    createTooltip(){
+      return;
+    },
+
     main() {
       /*
        * main entry point.
