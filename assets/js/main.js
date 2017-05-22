@@ -24,3 +24,10 @@ import SidebarResults from "./SidebarResults.vue";
 new SidebarResults({
   el: '#sidebar-results',
 });
+
+
+//keep homepage layout as a one column layout
+if(document.getElementById('overview')) {
+  let main = document.getElementById('overview').parentNode;
+  main.style.display = 'block'
+}
