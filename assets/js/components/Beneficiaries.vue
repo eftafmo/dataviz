@@ -318,12 +318,6 @@ export default Vue.extend({
         .attr("x", (d) => this.x(d[0]))
         .attr("width", 0)
         //.remove();
-
-      // handle the fg, it's already created
-      selection.select("rect.fg")
-        .attr("width", (d) => this.x(d.total) + this.barPadding )
-        .attr("height", this.barHeight + this.barPadding * 2);
-
     },
 
     createTooltip() {
@@ -332,18 +326,31 @@ export default Vue.extend({
       let tip = d3.tip()
           .attr('class', 'd3-tip benef')
           .html(function(d){
-             return "<div class='title-container'>"
+            return "<div class='title-container'>"
               + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
               + "<span class='name'>"+ d.name + "</span></div>"
               // TODO: 'grants' word should be taken from data
               + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
               + " <span class='action'>~Click to filter by beneficiary state</span>"
-           })
-           .offset(function(e) {
-            return [-20,  d3.event.layerX - $this.legendWidth - this.getBBox().width/2]
-       }).direction('n');
-       this.tip = tip;
+          })
+          .direction('n')
+          .offset(function(d) {
+            const zeroed = (-this.getBBox().width / 2
+                            -this.getBBox().x);
 
+            return [
+              -$this.itemHeight * 0.9,
+              Math.max(zeroed,
+                       // an amazing way to calculate the mouse position for d3-tip
+                       d3.event.clientX
+                       -$this.chart.node().ownerSVGElement.getBoundingClientRect().left
+                       + zeroed
+                       -$this.legendWidth
+                      )
+            ];
+          });
+
+       this.tip = tip;
        this.chart.call(this.tip)
     },
 
@@ -429,11 +436,6 @@ export default Vue.extend({
         .transition(t_)
         .call(this.renderFms);
 
-      // append a rect to prevent the hover mouseover event to propagate to children
-      const fg = fms.append("rect").attr("class", "fg").style('visibility', 'hidden')
-        .attr("width", (d) => this.x(d.total) + this.barPadding )
-        .attr("height", this.barHeight + this.barPadding * 2);
-
       // aand we also want to run it in EXIT, but with empty data
       // (normally the old data gets sent, so the fms don't get disappeared)
       beneficiaries.exit().each( (d) => (d.splice(0)) )
@@ -448,11 +450,10 @@ export default Vue.extend({
       bentered
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
-        });
-
-      // tooltip events
-       fg.on('mousemove', this.tip.show)
-         .on('mouseout', this.tip.hide);
+        })
+        // tooltip events
+        .on('mouseenter', this.tip.show)
+        .on('mouseleave', this.tip.hide);
     },
 
     handleFilterBeneficiary(val) {
