@@ -275,13 +275,13 @@ import {colour2gray} from 'js/lib/util';
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import {SectorColours} from 'js/constants.js';
-import WithTooltipMixin from './mixins/WithTooltipMixin';
+import WithTooltip from './mixins/WithTooltip';
 
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, ChartMixin, WithTooltipMixin,
+    BaseMixin, ChartMixin, WithTooltip,
   ],
 
   data() {
