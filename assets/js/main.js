@@ -1,6 +1,6 @@
 "use strict";
 
-require("../css/normalize.css");
+import 'normalize.css'
 require("../css/main.css");
 
 require("../js/header.js");
