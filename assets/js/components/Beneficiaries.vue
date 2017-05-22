@@ -184,7 +184,7 @@ export default Vue.extend({
       return this.svgWidth;
     },
 
-    height() {
+    itemsHeight() {
       // this is used in the template, so vue will try to call it
       // before ready
       if (!this.isReady) return 0;
@@ -193,10 +193,14 @@ export default Vue.extend({
             height = this.itemHeight * count +
                      this.itemPadding * (count - 1);
 
+      return height;
+    },
+
+    height() {
       // only resize the chart if there's not enough drawing room
       // (prevents the footer from dancing around during filtering)
-      this._height = this._height ? Math.max(this._height, height) :
-                                    height;
+      this._height = this._height ? Math.max(this._height, this.itemsHeight) :
+                                    this.itemsHeight;
       return this._height;
     },
 
@@ -332,7 +336,7 @@ export default Vue.extend({
       chart.select("line.domain")
         .transition(t)
       // the line height needs to depend on the data length for the FM filtering
-        .attr("y2", (this.itemHeight + this.itemPadding) * this.data.length);
+        .attr("y2", this.itemsHeight);
 
       /*
        * main stuff
