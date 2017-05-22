@@ -1,7 +1,7 @@
 // site-wide navigation filters
 export const FILTERS = {
   fm: null,
-  region: null,
+  beneficiary: null,
   sector: null,
   area: null,
 };

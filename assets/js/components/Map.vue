@@ -1,5 +1,6 @@
 <template>
 <div class="map-viz">
+<chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
@@ -30,6 +31,7 @@
         <path class="coastline" /> <!-- make sure coastline is on top, just in case -->
       </g>
 
+      <g class="states" />
       <g class="regions" />
 
       <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
@@ -38,6 +40,7 @@
 
     </g>
   </svg>
+</chart-container>
 </div>
 </template>
 
@@ -46,9 +49,9 @@
   // defs
   // - fills
   @water: #cbe9f6;
-  //@terrain: #f9f9cc;
   @terrain: #fff;
   @beneficiary: #ddd;
+  @region: #f9f9cc;
   @hovered: #9dccec;
   @donor_inactive: #85adcb;
   // - strokes
@@ -64,6 +67,10 @@
 
   // styles
   .chart {
+    .transitioning {
+      pointer-events: none;
+    }
+
     .base {
       .sphere {
         fill: @water;
@@ -94,7 +101,7 @@
       }
     }
 
-    .regions {
+    .states {
       .with-boundary;
       cursor: pointer;
 
@@ -113,6 +120,19 @@
         &:hover {
           .hovered;
           fill: @hovered;
+        }
+      }
+    }
+
+    .regions {
+      .with-boundary;
+      cursor: pointer;
+      fill: @region;
+
+      path {
+        &:hover {
+          stroke: black;
+          //.hovered;
         }
       }
     }
@@ -153,7 +173,9 @@ export default Vue.extend({
   beforeCreate() {
     // placeholders for fetched topojson data
     this.layers = null;
-    this.borders = null;
+    this.regions = null;
+    // cache for geojson data
+    this._regions_cache = {};
   },
 
   props: {
@@ -218,21 +240,39 @@ export default Vue.extend({
     this.queue.defer( (callback) => {
       d3.json(NUTS, (error, data) => {
         if (error) throw error;
-        this.borders = data;
-        this.renderRegions();
+        this.regions = data;
+        this.renderStates();
+        this._populateCache();
       });
       callback(null);
     });
   },
 
   methods: {
+    _populateCache() {
+      // cache the geojson data, because extracting it from topojson
+      // is an expensive operation
+      const data = this.regions,
+            layer = 'nuts3',
+            cache = this._regions_cache;
+
+      const countries = Object.keys(COUNTRIES);
+      countries.forEach( (c) => cache[c] = [] );
+
+      const features = topojson.feature(data, data.objects[layer]).features;
+      for (const f of features) {
+        const c = f.id.substr(0,2);
+        if (countries.indexOf(c) == -1) continue;
+        cache[c].push(f);
+      }
+    },
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
       //this.setStyle();
 
       this.renderBase();
-      this.renderRegions();
+      this.renderStates();
 
       this.rendered = true;
     },
@@ -249,7 +289,9 @@ export default Vue.extend({
             graticule_stroke = this.graticule_stroke * this.scaleFactor;
 
       style.innerHTML = `
-        .map-viz .chart .terrain, .map-viz .chart .regions {
+        .map-viz .chart .terrain,
+        .map-viz .chart .states,
+        .map-viz .chart .regions {
           stroke-width: ${terrain_stroke};
         }
         .map-viz .chart .base .graticule {
@@ -324,21 +366,23 @@ export default Vue.extend({
           .append("path")
           .attr("d", path);
       };
+
+      this.renderStates();
     },
 
-    renderRegions() {
+    renderStates() {
       // bail out if no data, or not mounted, or already rendered
-      if (!this.borders || !this.$el || this._regions_rendered) return;
-      this._regions_rendered = true;
+      if (!this.regions || !this.$el || this._states_rendered) return;
+      this._states_rendered = true;
 
       const $this = this,
-            data = this.borders,
+            data = this.regions,
             layers = data.objects;
 
       const _mesh = (obj, filter) => topojson.mesh(data, obj, filter),
             _features = (obj) => topojson.feature(data, obj).features;
 
-      const regions = this.chart.select('.regions'),
+      const states = this.chart.select('.states'),
             path = this.path;
 
       const scaleLi = 5;
@@ -378,7 +422,7 @@ export default Vue.extend({
           .each(drawFrameLi);
       }
 
-      const countries = regions.selectAll("path")
+      const countries = states.selectAll("path")
              .data(_features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ))
              .enter()
              .append("path")
@@ -412,20 +456,73 @@ export default Vue.extend({
         );
     },
 
-    handleFilterRegion(val, old) {
+    renderRegions(state, t) {
+      // renders NUTS-lvl3 data
+
+      // only render the current state, but capture the rest for exit()
+      const containers = this.chart.select('.regions').selectAll('g')
+                             .data(
+                               state ? [state] : [],
+                               (d) => d
+                             );
+
+      const conentered = containers.enter()
+                                   .append('g')
+                                   .attr('class', (d) => d )
+                                   .attr('opacity', 0);
+
+
+      const regions = conentered.selectAll('path')
+                                .data(
+                                  state ? this._regions_cache[state] : [],
+                                  (d) => d.id
+                                );
+
+      regions.enter().append('path')
+             .attr('d', this.path)
+             .on("mouseenter",
+                 function(){ d3.select(this).raise(); }
+             )
+             .append('title')
+             .text( (d) => d.properties.name);
+
+
+      containers.merge(conentered)
+                .style('display', null)
+                .classed('transitioning', true)
+                .transition(t)
+                .attr('opacity', 1)
+                .on('end', function() {
+                  d3.select(this)
+                    .classed('transitioning', false);
+                });
+
+      containers.exit()
+                .classed('transitioning', true)
+                .transition(t)
+                .attr('opacity', 0)
+                .on('end', function() {
+                  d3.select(this)
+                    .style('display', 'none')
+                    .classed('transitioning', false);
+                });
+    },
+
+    handleFilterBeneficiary(val, old) {
       const $this = this,
-            chart = this.chart;
+            chart = this.chart,
+            t = this.getTransition();
 
       const zoom = d3.zoom()
                      .on("zoom", () => {
                        chart.attr("transform", d3.event.transform);
                        this.zoom = d3.event.transform.k;
                        this.setStyle();
-                     });
+                     })
+                     .on("start", () => this.renderRegions(val, t) )
 
       chart
-        .transition()
-        .duration(500)
+        .transition(t)
         .call(zoom.transform,
               transformer);
 
@@ -436,8 +533,8 @@ export default Vue.extend({
 
         const spacing = .1 * Math.min($this.width, $this.height);
 
-        const region = chart.select(".regions").select("." + val),
-              bounds = $this.path.bounds(region.datum()),
+        const state = chart.select(".states").select("." + val),
+              bounds = $this.path.bounds(state.datum()),
               x1 = bounds[0][0],
               x2 = bounds[1][0],
 
