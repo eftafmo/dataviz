@@ -50,7 +50,6 @@ export default {
   methods: {
     _main() {
       this.beforeMain();
-      this.createTooltip();
       this.main();
     },
     beforeMain() {
@@ -59,10 +58,6 @@ export default {
        * when data becomes available, but before main.
        * this is the place to do it.
        */
-      return;
-    },
-
-    createTooltip(){
       return;
     },
 
