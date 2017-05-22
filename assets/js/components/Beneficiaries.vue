@@ -123,13 +123,13 @@ import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
-import WithTooltip from './mixins/WithTooltip';
+import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin, WithCountriesMixin, WithTooltip,
+    ChartMixin, WithFMsMixin, WithCountriesMixin, WithTooltipMixin,
   ],
 
   data() {
