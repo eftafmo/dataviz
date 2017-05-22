@@ -326,6 +326,27 @@ export default Vue.extend({
 
     },
 
+    createTooltip() {
+      const $this = this;
+      // add tooltip
+      let tip = d3.tip()
+          .attr('class', 'd3-tip benef')
+          .html(function(d){
+             return "<div class='title-container'>"
+              + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
+              + "<span class='name'>"+ d.name + "</span></div>"
+              // TODO: 'grants' word should be taken from data
+              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
+              + " <span class='action'>~Click to filter by beneficiary state</span>"
+           })
+           .offset(function(e) {
+            return [-20,  d3.event.layerX - $this.legendWidth - this.getBBox().width/2]
+       }).direction('n');
+       this.tip = tip;
+
+       this.chart.call(this.tip)
+    },
+
     renderChart() {
       const $this = this,
             data = this.data;
@@ -420,27 +441,7 @@ export default Vue.extend({
         .transition(t_)
         .call(this.renderFms);
 
-      // add tooltip
-      let tip = d3.tip()
-            .attr('class', 'd3-tip benef')
-           .html(function(d){
-             return "<div class='title-container'>"
-              + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
-              + "<span class='name'>"+ d.name + "</span></div>"
-              // TODO: 'grants' word should be taken from data
-              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
-              + " <span class='action'>~Click to filter by beneficiary state</span>"
-           })
 
-      tip.offset(function(e) {
-            return [-20,  d3.event.layerX - $this.legendWidth - this.getBBox().width/2]
-       }).direction('n');
-
-
-       chart.call(tip)
-
-       fg.on('mousemove', tip.show)
-          .on('mouseout', tip.hide);
       /*
        * and finally, events
        */
@@ -448,6 +449,10 @@ export default Vue.extend({
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
         });
+
+      // tooltip events
+       fg.on('mousemove', this.tip.show)
+         .on('mouseout', this.tip.hide);
     },
 
     handleFilterBeneficiary(val) {
