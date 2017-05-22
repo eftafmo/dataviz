@@ -331,7 +331,8 @@ export default Vue.extend({
       // most important thing first: animate the line!
       chart.select("line.domain")
         .transition(t)
-        .attr("y2", this.height);
+      // the line height needs to depend on the data length for the FM filtering
+        .attr("y2", (this.itemHeight + this.itemPadding) * this.data.length);
 
       /*
        * main stuff
