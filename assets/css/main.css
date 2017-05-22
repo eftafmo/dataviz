@@ -1,3 +1,4 @@
+@import url('~normalize.css');
 @import url('eeag-icons.css');
 @import url('open-sans-fonts.css');
 
@@ -30,13 +31,6 @@ body {
   line-height: 1.3334;
   background-color: #fff;
   color: #444;
-}
-
-/* this is the default in all browsers except for ie9.
- * TODO: remove it and use normalize.css
- */
-svg:not(:root) {
-  overflow: hidden;
 }
 
 hr {
