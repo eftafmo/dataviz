@@ -73,6 +73,16 @@ d3.tip = d3Tip;
 
 export default {
 
+mounted() {
+    this.createTooltip();
+},
+
+methods: {
+    createTooltip() {
+      throw "Not Implemented"
+    },
+},
+
 }
 
 </script>
