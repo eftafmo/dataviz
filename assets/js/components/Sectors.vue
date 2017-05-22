@@ -530,9 +530,7 @@ export default Vue.extend({
           .direction('s');
 
        this.tip = tip;
-
        this.chart.call(this.tip)
-       return this.tip
     },
 
     renderChart() {
