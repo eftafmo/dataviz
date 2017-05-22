@@ -39,4 +39,12 @@
     name: "Justice and home affairs",
     colour: "rgb(10, 110, 145)",
   },
+  {
+    name: "Technical assistance",
+    colour: "rgb(119, 43, 112)",
+  },
+  {
+    name: "Other",
+    colour: "rgb(111, 111, 111)",
+  },
 ]
