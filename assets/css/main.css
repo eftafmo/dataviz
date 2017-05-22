@@ -121,6 +121,7 @@ h2 {
   position: sticky;
   top: 0;
   min-height: 30px;
+  overflow-x: hidden;
 }
 
 #global-filters.visible {
