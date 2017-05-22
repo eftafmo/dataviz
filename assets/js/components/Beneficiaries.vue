@@ -126,12 +126,13 @@ import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
+import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin, WithCountriesMixin
+    ChartMixin, WithFMsMixin, WithCountriesMixin, WithTooltipMixin,
   ],
 
   data() {
@@ -326,6 +327,40 @@ export default Vue.extend({
         //.remove();
     },
 
+    createTooltip() {
+      const $this = this;
+      // add tooltip
+      let tip = d3.tip()
+          .attr('class', 'd3-tip benef')
+          .html(function(d){
+            return "<div class='title-container'>"
+              + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
+              + "<span class='name'>"+ d.name + "</span></div>"
+              // TODO: 'grants' word should be taken from data
+              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
+              + " <span class='action'>~Click to filter by beneficiary state</span>"
+          })
+          .direction('n')
+          .offset(function(d) {
+            const zeroed = (-this.getBBox().width / 2
+                            -this.getBBox().x);
+
+            return [
+              -$this.itemHeight * 0.9,
+              Math.max(zeroed,
+                       // an amazing way to calculate the mouse position for d3-tip
+                       d3.event.clientX
+                       -$this.chart.node().ownerSVGElement.getBoundingClientRect().left
+                       + zeroed
+                       -$this.legendWidth
+                      )
+            ];
+          });
+
+       this.tip = tip;
+       this.chart.call(this.tip)
+    },
+
     renderChart() {
       const $this = this,
             data = this.data;
@@ -345,7 +380,7 @@ export default Vue.extend({
        * main stuff
        */
       const beneficiaries = chart.select(".beneficiaries")
-	    .selectAll("g.beneficiary")
+            .selectAll("g.beneficiary")
             .data(data, (d) => d.name ); /* JOIN */
 
       const bentered = beneficiaries.enter().append("g") /* ENTER */
@@ -367,12 +402,6 @@ export default Vue.extend({
       /*
        *
        */
-      bentered.append("title").text(
-        (d) => d.map(
-          (d_) => d_.fm + ":\t" + this.format(d_.value)
-        ).join("\n")
-      )
-
       /*
        * render the row labels
        */
@@ -413,6 +442,7 @@ export default Vue.extend({
       fms.merge(beneficiaries.select("g.fms"))
         .transition(t_)
         .call(this.renderFms);
+
       // aand we also want to run it in EXIT, but with empty data
       // (normally the old data gets sent, so the fms don't get disappeared)
       beneficiaries.exit().each( (d) => (d.splice(0)) )
@@ -420,13 +450,17 @@ export default Vue.extend({
         .transition(t_)
         .call(this.renderFms);
 
+
       /*
        * and finally, events
        */
       bentered
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
-        });
+        })
+        // tooltip events
+        .on('mouseenter', this.tip.show)
+        .on('mouseleave', this.tip.hide);
     },
 
     handleFilterBeneficiary(val) {

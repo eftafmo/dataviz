@@ -260,6 +260,11 @@
     */
   }
 }
+
+  .d3-tip.sect:after {
+    top: 19px;
+    transform: rotate(180deg);
+  }
 </style>
 
 <script>
@@ -270,11 +275,13 @@ import {colour2gray} from 'js/lib/util';
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import {SectorColours} from 'js/constants.js';
+import WithTooltipMixin from './mixins/WithTooltip';
+
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, ChartMixin,
+    BaseMixin, ChartMixin, WithTooltipMixin,
   ],
 
   data() {
@@ -506,6 +513,26 @@ export default Vue.extend({
       }
     },
 
+    createTooltip() {
+    const $this = this;
+       // add tooltip
+    let tip = d3.tip()
+          .attr('class', 'd3-tip sect')
+          .html(function(d){
+             return "<div class='title-container'>"
+              + "<span>"+d.data.name+"</span></div>"
+              + $this.format(d.value)
+              // TODO: 'grant allocation' should be taken from data
+              + " grant allocation"
+              + " <span class='action'>~Click to filter by priority sector </span>"
+           })
+          .offset([15,30])
+          .direction('s');
+
+       this.tip = tip;
+       this.chart.call(this.tip)
+    },
+
     renderChart() {
       this.rendered = true;
       const $this = this,
@@ -600,6 +627,8 @@ export default Vue.extend({
         .filter( (d) => d.depth == 1 )
         .lower();
 
+      /*
+
       // send deleted items to back too
       aexit // EXIT
         .lower()
@@ -610,7 +639,9 @@ export default Vue.extend({
       aentered
         .on("click", this.click)
         .on("mouseenter", this.highlight)
-        .on("mouseleave", this.unhighlight);
+        .on("mouseleave", this.unhighlight)
+        .on('mouseover', this.tip.show)
+        .on('mouseout', this.tip.hide);
     },
 
     click(d) {

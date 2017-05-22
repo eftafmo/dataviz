@@ -11,6 +11,7 @@
     "d3-queue": "^3.0.5",
     "d3-sankey": "^0.4.2",
     "normalize.css": "^7.0.0",
+    "d3-tip": "^0.7.1",
     "topojson-client": "^3.0.0",
     "vue": "^2.2.6"
   },
