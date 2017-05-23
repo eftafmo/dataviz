@@ -157,6 +157,7 @@ import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name, COUNTRIES} from './mixins/WithCountries';
+import WithTooltipMixin from './mixins/WithTooltip';
 
 
 // TODO: pass these through webpack maybe?
@@ -168,6 +169,7 @@ export default Vue.extend({
   mixins: [
     BaseMixin, ChartMixin,
     WithFMsMixin, WithCountriesMixin,
+    WithTooltipMixin,
   ],
 
   beforeCreate() {
@@ -303,6 +305,25 @@ export default Vue.extend({
         .map-viz .chart .base .graticule {
           stroke-width: ${graticule_stroke};
         }`;
+    },
+
+    createTooltip() {
+      const $this = this;
+
+      let tip = d3.tip()
+          .attr('class', 'd3-tip map')
+          .html(function(d) {
+            return `<div class="title-container">
+                      <span class="name">${this.name} (${d.id})</span>
+                    </div>
+                    ${$this.format(d.amount)}
+            `;
+          })
+          .direction('n')
+          .offset([0, 0])
+
+       this.tip = tip;
+       this.chart.call(this.tip)
     },
 
     renderBase() {
@@ -464,6 +485,7 @@ export default Vue.extend({
 
     renderRegions(t) {
       // renders NUTS-lvl3 regions for the selected country
+      const $this = this;
       const state = this.filters.beneficiary;
 
       // only render the current state, but capture the rest for exit()
@@ -490,13 +512,18 @@ export default Vue.extend({
              // cache the name with the node
              .property('name', (d) => d.properties.name )
              .attr('fill', interpolateYlGn(0))
-             .on("mouseenter",
-                 function(){ d3.select(this).raise(); }
-             );
+             .on('mouseenter',
+                 function(d, i) {
+                   d3.select(this).raise();
+                   $this.tip.show.call(this, d, i);
+                 }
+             )
+             .on('mouseleave', this.tip.hide);
 
-      rentered
-        .append('title')
-        .text( (d) => d.properties.name );
+      // don't add a title, it's shown by the tooltip
+      //rentered
+      // .append('title')
+      // .text( (d) => d.properties.name );
 
       containers.merge(conentered)
                 .style('display', null)
@@ -570,7 +597,6 @@ export default Vue.extend({
                     .domain([min, max])
                     .range([.1, 1]);
 
-        console.log(d3.values(totals))
         const regions = this.chart.select('g.regions > g.' + state)
                             .selectAll('path').data(d3.values(totals), (d) => d.id );
 
