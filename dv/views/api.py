@@ -126,6 +126,7 @@ def beneficiary_allocation_detail(request, beneficiary):
         .filter(nuts__length=5)
         .exclude(allocation=0)
         .annotate(
+            id=F('nuts'),
             pa=F('outcome__programme_area__name'),
             ps=F('outcome__programme_area__priority_sector__name'),
             # TODO: remove this Concat trick once we get rid of fm enums
@@ -135,7 +136,7 @@ def beneficiary_allocation_detail(request, beneficiary):
                 output_field=CharField()
             ),
         )
-        .values('nuts', 'pa', 'ps', 'fm')
+        .values('id', 'pa', 'ps', 'fm')
         .annotate(amount=Sum('allocation'))
     )
 
