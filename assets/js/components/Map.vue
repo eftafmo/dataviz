@@ -313,11 +313,21 @@ export default Vue.extend({
       let tip = d3.tip()
           .attr('class', 'd3-tip map')
           .html(function(d) {
+            // this function is common to both countries and regions, so...
+
+            // not the smartest way to tell if this is a country, but it works
+            // TODO: add country financial data
+            // TODO: move flag to css
+            if (d.id.length == 2)
+              return `<div class="title-container">
+                        <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
+                        <span class="name">${COUNTRIES[d.id].name}</span>
+                      </div>`;
+
             return `<div class="title-container">
                       <span class="name">${this.name} (${d.id})</span>
                     </div>
-                    ${$this.format(d.amount)}
-            `;
+                    ${$this.format(d.amount || 0)}`;
           })
           .direction('n')
           .offset([0, 0])
@@ -472,7 +482,10 @@ export default Vue.extend({
         .filter( (d) => COUNTRIES[d.id].type == "beneficiary" )
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
-        });
+        })
+        // adding tooltip only for beneficiaries
+        .on('mouseenter', this.tip.show)
+        .on('mouseleave', this.tip.hide);
 
       // hardcoding the donor colours a bit, because we want to
       // transition them later
