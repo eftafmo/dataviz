@@ -52,25 +52,28 @@
     font-size: 1.6rem;
   }
 
-  .legend .fm span {
-    width: 10px; height: 10px;
-    display: inline-block;
-  }
-  .legend li {
-    list-style-type: none;
-    display: inline-block;
-    margin-right: 2rem;
-  }
-  .legend .fm {
-    transition: all .5s ease;
-  }
-  .legend .fm.disabled {
-    filter: grayscale(100%);
-    opacity: 0.5;
-  }
+  .legend {
+    cursor: pointer;
+    .fm span {
+      width: 10px; height: 10px;
+      display: inline-block;
+    }
+    li {
+      list-style-type: none;
+      display: inline-block;
+      margin-right: 2rem;
+    }
+    .fm {
+      transition: all .5s ease;
+    }
+    .fm.disabled {
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
 
-  .legend .fm.selected {
-    text-shadow: 0 0 1px #999;
+    .fm.selected {
+      text-shadow: 0 0 1px #999;
+    }
   }
 
   .chart {
@@ -123,12 +126,13 @@ import ChartMixin from './mixins/Chart';
 import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
+import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Vue.extend({
   mixins: [
     BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin, WithCountriesMixin
+    ChartMixin, WithFMsMixin, WithCountriesMixin, WithTooltipMixin,
   ],
 
   data() {
@@ -184,7 +188,7 @@ export default Vue.extend({
       return this.svgWidth;
     },
 
-    height() {
+    itemsHeight() {
       // this is used in the template, so vue will try to call it
       // before ready
       if (!this.isReady) return 0;
@@ -193,10 +197,14 @@ export default Vue.extend({
             height = this.itemHeight * count +
                      this.itemPadding * (count - 1);
 
+      return height;
+    },
+
+    height() {
       // only resize the chart if there's not enough drawing room
       // (prevents the footer from dancing around during filtering)
-      this._height = this._height ? Math.max(this._height, height) :
-                                    height;
+      this._height = this._height ? Math.max(this._height, this.itemsHeight) :
+                                    this.itemsHeight;
       return this._height;
     },
 
@@ -319,6 +327,40 @@ export default Vue.extend({
         //.remove();
     },
 
+    createTooltip() {
+      const $this = this;
+      // add tooltip
+      let tip = d3.tip()
+          .attr('class', 'd3-tip benef')
+          .html(function(d){
+            return "<div class='title-container'>"
+              + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
+              + "<span class='name'>"+ d.name + "</span></div>"
+              // TODO: 'grants' word should be taken from data
+              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
+              + " <span class='action'>~Click to filter by beneficiary state</span>"
+          })
+          .direction('n')
+          .offset(function(d) {
+            const zeroed = (-this.getBBox().width / 2
+                            -this.getBBox().x);
+
+            return [
+              -$this.itemHeight * 0.9,
+              Math.max(zeroed,
+                       // an amazing way to calculate the mouse position for d3-tip
+                       d3.event.clientX
+                       -$this.chart.node().ownerSVGElement.getBoundingClientRect().left
+                       + zeroed
+                       -$this.legendWidth
+                      )
+            ];
+          });
+
+       this.tip = tip;
+       this.chart.call(this.tip)
+    },
+
     renderChart() {
       const $this = this,
             data = this.data;
@@ -331,13 +373,14 @@ export default Vue.extend({
       // most important thing first: animate the line!
       chart.select("line.domain")
         .transition(t)
-        .attr("y2", this.height);
+      // the line height needs to depend on the data length for the FM filtering
+        .attr("y2", this.itemsHeight);
 
       /*
        * main stuff
        */
       const beneficiaries = chart.select(".beneficiaries")
-	    .selectAll("g.beneficiary")
+            .selectAll("g.beneficiary")
             .data(data, (d) => d.name ); /* JOIN */
 
       const bentered = beneficiaries.enter().append("g") /* ENTER */
@@ -359,12 +402,6 @@ export default Vue.extend({
       /*
        *
        */
-      bentered.append("title").text(
-        (d) => d.map(
-          (d_) => d_.fm + ":\t" + this.format(d_.value)
-        ).join("\n")
-      )
-
       /*
        * render the row labels
        */
@@ -405,6 +442,7 @@ export default Vue.extend({
       fms.merge(beneficiaries.select("g.fms"))
         .transition(t_)
         .call(this.renderFms);
+
       // aand we also want to run it in EXIT, but with empty data
       // (normally the old data gets sent, so the fms don't get disappeared)
       beneficiaries.exit().each( (d) => (d.splice(0)) )
@@ -412,13 +450,17 @@ export default Vue.extend({
         .transition(t_)
         .call(this.renderFms);
 
+
       /*
        * and finally, events
        */
       bentered
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
-        });
+        })
+        // tooltip events
+        .on('mouseenter', this.tip.show)
+        .on('mouseleave', this.tip.hide);
     },
 
     handleFilterBeneficiary(val) {

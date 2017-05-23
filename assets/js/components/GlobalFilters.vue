@@ -119,9 +119,14 @@ export default Vue.extend({
 
   computed : {
     hasFilters() {
+      let component_parent = document.getElementById('global-filters');
       for (const filter in FILTERS) {
-        if (FILTERS[filter]) return true;
+        if (FILTERS[filter]) {
+          component_parent.classList.add('visible') ;
+          return true;
+        }
       }
+      component_parent.classList.remove('visible') ;
       return false;
     },
   },

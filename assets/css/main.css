@@ -1,3 +1,5 @@
+@import '~normalize.css';
+
 @import url('eeag-icons.css');
 @import url('open-sans-fonts.css');
 
@@ -30,13 +32,6 @@ body {
   line-height: 1.3334;
   background-color: #fff;
   color: #444;
-}
-
-/* this is the default in all browsers except for ie9.
- * TODO: remove it and use normalize.css
- */
-svg:not(:root) {
-  overflow: hidden;
 }
 
 hr {
@@ -126,5 +121,22 @@ h2 {
 #global-filters {
   position: sticky;
   top: 0;
+  min-height: 30px;
+  overflow-x: hidden;
+}
+
+#global-filters.visible {
   z-index: 1;
 }
+
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */

@@ -60,6 +60,7 @@ export default {
        */
       return;
     },
+
     main() {
       /*
        * main entry point.
