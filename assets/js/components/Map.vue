@@ -51,7 +51,6 @@
   @water: #cbe9f6;
   @terrain: #fff;
   @beneficiary: #ddd;
-  @region: #f9f9cc;
   @hovered: #9dccec;
   @donor_inactive: #85adcb;
   // - strokes
@@ -127,7 +126,7 @@
     .regions {
       .with-boundary;
       cursor: pointer;
-      fill: @region;
+      // regions get their fill inline
 
       path {
         &:hover {
@@ -158,6 +157,7 @@ import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name, COUNTRIES} from './mixins/WithCountries';
+import WithTooltipMixin from './mixins/WithTooltip';
 
 
 // TODO: pass these through webpack maybe?
@@ -169,6 +169,7 @@ export default Vue.extend({
   mixins: [
     BaseMixin, ChartMixin,
     WithFMsMixin, WithCountriesMixin,
+    WithTooltipMixin,
   ],
 
   beforeCreate() {
@@ -176,7 +177,9 @@ export default Vue.extend({
     this.layers = null;
     this.regions = null;
     // cache for geojson data
-    this._regions_cache = {};
+    this._region_borders = {};
+    // cache for allocation data
+    this._region_data = {};
   },
 
   props: {
@@ -232,7 +235,6 @@ export default Vue.extend({
   },
 
   created() {
-    console.log(this.detailsDatasource.replace('XX', 'zz'))
     // this needs to fetch some extra-data
     this.queue.defer( (callback) => {
       d3.json(LAYERS, (error, data) => {
@@ -247,7 +249,7 @@ export default Vue.extend({
         if (error) throw error;
         this.regions = data;
         this.renderStates();
-        this._populateCache();
+        setTimeout(this._populateCache, 1);
       });
       callback(null);
     });
@@ -259,7 +261,7 @@ export default Vue.extend({
       // is an expensive operation
       const data = this.regions,
             layer = 'nuts3',
-            cache = this._regions_cache;
+            cache = this._region_borders;
 
       const countries = Object.keys(COUNTRIES);
       countries.forEach( (c) => cache[c] = [] );
@@ -271,6 +273,7 @@ export default Vue.extend({
         cache[c].push(f);
       }
     },
+
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
@@ -302,6 +305,35 @@ export default Vue.extend({
         .map-viz .chart .base .graticule {
           stroke-width: ${graticule_stroke};
         }`;
+    },
+
+    createTooltip() {
+      const $this = this;
+
+      let tip = d3.tip()
+          .attr('class', 'd3-tip map')
+          .html(function(d) {
+            // this function is common to both countries and regions, so...
+
+            // not the smartest way to tell if this is a country, but it works
+            // TODO: add country financial data
+            // TODO: move flag to css
+            if (d.id.length == 2)
+              return `<div class="title-container">
+                        <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
+                        <span class="name">${COUNTRIES[d.id].name}</span>
+                      </div>`;
+
+            return `<div class="title-container">
+                      <span class="name">${this.name} (${d.id})</span>
+                    </div>
+                    ${$this.format(d.amount || 0)}`;
+          })
+          .direction('n')
+          .offset([0, 0])
+
+       this.tip = tip;
+       this.chart.call(this.tip)
     },
 
     renderBase() {
@@ -450,7 +482,10 @@ export default Vue.extend({
         .filter( (d) => COUNTRIES[d.id].type == "beneficiary" )
         .on("click", function (d) {
           $this.toggleBeneficiary(d.id, this);
-        });
+        })
+        // adding tooltip only for beneficiaries
+        .on('mouseenter', this.tip.show)
+        .on('mouseleave', this.tip.hide);
 
       // hardcoding the donor colours a bit, because we want to
       // transition them later
@@ -461,44 +496,10 @@ export default Vue.extend({
         );
     },
 
-    renderRegions(state, t) {
-      // renders NUTS-lvl3 data
-console.log(interpolateYlGn(0));
-      if (state) {
-        const url = this.detailsDatasource.replace('XX', state);
-        d3.json(url, (error, data) => {
-          if (error) throw error;
-
-          const totals = {};
-          let max = 0;
-
-          for (const row of data) {
-            const key = row.nuts,
-                  val = totals[key];
-
-            totals[key] = +row.amount + ( val === undefined ? 0 : val );
-            // save another iteration and track the max
-            max = Math.max(totals[key], max);
-          }
-
-          const min = d3.min(d3.values(totals));
-
-          // d3's chromatic scales take a [0, 1] domain
-          // TODO: user testing. linear or log?
-          //const x = d3.scaleLinear()
-          const x = d3.scaleLog()
-                      .domain([min, max])
-                      .range([.1, 1]);
-
-          regions.merge(rentered) // yes, this looks weird. look below.
-          .style("fill", (d) => {
-            const v = totals[d.id];
-            return interpolateYlGn(
-              (v === undefined) ? 0 : x(totals[d.id])
-            );
-          } )
-        });
-      };
+    renderRegions(t) {
+      // renders NUTS-lvl3 regions for the selected country
+      const $this = this;
+      const state = this.filters.beneficiary;
 
       // only render the current state, but capture the rest for exit()
       const containers = this.chart.select('.regions').selectAll('g')
@@ -515,19 +516,27 @@ console.log(interpolateYlGn(0));
 
       const regions = conentered.selectAll('path')
                                 .data(
-                                  state ? this._regions_cache[state] : [],
+                                  state ? this._region_borders[state] : [],
                                   (d) => d.id
                                 );
 
       const rentered = regions.enter().append('path')
              .attr('d', this.path)
-             .on("mouseenter",
-                 function(){ d3.select(this).raise(); }
-             );
+             // cache the name with the node
+             .property('name', (d) => d.properties.name )
+             .attr('fill', interpolateYlGn(0))
+             .on('mouseenter',
+                 function(d, i) {
+                   d3.select(this).raise();
+                   $this.tip.show.call(this, d, i);
+                 }
+             )
+             .on('mouseleave', this.tip.hide);
 
-      rentered
-        .append('title')
-        .text( (d) => d.properties.name );
+      // don't add a title, it's shown by the tooltip
+      //rentered
+      // .append('title')
+      // .text( (d) => d.properties.name );
 
       containers.merge(conentered)
                 .style('display', null)
@@ -547,7 +556,89 @@ console.log(interpolateYlGn(0));
                   d3.select(this)
                     .style('display', 'none')
                     .classed('transitioning', false);
-                });
+                })
+
+                // also reset regions to default colour
+                .selectAll('path')
+                .attr('fill', interpolateYlGn(0))
+
+      // finally,
+      this.renderRegionData(t)
+    },
+
+    renderRegionData(t) {
+      const state = this.filters.beneficiary;
+
+      // this could be called by another filter.
+      // bail out if no beneficiary selected.
+      if(state === null) return;
+
+      let dataset = this._region_data[state];
+
+      // placing the rendering code inside a function,
+      // because the dataset might not be loaded yet
+      const _renderRegionData = () => {
+        // this is where we apply the existing filters to the dataset. TODO.
+        const totals = {},
+              // another version of the above, but storing only id -> value
+              _totals = {};
+        let max = 0;
+
+        for (const row of dataset) {
+          const id = row.id;
+          let item = totals[id];
+          if (item === undefined) {
+            item = totals[id] = {
+              id: id,
+              amount: 0,
+            };
+          }
+
+          item.amount += row.amount;
+
+          // save another iteration and track the max
+          max = Math.max(item.amount, max);
+          // save this too, we'll use it to get the min
+          _totals[id] = item.amount;
+        }
+        const min = d3.min(d3.values(_totals));
+
+        // d3's chromatic scales take a [0, 1] domain
+        // TODO: user testing. linear or log?
+        //const x = d3.scaleLinear()
+        const x = d3.scaleLog()
+                    .domain([min, max])
+                    .range([.1, 1]);
+
+        const regions = this.chart.select('g.regions > g.' + state)
+                            .selectAll('path').data(d3.values(totals), (d) => d.id );
+
+        regions.enter().merge(regions)
+               .transition(t)
+               .attr("fill", (d) => interpolateYlGn(x(d.amount)) );
+
+        regions.exit()
+               .transition(t)
+               .attr("fill", interpolateYlGn(0));
+      };
+
+      // finally, trigger the whole logic
+      if (dataset === undefined) {
+        // reset the transition, data might arrive too late to use it.
+        // TODO: run a throbber / suggest data loading somehow?
+        t = undefined;
+
+        // fetch the data, fill the cache, render
+        const url = this.detailsDatasource.replace('XX', state);
+
+        d3.json(url, (error, data) => {
+          if (error) throw error;
+          dataset = this._region_data[state] = data;
+          _renderRegionData();
+        } );
+      } else {
+        _renderRegionData();
+      }
     },
 
     handleFilterBeneficiary(val, old) {
@@ -561,7 +652,7 @@ console.log(interpolateYlGn(0));
                        this.zoom = d3.event.transform.k;
                        this.setStyle();
                      })
-                     .on("start", () => this.renderRegions(val, t) )
+                     .on("start", () => this.renderRegions(t) )
 
       chart
         .transition(t)
