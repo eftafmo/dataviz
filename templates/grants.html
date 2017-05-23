@@ -29,7 +29,9 @@
 <div class="lg-column">
   <div class="grant-dataviz" id="funding-map">
   <h2>Funding map</h2>
-    <xmap />
+    <xmap
+      details-datasource="{% url "api:beneficiary-allocation-detail" "XX" %}"
+    />
   </div>
 
   <div class="grant-dataviz" id="beneficiary-states">

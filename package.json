@@ -10,6 +10,7 @@
     "d3": "^4.7.4",
     "d3-queue": "^3.0.5",
     "d3-sankey": "^0.4.2",
+    "d3-scale-chromatic": "^1.1.1",
     "topojson-client": "^3.0.0",
     "vue": "^2.2.6"
   },

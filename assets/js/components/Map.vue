@@ -152,6 +152,7 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
+import {interpolateYlGn} from 'd3-scale-chromatic';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
@@ -179,6 +180,9 @@ export default Vue.extend({
   },
 
   props: {
+    // this is a "template" with the string 'XX' meant to be replaced
+    // with the country code
+    detailsDatasource: String,
   },
 
   data() {
@@ -228,6 +232,7 @@ export default Vue.extend({
   },
 
   created() {
+    console.log(this.detailsDatasource.replace('XX', 'zz'))
     // this needs to fetch some extra-data
     this.queue.defer( (callback) => {
       d3.json(LAYERS, (error, data) => {
@@ -458,6 +463,42 @@ export default Vue.extend({
 
     renderRegions(state, t) {
       // renders NUTS-lvl3 data
+console.log(interpolateYlGn(0));
+      if (state) {
+        const url = this.detailsDatasource.replace('XX', state);
+        d3.json(url, (error, data) => {
+          if (error) throw error;
+
+          const totals = {};
+          let max = 0;
+
+          for (const row of data) {
+            const key = row.nuts,
+                  val = totals[key];
+
+            totals[key] = +row.amount + ( val === undefined ? 0 : val );
+            // save another iteration and track the max
+            max = Math.max(totals[key], max);
+          }
+
+          const min = d3.min(d3.values(totals));
+
+          // d3's chromatic scales take a [0, 1] domain
+          // TODO: user testing. linear or log?
+          //const x = d3.scaleLinear()
+          const x = d3.scaleLog()
+                      .domain([min, max])
+                      .range([.1, 1]);
+
+          regions.merge(rentered) // yes, this looks weird. look below.
+          .style("fill", (d) => {
+            const v = totals[d.id];
+            return interpolateYlGn(
+              (v === undefined) ? 0 : x(totals[d.id])
+            );
+          } )
+        });
+      };
 
       // only render the current state, but capture the rest for exit()
       const containers = this.chart.select('.regions').selectAll('g')
@@ -478,14 +519,15 @@ export default Vue.extend({
                                   (d) => d.id
                                 );
 
-      regions.enter().append('path')
+      const rentered = regions.enter().append('path')
              .attr('d', this.path)
              .on("mouseenter",
                  function(){ d3.select(this).raise(); }
-             )
-             .append('title')
-             .text( (d) => d.properties.name);
+             );
 
+      rentered
+        .append('title')
+        .text( (d) => d.properties.name );
 
       containers.merge(conentered)
                 .style('display', null)
