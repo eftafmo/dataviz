@@ -6,7 +6,7 @@
 
   <section class="section align-center">
 
-    <h2>Find out more</h2>
+    <h2 class="homepage-subtitle">Find out more</h2>
 
     <nav class="homepage-nav">
       <a href="{% url 'frontend:grants' %}">Our grants</a>
@@ -14,10 +14,12 @@
       <a href="{% url 'frontend:projects' %}">Our projects</a>
     </nav>
 
-    <form class="homepage-search" action="">
-      <input type="search" placeholder="Programmes, Projects, News, Organizations, etc.">
-      <button type="submit">Search</button>
-    </form>
+    <div class="homepage-search-wrapper">
+      <form class="homepage-search" action="">
+        <input type="search" placeholder="Programmes, Projects, News, Organizations, etc.">
+        <button type="submit">Search</button>
+      </form>
+    </div>
 
   </section>
 
