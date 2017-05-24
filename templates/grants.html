@@ -19,7 +19,7 @@
     <sectors
         :width="250"
         :height="300"
-        datasource="{% url "api:sector-allocation" %}"
+        datasource="{% url "api:grants" %}"
     >
     </sectors>
   </div>
@@ -38,7 +38,7 @@
   <h2>Funding across beneficiary states</h2>
     <beneficiaries
         :min-height="200"
-        datasource="{% url "api:beneficiary-allocation" %}"
+        datasource="{% url "api:grants" %}"
     >
     </beneficiaries>
   </div>
@@ -58,7 +58,7 @@ new Vue({
       mechanisms: components.Mechanisms,
   },
   data: {
-    //datasource: '{#% url "api:fm-allocation" %#}',
+    //datasource: '{#% url "api:grants" %#}',
     data: {
       EEA: 993500000,
       Norway: 804600000,
