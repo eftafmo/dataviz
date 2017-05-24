@@ -10,12 +10,18 @@
 }
 .homepage-nav a {
   flex-grow: 1;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: #005494;
   max-width: 28rem;
-  padding: 2rem;
+  padding: 1.5rem;
   transition: .2s;
   border-top: 4px solid #355785;
+}
+@media(max-width:700px){
+  .homepage-nav a {
+    font-size: 1.5rem;
+    padding: 1rem;
+  }
 }
 .homepage-nav a:hover {
   text-decoration: none;
