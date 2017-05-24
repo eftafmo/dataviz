@@ -118,10 +118,11 @@
     }
   }
   .legend {
+    width: 55%;
     display: block;
     height: auto;
     position: relative;
-    @media (min-width:1400px), (max-width:700px) {
+    @media (min-width:1400px), (max-width:1025px) {
       width: 100%;
       margin-top: 1rem;
     }
