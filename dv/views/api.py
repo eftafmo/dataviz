@@ -20,6 +20,7 @@ def grants(request):
         return HttpResponseNotAllowed()
 
     allocations = Allocation.objects.all().select_related(
+        'financial_mechanism',
         'state',
         'programme_area',
         'programme_area__priority_sector',
@@ -32,7 +33,8 @@ def grants(request):
         out.append({
             'BSCode': a.state.code,
             'BSName': a.state.name,
-            'FMCode': a.financial_mechanism_id,
+            'FMCode': a.financial_mechanism.code,
+            'FMName': a.financial_mechanism.grant_name,
             'PACode': a.programme_area.code,
             'PAShort': a.programme_area.short_name,
             'PAName': a.programme_area.name,
