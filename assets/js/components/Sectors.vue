@@ -520,12 +520,17 @@ export default Vue.extend({
     let tip = d3.tip()
           .attr('class', 'd3-tip sect')
           .html(function(d){
+            let filter_by = "sector"
+            if (d.depth==2){
+              filter_by = "area"
+            }
+
              return "<div class='title-container'>"
               + "<span>"+d.data.name+"</span></div>"
               + $this.format(d.value)
               // TODO: 'grant allocation' should be taken from data
               + " grant allocation"
-              + " <span class='action'>~Click to filter by priority sector </span>"
+              + " <span class='action'>~Click to filter by priority " + filter_by + " </span>"
            })
           .offset([15,30])
           .direction('s');
