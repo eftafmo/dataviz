@@ -1,11 +1,11 @@
 {
-  EEA: {
-    id: "EEA",
+  "EEA-Grants": {
+    id: "EEA-Grants",
     name: "EEA Grants",
     colour: "rgb(35, 97, 146)",
   },
-  Norway: {
-    id: "Norway",
+  "Norway-Grants": {
+    id: "Norway-Grants",
     name: "Norway Grants",
     colour: "rgb(166, 25, 46)",
   },

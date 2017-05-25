@@ -19,3 +19,13 @@ export function colour2gray(colour, opacity) {
   const x = Y + (255 - Y) * (1 - opacity);
   return d3.rgb(x, x, x);
 }
+
+export function slugify(text) {
+  return text.toString()
+    //.toLowerCase()  // it's safer not to lowercase this for our usage, for now
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
+}

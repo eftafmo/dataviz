@@ -9,7 +9,7 @@
   <div class="grant-dataviz" id="financial-mechanisms">
   <h2>Funding by financial mechanism</h2>
     <mechanisms
-        :initial="data"
+        datasource="{% url "api:grants" %}"
     >
     </mechanisms>
   </div>
@@ -58,11 +58,6 @@ new Vue({
       mechanisms: components.Mechanisms,
   },
   data: {
-    //datasource: '{#% url "api:grants" %#}',
-    data: {
-      EEA: 993500000,
-      Norway: 804600000,
-    },
   },
 });
 
