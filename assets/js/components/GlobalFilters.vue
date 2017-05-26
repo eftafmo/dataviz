@@ -1,5 +1,5 @@
 <template>
-    <div :remove="removeLastFilter()" class="global-filters" :class="{active: hasFilters}">
+    <div class="global-filters" :class="{active: hasFilters}">
     <transition name="bounce">
       <div v-if="hasFilters" class="container">
         <div class="global-filters-inner">
@@ -65,7 +65,7 @@
 }
 
 .list-enter-active, .list-leave-active {
-  transition: all .3s;
+  transition: all 1s;
 }
 .list-enter, .list-leave-to {
   opacity: 0;
@@ -73,10 +73,10 @@
 }
 
 .bounce-enter-active {
-  animation: bounce-in .3s;
+  animation: bounce-in .5s;
 }
 .bounce-leave-active {
-  animation: bounce-out .3s;
+  animation: bounce-out .5s;
 }
 @keyframes bounce-in {
   0% {
@@ -135,16 +135,6 @@ export default Vue.extend({
     removeFilter(e){
       const remove_el = e.target.getAttribute('filter')
       FILTERS[remove_el] = null;
-    },
-
-    removeLastFilter() {
-      const $this=this;
-      window.addEventListener("keyup", function(e){
-        if (e.keyCode == 27) {
-          let last_filter = $this.$el.querySelector('.list-filters .filter-item:last-child').getAttribute('filter');
-          FILTERS[last_filter] = null
-        }
-      })
     },
 
     resetFilters(){
