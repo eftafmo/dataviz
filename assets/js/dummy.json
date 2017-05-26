@@ -1,0 +1,73 @@
+[
+  {
+    "outcome": "Strenghtened capacity of NGO and enabling environment for the sector promoted",
+    "priority_sector_name": "Civil society",
+    "priority_sector_id": "civil-society",
+    "indicators": [
+      {
+        "indicator": "Number of NGOs/Small organizations reporting strenghtened capacity",
+        "achievement": {
+          "RO": 12,
+          "HU": 2
+        }
+      },
+      {
+        "indicator": "Number of NGOs achieving new sources of funding",
+        "achievement": {
+          "EE": 52,
+          "ES": 3,
+          "PL": 95
+        }
+      }
+    ]
+  },
+  {
+    "outcome": "Tootsie roll jelly-o tiramisu. Apple pie sweet roll carrot cake topping biscuit chocolate",
+    "priority_sector": "Green industry innovation",
+    "priority_sector_id": "green-industry-innovation",
+    "indicators": [
+      {
+        "indicator": "Cotton candy lemon drops cheesecake gummi bears tiramisu pie jelly-o tart sugar plum.",
+        "achievement": {
+          "BG": 159,
+          "GR": 20,
+          "PL": 22
+        }
+      },
+      {
+        "indicator": "Tiramisu pie jelly-o tart sugar plum.",
+        "achievement": {
+          "EE": 12,
+          "ML": 99
+        }
+      }
+    ]
+  }
+]
+
+// YAML
+// - outcome: Strenghtened capacity of NGO and enabling environment for the sector promoted
+//   priority_sector_name: Civil society
+//   priority_sector_id: civil-society
+//   indicators:
+//     - indicator: Number of NGOs/Small organizations reporting strenghtened capacity
+//       achievement:
+//         RO: 12
+//         HU: 2
+//     - indicator: Number of NGOs achieving new sources of funding
+//       achievement:
+//         EE: 52
+//         ES: 3
+//         PL: 95
+// - outcome: Tootsie roll jelly-o tiramisu. Apple pie sweet roll carrot cake topping biscuit chocolate
+//   priority_sector: Civil Society
+//   indicators:
+//     - indicator: Cotton candy lemon drops cheesecake gummi bears tiramisu pie jelly-o tart sugar plum.
+//       achievement:
+//         BG: 159
+//         GR: 20
+//     - indicator: Tiramisu pie jelly-o tart sugar plum.
+//       achievement:
+//         EE: 12
+//         ML: 99
+//         PL: 22
