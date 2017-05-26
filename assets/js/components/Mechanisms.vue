@@ -124,25 +124,25 @@ export default Vue.extend({
 
   computed: {
     data() {
+      // filter dataset by everything except fm
+      const _filters = d3.keys(this.filters).filter( (f) => f != 'fm' );
+      const dataset = this.filter(this.dataset, _filters);
+
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
-      const fms = {}
+      const fmdata = {}
       for (const fm in FMs) {
-        fms[fm] = {
+        fmdata[fm] = {
           'value': 0,
           'beneficiaries': d3.set(),
           'sectors': d3.set(),
         };
-        Object.assign(fms[fm], FMs[fm]);
+        Object.assign(fmdata[fm], FMs[fm]);
       }
 
-      // filter by everything except fm
-      const _filters = d3.keys(this.filters).filter( (f) => f != 'fm' );
-      const ds = this.filter(this.dataset, _filters);
-
-      for (const d of ds) {
+      for (const d of dataset) {
         const id = slugify(d.fm),
-              fm = fms[id],
+              fm = fmdata[id],
               value = +d.allocation;
 
         // backend might send us empty data...
@@ -153,7 +153,7 @@ export default Vue.extend({
         fm.beneficiaries.add(d.beneficiary);
       }
 
-      return d3.values(fms);
+      return d3.values(fmdata);
     },
   },
 
