@@ -5,7 +5,7 @@
 <template>
 <ul class="fms">
   <li
-      v-for="(fm, k, index) in fms"
+      v-for="fm in fms"
       class="fm"
       :class="[fm.id, $parent.getFilterClass(fm)]"
       @click="$parent.toggleFm(fm, $event.target)"
