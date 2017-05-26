@@ -18,11 +18,11 @@
           v-if="sector.value"
           :key="getLabelID(sector)"
           :id="getLabelID(sector)"
-          :class="{selected: filters.sector == sector.data.id}"
+          :class="{selected: isSelectedSector(sector)}"
       >
         <a @click="click(sector)"
-           @mouseenter="filters.sector == sector.data.id ? null : highlight(sector)"
-           @mouseleave="filters.sector == sector.data.id ? null : unhighlight(sector)"
+           @mouseenter="isSelectedSector(sector) ? null : highlight(sector)"
+           @mouseleave="isSelectedSector(sector) ? null : unhighlight(sector)"
         >
           <span :style="{background: sector.data.colour}"></span>
           <span>
@@ -34,7 +34,7 @@
             {{ format(sector.value) }}
           </span>
           <span
-              v-if="filters.sector == sector.data.id"
+              v-if="isSelectedSector(sector)"
               class="icon icon-close"
           />
         </a>
@@ -49,7 +49,7 @@
             name="areas"
         >
           <transition-group
-              v-show="filters.sector == sector.data.id"
+              v-show="isSelectedSector(sector)"
               tag="ul"
               class="areas"
               name="item"
@@ -59,10 +59,7 @@
                 v-if="area.value"
                 :key="getLabelID(area)"
                 :id="getLabelID(area)"
-                :class="{ inactive: filters.area &&
-                                    filters.sector == area.parent.data.id &&
-                                    filters.area != area.data.id
-                        }"
+                :class="{ inactive: !isActiveArea(area) }"
             >
               <a @click="click(area)"
                  @mouseenter="highlight(area)"
@@ -305,6 +302,11 @@ export default Vue.extend({
                          .filter((f) => f != 'sector' && f != 'area');
       const dataset = this.filter(this.dataset, _filters);
 
+      // TODO: fix BUG: because we pre-filter data, newly .enter()-ed
+      // items pop-up all of a sudden instead of transitioning from 0.
+      // must either find a fix in render() or filter (set zeroes) down here.
+      // Or base the dataset on a pre-prepared tree. ¤
+
       // build the sector tree
       const sectors = {}
       for (const d of dataset) {
@@ -342,13 +344,19 @@ export default Vue.extend({
       }
 
       // we'll build a new tree to get the sectors sorted,
-      // and also add in the colours
+      // and also add in the colours and more
       const sectordata = {};
       for (const sid in SectorColours) {
         // yes we're iterating on colour data, it has the proper order
         const sector = sectors[sid];
         if (sector === undefined) continue;
         sectordata[sid] = sector;
+
+        // we'll add a backreference for all areas to the parent sector.
+        // we'll use it during filtering below.
+        for (const aid in sector.children) {
+          sector.children[aid].parentname = sector.name;
+        }
 
         const colour = SectorColours[sid];
         sector.colour = colour;
@@ -358,7 +366,7 @@ export default Vue.extend({
         if (acolours === undefined) {
           // WARNING, TODO: if we ever share a direct link to this, prefiltered
           // on beneficiary or fm, this will make a fine mess of things.
-          // area colour generation should be done on a pre-existing list.
+          // area colour generation should be done on a pre-existing list. ¤
           acolours = this.area_colours[sid] = {};
           const aids = d3.keys(sector.children),
                 colourscale = this._mkcolourscale(colour, aids.length);
@@ -382,11 +390,11 @@ export default Vue.extend({
       );
 
       // filtering by sectors / areas makes items "disabled".
-      const isEnabled = (this.filters.sector === null ?
-        ( () => true ) :
-        ( (d) => !d.allocation ? d.id == this.filters.sector :
-                                 d.parent == this.filters.sector )
-      );
+      const isEnabled = (d) => {
+        if (this.filters.sector === null) return true;
+        if (d.allocation === undefined) return d.name == this.filters.sector;
+        return d.parentname == this.filters.sector;
+      };
 
       // tell the hierarchy object how to calculate sums
       tree.sum( (d) => {
@@ -619,7 +627,7 @@ export default Vue.extend({
       if (this.filters.sector) {
         transitioning
           .filter(
-            (d) => d.parent.data.id == this.filters.sector
+            (d) => this.isSelectedSector(d.parent)
           )
           .style("display", null)
           .attr("opacity", 1);
@@ -628,7 +636,7 @@ export default Vue.extend({
       if (this._prevsector) {
         transitioning
           .filter(
-            (d) => d.parent.data.id == this._prevsector
+            (d) => d.parent.data.name == this._prevsector
           )
           .attr("opacity", 0)
           // and also reset possibly grayed out areas §
@@ -653,8 +661,6 @@ export default Vue.extend({
         .filter( (d) => d.depth == 1 )
         .lower();
 
-      /*
-
       // send deleted items to back too
       aexit // EXIT
         .lower()
@@ -672,7 +678,7 @@ export default Vue.extend({
 
     click(d) {
       const func = d.depth == 1 ? this.toggleSector : this.toggleArea;
-      func(d.data, this);
+      func(d, this);
     },
 
     _highlight(d, yes) {
@@ -702,9 +708,23 @@ export default Vue.extend({
       this._highlight(d, false);
     },
 
+    // NOTE: these functions will take a d3.hierarchy node as argument,
+    // so we must access everything via element.data
+    isSelectedSector(s) {
+      if (!this.filters.sector) return;
+      return this.filters.sector == s.data.name;
+    },
+
+    isActiveArea(a) {
+      if (!this.filters.area) return true;
+      return this.filters.sector == a.parent.data.name &&
+             this.filters.area == a.data.name;
+    },
+
     toggleSector(s, etarget) {
-      this.filters.sector = this.filters.sector == s ?
-                            null : s;
+      const sname = s.data.name;
+      this.filters.sector = this.filters.sector == sname ?
+                            null : sname;
     },
 
     toggleArea(a, etarget) {
@@ -712,10 +732,11 @@ export default Vue.extend({
         console.error("Filtered by area without a sector. Impossible 1.")
         return;
       }
-      this.filters.area = this.filters.area == a ?
-                          null : a;
+      const aname = a.data.name;
+      this.filters.area = this.filters.area == aname ?
+                          null : aname;
       // TODO: what if the area does not to the current sector belong?
-      // TODO: we need a persistent array of PS / PAs
+      // TODO: we need a persistent array of PS / PAs. ¤
     },
 
     handleFilterSector(val, old) {
@@ -750,7 +771,7 @@ export default Vue.extend({
       const areas = this.chart
                         .selectAll(".arc")
                         .filter(
-                          (d) => d.parent.data.id == this.filters.sector
+                          (d) => this.isSelectedSector(d.parent)
                         );
 
       const colourfunc = (
@@ -758,7 +779,7 @@ export default Vue.extend({
           const c = d.data.colour;
           if (val === null) return c;
 
-          if (d.data.id == this.filters.area) return c;
+          if (this.isActiveArea(d)) return c;
           else return colour2gray(c, this.inactive_opacity);
         }
       );
@@ -770,7 +791,7 @@ export default Vue.extend({
         .attr("fill", colourfunc);
     },
 
-    handleFilterFm() {
+    handleFilter() {
       this.render();
     },
   },
