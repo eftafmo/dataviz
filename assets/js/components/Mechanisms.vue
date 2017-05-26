@@ -136,58 +136,21 @@ export default Vue.extend({
         Object.assign(fms[fm], FMs[fm]);
       }
 
-      let ds = this.dataset;
-
-      // TODO: move this part under its own function.
-      // the filterfunc could also be built dynamically..
-      const filterfuncs = [];
-
-      if (this.filters.beneficiary) {
-        filterfuncs.push(
-          (item) => item.beneficiary == this.filters.beneficiary
-        );
-      }
-
-      if (this.filters.sector) {
-        filterfuncs.push(
-          (item) => item.sector == this.filters.sector
-        );
-      }
-
-      if (this.filters.area) {
-        filterfuncs.push(
-          (item) => item.area == this.filters.area
-        );
-      }
-
-      if (filterfuncs) {
-        // TODO: is it really a better approach to pre-build the functions,
-        // instead of doing if(this.filters.x) for each row?
-        // some profiling would be nice.
-        const filterfunc = (item) => {
-          for (const f of filterfuncs) {
-            if (!f(item)) return false;
-          }
-          return true;
-        }
-
-        ds = ds.filter(filterfunc);
-      }
+      // filter by everything except fm
+      const _filters = d3.keys(this.filters).filter( (f) => f != 'fm' );
+      const ds = this.filter(this.dataset, _filters);
 
       for (const d of ds) {
-        const id = slugify(d.FMName),
+        const id = slugify(d.fm),
               fm = fms[id],
-              // TODO: make these names prettier
-              value = +d.GrossAlloc,
-              sector = d.PSName,
-              beneficiary = d.BSName;
+              value = +d.allocation;
 
         // backend might send us empty data...
         if(value === 0) continue;
 
         fm.value += value;
-        fm.sectors.add(sector);
-        fm.beneficiaries.add(beneficiary);
+        fm.sectors.add(d.sector);
+        fm.beneficiaries.add(d.beneficiary);
       }
 
       return d3.values(fms);
