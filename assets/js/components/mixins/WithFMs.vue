@@ -19,22 +19,22 @@ export default {
   },
 
   methods: {
-    getFilterClass(fm) {
+    getFilterClassFm(fm) {
       if (!this.filters.fm)
         return;
 
-      if (this.isSelected(fm))
+      if (this.isSelectedFm(fm))
         return "selected";
 
-      if (this.isDisabled(fm))
+      if (this.isDisabledFm(fm))
         return "disabled";
     },
 
-    isSelected(fm) {
+    isSelectedFm(fm) {
       if (!this.filters.fm) return;
       return this.filters.fm == fm.name;
     },
-    isDisabled(fm) {
+    isDisabledFm(fm) {
       if (!this.filters.fm) return;
       return this.filters.fm != fm.name;
     },

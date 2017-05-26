@@ -7,7 +7,7 @@
   <li
       v-for="fm in fms"
       class="fm"
-      :class="[fm.id, $parent.getFilterClass(fm)]"
+      :class="[fm.id, $parent.getFilterClassFm(fm)]"
       @click="$parent.toggleFm(fm, $event.target)"
   >
     <slot name="fm-content" :fm="fm">{{ fm.name }}</slot>

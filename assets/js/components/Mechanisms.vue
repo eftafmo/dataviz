@@ -236,7 +236,7 @@ export default Vue.extend({
       this.chart.selectAll("rect.fm")
         .transition(t)
         .attr("fill", (d) => (
-          this.isDisabled(d) ?
+          this.isDisabledFm(d) ?
             colour2gray(d.colour, this.inactive_opacity) :
             d.colour
         ));

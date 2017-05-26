@@ -19,13 +19,12 @@
           :key="getLabelID(sector)"
           :id="getLabelID(sector)"
           :class="{selected: filters.sector == sector.data.id}"
-          :style="{color: _colour(sector)}"
       >
         <a @click="click(sector)"
            @mouseenter="filters.sector == sector.data.id ? null : highlight(sector)"
            @mouseleave="filters.sector == sector.data.id ? null : unhighlight(sector)"
         >
-          <span :style="{background: _colour(sector)}"></span>
+          <span :style="{background: sector.data.colour}"></span>
           <span>
             {{ sector.data.name }}
           </span>
@@ -69,7 +68,7 @@
                  @mouseenter="highlight(area)"
                  @mouseleave="unhighlight(area)"
               >
-                <span :style="{background: _colour(area)}"></span>
+                <span :style="{background: area.data.colour}"></span>
                 <span>
                   {{ area.data.name }}
                 </span>
@@ -271,13 +270,12 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import {colour2gray} from 'js/lib/util';
+import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import {SectorColours} from 'js/constants.js';
 import WithTooltipMixin from './mixins/WithTooltip';
-
 
 
 export default Vue.extend({
@@ -294,18 +292,94 @@ export default Vue.extend({
 
       // percentage of mid-donut void
       inner_radius: .65,
+
+      // this will be populated during the first run
+      area_colours: {},
     };
   },
 
   computed: {
     data() {
-      // TODO: avoid spurious run with empty data / track isReady()?
-      //if (this.dataset === undefined) return;
+      // filter dataset by everything except sector / area
+      const _filters = d3.keys(this.filters)
+                         .filter((f) => f != 'sector' && f != 'area');
+      const dataset = this.filter(this.dataset, _filters);
 
-      const tree = d3.hierarchy( { children: this.dataset } );
+      // build the sector tree
+      const sectors = {}
+      for (const d of dataset) {
+        const s = d.sector,
+              a = d.area,
+              sid = slugify(s),
+              aid = slugify(a),
+              fm = d.fm,
+              value = +d.allocation;
 
-      // simplest way to get this recomputed on filter changes
-      // is to access filter data right here.
+        // backend might send us empty data...
+        if(value === 0) continue;
+
+        let sector = sectors[sid];
+        if (sector === undefined)
+          sector = sectors[sid] = {
+            id: sid,
+            name: s,
+            children: {},
+          };
+
+        let area = sector.children[aid];
+        if (area === undefined)
+          area = sector.children[aid] = {
+            id: aid,
+            name: a,
+            allocation: {},
+          };
+
+        let allocation = area.allocation[fm];
+        if (allocation === undefined)
+          allocation = area.allocation[fm] = 0;
+
+        area.allocation[fm] = allocation + value;
+      }
+
+      // we'll build a new tree to get the sectors sorted,
+      // and also add in the colours
+      const sectordata = {};
+      for (const sid in SectorColours) {
+        // yes we're iterating on colour data, it has the proper order
+        const sector = sectors[sid];
+        if (sector === undefined) continue;
+        sectordata[sid] = sector;
+
+        const colour = SectorColours[sid];
+        sector.colour = colour;
+
+        let acolours = this.area_colours[sid];
+        // if this is the first time around, generate the area colours
+        if (acolours === undefined) {
+          // WARNING, TODO: if we ever share a direct link to this, prefiltered
+          // on beneficiary or fm, this will make a fine mess of things.
+          // area colour generation should be done on a pre-existing list.
+          acolours = this.area_colours[sid] = {};
+          const aids = d3.keys(sector.children),
+                colourscale = this._mkcolourscale(colour, aids.length);
+
+          for (const aid of aids) {
+            acolours[aid] = colourscale(aid);
+          }
+        }
+
+        for (const aid in sector.children) {
+          sector.children[aid].colour = acolours[aid];
+        }
+      }
+
+      // finally, using d3's hierarchy makes working with trees easy
+      const tree = d3.hierarchy(
+        { children: sectordata },
+        // the default accessor function looks for arrays of children,
+        // but we have an object tree
+        (d) => d3.values(d.children)
+      );
 
       // filtering by sectors / areas makes items "disabled".
       const isEnabled = (this.filters.sector === null ?
@@ -314,6 +388,7 @@ export default Vue.extend({
                                  d.parent == this.filters.sector )
       );
 
+      // tell the hierarchy object how to calculate sums
       tree.sum( (d) => {
         // only last level has allocation
         if (!d.allocation) return 0;
@@ -322,13 +397,7 @@ export default Vue.extend({
 
         return d3.sum(
           d3.entries(d.allocation),
-          (item) => {
-            // allocation is grouped by FM, so filter if needed
-            if (this.filters.fm
-                && item.key != this.filters.fm) return 0;
-
-            return item.value;
-          }
+          (item) => item.value
         );
       } );
 
@@ -337,20 +406,6 @@ export default Vue.extend({
 
     radius() {
       return Math.min(this.width, this.height) / 2 - this.margin;
-    },
-
-    _primary_colour() {
-      const keys = [],
-            values = [];
-      for (let k in SectorColours) {
-        keys.push(k);
-        values.push(SectorColours[k]);
-      }
-      return d3.scaleOrdinal()
-        .domain(keys)
-        .range(values)
-      // fail hard on missing values
-        .unknown(null)
     },
 
     _partition() {
@@ -374,7 +429,6 @@ export default Vue.extend({
 
   mounted() {
     this.root = null;
-    this._secondary_colours = {};
     // this one's used during transitioning below
     this._areasCancelled = [];
   },
@@ -421,17 +475,6 @@ export default Vue.extend({
       this._areasCancelled.push(el);
     },
 
-    processDataset(ds) {
-      // add a reference to the parent sector to all areas
-      // to keep track of filtering
-      for (const s of ds) {
-        for (const a of s.children) {
-          a.parent = s.id;
-        }
-      }
-      return ds;
-    },
-
     _extract_coords: (d) => (
       {
         x0: d.x0, x1: d.x1,
@@ -439,15 +482,6 @@ export default Vue.extend({
         depth: d.depth,
       }
     ),
-
-    _colour(d) {
-      const func = (
-        d.depth == 1 ?
-          this._primary_colour :
-          this._secondary_colours[d.parent.data.name]
-      );
-      return func(d.data.name);
-    },
 
     _mkarc(outerradius, innerradius) {
       const arc = d3.arc()
@@ -500,20 +534,6 @@ export default Vue.extend({
     getArcID(node) { return "a-" + this._getID(node); },
     getLabelID(node) { return "l-" + this._getID(node); },
 
-    beforeMain() {
-      // generate children colours.
-      // TODO: make this fully pre-computed
-      // (e.g. inside a WithSectors mixin)
-      for (let d of this.data.children) {
-        // TODO: make colours id-based
-        const name = d.data.name;
-
-        this._secondary_colours[name] = this._mkcolourscale(
-          SectorColours[name], d.children.length
-        );
-      }
-    },
-
     createTooltip() {
     const $this = this;
        // add tooltip
@@ -560,7 +580,7 @@ export default Vue.extend({
         .attr("id", this.getArcID)
 	.attr("class", "arc")
 	.attr("d", this._arc)
-	.attr("fill", this._colour)
+	.attr("fill", (d) => d.data.colour )
         // level 2 items are hidden
         .attr("opacity", (d) => d.depth == 2 ? 0 : null )
         // and really hidden
@@ -612,7 +632,7 @@ export default Vue.extend({
           )
           .attr("opacity", 0)
           // and also reset possibly grayed out areas §
-          .attr("fill", this._colour)
+	  .attr("fill", (d) => d.data.colour )
           // don't forget to re-disable it
           .on("end", function() { this.style.display = "none"; });
 
@@ -652,7 +672,7 @@ export default Vue.extend({
 
     click(d) {
       const func = d.depth == 1 ? this.toggleSector : this.toggleArea;
-      func(d.data.id, this);
+      func(d.data, this);
     },
 
     _highlight(d, yes) {
@@ -732,10 +752,11 @@ export default Vue.extend({
                         .filter(
                           (d) => d.parent.data.id == this.filters.sector
                         );
-      // TODO: unify this with the default colour func?
-      const colourfunc = (val === null ? this._colour :
+
+      const colourfunc = (
         (d) => {
-          const c = this._colour(d);
+          const c = d.data.colour;
+          if (val === null) return c;
 
           if (d.data.id == this.filters.area) return c;
           else return colour2gray(c, this.inactive_opacity);
