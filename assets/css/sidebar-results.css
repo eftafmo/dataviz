@@ -218,7 +218,7 @@
   font-weight: inherit;
   color: #005494;
 }
-.sidebar-result-news time {
+.sidebar-result-news small {
   font-size: 1.2rem;
   color: #898989;
 }

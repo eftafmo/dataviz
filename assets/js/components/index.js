@@ -6,7 +6,8 @@ import Mechanisms from './Mechanisms';
 import Sectors from './Sectors';
 import Map from './Map';
 import Beneficiaries from './Beneficiaries';
-import GlobalFilters from './GlobalFilters'
+import GlobalFilters from './GlobalFilters';
+import Results from './SidebarResultTab';
 
 export {
   Overview,
@@ -15,4 +16,5 @@ export {
   Map,
   Beneficiaries,
   GlobalFilters,
+  Results,
 };
