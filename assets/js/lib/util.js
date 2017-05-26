@@ -22,7 +22,7 @@ export function colour2gray(colour, opacity) {
 
 export function slugify(text) {
   return text.toString()
-    //.toLowerCase()  // it's safer not to lowercase this for our usage, for now
+    .toLowerCase()
     .replace(/\s+/g, '-')           // Replace spaces with -
     .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
     .replace(/\-\-+/g, '-')         // Replace multiple - with single -
