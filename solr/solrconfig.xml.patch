@@ -1,5 +1,5 @@
---- a/solrconfig.xml	2017-01-10 13:29:14.487726132 +0200
-+++ b/solrconfig.xml	2017-01-10 18:33:31.331140936 +0200
+--- a/solrconfig.xml	2017-05-28 14:46:31.568310089 +0000
++++ b/solrconfig.xml	2017-05-28 14:46:31.568310089 +0000
 @@ -130,10 +130,11 @@
         between the existing compression modes in the default codec: "BEST_SPEED" (default)
         or "BEST_COMPRESSION".
@@ -29,7 +29,7 @@
         Index Config - These settings control low-level behavior of indexing
         Most example settings here show the default value, but are commented
         out, to more easily see where customizations have been made.
-@@ -305,15 +305,15 @@
+@@ -302,15 +305,15 @@
                  track of max version values when checking for re-ordered
                  updates; increase this value to reduce the cost of
                  synchronizing access to version buckets during high-volume
@@ -41,8 +41,33 @@
        <int name="numVersionBuckets">${solr.ulog.numVersionBuckets:65536}</int>
      </updateLog>
 +    -->
-
+ 
      <!-- AutoCommit
-
+ 
           Perform a hard commit automatically under certain conditions.
           Instead of enabling autoCommit, consider using "commitWithin"
+@@ -1346,10 +1349,11 @@
+         <str>yyyy-MM-dd HH:mmZ</str>
+         <str>yyyy-MM-dd HH:mm</str>
+         <str>yyyy-MM-dd</str>
+       </arr>
+     </processor>
++    <!--
+     <processor class="solr.AddSchemaFieldsUpdateProcessorFactory">
+       <str name="defaultFieldType">strings</str>
+       <lst name="typeMapping">
+         <str name="valueClass">java.lang.Boolean</str>
+         <str name="fieldType">booleans</str>
+@@ -1366,10 +1370,11 @@
+       <lst name="typeMapping">
+         <str name="valueClass">java.lang.Number</str>
+         <str name="fieldType">tdoubles</str>
+       </lst>
+     </processor>
++    -->
+     <processor class="solr.RunUpdateProcessorFactory"/>
+   </updateRequestProcessorChain>
+ 
+   <!-- Deduplication
+ 
+[0m
