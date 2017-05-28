@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'haystack',
     'webpack_loader',
     'dv',
 ]
@@ -136,5 +137,11 @@ WEBPACK_LOADER = {
     }
 }
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://solr:8983/solr'
+    },
+}
 
 from .localsettings import *
