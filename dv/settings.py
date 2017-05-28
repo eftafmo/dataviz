@@ -140,7 +140,7 @@ WEBPACK_LOADER = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://solr:8983/solr'
+        'URL': 'http://solr:8983/solr/eeagrants'
     },
 }
 
