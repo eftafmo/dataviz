@@ -1,0 +1,48 @@
+--- a/solrconfig.xml	2017-01-10 13:29:14.487726132 +0200
++++ b/solrconfig.xml	2017-01-10 18:33:31.331140936 +0200
+@@ -130,10 +130,11 @@
+        between the existing compression modes in the default codec: "BEST_SPEED" (default)
+        or "BEST_COMPRESSION".
+   -->
+   <codecFactory class="solr.SchemaCodecFactory"/>
+ 
++  <schemaFactory class="ClassicIndexSchemaFactory"/>
+   <!-- To disable dynamic schema REST APIs, use the following for <schemaFactory>:
+   
+        <schemaFactory class="ClassicIndexSchemaFactory"/>
+ 
+        When ManagedIndexSchemaFactory is specified instead, Solr will load the schema from
+@@ -147,14 +148,16 @@
+ 
+        When ManagedIndexSchemaFactory is specified with mutable = true, schema
+        modification REST API calls will be allowed; otherwise, error responses will be
+        sent back for these requests. 
+   -->
++<!--
+   <schemaFactory class="ManagedIndexSchemaFactory">
+     <bool name="mutable">true</bool>
+     <str name="managedSchemaResourceName">managed-schema</str>
+   </schemaFactory>
++ -->
+ 
+   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Index Config - These settings control low-level behavior of indexing
+        Most example settings here show the default value, but are commented
+        out, to more easily see where customizations have been made.
+@@ -305,15 +305,15 @@
+                 track of max version values when checking for re-ordered
+                 updates; increase this value to reduce the cost of
+                 synchronizing access to version buckets during high-volume
+                 indexing, this requires 8 bytes (long) * numVersionBuckets
+                 of heap space per Solr core.
+-    -->
+     <updateLog>
+       <str name="dir">${solr.ulog.dir:}</str>
+       <int name="numVersionBuckets">${solr.ulog.numVersionBuckets:65536}</int>
+     </updateLog>
++    -->
+
+     <!-- AutoCommit
+
+          Perform a hard commit automatically under certain conditions.
+          Instead of enabling autoCommit, consider using "commitWithin"
