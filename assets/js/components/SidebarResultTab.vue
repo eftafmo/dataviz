@@ -11,12 +11,8 @@
             <h4 class="title">{{ item.outcome }}</h4>
             <small>{{ item.priority_sector_name}}</small>
             <ul v-for="ind in item.indicators" class="indicators">
-               <li v-for="(value,country) in ind.achievement" class="indicator clearfix" :style="{borderColor: color[item.priority_sector_name]}">
-                  <div class="ind-country">
-                    <img class="country_thumbnail" :src="`/assets/imgs/${get_flag_name(country)}.png`">
-                    <small> {{get_country_name(country)}} </small>
-                  </div>
-                  <div class="ind-count"> {{value}}</div>
+               <li class="indicator clearfix" :style="{borderColor: color[item.priority_sector_name]}">
+                  <div class="ind-count"> {{ind.achievement}}</div>
                   <div class="ind-value"> {{ind.indicator}} </div>
                </li>
                </ul>
@@ -53,10 +49,9 @@
   }
 
   .ind-count {
-    float: left;
+    display: inline;
     font-size: 2rem;
     color: black;
-    width: 15%;
   }
 
   .country_thumbnail {
@@ -72,8 +67,7 @@
   }
 
   .ind-value {
-    float: left;
-    width: 85%;
+    display: inline;
     font-size: 1.2rem;
 
   }
