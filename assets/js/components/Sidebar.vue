@@ -1,8 +1,12 @@
 <template>
-  <div id="sidebar-results" class="sidebar sidebar-results">
+  <div id="sidebar-results" class="sidebar sidebar-results" v-if="hasData">
     <div class="sidebar-header">
-      <strong>{{ format(dataset.Total) }}</strong>
-      <small>{{ format(dataset.Bilateral) }} for bilateral relations</small>
+      <transition name="fade">
+        <div class="allocation" :key="transitioned">
+          <strong>{{ format(data.allocation) }}</strong>
+          <small>{{ format(data.bilateral_allocation) }} for bilateral relations</small>
+        </div>
+      </transition>
       <button type="button" id="close-sidebar-results" class="no-btn"
               title="Close results"
               v-if="isMobileExpanded"
@@ -38,7 +42,28 @@
 </template>
 
 <style>
+sidebar-header {
+  position: relative;
+  padding: 0 !important;
+}
 
+.allocation {
+  padding: 1rem;
+}
+
+.allocation.fade-enter-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.allocation.fade-enter-active, .allocation.fade-leave-active {
+  transition: opacity 1s;
+}
+.allocation.fade-enter, .allocation.fade-leave-to {
+  opacity: 0
+}
 </style>
 
 <script>
@@ -59,10 +84,31 @@ export default Vue.extend({
   data() {
     return {
       results: [{}],
+      // helper for transitioning value changes
+      transitioned: false,
+
       onMobile: false,
       isMobileExpanded: false,
       selectedTab: undefined
     }
+  },
+
+  computed: {
+    data() {
+      const dataset = this.filter(this.dataset);
+
+      const out = {
+        allocation: 0,
+        bilateral_allocation: 0,
+      };
+
+      for (const row of dataset) {
+        out.allocation += +row.allocation;
+        out.bilateral_allocation += +row.bilateral_allocation;
+      }
+
+      return out;
+    },
   },
 
   watch: {
@@ -87,7 +133,6 @@ export default Vue.extend({
   },
 
   methods: {
-
     selectTab(tab) {
       this.selectedTab = tab;
     },
@@ -113,8 +158,13 @@ export default Vue.extend({
         el.classList.remove('is-expanded-on-mobile');
       }
     }
-  }
+  },
 
+  watch: {
+    data() {
+      this.transitioned = !this.transitioned;
+    },
+  },
 });
 
 </script>
