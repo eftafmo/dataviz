@@ -47,6 +47,7 @@
 
 {% block aside %}
     <div id="sidebar-results">
+    <sidebar></sidebar>
     </div>
 {% endblock %}
 
@@ -88,6 +89,15 @@ new Vue({
   el: '#beneficiary-states',
   components: {
     beneficiaries: components.Beneficiaries,
+  },
+  data: {
+  },
+});
+
+new Vue({
+  el: '#sidebar-results',
+  components: {
+    sidebar: components.Sidebar,
   },
   data: {
   },

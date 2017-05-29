@@ -33,13 +33,12 @@
       </nav>
     </div>
 
-  <div class="sidebar-tab-content">
-      <sidebar-result-tab id="results"
+    <div class="sidebar-tab-content">
+      <sidebar_results_tab id="results"
                           v-bind:selected="(selectedTab == 'results')"/>
-      <sidebar-result-tab id="programmes"
-                          v-bind:selected="(selectedTab == 'programmes')"/>
+    <!--   <sidebar-result-tab id="programmes"
+                          v-bind:selected="(selectedTab == 'programmes')"/> -->
     </div>
-  </div>
   </div>
 </template>
 
@@ -48,35 +47,27 @@
 </style>
 
 <script>
-
   import Vue from 'vue';
-  import BaseMixin from './mixins/Base.vue';
-  import * as d3 from 'd3'
+  import Results from './SidebarResultTab';
 
-  export default Vue.extend({
+export default Vue.extend({
 
-  mixins: [
-    BaseMixin,
-  ],
-
-  computed: {
-    data(){
-      return this.dataset
-    },
-
-    items() {
-    }
-
+  components: {
+    'sidebar_results_tab': Results,
   },
+
+
 
     data() {
       return {
+
         message: "Am triumfat",
         onMobile: false,
         isMobileExpanded: false,
         selectedTab: undefined
       }
     },
+
     watch: {
       onMobile (matches) {
         if (matches) {
@@ -87,17 +78,23 @@
         }
       }
     },
+
     created () {
       // Add a media query listener handle mobile events
       var mq = window.matchMedia ('(max-width: 768px)');
       var self = this;
+
       mq.addListener(function(mq) { self.onMobile = mq.matches; });
+
       this.onMobile = mq.matches; // initial check;
     },
+
     methods: {
+
       selectTab(tab) {
         this.selectedTab = tab;
       },
+
       mobileExpand() {
         if (!this.isMobileExpanded) {
           console.log('expand');
@@ -105,22 +102,22 @@
           this.$el.classList.add('is-expanded-on-mobile');
         }
       },
+
       mobileCollapse(e) {
         e = e || window.event;
         e.stopPropagation(); // event will trigger expand and cancel collapse
+
         if (this.isMobileExpanded) {
           console.log('collapse');
           this.isMobileExpanded = false;
+
           var el = this.$el;
+
           el.classList.remove('is-expanded-on-mobile');
         }
       }
-    },
-
-
-
+    }
 
   });
-
 
 </script>

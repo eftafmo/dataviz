@@ -8,6 +8,7 @@ import Map from './Map';
 import Beneficiaries from './Beneficiaries';
 import GlobalFilters from './GlobalFilters';
 import Results from './SidebarResultTab';
+import Sidebar from './SidebarResults';
 
 export {
   Overview,
@@ -16,5 +17,6 @@ export {
   Map,
   Beneficiaries,
   GlobalFilters,
+  Sidebar,
   Results,
 };
