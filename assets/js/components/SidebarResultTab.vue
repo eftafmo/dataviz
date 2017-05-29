@@ -5,8 +5,8 @@
         'is-loading': loading
        }">
     <ul class="sidebar-tab-result-list">
-      <li v-for="item in data.items">
-        <a class="sidebar-result-news" target="_blank">
+      <li v-for="item in data">
+        <div class="sidebar-result-news">
           <div class="body">
             <h4 class="title">{{ item.outcome }}</h4>
             <small>{{ item.priority_sector_name}}</small>
@@ -21,7 +21,7 @@
                </li>
                </ul>
           </div>
-        </a>
+        </div>
       </li>
     </ul>
 
@@ -56,12 +56,13 @@
     float: left;
     font-size: 2rem;
     color: black;
-    width: 10%;
+    width: 15%;
   }
 
   .country_thumbnail {
     display: inline-block;
     width: 24px;
+    margin-right: .5rem;
   }
 
   .ind-country {
@@ -72,7 +73,9 @@
 
   .ind-value {
     float: left;
-    width: 90%;
+    width: 85%;
+    font-size: 1.2rem;
+
   }
 
 }
@@ -81,11 +84,10 @@
 <script>
 
 import Vue from 'vue';
+import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
 import {SectorColours} from 'js/constants.js';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
-import mydata from 'js/dummy.js';
-console.log(mydata)
 
 export default Vue.extend({
   mixins: [
@@ -108,9 +110,6 @@ export default Vue.extend({
       return {
         loading: false,
         color: SectorColours,
-        dataset: {
-         items: mydata,
-        }
       }
     },
 

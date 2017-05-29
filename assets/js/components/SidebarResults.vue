@@ -34,7 +34,7 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <sidebar_results_tab id="results"
+      <sidebar_results_tab :initial="results" id="results"
                           v-bind:selected="(selectedTab == 'results')"/>
     <!--   <sidebar-result-tab id="programmes"
                           v-bind:selected="(selectedTab == 'programmes')"/> -->
@@ -49,6 +49,7 @@
 <script>
   import Vue from 'vue';
   import Results from './SidebarResultTab';
+  import results_data from 'js/dummy.js';
 
 export default Vue.extend({
 
@@ -57,10 +58,9 @@ export default Vue.extend({
   },
 
 
-
-    data() {
+  data() {
       return {
-
+        results: results_data,
         message: "Am triumfat",
         onMobile: false,
         isMobileExpanded: false,
