@@ -57,40 +57,40 @@ export default Vue.extend({
   },
 
   data() {
-      return {
-        results: [{}],
-        onMobile: false,
-        isMobileExpanded: false,
-        selectedTab: undefined
-      }
-    },
+    return {
+      results: [{}],
+      onMobile: false,
+      isMobileExpanded: false,
+      selectedTab: undefined
+    }
+  },
 
-    watch: {
-      onMobile (matches) {
-        if (matches) {
-          this.$el.addEventListener('click', this.mobileExpand, false);
-        } else {
-          this.$el.removeEventListener('click', this.mobileExpand, false);
-          this.mobileCollapse();
-        }
+  watch: {
+    onMobile (matches) {
+      if (matches) {
+        this.$el.addEventListener('click', this.mobileExpand, false);
+      } else {
+        this.$el.removeEventListener('click', this.mobileExpand, false);
+        this.mobileCollapse();
       }
-    },
+    }
+  },
 
-    created () {
-      // Add a media query listener handle mobile events
-      var mq = window.matchMedia ('(max-width: 768px)');
+  created () {
+    // Add a media query listener handle mobile events
+    var mq = window.matchMedia ('(max-width: 768px)');
       var self = this;
 
-      mq.addListener(function(mq) { self.onMobile = mq.matches; });
+    mq.addListener(function(mq) { self.onMobile = mq.matches; });
 
-      this.onMobile = mq.matches; // initial check;
+    this.onMobile = mq.matches; // initial check;
+  },
+
+  methods: {
+
+    selectTab(tab) {
+      this.selectedTab = tab;
     },
-
-    methods: {
-
-      selectTab(tab) {
-        this.selectedTab = tab;
-      },
 
       mobileExpand() {
         if (!this.isMobileExpanded) {
@@ -100,21 +100,21 @@ export default Vue.extend({
         }
       },
 
-      mobileCollapse(e) {
-        e = e || window.event;
-        e.stopPropagation(); // event will trigger expand and cancel collapse
+    mobileCollapse(e) {
+      e = e || window.event;
+      e.stopPropagation(); // event will trigger expand and cancel collapse
 
-        if (this.isMobileExpanded) {
-          console.log('collapse');
-          this.isMobileExpanded = false;
+      if (this.isMobileExpanded) {
+        console.log('collapse');
+        this.isMobileExpanded = false;
 
-          var el = this.$el;
+        var el = this.$el;
 
-          el.classList.remove('is-expanded-on-mobile');
-        }
+        el.classList.remove('is-expanded-on-mobile');
       }
     }
+  }
 
-  });
+});
 
 </script>
