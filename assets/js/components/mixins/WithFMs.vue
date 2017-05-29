@@ -19,6 +19,10 @@ export default {
   },
 
   methods: {
+    fmcolour(fmid) {
+      return FMs[fmid].colour;
+    },
+
     getFilterClassFm(fm) {
       if (!this.filters.fm)
         return;

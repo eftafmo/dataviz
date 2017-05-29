@@ -5,14 +5,14 @@
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
         <rect x="0" y="0" width="50" height="25"
-              class="Norway"
-              :fill="colour('Norway')"
-              :stroke="colour('Norway')"
+              class="norway-grants"
+              :fill="fmcolour('norway-grants')"
+              :stroke="fmcolour('norway-grants')"
         />
         <rect x="0" y="25" width="50" height="25"
-              class="EEA"
-              :fill="colour('EEA')"
-              :stroke="colour('EEA')"
+              class="eea-grants"
+              :fill="fmcolour('eea-grants')"
+              :stroke="fmcolour('eea-grants')"
         />
       </pattern>
     </defs>
@@ -152,6 +152,7 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import {interpolateYlGn} from 'd3-scale-chromatic';
+import {slugify} from 'js/lib/util'
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
@@ -199,7 +200,6 @@ export default Vue.extend({
 
       zoom: 1,
 
-       // there's no data needed for this visualisation
       dataset: {},
       hasData: true,
     };
@@ -492,7 +492,7 @@ export default Vue.extend({
       countries
         .filter( (d) => COUNTRIES[d.id].type == "donor" )
         .attr("fill", (d) => d.id == "NO" ?
-                             "url(#multi-fm)" : this.colour("EEA")
+                             "url(#multi-fm)" : this.fmcolour("eea-grants") // §
         );
     },
 
@@ -695,13 +695,15 @@ export default Vue.extend({
     handleFilterFm(val, old) {
       const t = this.getTransition();
 
-      const colourfuncEEA = val != "Norway" ?
-                            () => this.colour("EEA") :
-                            () => this.donor_inactive_colour;
+      // TODO: find a better way to deal with this. hardcoding is meh. §
+      // (use ids everywhere)?
+      const colourfuncEEA = () => val != "Norway Grants" ?
+                                  this.fmcolour("eea-grants") :
+                                  this.donor_inactive_colour;
 
       const colourfuncNO = val === null ?
-                           (d) => this.colour(d) :
-                           () => this.colour(val);
+                           (d) => this.fmcolour(d) :
+                           () => this.fmcolour(slugify(val)); // awful §
 
       this._countrySelection
         .filter( (d) => COUNTRIES[d.id].type == "donor" && d.id != "NO" )
