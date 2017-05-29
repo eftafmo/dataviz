@@ -1,13 +1,8 @@
 <template>
   <div id="sidebar-results" class="sidebar sidebar-results">
     <div class="sidebar-header">
-
-
-      <strong>€1.798.100.000</strong>
-      <small>€0.000.000 for bilateral relations</small>
-
-
-
+      <strong>{{format(dataset.Total)}}</strong>
+      <small>{{format(dataset.Bilateral)}} for bilateral relations</small>
       <button type="button" id="close-sidebar-results" class="no-btn"
               title="Close results"
               v-if="isMobileExpanded"
@@ -50,8 +45,13 @@
   import Vue from 'vue';
   import Results from './SidebarResultTab';
   import results_data from 'js/dummy.js';
+  import BaseMixin from './mixins/Base';
+
 
 export default Vue.extend({
+  mixins: [
+    BaseMixin
+  ],
 
   components: {
     'sidebar_results_tab': Results,

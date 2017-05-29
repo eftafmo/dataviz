@@ -47,7 +47,7 @@
 
 {% block aside %}
     <div id="sidebar-results">
-    <sidebar></sidebar>
+    <sidebar :initial="data"></sidebar>
     </div>
 {% endblock %}
 
@@ -100,6 +100,10 @@ new Vue({
     sidebar: components.Sidebar,
   },
   data: {
+    data: {
+      Total: 1798100000,
+      Bilateral: 804600000,
+    }
   },
 });
 </script>
