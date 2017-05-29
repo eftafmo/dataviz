@@ -282,8 +282,10 @@ export default Vue.extend({
         let oldend = 0;
 
         for (const fm of fms) {
-          const value = beneficiary.allocation[fm.name];
-          if (value === undefined) continue;
+          let value = beneficiary.allocation[fm.name];
+          // we want 0-valued items too, so they transition properly
+          if (value === undefined)
+            value = 0;
 
           const newend = oldend + value;
 
