@@ -126,6 +126,7 @@
 
   .programme-item-header {
     display: inline;
+    cursor: pointer;
   }
 
   .programme-item.active{
