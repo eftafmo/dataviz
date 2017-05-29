@@ -35,7 +35,7 @@ def grants(request):
             'fm': a.financial_mechanism.grant_name,
             'sector': a.programme_area.priority_sector.name,
             'area': a.programme_area.name,
-            'beneficiary': a.state.name,
+            'beneficiary': a.state.code,
             'allocation': a.gross_allocation,
 
             # Make sure you select the exact querySet from related manager as we did on prefetch_related
