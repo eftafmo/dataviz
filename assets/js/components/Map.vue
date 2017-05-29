@@ -612,6 +612,8 @@ export default Vue.extend({
                     .domain([min, max])
                     .range([.1, 1]);
 
+        if (t === undefined) t = this.getTransition();
+
         const regions = this.chart.select('g.regions > g.' + state)
                             .selectAll('path').data(d3.values(totals), (d) => d.id );
 
@@ -697,6 +699,10 @@ export default Vue.extend({
     handleFilterFm(val, old) {
       const t = this.getTransition();
 
+      /*
+       * part 1: change the donor colours
+       */
+
       // TODO: find a better way to deal with this. hardcoding is meh. §
       // (use ids everywhere)?
       const colourfuncEEA = () => val != "Norway Grants" ?
@@ -718,6 +724,16 @@ export default Vue.extend({
         .transition(t)
         .attr("fill", colourfuncNO)
         .attr("stroke", colourfuncNO);
+
+      /*
+       * part 2: change the region data
+       */
+
+      this.renderRegionData(t);
+    },
+
+    handleFilter(type, val, old) {
+      this.renderRegionData();
     },
   },
 
