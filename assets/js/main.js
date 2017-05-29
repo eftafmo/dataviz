@@ -4,6 +4,9 @@ require("../css/main.css");
 
 require("../js/header.js");
 
+// register polyfills
+import './lib/polyfills';
+
 // register widget components
 import './widgets/index.js';
 
