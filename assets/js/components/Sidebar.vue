@@ -33,8 +33,6 @@
                           v-bind:selected="(selectedTab == 'results')"/>
        <programmes :initial="programmes" id="results"
                           v-bind:selected="(selectedTab == 'programmes')"/>
-    <!--   <sidebar-result-tab id="programmes"
-                          v-bind:selected="(selectedTab == 'programmes')"/> -->
     </div>
   </div>
 </template>
@@ -46,7 +44,7 @@
 <script>
   import Vue from 'vue';
   import Results from './Results';
-  import results_data from 'js/dummy.js';
+  import {results_data, programmes_data} from 'js/dummy.js';
   import BaseMixin from './mixins/Base';
   import Programmes from './Programmes'
 
@@ -64,7 +62,7 @@ export default Vue.extend({
   data() {
       return {
         results: results_data,
-        programmes: results_data,
+        programmes: programmes_data,
         message: "Am triumfat",
         onMobile: false,
         isMobileExpanded: false,

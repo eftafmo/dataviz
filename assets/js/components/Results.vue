@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-tab-pane"
+  <div class="sidebar-tab-pane results"
        v-bind:class="{
         'is-selected': selected,
         'is-loading': loading
@@ -33,7 +33,7 @@
 </template>
 
 <style lang="less">
-.sidebar-tab-pane{
+.results{
   li {
     list-style-type: none;
   }
