@@ -571,20 +571,22 @@ export default Vue.extend({
 
       // this could be called by another filter.
       // bail out if no beneficiary selected.
-      if(state === null) return;
+      if (state === null) return;
 
       let dataset = this._region_data[state];
 
       // placing the rendering code inside a function,
       // because the dataset might not be loaded yet
       const _renderRegionData = () => {
-        // this is where we apply the existing filters to the dataset. TODO.
+        const _filters = d3.keys(this.filters).filter( (f) => f != 'beneficiary' );
+        const regiondata = this.filter(dataset, _filters);
+
         const totals = {},
               // another version of the above, but storing only id -> value
               _totals = {};
         let max = 0;
 
-        for (const row of dataset) {
+        for (const row of regiondata) {
           const id = row.id;
           let item = totals[id];
           if (item === undefined) {

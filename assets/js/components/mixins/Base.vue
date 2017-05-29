@@ -70,6 +70,8 @@ export default {
       return filterfuncs;
     },
 
+    // TODO: change this to take the list of excluded filters instead.
+    // that's how every component uses it anyway.
     filter(data, filters) {
       const filterfuncs = this._mkfilterfuncs(filters);
       if (!filterfuncs) return data;
