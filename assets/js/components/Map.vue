@@ -5,14 +5,14 @@
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
         <rect x="0" y="0" width="50" height="25"
-              class="Norway"
-              :fill="colour('Norway')"
-              :stroke="colour('Norway')"
+              class="norway-grants"
+              :fill="fmcolour('norway-grants')"
+              :stroke="fmcolour('norway-grants')"
         />
         <rect x="0" y="25" width="50" height="25"
-              class="EEA"
-              :fill="colour('EEA')"
-              :stroke="colour('EEA')"
+              class="eea-grants"
+              :fill="fmcolour('eea-grants')"
+              :stroke="fmcolour('eea-grants')"
         />
       </pattern>
     </defs>
@@ -152,6 +152,7 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import {interpolateYlGn} from 'd3-scale-chromatic';
+import {slugify} from 'js/lib/util'
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
@@ -199,7 +200,6 @@ export default Vue.extend({
 
       zoom: 1,
 
-       // there's no data needed for this visualisation
       dataset: {},
       hasData: true,
     };
@@ -492,7 +492,7 @@ export default Vue.extend({
       countries
         .filter( (d) => COUNTRIES[d.id].type == "donor" )
         .attr("fill", (d) => d.id == "NO" ?
-                             "url(#multi-fm)" : this.colour("EEA")
+                             "url(#multi-fm)" : this.fmcolour("eea-grants") // §
         );
     },
 
@@ -571,20 +571,22 @@ export default Vue.extend({
 
       // this could be called by another filter.
       // bail out if no beneficiary selected.
-      if(state === null) return;
+      if (state === null) return;
 
       let dataset = this._region_data[state];
 
       // placing the rendering code inside a function,
       // because the dataset might not be loaded yet
       const _renderRegionData = () => {
-        // this is where we apply the existing filters to the dataset. TODO.
+        const _filters = d3.keys(this.filters).filter( (f) => f != 'beneficiary' );
+        const regiondata = this.filter(dataset, _filters);
+
         const totals = {},
               // another version of the above, but storing only id -> value
               _totals = {};
         let max = 0;
 
-        for (const row of dataset) {
+        for (const row of regiondata) {
           const id = row.id;
           let item = totals[id];
           if (item === undefined) {
@@ -594,7 +596,7 @@ export default Vue.extend({
             };
           }
 
-          item.amount += row.amount;
+          item.amount += +row.amount;
 
           // save another iteration and track the max
           max = Math.max(item.amount, max);
@@ -609,6 +611,8 @@ export default Vue.extend({
         const x = d3.scaleLog()
                     .domain([min, max])
                     .range([.1, 1]);
+
+        if (t === undefined) t = this.getTransition();
 
         const regions = this.chart.select('g.regions > g.' + state)
                             .selectAll('path').data(d3.values(totals), (d) => d.id );
@@ -695,13 +699,19 @@ export default Vue.extend({
     handleFilterFm(val, old) {
       const t = this.getTransition();
 
-      const colourfuncEEA = val != "Norway" ?
-                            () => this.colour("EEA") :
-                            () => this.donor_inactive_colour;
+      /*
+       * part 1: change the donor colours
+       */
+
+      // TODO: find a better way to deal with this. hardcoding is meh. §
+      // (use ids everywhere)?
+      const colourfuncEEA = () => val != "Norway Grants" ?
+                                  this.fmcolour("eea-grants") :
+                                  this.donor_inactive_colour;
 
       const colourfuncNO = val === null ?
-                           (d) => this.colour(d) :
-                           () => this.colour(val);
+                           (d) => this.fmcolour(d) :
+                           () => this.fmcolour(slugify(val)); // awful §
 
       this._countrySelection
         .filter( (d) => COUNTRIES[d.id].type == "donor" && d.id != "NO" )
@@ -714,6 +724,16 @@ export default Vue.extend({
         .transition(t)
         .attr("fill", colourfuncNO)
         .attr("stroke", colourfuncNO);
+
+      /*
+       * part 2: change the region data
+       */
+
+      this.renderRegionData(t);
+    },
+
+    handleFilter(type, val, old) {
+      this.renderRegionData();
     },
   },
 
