@@ -9,11 +9,11 @@
         <div class="sidebar-result-news">
           <div class="body">
             <h4 class="title">{{ item.outcome }}</h4>
-            <small>{{ item.priority_sector_name}}</small>
+            <small>{{ item.priority_sector_name }}</small>
             <ul v-for="ind in item.indicators" class="indicators">
-               <li class="indicator clearfix" :style="{borderColor: color[item.priority_sector_name]}">
-                  <div class="ind-count"> {{ind.achievement}}</div>
-                  <div class="ind-value"> {{ind.indicator}} </div>
+               <li class="indicator clearfix" :style="{borderColor: color[item.priority_sector_id]}">
+                  <div class="ind-count"> {{ ind.achievement }}</div>
+                  <div class="ind-value"> {{ ind.indicator }} </div>
                </li>
                </ul>
           </div>
@@ -94,7 +94,6 @@ export default Vue.extend({
         default: false
       },
     },
-
 
     watch: {
       selected () { this.loadResults(); }

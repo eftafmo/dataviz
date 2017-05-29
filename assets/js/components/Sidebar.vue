@@ -1,8 +1,8 @@
 <template>
   <div id="sidebar-results" class="sidebar sidebar-results">
     <div class="sidebar-header">
-      <strong>{{format(dataset.Total)}}</strong>
-      <small>{{format(dataset.Bilateral)}} for bilateral relations</small>
+      <strong>{{ format(dataset.Total) }}</strong>
+      <small>{{ format(dataset.Bilateral) }} for bilateral relations</small>
       <button type="button" id="close-sidebar-results" class="no-btn"
               title="Close results"
               v-if="isMobileExpanded"
