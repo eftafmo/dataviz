@@ -31,6 +31,8 @@
     <div class="sidebar-tab-content">
       <results :initial="results" id="results"
                           v-bind:selected="(selectedTab == 'results')"/>
+       <programmes :initial="programmes" id="results"
+                          v-bind:selected="(selectedTab == 'programmes')"/>
     <!--   <sidebar-result-tab id="programmes"
                           v-bind:selected="(selectedTab == 'programmes')"/> -->
     </div>
@@ -46,7 +48,7 @@
   import Results from './Results';
   import results_data from 'js/dummy.js';
   import BaseMixin from './mixins/Base';
-
+  import Programmes from './Programmes'
 
 export default Vue.extend({
   mixins: [
@@ -55,12 +57,14 @@ export default Vue.extend({
 
   components: {
     results: Results,
+    programmes: Programmes
   },
 
 
   data() {
       return {
         results: results_data,
+        programmes: results_data,
         message: "Am triumfat",
         onMobile: false,
         isMobileExpanded: false,
