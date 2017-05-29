@@ -13,13 +13,13 @@
                     <img :src="`/assets/imgs/${get_flag_name(item.beneficiary)}.png`"/>
                 </div>
                 <h3 class="title">{{ get_country_name(item.beneficiary) }}</h3>
-                <small>(10 programmes, {{item.project_count}} projects)</small>
+                <small>({{ item.programmes.length }} programmes, {{ item.project_count }} projects)</small>
             </div>
             <ul class="programme-list">
                <li v-for="programme in item.programmes"  class="programme-item">
                   <div  @click="toggleContent($event)" class="programme-item-header"> {{ programme.name }} </div>
                       <div class="programme-sublist-wrapper">
-                        <small class="programme-sublist-header">{{programme.priority_sector}}</small>
+                        <small class="programme-sublist-header">{{ programme.priority_sector }}</small>
                          <ul class="programme-sublist">
                                 <li class="programme-sublist-item">
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
