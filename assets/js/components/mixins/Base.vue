@@ -105,11 +105,12 @@ export default {
        * implementations need to make sure this only gets called on ready
        */
 
-      throw "Not implemented";
+      // no need to throw, some components could be Vue-only
+      //throw "Base.main(): Not implemented";
     },
 
     fetchData() {
-      if (!this.datasource) throw "Missing datasource."
+      if (!this.datasource) throw "Base.fetchData(): Missing datasource."
 
       d3.json(this.datasource, (error, ds) => {
         if (error) throw error;

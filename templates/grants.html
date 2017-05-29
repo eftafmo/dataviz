@@ -10,8 +10,7 @@
   <h2>Funding by financial mechanism</h2>
     <mechanisms
         datasource="{% url "api:grants" %}"
-    >
-    </mechanisms>
+    />
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
@@ -20,10 +19,8 @@
         :width="250"
         :height="300"
         datasource="{% url "api:grants" %}"
-    >
-    </sectors>
+    />
   </div>
-
 </div>
 
 <div class="lg-column">
@@ -39,16 +36,17 @@
     <beneficiaries
         :min-height="200"
         datasource="{% url "api:grants" %}"
-    >
-    </beneficiaries>
+    />
   </div>
 </div>
 {% endblock %}
 
 {% block aside %}
-    <div id="sidebar-results">
-    <sidebar :initial="data"></sidebar>
-    </div>
+  <div id="sidebar-results">
+    <sidebar
+        datasource="{% url "api:grants" %}"
+    />
+  </div>
 {% endblock %}
 
 {% block finally %}

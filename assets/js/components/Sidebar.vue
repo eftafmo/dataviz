@@ -44,7 +44,6 @@
 <script>
   import Vue from 'vue';
   import Results from './Results';
-  import results_data from 'js/dummy.js';
   import BaseMixin from './mixins/Base';
 
 
@@ -57,11 +56,9 @@ export default Vue.extend({
     results: Results,
   },
 
-
   data() {
       return {
-        results: results_data,
-        message: "Am triumfat",
+        results: [{}],
         onMobile: false,
         isMobileExpanded: false,
         selectedTab: undefined
