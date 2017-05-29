@@ -594,7 +594,7 @@ export default Vue.extend({
             };
           }
 
-          item.amount += row.amount;
+          item.amount += +row.amount;
 
           // save another iteration and track the max
           max = Math.max(item.amount, max);
