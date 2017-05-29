@@ -10,7 +10,7 @@ export default {
 
   props: {
     datasource: String, // TODO: required?
-    initial: Object,
+    initial: {Object,Array}
   },
 
   data() {

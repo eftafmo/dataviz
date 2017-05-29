@@ -20,6 +20,12 @@ export function get_flag_name(code) {
   return `flag-${flag}`;
 }
 
+export function get_country_name(code) {
+  const country_name = COUNTRIES[code].name;
+  if (!country_name) throw "Country not found: " + code;
+  return country_name;
+}
+
 const req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
 // we could load all of req.keys() instead, but we want things to fail
 // if there's a mismatch between country names and png files.
@@ -34,5 +40,7 @@ export default {
       this.filters.beneficiary = this.filters.beneficiary == b ?
                                  null : b;
     },
+    get_flag_name(c) { return get_flag_name(c) },
+    get_country_name(c) { return get_country_name(c)},
   },
 };

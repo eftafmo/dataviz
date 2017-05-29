@@ -1,13 +1,8 @@
 <template>
   <div id="sidebar-results" class="sidebar sidebar-results">
     <div class="sidebar-header">
-
-
-      <strong>€1.798.100.000</strong>
-      <small>€0.000.000 for bilateral relations</small>      
-
-
-
+      <strong>{{format(dataset.Total)}}</strong>
+      <small>{{format(dataset.Bilateral)}} for bilateral relations</small>
       <button type="button" id="close-sidebar-results" class="no-btn"
               title="Close results"
               v-if="isMobileExpanded"
@@ -34,10 +29,10 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <sidebar-result-tab id="results" 
+      <results :initial="results" id="results"
                           v-bind:selected="(selectedTab == 'results')"/>
-      <sidebar-result-tab id="programmes"
-                          v-bind:selected="(selectedTab == 'programmes')"/>
+    <!--   <sidebar-result-tab id="programmes"
+                          v-bind:selected="(selectedTab == 'programmes')"/> -->
     </div>
   </div>
 </template>
@@ -48,12 +43,24 @@
 
 <script>
   import Vue from 'vue';
+  import Results from './Results';
+  import results_data from 'js/dummy.js';
+  import BaseMixin from './mixins/Base';
 
-  var SidebarResults = Vue.extend({
 
-    data() {
+export default Vue.extend({
+  mixins: [
+    BaseMixin
+  ],
+
+  components: {
+    results: Results,
+  },
+
+
+  data() {
       return {
-
+        results: results_data,
         message: "Am triumfat",
         onMobile: false,
         isMobileExpanded: false,
@@ -113,5 +120,4 @@
 
   });
 
-  export default SidebarResults;
 </script>
