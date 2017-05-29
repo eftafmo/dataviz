@@ -119,19 +119,20 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import {colour2gray} from 'js/lib/util';
+import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
-import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
+import FMs from 'js/constants/financial-mechanisms.json5';
+
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, CSVReadingMixin,
+    BaseMixin,
     ChartMixin, WithFMsMixin, WithCountriesMixin, WithTooltipMixin,
   ],
 
@@ -236,60 +237,79 @@ export default Vue.extend({
     },
 
     data() {
-      // massage data so it's appropriate for a stacked barchart
+      // filter dataset by everything except beneficiary
+      const _filters = d3.keys(this.filters)
+                         .filter((f) => f != 'beneficiary');
+      const dataset = this.filter(this.dataset, _filters);
 
-      const keys = this.filters.fm ?
-                   [this.filters.fm] :
-                   this.dataset.columns.slice(2); // skips id & name
-      const stack = d3.stack()
-                      .keys(keys);
+      const beneficiaries = {}
+      for (const d of dataset) {
+        const bid = d.beneficiary,
+              fm = d.fm,
+              value = +d.allocation;
 
-      // transpose because we want items grouped by row.
-      // (d3.stack returns items grouped by columns (keys))
-      const data = d3.transpose(stack(this.dataset));
+        if (value === 0) continue;
 
-      // iterate to add some useful properties
-      data.forEach( (row, i) => {
-        // these will be removed
-        const _zeroes = [];
+        let beneficiary = beneficiaries[bid];
+        if (beneficiary === undefined)
+          beneficiary = beneficiaries[bid] = {
+            id: bid,
+            name: COUNTRIES[bid].name,
+            total: 0,
+            allocation: {},
+            sectors: d3.set(),
+          };
 
-        row.forEach( (item, j) => {
-          const value = item[1] - item[0];
-          if (value == 0) {
-            _zeroes.push(j);
+        let allocation = beneficiary.allocation[fm];
+        if (allocation === undefined)
+          allocation = beneficiary.allocation[fm] = 0;
 
-          }
-          item.value = value;
+        beneficiary.total += value;
+        beneficiary.allocation[fm] = allocation + value;
+        beneficiary.sectors.add(d.sector);
+      }
 
-          // the fm, per-item
-          item.fm = keys[j];
+      const beneficiarydata = d3.values(beneficiaries);
 
-          // also clear old data
-          delete item.data;
-        });
+      // we'll use this to preserve order, and as a basis for each bar item
+      const fms = this.filters.fm ?
+                  [FMs[slugify(this.filters.fm)]] : d3.values(FMs);
 
-        if(_zeroes) {
-          _zeroes.reverse();
-          _zeroes.forEach((i) => row.splice(i, 1));
+      // generate series data from the allocation data
+      for (const beneficiary of beneficiarydata) {
+        // create a new allocations entry for this
+        const allocations = [];
+        let oldend = 0;
+
+        for (const fm of fms) {
+          const value = beneficiary.allocation[fm.name];
+          if (value === undefined) continue;
+
+          const newend = oldend + value;
+
+          allocations.push(Object.assign({}, fm, {
+            value: value,
+            // naming is hard
+            d: [oldend, newend],
+          }))
+
+          oldend = newend;
         }
 
-        Object.assign(row, {
-          id: this.dataset[i].id,
-          name: this.dataset[i].name,
-          total: d3.sum(row, (d) => d.value),
-        });
-      });
+        // switch the old entry for the new one
+        delete beneficiary.allocation;
+        beneficiary.allocations = allocations;
+      }
 
       // sort by total
-      data.sort((a, b) => b.total - a.total);
+      beneficiarydata.sort((a, b) => b.total - a.total);
 
-      // return filtered
-      return data.filter((d) => d.total != 0);
+      return beneficiarydata;
     },
   },
 
   methods: {
-    renderFms(context) {
+    renderBeneficiaryData(context) {
       // this could receive both a selection and a transition
       const selection = context.selection ? context.selection() : context,
             t = context;
@@ -300,29 +320,29 @@ export default Vue.extend({
         .attr("height", this.barHeight + this.barPadding * 2);
 
       // the real deal
-      const items = selection.selectAll("rect.fm").data(
-        (d) => d, // re-bind local data (to create a join)
-        (d) => d.fm // the key
+      const fms = selection.selectAll("rect.fm").data(
+        (d) => d.allocations,
+        (d) => d.id
       );
 
-      items.enter().append("rect") // ENTER-only
-        .attr("class", (d) => "fm " + d.fm)
-        .attr("fill", (d) => this.colour(d.fm))
+      fms.enter().append("rect") // ENTER-only
+        .attr("class", (d) => "fm " + d.id )
+        .attr("fill", (d) => d.colour )
         // adding a stroke as well prevents what looks like a sub-pixel gap
         // between fms. but needs to be done for background too, so, TODO
-        //.attr("stroke", (d) => this.colour(d.fm))
+        //.attr("stroke", (d) => d.colour )
         .attr("y", this.barPadding)
         .attr("height", this.barHeight)
 
-      .merge(items) // ENTER + UPDATE
+      .merge(fms) // ENTER + UPDATE
         .transition(t)
-        .attr("x", (d) => this.x(d[0]))
-        .attr("width", (d) => this.x(d[1]) - this.x(d[0]));
+        .attr("x", (d) => this.x(d.d[0]))
+        .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]));
 
-      items.exit() // EXIT
+      fms.exit() // EXIT
         .transition(t)
         // shrink down to 0 if the first item, or expand to the end otherwise
-        .attr("x", (d) => this.x(d[0]))
+        .attr("x", (d) => this.x(d.d[0]))
         .attr("width", 0)
         //.remove();
     },
@@ -336,8 +356,7 @@ export default Vue.extend({
             return "<div class='title-container'>"
               + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
               + "<span class='name'>"+ d.name + "</span></div>"
-              // TODO: 'grants' word should be taken from data
-              + d.map((d_) => d_.fm + " grants" + ":\t" + $this.format(d_.value)).join('\n')
+              + d.allocations.map((d_) => d_.name + ":\t\t" + $this.format(d_.value)).join('\n')
               + " <span class='action'>~Click to filter by beneficiary state</span>"
           })
           .direction('n')
@@ -436,19 +455,19 @@ export default Vue.extend({
 
       // while here, draw a full-width rectangle used for mouse-over effects.
       // this will look like a border around the fms
-      const bg = fms.append("rect").attr("class", "bg"); // continued in renderFms
+      const bg = fms.append("rect").attr("class", "bg"); // continued in renderBeneficiaryData
 
       // we want to run the item rendering both in ENTER and UPDATE
       fms.merge(beneficiaries.select("g.fms"))
         .transition(t_)
-        .call(this.renderFms);
+        .call(this.renderBeneficiaryData);
 
       // aand we also want to run it in EXIT, but with empty data
       // (normally the old data gets sent, so the fms don't get disappeared)
-      beneficiaries.exit().each( (d) => (d.splice(0)) )
+      beneficiaries.exit().each( (d) => (d.allocations.splice(0)) )
                    .select("g.fms")
         .transition(t_)
-        .call(this.renderFms);
+        .call(this.renderBeneficiaryData);
 
 
       /*
@@ -491,11 +510,7 @@ export default Vue.extend({
 
         // the fm bars
         selection.select("g.fms").selectAll("rect.fm")
-          .attr("fill",
-                yes ?
-                  (d) => this.colour(d.fm) :
-                  (d) => _inactivecolour(this.colour(d.fm))
-          );
+          .attr("fill", (d) => yes ? d.colour : _inactivecolour(d.colour))
       };
 
       const activate = (selection) => _activate(selection, true),
@@ -510,7 +525,7 @@ export default Vue.extend({
       ).call(deactivate);
     },
 
-    handleFilterFm() {
+    handleFilter() {
       this.render();
     },
 
