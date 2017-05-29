@@ -7,8 +7,8 @@ import Sectors from './Sectors';
 import Map from './Map';
 import Beneficiaries from './Beneficiaries';
 import GlobalFilters from './GlobalFilters';
-import Results from './SidebarResultTab';
-import Sidebar from './SidebarResults';
+import Results from './Results';
+import Sidebar from './Sidebar';
 
 export {
   Overview,

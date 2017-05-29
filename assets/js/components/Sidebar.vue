@@ -29,7 +29,7 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <sidebar_results_tab :initial="results" id="results"
+      <results :initial="results" id="results"
                           v-bind:selected="(selectedTab == 'results')"/>
     <!--   <sidebar-result-tab id="programmes"
                           v-bind:selected="(selectedTab == 'programmes')"/> -->
@@ -43,7 +43,7 @@
 
 <script>
   import Vue from 'vue';
-  import Results from './SidebarResultTab';
+  import Results from './Results';
   import results_data from 'js/dummy.js';
   import BaseMixin from './mixins/Base';
 
@@ -54,7 +54,7 @@ export default Vue.extend({
   ],
 
   components: {
-    'sidebar_results_tab': Results,
+    results: Results,
   },
 
 
