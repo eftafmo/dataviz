@@ -218,10 +218,12 @@ export default Vue.extend({
             .on("mouseenter", this.tip.show)
             .on("mouseleave", this.tip.hide);
 
+      /* // this is handled in tooltip already
       fentered
-        .append("title").text( (d) => this.format(d.value) + '  ' + d.sectors.size() + '   ' + d.beneficiaries.size() );
+        .append("title").text( (d) => this.format(d.value) );
       fentered
         .append("desc").text( (d) => d.name );
+      */
 
       fms.merge(fentered)
         .transition(t)
