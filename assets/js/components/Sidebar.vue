@@ -35,8 +35,8 @@
     <div class="sidebar-tab-content">
       <results :datasource="datasource" id="results"
                           v-bind:selected="(selectedTab == 'results')"/>
-    <!--   <sidebar-result-tab id="programmes"
-                          v-bind:selected="(selectedTab == 'programmes')"/> -->
+       <programmes :initial="programmes" id="results"
+                          v-bind:selected="(selectedTab == 'programmes')"/>
     </div>
   </div>
 </template>
@@ -70,7 +70,7 @@ sidebar-header {
   import Vue from 'vue';
   import Results from './Results';
   import BaseMixin from './mixins/Base';
-
+  import Programmes from './Programmes'
 
 export default Vue.extend({
   mixins: [
@@ -79,6 +79,7 @@ export default Vue.extend({
 
   components: {
     results: Results,
+    programmes: Programmes
   },
 
   data() {

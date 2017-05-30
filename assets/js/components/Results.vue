@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-tab-pane"
+  <div class="sidebar-tab-pane results"
        v-bind:class="{
         'is-selected': selected,
         'is-loading': loading
