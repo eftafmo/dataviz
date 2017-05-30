@@ -2,14 +2,14 @@ from collections import OrderedDict, defaultdict, namedtuple
 from django.http import HttpResponseNotAllowed
 from django.db.models import CharField
 from django.db.models.expressions import F, Value
-from django.db.models.aggregates import Sum
+from django.db.models.aggregates import Count, Sum
 from django.db.models.functions import Length, Concat
 from django.db.models.query import Prefetch
 from django.utils.text import slugify
 from dv.lib.http import CsvResponse, JsonResponse
 from dv.models import (
     Allocation,
-    State, ProgrammeArea, Project,
+    State, ProgrammeArea, Programme, Project,
     ProgrammeIndicator,
 )
 
@@ -33,6 +33,12 @@ def grants(request):
             queryset=ProgrammeIndicator.objects.all().select_related(
                 'programme', 'indicator'
             ).exclude(achievement=0)
+        ),
+        Prefetch(
+            'programme_area__programme_set',
+            queryset=Programme.objects.all().annotate(
+                projectcount=Count('project')
+            )
         ),
     )
     out = []
@@ -62,6 +68,14 @@ def grants(request):
                 for o in a.programme_area.outcomes.all()
                 if len([pi for pi in o.programmeindicator_set.all()
                         if pi.programme.state_id == a.state_id])
+            },
+
+            'programmes': {
+                p.name: p.projectcount
+
+                # Note: this approach is starting to make queries take a long time
+                for p in a.programme_area.programme_set.all()
+                if p.state_id == a.state_id
             },
         })
 

@@ -82,7 +82,6 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
-import {SectorColours} from 'js/constants.js';
 //import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 import WithSectorsMixin from './mixins/WithSectors';
 
@@ -105,7 +104,6 @@ export default Vue.extend({
   data () {
     return {
       loading: false,
-      color: SectorColours,
     }
   },
 

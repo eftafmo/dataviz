@@ -4,44 +4,33 @@
         'is-selected': selected,
         'is-loading': loading
        }">
-    <ul class="sidebar-tab-result-list">
-      <li v-for="item in data">
+    <ul class="sidebar-tab-result-list" v-if="hasData">
+      <li v-for="beneficiary in data.beneficiaries">
         <div class="sidebar-result-news">
           <div class="body">
             <div class="title-wrapper">
                 <div class="flag">
-                    <img :src="`/assets/imgs/${get_flag_name(item.beneficiary)}.png`"/>
+                    <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
                 </div>
-                <h3 class="title">{{ get_country_name(item.beneficiary) }}</h3>
-                <small>({{ item.programmes.length }} programmes, {{ item.project_count }} projects)</small>
+                <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
+                <small>({{ beneficiary.programmes.length }} programmes, {{ beneficiary.projectcount }} projects)</small>
             </div>
             <ul class="programme-list">
-               <li v-for="programme in item.programmes"  class="programme-item">
-                  <div  @click="toggleContent($event)" class="programme-item-header"> {{ programme.name }} </div>
-                      <div class="programme-sublist-wrapper">
-                        <small class="programme-sublist-header">{{ programme.priority_sector }}</small>
-                         <ul class="programme-sublist">
-                                <li class="programme-sublist-item">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                </li>
-                                  <li class="programme-sublist-item">
-                                        Lorem ipsum dolor sit amet, consecdsfdolore magna aliqua. Ut enim ad minim veniam,
-                                </li>
-                                  <li class="programme-sublist-item">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                        tempor incididunt ut lasfasfasbore et dolore magna aliqua. Ut enim ad minim veniam,
-                                </li>
-                                  <li class="programme-sublist-item">
-                                        Lorem ipsum dolsfafet dolore magna aliqua. Ut enim ad minim veniam,
-                                </li>
-                                  <li class="programme-sublist-item">
-                                       fasfaliqua. Ut enim ad minim veniam,
-                                </li>
-                         </ul>
-                      </div>
+               <li v-for="programme in beneficiary.programmes"  class="programme-item">
+                 <div  @click="toggleContent($event)" class="programme-item-header"> {{ programme.name }} </div>
+                 <div class="programme-sublist-wrapper">
+                   <small class="programme-sublist-header">{{ programme.sector }}</small>
+                   <ul class="programme-sublist">
+                     <li class="programme-sublist-item"
+                         v-for="n in programme.projectcount"
+                         v-if="n <= 10"
+                     >
+                       Lorem ipsum {{ n }}
+                     </li>
+                   </ul>
+                 </div>
                </li>
-               </ul>
+            </ul>
           </div>
         </div>
       </li>
@@ -161,8 +150,8 @@
 
 import Vue from 'vue';
 import * as d3 from 'd3';
+
 import BaseMixin from './mixins/Base';
-import {SectorColours} from 'js/constants.js';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 
 export default Vue.extend({
@@ -178,14 +167,86 @@ export default Vue.extend({
   },
 
   watch: {
-    selected () { this.loadResults(); }
+    selected () { this.loadResults(); },
   },
 
-  data () {
+  data() {
     return {
       loading: false,
-      color: SectorColours,
-    }
+    };
+  },
+
+  computed: {
+    projectcount() {
+      // this could be useful to the parent?
+
+      // NOTE: WARNING: TODO: this sum is in fact wrong, because a programme
+      // can belong to multiple PAs. the sum per-beneficiary needs to be
+      // provided by the backend.
+
+      return data.projectcount;
+    },
+
+    data() {
+      const dataset = this.filter(this.dataset);
+      const beneficiaries = {};
+      let totalcount = 0;
+
+      for (const d of dataset) {
+        const programmes = d.programmes;
+
+        if (!programmes) continue;
+
+        let beneficiary = beneficiaries[d.beneficiary];
+        if (beneficiary === undefined)
+          beneficiary = beneficiaries[d.beneficiary] = {
+            _projectcount: 0,
+          };
+
+        for (const p in programmes) {
+          const projectcount = +programmes[p];
+
+          if (projectcount == 0) continue;
+
+          let programme = beneficiary[p];
+          if (programme === undefined)
+            programme = beneficiary[p] = {
+              sector: d.sector,
+              projectcount: 0,
+            };
+
+          programme.projectcount += projectcount;
+          beneficiary._projectcount += projectcount;
+          totalcount += projectcount;
+        }
+      }
+
+      const out = {
+        beneficiaries: [],
+        projectcount: totalcount,
+      };
+
+      for (const b in beneficiaries) {
+        const programmes = beneficiaries[b],
+              beneficiary = {
+                id: b,
+                programmes: [],
+              };
+
+        out.beneficiaries.push(beneficiary);
+
+        for (const p in programmes) {
+          const value = programmes[p];
+          if (p === '_projectcount') {
+            beneficiary.projectcount = value;
+            continue;
+          }
+          beneficiary.programmes.push(Object.assign({name: p}, value));
+        }
+      }
+
+      return out;
+    },
   },
 
   methods: {
@@ -215,9 +276,7 @@ export default Vue.extend({
         target.classList.add('active')
       }
     },
-  }
-
+  },
 });
-
 
 </script>
