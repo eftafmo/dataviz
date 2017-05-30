@@ -4,11 +4,13 @@ from django.db.models import CharField
 from django.db.models.expressions import F, Value
 from django.db.models.aggregates import Sum
 from django.db.models.functions import Length, Concat
+from django.db.models.query import Prefetch
 from django.utils.text import slugify
 from dv.lib.http import CsvResponse, JsonResponse
 from dv.models import (
     Allocation,
     State, ProgrammeArea, Project,
+    ProgrammeIndicator,
 )
 
 
@@ -25,10 +27,16 @@ def grants(request):
         'programme_area',
         'programme_area__priority_sector',
     ).prefetch_related(
-        # TODO figure out how to use Prefetch() here to filter outcome.name from the begining
         'programme_area__outcomes__programmes',
+        Prefetch(
+            'programme_area__outcomes__programmeindicator_set',
+            queryset=ProgrammeIndicator.objects.all().select_related(
+                'programme', 'indicator'
+            ).exclude(achievement=0)
+        ),
     )
     out = []
+    outcomes = []
     for a in allocations:
         out.append({
             # TODO: switch these to ids(?)
@@ -38,13 +46,33 @@ def grants(request):
             'beneficiary': a.state.code,
             'allocation': a.gross_allocation,
 
-            # Make sure you select the exact querySet from related manager as we did on prefetch_related
-            # That is all(). This is why we filter the outcome.name in python.
-            # Otherwise the prefetch is useless and this will take a *lot* of time
             'bilateral_allocation': sum(p.allocation
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'
                     for p in o.programmes.all() if p.state_id == a.state_id),
+
+            'results': {
+                o.name: {
+                    pi.indicator.name: pi.achievement
+
+                    # using .all() will in fact hit the queryset
+                    # defined in Prefetch() above
+                    for pi in o.programmeindicator_set.all()
+                    if pi.programme.state_id == a.state_id
+                }
+
+                for o in a.programme_area.outcomes.all()
+                if len([pi for pi in o.programmeindicator_set.all()
+                        if pi.programme.state_id == a.state_id])
+            },
         })
+
+    """
+    # use for testing with django-debug-toolbar:
+    from django.http import HttpResponse
+    from pprint import pformat
+    return HttpResponse('<html><body><pre>%s</pre></body></html>' % pformat(out))
+    """
+
     return JsonResponse(out)
 
 def beneficiary_allocation_detail(request, beneficiary):

@@ -33,7 +33,7 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <results :initial="results" id="results"
+      <results :datasource="datasource" id="results"
                           v-bind:selected="(selectedTab == 'results')"/>
     <!--   <sidebar-result-tab id="programmes"
                           v-bind:selected="(selectedTab == 'programmes')"/> -->
@@ -83,13 +83,13 @@ export default Vue.extend({
 
   data() {
     return {
-      results: [{}],
       // helper for transitioning value changes
       transitioned: false,
 
       onMobile: false,
       isMobileExpanded: false,
-      selectedTab: undefined
+      // select first tab by default
+      selectedTab: 'results',
     }
   },
 
