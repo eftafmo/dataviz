@@ -96,7 +96,7 @@ import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base.vue';
 import ChartMixin from './mixins/Chart.vue';
-import WithFMsMixin from './mixins/WithFMs.vue';
+import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 import FMs from 'js/constants/financial-mechanisms.json5';
