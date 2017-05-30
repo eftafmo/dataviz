@@ -88,37 +88,37 @@ export default Vue.extend({
     BaseMixin, WithCountriesMixin,
   ],
 
-    props: {
-      selected: {
-        type: Boolean,
-        default: false
-      },
+  props: {
+    selected: {
+      type: Boolean,
+      default: false
     },
+  },
 
-    watch: {
+  watch: {
       selected () { this.loadResults(); }
-    },
+  },
 
-    data () {
-      return {
-        loading: false,
-        color: SectorColours,
-      }
-    },
-
-    methods: {
-      loadResults() {
-        var self = this;
-        self.loading = true;
-
-        window.setTimeout(function() {
-          // simulate ajax call
-          self.loading = false;
-        }, 1000);
-      },
+  data () {
+    return {
+      loading: false,
+      color: SectorColours,
     }
+  },
 
-  });
+  methods: {
+    loadResults() {
+      var self = this;
+      self.loading = true;
+
+      window.setTimeout(function() {
+        // simulate ajax call
+        self.loading = false;
+      }, 1000);
+    },
+  }
+
+});
 
 
 </script>
