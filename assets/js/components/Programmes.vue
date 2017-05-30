@@ -251,6 +251,7 @@ export default Vue.extend({
 
   methods: {
     loadResults() {
+      /*
       var self = this;
       self.loading = true;
 
@@ -258,6 +259,7 @@ export default Vue.extend({
         // simulate ajax call
         self.loading = false;
       }, 1000);
+      */
     },
     toggleContent(e) {
       //remove comment if you want to toggle between elements
@@ -275,6 +277,11 @@ export default Vue.extend({
       else {
         target.classList.add('active')
       }
+    },
+
+    handleFilter() {
+      // vue-only component, doesn't need any special handling
+      return;
     },
   },
 });

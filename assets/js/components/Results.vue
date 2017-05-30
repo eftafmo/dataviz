@@ -155,6 +155,11 @@ export default Vue.extend({
       }, 1000);
       */
     },
+
+    handleFilter() {
+      // vue-only component, doesn't need any special handling
+      return;
+    },
   },
 });
 
