@@ -35,6 +35,10 @@ for (const code in COUNTRIES) {
 }
 
 export default {
+  beforeCreate() {
+    this.COUNTRIES = COUNTRIES;
+  },
+
   methods: {
     toggleBeneficiary(b, etarget) {
       this.filters.beneficiary = this.filters.beneficiary == b ?

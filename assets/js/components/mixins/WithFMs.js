@@ -2,24 +2,28 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 
 import FMLegendComponent from '../includes/FMLegend';
-
-import FMs from 'js/constants/financial-mechanisms.json5';
+import FMS from 'js/constants/financial-mechanisms.json5';
 
 
 export default {
+  beforeCreate() {
+    this.FMS = FMS;
+  },
+
   components: {
     'fm-legend': FMLegendComponent,
   },
 
   data() {
     return {
-      fms: FMs,
+      // TODO: get rid of this, and use this.FMS
+      fms: FMS,
     };
   },
 
   methods: {
     fmcolour(fmid) {
-      return FMs[fmid].colour;
+      return FMS[fmid].colour;
     },
 
     getFilterClassFm(fm) {
