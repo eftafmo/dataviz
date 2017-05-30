@@ -90,8 +90,7 @@ export default Vue.extend({
       onMobile: false,
       isMobileExpanded: false,
       // select first tab by default
-      //selectedTab: 'results',
-      selectedTab: 'programmes',
+      selectedTab: 'results',
     }
   },
 
