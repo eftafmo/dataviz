@@ -158,11 +158,9 @@ export default Vue.extend({
 
         el.classList.remove('is-expanded-on-mobile');
       }
-    }
-  },
+    },
 
-  watch: {
-    data() {
+    handleFilter() {
       this.transitioned = !this.transitioned;
     },
   },
