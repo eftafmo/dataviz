@@ -1,9 +1,19 @@
 <template>
 <div class="overview-viz">
-  <svg :width="width" :height="height">
-    <!-- with a bit of hardcoded rotation, because -->
-    <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
-  </svg>
+  <div v-if="hasData" class="legend">
+    <fm-legend :fms="fms" class="clearfix">
+      <template slot="fm-content" scope="x">
+        <span :style="{backgroundColor: x.fm.colour}"></span>
+        {{ x.fm.name }}
+      </template>
+    </fm-legend>
+  </div>
+  <chart-container :width="width" :height="height">
+    <svg :viewBox="`0 0 ${width} ${height}`">
+      <!-- with a bit of hardcoded rotation, because -->
+      <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
+    </svg>
+  </chart-container>
 </div>
 </template>
 
@@ -16,6 +26,45 @@
       /*fill-opacity: .8;*/
     }
   }
+
+  .legend {
+    cursor: pointer;
+    .fm span {
+      width: 10px; height: 10px;
+      display: inline-block;
+    }
+    li {
+      list-style-type: none;
+      display: inline-block;
+      margin-right: 2rem;
+    }
+    .fm {
+      transition: all .5s ease;
+      display: block;
+    }
+    .fm.disabled {
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
+
+    .fm.selected {
+      text-shadow: 0 0 1px #999;
+    }
+  }
+
+  .chart-container {
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 3rem;
+    @media (min-width: 800px)and (max-width:1000px){
+      width: 84%;
+
+    }
+    @media (min-width:1000px) {
+      width: 60%;
+    }
+  }
+
 }
 </style>
 
