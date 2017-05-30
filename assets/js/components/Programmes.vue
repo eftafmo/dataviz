@@ -170,54 +170,54 @@ export default Vue.extend({
     BaseMixin, WithCountriesMixin,
   ],
 
-    props: {
-      selected: {
-        type: Boolean,
-        default: false
-      },
+  props: {
+    selected: {
+      type: Boolean,
+      default: false
     },
+  },
 
-    watch: {
-      selected () { this.loadResults(); }
+  watch: {
+    selected () { this.loadResults(); }
+  },
+
+  data () {
+    return {
+      loading: false,
+      color: SectorColours,
+    }
+  },
+
+  methods: {
+    loadResults() {
+      var self = this;
+      self.loading = true;
+
+      window.setTimeout(function() {
+        // simulate ajax call
+        self.loading = false;
+      }, 1000);
     },
+    toggleContent(e) {
+      //remove comment if you want to toggle between elements
 
-    data () {
-      return {
-        loading: false,
-        color: SectorColours,
+      // let all_programe_items = this.$el.querySelectorAll('.programme-item');
+      // for (let item of all_programe_items){
+      //     if(item.classList.contains('active'))
+      //         item.classList.remove('active')
+      // }
+
+      const target = e.target.parentNode
+      if(target.classList.contains('active')){
+        target.classList.remove('active')
+      }
+      else {
+        target.classList.add('active')
       }
     },
+  }
 
-    methods: {
-      loadResults() {
-        var self = this;
-        self.loading = true;
-
-        window.setTimeout(function() {
-          // simulate ajax call
-          self.loading = false;
-        }, 1000);
-      },
-      toggleContent(e) {
-        //remove comment if you want to toggle between elements
-
-        // let all_programe_items = this.$el.querySelectorAll('.programme-item');
-        // for (let item of all_programe_items){
-        //     if(item.classList.contains('active'))
-        //         item.classList.remove('active')
-        // }
-
-        const target = e.target.parentNode
-        if(target.classList.contains('active')){
-            target.classList.remove('active')
-        }
-        else {
-            target.classList.add('active')
-        }
-      },
-    }
-
-  });
+});
 
 
 </script>
