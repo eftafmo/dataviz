@@ -36,7 +36,6 @@ def grants(request):
         ),
     )
     out = []
-    outcomes = []
     for a in allocations:
         out.append({
             # TODO: switch these to ids(?)
