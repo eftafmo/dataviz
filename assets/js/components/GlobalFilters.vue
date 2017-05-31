@@ -14,7 +14,7 @@
                      v-if="item != null"
                      @click="removeFilter"
                      v-bind:key="item">
-                  {{item}}
+                 {{type}} : {{item}}
                 </li>
               </transition-group>
             </ul>
