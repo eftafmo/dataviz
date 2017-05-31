@@ -89,6 +89,10 @@
 .d3-tip.fms {
     line-height: 1.2;
     white-space: normal;
+    &:after {
+    top: 19px;
+    transform: rotate(180deg);
+    }
   }
 
 </style>
@@ -178,7 +182,7 @@ export default Vue.extend({
                     <span class="action">~Click to filter by financial mechanism</span>
             `;
           })
-          .direction('n')
+          .direction('s')
           .offset([0, 0])
 
        this.tip = tip;
