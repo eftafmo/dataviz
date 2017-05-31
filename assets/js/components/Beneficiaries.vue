@@ -355,11 +355,21 @@ export default Vue.extend({
       let tip = d3.tip()
           .attr('class', 'd3-tip benef')
           .html(function(d){
-            console.log(d.allocations)
+          let allocation_value = d.allocations.map((d_) => d_.value)
+          let allocation_content = d.allocations.map((d_) => d_.name + ": " + $this.format(d_.value))
+
+          //remove from allocation from content if value 0
+          for (let i in allocation_value) {
+            if (allocation_value[i] == 0){
+               allocation_content.splice(i,1)
+            }
+          }
+
+          allocation_content = allocation_content.join('\n')
             return "<div class='title-container'>"
               + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
               + "<span class='name'>"+ d.name + "</span></div>"
-              + d.allocations.map((d_) => d_.name + ": " + $this.format(d_.value)).join('\n')
+              +  allocation_content
               + " <span class='action'>~Click to filter by beneficiary state</span>"
           })
           .direction('n')
