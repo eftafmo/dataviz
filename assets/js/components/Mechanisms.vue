@@ -86,6 +86,11 @@
   }
 }
 
+.d3-tip.fms {
+    line-height: 1.2;
+    white-space: normal;
+  }
+
 </style>
 
 
@@ -167,9 +172,9 @@ export default Vue.extend({
             return `<div class="title-container">
                       <span class="name">${d.name}</span>
                     </div>
-                    - ${$this.format(d.value)}
-                    - ${d.beneficiaries.size()} beneficiary states
-                    - ${d.sectors.size()} priority sectors
+                    <div>- ${$this.format(d.value)}  </div>
+                    <div>- ${d.beneficiaries.size()} beneficiary states </div>
+                    <div>- ${d.sectors.size()} priority sectors </div>
                     <span class="action">~Click to filter by financial mechanism</span>
             `;
           })
