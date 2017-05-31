@@ -327,7 +327,8 @@ export default Vue.extend({
             return `<div class="title-container">
                       <span class="name">${this.name} (${d.id})</span>
                     </div>
-                    ${$this.format(d.amount || 0)}`;
+                    ${$this.format(d.amount || 0)}
+                    <small>(Temporary)<small>`;
           })
           .direction('n')
           .offset([0, 0])
