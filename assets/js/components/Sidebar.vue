@@ -54,12 +54,12 @@ sidebar-header {
 
 .allocation.fade-enter-active {
   position: absolute;
-  top: 10px;
+  top: 11px;
   left: 0;
 }
 
 .allocation.fade-enter-active, .allocation.fade-leave-active {
-  transition: opacity .4s;
+  transition: opacity .5s;
 }
 .allocation.fade-enter, .allocation.fade-leave-to {
   opacity: 0
