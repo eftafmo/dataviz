@@ -40,6 +40,7 @@
 }
 
 .global-filters {
+  overflow: hidden;
   padding: 0;
   opacity: 0;
   visibility: hidden;
