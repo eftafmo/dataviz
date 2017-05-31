@@ -6,7 +6,7 @@
        }">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
-        <div class="sidebar-result-news">
+        <div class="sidebar-result-content">
           <div class="body">
             <div class="title-wrapper">
                 <div class="flag">
@@ -51,12 +51,17 @@
 .programmes{
   li {
     list-style-type: none;
-    color: initial;
+    color: inherit;
+  }
+
+  small {
+    color: #898989;
   }
 
   .programme-list {
     margin-left: .5rem;
     padding-left: 0;
+    color: #444;
   }
 
   .programme-sublist-wrapper {
@@ -101,7 +106,7 @@
     color: #444;
   }
 
-  .programme-item:before {
+  .programme-item-header:before {
     display: inline-block;
     content: "►";
     margin-right: .5rem;
@@ -118,7 +123,7 @@
     cursor: pointer;
   }
 
-  .programme-item.active{
+  .active .programme-item-header{
     color: #005494;
     &:before {
         transform: rotate(90deg);
