@@ -49,17 +49,17 @@ sidebar-header {
 
 .allocation {
   padding: 1rem;
+  width: 100%;
 }
 
 .allocation.fade-enter-active {
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 0;
-  width: 100%;
 }
 
 .allocation.fade-enter-active, .allocation.fade-leave-active {
-  transition: opacity 1s;
+  transition: opacity .4s;
 }
 .allocation.fade-enter, .allocation.fade-leave-to {
   opacity: 0
