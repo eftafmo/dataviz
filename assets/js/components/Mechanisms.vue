@@ -4,9 +4,9 @@
     <g class="chart"></g>
   </svg>
   <div v-if="hasData" class="legend">
-    <fm-legend :fms="fms" class="clearfix">
+    <fm-legend :fms="data" class="clearfix">
       <template slot="fm-content" scope="x">
-        <span class="value" :style="{color: colour(x.fm)}">{{ format(value(x.fm)) }}</span>
+        <span class="value" :style="{color: x.fm.colour}">{{ format(x.fm.value) }}</span>
         <span class="name">{{ x.fm.name }}</span>
       </template>
     </fm-legend>
@@ -30,15 +30,21 @@
       margin-left: auto;
       margin-right: auto;
     }
-
   }
 
   text-align: center;
   .fms {
     text-align: center;
+    padding-left: 0;
   }
 
   .fm { cursor: pointer; }
+
+  .chart {
+    rect.fm {
+      shape-rendering: crispEdges;
+    }
+  }
 
   .legend .fm {
     transition: all .5s ease;
@@ -81,23 +87,37 @@
   }
 }
 
+.d3-tip.fms {
+    line-height: 1.2;
+    white-space: normal;
+    &:after {
+    top: 19px;
+    transform: rotate(180deg);
+    }
+  }
+
 </style>
 
 
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import {colour2gray} from 'js/lib/util';
+import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base.vue';
 import ChartMixin from './mixins/Chart.vue';
-import WithFMsMixin from './mixins/WithFMs.vue';
+import WithFMsMixin from './mixins/WithFMs';
+import WithTooltipMixin from './mixins/WithTooltip';
 
 import FMs from 'js/constants/financial-mechanisms.json5';
 
 
 export default Vue.extend({
-  mixins: [BaseMixin, ChartMixin, WithFMsMixin],
+  mixins: [
+    BaseMixin, ChartMixin,
+    WithFMsMixin,
+    WithTooltipMixin,
+  ],
 
   props: {
     disabled_colour: {
@@ -112,73 +132,131 @@ export default Vue.extend({
     };
   },
 
+  computed: {
+    data() {
+      // filter dataset by everything except fm
+      const _filters = d3.keys(this.filters).filter( (f) => f != 'fm' );
+      const dataset = this.filter(this.dataset, _filters);
+
+      // base the data on the FM list from constants,
+      // so even non-existing FMs get a 0 entry
+      const fmdata = {}
+      for (const fm in FMs) {
+        fmdata[fm] = {
+          'value': 0,
+          'beneficiaries': d3.set(),
+          'sectors': d3.set(),
+        };
+        Object.assign(fmdata[fm], FMs[fm]);
+      }
+
+      for (const d of dataset) {
+        const id = slugify(d.fm),
+              fm = fmdata[id],
+              value = +d.allocation;
+
+        // backend might send us empty data...
+        if(value === 0) continue;
+
+        fm.value += value;
+        fm.sectors.add(d.sector);
+        fm.beneficiaries.add(d.beneficiary);
+      }
+
+      return d3.values(fmdata);
+    },
+  },
+
   methods: {
-    value(fm) {
-      const fmid = this.getFmId(fm);
-      return this.data[fmid] || 0;
+    createTooltip() {
+      const $this = this;
+
+      let tip = d3.tip()
+          .attr('class', 'd3-tip fms')
+          .html(function(d) {
+            return `<div class="title-container">
+                      <span class="name">${d.name}</span>
+                    </div>
+                    <div>- ${$this.format(d.value)}  </div>
+                    <div>- ${d.beneficiaries.size()} beneficiary states </div>
+                    <div>- ${d.sectors.size()} priority sectors </div>
+                    <span class="action">~Click to filter by financial mechanism</span>
+            `;
+          })
+          .direction('s')
+          .offset([0, 0])
+
+       this.tip = tip;
+       this.chart.call(this.tip)
     },
 
     renderChart() {
       const $this = this,
             chart = this.chart;
 
+      // special trick to animate this on first render too
+      this.rendered = true;
+      const t = this.getTransition();
+
       // we always use width 100, because viewBox and preserveAspectRatio=none
       const width = 100;
 
       const x = d3.scaleLinear()
           .rangeRound([0, width])
-          .domain([0, d3.sum(d3.values(this.data))]);
+          .domain([0, d3.sum(this.data.map( (d) => d.value ))]);
 
       const fms = chart
-	    .selectAll(".fm")
-            .data(d3.entries(this.data))
-            .enter().append("rect")
-            .attr("class", (d) => "fm " + d.key);
+	    .selectAll("rect.fm")
+            .data(this.data, (d) => d.id )
 
-      fms
-        .attr("x", 0)
-        .attr("y", 0)
-      // skip this here to transition it below
-      //.attr("width", (d) => x(d.value))
-        .attr("height", "100%")
-        .attr("transform", (d, i) => {
-          // draw the second bar from right to left
-          if (i == 1) return (
-            `scale(-1,1) translate(-${width},0)`
-          );
-        })
-        .attr("fill", (d) => this.colour(d))
-        .transition()
-        .duration(500)
-        .attr("width", (d) => x(this.value(d)));
+      const fentered = fms.enter().append("rect")
+            .attr("class", (d) => "fm " + d.id)
+            .attr("fill", (d) => d.colour )
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 0)
+            .attr("height", "100%")
+            .attr("transform", (d, i) => {
+              // draw the second bar from right to left
+              if (i == 1) return (
+                `scale(-1,1) translate(-${width},0)`
+              );
+            })
+            .on("click", function (d) {
+              $this.toggleFm(d, this);
+            })
+            .on("mouseenter", this.tip.show)
+            .on("mouseleave", this.tip.hide);
 
-      fms
-        .append("title").text((d) => this.format(this.value(d)));
-      fms
-        .append("desc").text((d) => this.fms[d.key].name);
+      /* // this is handled in tooltip already
+      fentered
+        .append("title").text( (d) => this.format(d.value) );
+      fentered
+        .append("desc").text( (d) => d.name );
+      */
 
-      fms
-        .on("click", function (d) {
-          $this.toggleFm(d, this);
-        });
-
-      // remember the current selection, we'll use it for transitions
-      this._chart_fms = fms;
+      fms.merge(fentered)
+        .transition(t)
+        .attr("width", (d) => x(d.value) );
     },
 
     handleFilterFm(val, old) {
       // transition the chart to disabled / selected.
       // (the legend is handled by vue.)
+      const t = this.getTransition();
 
-      // TODO: handle the case when !this.isReady()
-      this._chart_fms
-        .transition()
-        .duration(500)
+      this.chart.selectAll("rect.fm")
+        .transition(t)
         .attr("fill", (d) => (
-          this.isDisabled(d) ?
-            colour2gray(this.colour(d), this.inactive_opacity) :
-            this.colour(d)
+          this.isDisabledFm(d) ?
+            colour2gray(d.colour, this.inactive_opacity) :
+            d.colour
         ));
+    },
+
+    // for all other filters, re-render
+    handleFilter() {
+      this.render();
     },
   },
 });

@@ -10,7 +10,7 @@ export default {
 
   props: {
     datasource: String, // TODO: required?
-    initial: Object,
+    initial: {Object,Array}
   },
 
   data() {
@@ -23,6 +23,10 @@ export default {
   },
 
   computed: {
+    pre_filtered() {
+
+    },
+
     data() {
       // convenience property, should be overriden by each component
       return this.dataset;
@@ -48,6 +52,40 @@ export default {
   },
 
   methods: {
+    _mkfilterfuncs(filters) {
+      // returns an array of filtering functions, given a set of filter names
+      // and considering the filters currently set
+      if (!filters) filters = d3.keys(this.filters);
+
+      const filterfuncs = [];
+      for (const f of filters) {
+        const val = this.filters[f];
+        if (!val) continue;
+
+        filterfuncs.push(
+          (item) => item[f] == val
+        );
+      }
+
+      return filterfuncs;
+    },
+
+    // TODO: change this to take the list of excluded filters instead.
+    // that's how every component uses it anyway.
+    filter(data, filters) {
+      const filterfuncs = this._mkfilterfuncs(filters);
+      if (!filterfuncs) return data;
+
+      const filterfunc = (item) => {
+        for (const func of filterfuncs) {
+          if (!func(item)) return false;
+        }
+        return true;
+      }
+
+      return data.filter(filterfunc);
+    },
+
     _main() {
       this.beforeMain();
       this.main();
@@ -67,11 +105,12 @@ export default {
        * implementations need to make sure this only gets called on ready
        */
 
-      throw "Not implemented";
+      // no need to throw, some components could be Vue-only
+      //throw "Base.main(): Not implemented";
     },
 
     fetchData() {
-      if (!this.datasource) throw "Missing datasource."
+      if (!this.datasource) throw "Base.fetchData(): Missing datasource."
 
       d3.json(this.datasource, (error, ds) => {
         if (error) throw error;

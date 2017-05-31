@@ -1,9 +1,19 @@
 <template>
 <div class="overview-viz">
-  <svg :width="width" :height="height">
-    <!-- with a bit of hardcoded rotation, because -->
-    <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
-  </svg>
+  <div v-if="hasData" class="legend">
+    <fm-legend :fms="FMS" class="clearfix">
+      <template slot="fm-content" scope="x">
+        <span :style="{backgroundColor: x.fm.colour}"></span>
+        {{ x.fm.name }}
+      </template>
+    </fm-legend>
+  </div>
+  <chart-container :width="width" :height="height">
+    <svg :viewBox="`0 0 ${width} ${height}`">
+      <!-- with a bit of hardcoded rotation, because -->
+      <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
+    </svg>
+  </chart-container>
 </div>
 </template>
 
@@ -16,6 +26,45 @@
       /*fill-opacity: .8;*/
     }
   }
+
+  .legend {
+    cursor: pointer;
+    .fm span {
+      width: 10px; height: 10px;
+      display: inline-block;
+    }
+    li {
+      list-style-type: none;
+      display: inline-block;
+      margin-right: 2rem;
+    }
+    .fm {
+      transition: all .5s ease;
+      display: block;
+    }
+    .fm.disabled {
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
+
+    .fm.selected {
+      text-shadow: 0 0 1px #999;
+    }
+  }
+
+  .chart-container {
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 3rem;
+    @media (min-width: 800px)and (max-width:1000px){
+      width: 84%;
+
+    }
+    @media (min-width:1000px) {
+      width: 60%;
+    }
+  }
+
 }
 </style>
 
@@ -23,46 +72,66 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
+import {slugify} from 'js/lib/util';
 
 import stretchedChord from 'js/lib/d3.stretched.chord';
 import customChordLayout from 'js/lib/d3.layout.chord.sort';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
-import CSVReadingMixin from './mixins/CSVReading';
 import WithFMsMixin from './mixins/WithFMs';
-//import WithCountriesMixin from './mixins/WithCountries';
+import WithCountriesMixin from './mixins/WithCountries';
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, CSVReadingMixin,
-    ChartMixin, WithFMsMixin, //WithCountriesMixin,
+    BaseMixin, ChartMixin,
+    WithFMsMixin, WithCountriesMixin,
   ],
 
   props: {
     width: Number,
     height: Number,
-    pullOut: {
-      type: Number,
-      default: 30,
-    },
-    emptyPerc: {
-      type: Number,
-      default: 0.7, // "percenteage" of circle that becomes empty
-    },
   },
 
   data() {
     return {
+      pullOut: 30,
+      beneficiary_colour: "#ccc",
+      emptyPerc: 0.7, // "percentage" of circle that becomes empty
     };
   },
 
   computed: {
     data() {
+      const _dataset = {};
+
+      const fmnames = d3.values(this.FMS).map( (fm) => fm.name ),
+            _fmsobj = {};
+      fmnames.forEach( (n) => _fmsobj[n] = 0 );
+
+      for (const d of this.dataset) {
+        const value = +d.allocation,
+              b = d.beneficiary;
+
+        if (value == 0) continue;
+
+        let beneficiary = _dataset[b];
+        if (beneficiary === undefined)
+          beneficiary = _dataset[b] = Object.assign(
+            { name: this.COUNTRIES[b].name },
+            _fmsobj
+          );
+
+        beneficiary[d.fm] += value;
+      }
+
+      const dataset = d3.values(_dataset);
+      dataset.sort((a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0));
+
       // the chord layout needs a matrix as input
-      const from_ = this.dataset.columns.slice(2), // skips id & name
-            to_ = this.dataset.map( (d) => d.name ); // d.id?
+      const from_ = fmnames,
+            to_ = dataset.map( (d) => d.name );
 
       // items are in fact a circle, starting clockwise with first country,
       // then a dummy item, then the financial mechanisms bottom to top,
@@ -72,7 +141,7 @@ export default Vue.extend({
 
       let total = 0;
 
-      const to_matrix = this.dataset.map( (row) => {
+      const to_matrix = dataset.map( (row) => {
         return from_.map( (f) => {
           const val = +row[f];
           // we take this wonderful opportunity for some side-effects
@@ -171,10 +240,14 @@ const fadeOnChord = (d) => {
 		});
 }//fadeOnChord
 
-      const getColour = (d,i) => {
-        if (names[i] === "") return "none";
-        const fmcolour = this.colour(names[i]);
-        return fmcolour ? fmcolour : "#ccc";
+      const getColour = (d, i) => {
+        const name = names[i];
+        if (name === "") return "none";
+
+        const fm = this.FMS[slugify(name)]
+        if (fm === undefined) return this.beneficiary_colour;
+
+        return fm.colour;
       };
 
 ////////////////////////////////////////////////////////////

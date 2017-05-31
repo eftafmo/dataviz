@@ -4,8 +4,24 @@
     colour: "rgb(140, 160, 35)",
   },
   {
-    name: "Climate change and renewable energy",
+    name: "Climate change",
     colour: "rgb(245, 130, 70)",
+  },
+  {
+    name: "Civil society",
+    colour: "rgb(195, 0, 105)",
+  },
+  {
+    name: "Human and social development",
+    colour: "rgb(115, 70, 160)",
+  },
+  {
+    name: "Protecting cultural heritage",
+    colour: "rgb(105, 40, 0)",
+  },
+  {
+    name: "Research and scholarship",
+    colour: "rgb(245, 195, 10)",
   },
   {
     name: "Carbon capture and storage",
@@ -16,24 +32,8 @@
     colour: "rgb(10, 160, 70)",
   },
   {
-    name: "Human and social development",
-    colour: "rgb(115, 70, 160)",
-  },
-  {
-    name: "Civil society",
-    colour: "rgb(195, 0, 105)",
-  },
-  {
     name: "Decent work and tripartite dialogue",
     colour: "rgb(0, 175, 240)",
-  },
-  {
-    name: "Protecting cultural heritage",
-    colour: "rgb(105, 40, 0)",
-  },
-  {
-    name: "Research and scholarship",
-    colour: "rgb(245, 195, 10)",
   },
   {
     name: "Justice and home affairs",

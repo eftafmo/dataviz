@@ -4,6 +4,9 @@ require("../css/main.css");
 
 require("../js/header.js");
 
+// register polyfills
+import './lib/polyfills';
+
 // register widget components
 import './widgets/index.js';
 
@@ -14,16 +17,6 @@ require("expose-loader?components!./components/index.js");
 // TODO: in a cleaner way?
 import Vue from 'vue';
 window.Vue = Vue;
-
-
-import './components/SidebarResultTab.vue';
-// we import the default export from app modules,
-import SidebarResults from "./SidebarResults.vue";
-
-// and instantiate and target them specifically.
-new SidebarResults({
-  el: '#sidebar-results',
-});
 
 
 //keep homepage layout as a one column layout

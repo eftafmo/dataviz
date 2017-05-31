@@ -14,7 +14,7 @@
                      v-if="item != null"
                      @click="removeFilter"
                      v-bind:key="item">
-                  {{item}}
+                 {{type}} : {{item}}
                 </li>
               </transition-group>
             </ul>
@@ -40,6 +40,7 @@
 }
 
 .global-filters {
+  overflow: hidden;
   padding: 0;
   opacity: 0;
   visibility: hidden;

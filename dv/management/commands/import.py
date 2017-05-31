@@ -1,4 +1,3 @@
-import argparse
 import io
 import pickle
 import pyexcel
@@ -9,12 +8,14 @@ from itertools import cycle
 from urllib.parse import urlparse
 from urllib.request import urlopen
 from django.core.management.base import BaseCommand, CommandError
+from django.db import IntegrityError
+
 from dv.models import (
     NUTS,
     State, PrioritySector, ProgrammeArea, Programme, Programme_ProgrammeArea,
     Outcome, ProgrammeOutcome, Project, Indicator, ProgrammeIndicator,
     OrganisationType, Organisation, OrganisationRole,
-)
+    FinancialMechanism, Allocation)
 from dv.lib.utils import is_iter
 
 
@@ -62,14 +63,15 @@ class Command(BaseCommand):
                 pickle.dump(nuts_book, cached)
 
         models = (
-            NUTS, State,
-            PrioritySector, ProgrammeArea,
+            NUTS, State, FinancialMechanism,
+            PrioritySector, ProgrammeArea, Allocation,
             Programme, Programme_ProgrammeArea,
             Outcome, ProgrammeOutcome,
             Project,
             Indicator, ProgrammeIndicator,
             OrganisationType, Organisation, OrganisationRole,
         )
+        models = (ProgrammeIndicator,)
 
         self.stderr.style_func = None
         def _write(*args, **kwargs):
@@ -121,26 +123,18 @@ class Command(BaseCommand):
                         # fallback to pk, and hope for the best
                         uniq_field = pk_field.name
 
-            created = []
             count = 0
 
             def _save(obj):
-                if is_iter(uniq_field):
-                    key = tuple(getattr(obj, fld) for fld in uniq_field)
-                else:
-                    key = getattr(obj, uniq_field)
-
-                if key in created:
-                    return
-                elif key is None and uniq_field == pk_field.name:
-                    # nothing to keep track of
-                    pass
-                else:
-                    created.append(key)
-
-                obj.save()
                 nonlocal count
-                count += 1
+                try:
+                    obj.save()
+                    count += 1
+                except IntegrityError as e:
+                    if 'UNIQUE constraint failed:' in str(e):
+                        pass
+                    else:
+                        raise
 
             for record in sheet.records:
                 _inline(next(throbber))

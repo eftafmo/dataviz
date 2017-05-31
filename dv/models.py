@@ -55,13 +55,17 @@ class _MainModel(_BaseModel):
         abstract = True
 
 
-class FINANCIAL_MECHANISM(Enum):
-    EEA = 'eea'
-    NORWAY = 'norway'
+class FinancialMechanism(_MainModel):
+    IMPORT_SOURCE = 'PrioritySector'
+    IMPORT_MAPPING = {
+        'code': 'FMCode',
+        'name': 'FinancialMechanism',
+        'grant_name': 'GrantName',
+    }
 
-    class Labels:
-        EEA = _('EEA')
-        NORWAY = _('Norway')
+    code = models.CharField(max_length=16, primary_key=True)
+    name = models.CharField(max_length=128, unique=True)
+    grant_name = models.CharField(max_length=128, unique=True)
 
 
 # TODO: fix NUTS data issues and use this as foreign key below
@@ -83,50 +87,28 @@ class NUTS(_MainModel):
 class State(_MainModel):
     IMPORT_SOURCE = 'BeneficiaryState'
     IMPORT_MAPPING = {
-        'name': 'BeneficaryState',
         'code': 'Abbreviation',
+        'name': 'BeneficiaryState',
+        'url': 'UrlBSPage',
     }
 
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=64, unique=True)
-
-    # these should be moved away
-    gross_allocation_eea = models.PositiveIntegerField()
-    gross_allocation_norway = models.PositiveIntegerField()
-
-    @property
-    def gross_allocation(self):
-        return self.gross_allocation_eea + self.gross_allocation_norway
-
-    # as well as these
-    net_allocation_eea = models.PositiveIntegerField()
-    net_allocation_norway = models.PositiveIntegerField()
-
-    @property
-    def net_allocation(self):
-        return self.net_allocation_eea + self.net_allocation_norway
+    url = models.TextField()
 
 
 class PrioritySector(_MainModel):
     IMPORT_SOURCE = 'PrioritySector'
     IMPORT_MAPPING = {
-        'type': 'GrantName', # this needs special handling
+        'type': 'FMCode',
         'code': 'PSCode',
         'name': 'PrioritySector',
     }
 
-    @classmethod
-    def from_data(cls, data):
-        # our grant type identifier is the first word of the GrantName
-        data = data.copy()
-        type_column = cls.IMPORT_MAPPING['type']
-        data[type_column] = data[type_column].split()[0]
-        return super().from_data(data)
-
-    type = EnumField(FINANCIAL_MECHANISM, max_length=6)
-
     code = models.CharField(max_length=4, primary_key=True)
-    name = models.CharField(max_length=64) # not unique
+    name = models.CharField(max_length=64)  # not unique
+
+    type = models.ForeignKey(FinancialMechanism)
 
 
 class ProgrammeArea(_MainModel):
@@ -141,20 +123,52 @@ class ProgrammeArea(_MainModel):
         'objective': 'ProgrammeAreaObjective',
     }
 
-    priority_sector = models.ForeignKey(PrioritySector)
-
+    # each PA code is duplicated for the 2 FM present now
     code = models.CharField(max_length=4, primary_key=True)
-    name = models.CharField(max_length=256) # not unique
-    short_name = models.CharField(max_length=32) # not unique
+    name = models.CharField(max_length=256)  # not unique because of FM
+    short_name = models.CharField(max_length=32)  # not unique
+    order = models.SmallIntegerField()
+    objective = models.TextField()
+
+    priority_sector = models.ForeignKey(PrioritySector)
+    # Allocation also branches off towards FM
+    allocations = models.ManyToManyField(State, through="Allocation")
+
+
+class Allocation(_MainModel):
+    NATURAL_KEY_FIELD = None
+
+    class Meta(_MainModel.Meta):
+        unique_together = ('state', 'programme_area', 'financial_mechanism')
+
+    IMPORT_SOURCE = 'BeneficiaryStatePrioritySector'
+    IMPORT_MAPPING = {
+        'state': ('name', 'BeneficiaryState'),
+        'programme_area': 'PACode',
+        'financial_mechanism': 'FMCode',
+        'gross_allocation': 'GrossAllocation',
+        'net_allocation': 'NetAllocation',
+        'order': 'SortOrder',
+    }
+
+    state = models.ForeignKey(State)
+    programme_area = models.ForeignKey(ProgrammeArea)
+    # PA is already including FM, but add this so we have more data traversal paths
+    financial_mechanism = models.ForeignKey(FinancialMechanism)
+
+    gross_allocation = models.DecimalField(max_digits=15, decimal_places=2)
+    net_allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
     order = models.SmallIntegerField()
 
-    objective = models.TextField()
-
-    # TODO: bad decimal field, go sit in a corner
-    #gross_allocation = models.PositiveIntegerField()
-    gross_allocation = models.FloatField()
-    net_allocation = models.PositiveIntegerField()
+    def __str__(self):
+        return "{} / {} / {} of gross: {} (net: {})".format(
+            self.financial_mechanism_id,
+            self.state_id,
+            self.programme_area_id,
+            self.gross_allocation,
+            self.net_allocation
+        )
 
 
 class Programme(_MainModel):
@@ -183,35 +197,25 @@ class Programme(_MainModel):
             APPROVED = _('Approved'),
             IMPLEMENTATION = _('Implementation')
 
-    #@classmethod
-    #def from_data(cls, data):
-    #    # we need to extract the programme area codes from the input
-    #    data = data.copy()
-    #    pa_column = cls.IMPORT_MAPPING['programme_areas']
-    #    data[pa_column] = data[pa_column].split()[0]
-    #    return super().from_data(data)
-
     state = models.ForeignKey(State)
     programme_areas = models.ManyToManyField(ProgrammeArea,
                                              through="Programme_ProgrammeArea")
 
     code = models.CharField(max_length=5, primary_key=True)
-    name = models.CharField(max_length=256) # not unique
+    name = models.CharField(max_length=256)  # not unique
 
     status = EnumField(STATUS, max_length=14)
 
     summary = models.TextField()
 
-    allocation_eea = models.PositiveIntegerField()
-    allocation_norway = models.PositiveIntegerField()
+    allocation_eea = models.DecimalField(max_digits=15, decimal_places=2)
+    allocation_norway = models.DecimalField(max_digits=15, decimal_places=2)
 
     @property
     def allocation(self):
         return self.allocation_eea + self.allocation_norway
 
-    # TODO: another decimal field. must... fix...
-    #co_financing = models.PositiveIntegerField()
-    co_financing = models.FloatField()
+    co_financing = models.DecimalField(max_digits=15, decimal_places=2)
 
     @property
     def is_eea(self):
@@ -232,6 +236,10 @@ class Programme_ProgrammeArea(_BaseModel):
         'programme': 'ProgrammeCode',
         'programme_area': 'PAListWithShortName',
     }
+    IMPORT_MAPPING = {
+        'programme': 'programme',
+        'programme_area': 'programme_area',
+    }
 
     __PA_RE = re.compile(r'(?:^|,)([A-Z]{2}[0-9]{2}) - ')
     @classmethod
@@ -246,13 +254,12 @@ class Programme_ProgrammeArea(_BaseModel):
         # we need to extract the programme area codes from the input
         programme_areas = re.findall(cls.__PA_RE, data[pa_column])
 
-        return list(map(
-            super().from_data,
+        return map(super().from_data,
             ({
                 'programme': programme,
                 'programme_area': pa,
             } for pa in programme_areas)
-        ))
+        )
 
     programme = models.ForeignKey(Programme)
     programme_area = models.ForeignKey(ProgrammeArea)
@@ -291,10 +298,10 @@ class Outcome(_FussyOutcomeCode, _MainModel):
         #'IsForReportingOnly'
     }
 
-    programme_area = models.ForeignKey(ProgrammeArea)
+    programme_area = models.ForeignKey(ProgrammeArea, related_name='outcomes')
 
     code = models.CharField(max_length=12, primary_key=True)
-    name = models.CharField(max_length=512) # not unique
+    name = models.CharField(max_length=512)  # not unique
 
     fixed_budget_line = models.BooleanField()
 
@@ -309,8 +316,8 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
         'co_financing': 'ProgrammeCoFinancing',
     }
 
-    programme = models.ForeignKey(Programme, null=True) # because "Reserve FM2004-09"
-    outcome = models.ForeignKey(Outcome)
+    programme = models.ForeignKey(Programme, null=True)  # because "Reserve FM2004-09"
+    outcome = models.ForeignKey(Outcome, related_name='programmes')
     state = models.ForeignKey(State)
 
     # TODO: fix decimal fields
@@ -342,6 +349,10 @@ class Project(_MainModel):
         'allocation': 'GrantAmount',
         #'geotarget': 'NUTSCode',
         'nuts': 'NUTSCode',
+        'programme_co_financing': 'ProgrammeCoFinancing',
+        'project_co_financing': 'ProjectCoFinancing',
+        'is_eea': 'IsEEA',
+        'is_norway': 'IsNorway',
 
         # TODO: leftovers
         #'Predefined',
@@ -359,11 +370,13 @@ class Project(_MainModel):
         IN_PROGRESS = 'in progress'
         COMPLETED = 'completed'
         TERMINATED = 'terminated'
+        NON_COMPLETED = 'non completed'
 
         class Labels:
             IN_PROGRESS = _('In Progress')
             COMPLETED = _('Completed')
             TERMINATED = _('Terminated')
+            NON_COMPLETED = _('Non Completed')
 
     state = models.ForeignKey(State)
     programme = models.ForeignKey(Programme)
@@ -372,15 +385,11 @@ class Project(_MainModel):
     status = EnumField(STATUS, max_length=11)
 
     code = models.CharField(max_length=9, primary_key=True)
-    name = models.CharField(max_length=512) # not unique
-
-    #geotarget = models.ForeignKey(NUTS)
+    name = models.CharField(max_length=512)  # not unique
     nuts = models.CharField(max_length=5)
-
-    allocation = models.PositiveIntegerField()
-    programme_co_financing = models.PositiveIntegerField()
-    project_co_financing = models.PositiveIntegerField()
-
+    allocation = models.DecimalField(max_digits=15, decimal_places=2)
+    programme_co_financing = models.DecimalField(max_digits=15, decimal_places=2)
+    project_co_financing = models.DecimalField(max_digits=15, decimal_places=2)
     is_eea = models.BooleanField()
     is_norway = models.BooleanField()
 
@@ -400,10 +409,10 @@ class ProgrammeIndicator(_BaseModel):
     IMPORT_SOURCE = 'ProgrammeIndicators'
     IMPORT_MAPPING = {
         'indicator': 'IndicatorCode',
-
         'programme': 'ProgrammeCode',
         'programme_area': 'ProgrammeAreaCode',
         'outcome': 'OutcomeCode',
+        'achievement': 'Achievement',
     }
 
     # TODO: assess linking (all 3? of) these to ProgrammeOutcome
@@ -420,7 +429,7 @@ class ProgrammeIndicator(_BaseModel):
     achievement = models.IntegerField()
 
     def __str__(self):
-        return "%s _ %s" % ('self.programme.code', self.indicator.code)
+        return "%s - %s" % (self.programme.code, self.indicator.code)
 
 
 class OrganisationType(_BaseModel):
