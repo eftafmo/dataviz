@@ -6,7 +6,7 @@
        }">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="(item, outcome) in data">
-        <div class="sidebar-result-news">
+        <div class="sidebar-result-content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
             <small>{{ item.sector }}</small>

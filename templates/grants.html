@@ -42,7 +42,7 @@
 {% endblock %}
 
 {% block aside %}
-  <div id="sidebar-results">
+  <div id="sidebar">
     <sidebar
         datasource="{% url "api:grants" %}"
     />
@@ -88,7 +88,7 @@ new Vue({
 });
 
 new Vue({
-  el: '#sidebar-results',
+  el: '#sidebar',
   components: {
     sidebar: components.Sidebar,
   },

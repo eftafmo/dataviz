@@ -154,6 +154,7 @@
   position: relative;
   overflow: auto;
   padding: 1.5rem;
+  padding-right: 0;
 }
 .sidebar-tab-pane::before {
   content: '';
@@ -189,6 +190,9 @@
   padding-left: 0;
   margin: 0;
   margin-bottom: 1rem;
+  max-height: 70vh;
+  overflow: auto;
+  width: 100%;
 }
 
 /* News results */
@@ -212,7 +216,8 @@
 .sidebar-result-news .body {
   overflow: hidden;
 }
-.sidebar-result-news .title {
+.sidebar-result-news .title,
+.sidebar-result-content .title{
   margin: 0;
   font-size: 1.4rem;
   font-weight: inherit;
@@ -223,3 +228,8 @@
   color: #898989;
 }
 
+
+#sidebar {
+  position: sticky;
+  top: 0;
+}
