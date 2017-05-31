@@ -35,6 +35,7 @@
   text-align: center;
   .fms {
     text-align: center;
+    padding-left: 0;
   }
 
   .fm { cursor: pointer; }
