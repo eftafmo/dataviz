@@ -5,3 +5,4 @@ pyexcel-xlsx>=0.3.0,<0.4
 django-enumfields>=0.8.2,<0.9
 django-material>=0.12.5,<0.13
 django-webpack-loader>=0.4.1,<0.5
+djangorestframework>=3.6.3,<3.7
