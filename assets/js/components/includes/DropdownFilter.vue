@@ -5,8 +5,8 @@
     </option>
     <option
         v-for="(item, id, index) in items"
-        :value="item.id"
-        :selected="item.id == current"
+        :value="getFilterName(item)"
+        :selected="getFilterName(item) == current"
     >
       {{item.name}}
     </option>
@@ -61,6 +61,17 @@ export default Vue.extend({
       const select = e.target;
       FILTERS[this.filter] = select.value || null;
     },
+
+    getFilterName(item){
+      //special case for beneficiary filter
+      if(this.filter == 'beneficiary'){
+        return item.id
+      }
+      else {
+        return item.name
+      }
+    },
+
   },
 });
 
