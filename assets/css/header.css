@@ -21,6 +21,17 @@
   }
 }
 
+.header-logo a {
+  max-width: 139px;
+  padding: .2rem;
+  display: block;
+}
+
+.header-logo img {
+  width: 100%;
+}
+
+
 /* Menu */
 @media (max-width: 768px) {
 
