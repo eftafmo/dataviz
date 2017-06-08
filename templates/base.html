@@ -50,8 +50,8 @@
 
   <div id="content" class="page-body">
     <div id="global-filters">
-      <globalfilter>
-      </globalfilter>
+      <globalfilters>
+      </globalfilters>
     </div>
     <div class="container">
       <div class="page-body-inner">
@@ -74,15 +74,5 @@
   {% render_bundle 'scripts' 'js' %}
 {% block finally %}
 {% endblock %}
-<script>
-  new Vue({
-    el: '#global-filters',
-    components: {
-        globalfilter: components.GlobalFilters,
-    },
-    data: {
-    },
-  });
-</script>
 </body>
 </html>

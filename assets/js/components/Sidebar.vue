@@ -33,10 +33,12 @@
     </div>
 
     <div class="sidebar-tab-content">
-      <results :datasource="datasource" id="results"
-                          v-bind:selected="(selectedTab == 'results')"/>
-      <programmes :datasource="datasource" id="programmes"
-                          v-bind:selected="(selectedTab == 'programmes')"/>
+      <results id="results"
+               :initial="dataset"
+               v-bind:selected="(selectedTab == 'results')"/>
+      <programmes id="programmes"
+                  :initial="dataset"
+                  v-bind:selected="(selectedTab == 'programmes')"/>
     </div>
   </div>
 </template>

@@ -10,14 +10,10 @@ import './lib/polyfills';
 // register widget components
 import './widgets/index.js';
 
-// expose components globally
-require("expose-loader?components!./components/index.js");
-
-// expose vue globally
+// expose root vue instances globally
 // TODO: in a cleaner way?
-import Vue from 'vue';
-window.Vue = Vue;
-
+import Grants from './Grants.js';
+window.Grants = Grants;
 
 //keep homepage layout as a one column layout
 if(document.getElementById('overview')) {
