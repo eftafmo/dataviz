@@ -500,7 +500,8 @@ class Organisation(_BaseModel):
     orgtype = models.ForeignKey(OrganisationType, null=True)
     # TODO: the countries can be different from member states.
     # TODO: unify.
-    #country = models.ForeignKey(State)
+    #country = models.ForeignKey(State
+    # FIXME mention this in the mapping and reimport sqlite... and all that went missing since v6
     country = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
     #geotarget = models.ForeignKey(NUTS)
@@ -563,6 +564,7 @@ class OrganisationRole(_BaseModel):
             PJDPP = _('Donor Project Partner')
             PJPP = _('Project Partner')
 
+    # FIXME not many-to-many? not many org to role?
     organisation = models.ForeignKey(Organisation)
     role = EnumField(ROLE, max_length=23)
 
