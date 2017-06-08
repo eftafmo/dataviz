@@ -19,7 +19,7 @@
   }
 
   .sidebar-results.is-expanded-on-mobile {
-    height: calc(100% - 2rem);
+    height: calc(100% - 8rem);
     width: calc(100% - 2rem);
   }
 }

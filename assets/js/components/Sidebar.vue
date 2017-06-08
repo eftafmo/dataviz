@@ -20,14 +20,12 @@
         <a class="sidebar-tab-menu-item"
            v-on:click="selectTab('results')"
            v-bind:class="{ active: (selectedTab == 'results') }">
-          <span class="counter">14</span>
-          Results
+         <small>Results</small>
         </a>
         <a class="sidebar-tab-menu-item"
            v-on:click="selectTab('programmes')"
            v-bind:class="{ active: (selectedTab == 'programmes') }">
-          <span class="counter">156</span>
-          Programmes
+          <small>Programmes</small>
         </a>
       </nav>
     </div>
@@ -114,19 +112,18 @@ export default Vue.extend({
 
   watch: {
     onMobile (matches) {
-      if (matches) {
-        this.$el.addEventListener('click', this.mobileExpand, false);
-      } else {
-        this.$el.removeEventListener('click', this.mobileExpand, false);
-        this.mobileCollapse();
-      }
-    }
+        if (matches) {
+          this.$el.addEventListener('click', this.mobileExpand, false);
+        } else {
+          this.$el.removeEventListener('click', this.mobileExpand, false);
+          this.mobileCollapse();
+        }
   },
-
-  created () {
+},
+  updated () {
     // Add a media query listener handle mobile events
     var mq = window.matchMedia ('(max-width: 768px)');
-      var self = this;
+    var self = this;
 
     mq.addListener(function(mq) { self.onMobile = mq.matches; });
 
@@ -140,7 +137,6 @@ export default Vue.extend({
 
       mobileExpand() {
         if (!this.isMobileExpanded) {
-          console.log('expand');
           this.isMobileExpanded = true;
           this.$el.classList.add('is-expanded-on-mobile');
         }
@@ -151,7 +147,6 @@ export default Vue.extend({
       e.stopPropagation(); // event will trigger expand and cancel collapse
 
       if (this.isMobileExpanded) {
-        console.log('collapse');
         this.isMobileExpanded = false;
 
         var el = this.$el;

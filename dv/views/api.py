@@ -1,4 +1,5 @@
 from collections import OrderedDict, defaultdict, namedtuple
+from rest_framework.generics import ListAPIView
 from django.http import HttpResponseNotAllowed
 from django.db.models import CharField
 from django.db.models.expressions import F, Value
@@ -11,6 +12,9 @@ from dv.models import (
     Allocation,
     State, ProgrammeArea, Programme, Project,
     ProgrammeIndicator,
+)
+from dv.serializers import (
+    ProjectSerializer,
 )
 
 
@@ -88,6 +92,7 @@ def grants(request):
 
     return JsonResponse(out)
 
+
 def beneficiary_allocation_detail(request, beneficiary):
     """
     Returns NUTS3-level allocations for the given state.
@@ -117,3 +122,8 @@ def beneficiary_allocation_detail(request, beneficiary):
     )
 
     return JsonResponse(list(allocations))
+
+
+class ProjectList(ListAPIView):
+    queryset = Project.objects.all().order_by('code')
+    serializer_class = ProjectSerializer
