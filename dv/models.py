@@ -692,6 +692,7 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
     organisation = models.ForeignKey(Organisation, related_name='roles')
     organisation_role = models.ForeignKey(OrganisationRole, related_name='organisations')
 
+
     # TODO 1: this shouldn't be stored in case the org is a project one
     # TODO 2: this makes no sense, both of them nullable
     # programme and project are denormalised to include BS
