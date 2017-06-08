@@ -303,8 +303,8 @@ export default Vue.extend({
         beneficiary.allocations = allocations;
       }
 
-      // sort by total
-      beneficiarydata.sort((a, b) => b.total - a.total);
+      // sort by name
+      beneficiarydata.sort((a,b) => d3.ascending(a.name,b.name));
 
       return beneficiarydata;
     },
