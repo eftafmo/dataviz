@@ -2,7 +2,13 @@
 
 
 {% block main %}
-  <div class="grant-dataviz" id="overview"></div>
+  <div class="grant-dataviz" id="overview">
+    <overview
+        :width="500"
+        :height="400"
+        :initial="dataset"
+    />
+  </div>
 
   <section class="section align-center">
 
@@ -27,12 +33,10 @@
 
 {% block finally %}
 <script>
-new components.Overview({
+new Homepage({
   el: '#overview',
   data: {
     datasource: "{% url "api:grants" %}",
-    width: 500,
-    height: 400,
   },
 });
 </script>
