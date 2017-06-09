@@ -250,6 +250,8 @@ export default Vue.extend({
         }
       }
 
+      //Sort by country
+      out.beneficiaries.sort((a,b) => d3.ascending(a.id,b.id));
       return out;
     },
   },
