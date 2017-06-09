@@ -322,13 +322,15 @@ export default Vue.extend({
               return `<div class="title-container">
                         <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
                         <span class="name">${COUNTRIES[d.id].name}</span>
-                      </div>`;
+                      </div>`
+                      +" <button class='btn btn-anchor'>X</button>";
 
             return `<div class="title-container">
                       <span class="name">${this.name} (${d.id})</span>
                     </div>
                     ${$this.format(d.amount || 0)}
-                    <small>(Temporary)<small>`;
+                    <small>(Temporary)<small>`
+                    +" <button class='btn btn-anchor'>X</button>";
           })
           .direction('n')
           .offset([0, 0])

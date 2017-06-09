@@ -573,6 +573,7 @@ export default Vue.extend({
               // TODO: 'grant allocation' should be taken from data
               + " grant allocation"
               + " <span class='action'>~Click to filter by priority " + filter_by + " </span>"
+              +" <button class='btn btn-anchor'>X</button>"
            })
           .offset([15,30])
           .direction('s');

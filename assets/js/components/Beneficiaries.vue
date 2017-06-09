@@ -371,6 +371,7 @@ export default Vue.extend({
               + "<span class='name'>"+ d.name + "</span></div>"
               +  allocation_content
               + " <span class='action'>~Click to filter by beneficiary state</span>"
+              +" <button class='btn btn-anchor'>X</button>"
           })
           .direction('n')
           .offset(function(d) {

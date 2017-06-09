@@ -181,6 +181,7 @@ export default Vue.extend({
                     <div>- ${d.beneficiaries.size()} beneficiary states </div>
                     <div>- ${d.sectors.size()} priority sectors </div>
                     <span class="action">~Click to filter by financial mechanism</span>
+                    <button class="btn btn-anchor">X</button>
             `;
           })
           .direction('s')
