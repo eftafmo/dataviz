@@ -199,9 +199,6 @@ export default Vue.extend({
       donor_inactive_colour: "#85adcb",
 
       zoom: 1,
-
-      dataset: {},
-      hasData: true,
     };
   },
 

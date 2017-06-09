@@ -9,7 +9,7 @@
   <div class="grant-dataviz" id="financial-mechanisms">
   <h2>Funding by financial mechanism</h2>
     <mechanisms
-        datasource="{% url "api:grants" %}"
+        :initial="dataset"
     />
   </div>
 
@@ -18,7 +18,7 @@
     <sectors
         :width="250"
         :height="300"
-        datasource="{% url "api:grants" %}"
+        :initial="dataset"
     />
   </div>
 </div>
@@ -27,7 +27,8 @@
   <div class="grant-dataviz" id="funding-map">
   <h2>Funding map</h2>
     <xmap
-      details-datasource="{% url "api:beneficiary-allocation-detail" "XX" %}"
+        :initial="dataset"
+        details-datasource="{% url "api:beneficiary-allocation-detail" "XX" %}"
     />
   </div>
 
@@ -35,7 +36,7 @@
   <h2>Funding across beneficiary states</h2>
     <beneficiaries
         :min-height="200"
-        datasource="{% url "api:grants" %}"
+        :initial="dataset"
     />
   </div>
 </div>
@@ -44,59 +45,17 @@
 {% block aside %}
   <div id="sidebar">
     <sidebar
-        datasource="{% url "api:grants" %}"
+        :initial="dataset"
     />
   </div>
 {% endblock %}
 
 {% block finally %}
 <script>
-new Vue({
-  el: '#financial-mechanisms',
-  components: {
-      mechanisms: components.Mechanisms,
-  },
+new Grants({
+  el: '#content',
   data: {
-  },
-});
-
-new Vue({
-  el: '#priority-sectors',
-  components: {
-      sectors: components.Sectors,
-  },
-  data: {
-  },
-});
-
-new Vue({
-  el: '#funding-map',
-  components: {
-      xmap: components.Map,
-  },
-  data: {
-  },
-});
-
-new Vue({
-  el: '#beneficiary-states',
-  components: {
-    beneficiaries: components.Beneficiaries,
-  },
-  data: {
-  },
-});
-
-new Vue({
-  el: '#sidebar',
-  components: {
-    sidebar: components.Sidebar,
-  },
-  data: {
-    data: {
-      Total: 1798100000,
-      Bilateral: 804600000,
-    }
+    datasource: "{% url "api:grants" %}"
   },
 });
 </script>

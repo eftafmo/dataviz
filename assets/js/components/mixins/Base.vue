@@ -10,21 +10,28 @@ export default {
 
   props: {
     datasource: String, // TODO: required?
-    initial: {Object,Array}
+    initial: [Object, Array],
   },
 
   data() {
     return {
-      dataset: (this.initial
-                && this.processDataset(this.initial)
-                || undefined),
       filters: FILTERS,
+      // this is only used internally. mind the creative use of unicode,
+      // because properties beginning with underscore aren't reactive
+      ˉdataset: null,
     };
+
   },
 
   computed: {
-    pre_filtered() {
-
+    dataset: {
+      // make dataset a settable computed
+      get() {
+        return this.ˉdataset || this.initial;
+      },
+      set(val) {
+        this.ˉdataset = val;
+      },
     },
 
     data() {
@@ -44,11 +51,12 @@ export default {
   },
 
   created() {
-    if (!this.hasData) this.fetchData();
+    // fetch data only if no initial data provided,
+    // and there is an external datasource
+    if (!this.hasData && this.datasource) this.fetchData();
   },
 
   mounted() {
-    if (this.isReady) this._main();
   },
 
   methods: {
@@ -132,8 +140,9 @@ export default {
      */
     handleFilter(type, val, old) {
       // this should be handled by each component specifically
+      return
       //throw "Unhandled filter: " + type;
-      console.log(`» [${type}] filter:`, old,'→', val);
+      //console.log(`» [${type}] filter:`, old,'→', val);
     },
     handleFilterFm(val, old) {
       const type = "fm";
@@ -168,11 +177,7 @@ export default {
     }).format("$,d"), // currency; thousand separators; decimal int.
   },
   watch: {
-    'dataset': {
-      handler() {
-        if (this.isReady) this._main();
-      },
-    },
+    'isReady': '_main',
     // make sure every key exists from the start
     'filters.fm': 'handleFilterFm',
     'filters.beneficiary': 'handleFilterBeneficiary',
