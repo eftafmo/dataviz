@@ -222,6 +222,19 @@
   font-weight: inherit;
   color: #005494;
 }
+
+.sidebar-result-content {
+  margin-top: 2rem;
+}
+
+.sidebar-tab-result-list li:first-of-type .sidebar-result-content{
+  margin-top: 0;
+}
+
+.results_content .title {
+  color: #444;
+}
+
 .sidebar-result-news small {
   font-size: 1.2rem;
   color: #898989;

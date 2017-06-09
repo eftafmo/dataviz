@@ -6,7 +6,7 @@
        }">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="(item, outcome) in data">
-        <div class="sidebar-result-content">
+        <div class="sidebar-result-content results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
             <small>{{ item.sector }}</small>
@@ -40,6 +40,10 @@
 
   ul {
     padding-left: 0;
+  }
+
+  small {
+    color: #898989;
   }
 
   .indicator {

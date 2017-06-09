@@ -6,7 +6,7 @@
        }">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
-        <div class="sidebar-result-content">
+        <div class="sidebar-result-content programmes_content">
           <div class="body">
             <div class="title-wrapper">
                 <div class="flag">
