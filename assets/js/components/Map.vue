@@ -1,6 +1,6 @@
 <template>
 <div class="map-viz">
-<chart-container :width="width" :height="height">
+  <chart-container :width="width" :height="height" :class="{ rendering: !rendered }">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
@@ -68,6 +68,12 @@
   }
 
   // styles
+  .rendering {
+    // don't show the base map until all data has been loaded
+    // (TODO: we could also transition this)
+    visibility: hidden;
+  }
+
   .chart {
     .transitioning {
       pointer-events: none;
@@ -257,8 +263,8 @@ export default Vue.extend({
 
   methods: {
     _populateCache() {
-      // cache the geojson data, because extracting it from topojson
-      // is an expensive operation
+      // cache the nuts3-level geojson data, because extracting it
+      // from topojson is an expensive operation
       const data = this.regions,
             layer = 'nuts3',
             cache = this._region_borders;
@@ -281,6 +287,7 @@ export default Vue.extend({
 
       this.renderBase();
       this.renderStates();
+      this.attachData();
 
       this.rendered = true;
     },
@@ -322,7 +329,8 @@ export default Vue.extend({
               return `<div class="title-container">
                         <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
                         <span class="name">${COUNTRIES[d.id].name}</span>
-                      </div>`
+                      </div>
+                      ${$this.format(d.total || 0)}`
                       +" <button class='btn btn-anchor'>X</button>";
 
             return `<div class="title-container">
@@ -463,14 +471,14 @@ export default Vue.extend({
       }
 
       const countries = states.selectAll("path")
-             .data(_features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ))
+             .data(
+               _features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ),
+               (d) => d.id
+             )
              .enter()
              .append("path")
              .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
              .attr("d", path);
-
-      // remembering these for lazy reasons
-      this._countrySelection = countries;
 
       countries
         .filter( (d) => d.id == "LI" )
@@ -497,6 +505,26 @@ export default Vue.extend({
         .attr("fill", (d) => d.id == "NO" ?
                              "url(#multi-fm)" : this.fmcolour("eea-grants") // §
         );
+    },
+
+    attachData() {
+      // everything was already rendered above,
+      // we just need to attach beneficiary data.
+
+      const beneficiarydata = this.beneficiarydata;
+      const countries = this.chart.select('.states').selectAll('path');
+
+      // however, we also need to retain geo-data, so we're gonna update
+      // the data in place
+      // NOTE: this is definitely a d3 anti-pattern, but we'll get away
+      // with it because we don't need to handle enter / exit.
+
+      for (const d of countries.data()) {
+        const bd = beneficiarydata[d.id];
+        if (bd === undefined) continue;
+
+        Object.assign(d, bd);
+      }
     },
 
     renderRegions(t) {
@@ -703,6 +731,11 @@ export default Vue.extend({
       const t = this.getTransition();
 
       /*
+       * part 0: update data
+       */
+      this.attachData();
+
+      /*
        * part 1: change the donor colours
        */
 
@@ -716,7 +749,7 @@ export default Vue.extend({
                            (d) => this.fmcolour(d) :
                            () => this.fmcolour(slugify(val)); // awful §
 
-      this._countrySelection
+      this.chart.select('.states').selectAll('path')
         .filter( (d) => COUNTRIES[d.id].type == "donor" && d.id != "NO" )
         .transition(t)
         .attr("fill", colourfuncEEA);
@@ -736,6 +769,7 @@ export default Vue.extend({
     },
 
     handleFilter(type, val, old) {
+      this.attachData();
       this.renderRegionData();
     },
   },

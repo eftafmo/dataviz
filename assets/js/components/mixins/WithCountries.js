@@ -34,9 +34,51 @@ for (const code in COUNTRIES) {
   req(`./${get_flag_name(code)}.png`);
 }
 
+import * as d3 from 'd3';
+
 export default {
   beforeCreate() {
     this.COUNTRIES = COUNTRIES;
+  },
+
+  computed: {
+    // this can be used by components displaying per-beneficiary data.
+    // (although it's sad that each component should run this code. TODO?)
+    beneficiarydata() {
+      // filter dataset by everything except beneficiary
+      const _filters = d3.keys(this.filters)
+                         .filter((f) => f != 'beneficiary');
+      const dataset = this.filter(this.dataset, _filters);
+
+      const beneficiaries = {}
+      for (const d of dataset) {
+        const bid = d.beneficiary,
+              fm = d.fm,
+              value = +d.allocation;
+
+        if (value === 0) continue;
+
+        let beneficiary = beneficiaries[bid];
+        if (beneficiary === undefined)
+          beneficiary = beneficiaries[bid] = {
+            id: bid,
+            name: COUNTRIES[bid].name,
+            total: 0,
+            allocation: {},
+            sectors: d3.set(),
+          };
+
+        let allocation = beneficiary.allocation[fm];
+        if (allocation === undefined)
+          allocation = beneficiary.allocation[fm] = 0;
+
+        beneficiary.total += value;
+        beneficiary.allocation[fm] = allocation + value;
+        beneficiary.sectors.add(d.sector);
+      }
+
+      return beneficiaries;
+    },
   },
 
   methods: {
