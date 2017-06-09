@@ -41,6 +41,9 @@
     </g>
   </svg>
 </chart-container>
+  <div v-if="hasData" class="dropdown">
+    <dropdown filter="beneficiary" title="Select a country" :items="COUNTRIES"></dropdown>
+  </div>
 </div>
 </template>
 
