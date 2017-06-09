@@ -79,6 +79,9 @@
       </li>
     </transition-group>
   </div>
+  <div v-if="hasData" class="dropdown">
+    <dropdown filter="sector" title="Select a sector" :items="selectPSData"></dropdown>
+  </div>
 </div>
 </template>
 
@@ -409,6 +412,18 @@ export default Vue.extend({
       } );
 
       return tree;
+    },
+
+    selectPSData() {
+      let selectItems = []
+      for (let item of this.data.children) {
+        selectItems.push(item.data)
+      }
+      return selectItems
+    },
+
+    selectPAData() {
+
     },
 
     radius() {
