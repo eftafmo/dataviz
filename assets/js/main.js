@@ -11,11 +11,7 @@ import './lib/polyfills';
 import './widgets/index.js';
 
 // expose root vue instances globally
-// TODO: in a cleaner way?
-import Homepage from './Homepage.js';
-import Grants from './Grants.js';
-window.Homepage = Homepage;
-window.Grants = Grants;
+require("expose-loader?root!./root-instances.js");
 
 //keep homepage layout as a one column layout
 if(document.getElementById('overview')) {
