@@ -33,7 +33,7 @@ export const Grants = Viz.extend({
   components: {
     mechanisms: components.Mechanisms,
     sectors: components.Sectors,
-    xmap: components.Map,
+    xmap: components.AllocationMap,
     beneficiaries: components.Beneficiaries,
     sidebar: components.Sidebar,
   },
@@ -47,9 +47,7 @@ export const Projects = Viz.extend({
     sectors: components.Sectors.extend({
       mixins: [ProjectsMixin],
     }),
-    xmap: components.Map.extend({
-      mixins: [ProjectsMixin],
-    }),
+    xmap: components.ProjectsMap,
     beneficiaries: components.Beneficiaries,
     sidebar: components.Sidebar,
   },
