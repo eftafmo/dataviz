@@ -16,6 +16,10 @@ export default {
   data() {
     return {
       filters: FILTERS,
+
+      // unless overriden, displayed values are formatted as currency
+      showsCurrency: true,
+
       // this is only used internally. mind the creative use of unicode,
       // because properties beginning with underscore aren't reactive
       ˉdataset: null,
@@ -47,6 +51,24 @@ export default {
     isReady() {
       return !!(this.hasData
                 && this.$el);
+    },
+
+    format() {
+      const locale = {
+        // see https://github.com/d3/d3-format/blob/master/locale/
+        // TODO: derive and extend the browser locale?
+        // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
+        "decimal": ",", // that's the european way
+        "thousands": ".", // dot, the european way
+        "grouping": [3],
+        "currency": ["€", ""],
+        "percent": "%",
+      };
+
+      // show currency. thousand separators. decimal int.
+      const format = this.showsCurrency ? "$,d" : "d";
+
+      return d3.formatLocale(locale).format(format);
     },
   },
 
@@ -160,21 +182,6 @@ export default {
       const type = "area";
       this.handleFilter(type, val, old);
     },
-
-    /*
-     * utility methods available to all instances,
-     * be they charts or not.
-     */
-    format: d3.formatLocale({
-      // see https://github.com/d3/d3-format/blob/master/locale/
-      // TODO: derive and extend the browser locale?
-      // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
-      "decimal": ",", // that's the european way
-      "thousands": ".", // dot, the european way
-      "grouping": [3],
-      "currency": ["€", ""],
-      "percent": "%",
-    }).format("$,d"), // currency; thousand separators; decimal int.
   },
   watch: {
     'isReady': '_main',

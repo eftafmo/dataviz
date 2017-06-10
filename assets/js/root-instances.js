@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import BaseMixin from './components/mixins/Base';
+import ProjectsMixin from './components/mixins/Projects';
 import * as components from './components/index';
 
 
@@ -40,12 +41,15 @@ export const Grants = Viz.extend({
 
 export const Projects = Viz.extend({
   name: 'Projects',
-  mixins: [BaseMixin],
 
   components: {
     mechanisms: components.Mechanisms,
-    sectors: components.Sectors,
-    xmap: components.Map,
+    sectors: components.Sectors.extend({
+      mixins: [ProjectsMixin],
+    }),
+    xmap: components.Map.extend({
+      mixins: [ProjectsMixin],
+    }),
     beneficiaries: components.Beneficiaries,
     sidebar: components.Sidebar,
   },
