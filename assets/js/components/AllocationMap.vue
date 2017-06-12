@@ -71,17 +71,27 @@ export default BaseMap.extend({
                     .range([.1, 1]);
 
         if (t === undefined) t = this.getTransition();
-
         const regions = this.chart.select('g.regions > g.' + state)
                             .selectAll('path').data(d3.values(totals), (d) => d.id );
 
-        regions.enter().merge(regions)
+        // protect against data that has unknown NUTS codes
+        const _badregions = regions.enter().data();
+        if (_badregions.length)
+          // TODO: log this in production
+          //throw new Error(
+          console.error(
+            "Unknown NUTS codes: " +
+            _badregions.map( (d) => d.id ).join(", ")
+          );
+
+        regions
                .transition(t)
                .attr("fill", (d) => interpolateYlGn(x(d.amount)) );
 
         regions.exit()
                .transition(t)
                .attr("fill", interpolateYlGn(0));
+               // TODO: and reset data to 0 ?
       };
 
       // finally, trigger the whole logic
