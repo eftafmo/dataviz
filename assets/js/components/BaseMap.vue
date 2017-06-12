@@ -185,6 +185,8 @@ export default Vue.extend({
     // placeholders for fetched topojson data
     this.layers = null;
     this.regions = null;
+    // cache for computed geofeature-related data
+    this.geodetails = {};
     // cache for geojson data
     this._region_borders = {};
     // cache for allocation data
@@ -280,6 +282,15 @@ export default Vue.extend({
       }
     },
 
+    cacheGeoDetails(d) {
+      const path = this.path;
+
+      this.geodetails[d.id] = {
+        centroid: path.centroid(d),
+        bounds: path.bounds(d),
+      };
+    },
+
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
@@ -287,7 +298,7 @@ export default Vue.extend({
 
       this.renderBase();
       this.renderStates();
-      this.attachData();
+      this.renderData();
 
       this.rendered = true;
     },
@@ -437,10 +448,10 @@ export default Vue.extend({
 
       function drawFrameLi(d) {
         const scale = scaleLi,
-              center = path.centroid(d),
+              center = $this.geodetails["LI"].centroid,
               cx = center[0],
               cy = center[1],
-              bounds = path.bounds(d),
+              bounds = $this.geodetails["LI"].bounds,
               b1 = bounds[0],
               b2 = bounds[1],
               dx = b2[0] - b1[0],
@@ -459,7 +470,7 @@ export default Vue.extend({
           .attr("vector-effect","non-scaling-stroke")
           .attr("transform", (d) => {
             const scale = scaleLi,
-                  center = path.centroid(d),
+                  center = $this.geodetails["LI"].centroid,
                   cx = center[0],
                   cy = center[1],
                   tx = -cx * (scale - 1),
@@ -478,17 +489,20 @@ export default Vue.extend({
              .enter()
              .append("path")
              .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
-             .attr("d", path);
+             .attr("d", path)
+             // while at this, cache the centroids and bounding box,
+             // because the geo-data will get wiped during data manipulation
+             .each(this.cacheGeoDetails);
 
       countries
         .filter( (d) => d.id == "LI" )
         .call(magnifyLiechtenstein);
 
+      /* mouse events */
       countries
         .on("mouseenter",
             function(){ d3.select(this).raise(); }
-        );
-
+        )
       countries
         .filter( (d) => COUNTRIES[d.id].type == "beneficiary" )
         .on("click", function (d) {
@@ -507,24 +521,9 @@ export default Vue.extend({
         );
     },
 
-    attachData() {
-      // everything was already rendered above,
-      // we just need to attach beneficiary data.
-
-      const beneficiarydata = this.beneficiarydata;
-      const countries = this.chart.select('.states').selectAll('path');
-
-      // however, we also need to retain geo-data, so we're gonna update
-      // the data in place
-      // NOTE: this is definitely a d3 anti-pattern, but we'll get away
-      // with it because we don't need to handle enter / exit.
-
-      for (const d of countries.data()) {
-        const bd = beneficiarydata[d.id];
-        if (bd === undefined) continue;
-
-        Object.assign(d, bd);
-      }
+    renderData() {
+      // children should implement this as needed
+      return;
     },
 
     renderRegions(t) {
@@ -553,6 +552,7 @@ export default Vue.extend({
 
       const rentered = regions.enter().append('path')
              .attr('d', this.path)
+             .each(this.cacheGeoDetails)
              // cache the name with the node
              .property('name', (d) => d.properties.name )
              .attr('fill', this.default_region_colour)
@@ -627,8 +627,7 @@ export default Vue.extend({
 
         const spacing = .1 * Math.min($this.width, $this.height);
 
-        const state = chart.select(".states").select("." + val),
-              bounds = $this.path.bounds(state.datum()),
+        const bounds = $this.geodetails[val].bounds,
               x1 = bounds[0][0],
               x2 = bounds[1][0],
 
@@ -657,9 +656,9 @@ export default Vue.extend({
       const t = this.getTransition();
 
       /*
-       * part 0: update data
+       * part 0: re-render data-dependent stuff
        */
-      this.attachData();
+      this.renderData();
 
       /*
        * part 1: change the donor colours
@@ -695,7 +694,7 @@ export default Vue.extend({
     },
 
     handleFilter(type, val, old) {
-      this.attachData();
+      this.renderData();
       this.renderRegionData();
     },
   },

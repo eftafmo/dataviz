@@ -13,6 +13,17 @@ export default BaseMap.extend({
   },
 
   methods: {
+    renderData() {
+      const states = this.chart.select('.states').selectAll('path'),
+            beneficiarydata = d3.values(this.beneficiarydata);
+
+      // we just need to re-assign the data to the states,
+      // so the tooltip displays correct values
+      states.data(beneficiarydata, (d) => d.id );
+
+      // and TODO: disable filtering for 0 / missing items
+    },
+
     renderRegionData(t) {
       const state = this.filters.beneficiary;
 
