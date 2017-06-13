@@ -19,7 +19,7 @@ from dv.models import (
 from dv.lib.utils import is_iter
 
 
-NUTS_FILE = "http://ec.europa.eu/eurostat/ramon/documents/nuts/NUTS_2013.zip"
+NUTS_FILE = "http://ec.europa.eu/eurostat/ramon/documents/nuts/NUTS_2006.zip"
 
 
 class Command(BaseCommand):

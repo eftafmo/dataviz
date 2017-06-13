@@ -71,8 +71,8 @@ class FinancialMechanism(_MainModel):
 # TODO: fix NUTS data issues and use this as foreign key below
 class NUTS(_MainModel):
     IMPORT_MAPPING = {
-        'code': 'NUTS CODE',
-        'label': 'NUTS LABEL',
+        'code': 'CODE',
+        'label': 'LABEL',
     }
 
     code = models.CharField(max_length=2, primary_key=True)
