@@ -83,6 +83,11 @@ class NUTS(_MainModel):
         """The NUTS level."""
         return len(self.code) - 2
 
+    class Meta(_BaseModel.Meta):
+        ordering = ['code']
+
+    def __str__(self):
+        return self.code
 
 class State(_MainModel):
     IMPORT_SOURCE = 'BeneficiaryState'
