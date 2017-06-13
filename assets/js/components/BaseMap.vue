@@ -38,6 +38,8 @@
         <g class="frames" />
       </g>
 
+      <g class="data" /> <!-- this one's for actual visualisations -->
+
     </g>
   </svg>
 </chart-container>
