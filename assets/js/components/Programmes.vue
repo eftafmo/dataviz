@@ -1,5 +1,6 @@
 <template>
-  <div class="sidebar-tab-pane programmes">
+  <section class="sidebar-tab-pane programmes"
+             role="tabpanel">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
         <div class="sidebar-result-content programmes_content">
@@ -31,8 +32,8 @@
         </div>
       </li>
     </ul>
-
-  </div>
+  <slot />
+  </section>
 </template>
 
 <style lang="less">
@@ -151,6 +152,12 @@ export default Vue.extend({
   mixins: [
     BaseMixin, WithCountriesMixin,
   ],
+
+  props: {
+    name: 'Programmes'
+  },
+
+
 
   computed: {
     projectcount() {

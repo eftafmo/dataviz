@@ -40,11 +40,24 @@
 {% endblock %}
 
 {% block aside %}
-  <div id="sidebar">
-    <sidebar
-        :initial="dataset"
-    />
+<div id="sidebar-results" class="sidebar sidebar-results">
+  <sidebar
+      :initial="dataset">
+    <!-- this entire part is the sidebar's slot... -->
+  </sidebar>
+
+    <tabs>
+      <tab name="Results">
+        <results
+        :initial="dataset" />
+      </tab>
+      <tab name="Programmes">
+        <programmes
+        :initial="dataset" />
+      </tab>
+    </tabs>
   </div>
+    <!-- ...end slot -->
 {% endblock %}
 
 {% block finally %}

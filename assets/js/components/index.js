@@ -10,6 +10,7 @@ import Beneficiaries from './Beneficiaries';
 import GlobalFilters from './GlobalFilters';
 import Results from './Results';
 import Sidebar from './Sidebar';
+import Programmes from './Programmes';
 
 
 export {
@@ -22,4 +23,6 @@ export {
   GlobalFilters,
   Sidebar,
   Results,
+  Programmes,
 };
+

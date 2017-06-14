@@ -77,7 +77,7 @@
   left: 0;
   background: rgba(100, 100, 100, .8);
 }
-.sidebar-tab-menu {
+.tabs-component-tabs{
   border-bottom: 1px solid #ddd;
   position: relative;
 }
@@ -94,7 +94,7 @@
   display: block;
   clear: both;
 }
-.sidebar-tab-menu-item {
+.tabs-component-tab {
   box-sizing: border-box;
   float: left;
   display: block;
@@ -106,7 +106,7 @@
   cursor: pointer;
   background: transparent;
 }
-.sidebar-tab-menu-item::after {
+.tabs-component-tab::after {
   content: '';
   display: block;
   position: absolute;
@@ -116,32 +116,32 @@
   height: 3px;
   background: transparent;
 }
-.sidebar-tab-menu-item:hover {
+.tabs-component-tab:hover {
   text-decoration: none;
   color: #50B9FF;
 }
-.sidebar-tab-menu-item:hover::after {
+.tabs-component-tab:hover::after {
   background: #50B9FF;
 }
-.sidebar-tab-menu-item.active {
+.tabs-component-tab.is-active {
   color: #005494;
   font-weight: 600;
 }
-.sidebar-tab-menu-item.active::after {
+.tabs-component-tab.is-active::after {
   background: #005494;
 }
 @media (max-width: 768px) {
-  .sidebar-tab-menu-item {
+  .tabs-component-tab {
     font-size: 1.2rem;
   }
-  .sidebar-tab-menu-item .counter {
+  .tabs-component-tab .counter {
     display: block;
     font-size: 1.5rem;
     font-weight: bold;
   }
 }
 @media (min-width: 769px) {
-  .sidebar-tab-menu-item .counter {
+  .tabs-component-tab .counter {
     display: none;
   }
 }
@@ -149,7 +149,6 @@
 
 /* Sidebar tab pane */
 .sidebar-tab-pane {
-  display: none;
   position: relative;
   overflow: auto;
   padding: 1.5rem;

@@ -1,5 +1,5 @@
 <template>
-  <div id="sidebar-results" class="sidebar sidebar-results" v-if="hasData">
+<div v-if="hasData">
     <div class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="transitioned">
@@ -14,29 +14,6 @@
         <span class="icon icon-close"></span>
       </button>
     </div>
-
-    <div class="sidebar-tabs">
-      <nav class="sidebar-tab-menu">
-        <a class="sidebar-tab-menu-item"
-           v-on:click="selectTab('results')"
-           v-bind:class="{ active: (selectedTab == 'results') }">
-         <small>Results</small>
-        </a>
-        <a class="sidebar-tab-menu-item"
-           v-on:click="selectTab('programmes')"
-           v-bind:class="{ active: (selectedTab == 'programmes') }">
-          <small>Programmes</small>
-        </a>
-      </nav>
-    </div>
-
-    <div class="sidebar-tab-content">
-      <results id="results"
-               :initial="dataset"
-               v-bind:class="{ active: (selectedTab == 'results') }"/>
-      <programmes id="programmes"
-                  :initial="dataset"
-                  v-bind:class="{ active: (selectedTab == 'programmes') }"/>
     </div>
   </div>
 </template>
@@ -72,19 +49,12 @@ sidebar-header {
 
 <script>
   import Vue from 'vue';
-  import Results from './Results';
   import BaseMixin from './mixins/Base';
-  import Programmes from './Programmes'
 
 export default Vue.extend({
   mixins: [
     BaseMixin
   ],
-
-  components: {
-    results: Results,
-    programmes: Programmes
-  },
 
   data() {
     return {
