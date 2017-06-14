@@ -9,7 +9,7 @@ import ProjectsMap from './ProjectsMap';
 import Beneficiaries from './Beneficiaries';
 import GlobalFilters from './GlobalFilters';
 import Results from './Results';
-import Sidebar from './Sidebar';
+import Allocation_overview from './Allocation-overview';
 import Programmes from './Programmes';
 
 
@@ -21,7 +21,7 @@ export {
   ProjectsMap,
   Beneficiaries,
   GlobalFilters,
-  Sidebar,
+  Allocation_overview,
   Results,
   Programmes,
 };

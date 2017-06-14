@@ -17,7 +17,7 @@
 </template>
 
 <style>
-sidebar-header {
+.sidebar-header {
   position: relative;
   padding: 0 !important;
 }

@@ -36,7 +36,7 @@ export const Grants = Viz.extend({
     sectors: components.Sectors,
     xmap: components.AllocationMap,
     beneficiaries: components.Beneficiaries,
-    sidebar: components.Sidebar,
+    allocation_overview: components.Allocation_overview,
     programmes: components.Programmes,
     results: components.Results,
     tabs: Tabs,
@@ -54,8 +54,6 @@ export const Projects = Viz.extend({
     }),
     xmap: components.ProjectsMap,
     beneficiaries: components.Beneficiaries,
-    sidebar: components.Sidebar,
+    allocation_overview: components.Allocation_overview,
   },
 });
-
-
