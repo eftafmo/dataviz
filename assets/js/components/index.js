@@ -11,6 +11,7 @@ import GlobalFilters from './GlobalFilters';
 import Results from './Results';
 import Allocation_overview from './Allocation-overview';
 import Programmes from './Programmes';
+import Sidebar from './Sidebar';
 
 
 export {
@@ -24,5 +25,6 @@ export {
   Allocation_overview,
   Results,
   Programmes,
+  Sidebar,
 };
 

@@ -7,10 +7,7 @@
           <small>{{ format(data.bilateral_allocation) }} for bilateral relations</small>
         </div>
       </transition>
-      <button type="button" id="close-sidebar" class="no-btn"
-              title="Close results">
-        <span class="icon icon-close"></span>
-      </button>
+
     </div>
     </div>
   </div>
@@ -77,7 +74,14 @@ export default Vue.extend({
       return out;
     },
   },
+  methods: {
 
+    handleFilter() {
+
+      this.transitioned = !this.transitioned;
+    },
+
+  },
 
 });
 

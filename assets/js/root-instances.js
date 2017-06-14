@@ -21,7 +21,7 @@ export const Homepage = Base.extend({
 
 
 const Viz = Base.extend({
-  // TODO: do we want the filter bar on all pages?
+  // TODO: do we want the filter bar on all pages?7
   components: {
     globalfilters: components.GlobalFilters,
   },
@@ -41,6 +41,7 @@ export const Grants = Viz.extend({
     results: components.Results,
     tabs: Tabs,
     tab: Tab,
+    sidebar: components.Sidebar,
   },
 });
 

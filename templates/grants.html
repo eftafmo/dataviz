@@ -40,11 +40,12 @@
 {% endblock %}
 
 {% block aside %}
-<div class="sidebar">
+<sidebar>
   <allocation_overview
-      :initial="dataset">
+      :initial="dataset"
+      slot="Allocation_overview">
   </allocation_overview>
-    <tabs>
+    <tabs slot="Tabs">
       <tab name="Results">
         <results
         :initial="dataset" />
@@ -54,7 +55,7 @@
         :initial="dataset" />
       </tab>
     </tabs>
- </div>
+ </sidebar>
 {% endblock %}
 
 {% block finally %}
