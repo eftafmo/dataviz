@@ -592,18 +592,20 @@ export default Vue.extend({
       const t = this.getTransition();
 
       const arcs = this.chart
-	    .selectAll(".arc")
+	    .selectAll("g.arc > path")
 	    .data(data, this.getArcID); // JOIN
 
-      const aentered = arcs.enter().append("path") // ENTER
-        .each(function(d) {
-	  // cache current coordinates
-	  this._prev = $this._extract_coords(d);
-	})
+      const aentered = arcs.enter() // ENTER
+        .append("g")
         .attr("id", this.getArcID)
-	.attr("class", "arc")
-	.attr("d", this._arc)
-	.attr("fill", (d) => d.data.colour )
+        .attr("class", "arc")
+        .attr("fill", (d) => d.data.colour )
+        .append("path")
+        .each(function(d) {
+          // cache current coordinates
+          this._prev = $this._extract_coords(d);
+	})
+        .attr("d", this._arc)
         // level 2 items are hidden
         .attr("opacity", (d) => d.depth == 2 ? 0 : null )
         // and really hidden
@@ -621,6 +623,7 @@ export default Vue.extend({
 
       const transitioning = arcs // UPDATE
         .transition(t)
+        // avoid other transitions while this runs
         .on("start",
             () => this._transitioning = true )
         .on("end",
@@ -698,8 +701,6 @@ export default Vue.extend({
 
     _highlight(d, yes) {
       // avoid funny race conditions
-      // WARNING: TODO: [BUG] there's an unhandled race condition
-      // between this and click
       if(this._transitioning) return;
 
       const arc = this.getArcID(d),
@@ -707,10 +708,10 @@ export default Vue.extend({
 
       const arcfunc = yes ? this._arcLarge : this._arc;
 
-      d3.select(this.$el).select(`#${label}>a`)
+      d3.select(this.$el).select(`#${label} > a`)
         .classed("hovered", yes);
 
-      d3.select(this.$el).select(`#${arc}`)
+      d3.select(this.$el).select(`#${arc} > path`)
         .transition(this.getTransition(this.short_duration))
         .attr("d", arcfunc)
     },
