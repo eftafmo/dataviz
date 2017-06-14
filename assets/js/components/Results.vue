@@ -1,5 +1,6 @@
 <template>
-  <div class="sidebar-tab-pane results">
+  <section class="sidebar-tab-pane results"
+    role="tabpanel">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="(item, outcome) in data">
         <div class="sidebar-result-content results_content">
@@ -17,8 +18,8 @@
       </li>
     </ul>
 
-
-  </div>
+  </slot>
+  </section>
 </template>
 
 <style lang="less">
