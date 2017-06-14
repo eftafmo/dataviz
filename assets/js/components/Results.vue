@@ -83,12 +83,6 @@ export default Vue.extend({
     BaseMixin, WithSectorsMixin,
   ],
 
-
-  watch: {
-      selected () { this.loadResults(); }
-  },
-
-
   computed: {
     data() {
       const dataset = this.filter(this.dataset);
