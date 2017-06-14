@@ -273,13 +273,15 @@ import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
-import {SectorColours} from 'js/constants.js';
+import WithSectors from './mixins/WithSectors';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, ChartMixin, WithTooltipMixin,
+    BaseMixin, ChartMixin,
+    WithSectors,
+    WithTooltipMixin,
   ],
 
   data() {
@@ -291,52 +293,90 @@ export default Vue.extend({
 
       // percentage of mid-donut void
       inner_radius: .65,
-
-      // this will be populated during the first run
-      area_colours: {},
     };
+  },
+
+  beforeCreate() {
+    // cache for the sector / area names & colors ¤
+    this._sectortree = null;
   },
 
   computed: {
     data() {
+      // TODO: generate this on the server instead ¤
+      let sectortree = this._sectortree;
+      if (sectortree === null) {
+        // pre-generate the tree, without any allocation data
+        sectortree = this._sectortree = Object.assign({}, this.SECTORS);
+
+        for (const d of this.dataset) {
+          const s = d.sector,
+                a = d.area,
+                sid = slugify(s),
+                aid = slugify(a);
+
+          let sector = sectortree[sid];
+          // this.SECTORS should contain everything already, but one never knows
+          if (sector === undefined)
+            sector = sectortree[sid] = {
+              id: sid,
+              name: s,
+              children: {},
+              colour: '#555',
+            };
+
+          let children = sector.children;
+          if (children === undefined)
+            children = sector.children = {};
+
+          let area = children[aid];
+          if (area === undefined)
+            area = children[aid] = {
+              id: aid,
+              name: a,
+              allocation: {},
+            };
+        }
+
+        // final touches
+        for (const sid in sectortree) {
+          const sector = sectortree[sid],
+                colour = sector.colour,
+                areas = d3.values(sector.children);
+
+          // add a backreference to the parent sector for all areas
+          // and generate area colors
+          const colourscale = this._mkcolourscale(colour, areas.length);
+
+          for (const area of areas) {
+            area.parentname = sector.name;
+            area.colour = colourscale(area.id);
+          }
+        }
+      }
+      // done pre-generation
+
       // filter dataset by everything except sector / area
       const _filters = d3.keys(this.filters)
                          .filter((f) => f != 'sector' && f != 'area');
       const dataset = this.filter(this.dataset, _filters);
 
-      // TODO: fix BUG: because we pre-filter data, newly .enter()-ed
-      // items pop-up all of a sudden instead of transitioning from 0.
-      // must either find a fix in render() or filter (set zeroes) down here.
-      // Or base the dataset on a pre-prepared tree. ¤
+      // we need to deep-copy the tree. JSON to the rescue.
+      const sectors = JSON.parse(JSON.stringify(sectortree));
 
-      // build the sector tree
-      const sectors = {}
+      // sum up allocation data
       for (const d of dataset) {
         const s = d.sector,
               a = d.area,
               sid = slugify(s),
               aid = slugify(a),
+              sector = sectors[sid],
+              area = sector.children[aid],
               fm = d.fm,
               value = +d.allocation;
 
         // backend might send us empty data...
         if(value === 0) continue;
-
-        let sector = sectors[sid];
-        if (sector === undefined)
-          sector = sectors[sid] = {
-            id: sid,
-            name: s,
-            children: {},
-          };
-
-        let area = sector.children[aid];
-        if (area === undefined)
-          area = sector.children[aid] = {
-            id: aid,
-            name: a,
-            allocation: {},
-          };
 
         let allocation = area.allocation[fm];
         if (allocation === undefined)
@@ -345,47 +385,9 @@ export default Vue.extend({
         area.allocation[fm] = allocation + value;
       }
 
-      // we'll build a new tree to get the sectors sorted,
-      // and also add in the colours and more
-      const sectordata = {};
-      for (const sid in SectorColours) {
-        // yes we're iterating on colour data, it has the proper order
-        const sector = sectors[sid];
-        if (sector === undefined) continue;
-        sectordata[sid] = sector;
-
-        // we'll add a backreference for all areas to the parent sector.
-        // we'll use it during filtering below.
-        for (const aid in sector.children) {
-          sector.children[aid].parentname = sector.name;
-        }
-
-        const colour = SectorColours[sid];
-        sector.colour = colour;
-
-        let acolours = this.area_colours[sid];
-        // if this is the first time around, generate the area colours
-        if (acolours === undefined) {
-          // WARNING, TODO: if we ever share a direct link to this, prefiltered
-          // on beneficiary or fm, this will make a fine mess of things.
-          // area colour generation should be done on a pre-existing list. ¤
-          acolours = this.area_colours[sid] = {};
-          const aids = d3.keys(sector.children),
-                colourscale = this._mkcolourscale(colour, aids.length);
-
-          for (const aid of aids) {
-            acolours[aid] = colourscale(aid);
-          }
-        }
-
-        for (const aid in sector.children) {
-          sector.children[aid].colour = acolours[aid];
-        }
-      }
-
       // finally, using d3's hierarchy makes working with trees easy
       const tree = d3.hierarchy(
-        { children: sectordata },
+        { children: sectors },
         // the default accessor function looks for arrays of children,
         // but we have an object tree
         (d) => d3.values(d.children)
@@ -611,15 +613,9 @@ export default Vue.extend({
         // and really hidden
         .style("display", (d) => d.depth == 2 ? "none" : null );
 
-      const aexit = arcs.exit(); // EXIT
 
       /* transitions */
-      // this stuff is complicated, each selection group will need its own transition
-      // (actually ^^ that is a lie, there are no enter animations, and exit
-      // never happens, but the code below is ready in case the logic changes).
-
-      // NOTE: not merging with ENTER, because there's not ENTER transition now.
-      // will need to be handled if things change.
+      // NOTE: there is no ENTER or EXIT, all items are persistent ¤
 
       const transitioning = arcs // UPDATE
         .transition(t)
@@ -641,6 +637,7 @@ export default Vue.extend({
             return $this._arc(interpolate(x));
           }
         });
+
       // if we've selected a sector, let's show its areas
       if (this.filters.sector) {
         transitioning
@@ -668,22 +665,6 @@ export default Vue.extend({
           () => this._prevsector = null
         );
       }
-
-      // send new items to back so existing arcs cover them
-      // during the transition and make them look animated
-      // (but make sure areas are in front of sectors)
-      aentered // ENTER
-        .filter( (d) => d.depth == 2 )
-        .lower();
-      aentered
-        .filter( (d) => d.depth == 1 )
-        .lower();
-
-      // send deleted items to back too
-      aexit // EXIT
-        .lower()
-        .transition(t)
-        .remove()
 
       /* events */
       aentered
@@ -752,7 +733,7 @@ export default Vue.extend({
       this.filters.area = this.filters.area == aname ?
                           null : aname;
       // TODO: what if the area does not to the current sector belong?
-      // TODO: we need a persistent array of PS / PAs. ¤
+      // TODO: take into account the persistent array of PS / PAs. ¤
     },
 
     handleFilterSector(val, old) {
@@ -777,9 +758,6 @@ export default Vue.extend({
       if (val === null && this._prevsector) {
         return;
       }
-
-      // WARNING: TODO: if the user filters by area while the sector-filtering
-      // transition is in progress, something will break. bug hidden in here.
 
       if (val !== null && this.filters.sector === null)
         console.error("Filtered by area without a sector. Impossible 2.")
