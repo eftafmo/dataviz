@@ -155,40 +155,13 @@
 
 
 /* Sidebar tab pane */
-.sidebar-section-wrapper {
+.sidebar-content {
   position: relative;
   overflow: auto;
-  padding: 1.5rem;
+  padding: 1.5rem!important;
   padding-right: 0;
 }
-.sidebar-section-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: none;
-  background: rgba(255, 255, 255, .8);
-}
-.sidebar-section-wrapper::after {
-  content: url('../imgs/loading.svg');
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -20px;
-  margin-left: -20px;
-  display: none;
-}
-.sidebar-section-wrapper.is-loading {
-  min-height: 180px;
-}
-.sidebar-section-wrapper.is-loading::before,
-.sidebar-section-wrapper.is-loading::after { display: block; }
 
-.sidebar-section-wrapper.is-selected {
-  display: block;
-}
 
 .sidebar-content {
   list-style: none;

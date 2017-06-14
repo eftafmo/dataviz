@@ -1,6 +1,5 @@
 <template>
-  <section class="sidebar-section-wrapper results">
-    <ul class="sidebar-content" v-if="hasData">
+    <ul class="sidebar-content results" v-if="hasData">
       <li v-for="(item, outcome) in data">
         <div class="content-item results_content">
           <div class="body">
@@ -16,8 +15,6 @@
         </div>
       </li>
     </ul>
-
-  </section>
 </template>
 
 <style lang="less">

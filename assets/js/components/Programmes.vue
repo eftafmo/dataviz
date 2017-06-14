@@ -1,6 +1,5 @@
 <template>
-  <section class="sidebar-section-wrapper programmes">
-    <ul class="sidebar-content" v-if="hasData">
+    <ul class="sidebar-content programmes" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
         <div class="content-item programmes_content">
           <div class="body">
@@ -31,7 +30,6 @@
         </div>
       </li>
     </ul>
-  </section>
 </template>
 
 <style lang="less">
