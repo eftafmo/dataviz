@@ -1,13 +1,13 @@
 <template>
 <div class="overview-viz">
-<div class="circle-wrapper">
+<div v-if="isReady" class="circle-wrapper">
     <div class="circle">
       <div class="programmes-count"><span>150</span><br>Programmes</div>
       <div class="projects-count"><span>6.639</span><br>Projects</div>
     </div>
     <div class="line-wrapper">
       <div class="donor-count"><span>3</span> Donor states</div>
-      <div class="states-count"><span>16</span> Beneficiary states</div>
+      <div class="states-count"><span>{{data.beneficiary_count}}</span> Beneficiary states</div>
   </div>
  </div>
   <div v-if="hasData" class="legend">
@@ -24,7 +24,7 @@
       <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
     </svg>
   </chart-container>
-  <div class="total-spent"><h1>1.798.100.000</h1>
+  <div class="total-spent"><h1 v-if="isReady">{{format(data.total)}}</h1>
     <h3>spent on</h3>
   </div>
   <div class="overview-info">to reduce social and economic disparities across europe and to strenghten bilateral relations</div>
@@ -217,6 +217,8 @@ export default Vue.extend({
       const from_ = fmnames,
             to_ = dataset.map( (d) => d.name );
 
+      const beneficiary_count = to_.length;
+
       // items are in fact a circle, starting clockwise with first country,
       // then a dummy item, then the financial mechanisms bottom to top,
       from_.reverse();
@@ -264,6 +266,7 @@ export default Vue.extend({
         matrix,
         total,
         _empty,
+        beneficiary_count,
       };
     },
   },
