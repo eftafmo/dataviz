@@ -254,11 +254,6 @@ export default Vue.extend({
             d.colour
         ));
     },
-
-    // for all other filters, re-render
-    handleFilter() {
-      this.render();
-    },
   },
 });
 

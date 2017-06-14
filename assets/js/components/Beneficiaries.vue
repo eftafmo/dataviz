@@ -507,17 +507,12 @@ export default Vue.extend({
       ).call(deactivate);
     },
 
-    handleFilter() {
-      this.render();
-    },
-
     changedDimension() {
       // re-render on dimensions change
       // (but don't mess with the initial render)
-      if (!this.rendered) return;
+      if (!this.isReady) return;
       // and don't animate things
-      this.rendered = false;
-      this.render();
+      this.render(true);
     },
   },
 

@@ -755,7 +755,7 @@ export default Vue.extend({
     },
 
     handleFilterSector(val, old) {
-      // remember the previos sector, it's used in various places,
+      // remember the previous sector, it's used in various places,
       // and clear it during render
       this._prevsector = old;
 
@@ -804,10 +804,6 @@ export default Vue.extend({
         // TODO: if this was already grayed out it would be nice to pass
         // momentarily through the default colour
         .attr("fill", colourfunc);
-    },
-
-    handleFilter() {
-      this.render();
     },
   },
 });

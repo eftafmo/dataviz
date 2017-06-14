@@ -1,5 +1,6 @@
 <script>
 import * as d3 from 'd3';
+import debounce from 'lodash.debounce';
 import Dropdown from '../includes/DropdownFilter';
 import ChartContainer from '../includes/ChartContainer';
 
@@ -32,7 +33,6 @@ export default {
 
   mounted() {
     this.chart = d3.select(this.$el).select('.chart');
-    this.legend = d3.select(this.$el).select('.legend');
 
     this.computeDimensions();
     window.addEventListener('resize', this.computeDimensions);
@@ -44,17 +44,28 @@ export default {
       // to allow computeDimensions() to do its work
       this.$nextTick(this.render);
     },
-    render() {
-      this.renderChart();
-      this.renderLegend();
-      this.rendered = true;
+
+    render(initial) {
+      const wait = 17, // wait between re-rendering
+            maxWait = 100; // but no more than this
+
+      if (initial) this.rendered = false;
+
+      let renderer = this._renderer;
+      if (renderer === undefined)
+        renderer = this._renderer = debounce(
+          () => {
+            this.renderChart();
+            this.rendered = true;
+          },
+          wait, {maxWait}
+        );
+
+      renderer();
     },
+
     renderChart() {
-      throw "Not implemented";
-    },
-    renderLegend() {
-      // don't throw, not all visualisations implement this
-      return;
+      throw new Error("Not implemented");
     },
 
     computeDimensions(event) {
@@ -72,6 +83,11 @@ export default {
 
       return d3.transition()
                .duration(duration);
+    },
+
+    // filters should re-render by default, unless specifically handled
+    handleFilter() {
+      this.render();
     },
   },
 
