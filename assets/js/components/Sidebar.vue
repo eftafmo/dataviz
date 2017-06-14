@@ -7,10 +7,8 @@
           <small>{{ format(data.bilateral_allocation) }} for bilateral relations</small>
         </div>
       </transition>
-      <button type="button" id="close-sidebar-results" class="no-btn"
-              title="Close results"
-              v-if="isMobileExpanded"
-              v-on:click="mobileCollapse">
+      <button type="button" id="close-sidebar" class="no-btn"
+              title="Close results">
         <span class="icon icon-close"></span>
       </button>
     </div>
@@ -58,13 +56,7 @@ export default Vue.extend({
 
   data() {
     return {
-      // helper for transitioning value changes
       transitioned: false,
-
-      onMobile: false,
-      isMobileExpanded: false,
-      // select first tab by default
-      selectedTab: 'results',
     }
   },
 
@@ -86,52 +78,7 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    onMobile (matches) {
-        if (matches) {
-          this.$el.addEventListener('click', this.mobileExpand, false);
-        } else {
-          this.$el.removeEventListener('click', this.mobileExpand, false);
-          this.mobileCollapse();
-        }
-  },
-},
-  updated () {
-    // Add a media query listener handle mobile events
-    var mq = window.matchMedia ('(max-width: 768px)');
-    var self = this;
 
-    mq.addListener(function(mq) { self.onMobile = mq.matches; });
-
-    this.onMobile = mq.matches; // initial check;
-  },
-
-  methods: {
-    selectTab(tab) {
-      this.selectedTab = tab;
-    },
-
-      mobileExpand() {
-        if (!this.isMobileExpanded) {
-          this.isMobileExpanded = true;
-          this.$el.classList.add('is-expanded-on-mobile');
-        }
-      },
-
-    mobileCollapse(e) {
-      e = e || window.event;
-      e.stopPropagation(); // event will trigger expand and cancel collapse
-
-      if (this.isMobileExpanded) {
-        this.isMobileExpanded = false;
-
-        var el = this.$el;
-
-        el.classList.remove('is-expanded-on-mobile');
-      }
-    },
-
-  },
 });
 
 </script>

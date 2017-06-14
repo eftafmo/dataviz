@@ -1,9 +1,9 @@
 <template>
-  <section class="sidebar-tab-pane results"
+  <section class="sidebar-section-wrapper results"
     role="tabpanel">
-    <ul class="sidebar-tab-result-list" v-if="hasData">
+    <ul class="sidebar-content" v-if="hasData">
       <li v-for="(item, outcome) in data">
-        <div class="sidebar-result-content results_content">
+        <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
             <small>{{ item.sector }}</small>
@@ -23,7 +23,7 @@
 </template>
 
 <style lang="less">
-.sidebar-tab-pane {
+.results {
   li {
     list-style-type: none;
   }
@@ -48,20 +48,6 @@
     color: black;
   }
 
-/*
-  .country_thumbnail {
-    display: inline-block;
-    width: 24px;
-    margin-right: .5rem;
-  }
-
-  .indicator-country {
-    display: flex;
-    align-items: center;
-    margin-bottom: .3rem;
-  }
-*/
-
   .indicator-name {
     display: inline;
     font-size: 1.2rem;
@@ -76,7 +62,6 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
-//import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 import WithSectorsMixin from './mixins/WithSectors';
 
 export default Vue.extend({

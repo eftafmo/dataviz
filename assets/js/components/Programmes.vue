@@ -1,9 +1,9 @@
 <template>
-  <section class="sidebar-tab-pane programmes"
+  <section class="sidebar-section-wrapper programmes"
              role="tabpanel">
-    <ul class="sidebar-tab-result-list" v-if="hasData">
+    <ul class="sidebar-content" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
-        <div class="sidebar-result-content programmes_content">
+        <div class="content-item programmes_content">
           <div class="body">
             <div class="title-wrapper">
                 <div class="flag">
@@ -135,8 +135,6 @@
     width: 24px;
     margin-right: .5rem;
   }
-
-
 }
 </style>
 
@@ -152,12 +150,6 @@ export default Vue.extend({
   mixins: [
     BaseMixin, WithCountriesMixin,
   ],
-
-  props: {
-    name: 'Programmes'
-  },
-
-
 
   computed: {
     projectcount() {
