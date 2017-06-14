@@ -259,7 +259,6 @@ export default Vue.extend({
         // top dummy
         [build_from(to_zeros, null, null, _empty)]
       );
-
       return {
         names,
         matrix,
