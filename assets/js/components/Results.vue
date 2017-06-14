@@ -1,6 +1,5 @@
 <template>
-  <section class="sidebar-section-wrapper results"
-    role="tabpanel">
+  <section class="sidebar-section-wrapper results">
     <ul class="sidebar-content" v-if="hasData">
       <li v-for="(item, outcome) in data">
         <div class="content-item results_content">
@@ -18,7 +17,6 @@
       </li>
     </ul>
 
-  </slot>
   </section>
 </template>
 

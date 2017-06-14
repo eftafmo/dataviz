@@ -1,6 +1,5 @@
 <template>
-  <section class="sidebar-section-wrapper programmes"
-             role="tabpanel">
+  <section class="sidebar-section-wrapper programmes">
     <ul class="sidebar-content" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
         <div class="content-item programmes_content">
@@ -32,7 +31,6 @@
         </div>
       </li>
     </ul>
-  <slot />
   </section>
 </template>
 

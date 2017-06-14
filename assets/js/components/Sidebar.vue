@@ -6,8 +6,7 @@
                 v-on:click="mobileCollapse">
           <span class="icon icon-close"></span>
   </button>
-    <slot name="Allocation_overview"></slot>
-    <slot name="Tabs"></slot>
+    <slot></slot>
   </div>
 </template>
 

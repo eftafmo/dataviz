@@ -41,20 +41,19 @@
 
 {% block aside %}
 <sidebar>
-  <allocation_overview
-      :initial="dataset"
-      slot="Allocation_overview">
-  </allocation_overview>
-    <tabs slot="Tabs">
-      <tab name="Results">
-        <results
+  <overview
+      :initial="dataset">
+  </overview>
+  <tabs>
+    <tab name="Results">
+      <results
         :initial="dataset" />
-      </tab>
+    </tab>
       <tab name="Programmes">
-        <programmes
+       <programmes
         :initial="dataset" />
-      </tab>
-    </tabs>
+    </tab>
+  </tabs>
  </sidebar>
 {% endblock %}
 

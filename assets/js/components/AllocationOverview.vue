@@ -1,16 +1,12 @@
 <template>
-<div v-if="hasData">
-    <div class="sidebar-header">
+    <div  v-if="hasData" class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="transitioned">
           <strong>{{ format(data.allocation) }}</strong>
           <small>{{ format(data.bilateral_allocation) }} for bilateral relations</small>
         </div>
       </transition>
-
     </div>
-    </div>
-  </div>
 </template>
 
 <style>
