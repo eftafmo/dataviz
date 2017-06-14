@@ -33,10 +33,10 @@
     <div class="sidebar-tab-content">
       <results id="results"
                :initial="dataset"
-               v-bind:selected="(selectedTab == 'results')"/>
+               v-bind:class="{ active: (selectedTab == 'results') }"/>
       <programmes id="programmes"
                   :initial="dataset"
-                  v-bind:selected="(selectedTab == 'programmes')"/>
+                  v-bind:class="{ active: (selectedTab == 'programmes') }"/>
     </div>
   </div>
 </template>
@@ -50,6 +50,10 @@ sidebar-header {
 .allocation {
   padding: 1rem;
   width: 100%;
+}
+
+.sidebar-tab-content .active {
+  display: block;
 }
 
 .allocation.fade-enter-active {
@@ -157,9 +161,6 @@ export default Vue.extend({
       }
     },
 
-    handleFilter() {
-      this.transitioned = !this.transitioned;
-    },
   },
 });
 

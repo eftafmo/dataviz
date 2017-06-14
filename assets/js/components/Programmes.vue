@@ -1,9 +1,5 @@
 <template>
-  <div class="sidebar-tab-pane programmes"
-       v-bind:class="{
-        'is-selected': selected,
-        'is-loading': loading
-       }">
+  <div class="sidebar-tab-pane programmes">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
         <div class="sidebar-result-content programmes_content">
@@ -35,14 +31,6 @@
         </div>
       </li>
     </ul>
-
-    <div class="small muted align-center">
-      &ndash;
-      <button type="button" class="btn-link">show 10 more results</button>
-      |
-      <a href="#search" class="muted">show all</a>
-      &ndash;
-    </div>
 
   </div>
 </template>
@@ -164,23 +152,6 @@ export default Vue.extend({
     BaseMixin, WithCountriesMixin,
   ],
 
-  props: {
-    selected: {
-      type: Boolean,
-      default: false
-    },
-  },
-
-  watch: {
-    selected () { this.loadResults(); },
-  },
-
-  data() {
-    return {
-      loading: false,
-    };
-  },
-
   computed: {
     projectcount() {
       // this could be useful to the parent?
@@ -257,17 +228,6 @@ export default Vue.extend({
   },
 
   methods: {
-    loadResults() {
-      /*
-      var self = this;
-      self.loading = true;
-
-      window.setTimeout(function() {
-        // simulate ajax call
-        self.loading = false;
-      }, 1000);
-      */
-    },
     toggleContent(e) {
       //remove comment if you want to toggle between elements
 
@@ -284,11 +244,6 @@ export default Vue.extend({
       else {
         target.classList.add('active')
       }
-    },
-
-    handleFilter() {
-      // vue-only component, doesn't need any special handling
-      return;
     },
   },
 });

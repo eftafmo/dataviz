@@ -1,9 +1,5 @@
 <template>
-  <div class="sidebar-tab-pane results"
-       v-bind:class="{
-        'is-selected': selected,
-        'is-loading': loading
-       }">
+  <div class="sidebar-tab-pane results">
     <ul class="sidebar-tab-result-list" v-if="hasData">
       <li v-for="(item, outcome) in data">
         <div class="sidebar-result-content results_content">
@@ -21,13 +17,6 @@
       </li>
     </ul>
 
-    <div class="small muted align-center">
-      &ndash;
-      <button type="button" class="btn-link">show 10 more results</button>
-      |
-      <a href="#search" class="muted">show all</a>
-      &ndash;
-    </div>
 
   </div>
 </template>
@@ -94,22 +83,11 @@ export default Vue.extend({
     BaseMixin, WithSectorsMixin,
   ],
 
-  props: {
-    selected: {
-      type: Boolean,
-      default: false
-    },
-  },
 
   watch: {
       selected () { this.loadResults(); }
   },
 
-  data () {
-    return {
-      loading: false,
-    }
-  },
 
   computed: {
     data() {
@@ -147,24 +125,7 @@ export default Vue.extend({
       return results;
     },
   },
-  methods: {
-    loadResults() {
-      /*
-      var self = this;
-      self.loading = true;
 
-      window.setTimeout(function() {
-        // simulate ajax call
-        self.loading = false;
-      }, 1000);
-      */
-    },
-
-    handleFilter() {
-      // vue-only component, doesn't need any special handling
-      return;
-    },
-  },
 });
 
 </script>
