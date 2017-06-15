@@ -1,12 +1,7 @@
 <template>
-  <div class="sidebar-tab-pane results"
-       v-bind:class="{
-        'is-selected': selected,
-        'is-loading': loading
-       }">
-    <ul class="sidebar-tab-result-list" v-if="hasData">
+    <ul class="results" v-if="hasData">
       <li v-for="(item, outcome) in data">
-        <div class="sidebar-result-content results_content">
+        <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
             <small>{{ item.sector }}</small>
@@ -20,20 +15,10 @@
         </div>
       </li>
     </ul>
-
-    <div class="small muted align-center">
-      &ndash;
-      <button type="button" class="btn-link">show 10 more results</button>
-      |
-      <a href="#search" class="muted">show all</a>
-      &ndash;
-    </div>
-
-  </div>
 </template>
 
 <style lang="less">
-.sidebar-tab-pane {
+.results {
   li {
     list-style-type: none;
   }
@@ -58,20 +43,6 @@
     color: black;
   }
 
-/*
-  .country_thumbnail {
-    display: inline-block;
-    width: 24px;
-    margin-right: .5rem;
-  }
-
-  .indicator-country {
-    display: flex;
-    align-items: center;
-    margin-bottom: .3rem;
-  }
-*/
-
   .indicator-name {
     display: inline;
     font-size: 1.2rem;
@@ -86,30 +57,12 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
-//import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 import WithSectorsMixin from './mixins/WithSectors';
 
 export default Vue.extend({
   mixins: [
     BaseMixin, WithSectorsMixin,
   ],
-
-  props: {
-    selected: {
-      type: Boolean,
-      default: false
-    },
-  },
-
-  watch: {
-      selected () { this.loadResults(); }
-  },
-
-  data () {
-    return {
-      loading: false,
-    }
-  },
 
   computed: {
     data() {
@@ -147,24 +100,7 @@ export default Vue.extend({
       return results;
     },
   },
-  methods: {
-    loadResults() {
-      /*
-      var self = this;
-      self.loading = true;
 
-      window.setTimeout(function() {
-        // simulate ajax call
-        self.loading = false;
-      }, 1000);
-      */
-    },
-
-    handleFilter() {
-      // vue-only component, doesn't need any special handling
-      return;
-    },
-  },
 });
 
 </script>

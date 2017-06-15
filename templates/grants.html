@@ -40,11 +40,21 @@
 {% endblock %}
 
 {% block aside %}
-  <div id="sidebar">
-    <sidebar
-        :initial="dataset"
-    />
-  </div>
+<sidebar>
+  <overview
+      :initial="dataset">
+  </overview>
+  <tabs cache-lifetime="">
+    <tab name="Results">
+      <results class="sidebar-content"
+        :initial="dataset" />
+    </tab>
+    <tab name="Programmes">
+      <programmes class="sidebar-content"
+        :initial="dataset" />
+    </tab>
+  </tabs>
+ </sidebar>
 {% endblock %}
 
 {% block finally %}

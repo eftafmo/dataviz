@@ -3,6 +3,7 @@ import Vue from 'vue';
 import BaseMixin from './components/mixins/Base';
 import ProjectsMixin from './components/mixins/Projects';
 import * as components from './components/index';
+import {Tabs, Tab} from 'vue-tabs-component';
 
 
 const Base = Vue.extend({
@@ -20,7 +21,7 @@ export const Homepage = Base.extend({
 
 
 const Viz = Base.extend({
-  // TODO: do we want the filter bar on all pages?
+  // TODO: do we want the filter bar on all pages?7
   components: {
     globalfilters: components.GlobalFilters,
   },
@@ -35,6 +36,11 @@ export const Grants = Viz.extend({
     sectors: components.Sectors,
     xmap: components.AllocationMap,
     beneficiaries: components.Beneficiaries,
+    overview: components.AllocationOverview,
+    programmes: components.Programmes,
+    results: components.Results,
+    tabs: Tabs,
+    tab: Tab,
     sidebar: components.Sidebar,
   },
 });
@@ -49,7 +55,11 @@ export const Projects = Viz.extend({
     }),
     xmap: components.ProjectsMap,
     beneficiaries: components.Beneficiaries,
+    overview: components.AllocationOverview,
+    programmes: components.Programmes,
+    results: components.Results,
+    tabs: Tabs,
+    tab: Tab,
     sidebar: components.Sidebar,
   },
 });
-
