@@ -44,13 +44,13 @@
   <overview
       :initial="dataset">
   </overview>
-  <tabs>
+  <tabs cache-lifetime="">
     <tab name="Results">
-      <results
+      <results class="sidebar-content"
         :initial="dataset" />
     </tab>
-      <tab name="Programmes">
-       <programmes
+    <tab name="Programmes">
+      <programmes class="sidebar-content"
         :initial="dataset" />
     </tab>
   </tabs>

@@ -1,5 +1,5 @@
 <template>
-    <ul class="sidebar-content programmes" v-if="hasData">
+    <ul class="programmes" v-if="hasData">
       <li v-for="beneficiary in data.beneficiaries">
         <div class="content-item programmes_content">
           <div class="body">
