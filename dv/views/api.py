@@ -1,4 +1,5 @@
 from collections import OrderedDict, defaultdict, namedtuple
+from decimal import Decimal
 from rest_framework.generics import ListAPIView
 from django.http import HttpResponseNotAllowed
 from django.db.models import CharField
@@ -12,6 +13,7 @@ from dv.models import (
     Allocation,
     State, ProgrammeArea, Programme, Project,
     ProgrammeIndicator,
+    NUTS,
 )
 from dv.serializers import (
     ProjectSerializer,
@@ -105,23 +107,84 @@ def beneficiary_allocation_detail(request, beneficiary):
         }, status=404)
 
     # Note: if project's PA stops going through Outcome, update below
+    fields = {
+        'id': F('nuts'),
+        'area': F('outcome__programme_area__name'),
+        'sector': F('outcome__programme_area__priority_sector__name'),
+        'fm': F('outcome__programme_area__priority_sector__type__grant_name'),
+    }
     allocations = (
         Project.objects.filter(state=state)
-        # TODO: load parent codes too and split amongst children (?)
-        .filter(nuts__length=5)
         .exclude(allocation=0)
-        .annotate(
-            id=F('nuts'),
-            area=F('outcome__programme_area__name'),
-            sector=F('outcome__programme_area__priority_sector__name'),
-            # TODO: remove this Concat trick once we get rid of fm enums
-            fm=F('outcome__programme_area__priority_sector__type__grant_name'),
-        )
-        .values('id', 'area', 'sector', 'fm')
+        .annotate(**fields)
+        .values(*fields.keys())
         .annotate(amount=Sum('allocation'))
     )
 
-    return JsonResponse(list(allocations))
+    # split all non-level3 allocation among level3s, but
+    #
+    # NOTE: "In every country at every NUTS level the “Extra-Regio” regions
+    # have been designated (coded by adding to a two-letter country code
+    # the letter Z at NUTS level 1, letters ZZ at NUTS level 2 and letters
+    # ZZZ at NUTS level 3)."
+    #
+    # (we'll pretend the Zs are root)
+
+    nuts3s = tuple(
+        NUTS.objects
+        .filter(code__startswith=beneficiary, code__length=5)
+        .exclude(code__endswith="Z") # skip extra-regio
+        .order_by('code')
+        .values_list('code', flat=True)
+    )
+
+    allocs = defaultdict(int)
+    fkeys = tuple(fields.keys())
+    codeidx = fkeys.index('id')
+    #_verify1 = Decimal('0');
+
+    for a in allocations:
+        amount = a.pop('amount')
+        #_verify1 += amount
+
+        code = a['id']
+        if len(code) > 2 and code.endswith('Z'): # extra-regio
+            code = code[:2]
+
+        # use fields' keys to ensure predictable order
+        key = tuple(a[k] for k in fkeys)
+        if len(code) == 5:
+            allocs[key] += amount
+            continue
+
+        # else split among children
+        children = (nuts3s if len(code) == 2
+                    else [n for n in nuts3s if n.startswith(code)])
+
+        # WARNING: this will trigger a DivisionByZero if we have mismatching
+        # NUTS codes between data and the official list.
+        # TODO: handle more gracefully.
+        # (or rather, TODO: the data-provided NUTS codes should be FKed to the
+        # official stuff)
+        amount = amount / len(children)
+
+        for nuts in children:
+            childkey = key[:codeidx] + (nuts, ) + key[codeidx+1:]
+            allocs[childkey] += amount
+
+    allocations = []
+    #_verify2 = Decimal('0');
+
+    for key, amount in allocs.items():
+        allocation = dict(zip(fkeys, key))
+        #_verify2 += amount
+
+        # strip away some of that crazy precision
+        allocation['amount'] = amount.quantize(Decimal('1.00'))
+        allocations.append(allocation)
+
+    #print(_verify1, _verify2)
+    return JsonResponse(allocations)
 
 
 class ProjectList(ListAPIView):

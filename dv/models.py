@@ -79,8 +79,8 @@ class NUTS(_MainModel):
         {
             'src': 0,
             'map': {
-                'code': 'NUTS CODE',
-                'label': 'NUTS LABEL',
+                'code': 'CODE',
+                'label': 'LABEL',
             }
         },
     ]
@@ -92,6 +92,12 @@ class NUTS(_MainModel):
     def level(self):
         """The NUTS level."""
         return len(self.code) - 2
+
+    class Meta(_BaseModel.Meta):
+        ordering = ['code']
+
+    def __str__(self):
+        return self.code
 
 
 class State(_MainModel):
