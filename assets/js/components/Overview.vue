@@ -113,6 +113,8 @@
 
   .legend {
     cursor: pointer;
+    position: relative;
+    z-index: 1;
     .fm span {
       width: 10px; height: 10px;
       display: inline-block;
@@ -217,6 +219,7 @@ export default Vue.extend({
       const dataset = d3.values(_dataset);
       dataset.sort((a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0));
 
+      let dup = []
       let programmes_total = 0;
       let projects_total = 0;
       for (const d of dataset) {
@@ -224,20 +227,20 @@ export default Vue.extend({
           if(this.COUNTRIES[c.beneficiary].name == d.name)
           {d.programmes.push(c.programmes)}
         }
-        let dup = []
         for (let a of d.programmes) {
             for (let c of a) {
               dup.push(c);
             }
         }
-        let unique = dup.filter(function(elem, index, self) {
-            return index == self.indexOf(elem);
-          })
-        d.programmes_count += unique.length
-        programmes_total += d.programmes_count
         projects_total += d.project_count
-      }
+       }
+      let unique = dup.filter(function(elem, index, self) {
+            return index == self.indexOf(elem);
+      })
+      programmes_total = unique.length
 
+
+      console.log(dataset)
       // the chord layout needs a matrix as input
       const from_ = fmnames,
             to_ = dataset.map( (d) => d.name );
