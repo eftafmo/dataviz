@@ -4,19 +4,27 @@
 import Overview from './Overview';
 import Mechanisms from './Mechanisms';
 import Sectors from './Sectors';
-import Map from './Map';
+import AllocationMap from './AllocationMap';
+import ProjectsMap from './ProjectsMap';
 import Beneficiaries from './Beneficiaries';
 import GlobalFilters from './GlobalFilters';
 import Results from './Results';
+import AllocationOverview from './AllocationOverview';
+import Programmes from './Programmes';
 import Sidebar from './Sidebar';
+
 
 export {
   Overview,
   Mechanisms,
   Sectors,
-  Map,
+  AllocationMap,
+  ProjectsMap,
   Beneficiaries,
   GlobalFilters,
-  Sidebar,
+  AllocationOverview,
   Results,
+  Programmes,
+  Sidebar,
 };
+

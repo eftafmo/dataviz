@@ -37,6 +37,7 @@
 
 .list-filters {
   overflow: hidden;
+  white-space: normal;
 }
 
 .global-filters {

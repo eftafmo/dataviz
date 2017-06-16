@@ -1,6 +1,6 @@
 <template>
 <div class="map-viz">
-<chart-container :width="width" :height="height">
+  <chart-container :width="width" :height="height" :class="{ rendering: !rendered }">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
       <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
@@ -38,9 +38,14 @@
         <g class="frames" />
       </g>
 
+      <g class="data" /> <!-- this one's for actual visualisations -->
+
     </g>
   </svg>
 </chart-container>
+  <div v-if="hasData" class="dropdown">
+    <dropdown filter="beneficiary" title="Select a country" :items="COUNTRIES"></dropdown>
+  </div>
 </div>
 </template>
 
@@ -65,6 +70,12 @@
   }
 
   // styles
+  .rendering {
+    // don't show the base map until all data has been loaded
+    // (TODO: we could also transition this)
+    visibility: hidden;
+  }
+
   .chart {
     .transitioning {
       pointer-events: none;
@@ -151,7 +162,6 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
-import {interpolateYlGn} from 'd3-scale-chromatic';
 import {slugify} from 'js/lib/util'
 
 import BaseMixin from './mixins/Base';
@@ -177,6 +187,8 @@ export default Vue.extend({
     // placeholders for fetched topojson data
     this.layers = null;
     this.regions = null;
+    // cache for computed geofeature-related data
+    this.geodetails = {};
     // cache for geojson data
     this._region_borders = {};
     // cache for allocation data
@@ -197,11 +209,9 @@ export default Vue.extend({
       terrain_stroke: 0.5,
       graticule_stroke: 0.2,
       donor_inactive_colour: "#85adcb",
+      default_region_colour: "#fff",
 
       zoom: 1,
-
-      dataset: {},
-      hasData: true,
     };
   },
 
@@ -257,8 +267,8 @@ export default Vue.extend({
 
   methods: {
     _populateCache() {
-      // cache the geojson data, because extracting it from topojson
-      // is an expensive operation
+      // cache the nuts3-level geojson data, because extracting it
+      // from topojson is an expensive operation
       const data = this.regions,
             layer = 'nuts3',
             cache = this._region_borders;
@@ -274,6 +284,15 @@ export default Vue.extend({
       }
     },
 
+    cacheGeoDetails(d) {
+      const path = this.path;
+
+      this.geodetails[d.id] = {
+        centroid: path.centroid(d),
+        bounds: path.bounds(d),
+      };
+    },
+
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
@@ -281,6 +300,7 @@ export default Vue.extend({
 
       this.renderBase();
       this.renderStates();
+      this.renderData();
 
       this.rendered = true;
     },
@@ -322,13 +342,16 @@ export default Vue.extend({
               return `<div class="title-container">
                         <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
                         <span class="name">${COUNTRIES[d.id].name}</span>
-                      </div>`;
+                      </div>
+                      ${$this.format(d.total || 0)}`
+                      +" <button class='btn btn-anchor'>X</button>";
 
             return `<div class="title-container">
                       <span class="name">${this.name} (${d.id})</span>
                     </div>
                     ${$this.format(d.amount || 0)}
-                    <small>(Temporary)<small>`;
+                    <small>(Temporary)<small>`
+                    +" <button class='btn btn-anchor'>X</button>";
           })
           .direction('n')
           .offset([0, 0])
@@ -427,10 +450,10 @@ export default Vue.extend({
 
       function drawFrameLi(d) {
         const scale = scaleLi,
-              center = path.centroid(d),
+              center = $this.geodetails["LI"].centroid,
               cx = center[0],
               cy = center[1],
-              bounds = path.bounds(d),
+              bounds = $this.geodetails["LI"].bounds,
               b1 = bounds[0],
               b2 = bounds[1],
               dx = b2[0] - b1[0],
@@ -449,7 +472,7 @@ export default Vue.extend({
           .attr("vector-effect","non-scaling-stroke")
           .attr("transform", (d) => {
             const scale = scaleLi,
-                  center = path.centroid(d),
+                  center = $this.geodetails["LI"].centroid,
                   cx = center[0],
                   cy = center[1],
                   tx = -cx * (scale - 1),
@@ -461,24 +484,27 @@ export default Vue.extend({
       }
 
       const countries = states.selectAll("path")
-             .data(_features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ))
+             .data(
+               _features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ),
+               (d) => d.id
+             )
              .enter()
              .append("path")
              .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
-             .attr("d", path);
-
-      // remembering these for lazy reasons
-      this._countrySelection = countries;
+             .attr("d", path)
+             // while at this, cache the centroids and bounding box,
+             // because the geo-data will get wiped during data manipulation
+             .each(this.cacheGeoDetails);
 
       countries
         .filter( (d) => d.id == "LI" )
         .call(magnifyLiechtenstein);
 
+      /* mouse events */
       countries
         .on("mouseenter",
             function(){ d3.select(this).raise(); }
-        );
-
+        )
       countries
         .filter( (d) => COUNTRIES[d.id].type == "beneficiary" )
         .on("click", function (d) {
@@ -495,6 +521,11 @@ export default Vue.extend({
         .attr("fill", (d) => d.id == "NO" ?
                              "url(#multi-fm)" : this.fmcolour("eea-grants") // §
         );
+    },
+
+    renderData() {
+      // children should implement this as needed
+      return;
     },
 
     renderRegions(t) {
@@ -523,9 +554,10 @@ export default Vue.extend({
 
       const rentered = regions.enter().append('path')
              .attr('d', this.path)
+             .each(this.cacheGeoDetails)
              // cache the name with the node
              .property('name', (d) => d.properties.name )
-             .attr('fill', interpolateYlGn(0))
+             .attr('fill', this.default_region_colour)
              .on('mouseenter',
                  function(d, i) {
                    d3.select(this).raise();
@@ -561,89 +593,15 @@ export default Vue.extend({
 
                 // also reset regions to default colour
                 .selectAll('path')
-                .attr('fill', interpolateYlGn(0))
+                .attr('fill', this.default_region_colour)
 
       // finally,
       this.renderRegionData(t)
     },
 
     renderRegionData(t) {
-      const state = this.filters.beneficiary;
-
-      // this could be called by another filter.
-      // bail out if no beneficiary selected.
-      if (state === null) return;
-
-      let dataset = this._region_data[state];
-
-      // placing the rendering code inside a function,
-      // because the dataset might not be loaded yet
-      const _renderRegionData = () => {
-        const _filters = d3.keys(this.filters).filter( (f) => f != 'beneficiary' );
-        const regiondata = this.filter(dataset, _filters);
-
-        const totals = {},
-              // another version of the above, but storing only id -> value
-              _totals = {};
-        let max = 0;
-
-        for (const row of regiondata) {
-          const id = row.id;
-          let item = totals[id];
-          if (item === undefined) {
-            item = totals[id] = {
-              id: id,
-              amount: 0,
-            };
-          }
-
-          item.amount += +row.amount;
-
-          // save another iteration and track the max
-          max = Math.max(item.amount, max);
-          // save this too, we'll use it to get the min
-          _totals[id] = item.amount;
-        }
-        const min = d3.min(d3.values(_totals));
-
-        // d3's chromatic scales take a [0, 1] domain
-        // TODO: user testing. linear or log?
-        //const x = d3.scaleLinear()
-        const x = d3.scaleLog()
-                    .domain([min, max])
-                    .range([.1, 1]);
-
-        if (t === undefined) t = this.getTransition();
-
-        const regions = this.chart.select('g.regions > g.' + state)
-                            .selectAll('path').data(d3.values(totals), (d) => d.id );
-
-        regions.enter().merge(regions)
-               .transition(t)
-               .attr("fill", (d) => interpolateYlGn(x(d.amount)) );
-
-        regions.exit()
-               .transition(t)
-               .attr("fill", interpolateYlGn(0));
-      };
-
-      // finally, trigger the whole logic
-      if (dataset === undefined) {
-        // reset the transition, data might arrive too late to use it.
-        // TODO: run a throbber / suggest data loading somehow?
-        t = undefined;
-
-        // fetch the data, fill the cache, render
-        const url = this.detailsDatasource.replace('XX', state);
-
-        d3.json(url, (error, data) => {
-          if (error) throw error;
-          dataset = this._region_data[state] = data;
-          _renderRegionData();
-        } );
-      } else {
-        _renderRegionData();
-      }
+      // children should implement this as needed
+      return;
     },
 
     handleFilterBeneficiary(val, old) {
@@ -671,8 +629,7 @@ export default Vue.extend({
 
         const spacing = .1 * Math.min($this.width, $this.height);
 
-        const state = chart.select(".states").select("." + val),
-              bounds = $this.path.bounds(state.datum()),
+        const bounds = $this.geodetails[val].bounds,
               x1 = bounds[0][0],
               x2 = bounds[1][0],
 
@@ -701,6 +658,11 @@ export default Vue.extend({
       const t = this.getTransition();
 
       /*
+       * part 0: re-render data-dependent stuff
+       */
+      this.renderData();
+
+      /*
        * part 1: change the donor colours
        */
 
@@ -714,7 +676,7 @@ export default Vue.extend({
                            (d) => this.fmcolour(d) :
                            () => this.fmcolour(slugify(val)); // awful §
 
-      this._countrySelection
+      this.chart.select('.states').selectAll('path')
         .filter( (d) => COUNTRIES[d.id].type == "donor" && d.id != "NO" )
         .transition(t)
         .attr("fill", colourfuncEEA);
@@ -734,6 +696,7 @@ export default Vue.extend({
     },
 
     handleFilter(type, val, old) {
+      this.renderData();
       this.renderRegionData();
     },
   },

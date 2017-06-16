@@ -10,26 +10,40 @@ logger = logging.getLogger()
 
 
 class ImportableModelMixin(object):
-    IMPORT_SOURCE = None
-    #: a dictionary of either
-    #: <model field name>: <imported column name>, or
-    #: <model field name>: (<related-model field name>, <imported column name>)
-    IMPORT_MAPPING = {}
+    IMPORT_SOURCES = [
+        {
+            'src': None,
+            #: a dictionary of either
+            #: <model field name>: <imported column name>, in which case 'code' will be looked up, or
+            #: <model field name>: (<related-model lookup field name>, <imported column name>)
+            'map': {}
+        }
+    ]
 
     @classmethod
-    def from_data(cls, data, **values):
+    def from_data(cls, data, src_idx, **values):
         """
         Creates a new object from the given data, handling CamelCased columns.
-        Column mapping can be overriden using `cls.IMPORT_MAPPING`.
+        Column mapping can be overriden using `cls.IMPORT_SOURCES`.
         Default values can be specified as **kwargs.
         """
-        # make a copy, 'cause we'll mutate the input data
-        data = data.copy()
+        sheet_name = cls.IMPORT_SOURCES[src_idx]['src']
+        mapping = cls.IMPORT_SOURCES[src_idx]['map']
+        kernel_keys = set()
 
         fields = {
             f.name: f
             for f in cls._meta.fields
         }
+
+        # Detect a 2nd pass when we should update a row rather than insert it
+        if src_idx > 0:
+            current_keys = set(mapping.keys())
+            initial_insert_keys = set(cls.IMPORT_SOURCES[0]['map'].keys())
+
+            kernel_keys = initial_insert_keys & current_keys
+            extra_keys = current_keys - initial_insert_keys
+
 
         def _assign(fld, val, rel_field=None):
             field = fields[fld]
@@ -83,25 +97,38 @@ class ImportableModelMixin(object):
             else:
                 raise NotImplementedError("Can't handle relation type for field", field)
 
-        # first handle everything defined under IMPORT_MAPPING
-        for field, column in cls.IMPORT_MAPPING.items():
+        for field, column in mapping.items():
             # the "column" can in fact be a tuple of (related field, input column)
             rel_field = None
             if isinstance(column, (tuple, list)):
                 rel_field, column = column
 
             try:
-                # TODO trimm ws?
-                val = data.pop(column)
+                val = data[column]
             except KeyError:
-                logger.error("Column %s not found in sheet %s", column, cls.IMPORT_SOURCE)
+                logger.error("Column %s not found in sheet %s", column, sheet_name)
                 raise
             else:
                 try:
                     _assign(field, val, rel_field)
                 except ObjectDoesNotExist as e:
-                    logger.warning("Error while assigning val: {} to field: {}, rel_field: {} ({})".format(val, field, rel_field, e))
+                    logger.warning(
+                        "Error while assigning val: {} to field: {}, rel_field: {} ({})".format(
+                            val, field, rel_field, e))
+                    return
 
-        if data:
-            logger.debug("Unused input data: %s", data.keys())
-        return cls(**values)
+        # if we have kernel_keys then identify an object already in db and update it
+        if kernel_keys:
+            try:
+                identity_values = {k: values[k] for k in kernel_keys}
+                obj = cls.objects.get(**identity_values)
+                [ setattr(obj, k, values[k]) for k in values if k in extra_keys ]
+            except (KeyError, ObjectDoesNotExist) as e:
+                logger.warning("Error while grabbing {} instance with identity: {}".format(
+                    cls.__name__, identity_values
+                ))
+                return
+            return obj
+        # otherwise create a new row
+        else:
+            return cls(**values)

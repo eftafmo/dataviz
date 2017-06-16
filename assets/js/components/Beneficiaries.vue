@@ -237,39 +237,7 @@ export default Vue.extend({
     },
 
     data() {
-      // filter dataset by everything except beneficiary
-      const _filters = d3.keys(this.filters)
-                         .filter((f) => f != 'beneficiary');
-      const dataset = this.filter(this.dataset, _filters);
-
-      const beneficiaries = {}
-      for (const d of dataset) {
-        const bid = d.beneficiary,
-              fm = d.fm,
-              value = +d.allocation;
-
-        if (value === 0) continue;
-
-        let beneficiary = beneficiaries[bid];
-        if (beneficiary === undefined)
-          beneficiary = beneficiaries[bid] = {
-            id: bid,
-            name: COUNTRIES[bid].name,
-            total: 0,
-            allocation: {},
-            sectors: d3.set(),
-          };
-
-        let allocation = beneficiary.allocation[fm];
-        if (allocation === undefined)
-          allocation = beneficiary.allocation[fm] = 0;
-
-        beneficiary.total += value;
-        beneficiary.allocation[fm] = allocation + value;
-        beneficiary.sectors.add(d.sector);
-      }
-
-      const beneficiarydata = d3.values(beneficiaries);
+      const beneficiarydata = d3.values(this.beneficiarydata);
 
       // we'll use this to preserve order, and as a basis for each bar item
       const fms = this.filters.fm ?
@@ -371,6 +339,7 @@ export default Vue.extend({
               + "<span class='name'>"+ d.name + "</span></div>"
               +  allocation_content
               + " <span class='action'>~Click to filter by beneficiary state</span>"
+              +" <button class='btn btn-anchor'>X</button>"
           })
           .direction('n')
           .offset(function(d) {

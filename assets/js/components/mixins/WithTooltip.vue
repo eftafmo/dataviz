@@ -9,6 +9,19 @@
   box-shadow: 0px 0px 3px #aaa;
   white-space: pre;
   line-height: 1.5;
+  .btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    @media(min-width: 768px){
+      display: none;
+    }
+  }
+  @media(max-width:768px) {
+    left: 0!important;
+    right: 0!important;
+    border: 1px solid #3d90f3;
+  }
 
   &:after {
     content: '▼';
@@ -22,6 +35,9 @@
     font-size: 2em;
     clear: both;
     pointer-events: none;
+     @media(max-width:768px) {
+      display: none;
+  }
   }
 
   .action {

@@ -1,3 +1,4 @@
+bleach>=2,<=3
 Django>=1.11,<1.12
 pyexcel>=0.4.2,<0.5
 pyexcel-xls>=0.3.1,<0.4

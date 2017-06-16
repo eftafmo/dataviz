@@ -79,6 +79,9 @@
       </li>
     </transition-group>
   </div>
+  <div v-if="hasData" class="dropdown">
+    <dropdown filter="sector" title="Select a sector" :items="selectPSData"></dropdown>
+  </div>
 </div>
 </template>
 
@@ -411,6 +414,18 @@ export default Vue.extend({
       return tree;
     },
 
+    selectPSData() {
+      let selectItems = []
+      for (let item of this.data.children) {
+        selectItems.push(item.data)
+      }
+      return selectItems
+    },
+
+    selectPAData() {
+
+    },
+
     radius() {
       return Math.min(this.width, this.height) / 2 - this.margin;
     },
@@ -558,6 +573,7 @@ export default Vue.extend({
               // TODO: 'grant allocation' should be taken from data
               + " grant allocation"
               + " <span class='action'>~Click to filter by priority " + filter_by + " </span>"
+              +" <button class='btn btn-anchor'>X</button>"
            })
           .offset([15,30])
           .direction('s');

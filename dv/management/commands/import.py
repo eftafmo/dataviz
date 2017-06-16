@@ -1,4 +1,5 @@
 import io
+import logging
 import pickle
 import pyexcel
 import os.path
@@ -15,11 +16,12 @@ from dv.models import (
     State, PrioritySector, ProgrammeArea, Programme, Programme_ProgrammeArea,
     Outcome, ProgrammeOutcome, Project, Indicator, ProgrammeIndicator,
     OrganisationType, Organisation, OrganisationRole,
-    FinancialMechanism, Allocation)
+    FinancialMechanism, Allocation, Organisation_OrganisationRole)
 from dv.lib.utils import is_iter
 
+logger = logging.getLogger()
 
-NUTS_FILE = "http://ec.europa.eu/eurostat/ramon/documents/nuts/NUTS_2013.zip"
+NUTS_FILE = "http://ec.europa.eu/eurostat/ramon/documents/nuts/NUTS_2006.zip"
 
 
 class Command(BaseCommand):
@@ -71,7 +73,6 @@ class Command(BaseCommand):
             Indicator, ProgrammeIndicator,
             OrganisationType, Organisation, OrganisationRole,
         )
-        models = (ProgrammeIndicator,)
 
         self.stderr.style_func = None
         def _write(*args, **kwargs):
@@ -98,57 +99,43 @@ class Command(BaseCommand):
                     record[k] = None
 
         for model in models:
-            if model == NUTS:
-                sheet = nuts_book[0]
-            else:
-                sheet = book[model.IMPORT_SOURCE]
-
-            _inline('importing "%s" into %s …  ' % (sheet.name,
-                                                    model._meta.label))
-
-            # we'll often have duplicates in a single sheet,
-            # so keep track of uniques
-            uniq_field = getattr(model, 'NATURAL_KEY_FIELD', None)
-            pk_field = model._meta.pk
-            if not uniq_field:
-                try:
-                    uniq_field = next(f.name
-                                      for f in model._meta.fields
-                                      if f.unique
-                                      and f != pk_field)
-                except StopIteration:
-                    try:
-                        uniq_field = model._meta.unique_together[0]
-                    except IndexError:
-                        # fallback to pk, and hope for the best
-                        uniq_field = pk_field.name
-
-            count = 0
-
-            def _save(obj):
-                nonlocal count
-                try:
-                    obj.save()
-                    count += 1
-                except IntegrityError as e:
-                    if 'UNIQUE constraint failed:' in str(e):
-                        pass
-                    else:
-                        raise
-
-            for record in sheet.records:
-                _inline(next(throbber))
-                _convert_nulls(record)
-
-                obj = model.from_data(record)
-                if obj is None:
-                    # trust the class, it knows why it refused object creation
-                    continue
-
-                if is_iter(obj):
-                    for _obj in obj:
-                        _save(_obj)
+            for idx, import_src in enumerate(model.IMPORT_SOURCES):
+                sheet_name = import_src['src']
+                mapping = import_src['map']
+                if model == NUTS:
+                    sheet = nuts_book[sheet_name]
                 else:
-                    _save(obj)
+                    sheet = book[sheet_name]
 
-            _write(_back + "done: %d" % count, self.style.SUCCESS)
+                _inline('importing "%s" into %s …  ' % (sheet.name, model._meta.label))
+
+                count = 0
+
+                def _save(obj):
+                    nonlocal count
+                    try:
+                        obj.save()
+                        count += 1
+                    except IntegrityError as e:
+                        # NOTE This is backend specific; might change on switch, say, postgres
+                        if 'UNIQUE constraint failed:' in str(e):
+                            pass
+                        else:
+                            raise
+
+                for record in sheet.records:
+                    _inline(next(throbber))
+                    _convert_nulls(record)
+
+                    obj = model.from_data(record, idx)
+                    if obj is None:
+                        # trust the class, it knows why it refused object creation
+                        continue
+
+                    if is_iter(obj):
+                        for _obj in obj:
+                            _save(_obj)
+                    else:
+                        _save(obj)
+
+                _write(_back + "done: %d" % count, self.style.SUCCESS)
