@@ -14,7 +14,7 @@ import './widgets/index.js';
 require("expose-loader?root!./root-instances.js");
 
 //keep homepage layout as a one column layout
-if(document.getElementById('overview')) {
-  let main = document.getElementById('overview').parentNode;
+if(document.querySelector('.homepage_content_wrapper')) {
+  let main = document.querySelector('.homepage_content_wrapper').parentNode;
   main.style.display = 'block'
 }

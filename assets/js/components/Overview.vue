@@ -1,15 +1,5 @@
 <template>
 <div class="overview-viz">
-<div v-if="isReady" class="circle-wrapper">
-    <div class="circle">
-      <div class="programmes-count"><span>{{data.programmes_total}}</span><br>Programmes</div>
-      <div class="projects-count"><span>{{data.projects_total}}</span><br>Projects</div>
-    </div>
-    <div class="line-wrapper">
-      <div class="donor-count"><span>3</span> Donor states</div>
-      <div class="states-count"><span>{{data.beneficiary_count}}</span> Beneficiary states</div>
-  </div>
- </div>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="FMS" class="clearfix">
       <template slot="fm-content" scope="x">
@@ -24,10 +14,6 @@
       <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
     </svg>
   </chart-container>
-  <div class="total-spent"><h1 v-if="isReady">{{format(data.total)}}</h1>
-    <h3>spent on</h3>
-  </div>
-  <div class="overview-info">to reduce social and economic disparities across europe and to strenghten bilateral relations</div>
 </div>
 </template>
 
@@ -191,7 +177,6 @@ export default Vue.extend({
 
   computed: {
     data() {
-      this.dataset = mydata
       const $this=this;
       const _dataset = {};
       const fmnames = d3.values(this.FMS).map( (fm) => fm.name ),
@@ -200,52 +185,25 @@ export default Vue.extend({
 
       for (const d of this.dataset) {
         const value = +d.allocation,
-              b = d.beneficiary,
-              project_count = d.project_count,
-              programmes_list = d.programmes;
+              b = d.beneficiary;
         if (value == 0) continue;
 
         let beneficiary = _dataset[b];
         if (beneficiary === undefined)
           beneficiary = _dataset[b] = Object.assign(
             { name: this.COUNTRIES[b].name },
-            _fmsobj,
-            { project_count: project_count },
-            { programmes : []},
-            { programmes_count : 0}
+            _fmsobj
           )
         beneficiary[d.fm] += value;
       }
       const dataset = d3.values(_dataset);
       dataset.sort((a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0));
 
-      let dup = []
-      let programmes_total = 0;
-      let projects_total = 0;
-      for (const d of dataset) {
-        for (const c of this.dataset ) {
-          if(this.COUNTRIES[c.beneficiary].name == d.name)
-          {d.programmes.push(c.programmes)}
-        }
-        for (let a of d.programmes) {
-            for (let c of a) {
-              dup.push(c);
-            }
-        }
-        projects_total += d.project_count
-       }
-      let unique = dup.filter(function(elem, index, self) {
-            return index == self.indexOf(elem);
-      })
-      programmes_total = unique.length
 
-
-      console.log(dataset)
       // the chord layout needs a matrix as input
       const from_ = fmnames,
             to_ = dataset.map( (d) => d.name );
 
-      const beneficiary_count = to_.length;
       // items are in fact a circle, starting clockwise with first country,
       // then a dummy item, then the financial mechanisms bottom to top,
       from_.reverse();
@@ -293,9 +251,6 @@ export default Vue.extend({
         matrix,
         total,
         _empty,
-        beneficiary_count,
-        programmes_total,
-        projects_total,
       };
     },
   },

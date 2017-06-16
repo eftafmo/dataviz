@@ -12,10 +12,12 @@ import Results from './Results';
 import AllocationOverview from './AllocationOverview';
 import Programmes from './Programmes';
 import Sidebar from './Sidebar';
+import HomepageInfo from './HomepageInfo';
 
 
 export {
   Overview,
+  HomepageInfo,
   Mechanisms,
   Sectors,
   AllocationMap,

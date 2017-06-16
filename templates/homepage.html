@@ -2,12 +2,20 @@
 
 
 {% block main %}
-  <div class="grant-dataviz" id="overview">
-    <overview
-        :width="500"
-        :height="400"
-        :initial="dataset"
-    />
+  <div class="homepage_content_wrapper">
+    <div class="grant-dataviz" id="overview">
+      <overview
+          :width="500"
+          :height="400"
+          :initial="dataset"
+      />
+    </div>
+    <div id="info">
+      <info
+          :initial="dataset"
+      />
+
+    </div>
   </div>
 
   <section class="section align-center">
@@ -34,7 +42,7 @@
 {% block finally %}
 <script>
 new root.Homepage({
-  el: '#overview',
+  el: '#content',
   data: {
     datasource: "{% url "api:grants" %}",
   },
