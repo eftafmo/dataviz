@@ -161,11 +161,10 @@ def beneficiary_allocation_detail(request, beneficiary):
         children = (nuts3s if len(code) == 2
                     else [n for n in nuts3s if n.startswith(code)])
 
-        # WARNING: this will trigger a DivisionByZero if we have mismatching
-        # NUTS codes between data and the official list.
-        # TODO: handle more gracefully.
-        # (or rather, TODO: the data-provided NUTS codes should be FKed to the
-        # official stuff)
+        if len(children) == 0:
+            # TODO: this is an error. log it, etc.
+            continue
+
         amount = amount / len(children)
 
         for nuts in children:
