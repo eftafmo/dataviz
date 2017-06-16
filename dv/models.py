@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import bleach
 import re
 from django.db import models
 from enumfields import EnumField, Enum
@@ -56,12 +57,16 @@ class _MainModel(_BaseModel):
 
 
 class FinancialMechanism(_MainModel):
-    IMPORT_SOURCE = 'PrioritySector'
-    IMPORT_MAPPING = {
-        'code': 'FMCode',
-        'name': 'FinancialMechanism',
-        'grant_name': 'GrantName',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'PrioritySector',
+            'map': {
+                'code': 'FMCode',
+                'name': 'FinancialMechanism',
+                'grant_name': 'GrantName',
+            }
+        },
+    ]
 
     code = models.CharField(max_length=16, primary_key=True)
     name = models.CharField(max_length=128, unique=True)
@@ -70,10 +75,15 @@ class FinancialMechanism(_MainModel):
 
 # TODO: fix NUTS data issues and use this as foreign key below
 class NUTS(_MainModel):
-    IMPORT_MAPPING = {
-        'code': 'CODE',
-        'label': 'LABEL',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 0,
+            'map': {
+                'code': 'CODE',
+                'label': 'LABEL',
+            }
+        },
+    ]
 
     code = models.CharField(max_length=2, primary_key=True)
     label = models.CharField(max_length=128)
@@ -89,13 +99,18 @@ class NUTS(_MainModel):
     def __str__(self):
         return self.code
 
+
 class State(_MainModel):
-    IMPORT_SOURCE = 'BeneficiaryState'
-    IMPORT_MAPPING = {
-        'code': 'Abbreviation',
-        'name': 'BeneficiaryState',
-        'url': 'UrlBSPage',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'BeneficiaryState',
+            'map': {
+                'code': 'Abbreviation',
+                'name': 'BeneficiaryState',
+                'url': 'UrlBSPage',
+            }
+        },
+    ]
 
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=64, unique=True)
@@ -103,12 +118,16 @@ class State(_MainModel):
 
 
 class PrioritySector(_MainModel):
-    IMPORT_SOURCE = 'PrioritySector'
-    IMPORT_MAPPING = {
-        'type': 'FMCode',
-        'code': 'PSCode',
-        'name': 'PrioritySector',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'PrioritySector',
+            'map': {
+                'type': 'FMCode',
+                'code': 'PSCode',
+                'name': 'PrioritySector',
+            }
+        },
+    ]
 
     code = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=64)  # not unique
@@ -118,15 +137,19 @@ class PrioritySector(_MainModel):
 
 class ProgrammeArea(_MainModel):
     # programme areas are defined in the same sheet with priority sectors
-    IMPORT_SOURCE = 'PrioritySector'
-    IMPORT_MAPPING = {
-        'priority_sector': 'PSCode',
-        'code': 'PACode',
-        'name': 'ProgrammeArea',
-        'short_name': 'ProgrammeAreaShortName',
-        'order': 'SortOrder',
-        'objective': 'ProgrammeAreaObjective',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'PrioritySector',
+            'map': {
+                'priority_sector': 'PSCode',
+                'code': 'PACode',
+                'name': 'ProgrammeArea',
+                'short_name': 'ProgrammeAreaShortName',
+                'order': 'SortOrder',
+                'objective': 'ProgrammeAreaObjective',
+            }
+        },
+    ]
 
     # each PA code is duplicated for the 2 FM present now
     code = models.CharField(max_length=4, primary_key=True)
@@ -142,19 +165,19 @@ class ProgrammeArea(_MainModel):
 
 class Allocation(_MainModel):
     NATURAL_KEY_FIELD = None
-
-    class Meta(_MainModel.Meta):
-        unique_together = ('state', 'programme_area', 'financial_mechanism')
-
-    IMPORT_SOURCE = 'BeneficiaryStatePrioritySector'
-    IMPORT_MAPPING = {
-        'state': ('name', 'BeneficiaryState'),
-        'programme_area': 'PACode',
-        'financial_mechanism': 'FMCode',
-        'gross_allocation': 'GrossAllocation',
-        'net_allocation': 'NetAllocation',
-        'order': 'SortOrder',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'BeneficiaryStatePrioritySector',
+            'map': {
+                'state': ('name', 'BeneficiaryState'),
+                'programme_area': 'PACode',
+                'financial_mechanism': 'FMCode',
+                'gross_allocation': 'GrossAllocation',
+                'net_allocation': 'NetAllocation',
+                'order': 'SortOrder',
+            }
+        },
+    ]
 
     state = models.ForeignKey(State)
     programme_area = models.ForeignKey(ProgrammeArea)
@@ -175,24 +198,32 @@ class Allocation(_MainModel):
             self.net_allocation
         )
 
+    class Meta(_MainModel.Meta):
+        unique_together = ('state', 'programme_area', 'financial_mechanism')
+
 
 class Programme(_MainModel):
-    IMPORT_SOURCE = 'Programme'
-    IMPORT_MAPPING = {
-        'state': ('name', 'BeneficiaryState'),
-        # skipping this, as we can't import m2ms before the instance is saved
-        #'programme_areas': 'PAListWithShortName', # this needs special massaging
-        'code': 'ProgrammeCode',
-        'name': 'Programme',
-        'summary': 'ProgrammeSummary',
-        'allocation_eea': 'AllocatedProgrammeGrantEEA',
-        'allocation_norway': 'AllocatedProgrammeGrantNorway',
-        'co_financing': 'ProgrammeCoFinancing',
-        'status': 'ProgrammeStatus',
-        # TODO: leftovers
-        #IsDirectlyContracted
-        #IsTAProgramme
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'Programme',
+            'map': {
+                'state': ('name', 'BeneficiaryState'),
+                # skipping this, as we can't import m2ms before the instance is saved
+                #'programme_areas': 'PAListWithShortName', # this needs special massaging
+                'code': 'ProgrammeCode',
+                'name': 'Programme',
+                'summary': 'ProgrammeSummary',
+                'allocation_eea': 'AllocatedProgrammeGrantEEA',
+                'allocation_norway': 'AllocatedProgrammeGrantNorway',
+                'co_financing': 'ProgrammeCoFinancing',
+                'status': 'ProgrammeStatus',
+                'url': 'UrlProgrammePage',
+                # TODO: leftovers
+                #IsDirectlyContracted
+                #IsTAProgramme
+            }
+        },
+    ]
 
     class STATUS(Enum):
         APPROVED = 'approved'
@@ -201,6 +232,15 @@ class Programme(_MainModel):
         class Labels:
             APPROVED = _('Approved'),
             IMPLEMENTATION = _('Implementation')
+
+    @classmethod
+    def from_data(cls, data, src_idx):
+        """ Mutates its data! """
+        mapping = cls.IMPORT_SOURCES[src_idx]['map']
+        data[mapping['summary']] = bleach.clean(
+            data[mapping['summary']], strip=True, strip_comments=True)
+
+        return super().from_data(data, src_idx)
 
     state = models.ForeignKey(State)
     programme_areas = models.ManyToManyField(ProgrammeArea,
@@ -211,6 +251,7 @@ class Programme(_MainModel):
 
     status = EnumField(STATUS, max_length=14)
 
+    url = models.CharField(max_length=256, null=True)
     summary = models.TextField()
 
     allocation_eea = models.DecimalField(max_digits=15, decimal_places=2)
@@ -235,36 +276,45 @@ class Programme_ProgrammeArea(_BaseModel):
     """
     A m2m-through table, defined explicitly only so it can be used during import
     """
-    IMPORT_SOURCE = 'Programme'
-    # note the leading underscore, this won't hit ImportableModelMixin.from_data
-    _IMPORT_MAPPING = {
-        'programme': 'ProgrammeCode',
-        'programme_area': 'PAListWithShortName',
-    }
-    IMPORT_MAPPING = {
-        'programme': 'programme',
-        'programme_area': 'programme_area',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'Programme',
+            'map': {
+                'programme': 'programme',
+                'programme_area': 'programme_area',
+            },
+            # note the leading underscore, this won't hit ImportableModelMixin.from_data
+            '_map': {
+                'programme': 'ProgrammeCode',
+                'programme_area': 'PAListWithShortName',
+            }
+        },
+    ]
 
     __PA_RE = re.compile(r'(?:^|,)([A-Z]{2}[0-9]{2}) - ')
+
     @classmethod
-    def from_data(cls, data):
+    def from_data(cls, data, src_idx):
         # this isn't a regular from_data() method, because
         # it returns multiple instances!
 
-        p_column = cls._IMPORT_MAPPING['programme']
+        private_mapping = cls.IMPORT_SOURCES[src_idx]['_map']
+        p_column = private_mapping['programme']
         programme = data[p_column]
 
-        pa_column = cls._IMPORT_MAPPING['programme_area']
+        pa_column = private_mapping['programme_area']
         # we need to extract the programme area codes from the input
         programme_areas = re.findall(cls.__PA_RE, data[pa_column])
 
-        return map(super().from_data,
-            ({
-                'programme': programme,
-                'programme_area': pa,
-            } for pa in programme_areas)
-        )
+        def _generate_data():
+            for pa in programme_areas:
+                yield {
+                    'programme': programme,
+                    'programme_area': pa,
+                }
+
+        # weird - we can't get away with bare super()...
+        return ( super(cls, cls).from_data(subdata, src_idx) for subdata in _generate_data())
 
     programme = models.ForeignKey(Programme)
     programme_area = models.ForeignKey(ProgrammeArea)
@@ -278,7 +328,7 @@ class Programme_ProgrammeArea(_BaseModel):
 
 class _FussyOutcomeCode(object):
     @classmethod
-    def from_data(cls, data):
+    def from_data(cls, data, src_idx):
         # fix non-unique FBL outcome codes
         # FBL = Fund for bilateral cooperation
         data = data.copy()
@@ -288,20 +338,24 @@ class _FussyOutcomeCode(object):
             code = '%sFBL%s' % (data['PACode'], uniq)
             data['OutcomeCode'] = code
 
-        return super().from_data(data)
+        return super().from_data(data, src_idx)
 
 
 class Outcome(_FussyOutcomeCode, _MainModel):
-    IMPORT_SOURCE = 'ProgrammeOutcomes'
-    IMPORT_MAPPING = {
-        'programme_area': 'PACode',
-        'code': 'OutcomeCode',
-        'name': 'Outcome',
-        'fixed_budget_line': 'IsFixedBudgetline',
-        # TODO: leftovers
-        #'IsProgrammeArea',
-        #'IsForReportingOnly'
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'ProgrammeOutcomes',
+            'map': {
+                'programme_area': 'PACode',
+                'code': 'OutcomeCode',
+                'name': 'Outcome',
+                'fixed_budget_line': 'IsFixedBudgetline',
+                # TODO: leftovers
+                #'IsProgrammeArea',
+                #'IsForReportingOnly'
+            }
+        },
+    ]
 
     programme_area = models.ForeignKey(ProgrammeArea, related_name='outcomes')
 
@@ -312,24 +366,36 @@ class Outcome(_FussyOutcomeCode, _MainModel):
 
 
 class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
-    IMPORT_SOURCE = 'ProgrammeOutcomes'
-    IMPORT_MAPPING = {
-        'programme': 'ProgrammeCode',
-        'outcome': 'OutcomeCode',
-        'state': ('name', 'BeneficiaryState'),
-        'allocation': 'GrantAmount',
-        'co_financing': 'ProgrammeCoFinancing',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'ProgrammeOutcomes',
+            'map': {
+                'programme': 'ProgrammeCode',
+                'outcome': 'OutcomeCode',
+                'state': ('name', 'BeneficiaryState'),
+                'allocation': 'GrantAmount',
+                'co_financing': 'ProgrammeCoFinancing',
+            }
+        },
+        # Update ProgrammeOutcom based on info from ProgrammeIndicators
+        # make sure you identify same row (all uniq constraints present)
+        {
+            'src': 'ProgrammeIndicators',
+            'map': {
+                'programme': 'ProgrammeCode',
+                'outcome': 'OutcomeCode',
+                'result_text': 'ResultText',
+            }
+        },
+    ]
 
     programme = models.ForeignKey(Programme, null=True)  # because "Reserve FM2004-09"
     outcome = models.ForeignKey(Outcome, related_name='programmes')
     state = models.ForeignKey(State)
 
-    # TODO: fix decimal fields
-    #allocation = models.PositiveIntegerField()
-    #co_financing = models.PositiveIntegerField()
     allocation = models.FloatField()
     co_financing = models.FloatField()
+    result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
 
     class Meta:
         unique_together = ('programme', 'outcome', 'state')
@@ -337,39 +403,41 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
     def __str__(self):
         return "%s _ %s" % (self.programme.code, self.outcome.code)
 
-    #@property
-    #def state(self):
-    #    return self.programme.state
-
 
 class Project(_MainModel):
-    IMPORT_SOURCE = 'Project'
-    IMPORT_MAPPING = {
-        'state': ('name', 'BeneficiaryState'),
-        'programme': 'ProgrammeCode',
-        'outcome': 'OutcomeCode',
-        'status': 'ProjectStatus',
-        'code': 'ProjectCode',
-        'name': 'Project',
-        'allocation': 'GrantAmount',
-        #'geotarget': 'NUTSCode',
-        'nuts': 'NUTSCode',
-        'programme_co_financing': 'ProgrammeCoFinancing',
-        'project_co_financing': 'ProjectCoFinancing',
-        'is_eea': 'IsEEA',
-        'is_norway': 'IsNorway',
+    IMPORT_SOURCES = [
+        {
+            'src': 'Project',
+            'map': {
+                'state': ('name', 'BeneficiaryState'),
+                'programme': 'ProgrammeCode',
+                'outcome': 'OutcomeCode',
+                'financial_mechanism': 'FMCode',
+                'status': 'ProjectStatus',
+                'code': 'ProjectCode',
+                'name': 'Project',
+                'allocation': 'GrantAmount',
+                'geotarget': 'GeographicalTarget',
+                'nuts': 'NUTSCode',
+                'programme_co_financing': 'ProgrammeCoFinancing',
+                'project_co_financing': 'ProjectCoFinancing',
+                'is_eea': 'IsEEA',
+                'is_norway': 'IsNorway',
+                'url': 'UrlProjectPage',
 
-        # TODO: leftovers
-        #'Predefined',
-        #'PlannedSummary',
-        #'ActualSummary',
-        #'IsPublished',
-        #'IsSmallGrantScheme',
-        #'IsPredefined',
-        #'IsBestPracticeProject',
-        #'IsMobility',
-        #'HasEnded'
-    }
+                # TODO: leftovers
+                #'Predefined',
+                #'PlannedSummary',
+                #'ActualSummary',
+                #'IsPublished',
+                #'IsSmallGrantScheme',
+                #'IsPredefined',
+                #'IsBestPracticeProject',
+                #'IsMobility',
+                #'HasEnded'
+            }
+        },
+    ]
 
     class STATUS(Enum):
         IN_PROGRESS = 'in progress'
@@ -386,12 +454,15 @@ class Project(_MainModel):
     state = models.ForeignKey(State)
     programme = models.ForeignKey(Programme)
     outcome = models.ForeignKey(Outcome)
+    financial_mechanism = models.ForeignKey(FinancialMechanism)
 
     status = EnumField(STATUS, max_length=11)
 
     code = models.CharField(max_length=9, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
     nuts = models.CharField(max_length=5)
+    geotarget = models.CharField(max_length=256)
+    url = models.CharField(max_length=256, null=True)
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
     programme_co_financing = models.DecimalField(max_digits=15, decimal_places=2)
     project_co_financing = models.DecimalField(max_digits=15, decimal_places=2)
@@ -400,25 +471,33 @@ class Project(_MainModel):
 
 
 class Indicator(_MainModel):
-    IMPORT_SOURCE = 'ProgrammeIndicators'
-    IMPORT_MAPPING = {
-        'code': 'IndicatorCode',
-        'name': 'Indicator',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'ProgrammeIndicators',
+            'map': {
+                'code': 'IndicatorCode',
+                'name': 'Indicator',
+            }
+        },
+    ]
 
-    code = models.CharField(max_length=5, primary_key=True)
-    name = models.CharField(max_length=128, unique=True)
+    code = models.CharField(max_length=64, primary_key=True)
+    name = models.CharField(max_length=256)
 
 
 class ProgrammeIndicator(_BaseModel):
-    IMPORT_SOURCE = 'ProgrammeIndicators'
-    IMPORT_MAPPING = {
-        'indicator': 'IndicatorCode',
-        'programme': 'ProgrammeCode',
-        'programme_area': 'ProgrammeAreaCode',
-        'outcome': 'OutcomeCode',
-        'achievement': 'Achievement',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'ProgrammeIndicators',
+            'map': {
+                'indicator': 'IndicatorCode',
+                'programme': 'ProgrammeCode',
+                'programme_area': 'ProgrammeAreaCode',
+                'outcome': 'OutcomeCode',
+                'achievement': 'Achievement',
+            }
+        },
+    ]
 
     # TODO: assess linking (all 3? of) these to ProgrammeOutcome
     #'ProgrammeCode',
@@ -438,25 +517,31 @@ class ProgrammeIndicator(_BaseModel):
 
 
 class OrganisationType(_BaseModel):
-    IMPORT_SOURCE = 'Organisation'
-    IMPORT_MAPPING = {
-        'category': 'OrganisationTypeCategory',
-        'name': 'OrganisationType',
-    }
+    IMPORT_SOURCES = [
+        {
+            'src': 'Organisation',
+            'map': {
+                'category': 'OrganisationTypeCategory',
+                'name': 'OrganisationType',
+            }
+        },
+    ]
 
     @classmethod
-    def from_data(cls, data):
+    def from_data(cls, data, src_idx):
         # skip empty stuff
-        if data[cls.IMPORT_MAPPING['name']] is None:
+        mapping = cls.IMPORT_SOURCES[src_idx]['map']
+        if data[mapping['name']] is None:
             return
 
-        return super().from_data(data)
+        return super().from_data(data, src_idx)
 
     class CATEGORY(Enum):
         PRIVATE_SECTOR = 'private sector'
         PUBLIC_SECTOR = 'public sector'
         CIVIL_SOCIETY = 'civil society'
         EDUCATION = 'education'
+
         INTERNATIONAL_INSTITUTIONS = 'international institutions'
         OTHER = 'other'
 
@@ -475,19 +560,37 @@ class OrganisationType(_BaseModel):
         return "%s / %s" % (self.category, self.name)
 
 
-class Organisation(_BaseModel):
-    IMPORT_SOURCE = 'Organisation'
-    IMPORT_MAPPING = {
-        'id': 'IdOrganisation',
-        'name': 'Organisation',
-        'ptype': 'IsProgrammeOrProjectOrg',
-        'orgtype': ('name', 'OrganisationType'),
-        #'geotarget': 'NUTSCode',
-        'nuts': 'NUTSCode',
+class OrganisationRole(_BaseModel):
+    IMPORT_SOURCES = [
+        {
+            'src': 'OrganisationRoles',
+            'map': {
+                'code': 'OrganisationRoleCode',
+                'role': 'OrganisationRole',
+            }
+        },
+    ]
 
-        # TODO: use proper states/countries table
-        #'country': ('name', 'Country'),
-    }
+    code = models.CharField(max_length=8, primary_key=True)
+    role = models.CharField(max_length=64)
+
+
+class Organisation(_BaseModel):
+    IMPORT_SOURCES = [
+        {
+            'src': 'Organisation',
+            'map': {
+                'id': 'IdOrganisation',
+                'name': 'Organisation',
+                'ptype': 'IsProgrammeOrProjectOrg',
+                'orgtype': ('name', 'OrganisationType'),
+                'nuts': 'NUTSCode',
+                # TODO: use proper states/countries table
+                'country': ('name', 'Country'),
+                'geotarget': 'GeographicalTarget',
+            }
+        },
+    ]
     # TODO: leftovers
     #'City',
 
@@ -499,83 +602,79 @@ class Organisation(_BaseModel):
             PROGRAMME = _('Programme')
             PROJECT = _('Project')
 
-    # TODO: find a better name for this
     ptype = EnumField(ORGANISATION_TYPE, max_length=9)
-    # TODO: and this
     orgtype = models.ForeignKey(OrganisationType, null=True)
     # TODO: the countries can be different from member states.
-    # TODO: unify.
     #country = models.ForeignKey(State)
     country = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
-    #geotarget = models.ForeignKey(NUTS)
+    geotarget = models.CharField(max_length=256)
     nuts = models.CharField(max_length=5)
 
-    class Meta(_BaseModel.Meta):
+    role = models.ManyToManyField(OrganisationRole, through="Organisation_OrganisationRole")
+
+    # class Meta(_BaseModel.Meta):
         # TODO: this isn't unique, as organisations are duplicate
         # if they're both programme- & project-level.
         # TODO: fix it?
         #unique_together = ('country', 'name')
-        pass
+        # pass
 
     def __str__(self):
         return "%s _ %s" % (self.country, self.name)
 
 
-class OrganisationRole(_BaseModel):
-    IMPORT_SOURCE = 'OrganisationRoles'
-    IMPORT_MAPPING = {
-        'role': 'OrganisationRoleCode',
-        'organisation': ('id', 'IdOrganisation'),
-
-        'programme': 'ProgrammeCode',
-        'project': 'ProjectCode',
-    }
-    # TODO: leftovers
-    #'Country',
-    #'IsProgrammeOrProjectOrg',
-    #'IsImplementingPartner'
-
+class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
+    IMPORT_SOURCES = [
+        {
+            'src': 'OrganisationRole',
+            'map': {
+                'organisation': ('id', 'IdOrganisation'),
+                'programme': 'ProgrammeCode',
+                'project': 'ProjectCode',
+                'is_programme': 'IsProgrammeOrProjectOrg',
+                'is_implementing_partner': 'IsImplementingPartner',
+            }
+        },
+    ]
 
     @classmethod
-    def from_data(cls, data):
-        # TODO: temporary fix for bad data. remove.
-        if data[cls.IMPORT_MAPPING['programme']] in (
-                'RO16', 'GR50', 'PL11', 'RO08'):
-            return
-        if data[cls.IMPORT_MAPPING['organisation'][1]] in (
-                73, 117, 89, 104, 850, 1089):
-            return
-        return super().from_data(data)
+    def from_data(cls, data, src_idx):
+        """ Warning: mutates its input data"""
 
-    class ROLE(Enum):
-        NFP = 'national focal point'
-        DS = 'donor state'
-        PO = 'programme operator'
-        DPP = 'donor programme partner'
-        PP = 'programme partner'
-        PJPT = 'project promoter'
-        PJDPP = 'donor project partner'
-        PJPP = 'project partner'
+        mapping = cls.IMPORT_SOURCES[src_idx]['map']
+        excel_value = data[mapping['is_programme']].lower()
 
-        class Labels:
-            NFP = _('National Focal Point')
-            DS = _('Donor State')
-            PO = _('Programme Operator')
-            DPP = _('Donor Programme Partner')
-            PP = _('Programme Partner')
-            PJPT = _('Project Promoter')
-            PJDPP = _('Donor Project Partner')
-            PJPP = _('Project Partner')
+        # If not str then perheps we somehow already processed this.
+        # If bad, non-str data, let Field exception tell us
+        if isinstance(excel_value, str):
+            model_value = None
+            if excel_value == 'programme':
+                model_value = True
+            elif excel_value == 'project':
+                model_value = False
+            data[mapping['is_programme']] = model_value
 
-    organisation = models.ForeignKey(Organisation)
-    role = EnumField(ROLE, max_length=23)
+        return super().from_data(data, src_idx)
+
+    organisation = models.ForeignKey(Organisation, related_name='roles')
+    organisation_role = models.ForeignKey(OrganisationRole, related_name='organisations')
 
     # TODO 1: this shouldn't be stored in case the org is a project one
     # TODO 2: this makes no sense, both of them nullable
+    # programme and project are denormalised to include BS
     programme = models.ForeignKey(Programme, null=True)
-    # TODO: this structure smells
     project = models.ForeignKey(Project, null=True)
+    is_programme = models.NullBooleanField(default=None)
+    is_implementing_partner = models.BooleanField()
+
+    class Meta(_BaseModel.Meta):
+        unique_together = (
+            'organisation',
+            'organisation_role',
+            'programme',
+            'project',
+        )
 
 
 class News(models.Model):
