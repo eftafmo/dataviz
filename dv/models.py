@@ -384,7 +384,6 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
             'map': {
                 'programme': 'ProgrammeCode',
                 'outcome': 'OutcomeCode',
-                'state': ('name', 'BeneficiaryState'),
                 'result_text': 'ResultText',
             }
         },
@@ -483,7 +482,7 @@ class Indicator(_MainModel):
     ]
 
     code = models.CharField(max_length=64, primary_key=True)
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256)
 
 
 class ProgrammeIndicator(_BaseModel):

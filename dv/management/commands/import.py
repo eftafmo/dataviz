@@ -74,8 +74,6 @@ class Command(BaseCommand):
             OrganisationType, Organisation, OrganisationRole,
         )
 
-        models = ( OrganisationRole, )
-
         self.stderr.style_func = None
         def _write(*args, **kwargs):
             self.stderr.write(*args, **kwargs)
