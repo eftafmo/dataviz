@@ -28,7 +28,13 @@ export default {
       short_duration: 250,
       // opacity of filtered-out items
       inactive_opacity: .7,
-    }
+
+      // timings for debouncing render functions (in milliseconds)
+      renderWait: {
+        min: 17,
+        max: 100,
+      },
+    };
   },
 
   mounted() {
@@ -46,9 +52,6 @@ export default {
     },
 
     render(initial) {
-      const wait = 17, // wait between re-rendering
-            maxWait = 100; // but no more than this
-
       if (initial) this.rendered = false;
 
       let renderer = this._renderer;
@@ -58,7 +61,7 @@ export default {
             this.renderChart();
             this.rendered = true;
           },
-          wait, {maxWait}
+          this.renderWait.min, {maxWait: this.renderWait.max}
         );
 
       renderer();

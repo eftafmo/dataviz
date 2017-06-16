@@ -269,6 +269,7 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
+import debounce from 'lodash.debounce';
 import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
@@ -299,6 +300,8 @@ export default Vue.extend({
   beforeCreate() {
     // cache for the sector / area names & colors ¤
     this._sectortree = null;
+    // a queue to know which sector's child areas should be disappeared §
+    this._prevsector = [];
   },
 
   computed: {
@@ -584,8 +587,29 @@ export default Vue.extend({
        this.chart.call(this.tip)
     },
 
+    /*
+       NOTE:
+       The following transitions happen:
+       - (1) arc lenghts
+       - (2) colors (and visibility and opacity)
+
+       Due to transitions being element-exclusive in d3, and to avoid
+       needlessly re-rendering everything,
+       - (1) happen on <path> elements,
+       - (2) happen on their <g> containers.
+
+       (1) are triggered
+         - by filtering on FM and BS (obviously, data changes),
+         - when filtering by a PS: the other sectors turn to 0, while
+           its children PAs fill up the 360 degrees.
+
+       (2) are triggered only when filtering by a PA: its siblings will
+           be grayed out.
+
+       (and well, there's also (3) - arc dimension change during mouseover)
+
+     */
     renderChart() {
-      this.rendered = true;
       const $this = this,
             // flatten data
             data = this._partition(this.data)
@@ -598,28 +622,37 @@ export default Vue.extend({
 	    .data(data, this.getArcID); // JOIN
 
       const aentered = arcs.enter() // ENTER
+        // the container:
         .append("g")
         .attr("id", this.getArcID)
         .attr("class", "arc")
         .attr("fill", (d) => d.data.colour )
+        // level 2 items are hidden
+        .attr("opacity", (d) => d.depth == 2 ? 0 : null )
+        // and really hidden
+        .style("display", (d) => d.depth == 2 ? "none" : null )
+
+        // the arc:
         .append("path")
         .each(function(d) {
           // cache current coordinates
           this._prev = $this._extract_coords(d);
 	})
         .attr("d", this._arc)
-        // level 2 items are hidden
-        .attr("opacity", (d) => d.depth == 2 ? 0 : null )
-        // and really hidden
-        .style("display", (d) => d.depth == 2 ? "none" : null );
 
+        // events
+        .on("click", this.click)
+        .on("mouseenter", this.highlight)
+        .on("mouseleave", this.unhighlight)
+        .on('mouseover', this.tip.show)
+        .on('mouseout', this.tip.hide);
 
       /* transitions */
       // NOTE: there is no ENTER or EXIT, all items are persistent ¤
 
       const transitioning = arcs // UPDATE
         .transition(t)
-        // avoid other transitions while this runs
+        // avoid other transitions while this runs ¬
         .on("start",
             () => this._transitioning = true )
         .on("end",
@@ -637,42 +670,59 @@ export default Vue.extend({
             return $this._arc(interpolate(x));
           }
         });
+    },
 
-      // if we've selected a sector, let's show its areas
-      if (this.filters.sector) {
-        transitioning
-          .filter(
-            (d) => this.isSelectedSector(d.parent)
-          )
-          .style("display", null)
-          .attr("opacity", 1);
-      }
-      // and hide the previous ones
-      if (this._prevsector) {
-        transitioning
-          .filter(
-            (d) => d.parent.data.name == this._prevsector
-          )
-          .attr("opacity", 0)
-          // and also reset possibly grayed out areas §
-	  .attr("fill", (d) => d.data.colour )
-          // don't forget to re-disable it
-          .on("end", function() { this.style.display = "none"; });
-
-        // we reset the prevsector during next tick only,
-        // to avoid race conditions with handleFilterArea §
-        this.$nextTick(
-          () => this._prevsector = null
+    renderAreasStuff() {
+      // "renders" areas' opacity and colors.
+      // debounce the actual implementation because it can happen both during
+      // area filtering and sector filtering.
+      let renderer = this._areaStuffRenderer;
+      if (renderer === undefined)
+        renderer = this._areaStuffRenderer = debounce(
+          this._renderAreasStuff,
+          this.renderWait.min, {maxWait: this.renderWait.max}
         );
+      renderer();
+    },
+
+    _renderAreasStuff() {
+      // the real areas stuff implementation
+      const currsector = this.filters.sector,
+            prevsector = (
+              this._prevsector.length && this._prevsector[0] != currsector ?
+                this._prevsector.shift() : null // §
+            );
+
+      const t = this.getTransition();
+
+      const areas = this.chart
+                        .selectAll("g.arc")
+                        .filter( (d) => d.depth == 2 );
+
+      if (currsector) {
+        areas.filter( (d) => this.isSelectedSector(d.parent) )
+          .transition(t)
+          .style("display", null) // null undoes any other value
+          .attr("opacity", 1)
+          .attr("fill", (d) => {
+            const c = d.data.colour;
+            if (this.filters.area === null) return c;
+            if (this.isActiveArea(d)) return c;
+            // TODO: if this was already grayed out it would be nice to pass
+            // momentarily through the default colour
+            return colour2gray(c, this.inactive_opacity);
+          })
       }
 
-      /* events */
-      aentered
-        .on("click", this.click)
-        .on("mouseenter", this.highlight)
-        .on("mouseleave", this.unhighlight)
-        .on('mouseover', this.tip.show)
-        .on('mouseout', this.tip.hide);
+      if (prevsector) {
+        areas.filter( (d) => d.parent.data.name == prevsector )
+          .transition(t)
+          .style("display", null) // null undoes any other value
+          .attr("opacity", 0)
+          // reset colours to default
+          .attr("fill", (d) => d.data.colour )
+          .on("end", function() { this.style.display = "none"; })
+      }
     },
 
     click(d) {
@@ -681,7 +731,7 @@ export default Vue.extend({
     },
 
     _highlight(d, yes) {
-      // avoid funny race conditions
+      // avoid funny race conditions ¬
       if(this._transitioning) return;
 
       const arc = this.getArcID(d),
@@ -737,52 +787,23 @@ export default Vue.extend({
     },
 
     handleFilterSector(val, old) {
-      // remember the previous sector, it's used in various places,
-      // and clear it during render
-      this._prevsector = old;
+      // remember this soon-to-be previous sector.
+      // (it will be removed from the queue during handling of areas §)
+      if (val) this._prevsector.push(val);
 
       // always reset area on sector change
       this.filters.area = null;
 
+      // TODO: share a transition instance between these.
       this.render();
+      this.renderAreasStuff();
     },
 
     handleFilterArea(val) {
-      // don't go through a full render, as
-      // this only needs to gray out sibling areas.
-
-      // but WARNING, WARNING: transitions in d3 are element-exclusive, §
-      // so in case the area filter was cleared by switching away
-      // from the parent sector we can't handle this here.
-      // we'll let the default sector-triggered render() take care of it. §
-      if (val === null && this._prevsector) {
-        return;
-      }
-
       if (val !== null && this.filters.sector === null)
         console.error("Filtered by area without a sector. Impossible 2.")
-
-      const areas = this.chart
-                        .selectAll(".arc")
-                        .filter(
-                          (d) => this.isSelectedSector(d.parent)
-                        );
-
-      const colourfunc = (
-        (d) => {
-          const c = d.data.colour;
-          if (val === null) return c;
-
-          if (this.isActiveArea(d)) return c;
-          else return colour2gray(c, this.inactive_opacity);
-        }
-      );
-
-      areas
-        .transition(this.getTransition())
-        // TODO: if this was already grayed out it would be nice to pass
-        // momentarily through the default colour
-        .attr("fill", colourfunc);
+      // this only needs to gray out sibling areas.
+      this.renderAreasStuff();
     },
   },
 });
