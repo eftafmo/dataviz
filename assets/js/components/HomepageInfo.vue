@@ -1,19 +1,30 @@
 <template>
 <div v-if="hasData" class="info-viz">
-
+   <div class="total-spent">
+      <h1>{{format(data.allocation_total)}}</h1>
+      <h3>spent on</h3>
+   </div>
 <!-- <div  class="circle-wrapper"> -->
     <div class="circle">
-      <div class="programmes-count"><span>{{data.programmes_total}}</span><br>Programmes</div>
-      <div class="projects-count"><span>{{data.projectcount}}</span><br>Projects</div>
+      <div class="programmes-count">
+        <span>{{data.programmes_total}}</span><br>Programmes
+      </div>
+      <div class="projects-count">
+        <span>{{data.projectcount}}</span><br>Projects
+      </div>
     </div>
     <div class="line-wrapper">
-      <div class="donor-count"><span>3</span> Donor states</div>
-      <div class="states-count"><span>{{data.beneficiaries.length}}</span> Beneficiary states</div>
+      <div class="donor-count">
+        <span class="mobile_only">FROM</span>
+        <span>3</span> Donor states
+      </div>
+      <div class="states-count">
+        <span class="mobile_only">TO</span>
+        <span>{{data.beneficiaries.length}}</span> Beneficiary states
+      </div>
   </div>
  <!-- </div> -->
-  <div class="total-spent"><h1>{{format(data.allocation_total)}}</h1>
-    <h3>spent on</h3>
-  </div>
+
   <div class="overview-info">to reduce social and economic disparities across europe and to strenghten bilateral relations</div>
 </div>
 </template>
@@ -48,6 +59,14 @@
     top: 40%;
     z-index: -1;
     width: 100%;
+    margin-bottom: 3rem;
+    @media (min-width:768px) and (max-width:1000px){
+      top: auto;
+      bottom: 0;
+      > div {
+        margin: 0;
+      }
+    }
   }
 
   .total-spent {
@@ -64,6 +83,13 @@
     max-width: 350px;
     font-size: 2rem;
     bottom: 9%;
+    @media (min-width:768px) and (max-width:1400px){
+      left: 42%;
+      text-align: center;
+      max-width: 200px;
+      font-size: 1.5rem;
+      bottom: 9%;
+    }
   }
 
   .circle-wrapper {
@@ -93,35 +119,59 @@
     top: 30%;
     left: 39%;
     font-size: 3rem;
-
+    @media (min-width:768px) and (max-width:1400px){
+      top: 33%;
+      left: 40%;
+      font-size: 2rem;
+      padding: 4rem 5rem;
+      span {
+        font-size: 3.5rem;
+      }
     }
 
-  .legend {
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-    .fm span {
-      width: 10px; height: 10px;
-      display: inline-block;
-    }
-    li {
-      list-style-type: none;
-      display: inline-block;
-      margin-right: 2rem;
-    }
-    .fm {
-      transition: all .5s ease;
-      display: block;
-    }
-    .fm.disabled {
-      filter: grayscale(100%);
-      opacity: 0.5;
-    }
 
-    .fm.selected {
-      text-shadow: 0 0 1px #999;
     }
-  }
+    //mobile
+    @media(max-width:768px) {
+      padding-top: 1rem;
+      border-top: 1px solid #ddd;
+      .circle,
+      .line-wrapper,
+      .total-spent,
+      .overview-info {
+        position: static;
+      }
+      //square in this case
+      .circle {
+        background: rgb(35, 97, 146);
+        border-radius: 0;
+        color: white;
+        padding: 1rem;
+        margin: 2rem;
+        max-width: 327px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .donor-count, .states-count, .overview-info {
+        margin: 0;
+        max-width: none;
+      }
+
+      .overview-info {
+        margin-bottom: 2rem;
+        border-top: solid #236192;
+        padding-top: 1rem;
+      }
+
+      .total-spent h1{
+        display: inline-block;
+        color: #236192;
+        border-bottom: solid #236192;
+        margin: 0;
+      }
+
+    }
 }
 </style>
 
