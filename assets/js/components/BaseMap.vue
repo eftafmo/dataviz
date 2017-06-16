@@ -298,8 +298,10 @@ export default Vue.extend({
       // because it's triggered by the change in svgWidth
       //this.setStyle();
 
+      // TODO: move these somewhere else, and don't hijack default render
       this.renderBase();
       this.renderStates();
+
       this.renderData();
 
       this.rendered = true;

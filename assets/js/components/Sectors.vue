@@ -269,17 +269,20 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
+import debounce from 'lodash.debounce';
 import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
-import {SectorColours} from 'js/constants.js';
+import WithSectors from './mixins/WithSectors';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, ChartMixin, WithTooltipMixin,
+    BaseMixin, ChartMixin,
+    WithSectors,
+    WithTooltipMixin,
   ],
 
   data() {
@@ -291,52 +294,92 @@ export default Vue.extend({
 
       // percentage of mid-donut void
       inner_radius: .65,
-
-      // this will be populated during the first run
-      area_colours: {},
     };
+  },
+
+  beforeCreate() {
+    // cache for the sector / area names & colors ¤
+    this._sectortree = null;
+    // a queue to know which sector's child areas should be disappeared §
+    this._prevsector = [];
   },
 
   computed: {
     data() {
+      // TODO: generate this on the server instead ¤
+      let sectortree = this._sectortree;
+      if (sectortree === null) {
+        // pre-generate the tree, without any allocation data
+        sectortree = this._sectortree = Object.assign({}, this.SECTORS);
+
+        for (const d of this.dataset) {
+          const s = d.sector,
+                a = d.area,
+                sid = slugify(s),
+                aid = slugify(a);
+
+          let sector = sectortree[sid];
+          // this.SECTORS should contain everything already, but one never knows
+          if (sector === undefined)
+            sector = sectortree[sid] = {
+              id: sid,
+              name: s,
+              children: {},
+              colour: '#555',
+            };
+
+          let children = sector.children;
+          if (children === undefined)
+            children = sector.children = {};
+
+          let area = children[aid];
+          if (area === undefined)
+            area = children[aid] = {
+              id: aid,
+              name: a,
+              allocation: {},
+            };
+        }
+
+        // final touches
+        for (const sid in sectortree) {
+          const sector = sectortree[sid],
+                colour = sector.colour,
+                areas = d3.values(sector.children);
+
+          // add a backreference to the parent sector for all areas
+          // and generate area colors
+          const colourscale = this._mkcolourscale(colour, areas.length);
+
+          for (const area of areas) {
+            area.parentname = sector.name;
+            area.colour = colourscale(area.id);
+          }
+        }
+      }
+      // done pre-generation
+
       // filter dataset by everything except sector / area
       const _filters = d3.keys(this.filters)
                          .filter((f) => f != 'sector' && f != 'area');
       const dataset = this.filter(this.dataset, _filters);
 
-      // TODO: fix BUG: because we pre-filter data, newly .enter()-ed
-      // items pop-up all of a sudden instead of transitioning from 0.
-      // must either find a fix in render() or filter (set zeroes) down here.
-      // Or base the dataset on a pre-prepared tree. ¤
+      // we need to deep-copy the tree. JSON to the rescue.
+      const sectors = JSON.parse(JSON.stringify(sectortree));
 
-      // build the sector tree
-      const sectors = {}
+      // sum up allocation data
       for (const d of dataset) {
         const s = d.sector,
               a = d.area,
               sid = slugify(s),
               aid = slugify(a),
+              sector = sectors[sid],
+              area = sector.children[aid],
               fm = d.fm,
               value = +d.allocation;
 
         // backend might send us empty data...
         if(value === 0) continue;
-
-        let sector = sectors[sid];
-        if (sector === undefined)
-          sector = sectors[sid] = {
-            id: sid,
-            name: s,
-            children: {},
-          };
-
-        let area = sector.children[aid];
-        if (area === undefined)
-          area = sector.children[aid] = {
-            id: aid,
-            name: a,
-            allocation: {},
-          };
 
         let allocation = area.allocation[fm];
         if (allocation === undefined)
@@ -345,47 +388,9 @@ export default Vue.extend({
         area.allocation[fm] = allocation + value;
       }
 
-      // we'll build a new tree to get the sectors sorted,
-      // and also add in the colours and more
-      const sectordata = {};
-      for (const sid in SectorColours) {
-        // yes we're iterating on colour data, it has the proper order
-        const sector = sectors[sid];
-        if (sector === undefined) continue;
-        sectordata[sid] = sector;
-
-        // we'll add a backreference for all areas to the parent sector.
-        // we'll use it during filtering below.
-        for (const aid in sector.children) {
-          sector.children[aid].parentname = sector.name;
-        }
-
-        const colour = SectorColours[sid];
-        sector.colour = colour;
-
-        let acolours = this.area_colours[sid];
-        // if this is the first time around, generate the area colours
-        if (acolours === undefined) {
-          // WARNING, TODO: if we ever share a direct link to this, prefiltered
-          // on beneficiary or fm, this will make a fine mess of things.
-          // area colour generation should be done on a pre-existing list. ¤
-          acolours = this.area_colours[sid] = {};
-          const aids = d3.keys(sector.children),
-                colourscale = this._mkcolourscale(colour, aids.length);
-
-          for (const aid of aids) {
-            acolours[aid] = colourscale(aid);
-          }
-        }
-
-        for (const aid in sector.children) {
-          sector.children[aid].colour = acolours[aid];
-        }
-      }
-
       // finally, using d3's hierarchy makes working with trees easy
       const tree = d3.hierarchy(
-        { children: sectordata },
+        { children: sectors },
         // the default accessor function looks for arrays of children,
         // but we have an object tree
         (d) => d3.values(d.children)
@@ -582,8 +587,29 @@ export default Vue.extend({
        this.chart.call(this.tip)
     },
 
+    /*
+       NOTE:
+       The following transitions happen:
+       - (1) arc lenghts
+       - (2) colors (and visibility and opacity)
+
+       Due to transitions being element-exclusive in d3, and to avoid
+       needlessly re-rendering everything,
+       - (1) happen on <path> elements,
+       - (2) happen on their <g> containers.
+
+       (1) are triggered
+         - by filtering on FM and BS (obviously, data changes),
+         - when filtering by a PS: the other sectors turn to 0, while
+           its children PAs fill up the 360 degrees.
+
+       (2) are triggered only when filtering by a PA: its siblings will
+           be grayed out.
+
+       (and well, there's also (3) - arc dimension change during mouseover)
+
+     */
     renderChart() {
-      this.rendered = true;
       const $this = this,
             // flatten data
             data = this._partition(this.data)
@@ -592,35 +618,41 @@ export default Vue.extend({
       const t = this.getTransition();
 
       const arcs = this.chart
-	    .selectAll(".arc")
+	    .selectAll("g.arc > path")
 	    .data(data, this.getArcID); // JOIN
 
-      const aentered = arcs.enter().append("path") // ENTER
-        .each(function(d) {
-	  // cache current coordinates
-	  this._prev = $this._extract_coords(d);
-	})
+      const aentered = arcs.enter() // ENTER
+        // the container:
+        .append("g")
         .attr("id", this.getArcID)
-	.attr("class", "arc")
-	.attr("d", this._arc)
-	.attr("fill", (d) => d.data.colour )
+        .attr("class", "arc")
+        .attr("fill", (d) => d.data.colour )
         // level 2 items are hidden
         .attr("opacity", (d) => d.depth == 2 ? 0 : null )
         // and really hidden
-        .style("display", (d) => d.depth == 2 ? "none" : null );
+        .style("display", (d) => d.depth == 2 ? "none" : null )
 
-      const aexit = arcs.exit(); // EXIT
+        // the arc:
+        .append("path")
+        .each(function(d) {
+          // cache current coordinates
+          this._prev = $this._extract_coords(d);
+	})
+        .attr("d", this._arc)
+
+        // events
+        .on("click", this.click)
+        .on("mouseenter", this.highlight)
+        .on("mouseleave", this.unhighlight)
+        .on('mouseover', this.tip.show)
+        .on('mouseout', this.tip.hide);
 
       /* transitions */
-      // this stuff is complicated, each selection group will need its own transition
-      // (actually ^^ that is a lie, there are no enter animations, and exit
-      // never happens, but the code below is ready in case the logic changes).
-
-      // NOTE: not merging with ENTER, because there's not ENTER transition now.
-      // will need to be handled if things change.
+      // NOTE: there is no ENTER or EXIT, all items are persistent ¤
 
       const transitioning = arcs // UPDATE
         .transition(t)
+        // avoid other transitions while this runs ¬
         .on("start",
             () => this._transitioning = true )
         .on("end",
@@ -638,57 +670,59 @@ export default Vue.extend({
             return $this._arc(interpolate(x));
           }
         });
-      // if we've selected a sector, let's show its areas
-      if (this.filters.sector) {
-        transitioning
-          .filter(
-            (d) => this.isSelectedSector(d.parent)
-          )
-          .style("display", null)
-          .attr("opacity", 1);
-      }
-      // and hide the previous ones
-      if (this._prevsector) {
-        transitioning
-          .filter(
-            (d) => d.parent.data.name == this._prevsector
-          )
-          .attr("opacity", 0)
-          // and also reset possibly grayed out areas §
-	  .attr("fill", (d) => d.data.colour )
-          // don't forget to re-disable it
-          .on("end", function() { this.style.display = "none"; });
+    },
 
-        // we reset the prevsector during next tick only,
-        // to avoid race conditions with handleFilterArea §
-        this.$nextTick(
-          () => this._prevsector = null
+    renderAreasStuff() {
+      // "renders" areas' opacity and colors.
+      // debounce the actual implementation because it can happen both during
+      // area filtering and sector filtering.
+      let renderer = this._areaStuffRenderer;
+      if (renderer === undefined)
+        renderer = this._areaStuffRenderer = debounce(
+          this._renderAreasStuff,
+          this.renderWait.min, {maxWait: this.renderWait.max}
         );
+      renderer();
+    },
+
+    _renderAreasStuff() {
+      // the real areas stuff implementation
+      const currsector = this.filters.sector,
+            prevsector = (
+              this._prevsector.length && this._prevsector[0] != currsector ?
+                this._prevsector.shift() : null // §
+            );
+
+      const t = this.getTransition();
+
+      const areas = this.chart
+                        .selectAll("g.arc")
+                        .filter( (d) => d.depth == 2 );
+
+      if (currsector) {
+        areas.filter( (d) => this.isSelectedSector(d.parent) )
+          .transition(t)
+          .style("display", null) // null undoes any other value
+          .attr("opacity", 1)
+          .attr("fill", (d) => {
+            const c = d.data.colour;
+            if (this.filters.area === null) return c;
+            if (this.isActiveArea(d)) return c;
+            // TODO: if this was already grayed out it would be nice to pass
+            // momentarily through the default colour
+            return colour2gray(c, this.inactive_opacity);
+          })
       }
 
-      // send new items to back so existing arcs cover them
-      // during the transition and make them look animated
-      // (but make sure areas are in front of sectors)
-      aentered // ENTER
-        .filter( (d) => d.depth == 2 )
-        .lower();
-      aentered
-        .filter( (d) => d.depth == 1 )
-        .lower();
-
-      // send deleted items to back too
-      aexit // EXIT
-        .lower()
-        .transition(t)
-        .remove()
-
-      /* events */
-      aentered
-        .on("click", this.click)
-        .on("mouseenter", this.highlight)
-        .on("mouseleave", this.unhighlight)
-        .on('mouseover', this.tip.show)
-        .on('mouseout', this.tip.hide);
+      if (prevsector) {
+        areas.filter( (d) => d.parent.data.name == prevsector )
+          .transition(t)
+          .style("display", null) // null undoes any other value
+          .attr("opacity", 0)
+          // reset colours to default
+          .attr("fill", (d) => d.data.colour )
+          .on("end", function() { this.style.display = "none"; })
+      }
     },
 
     click(d) {
@@ -697,9 +731,7 @@ export default Vue.extend({
     },
 
     _highlight(d, yes) {
-      // avoid funny race conditions
-      // WARNING: TODO: [BUG] there's an unhandled race condition
-      // between this and click
+      // avoid funny race conditions ¬
       if(this._transitioning) return;
 
       const arc = this.getArcID(d),
@@ -707,10 +739,10 @@ export default Vue.extend({
 
       const arcfunc = yes ? this._arcLarge : this._arc;
 
-      d3.select(this.$el).select(`#${label}>a`)
+      d3.select(this.$el).select(`#${label} > a`)
         .classed("hovered", yes);
 
-      d3.select(this.$el).select(`#${arc}`)
+      d3.select(this.$el).select(`#${arc} > path`)
         .transition(this.getTransition(this.short_duration))
         .attr("d", arcfunc)
     },
@@ -751,63 +783,27 @@ export default Vue.extend({
       this.filters.area = this.filters.area == aname ?
                           null : aname;
       // TODO: what if the area does not to the current sector belong?
-      // TODO: we need a persistent array of PS / PAs. ¤
+      // TODO: take into account the persistent array of PS / PAs. ¤
     },
 
     handleFilterSector(val, old) {
-      // remember the previos sector, it's used in various places,
-      // and clear it during render
-      this._prevsector = old;
+      // remember this soon-to-be previous sector.
+      // (it will be removed from the queue during handling of areas §)
+      if (val) this._prevsector.push(val);
 
       // always reset area on sector change
       this.filters.area = null;
 
+      // TODO: share a transition instance between these.
       this.render();
+      this.renderAreasStuff();
     },
 
     handleFilterArea(val) {
-      // don't go through a full render, as
-      // this only needs to gray out sibling areas.
-
-      // but WARNING, WARNING: transitions in d3 are element-exclusive, §
-      // so in case the area filter was cleared by switching away
-      // from the parent sector we can't handle this here.
-      // we'll let the default sector-triggered render() take care of it. §
-      if (val === null && this._prevsector) {
-        return;
-      }
-
-      // WARNING: TODO: if the user filters by area while the sector-filtering
-      // transition is in progress, something will break. bug hidden in here.
-
       if (val !== null && this.filters.sector === null)
         console.error("Filtered by area without a sector. Impossible 2.")
-
-      const areas = this.chart
-                        .selectAll(".arc")
-                        .filter(
-                          (d) => this.isSelectedSector(d.parent)
-                        );
-
-      const colourfunc = (
-        (d) => {
-          const c = d.data.colour;
-          if (val === null) return c;
-
-          if (this.isActiveArea(d)) return c;
-          else return colour2gray(c, this.inactive_opacity);
-        }
-      );
-
-      areas
-        .transition(this.getTransition())
-        // TODO: if this was already grayed out it would be nice to pass
-        // momentarily through the default colour
-        .attr("fill", colourfunc);
-    },
-
-    handleFilter() {
-      this.render();
+      // this only needs to gray out sibling areas.
+      this.renderAreasStuff();
     },
   },
 });

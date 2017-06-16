@@ -290,17 +290,19 @@ export default Vue.extend({
         .attr("height", this.barHeight + this.barPadding * 2);
 
       // the real deal
-      const fms = selection.selectAll("rect.fm").data(
+      const fms = selection.selectAll("g.fm > rect").data(
         (d) => d.allocations,
         (d) => d.id
       );
 
-      fms.enter().append("rect") // ENTER-only
+      fms.enter() // ENTER-only
+        .append("g")
         .attr("class", (d) => "fm " + d.id )
         .attr("fill", (d) => d.colour )
         // adding a stroke as well prevents what looks like a sub-pixel gap
         // between fms. but needs to be done for background too, so, TODO
         //.attr("stroke", (d) => d.colour )
+        .append("rect")
         .attr("y", this.barPadding)
         .attr("height", this.barHeight)
 
@@ -491,7 +493,7 @@ export default Vue.extend({
                  .attr("opacity", yes ? 1 : this.inactive_opacity);
 
         // the fm bars
-        selection.select("g.fms").selectAll("rect.fm")
+        selection.select("g.fms").selectAll(".fm")
           .attr("fill", (d) => yes ? d.colour : _inactivecolour(d.colour))
       };
 
@@ -507,17 +509,12 @@ export default Vue.extend({
       ).call(deactivate);
     },
 
-    handleFilter() {
-      this.render();
-    },
-
     changedDimension() {
       // re-render on dimensions change
       // (but don't mess with the initial render)
-      if (!this.rendered) return;
+      if (!this.isReady) return;
       // and don't animate things
-      this.rendered = false;
-      this.render();
+      this.render(true);
     },
   },
 
