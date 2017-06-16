@@ -1,7 +1,7 @@
 <template>
 <div v-if="hasData" class="info-viz">
 
-<div  class="circle-wrapper">
+<!-- <div  class="circle-wrapper"> -->
     <div class="circle">
       <div class="programmes-count"><span>{{data.programmes_total}}</span><br>Programmes</div>
       <div class="projects-count"><span>{{data.projectcount}}</span><br>Projects</div>
@@ -10,7 +10,7 @@
       <div class="donor-count"><span>3</span> Donor states</div>
       <div class="states-count"><span>{{data.beneficiaries.length}}</span> Beneficiary states</div>
   </div>
- </div>
+ <!-- </div> -->
   <div class="total-spent"><h1>{{format(data.allocation_total)}}</h1>
     <h3>spent on</h3>
   </div>
@@ -46,6 +46,7 @@
     justify-content: space-between;
     position: absolute;
     top: 40%;
+    z-index: -1;
     width: 100%;
   }
 
@@ -76,20 +77,24 @@
     top: 0;
     font-size: 3rem;
     text-align: center;
+  }
+    .circle {
     span {
       font-weight: bold;
       font-size: 4.5rem;
     }
-    .circle {
-      background: rgba(251, 251, 251, 0.86);
-      padding: 6rem 7rem;
-      border-radius: 100rem;
-      border: 4px solid white;
-      margin-left: 5rem;
-      margin-top: 2rem;
-      z-index: 1;
+    background: rgba(251, 251, 251, 0.86);
+    padding: 6rem 7rem;
+    border-radius: 116rem;
+    border: 4px solid white;
+    z-index: 1;
+    text-align: center;
+    position: absolute;
+    top: 30%;
+    left: 39%;
+    font-size: 3rem;
+
     }
-  }
 
   .legend {
     cursor: pointer;
@@ -141,7 +146,6 @@ export default Vue.extend({
     data () {
       const dataset = this.filter(mydata);
       const beneficiaries = {};
-      let allocation_total = 0;
 
       for (const d of dataset) {
         let beneficiary = beneficiaries[d.beneficiary];
@@ -154,7 +158,7 @@ export default Vue.extend({
         beneficiaries: [],
         projectcount: 0,
         programmes_total: 0,
-        allocation_total: allocation_total,
+        allocation_total: 0,
       };
 
       for (const b in beneficiaries) {
