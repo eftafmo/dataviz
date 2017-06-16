@@ -128,7 +128,7 @@ import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
-// import {mydata} from './dummy.js'
+import {mydata} from './dummy.js'
 
 
 export default Vue.extend({
@@ -139,45 +139,21 @@ export default Vue.extend({
 
   computed: {
     data () {
-      const dataset = this.filter(this.dataset);
+      const dataset = this.filter(mydata);
       const beneficiaries = {};
-      let totalcount = 0;
       let allocation_total = 0;
 
       for (const d of dataset) {
-        const programmes = d.programmes;
-
-        if (!programmes) continue;
-
         let beneficiary = beneficiaries[d.beneficiary];
         if (beneficiary === undefined)
           beneficiary = beneficiaries[d.beneficiary] = {
-            _projectcount: 0,
           };
-
-        for (const p in programmes) {
-          const projectcount = +programmes[p];
-
-          if (projectcount == 0) continue;
-
-          let programme = beneficiary[p];
-          if (programme === undefined)
-            programme = beneficiary[p] = {
-              sector: d.sector,
-              projectcount: 0,
-            };
-
-          programme.projectcount += projectcount;
-          beneficiary._projectcount += projectcount;
-          totalcount += projectcount;
-        }
       }
 
-      let programmes_total = 0;
       const out = {
         beneficiaries: [],
-        projectcount: totalcount,
-        programmes_total: programmes_total,
+        projectcount: 0,
+        programmes_total: 0,
         allocation_total: allocation_total,
       };
 
@@ -185,26 +161,29 @@ export default Vue.extend({
         const programmes = beneficiaries[b],
               beneficiary = {
                 id: b,
-                programmes: [],
               };
 
         out.beneficiaries.push(beneficiary);
+      }
 
-        for (const p in programmes) {
-          const value = programmes[p];
-          if (p === '_projectcount') {
-            beneficiary.projectcount = value;
-            continue;
+      //getting unique programmes
+      let programmes = []
+      for (const d of dataset) {
+        out.projectcount += d.project_count;
+          for (const b of out.beneficiaries) {
+              if(d.beneficiary == b.id){
+                 for (let p of d.programmes){
+                  programmes.push(p)
+                 }
+              }
           }
-          beneficiary.programmes.push(Object.assign({name: p}, value));
-        }
       }
+      let unique = programmes.filter(function(elem, index, self) {
+             return index == self.indexOf(elem);
+      })
+      out.programmes_total = unique.length
 
-      for (let d of out.beneficiaries){
-        out.programmes_total += d.programmes.length
-      }
-
-
+      //allocation total
       for (let d of dataset) {
         out.allocation_total += parseInt(d.allocation);
       }
@@ -213,14 +192,6 @@ export default Vue.extend({
       out.beneficiaries.sort((a,b) => d3.ascending(a.id,b.id));
       return out;
     },
-  },
-
-  methods: {
-
-    handleFilter() {
-      return
-    },
-
   },
 });
 </script>
