@@ -166,7 +166,7 @@ export default Vue.extend({
       for (const d of dataset) {
         const programmes = d.programmes;
 
-        if (!programmes) continue;
+        if (!programmes || !Object.keys(programmes).length) continue;
 
         let beneficiary = beneficiaries[d.beneficiary];
         if (beneficiary === undefined)
@@ -177,7 +177,7 @@ export default Vue.extend({
         for (const p in programmes) {
           const projectcount = +programmes[p];
 
-          if (projectcount == 0) continue;
+          //if (projectcount == 0) continue;
 
           let programme = beneficiary[p];
           if (programme === undefined)
@@ -205,7 +205,6 @@ export default Vue.extend({
               };
 
         out.beneficiaries.push(beneficiary);
-
         for (const p in programmes) {
           const value = programmes[p];
           if (p === '_projectcount') {
