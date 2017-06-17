@@ -34,18 +34,6 @@ def grants(request):
         'programme_area__priority_sector',
     ).prefetch_related(
         'programme_area__outcomes__programmes',
-        Prefetch(
-            'programme_area__outcomes__programmeindicator_set',
-            queryset=ProgrammeIndicator.objects.all().select_related(
-                'programme', 'indicator'
-            ).exclude(achievement=0)
-        ),
-        Prefetch(
-            'programme_area__programme_set',
-            queryset=Programme.objects.all().annotate(
-                projectcount=Count('project')
-            )
-        ),
     )
     programmes = set(ProgrammeOutcome.objects.all().select_related(
         'programme',
@@ -76,21 +64,6 @@ def grants(request):
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'
                     for p in o.programmes.all() if p.state_id == a.state_id),
 
-            'results_old': {
-                o.name: {
-                    pi.indicator.name: pi.achievement
-
-                    # using .all() will in fact hit the queryset
-                    # defined in Prefetch() above
-                    for pi in o.programmeindicator_set.all()
-                    if pi.programme.state_id == a.state_id
-                }
-
-                for o in a.programme_area.outcomes.all()
-                if len([pi for pi in o.programmeindicator_set.all()
-                        if pi.programme.state_id == a.state_id])
-            },
-
             'results': {
                 pi.result_text: {
                     pi.indicator.name: pi.achievement
@@ -101,14 +74,6 @@ def grants(request):
             'programmes': {
                 p[0]: p[1] for p in programmes
                 if p[2] == a.programme_area.code and p[3] == a.state.code
-            },
-
-            'programmes_old': {
-                p.name: p.projectcount
-
-                # Note: this approach is starting to make queries take a long time
-                for p in a.programme_area.programme_set.all()
-                if p.state_id == a.state_id
             },
         })
 
