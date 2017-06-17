@@ -12,7 +12,7 @@ from dv.lib.http import CsvResponse, JsonResponse
 from dv.models import (
     Allocation,
     State, ProgrammeArea, Programme, Project,
-    ProgrammeIndicator,
+    ProgrammeIndicator, ProgrammeOutcome,
     NUTS,
 )
 from dv.serializers import (
@@ -47,6 +47,21 @@ def grants(request):
             )
         ),
     )
+    programmes = set(ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area'
+    ).values_list(
+        'programme__code',
+        'programme__name',
+        'outcome__programme_area__code',
+        'state__code'
+    ).exclude(programme__isnull=True)
+    )
+
+    results = ProgrammeIndicator.objects.all().select_related(
+        'indicator'
+    ).exclude(achievement=0)
+
     out = []
     for a in allocations:
         out.append({
@@ -61,7 +76,7 @@ def grants(request):
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'
                     for p in o.programmes.all() if p.state_id == a.state_id),
 
-            'results': {
+            'results_old': {
                 o.name: {
                     pi.indicator.name: pi.achievement
 
@@ -76,7 +91,19 @@ def grants(request):
                         if pi.programme.state_id == a.state_id])
             },
 
+            'results': {
+                pi.result_text: {
+                    pi.indicator.name: pi.achievement
+                }
+                for pi in results
+                if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code
+            },
             'programmes': {
+                p[0]: p[1] for p in programmes
+                if p[2] == a.programme_area.code and p[3] == a.state.code
+            },
+
+            'programmes_old': {
                 p.name: p.projectcount
 
                 # Note: this approach is starting to make queries take a long time
