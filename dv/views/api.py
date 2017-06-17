@@ -12,7 +12,7 @@ from dv.lib.http import CsvResponse, JsonResponse
 from dv.models import (
     Allocation,
     State, ProgrammeArea, Programme, Project,
-    ProgrammeIndicator,
+    ProgrammeIndicator, ProgrammeOutcome,
     NUTS,
 )
 from dv.serializers import (
@@ -34,19 +34,22 @@ def grants(request):
         'programme_area__priority_sector',
     ).prefetch_related(
         'programme_area__outcomes__programmes',
-        Prefetch(
-            'programme_area__outcomes__programmeindicator_set',
-            queryset=ProgrammeIndicator.objects.all().select_related(
-                'programme', 'indicator'
-            ).exclude(achievement=0)
-        ),
-        Prefetch(
-            'programme_area__programme_set',
-            queryset=Programme.objects.all().annotate(
-                projectcount=Count('project')
-            )
-        ),
     )
+    programmes = set(ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area'
+    ).values_list(
+        'programme__code',
+        'programme__name',
+        'outcome__programme_area__code',
+        'state__code'
+    ).exclude(programme__isnull=True)
+    )
+
+    results = ProgrammeIndicator.objects.all().select_related(
+        'indicator'
+    ).exclude(achievement=0)
+
     out = []
     for a in allocations:
         out.append({
@@ -62,26 +65,15 @@ def grants(request):
                     for p in o.programmes.all() if p.state_id == a.state_id),
 
             'results': {
-                o.name: {
+                pi.result_text: {
                     pi.indicator.name: pi.achievement
-
-                    # using .all() will in fact hit the queryset
-                    # defined in Prefetch() above
-                    for pi in o.programmeindicator_set.all()
-                    if pi.programme.state_id == a.state_id
                 }
-
-                for o in a.programme_area.outcomes.all()
-                if len([pi for pi in o.programmeindicator_set.all()
-                        if pi.programme.state_id == a.state_id])
+                for pi in results
+                if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code
             },
-
             'programmes': {
-                p.name: p.projectcount
-
-                # Note: this approach is starting to make queries take a long time
-                for p in a.programme_area.programme_set.all()
-                if p.state_id == a.state_id
+                p[0]: p[1] for p in programmes
+                if p[2] == a.programme_area.code and p[3] == a.state.code
             },
         })
 

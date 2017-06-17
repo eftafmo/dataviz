@@ -8,12 +8,12 @@
                     <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
                 </div>
                 <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
-                <small>({{ beneficiary.programmes.length }} programmes, {{ beneficiary.projectcount }} projects)</small>
+                <small>({{ beneficiary.programmes.length }} programmes)</small>
             </div>
             <ul class="programme-list">
                <li v-for="programme in beneficiary.programmes"  class="programme-item">
-                 <div  @click="toggleContent($event)" class="programme-item-header"> {{ programme.name }} </div>
-                 <div class="programme-sublist-wrapper">
+                 <div class="programme-sublist-item"> {{ programme.programme_name }} </div>
+                 <!--<div class="programme-sublist-wrapper">
                    <small class="programme-sublist-header">{{ programme.sector }}</small>
                    <ul class="programme-sublist">
                      <li class="programme-sublist-item"
@@ -23,7 +23,7 @@
                        Lorem ipsum {{ n }}
                      </li>
                    </ul>
-                 </div>
+                 </div>-->
                </li>
             </ul>
           </div>
@@ -175,14 +175,16 @@ export default Vue.extend({
           };
 
         for (const p in programmes) {
-          const projectcount = +programmes[p];
-
+          // TODO: clean the project count logic
+          const projectcount = 0;
+          //const projectcount = +programmes[p];
           //if (projectcount == 0) continue;
-
           let programme = beneficiary[p];
           if (programme === undefined)
             programme = beneficiary[p] = {
               sector: d.sector,
+              programme_code: p,
+              programme_name: programmes[p],
               projectcount: 0,
             };
 
@@ -203,7 +205,6 @@ export default Vue.extend({
                 id: b,
                 programmes: [],
               };
-
         out.beneficiaries.push(beneficiary);
         for (const p in programmes) {
           const value = programmes[p];
@@ -211,7 +212,7 @@ export default Vue.extend({
             beneficiary.projectcount = value;
             continue;
           }
-          beneficiary.programmes.push(Object.assign({name: p}, value));
+          beneficiary.programmes.push(value);
         }
       }
 
