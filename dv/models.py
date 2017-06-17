@@ -494,6 +494,8 @@ class ProgrammeIndicator(_BaseModel):
                 'programme': 'ProgrammeCode',
                 'programme_area': 'ProgrammeAreaCode',
                 'outcome': 'OutcomeCode',
+                'result_text': 'ResultText',
+                'state': ('name', 'BeneficiaryState'),
                 'achievement': 'Achievement',
             }
         },
@@ -509,6 +511,8 @@ class ProgrammeIndicator(_BaseModel):
     programme = models.ForeignKey(Programme)
     programme_area = models.ForeignKey(ProgrammeArea)
     outcome = models.ForeignKey(Outcome)
+    state = models.ForeignKey(State, null=True)
+    result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
 
     achievement = models.IntegerField()
 
