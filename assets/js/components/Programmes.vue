@@ -11,8 +11,8 @@
                 <small>({{ beneficiary.programmes.length }} programmes)</small>
             </div>
             <ul class="programme-list">
-               <li v-for="programme in beneficiary.programmes"  class="programme-item">
-                 <div class="programme-sublist-item"> {{ programme.programme_name }} </div>
+               <li v-for="programme in beneficiary.programmes" class="programme-item">
+                 <a class="programme-sublist-item" target="_blank" v-bind:href=programme.programme_url> {{ programme.programme_name }} </a>
                  <!--<div class="programme-sublist-wrapper">
                    <small class="programme-sublist-header">{{ programme.sector }}</small>
                    <ul class="programme-sublist">
@@ -72,6 +72,13 @@
     color: #3D90F3;
   }
 
+  a.programme-sublist-item:hover {
+    text-decoration: None;
+  }
+
+  a.programme-sublist-item {
+    color: inherit;
+  }
 
   .flag {
     width: 30px;
@@ -184,7 +191,8 @@ export default Vue.extend({
             programme = beneficiary[p] = {
               sector: d.sector,
               programme_code: p,
-              programme_name: programmes[p],
+              programme_name: programmes[p].name,
+              programme_url: programmes[p].url,
               projectcount: 0,
             };
 

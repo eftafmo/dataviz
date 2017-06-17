@@ -37,12 +37,13 @@ def grants(request):
     )
     programmes = set(ProgrammeOutcome.objects.all().select_related(
         'programme',
-        'outcome__programme_area'
+        'outcome__programme_area',
     ).values_list(
         'programme__code',
         'programme__name',
         'outcome__programme_area__code',
-        'state__code'
+        'state__code',
+        'programme__url',
     ).exclude(programme__isnull=True)
     )
 
@@ -72,7 +73,11 @@ def grants(request):
                 if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code
             },
             'programmes': {
-                p[0]: p[1] for p in programmes
+                p[0]: {
+                    'name': p[1],
+                    'url': p[4],
+                }
+                for p in programmes
                 if p[2] == a.programme_area.code and p[3] == a.state.code
             },
         })
