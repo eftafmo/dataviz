@@ -8,12 +8,12 @@
                     <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
                 </div>
                 <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
-                <small>({{ beneficiary.programmes.length }} programmes, {{ beneficiary.projectcount }} projects)</small>
+                <small>({{ beneficiary.programmes.length }} programmes)</small>
             </div>
             <ul class="programme-list">
-               <li v-for="programme in beneficiary.programmes"  class="programme-item">
-                 <div  @click="toggleContent($event)" class="programme-item-header"> {{ programme.name }} </div>
-                 <div class="programme-sublist-wrapper">
+               <li v-for="programme in beneficiary.programmes" class="programme-item">
+                 <a class="programme-sublist-item" target="_blank" v-bind:href=programme.programme_url> {{ programme.programme_name }} </a>
+                 <!--<div class="programme-sublist-wrapper">
                    <small class="programme-sublist-header">{{ programme.sector }}</small>
                    <ul class="programme-sublist">
                      <li class="programme-sublist-item"
@@ -23,7 +23,7 @@
                        Lorem ipsum {{ n }}
                      </li>
                    </ul>
-                 </div>
+                 </div>-->
                </li>
             </ul>
           </div>
@@ -72,6 +72,13 @@
     color: #3D90F3;
   }
 
+  a.programme-sublist-item:hover {
+    text-decoration: None;
+  }
+
+  a.programme-sublist-item {
+    color: inherit;
+  }
 
   .flag {
     width: 30px;
@@ -166,7 +173,7 @@ export default Vue.extend({
       for (const d of dataset) {
         const programmes = d.programmes;
 
-        if (!programmes) continue;
+        if (!programmes || !Object.keys(programmes).length) continue;
 
         let beneficiary = beneficiaries[d.beneficiary];
         if (beneficiary === undefined)
@@ -175,14 +182,17 @@ export default Vue.extend({
           };
 
         for (const p in programmes) {
-          const projectcount = +programmes[p];
-
-          if (projectcount == 0) continue;
-
+          // TODO: clean the project count logic
+          const projectcount = 0;
+          //const projectcount = +programmes[p];
+          //if (projectcount == 0) continue;
           let programme = beneficiary[p];
           if (programme === undefined)
             programme = beneficiary[p] = {
               sector: d.sector,
+              programme_code: p,
+              programme_name: programmes[p].name,
+              programme_url: programmes[p].url,
               projectcount: 0,
             };
 
@@ -203,16 +213,14 @@ export default Vue.extend({
                 id: b,
                 programmes: [],
               };
-
         out.beneficiaries.push(beneficiary);
-
         for (const p in programmes) {
           const value = programmes[p];
           if (p === '_projectcount') {
             beneficiary.projectcount = value;
             continue;
           }
-          beneficiary.programmes.push(Object.assign({name: p}, value));
+          beneficiary.programmes.push(value);
         }
       }
 

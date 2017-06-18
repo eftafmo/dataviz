@@ -65,13 +65,23 @@ class Command(BaseCommand):
                 pickle.dump(nuts_book, cached)
 
         models = (
-            NUTS, State, FinancialMechanism,
-            PrioritySector, ProgrammeArea, Allocation,
-            Programme, Programme_ProgrammeArea,
-            Outcome, ProgrammeOutcome,
+            NUTS,
+            State,
+            FinancialMechanism,
+            PrioritySector,
+            ProgrammeArea,
+            Allocation,
+            Programme,
+            Programme_ProgrammeArea,
+            Outcome,
+            ProgrammeOutcome,
             Project,
-            Indicator, ProgrammeIndicator,
-            OrganisationType, Organisation, OrganisationRole,
+            Indicator,
+            ProgrammeIndicator,
+            OrganisationType,
+            Organisation,
+            OrganisationRole,
+            Organisation_OrganisationRole,
         )
 
         self.stderr.style_func = None

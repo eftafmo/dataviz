@@ -41,8 +41,10 @@
   .fm { cursor: pointer; }
 
   .chart {
-    rect.fm {
-      shape-rendering: crispEdges;
+    .fm {
+      rect {
+        shape-rendering: crispEdges;
+      }
     }
   }
 
@@ -207,12 +209,14 @@ export default Vue.extend({
           .domain([0, d3.sum(this.data.map( (d) => d.value ))]);
 
       const fms = chart
-	    .selectAll("rect.fm")
+	    .selectAll("g.fm > rect")
             .data(this.data, (d) => d.id )
 
-      const fentered = fms.enter().append("rect")
+      const fentered = fms.enter()
+            .append("g")
             .attr("class", (d) => "fm " + d.id)
             .attr("fill", (d) => d.colour )
+            .append("rect")
             .attr("x", 0)
             .attr("y", 0)
             .attr("width", 0)
@@ -246,18 +250,13 @@ export default Vue.extend({
       // (the legend is handled by vue.)
       const t = this.getTransition();
 
-      this.chart.selectAll("rect.fm")
+      this.chart.selectAll(".fm")
         .transition(t)
         .attr("fill", (d) => (
           this.isDisabledFm(d) ?
             colour2gray(d.colour, this.inactive_opacity) :
             d.colour
         ));
-    },
-
-    // for all other filters, re-render
-    handleFilter() {
-      this.render();
     },
   },
 });

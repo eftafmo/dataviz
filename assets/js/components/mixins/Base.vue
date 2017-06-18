@@ -93,7 +93,9 @@ export default {
         if (!val) continue;
 
         filterfuncs.push(
-          (item) => item[f] == val
+          // NOTE: use lower-case comparison, or things might get messy
+          // (until we switch to using ids)
+          (item) => item[f] && item[f].toLowerCase() == val.toLowerCase()
         );
       }
 
