@@ -48,12 +48,18 @@ def grants(request):
     ).exclude(programme__isnull=True)
     )
 
-    results = ProgrammeIndicator.objects.all().select_related(
+    all_results = ProgrammeIndicator.objects.all().select_related(
         'indicator'
     ).exclude(achievement=0)
 
     out = []
     for a in allocations:
+        results = defaultdict(dict)
+        for pi in all_results:
+            if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code:
+                results[pi.result_text].update({
+                    pi.indicator.name: pi.achievement
+                })
         out.append({
             # TODO: switch these to ids(?)
             'fm': a.financial_mechanism.grant_name,
@@ -66,13 +72,7 @@ def grants(request):
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'
                     for p in o.programmes.all() if p.state_id == a.state_id),
 
-            'results': {
-                pi.result_text: {
-                    pi.indicator.name: pi.achievement
-                }
-                for pi in results
-                if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code
-            },
+            'results': results,
             'programmes': {
                 p[0]: {
                     'name': p[1],
