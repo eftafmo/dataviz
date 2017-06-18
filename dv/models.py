@@ -220,7 +220,7 @@ class Programme(_MainModel):
                 'url': 'UrlProgrammePage',
                 # TODO: leftovers
                 #IsDirectlyContracted
-                #IsTAProgramme
+                'is_tap': 'IsTAProgramme'
             }
         },
     ]
@@ -256,6 +256,8 @@ class Programme(_MainModel):
 
     allocation_eea = models.DecimalField(max_digits=15, decimal_places=2)
     allocation_norway = models.DecimalField(max_digits=15, decimal_places=2)
+
+    is_tap = models.BooleanField()
 
     @property
     def allocation(self):

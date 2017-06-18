@@ -44,6 +44,7 @@ def grants(request):
         'outcome__programme_area__code',
         'state__code',
         'programme__url',
+        'programme__is_tap',
     ).exclude(programme__isnull=True)
     )
 
@@ -78,7 +79,8 @@ def grants(request):
                     'url': p[4],
                 }
                 for p in programmes
-                if p[2] == a.programme_area.code and p[3] == a.state.code
+                if p[2] == a.programme_area.code and p[3] == a.state.code and not p[5]
+                # Exclude technical assistance programmes from this list
             },
         })
 
