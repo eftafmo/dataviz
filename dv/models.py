@@ -512,6 +512,7 @@ class ProgrammeIndicator(_BaseModel):
     programme_area = models.ForeignKey(ProgrammeArea)
     outcome = models.ForeignKey(Outcome)
     state = models.ForeignKey(State, null=True)
+    # this is also on ProgrammeOutcome...
     result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
 
     achievement = models.IntegerField()
@@ -564,7 +565,7 @@ class OrganisationType(_BaseModel):
         return "%s / %s" % (self.category, self.name)
 
 
-class OrganisationRole(_BaseModel):
+class OrganisationRole(_MainModel):
     IMPORT_SOURCES = [
         {
             'src': 'OrganisationRoles',
@@ -589,14 +590,14 @@ class Organisation(_BaseModel):
                 'ptype': 'IsProgrammeOrProjectOrg',
                 'orgtype': ('name', 'OrganisationType'),
                 'nuts': 'NUTSCode',
-                # TODO: use proper states/countries table
-                'country': ('name', 'Country'),
+                'country': 'Country',
                 'geotarget': 'GeographicalTarget',
+
+                # leftovers
+                #'City',
             }
         },
     ]
-    # TODO: leftovers
-    #'City',
 
     class ORGANISATION_TYPE(Enum):
         PROGRAMME = 'programme'
@@ -608,8 +609,7 @@ class Organisation(_BaseModel):
 
     ptype = EnumField(ORGANISATION_TYPE, max_length=9)
     orgtype = models.ForeignKey(OrganisationType, null=True)
-    # TODO: the countries can be different from member states.
-    #country = models.ForeignKey(State)
+    # the countries can be different from member states; that's why we don't use FK
     country = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
     geotarget = models.CharField(max_length=256)
@@ -617,12 +617,7 @@ class Organisation(_BaseModel):
 
     role = models.ManyToManyField(OrganisationRole, through="Organisation_OrganisationRole")
 
-    # class Meta(_BaseModel.Meta):
-        # TODO: this isn't unique, as organisations are duplicate
-        # if they're both programme- & project-level.
-        # TODO: fix it?
-        #unique_together = ('country', 'name')
-        # pass
+    # TODO: can't unique, as organisations are duplicate if they're both programme & project level.
 
     def __str__(self):
         return "%s _ %s" % (self.country, self.name)
@@ -631,9 +626,10 @@ class Organisation(_BaseModel):
 class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
     IMPORT_SOURCES = [
         {
-            'src': 'OrganisationRole',
+            'src': 'OrganisationRoles',
             'map': {
                 'organisation': ('id', 'IdOrganisation'),
+                'organisation_role': 'OrganisationRoleCode',
                 'programme': 'ProgrammeCode',
                 'project': 'ProjectCode',
                 'is_programme': 'IsProgrammeOrProjectOrg',
@@ -679,6 +675,9 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
             'programme',
             'project',
         )
+
+    def __str__(self):
+        return "{} - {}".format(self.organisation_id, self.organisation_role_id)
 
 
 class News(models.Model):
