@@ -17,6 +17,7 @@
     }
   }
   @media(max-width:768px) {
+    display: none;
     left: 0!important;
     right: 0!important;
     border: 1px solid #3d90f3;
