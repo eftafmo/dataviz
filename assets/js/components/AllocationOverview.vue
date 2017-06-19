@@ -26,7 +26,7 @@
 
 .allocation.fade-enter-active {
   position: absolute;
-  top: 11px;
+  top: 0;
   left: 0;
 }
 
