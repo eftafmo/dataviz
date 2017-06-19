@@ -812,7 +812,6 @@ export default Vue.extend({
     },
 
     changeIcon(val, old) {
-      const $this = this
       const t = this.getTransition();
 
       d3.selectAll('g.arc')
