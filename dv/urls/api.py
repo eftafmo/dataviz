@@ -19,5 +19,6 @@ urlpatterns = [
     url(r'^projects/',
         views.ProjectList.as_view(),
         name='project-list',
-    )
+        ),
+    url(r'^news.json', views.news, name='news'),
 ]

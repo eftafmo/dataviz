@@ -13,7 +13,7 @@ from dv.models import (
     Allocation,
     State, ProgrammeArea, Programme, Project,
     ProgrammeIndicator, ProgrammeOutcome,
-    NUTS,
+    NUTS, News
 )
 from dv.serializers import (
     ProjectSerializer,
@@ -183,6 +183,36 @@ def beneficiary_allocation_detail(request, beneficiary):
 
     #print(_verify1, _verify2)
     return JsonResponse(allocations)
+
+
+def news(request):
+    news = (
+        News.objects.all()
+        .select_related(
+            'project',
+            'project__financial_mechanism',
+            'project__state',
+            'project__programme_area',
+            'project__programme_area__priority_sector',)
+        .exclude(project_id__isnull=True)
+        .order_by('-created')
+    )
+
+    out = []
+    for n in news:
+        out.append({
+            'fm': n.project.financial_mechanism.grant_name,
+            'sector': n.project.programme_area.priority_sector.name,
+            'area': n.project.programme_area.name,
+            'beneficiary': n.project.state_id,
+            'title': n.title,
+            'link': n.link,
+            'created': n.created,
+            'summary': n.summary,
+            'image': n.image,
+        })
+
+    return JsonResponse(out)
 
 
 class ProjectList(ListAPIView):
