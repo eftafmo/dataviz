@@ -46,9 +46,9 @@ def overview(request):
         'programme__code',
         'outcome__programme_area__priority_sector__type_id',
         'state__code',
+        'programme__is_tap',
     ).exclude(
         programme__isnull=True,
-        programme__is_tap__isnull=True
     ))
     project_counts = list(Project.objects.values(
         'financial_mechanism_id',
@@ -66,7 +66,7 @@ def overview(request):
             'programmes': [
                 p[0]
                 for p in programmes
-                if p[1] == a['financial_mechanism_id'] and p[2] == a['state_id']
+                if p[1] == a['financial_mechanism_id'] and p[2] == a['state_id'] and not p[3]
                 # Exclude technical assistance programmes from this list
             ],
             'project_count': next((
