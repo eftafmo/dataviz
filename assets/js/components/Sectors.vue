@@ -653,7 +653,7 @@ export default Vue.extend({
         .attr("y", -$this.height/4)
         .attr("width", $this.width/2)
         .attr("height", $this.height/2)
-        .style('display','none');
+        .style('opacity','0');
 
 
       // const sect_image = this.get_image(slugify(sname))
@@ -813,16 +813,23 @@ export default Vue.extend({
 
     changeIcon(val, old) {
       const $this = this
+      const t = this.getTransition();
 
       d3.selectAll('g.arc')
       .filter(function(c){
           return c.data.name == old
-      }).select('use').style('display','none')
+      })
+      .select('use')
+      .transition(t)
+      .style('opacity','0')
 
       d3.selectAll('g.arc')
         .filter(function(c){
           return c.data.name == val
-      }).select('use').style('display', 'block')
+      })
+      .select('use')
+      .transition(t)
+      .style('opacity', '1')
     },
 
     handleFilterArea(val) {
