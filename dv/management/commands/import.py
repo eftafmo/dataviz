@@ -65,7 +65,7 @@ class Command(BaseCommand):
                 pickle.dump(nuts_book, cached)
 
         models = (
-            NUTS,
+            # NUTS,
             State,
             FinancialMechanism,
             PrioritySector,
