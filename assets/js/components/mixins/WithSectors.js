@@ -15,7 +15,7 @@ export function get_image(code) {
   return `${sector_img}`;
 }
 
-const req = require.context('svg-sprite-loader!imgs/fmIcons', false, /[a-z]+\.png$/);
+const req = require.context('svg-sprite-loader!imgs/psIcons', false, /[a-z]+\.png$/);
 // we could load all of req.keys() instead, but we want things to fail
 // if there's a mismatch between country names and png files.
 // (possible TODO: compare req.keys() with countries and warn if necessary)
