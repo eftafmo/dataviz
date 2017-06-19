@@ -5,6 +5,7 @@
 
 {% block main %}
 <div class="lg-column">
+  <h1 class="page-title">Our projects</h1>
 
   <div class="grant-dataviz" id="financial-mechanisms">
   <h2>Projects by financial mechanism</h2>
@@ -45,11 +46,11 @@
       :initial="dataset">
   </overview>
   <tabs cache-lifetime="">
-    <tab name="Results">
+    <tab name="News">
       <results class="sidebar-content"
         :initial="dataset" />
     </tab>
-    <tab name="Programmes">
+    <tab name="Projects">
       <programmes class="sidebar-content"
         :initial="dataset" />
     </tab>

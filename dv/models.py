@@ -220,7 +220,7 @@ class Programme(_MainModel):
                 'url': 'UrlProgrammePage',
                 # TODO: leftovers
                 #IsDirectlyContracted
-                #IsTAProgramme
+                'is_tap': 'IsTAProgramme'
             }
         },
     ]
@@ -256,6 +256,8 @@ class Programme(_MainModel):
 
     allocation_eea = models.DecimalField(max_digits=15, decimal_places=2)
     allocation_norway = models.DecimalField(max_digits=15, decimal_places=2)
+
+    is_tap = models.BooleanField()
 
     @property
     def allocation(self):
@@ -411,6 +413,7 @@ class Project(_MainModel):
             'map': {
                 'state': ('name', 'BeneficiaryState'),
                 'programme': 'ProgrammeCode',
+                'programme_area': 'PACode',
                 'outcome': 'OutcomeCode',
                 'financial_mechanism': 'FMCode',
                 'status': 'ProjectStatus',
@@ -453,6 +456,7 @@ class Project(_MainModel):
 
     state = models.ForeignKey(State)
     programme = models.ForeignKey(Programme)
+    programme_area = models.ForeignKey(ProgrammeArea)
     outcome = models.ForeignKey(Outcome)
     financial_mechanism = models.ForeignKey(FinancialMechanism)
 

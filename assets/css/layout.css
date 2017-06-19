@@ -67,4 +67,9 @@
   .container {
     max-width: 1380px;
   }
+
+  #funding-map {
+      margin-top: 5rem;
+  }
+
 }

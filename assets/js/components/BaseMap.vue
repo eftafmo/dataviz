@@ -44,7 +44,26 @@
   </svg>
 </chart-container>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a country" :items="COUNTRIES"></dropdown>
+    <dropdown filter="beneficiary" title="Select a country" :items="getBeneficiaries"></dropdown>
+  </div>
+  <div class="legend">
+    <ul class="legend-items">
+      <li>
+          <span v-if="!this.filters['fm']" class="square" :style="{background: fmcolour('eea-grants')}">
+            <span class="triangle" :style="{borderTopColor: fmcolour('norway-grants')}"></span>
+          </span>
+          <!-- special handling because filters[fm] can't be used for in fmcolour -->
+          <span  v-if="this.filters['fm']" >
+            <span v-if="this.filters['fm']=='EEA Grants'" class="square" :style="{background: fmcolour('eea-grants')}"> </span>
+            <span v-if="this.filters['fm']=='Norway Grants'" class="square" :style="{background: fmcolour('norway-grants')}"> </span>
+          </span>
+          Donor states
+      </li>
+      <li>
+        <span class="square"></span>
+        Beneficiary states
+      </li>
+    </ul>
   </div>
 </div>
 </template>
@@ -154,6 +173,43 @@
         stroke-width: .5;
       }
     }
+
+  }
+  .legend {
+    ul{
+      padding-left: 0;
+    }
+
+    li {
+      list-style-type: none;
+      display: inline-flex;
+      align-items: center;
+      margin-right: 2rem;
+    }
+
+    li:last-of-type{
+      margin-right: 0;
+    }
+
+      .square {
+        height: 20px;
+        width: 20px;
+        background: @beneficiary;;
+        display: inline-block;
+        margin-right: 1rem;
+        position: relative;
+      }
+      .triangle {
+        width: 0;
+        height: 0;
+        border-left: 14px solid transparent;
+        border-right: 14px solid transparent;
+        border-top: 14px solid;
+        top: -2.1px;
+        position: absolute;
+        transform: rotate(135deg);
+        left: -9.1px;
+      }
   }
 }
 </style>
@@ -218,6 +274,16 @@ export default Vue.extend({
   computed: {
     scaleFactor() {
       return this.width / this.svgWidth / this.zoom;
+    },
+
+    getBeneficiaries() {
+      const beneficiaries = {}
+      for (let c in COUNTRIES) {
+        if(COUNTRIES[c].type == 'beneficiary'){
+          beneficiaries[c] = COUNTRIES[c]
+        }
+      }
+      return beneficiaries
     },
 
     projection() {
@@ -534,7 +600,7 @@ export default Vue.extend({
       // renders NUTS-lvl3 regions for the selected country
       const $this = this;
       const state = this.filters.beneficiary;
-
+      console.log(this.filters)
       // only render the current state, but capture the rest for exit()
       const containers = this.chart.select('.regions').selectAll('g')
                              .data(

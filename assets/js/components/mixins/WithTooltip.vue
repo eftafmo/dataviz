@@ -5,7 +5,6 @@
   max-width: 420px;
   padding: 1rem 2rem;
   background: white;
-  font-weight: 600;
   box-shadow: 0px 0px 3px #aaa;
   white-space: pre;
   line-height: 1.5;
@@ -18,6 +17,7 @@
     }
   }
   @media(max-width:768px) {
+    display: none;
     left: 0!important;
     right: 0!important;
     border: 1px solid #3d90f3;
@@ -56,6 +56,7 @@
     padding-bottom: 1rem;
     margin-bottom: 1rem;
     margin-top: .5rem;
+    font-weight: 600;
     margin-left: .5rem;
     margin-right: .5rem;
     border-bottom: 1px solid #eee;

@@ -4,7 +4,7 @@
         <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
-            <small>{{ item.sector }}</small>
+            <small v-show="hideSector">{{ item.sector }}</small>
             <ul v-for="(value, indicator) in item.indicators" class="indicators">
                <li class="indicator clearfix" :style="{borderColor: sectorcolour(item.sector)}">
                   <div class="indicator-achievement"> {{ value }}</div>
@@ -58,6 +58,7 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
 import WithSectorsMixin from './mixins/WithSectors';
+import {FILTERS} from '../globals.js'
 
 export default Vue.extend({
   mixins: [
@@ -98,6 +99,12 @@ export default Vue.extend({
       // TODO: sorting order?
 
       return results;
+    },
+    hideSector() {
+      if(FILTERS['sector'])
+        return false
+      else
+      return true
     },
   },
 

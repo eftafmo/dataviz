@@ -13,7 +13,7 @@ from dv.models import (
     Allocation,
     State, ProgrammeArea, Programme, Project,
     ProgrammeIndicator, ProgrammeOutcome,
-    NUTS,
+    NUTS, News
 )
 from dv.serializers import (
     ProjectSerializer,
@@ -44,15 +44,22 @@ def grants(request):
         'outcome__programme_area__code',
         'state__code',
         'programme__url',
+        'programme__is_tap',
     ).exclude(programme__isnull=True)
     )
 
-    results = ProgrammeIndicator.objects.all().select_related(
+    all_results = ProgrammeIndicator.objects.all().select_related(
         'indicator'
     ).exclude(achievement=0)
 
     out = []
     for a in allocations:
+        results = defaultdict(dict)
+        for pi in all_results:
+            if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code:
+                results[pi.result_text].update({
+                    pi.indicator.name: pi.achievement
+                })
         out.append({
             # TODO: switch these to ids(?)
             'fm': a.financial_mechanism.grant_name,
@@ -65,20 +72,15 @@ def grants(request):
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'
                     for p in o.programmes.all() if p.state_id == a.state_id),
 
-            'results': {
-                pi.result_text: {
-                    pi.indicator.name: pi.achievement
-                }
-                for pi in results
-                if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code
-            },
+            'results': results,
             'programmes': {
                 p[0]: {
                     'name': p[1],
                     'url': p[4],
                 }
                 for p in programmes
-                if p[2] == a.programme_area.code and p[3] == a.state.code
+                if p[2] == a.programme_area.code and p[3] == a.state.code and not p[5]
+                # Exclude technical assistance programmes from this list
             },
         })
 
@@ -181,6 +183,36 @@ def beneficiary_allocation_detail(request, beneficiary):
 
     #print(_verify1, _verify2)
     return JsonResponse(allocations)
+
+
+def news(request):
+    news = (
+        News.objects.all()
+        .select_related(
+            'project',
+            'project__financial_mechanism',
+            'project__state',
+            'project__programme_area',
+            'project__programme_area__priority_sector',)
+        .exclude(project_id__isnull=True)
+        .order_by('-created')
+    )
+
+    out = []
+    for n in news:
+        out.append({
+            'fm': n.project.financial_mechanism.grant_name,
+            'sector': n.project.programme_area.priority_sector.name,
+            'area': n.project.programme_area.name,
+            'beneficiary': n.project.state_id,
+            'title': n.title,
+            'link': n.link,
+            'created': n.created,
+            'summary': n.summary,
+            'image': n.image,
+        })
+
+    return JsonResponse(out)
 
 
 class ProjectList(ListAPIView):

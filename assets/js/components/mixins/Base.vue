@@ -20,21 +20,20 @@ export default {
       // unless overriden, displayed values are formatted as currency
       showsCurrency: true,
 
-      // this is only used internally. mind the creative use of unicode,
+      // this is only used internally. we can't come up with a nicer name,
       // because properties beginning with underscore aren't reactive
-      ˉdataset: null,
+      dataset__: null,
     };
-
   },
 
   computed: {
     dataset: {
       // make dataset a settable computed
       get() {
-        return this.ˉdataset || this.initial;
+        return this.dataset__ || this.initial;
       },
       set(val) {
-        this.ˉdataset = val;
+        this.dataset__ = val;
       },
     },
 
