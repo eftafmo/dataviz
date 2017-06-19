@@ -38,54 +38,41 @@
     padding-left: 0;
   }
 
-  .fm { cursor: pointer; }
-
   .chart {
     .fm {
+      cursor: pointer;
       rect {
         shape-rendering: crispEdges;
       }
     }
   }
 
-  .legend .fm {
-    transition: all .5s ease;
-  }
-  .legend .fm.disabled {
-    filter: grayscale(100%);
-    opacity: 0.5;
-  }
+  .legend {
+    .fm {
+      list-style-type: none;
+      display: inline-block;
 
-  .legend .fm.selected {
-    text-shadow: 0 0 1px #999;
-  }
+      border-right: 1px solid #ccc;
+      padding: 0 2rem;
 
-  .legend .fm {
-    list-style-type: none;
-    display: inline-block;
-  }
+      &:last-of-type {
+        padding-right: 0;
+        border-right: none;
+      }
 
-  .legend .fm {
-    border-right: 1px solid #ccc;
-    padding: 0 2rem;
-  }
+      &:first-of-type {
+        padding-left: 0;
+      }
 
-  .legend .fm:last-of-type {
-    padding-right: 0;
-    border-right: none;
-  }
+      .name {
+        display: block;
+      }
 
-  .legend .fm:first-of-type {
-    padding-left: 0;
-  }
-
-  .legend .value {
-    font-size: 1.8rem;
-    font-weight: bold;
-  }
-
-  .legend .fm .name {
-    display: block;
+      .value {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+    }
   }
 }
 
