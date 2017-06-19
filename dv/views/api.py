@@ -6,10 +6,13 @@ from django.db.models import CharField
 from django.db.models.expressions import F, Value
 from django.db.models.aggregates import Count, Sum
 from django.db.models.functions import Length, Concat
-from django.db.models.query import Prefetch
+from django.db.models.query import Prefetch, QuerySet
+from django.forms.models import model_to_dict
+
 from django.utils.text import slugify
 from dv.lib.http import CsvResponse, JsonResponse
 from dv.models import (
+    FinancialMechanism,
     Allocation,
     State, ProgrammeArea, Programme, Project,
     ProgrammeIndicator, ProgrammeOutcome,
@@ -21,6 +24,62 @@ from dv.serializers import (
 
 
 CharField.register_lookup(Length, 'length')
+
+
+def overview(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+
+    fms = FinancialMechanism.objects.all()
+    grants = {fm.code: fm.grant_name for fm in fms}
+    allocations = Allocation.objects.values(
+        'financial_mechanism_id',
+        'state_id'
+    ).annotate(
+        allocation=Sum('gross_allocation')
+    ).order_by('state_id', 'financial_mechanism_id')
+    programmes = set(ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area',
+        'outcome__programme_area__priority_sector',
+    ).values_list(
+        'programme__code',
+        'outcome__programme_area__priority_sector__type_id',
+        'state__code',
+    ).exclude(
+        programme__isnull=True,
+        programme__is_tap__isnull=True
+    ))
+    project_counts = list(Project.objects.values(
+        'financial_mechanism_id',
+        'state_id',
+    ).annotate(
+        project_count=Count('code')
+    ))
+    print(project_counts)
+    out = []
+    for a in allocations:
+        out.append({
+            'fm': grants[a['financial_mechanism_id']],
+            'beneficiary': a['state_id'],
+            'allocation': a['allocation'],
+            'programmes': [
+                p[0]
+                for p in programmes
+                if p[1] == a['financial_mechanism_id'] and p[2] == a['state_id']
+                # Exclude technical assistance programmes from this list
+            ],
+            'project_count': next((
+                p['project_count']
+                for p in project_counts
+                if (
+                    p['financial_mechanism_id'] == a['financial_mechanism_id'] and
+                    p['state_id'] == a['state_id']
+                )
+            ), 0)
+        })
+
+    return JsonResponse(out)
 
 
 def grants(request):
@@ -186,6 +245,8 @@ def beneficiary_allocation_detail(request, beneficiary):
 
 
 def news(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
     news = (
         News.objects.all()
         .select_related(
