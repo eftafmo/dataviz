@@ -34,22 +34,8 @@
     margin-right: 1rem;
   }
 
-  .indicator {
-    border-left: 3px solid red;
-    margin-bottom: .5rem;
-    padding-left: .5rem;
-  }
-
-  .indicator-achievement {
-    display: inline;
-    font-size: 2rem;
-    color: black;
-  }
-
-  .indicator-name {
-    display: inline;
-    font-size: 1.2rem;
-
+  .title {
+    font-size: 1.3rem;
   }
 
 }
