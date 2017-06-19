@@ -272,12 +272,12 @@ export default Vue.extend({
     },
 
     getBeneficiaries() {
-      let beneficiaries = COUNTRIES
-      for (let c in beneficiaries){
-        if(beneficiaries[c].type == 'donor'){
-          delete beneficiaries[c]
+      const beneficiaries = {}
+      for (let c in COUNTRIES) {
+        if(COUNTRIES[c].type == 'beneficiary'){
+          beneficiaries[c] = COUNTRIES[c]
         }
-      };
+      }
       return beneficiaries
     },
 
