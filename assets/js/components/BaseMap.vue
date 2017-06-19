@@ -46,6 +46,20 @@
   <div v-if="hasData" class="dropdown">
     <dropdown filter="beneficiary" title="Select a country" :items="COUNTRIES"></dropdown>
   </div>
+  <div class="legend">
+    <ul class="legend-items">
+      <li>
+          <span class="square" :style="{background: fmcolour('eea-grants')}">
+            <span class="triangle" :style="{borderTopColor: fmcolour('norway-grants')}"></span>
+          </span>
+          Donor states
+      </li>
+      <li>
+        <span class="square"></span>
+        Beneficiary states
+      </li>
+    </ul>
+  </div>
 </div>
 </template>
 
@@ -154,6 +168,43 @@
         stroke-width: .5;
       }
     }
+
+  }
+  .legend {
+    ul{
+      padding-left: 0;
+    }
+
+    li {
+      list-style-type: none;
+      display: inline-flex;
+      align-items: center;
+      margin-right: 2rem;
+    }
+
+    li:last-of-type{
+      margin-right: 0;
+    }
+
+      .square {
+        height: 20px;
+        width: 20px;
+        background: @beneficiary;;
+        display: inline-block;
+        margin-right: 1rem;
+        position: relative;
+      }
+      .triangle {
+        width: 0;
+        height: 0;
+        border-left: 14px solid transparent;
+        border-right: 14px solid transparent;
+        border-top: 14px solid;
+        top: -2.1px;
+        position: absolute;
+        transform: rotate(135deg);
+        left: -9.1px;
+      }
   }
 }
 </style>
