@@ -183,7 +183,6 @@ import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
-import {mydata} from '../constants/dummy.js'
 
 
 export default Vue.extend({
@@ -194,7 +193,7 @@ export default Vue.extend({
 
   computed: {
     data () {
-      const dataset = this.filter(mydata);
+      const dataset = this.filter(this.dataset);
       const beneficiaries = {};
 
       for (const d of dataset) {
