@@ -49,8 +49,13 @@
   <div class="legend">
     <ul class="legend-items">
       <li>
-          <span class="square" :style="{background: fmcolour('eea-grants')}">
+          <span v-if="!this.filters['fm']" class="square" :style="{background: fmcolour('eea-grants')}">
             <span class="triangle" :style="{borderTopColor: fmcolour('norway-grants')}"></span>
+          </span>
+          <!-- special handling because filters[fm] can't be used for in fmcolour -->
+          <span  v-if="this.filters['fm']" >
+            <span v-if="this.filters['fm']=='EEA Grants'" class="square" :style="{background: fmcolour('eea-grants')}"> </span>
+            <span v-if="this.filters['fm']=='Norway Grants'" class="square" :style="{background: fmcolour('norway-grants')}"> </span>
           </span>
           Donor states
       </li>
@@ -595,7 +600,7 @@ export default Vue.extend({
       // renders NUTS-lvl3 regions for the selected country
       const $this = this;
       const state = this.filters.beneficiary;
-
+      console.log(this.filters)
       // only render the current state, but capture the rest for exit()
       const containers = this.chart.select('.regions').selectAll('g')
                              .data(
