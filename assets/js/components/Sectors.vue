@@ -6,11 +6,6 @@
     </g>
   </svg>
 </chart-container>
-
-<!-- <div v-if="hasData">
-  <img :src="`/assets/imgs/fmIcons/${get_image('climate-change')}.png`"/>
-</div> -->
-
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
