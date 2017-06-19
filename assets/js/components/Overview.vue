@@ -153,7 +153,6 @@ import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
-import {mydata} from './dummy.js'
 
 
 export default Vue.extend({

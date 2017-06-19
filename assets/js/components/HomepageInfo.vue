@@ -183,7 +183,7 @@ import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
-import {mydata} from './dummy.js'
+import {mydata} from '../constants/dummy.js'
 
 
 export default Vue.extend({
