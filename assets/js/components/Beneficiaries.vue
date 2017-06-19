@@ -447,7 +447,7 @@ export default Vue.extend({
        */
       bentered
         .on("click", function (d) {
-          $this.toggleBeneficiary(d.id, this);
+          $this.toggleBeneficiary(d, this);
         })
         // tooltip events
         .on('mouseenter', this.tip.show)

@@ -82,10 +82,21 @@ export default {
   },
 
   methods: {
-    toggleBeneficiary(b, etarget) {
-      this.filters.beneficiary = this.filters.beneficiary == b ?
-                                 null : b;
+    isBeneficiary(d) {
+      return this.COUNTRIES[d.id].type == "beneficiary";
     },
+    isDonor(d) {
+      return this.COUNTRIES[d.id].type == "donor";
+    },
+
+    toggleBeneficiary(b, etarget) {
+      // don't filter by zero-valued items
+      if (b.total == 0) return;
+
+      this.filters.beneficiary = this.filters.beneficiary == b.id ?
+                                 null : b.id;
+    },
+
     get_flag_name(c) { return get_flag_name(c) },
     get_country_name(c) { return get_country_name(c)},
   },
