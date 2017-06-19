@@ -47,6 +47,9 @@ export default {
     },
 
     toggleFm(fm, etarget) {
+      // don't filter by zero-valued items
+      if (fm.value == 0) return;
+
       const fmname = fm.name;
       this.filters.fm = this.filters.fm == fmname ?
                         null : fmname;

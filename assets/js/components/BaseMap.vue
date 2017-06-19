@@ -132,23 +132,17 @@
 
     .states {
       .with-boundary;
-      cursor: pointer;
 
-      /*
-      // handled by d3
-      .donor {
-        fill: rgb(35, 97, 146),
-      }
-      .donor.NO {
-        fill: url(#multi-fm);
-      }
-      */
+      // TODO: should donors be clickable?
+      path.beneficiary {
+        cursor: pointer;
 
-      .beneficiary {
-        fill: @beneficiary;
+        &.zero {
+          cursor: not-allowed;
+        }
+
         &:hover {
           .hovered;
-          fill: @hovered;
         }
       }
     }
@@ -266,6 +260,11 @@ export default Vue.extend({
       graticule_stroke: 0.2,
       donor_inactive_colour: "#85adcb",
       default_region_colour: "#fff",
+      beneficiary_colour: {
+        default: '#ddd',
+        hovered: '#9dccec',
+        zero: '#fff',
+      },
 
       zoom: 1,
     };
@@ -559,6 +558,7 @@ export default Vue.extend({
              .enter()
              .append("path")
              .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
+             .attr("fill", this.beneficiary_colour.default)
              .attr("d", path)
              // while at this, cache the centroids and bounding box,
              // because the geo-data will get wiped during data manipulation
@@ -574,9 +574,9 @@ export default Vue.extend({
             function(){ d3.select(this).raise(); }
         )
       countries
-        .filter( (d) => COUNTRIES[d.id].type == "beneficiary" )
+        .filter(this.isBeneficiary)
         .on("click", function (d) {
-          $this.toggleBeneficiary(d.id, this);
+          $this.toggleBeneficiary(d, this);
         })
         // adding tooltip only for beneficiaries
         .on('mouseenter', this.tip.show)
@@ -585,7 +585,7 @@ export default Vue.extend({
       // hardcoding the donor colours a bit, because we want to
       // transition them later
       countries
-        .filter( (d) => COUNTRIES[d.id].type == "donor" )
+        .filter(this.isDonor)
         .attr("fill", (d) => d.id == "NO" ?
                              "url(#multi-fm)" : this.fmcolour("eea-grants") // §
         );
