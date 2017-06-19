@@ -6,6 +6,11 @@
     </g>
   </svg>
 </chart-container>
+
+<!-- <div v-if="hasData">
+  <img :src="`/assets/imgs/fmIcons/${get_image('climate-change')}.png`"/>
+</div> -->
+
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
@@ -630,10 +635,10 @@ export default Vue.extend({
         // level 2 items are hidden
         .attr("opacity", (d) => d.depth == 2 ? 0 : null )
         // and really hidden
-        .style("display", (d) => d.depth == 2 ? "none" : null )
+        .style("display", (d) => d.depth == 2 ? "none" : null);
 
         // the arc:
-        .append("path")
+        aentered.append("path")
         .each(function(d) {
           // cache current coordinates
           this._prev = $this._extract_coords(d);
@@ -646,6 +651,17 @@ export default Vue.extend({
         .on("mouseleave", this.unhighlight)
         .on('mouseover', this.tip.show)
         .on('mouseout', this.tip.hide);
+
+        aentered.append('use')
+        .attr("xlink:href", (d) => d.depth == 1 ?  `#${$this.get_image(slugify(d.data.id))}` : null )
+        .attr("x", -$this.width/4)
+        .attr("y", -$this.height/4)
+        .attr("width", $this.width/2)
+        .attr("height", $this.height/2)
+        .style('display','none');
+
+
+      // const sect_image = this.get_image(slugify(sname))
 
       /* transitions */
       // NOTE: there is no ENTER or EXIT, all items are persistent ¤
@@ -789,6 +805,7 @@ export default Vue.extend({
     handleFilterSector(val, old) {
       // remember this soon-to-be previous sector.
       // (it will be removed from the queue during handling of areas §)
+      this.changeIcon(val, old);
       if (val) this._prevsector.push(val);
 
       // always reset area on sector change
@@ -797,6 +814,20 @@ export default Vue.extend({
       // TODO: share a transition instance between these.
       this.render();
       this.renderAreasStuff();
+    },
+
+    changeIcon(val, old) {
+      const $this = this
+
+      d3.selectAll('g.arc')
+      .filter(function(c){
+          return c.data.name == old
+      }).select('use').style('display','none')
+
+      d3.selectAll('g.arc')
+        .filter(function(c){
+          return c.data.name == val
+      }).select('use').style('display', 'block')
     },
 
     handleFilterArea(val) {
