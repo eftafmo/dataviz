@@ -44,7 +44,7 @@
   </svg>
 </chart-container>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a country" :items="COUNTRIES"></dropdown>
+    <dropdown filter="beneficiary" title="Select a country" :items="getBeneficiaries"></dropdown>
   </div>
   <div class="legend">
     <ul class="legend-items">
@@ -269,6 +269,16 @@ export default Vue.extend({
   computed: {
     scaleFactor() {
       return this.width / this.svgWidth / this.zoom;
+    },
+
+    getBeneficiaries() {
+      let beneficiaries = COUNTRIES
+      for (let c in beneficiaries){
+        if(beneficiaries[c].type == 'donor'){
+          delete beneficiaries[c]
+        }
+      };
+      return beneficiaries
     },
 
     projection() {
