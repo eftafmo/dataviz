@@ -628,7 +628,7 @@ export default Vue.extend({
         .attr("class", "arc")
         .attr("fill", (d) => d.data.colour )
         // level 2 items are hidden
-        .attr("opacity", (d) => d.depth == 2 ? 0 : null )
+        .attr("opacity", (d) => d.depth == 2 ? 0 : null)
         // and really hidden
         .style("display", (d) => d.depth == 2 ? "none" : null);
 
