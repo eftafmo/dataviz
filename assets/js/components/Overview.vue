@@ -21,14 +21,86 @@
 <style lang="less">
 .overview-viz {
   .chart {
+    position: relative;
     path.chord {
       fill: #ccc;
       /*fill-opacity: .8;*/
     }
   }
 
+  .donor-count, .states-count {
+    word-spacing: 30rem;
+    text-align: center;
+    max-width: 150px;
+    span {
+      font-weight: bold;
+    }
+    font-size: 1.7rem;
+  }
+
+
+  .donor-count {
+    margin-left: 15%;
+  }
+
+  .states-count {
+    margin-right: 8%;
+  }
+
+  .line-wrapper {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 40%;
+    width: 100%;
+  }
+
+  .total-spent {
+    position: absolute;
+    top: 1rem;
+    left: 45%;
+    text-align: center;
+  }
+
+  .overview-info {
+    position: absolute;
+    left: 38%;
+    text-align: center;
+    max-width: 350px;
+    font-size: 2rem;
+    bottom: 9%;
+  }
+
+  .circle-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    font-size: 3rem;
+    text-align: center;
+    span {
+      font-weight: bold;
+      font-size: 4.5rem;
+    }
+    .circle {
+      background: rgba(251, 251, 251, 0.86);
+      padding: 6rem 7rem;
+      border-radius: 100rem;
+      border: 4px solid white;
+      margin-left: 5rem;
+      margin-top: 2rem;
+      z-index: 1;
+    }
+  }
+
   .legend {
     cursor: pointer;
+    position: relative;
+    z-index: 1;
     .fm span {
       width: 10px; height: 10px;
       display: inline-block;
@@ -86,7 +158,7 @@ import WithCountriesMixin from './mixins/WithCountries';
 export default Vue.extend({
   mixins: [
     BaseMixin, ChartMixin,
-    WithFMsMixin, WithCountriesMixin,
+    WithFMsMixin, WithCountriesMixin
   ],
 
   props: {
@@ -104,8 +176,8 @@ export default Vue.extend({
 
   computed: {
     data() {
+      const $this=this;
       const _dataset = {};
-
       const fmnames = d3.values(this.FMS).map( (fm) => fm.name ),
             _fmsobj = {};
       fmnames.forEach( (n) => _fmsobj[n] = 0 );
@@ -113,7 +185,6 @@ export default Vue.extend({
       for (const d of this.dataset) {
         const value = +d.allocation,
               b = d.beneficiary;
-
         if (value == 0) continue;
 
         let beneficiary = _dataset[b];
@@ -121,13 +192,12 @@ export default Vue.extend({
           beneficiary = _dataset[b] = Object.assign(
             { name: this.COUNTRIES[b].name },
             _fmsobj
-          );
-
+          )
         beneficiary[d.fm] += value;
       }
-
       const dataset = d3.values(_dataset);
       dataset.sort((a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0));
+
 
       // the chord layout needs a matrix as input
       const from_ = fmnames,
@@ -175,7 +245,6 @@ export default Vue.extend({
         // top dummy
         [build_from(to_zeros, null, null, _empty)]
       );
-
       return {
         names,
         matrix,
@@ -223,21 +292,21 @@ const endAngle = (d) => d.endAngle + offset;
 // Returns an event handler for fading a given chord group
 const fade = (opacity) => {
   return (d, i) => {
-	this.chart.selectAll("path.chord")
-		.filter(function(d) { return d.source.index !== i && d.target.index !== i && names[d.source.index] !== ""; })
-		.transition()
-		.style("opacity", opacity);
+  this.chart.selectAll("path.chord")
+    .filter(function(d) { return d.source.index !== i && d.target.index !== i && names[d.source.index] !== ""; })
+    .transition()
+    .style("opacity", opacity);
   };
 }//fade
 
 // Fade function when hovering over chord
 const fadeOnChord = (d) => {
-	var chosen = d;
-	this.chart.selectAll("path.chord")
-		.transition()
-		.style("opacity", function(d) {
-			return d.source.index === chosen.source.index && d.target.index === chosen.target.index ? opacityDefault : opacityLow;
-		});
+  var chosen = d;
+  this.chart.selectAll("path.chord")
+    .transition()
+    .style("opacity", function(d) {
+      return d.source.index === chosen.source.index && d.target.index === chosen.target.index ? opacityDefault : opacityLow;
+    });
 }//fadeOnChord
 
       const getColour = (d, i) => {
@@ -256,45 +325,45 @@ const fadeOnChord = (d) => {
 
 //Custom sort function of the chords to keep them in the original order
 var chord = customChordLayout() //d3.layout.chord()
-	.padding(.02)
-	.sortChords(d3.descending) //which chord should be shown on top when chords cross. Now the biggest chord is at the bottom
-	.matrix(matrix);
+  .padding(.02)
+  .sortChords(d3.descending) //which chord should be shown on top when chords cross. Now the biggest chord is at the bottom
+  .matrix(matrix);
 
 var arc = d3.arc()
-	.innerRadius(innerRadius)
-	.outerRadius(outerRadius)
-	.startAngle(startAngle) //startAngle and endAngle now include the offset in degrees
-	.endAngle(endAngle);
+  .innerRadius(innerRadius)
+  .outerRadius(outerRadius)
+  .startAngle(startAngle) //startAngle and endAngle now include the offset in degrees
+  .endAngle(endAngle);
 
 
 var path = stretchedChord() //Call the stretched chord function
-	.radius(innerRadius)
-	.startAngle(startAngle)
-	.endAngle(endAngle)
-	.pullOutSize(pullOutSize);
+  .radius(innerRadius)
+  .startAngle(startAngle)
+  .endAngle(endAngle)
+  .pullOutSize(pullOutSize);
 
 ////////////////////////////////////////////////////////////
 //////////////////// Draw outer Arcs ///////////////////////
 ////////////////////////////////////////////////////////////
 
 var g = this.chart.selectAll("g.group")
-	.data(chord.groups)
-	.enter().append("g")
-	.attr("class", "group")
-	.on("mouseover", fade(opacityLow))
-	.on("mouseout", fade(opacityDefault));
+  .data(chord.groups)
+  .enter().append("g")
+  .attr("class", "group")
+  .on("mouseover", fade(opacityLow))
+  .on("mouseout", fade(opacityDefault));
 
 
 
 g.append("path")
-	.style("stroke", getColour)
-	.style("fill", getColour)
-	.style("pointer-events", function(d,i) { return (names[i] === "" ? "none" : "auto"); })
-	.attr("d", arc)
-	.attr("transform", function(d, i) { //Pull the two slices apart
-				d.pullOutSize = pullOutSize * ( d.startAngle + 0.001 > Math.PI ? -1 : 1);
-				return "translate(" + d.pullOutSize + ',' + 0 + ")";
-	});
+  .style("stroke", getColour)
+  .style("fill", getColour)
+  .style("pointer-events", function(d,i) { return (names[i] === "" ? "none" : "auto"); })
+  .attr("d", arc)
+  .attr("transform", function(d, i) { //Pull the two slices apart
+        d.pullOutSize = pullOutSize * ( d.startAngle + 0.001 > Math.PI ? -1 : 1);
+        return "translate(" + d.pullOutSize + ',' + 0 + ")";
+  });
 
 ////////////////////////////////////////////////////////////
 ////////////////////// Append Names ////////////////////////
@@ -303,18 +372,18 @@ g.append("path")
 //The text also needs to be displaced in the horizontal directions
 //And also rotated with the offset in the clockwise direction
 g.append("text")
-	.each(function(d) { d.angle = ((d.startAngle + d.endAngle) / 2) + offset;})
-	.attr("dy", ".35em")
-	.attr("class", "titles")
-	.style("font-size", "10px" )
-	.attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-	.attr("transform", function(d,i) {
-		var c = arc.centroid(d);
-		return "translate(" + (c[0] + d.pullOutSize) + "," + c[1] + ")"
-		+ "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-		+ "translate(" + 20 + ",0)"
-		+ (d.angle > Math.PI ? "rotate(180)" : "")
-	})
+  .each(function(d) { d.angle = ((d.startAngle + d.endAngle) / 2) + offset;})
+  .attr("dy", ".35em")
+  .attr("class", "titles")
+  .style("font-size", "10px" )
+  .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+  .attr("transform", function(d,i) {
+    var c = arc.centroid(d);
+    return "translate(" + (c[0] + d.pullOutSize) + "," + c[1] + ")"
+    + "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+    + "translate(" + 20 + ",0)"
+    + (d.angle > Math.PI ? "rotate(180)" : "")
+  })
   .text(function(d,i) { return names[i]; });
 
 ////////////////////////////////////////////////////////////
@@ -322,15 +391,15 @@ g.append("text")
 ////////////////////////////////////////////////////////////
 
 this.chart.selectAll("path.chord")
-	.data(chord.chords)
-	.enter().append("path")
-	.attr("class", "chord")
-	.style("stroke", "none")
-	.style("opacity", function(d) { return (names[d.source.index] === "" ? 0 : opacityDefault); }) //Make the dummy strokes have a zero opacity (invisible)
-	.style("pointer-events", function(d,i) { return (names[d.source.index] === "" ? "none" : "auto"); }) //Remove pointer events from dummy strokes
-	.attr("d", path)
-	.on("mouseover", fadeOnChord)
-	.on("mouseout", fade(opacityDefault));
+  .data(chord.chords)
+  .enter().append("path")
+  .attr("class", "chord")
+  .style("stroke", "none")
+  .style("opacity", function(d) { return (names[d.source.index] === "" ? 0 : opacityDefault); }) //Make the dummy strokes have a zero opacity (invisible)
+  .style("pointer-events", function(d,i) { return (names[d.source.index] === "" ? "none" : "auto"); }) //Remove pointer events from dummy strokes
+  .attr("d", path)
+  .on("mouseover", fadeOnChord)
+  .on("mouseout", fade(opacityDefault));
     },
   },
 });

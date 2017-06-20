@@ -73,3 +73,14 @@
   }
 
 }
+
+
+.homepage_content_wrapper {
+  position: relative;
+}
+
+@media(min-width: 786px) {
+  .mobile_only {
+   display: none;
+  }
+}
