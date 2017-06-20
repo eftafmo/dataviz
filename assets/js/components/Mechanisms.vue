@@ -12,7 +12,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="fm" title="Both financial mechanisms" :items="fms"></dropdown>
+    <dropdown filter="fm" title="Both financial mechanisms" :items="FMS"></dropdown>
   </div>
 </div>
 </template>
@@ -98,8 +98,6 @@ import ChartMixin from './mixins/Chart.vue';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 
-import FMs from 'js/constants/financial-mechanisms.json5';
-
 
 export default Vue.extend({
   mixins: [
@@ -130,13 +128,13 @@ export default Vue.extend({
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
       const fmdata = {}
-      for (const fm in FMs) {
+      for (const fm in this.FMS) {
         fmdata[fm] = {
           'value': 0,
           'beneficiaries': d3.set(),
           'sectors': d3.set(),
         };
-        Object.assign(fmdata[fm], FMs[fm]);
+        Object.assign(fmdata[fm], this.FMS[fm]);
       }
 
       for (const d of dataset) {

@@ -1,7 +1,7 @@
 <template>
 <div class="beneficiaries-viz">
   <div v-if="hasData" class="legend">
-    <fm-legend :fms="fms" class="clearfix">
+    <fm-legend :fms="FMS" class="clearfix">
       <template slot="fm-content" scope="x">
         <span :style="{backgroundColor: x.fm.colour}"></span>
         {{ x.fm.name }}
