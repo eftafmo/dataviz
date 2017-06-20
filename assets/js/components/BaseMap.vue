@@ -44,7 +44,7 @@
   </svg>
 </chart-container>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a country" :items="COUNTRIES"></dropdown>
+    <dropdown filter="beneficiary" title="Select a country" :items="beneficiarydata"></dropdown>
   </div>
 </div>
 </template>

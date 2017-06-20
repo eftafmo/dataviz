@@ -9,7 +9,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="data"></dropdown>
+    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="beneficiarydata"></dropdown>
   </div>
   <svg width="100%" :height="height + 'px'">
     <filter id="grayscale">
