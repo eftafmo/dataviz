@@ -12,7 +12,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="fm" title="Both financial mechanisms" :items="FMS"></dropdown>
+    <dropdown filter="fm" title="Both financial mechanisms" :items="nonzero"></dropdown>
   </div>
 </div>
 </template>
@@ -151,6 +151,10 @@ export default Vue.extend({
       }
 
       return d3.values(fmdata);
+    },
+
+    nonzero() {
+      return this.data.filter( (d) => d.value != 0 );
     },
   },
 
