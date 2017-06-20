@@ -247,7 +247,7 @@ export default Vue.extend({
 
       //allocation total
       for (let d of dataset) {
-        out.allocation_total += parseFloat(d.allocation);
+        out.allocation_total += d.allocation;
       }
 
       //Sort by country
