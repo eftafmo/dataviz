@@ -74,6 +74,9 @@
     top: 1rem;
     left: 45%;
     text-align: center;
+    @media (min-width:768px) and (max-width: 1400px) {
+      left: 43%;
+    }
   }
 
   .overview-info {
@@ -90,6 +93,9 @@
       font-size: 1.5rem;
       bottom: 9%;
     }
+    @media (min-width: 768px) and (max-width: 900px) {
+      left: 39%;
+     }
   }
 
   .circle-wrapper {
@@ -127,6 +133,9 @@
       span {
         font-size: 3.5rem;
       }
+    }
+    @media (min-width: 768px) and (max-width: 800px) {
+          left: 36%;
     }
 
 
