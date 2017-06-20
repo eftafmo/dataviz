@@ -48,12 +48,25 @@
   }
 
   .legend {
+    .fm.disabled {
+        filter: grayscale(100%);
+        opacity: 0.5;
+      }
+
+     .fm.selected {
+        text-shadow: 0 0 1px #999;
+      }
+
     .fm {
       list-style-type: none;
       display: inline-block;
-
       border-right: 1px solid #ccc;
       padding: 0 2rem;
+      transition: all .5s ease;
+
+      @media(min-width: 400px) {
+       min-width: 150px;
+      }
 
       &:last-of-type {
         padding-right: 0;
@@ -72,10 +85,9 @@
         font-size: 1.8rem;
         font-weight: bold;
       }
+     }
     }
-  }
 }
-
 .d3-tip.fms {
     line-height: 1.2;
     white-space: normal;
