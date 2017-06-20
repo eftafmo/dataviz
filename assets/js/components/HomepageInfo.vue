@@ -238,7 +238,6 @@ export default Vue.extend({
 
       //allocation total
       for (let d of dataset) {
-        console.log(d.allocation)
         out.allocation_total += parseFloat(d.allocation);
       }
 
