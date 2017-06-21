@@ -1,7 +1,7 @@
 <template>
 <div class="beneficiaries-viz">
   <div v-if="hasData" class="legend">
-    <fm-legend :fms="fms" class="clearfix">
+    <fm-legend :fms="FMS" class="clearfix">
       <template slot="fm-content" scope="x">
         <span :style="{backgroundColor: x.fm.colour}"></span>
         {{ x.fm.name }}
@@ -9,7 +9,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="data"></dropdown>
+    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="beneficiarydata"></dropdown>
   </div>
   <svg width="100%" :height="height + 'px'">
     <filter id="grayscale">

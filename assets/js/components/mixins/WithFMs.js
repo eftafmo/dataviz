@@ -14,13 +14,6 @@ export default {
     'fm-legend': FMLegendComponent,
   },
 
-  data() {
-    return {
-      // TODO: get rid of this, and use this.FMS
-      fms: FMS,
-    };
-  },
-
   methods: {
     fmcolour(fmid) {
       return FMS[fmid].colour;

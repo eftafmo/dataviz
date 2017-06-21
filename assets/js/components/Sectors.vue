@@ -80,7 +80,7 @@
     </transition-group>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="sector" title="Select a sector" :items="selectPSData"></dropdown>
+    <dropdown filter="sector" title="Select a sector" :items="filtered_dataset"></dropdown>
   </div>
 </div>
 </template>
@@ -270,6 +270,7 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
+import merge from 'lodash.merge';
 import {colour2gray, slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
@@ -305,6 +306,54 @@ export default Vue.extend({
   },
 
   computed: {
+    filtered_sectors() {
+      // filter dataset by everything except sector / area
+      const _filters = d3.keys(this.filters)
+                         .filter((f) => f != 'sector' && f != 'area');
+      const dataset = this.filter(this.dataset, _filters);
+
+      const sectors = {}
+      for (const d of dataset) {
+        const s = d.sector,
+              a = d.area,
+              sid = slugify(s),
+              aid = slugify(a),
+              fm = d.fm,
+              value = +d.allocation;
+
+        // backend might send us empty data...
+        if(value === 0) continue;
+
+        let sector = sectors[sid];
+        if (sector === undefined)
+          sector = sectors[sid] = {
+            id: sid,
+            name: s,
+            children: {},
+          };
+
+        let area = sector.children[aid];
+        if (area === undefined)
+          area = sector.children[aid] = {
+            id: aid,
+            name: a,
+            allocation: {},
+          };
+
+        let allocation = area.allocation[fm];
+        if (allocation === undefined)
+          allocation = area.allocation[fm] = 0;
+
+        area.allocation[fm] = allocation + value;
+      }
+
+      return sectors;
+    },
+
+    filtered_dataset() {
+      return d3.values(this.filtered_sectors);
+    },
+
     data() {
       // TODO: generate this on the server instead ¤
       let sectortree = this._sectortree;
@@ -359,34 +408,9 @@ export default Vue.extend({
       }
       // done pre-generation
 
-      // filter dataset by everything except sector / area
-      const _filters = d3.keys(this.filters)
-                         .filter((f) => f != 'sector' && f != 'area');
-      const dataset = this.filter(this.dataset, _filters);
+      // we need to deep-copy the tree and merge it with the actual data
+      const sectors = merge({}, sectortree, this.filtered_sectors);
 
-      // we need to deep-copy the tree. JSON to the rescue.
-      const sectors = JSON.parse(JSON.stringify(sectortree));
-
-      // sum up allocation data
-      for (const d of dataset) {
-        const s = d.sector,
-              a = d.area,
-              sid = slugify(s),
-              aid = slugify(a),
-              sector = sectors[sid],
-              area = sector.children[aid],
-              fm = d.fm,
-              value = +d.allocation;
-
-        // backend might send us empty data...
-        if(value === 0) continue;
-
-        let allocation = area.allocation[fm];
-        if (allocation === undefined)
-          allocation = area.allocation[fm] = 0;
-
-        area.allocation[fm] = allocation + value;
-      }
 
       // finally, using d3's hierarchy makes working with trees easy
       const tree = d3.hierarchy(
@@ -399,8 +423,8 @@ export default Vue.extend({
       // filtering by sectors / areas makes items "disabled".
       const isEnabled = (d) => {
         if (this.filters.sector === null) return true;
-        if (d.allocation === undefined) return d.name == this.filters.sector;
-        return d.parentname == this.filters.sector;
+        if (d.allocation === undefined) return this._isSelectedSector(d.name);
+        return this._isSelectedSector(d.parentname);
       };
 
       // tell the hierarchy object how to calculate sums
@@ -417,18 +441,6 @@ export default Vue.extend({
       } );
 
       return tree;
-    },
-
-    selectPSData() {
-      let selectItems = []
-      for (let item of this.data.children) {
-        selectItems.push(item.data)
-      }
-      return selectItems
-    },
-
-    selectPAData() {
-
     },
 
     radius() {
@@ -755,16 +767,21 @@ export default Vue.extend({
       this._highlight(d, false);
     },
 
+    _isSelectedSector(sname) {
+      // avoid a mess caused by differing capitalization until we switch to ids
+      return slugify(this.filters.sector) == slugify(sname);
+    },
+
     // NOTE: these functions will take a d3.hierarchy node as argument,
     // so we must access everything via element.data
     isSelectedSector(s) {
       if (!this.filters.sector) return;
-      return this.filters.sector == s.data.name;
+      return this._isSelectedSector(s.data.name);
     },
 
     isActiveArea(a) {
       if (!this.filters.area) return true;
-      return this.filters.sector == a.parent.data.name &&
+      return this.isSelectedSector(a.parent) &&
              this.filters.area == a.data.name;
     },
 
