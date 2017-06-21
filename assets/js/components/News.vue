@@ -1,12 +1,12 @@
 <template>
     <ul class="news" v-if="hasData">
-      <li v-for="d in data">
+      <li v-for="news in data">
         <div class="content-item news_content">
-        <a :href="`${d.link}`">
+        <a :href="`${news.link}`">
           <div class="body clearfix">
-            <img :src="`${d.image}`">
-            <h4 class="title">{{d.title}}</h4>
-            <small>{{moment(d.created)}}</small>
+            <img :src="`${news.image}`">
+            <h4 class="title">{{news.title}}</h4>
+            <small>{{moment(news.created)}}</small>
           </div>
         </a>
         </div>
@@ -50,6 +50,7 @@ import WithSectorsMixin from './mixins/WithSectors';
 import {FILTERS} from '../globals.js'
 import moment from 'moment';
 
+
 export default Vue.extend({
   mixins: [
     BaseMixin, WithSectorsMixin,
@@ -57,8 +58,17 @@ export default Vue.extend({
 
   computed: {
     data() {
-    const dataset = this.dataset;
-    return dataset;
+    const dataset = this.filter(this.dataset);
+    const out = [];
+    for (let d of dataset) {
+      for (let news in d.news){
+        out.push(d.news[news])
+      }
+    }
+
+     out.sort((a,b) => d3.descending(a.created,b.created));
+
+    return out;
     },
   },
 
