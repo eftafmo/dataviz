@@ -831,11 +831,6 @@ export default Vue.extend({
       this.renderAreasStuff();
     },
 
-    sectslugify(val) {
-       const value = slugify(val)
-       return value
-    },
-
     handleFilterArea(val) {
       if (val !== null && this.filters.sector === null)
         console.error("Filtered by area without a sector. Impossible 2.")
