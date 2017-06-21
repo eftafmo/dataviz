@@ -5,9 +5,11 @@
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
-  <div class="psIcons" v-if="hasData">
-     <img v-for="sector in data.children" v-if="sector.value" v-show="isSelectedSector(sector)" :src="`/assets/imgs/psIcons/${get_image(sector.data.id)}.png`"/>
-  </div>
+  <transition appear>
+  <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
+    <use :href="`#${get_image(filters.sector)}`" />
+  </svg>
+  </transition>
 </chart-container>
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
@@ -125,18 +127,30 @@
     }
   }
 
-  .psIcons {
+  .sector-icon {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform:
-    translate(-50%,-50%);
+    transform: translate(-50%,-50%);
     width: 50%;
     height: 50%;
-    img {
-      width: 100%;
+    display: block;
+    &.v-enter-active,
+    &.v-leave-active {
+      transition: opacity @duration;
+    }
+
+    &.v-enter,
+    &.v-leave-to {
+      opacity: 0;
+    }
+    &.v-enter-to,
+    &.v-leave {
+      opacity: 1;
     }
   }
+
+
   .legend {
     width: 55%;
     display: block;

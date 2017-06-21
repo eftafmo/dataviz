@@ -2,17 +2,17 @@ import {slugify} from 'js/lib/util';
 import _SECTORS from 'js/constants/priority-sectors.json5';
 
 const SECTORS = {};
+
 for (const sector of _SECTORS) {
   const sid = slugify(sector.name)
   SECTORS[sid] = Object.assign({id: sid}, sector);
 }
 
-
-export function get_image(code) {
-  const sector = SECTORS[code];
-  if (!sector) throw "sector not found: " + code;
-  const sector_img = sector.name.toLowerCase().replace(/ /g, '');
-  return `${sector_img}`;
+export function get_image(name) {
+  const sid = slugify(name),
+        sector = SECTORS[sid];
+  if (!sector) throw "sector not found: " + name;
+  return sid;
 }
 
 const req = require.context('svg-sprite-loader!imgs/psIcons', false, /[a-z]+\.png$/);
