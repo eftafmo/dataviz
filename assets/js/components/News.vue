@@ -6,7 +6,7 @@
           <div class="body clearfix">
             <img :src="`${news.image}`">
             <h4 class="title">{{news.title}}</h4>
-            <small>{{moment(news.created)}}</small>
+            <small>{{formatDate(news.created)}}</small>
           </div>
         </a>
         </div>
@@ -48,7 +48,6 @@ import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
 import WithSectorsMixin from './mixins/WithSectors';
 import {FILTERS} from '../globals.js'
-import moment from 'moment';
 
 
 export default Vue.extend({
@@ -65,16 +64,17 @@ export default Vue.extend({
         out.push(d.news[news])
       }
     }
-
-     out.sort((a,b) => d3.descending(a.created,b.created));
-
+    out.sort((a,b) => d3.descending(a.created,b.created));
     return out;
     },
   },
 
   methods: {
-  moment(date){
-    return moment(date).format('Do MMMM YYYY ');
+  formatDate(date){
+    date = new Date;
+    var options = { day: 'numeric', month: 'long', year: 'numeric' };
+    var new_date = date.toLocaleDateString('en',options);
+    return new_date
   }
 }
 
