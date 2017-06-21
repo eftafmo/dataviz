@@ -46,13 +46,12 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import BaseMixin from './mixins/Base';
-import WithSectorsMixin from './mixins/WithSectors';
 import {FILTERS} from '../globals.js'
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, WithSectorsMixin,
+    BaseMixin
   ],
 
   computed: {
