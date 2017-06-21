@@ -5,6 +5,11 @@
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
+<div class="psIcons" :viewBox="`0 0 ${width} ${height}`" v-if="hasData">
+<div class="icon_container" v-for="sector in data.children" v-if="sector.value">
+    <img v-show="isSelectedSector(sector)" :src="`/assets/imgs/psIcons/${get_image(sector.data.id)}.png`"/>
+</div >
+</div>
 </chart-container>
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
@@ -114,6 +119,22 @@
        width: 50%;
        margin-right: 0;
     }
+  }
+
+  .psIcons {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform:
+    translate(-50%,-50%);
+    width: 50%;
+    height: 50%;
+    img {
+      width: 100%;
+    }
+  }
+  .icon_container {
+    position: absolute;
   }
   .legend {
     width: 55%;
@@ -630,14 +651,13 @@ export default Vue.extend({
         // level 2 items are hidden
         .attr("opacity", (d) => d.depth == 2 ? 0 : null)
         // and really hidden
-        .style("display", (d) => d.depth == 2 ? "none" : null);
-
+        .style("display", (d) => d.depth == 2 ? "none" : null)
         // the arc:
-        aentered.append("path")
+        .append("path")
         .each(function(d) {
           // cache current coordinates
           this._prev = $this._extract_coords(d);
-	})
+        })
         .attr("d", this._arc)
 
         // events
@@ -646,14 +666,6 @@ export default Vue.extend({
         .on("mouseleave", this.unhighlight)
         .on('mouseover', this.tip.show)
         .on('mouseout', this.tip.hide);
-
-        aentered.append('use')
-        .attr("xlink:href", (d) => d.depth == 1 ?  `#${$this.get_image(slugify(d.data.id))}` : null )
-        .attr("x", -$this.width/4)
-        .attr("y", -$this.height/4)
-        .attr("width", $this.width/2)
-        .attr("height", $this.height/2)
-        .style('opacity','0');
 
 
       // const sect_image = this.get_image(slugify(sname))
@@ -800,7 +812,6 @@ export default Vue.extend({
     handleFilterSector(val, old) {
       // remember this soon-to-be previous sector.
       // (it will be removed from the queue during handling of areas §)
-      this.changeIcon(val, old);
       if (val) this._prevsector.push(val);
 
       // always reset area on sector change
@@ -811,24 +822,9 @@ export default Vue.extend({
       this.renderAreasStuff();
     },
 
-    changeIcon(val, old) {
-      const t = this.getTransition();
-
-      d3.selectAll('g.arc')
-      .filter(function(c){
-          return c.data.name == old
-      })
-      .select('use')
-      .transition(t)
-      .style('opacity','0')
-
-      d3.selectAll('g.arc')
-        .filter(function(c){
-          return c.data.name == val
-      })
-      .select('use')
-      .transition(t)
-      .style('opacity', '1')
+    sectslugify(val) {
+       const value = slugify(val)
+       return value
     },
 
     handleFilterArea(val) {
