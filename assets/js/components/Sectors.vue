@@ -6,9 +6,7 @@
     </g>
   </svg>
   <div class="psIcons" v-if="hasData">
-    <div class="icon_container" v-for="sector in data.children" v-if="sector.value">
-        <img v-show="isSelectedSector(sector)" :src="`/assets/imgs/psIcons/${get_image(sector.data.id)}.png`"/>
-    </div >
+     <img v-for="sector in data.children" v-if="sector.value" v-show="isSelectedSector(sector)" :src="`/assets/imgs/psIcons/${get_image(sector.data.id)}.png`"/>
   </div>
 </chart-container>
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
@@ -138,9 +136,6 @@
     img {
       width: 100%;
     }
-  }
-  .icon_container {
-    position: absolute;
   }
   .legend {
     width: 55%;
