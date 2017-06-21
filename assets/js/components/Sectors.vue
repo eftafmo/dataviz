@@ -1,15 +1,15 @@
 <template>
-<div class="sectors-viz" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
-<div class="psIcons" :viewBox="`0 0 ${width} ${height}`" v-if="hasData">
-<div class="icon_container" v-for="sector in data.children" v-if="sector.value">
-    <img v-show="isSelectedSector(sector)" :src="`/assets/imgs/psIcons/${get_image(sector.data.id)}.png`"/>
-</div >
-</div>
+  <div class="psIcons" :viewBox="`0 0 ${width} ${height}`" v-if="hasData">
+    <div class="icon_container" v-for="sector in data.children" v-if="sector.value">
+        <img v-show="isSelectedSector(sector)" :src="`/assets/imgs/psIcons/${get_image(sector.data.id)}.png`"/>
+    </div >
+  </div>
 </chart-container>
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
@@ -102,6 +102,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  @media(min-width: 1000px) and (max-width: 1400px){
+    display: block;
+  }
 
   svg {
     width: 100%;
@@ -114,8 +117,11 @@
     margin-right: 3rem;
     min-width: 200px;
 
-    //TODO Define better breakpoints once all components are fluid
-    @media(min-width:1400px),(max-width:700px){
+    @media (min-width: 1000px) and (max-width: 1400px) {
+      float: left;
+    }
+
+    @media (min-width:1400px),(max-width:700px){
        width: 50%;
        margin-right: 0;
     }
@@ -144,6 +150,9 @@
     @media (min-width:1400px), (max-width:1025px) {
       width: 100%;
       margin-top: 1rem;
+    }
+    @media (min-width: 1000px) and (max-width: 1400px) {
+      float: left;
     }
   }
 
