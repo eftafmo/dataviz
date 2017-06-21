@@ -5,7 +5,7 @@
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
-  <div class="psIcons" :viewBox="`0 0 ${width} ${height}`" v-if="hasData">
+  <div class="psIcons" v-if="hasData">
     <div class="icon_container" v-for="sector in data.children" v-if="sector.value">
         <img v-show="isSelectedSector(sector)" :src="`/assets/imgs/psIcons/${get_image(sector.data.id)}.png`"/>
     </div >
