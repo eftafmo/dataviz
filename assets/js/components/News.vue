@@ -73,7 +73,7 @@ export default Vue.extend({
   formatDate(date){
     date = new Date;
     var options = { day: 'numeric', month: 'long', year: 'numeric' };
-    var new_date = date.toLocaleDateString('en',options);
+    var new_date = date.toLocaleDateString(navigator.language,options);
     return new_date
   }
 }
