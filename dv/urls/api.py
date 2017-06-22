@@ -11,7 +11,9 @@ urlpatterns = [
     #     name='sector-allocation'),
     # url(r'^beneficiaries.csv', views.beneficiary_allocation,
     #     name='beneficiary-allocation'),
+    url(r'^overview.json', views.overview, name='overview'),
     url(r'^grants.json', views.grants, name='grants'),
+    url(r'^projects.json', views.projects, name='projects'),
     url(r'^beneficiary-allocation/(?P<beneficiary>[A-Z]{2}).json',
         views.beneficiary_allocation_detail,
         name='beneficiary-allocation-detail'),
@@ -20,5 +22,4 @@ urlpatterns = [
         views.ProjectList.as_view(),
         name='project-list',
         ),
-    url(r'^news.json', views.news, name='news'),
 ]

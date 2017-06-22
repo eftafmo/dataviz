@@ -12,7 +12,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="fm" title="Both financial mechanisms" :items="fms"></dropdown>
+    <dropdown filter="fm" title="Both financial mechanisms" :items="nonzero"></dropdown>
   </div>
 </div>
 </template>
@@ -38,57 +38,56 @@
     padding-left: 0;
   }
 
-  .fm { cursor: pointer; }
-
   .chart {
     .fm {
+      cursor: pointer;
       rect {
         shape-rendering: crispEdges;
       }
     }
   }
 
-  .legend .fm {
-    transition: all .5s ease;
-  }
-  .legend .fm.disabled {
-    filter: grayscale(100%);
-    opacity: 0.5;
-  }
+  .legend {
+    .fm.disabled {
+        filter: grayscale(100%);
+        opacity: 0.5;
+      }
 
-  .legend .fm.selected {
-    text-shadow: 0 0 1px #999;
-  }
+     .fm.selected {
+        text-shadow: 0 0 1px #999;
+      }
 
-  .legend .fm {
-    list-style-type: none;
-    display: inline-block;
-  }
+    .fm {
+      list-style-type: none;
+      display: inline-block;
+      border-right: 1px solid #ccc;
+      padding: 0 2rem;
+      transition: all .5s ease;
 
-  .legend .fm {
-    border-right: 1px solid #ccc;
-    padding: 0 2rem;
-  }
+      @media(min-width: 400px) {
+       min-width: 150px;
+      }
 
-  .legend .fm:last-of-type {
-    padding-right: 0;
-    border-right: none;
-  }
+      &:last-of-type {
+        padding-right: 0;
+        border-right: none;
+      }
 
-  .legend .fm:first-of-type {
-    padding-left: 0;
-  }
+      &:first-of-type {
+        padding-left: 0;
+      }
 
-  .legend .value {
-    font-size: 1.8rem;
-    font-weight: bold;
-  }
+      .name {
+        display: block;
+      }
 
-  .legend .fm .name {
-    display: block;
-  }
+      .value {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+     }
+    }
 }
-
 .d3-tip.fms {
     line-height: 1.2;
     white-space: normal;
@@ -110,8 +109,6 @@ import BaseMixin from './mixins/Base.vue';
 import ChartMixin from './mixins/Chart.vue';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
-
-import FMs from 'js/constants/financial-mechanisms.json5';
 
 
 export default Vue.extend({
@@ -143,13 +140,13 @@ export default Vue.extend({
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
       const fmdata = {}
-      for (const fm in FMs) {
+      for (const fm in this.FMS) {
         fmdata[fm] = {
           'value': 0,
           'beneficiaries': d3.set(),
           'sectors': d3.set(),
         };
-        Object.assign(fmdata[fm], FMs[fm]);
+        Object.assign(fmdata[fm], this.FMS[fm]);
       }
 
       for (const d of dataset) {
@@ -166,6 +163,10 @@ export default Vue.extend({
       }
 
       return d3.values(fmdata);
+    },
+
+    nonzero() {
+      return this.data.filter( (d) => d.value != 0 );
     },
   },
 

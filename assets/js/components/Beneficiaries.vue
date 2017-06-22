@@ -1,7 +1,7 @@
 <template>
 <div class="beneficiaries-viz">
   <div v-if="hasData" class="legend">
-    <fm-legend :fms="fms" class="clearfix">
+    <fm-legend :fms="FMS" class="clearfix">
       <template slot="fm-content" scope="x">
         <span :style="{backgroundColor: x.fm.colour}"></span>
         {{ x.fm.name }}
@@ -9,7 +9,7 @@
     </fm-legend>
   </div>
   <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="data"></dropdown>
+    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="beneficiarydata"></dropdown>
   </div>
   <svg width="100%" :height="height + 'px'">
     <filter id="grayscale">
@@ -53,26 +53,14 @@
   }
 
   .legend {
-    cursor: pointer;
-    .fm span {
-      width: 10px; height: 10px;
-      display: inline-block;
-    }
-    li {
+    .fm {
       list-style-type: none;
       display: inline-block;
       margin-right: 2rem;
     }
-    .fm {
-      transition: all .5s ease;
-    }
-    .fm.disabled {
-      filter: grayscale(100%);
-      opacity: 0.5;
-    }
-
-    .fm.selected {
-      text-shadow: 0 0 1px #999;
+    span {
+      width: 10px; height: 10px;
+      display: inline-block;
     }
   }
 
@@ -459,7 +447,7 @@ export default Vue.extend({
        */
       bentered
         .on("click", function (d) {
-          $this.toggleBeneficiary(d.id, this);
+          $this.toggleBeneficiary(d, this);
         })
         // tooltip events
         .on('mouseenter', this.tip.show)

@@ -16,6 +16,9 @@ export const Homepage = Base.extend({
 
   components: {
     overview: components.Overview,
+    info: components.HomepageInfo,
+    globalfilters: components.GlobalFilters,
+
   },
 });
 
@@ -57,7 +60,7 @@ export const Projects = Viz.extend({
     beneficiaries: components.Beneficiaries,
     overview: components.AllocationOverview,
     programmes: components.Programmes,
-    results: components.Results,
+    news: components.News,
     tabs: Tabs,
     tab: Tab,
     sidebar: components.Sidebar,

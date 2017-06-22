@@ -2,49 +2,66 @@
   {
     name: "Environmental protection and management",
     colour: "rgb(140, 160, 35)",
+    icon: "environmental-protection-and-management.png",
   },
   {
     name: "Climate change",
     colour: "rgb(245, 130, 70)",
+    icon: "climate-change.png",
   },
   {
     name: "Civil society",
     colour: "rgb(195, 0, 105)",
+    icon: "civil-society.png",
   },
   {
     name: "Human and social development",
     colour: "rgb(115, 70, 160)",
+    icon: "human-and-social-development.png",
   },
   {
     name: "Protecting cultural heritage",
     colour: "rgb(105, 40, 0)",
+    icon: "protecting-cultural-heritage.png",
   },
   {
     name: "Research and scholarship",
     colour: "rgb(245, 195, 10)",
+    icon: "research-and-scholarship.png",
   },
   {
     name: "Carbon capture and storage",
     colour: "rgb(110, 125, 150)",
+    icon: "carbon-capture-and-storage.png",
   },
   {
     name: "Green industry innovation",
     colour: "rgb(10, 160, 70)",
+    icon: "green-industry-innovation.png",
   },
   {
     name: "Decent work and tripartite dialogue",
     colour: "rgb(0, 175, 240)",
+    icon: "decent-work-and-tripartite-dialogue.png",
   },
   {
     name: "Justice and home affairs",
     colour: "rgb(10, 110, 145)",
+    icon: "justice-and-home-affairs.png",
   },
   {
     name: "Technical assistance",
     colour: "rgb(179, 179, 179)",
+    icon: "other.png",
   },
   {
-    name: "Other",
-    colour: "rgb(146, 107, 142)",
+    name: "Fund for bilateral relations",
+    colour: "rgb(179, 179, 179)",
+    icon: "other.png",
+  },
+  {
+    name: "Reserve",
+    colour: "rgb(179, 179, 179)",
+    icon: "other.png",
   },
 ]

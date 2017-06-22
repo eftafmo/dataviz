@@ -14,12 +14,30 @@ export default BaseMap.extend({
 
   methods: {
     renderData() {
+      const t = this.getTransition();
+      const beneficiarydata = d3.values(this.beneficiarydata);
       const states = this.chart.select('.states').selectAll('path'),
-            beneficiarydata = d3.values(this.beneficiarydata);
+            beneficiaries = states.filter(this.isBeneficiary)
+                                  .data(beneficiarydata, (d) => d.id );
 
-      // we just need to re-assign the data to the states,
-      // so the tooltip displays correct values
-      states.data(beneficiarydata, (d) => d.id );
+      beneficiaries
+        .classed("zero", false)
+        .transition(t)
+        .attr("fill", this.beneficiary_colour.default);
+
+      beneficiaries
+        .exit()
+        .classed("zero", true)
+        .each(function() {
+          // make that value 0 too. totally mean.
+          Object.assign(d3.select(this).datum(), {
+            allocation: {},
+            sectors: [],
+            total: 0,
+          });
+        })
+        .transition(t)
+        .attr("fill", this.beneficiary_colour.zero);
 
       // and TODO: disable filtering for 0 / missing items
     },

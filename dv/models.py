@@ -129,7 +129,7 @@ class PrioritySector(_MainModel):
         },
     ]
 
-    code = models.CharField(max_length=4, primary_key=True)
+    code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=64)  # not unique
 
     type = models.ForeignKey(FinancialMechanism)
@@ -427,6 +427,12 @@ class Project(_MainModel):
                 'is_eea': 'IsEEA',
                 'is_norway': 'IsNorway',
                 'url': 'UrlProjectPage',
+                'has_ended': 'HasEnded',
+                'is_dpp': 'HasDpp',
+                'is_positive_fx': 'ResultPositiveEffects',
+                'is_improved_knowledge': 'ResultImprovedKnowledge',
+                'is_continued_coop': 'ResultContinuedCooperation',
+                'is_published': 'IsPublished',
 
                 # TODO: leftovers
                 #'Predefined',
@@ -472,6 +478,12 @@ class Project(_MainModel):
     project_co_financing = models.DecimalField(max_digits=15, decimal_places=2)
     is_eea = models.BooleanField()
     is_norway = models.BooleanField()
+    has_ended = models.BooleanField()
+    is_dpp = models.BooleanField()
+    is_positive_fx = models.BooleanField()
+    is_improved_knowledge = models.BooleanField()
+    is_continued_coop = models.BooleanField()
+    is_published = models.BooleanField()
 
 
 class Indicator(_MainModel):

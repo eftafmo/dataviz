@@ -1,17 +1,17 @@
-from collections import OrderedDict, defaultdict, namedtuple
+from collections import defaultdict
 from decimal import Decimal
 from rest_framework.generics import ListAPIView
 from django.http import HttpResponseNotAllowed
 from django.db.models import CharField
-from django.db.models.expressions import F, Value
+from django.db.models.expressions import F
 from django.db.models.aggregates import Count, Sum
-from django.db.models.functions import Length, Concat
-from django.db.models.query import Prefetch
+from django.db.models.functions import Length
+
 from django.utils.text import slugify
-from dv.lib.http import CsvResponse, JsonResponse
+from dv.lib.http import JsonResponse
 from dv.models import (
     Allocation,
-    State, ProgrammeArea, Programme, Project,
+    State, Project,
     ProgrammeIndicator, ProgrammeOutcome,
     NUTS, News
 )
@@ -21,6 +21,66 @@ from dv.serializers import (
 
 
 CharField.register_lookup(Length, 'length')
+
+
+def overview(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+
+    allocations = Allocation.objects.values(
+        'financial_mechanism_id',
+        'financial_mechanism__grant_name',
+        'state_id'
+    ).annotate(
+        allocation=Sum('gross_allocation')
+    ).order_by('state_id', 'financial_mechanism_id')
+
+    programmes = ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area',
+        'outcome__programme_area__priority_sector',
+    ).values(
+        'programme__code',
+        'outcome__programme_area__priority_sector__type_id',
+        'state__code',
+        'programme__is_tap',
+    ).exclude(
+        programme__isnull=True,
+    ).distinct()
+
+    project_counts_raw = list(Project.objects.values(
+        'financial_mechanism_id',
+        'state_id',
+    ).annotate(
+        project_count=Count('code')
+    ))
+
+    project_counts = defaultdict(dict)
+    for item in project_counts_raw:
+        project_counts[item['financial_mechanism_id']].update({
+            item['state_id']: item['project_count']
+        })
+
+    out = []
+    for a in allocations:
+        out.append({
+            'fm': a['financial_mechanism__grant_name'],
+            'beneficiary': a['state_id'],
+            'allocation': float(a['allocation']),
+            'programmes': [
+                p['programme__code']
+                for p in programmes
+                if (
+                    p['outcome__programme_area__priority_sector__type_id'] == a['financial_mechanism_id'] and
+                    p['state__code'] == a['state_id'] and
+                    not p['programme__is_tap']
+                )
+                # Exclude technical assistance programmes from this list
+            ],
+            'project_count': project_counts[a['financial_mechanism_id']].get(a['state_id'], 0)
+        })
+
+    return JsonResponse(out)
 
 
 def grants(request):
@@ -35,18 +95,20 @@ def grants(request):
     ).prefetch_related(
         'programme_area__outcomes__programmes',
     )
-    programmes = set(ProgrammeOutcome.objects.all().select_related(
+    programmes = ProgrammeOutcome.objects.all().select_related(
         'programme',
         'outcome__programme_area',
-    ).values_list(
+    ).values(
         'programme__code',
         'programme__name',
         'outcome__programme_area__code',
         'state__code',
         'programme__url',
-        'programme__is_tap',
-    ).exclude(programme__isnull=True)
-    )
+        'programme__is_tap'
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=True,
+    ).distinct()
 
     all_results = ProgrammeIndicator.objects.all().select_related(
         'indicator'
@@ -74,13 +136,119 @@ def grants(request):
 
             'results': results,
             'programmes': {
-                p[0]: {
-                    'name': p[1],
-                    'url': p[4],
+                p['programme__code']: {
+                    'name': p['programme__name'],
+                    'url': p['programme__url'],
                 }
                 for p in programmes
-                if p[2] == a.programme_area.code and p[3] == a.state.code and not p[5]
-                # Exclude technical assistance programmes from this list
+                if (
+                    p['outcome__programme_area__code'] == a.programme_area.code and
+                    p['state__code'] == a.state.code and
+                    not p['programme__is_tap']
+                    # Exclude technical assistance programmes from this list
+                )
+            },
+        })
+
+    """
+    # use for testing with django-debug-toolbar:
+    from django.http import HttpResponse
+    from pprint import pformat
+    return HttpResponse('<html><body><pre>%s</pre></body></html>' % pformat(out))
+    """
+
+    return JsonResponse(out)
+
+def projects(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+
+    allocations = Allocation.objects.all().select_related(
+        'financial_mechanism',
+        'state',
+        'programme_area',
+        'programme_area__priority_sector',
+    ).prefetch_related(
+        'programme_area__outcomes__programmes',
+    )
+
+    # get the real state_id from ProgrammeOutcome, refs IN22
+    programmes = ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area',
+    ).values(
+        'programme__code',
+        'programme__name',
+        'outcome__programme_area__code',
+        'state__code',
+        'programme__url',
+        'programme__is_tap'
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=True,
+    ).distinct()
+
+    project_counts_raw = list(Project.objects.values(
+        'financial_mechanism_id',
+        'programme_area_id',
+        'state_id',
+    ).annotate(
+        project_count=Count('code')
+    ))
+    project_counts = {}
+    for item in project_counts_raw:
+        key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id']
+        project_counts[key] = item['project_count']
+
+    news_raw = (
+        News.objects.all()
+        .select_related(
+            'project',
+            'project__financial_mechanism',
+            'project__state',
+            'project__programme_area',)
+        .exclude(project_id__isnull=True)
+        .order_by('-created')
+    )
+    news = defaultdict(list)
+    for item in news_raw:
+        key = (
+            item.project.financial_mechanism_id +
+            item.project.programme_area_id +
+            item.project.state_id
+        )
+        news[key].append({
+            'title': item.title,
+            'link': item.link,
+            'created': item.created,
+            'summary': item.summary,
+            'image': item.image,
+        })
+
+    out = []
+    for a in allocations:
+        key = a.financial_mechanism.code + a.programme_area.code + a.state_id
+        out.append({
+            # TODO: switch these to ids(?)
+            'fm': a.financial_mechanism.grant_name,
+            'sector': a.programme_area.priority_sector.name,
+            'area': a.programme_area.name,
+            'beneficiary': a.state.code,
+            'allocation': a.gross_allocation,
+            'project_count': project_counts.get(key, 0),
+            'news': news.get(key, []),
+            'programmes': {
+                p['programme__code']: {
+                    'name': p['programme__name'],
+                    'url': p['programme__url'],
+                }
+                for p in programmes
+                if (
+                    p['outcome__programme_area__code'] == a.programme_area.code and
+                    p['state__code'] == a.state.code and
+                    not p['programme__is_tap']
+                    # Exclude technical assistance programmes from this list
+                )
             },
         })
 
@@ -183,37 +351,6 @@ def beneficiary_allocation_detail(request, beneficiary):
 
     #print(_verify1, _verify2)
     return JsonResponse(allocations)
-
-
-def news(request):
-    news = (
-        News.objects.all()
-        .select_related(
-            'project',
-            'project__financial_mechanism',
-            'project__state',
-            'project__programme_area',
-            'project__programme_area__priority_sector',)
-        .exclude(project_id__isnull=True)
-        .order_by('-created')
-    )
-
-    out = []
-    for n in news:
-        out.append({
-            'fm': n.project.financial_mechanism.grant_name,
-            'sector': n.project.programme_area.priority_sector.name,
-            'area': n.project.programme_area.name,
-            'beneficiary': n.project.state_id,
-            'title': n.title,
-            'link': n.link,
-            'created': n.created,
-            'summary': n.summary,
-            'image': n.image,
-        })
-
-    return JsonResponse(out)
-
 
 class ProjectList(ListAPIView):
     queryset = Project.objects.all().order_by('code')

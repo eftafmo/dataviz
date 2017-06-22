@@ -45,9 +45,9 @@
   margin-top: 3px;
 }
 @media (max-width: 768px) {
-  .global-filters {
+  #global-filters {
     position: sticky;
-    top: 0;
+    top: 60px!important;
   }
   .global-filters-label {
     width: 5em;
