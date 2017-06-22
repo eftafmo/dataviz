@@ -600,6 +600,8 @@ export default Vue.extend({
     getArcID(node) { return "a-" + this._getID(node); },
     getLabelID(node) { return "l-" + this._getID(node); },
 
+    get_image(sname) { return slugify(sname); },
+
     createTooltip() {
     const $this = this;
        // add tooltip

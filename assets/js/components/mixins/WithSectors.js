@@ -7,19 +7,12 @@ for (const sector of _SECTORS) {
   SECTORS[sid] = Object.assign({id: sid}, sector);
 }
 
-export function get_image(name) {
-  const sid = slugify(name),
-        sector = SECTORS[sid];
-  if (!sector) throw "sector not found: " + name;
-  return sid;
-}
-
 const req = require.context('svg-sprite-loader!imgs/sectors', false, /[a-z]+\.png$/);
 // we could load all of req.keys() instead, but we want things to fail
 // if there's a mismatch between country names and png files.
 // (possible TODO: compare req.keys() with countries and warn if necessary)
 for (const code in SECTORS) {
-  req(`./${get_image(code)}.png`);
+  req(`./${code}.png`);
 }
 
 
@@ -39,7 +32,5 @@ export default {
       // using sector's name because we're mostly dealing with that
       return this.SECTORS[slugify(sectorname)].colour;
     },
-
-    get_image(c) { return get_image(c) },
   },
 };
