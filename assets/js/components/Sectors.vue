@@ -667,9 +667,9 @@ export default Vue.extend({
         .attr("class", "arc")
         .attr("fill", (d) => d.data.colour )
         // level 2 items are hidden
-        .attr("opacity", (d) => d.depth == 2 ? 0 : null)
+        .attr("opacity", (d) => d.depth == 2 ? 0 : null )
         // and really hidden
-        .style("display", (d) => d.depth == 2 ? "none" : null)
+        .style("display", (d) => d.depth == 2 ? "none" : null )
         // the arc:
         .append("path")
         .each(function(d) {
@@ -684,9 +684,6 @@ export default Vue.extend({
         .on("mouseleave", this.unhighlight)
         .on('mouseover', this.tip.show)
         .on('mouseout', this.tip.hide);
-
-
-      // const sect_image = this.get_image(slugify(sname))
 
       /* transitions */
       // NOTE: there is no ENTER or EXIT, all items are persistent ¤
