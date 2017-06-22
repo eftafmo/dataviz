@@ -180,6 +180,9 @@ def projects(request):
         'state__code',
         'programme__url',
         'programme__is_tap'
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=True,
     ).distinct()
 
     project_counts_raw = list(Project.objects.values(
