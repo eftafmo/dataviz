@@ -105,6 +105,9 @@ def grants(request):
         'state__code',
         'programme__url',
         'programme__is_tap'
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=True,
     ).distinct()
 
     all_results = ProgrammeIndicator.objects.all().select_related(
