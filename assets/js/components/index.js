@@ -13,7 +13,7 @@ import AllocationOverview from './AllocationOverview';
 import Programmes from './Programmes';
 import Sidebar from './Sidebar';
 import HomepageInfo from './HomepageInfo';
-
+import News from './News';
 
 export {
   Overview,
@@ -28,5 +28,6 @@ export {
   Results,
   Programmes,
   Sidebar,
+  News,
 };
 
