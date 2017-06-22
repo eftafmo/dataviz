@@ -102,7 +102,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  @media(min-width: 1000px) and (max-width: 1400px){
+  @media(min-width: 1000px) and (max-width: 1400px) {
     display: block;
   }
 
@@ -121,7 +121,7 @@
       float: left;
     }
 
-    @media (min-width:1400px),(max-width:700px){
+    @media (min-width:1400px), (max-width:700px) {
        width: 50%;
        margin-right: 0;
     }
@@ -672,6 +672,7 @@ export default Vue.extend({
         .attr("opacity", (d) => d.depth == 2 ? 0 : null )
         // and really hidden
         .style("display", (d) => d.depth == 2 ? "none" : null )
+
         // the arc:
         .append("path")
         .each(function(d) {
