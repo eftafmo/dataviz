@@ -11,8 +11,8 @@ const req = require.context('svg-sprite-loader!imgs/sectors', false, /[a-z]+\.pn
 // we could load all of req.keys() instead, but we want things to fail
 // if there's a mismatch between country names and png files.
 // (possible TODO: compare req.keys() with countries and warn if necessary)
-for (const code in SECTORS) {
-  req(`./${code}.png`);
+for (const sector in SECTORS) {
+  req(`./${SECTORS[sector].icon}`);
 }
 
 
