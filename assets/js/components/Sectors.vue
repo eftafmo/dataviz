@@ -1,10 +1,15 @@
 <template>
-<div class="sectors-viz" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
     </g>
   </svg>
+  <transition appear>
+  <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
+    <use :href="`#${get_image(filters.sector)}`" />
+  </svg>
+  </transition>
 </chart-container>
   <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
@@ -97,6 +102,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  @media(min-width: 1000px) and (max-width: 1400px) {
+    display: block;
+  }
 
   svg {
     width: 100%;
@@ -109,12 +117,40 @@
     margin-right: 3rem;
     min-width: 200px;
 
-    //TODO Define better breakpoints once all components are fluid
-    @media(min-width:1400px),(max-width:700px){
+    @media (min-width: 1000px) and (max-width: 1400px) {
+      float: left;
+    }
+
+    @media (min-width:1400px), (max-width:700px) {
        width: 50%;
        margin-right: 0;
     }
   }
+
+  .sector-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 50%;
+    height: 50%;
+    display: block;
+    &.v-enter-active,
+    &.v-leave-active {
+      transition: opacity @duration;
+    }
+
+    &.v-enter,
+    &.v-leave-to {
+      opacity: 0;
+    }
+    &.v-enter-to,
+    &.v-leave {
+      opacity: 1;
+    }
+  }
+
+
   .legend {
     width: 55%;
     display: block;
@@ -123,6 +159,9 @@
     @media (min-width:1400px), (max-width:1025px) {
       width: 100%;
       margin-top: 1rem;
+    }
+    @media (min-width: 1000px) and (max-width: 1400px) {
+      float: left;
     }
   }
 
@@ -573,6 +612,8 @@ export default Vue.extend({
     getArcID(node) { return "a-" + this._getID(node); },
     getLabelID(node) { return "l-" + this._getID(node); },
 
+    get_image(sname) { return slugify(sname); },
+
     createTooltip() {
     const $this = this;
        // add tooltip
@@ -649,7 +690,7 @@ export default Vue.extend({
         .each(function(d) {
           // cache current coordinates
           this._prev = $this._extract_coords(d);
-	})
+        })
         .attr("d", this._arc)
 
         // events
