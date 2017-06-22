@@ -583,6 +583,9 @@ class OrganisationRole(_MainModel):
     code = models.CharField(max_length=8, primary_key=True)
     role = models.CharField(max_length=64)
 
+    def __str__(self):
+        return "%s _ %s" % (self.code, self.role)
+
 
 class Organisation(_BaseModel):
     IMPORT_SOURCES = [
