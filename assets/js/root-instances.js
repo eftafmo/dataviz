@@ -58,7 +58,7 @@ export const Projects = Viz.extend({
     }),
     xmap: components.ProjectsMap,
     beneficiaries: components.Beneficiaries,
-    overview: components.AllocationOverview,
+    overview: components.ProjectsOverview,
     programmes: components.Programmes,
     news: components.News,
     tabs: Tabs,

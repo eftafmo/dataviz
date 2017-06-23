@@ -14,6 +14,7 @@ import Programmes from './Programmes';
 import Sidebar from './Sidebar';
 import HomepageInfo from './HomepageInfo';
 import News from './News';
+import ProjectsOverview from './ProjectsOverview';
 
 export {
   Overview,
@@ -29,5 +30,6 @@ export {
   Programmes,
   Sidebar,
   News,
+  ProjectsOverview,
 };
 
