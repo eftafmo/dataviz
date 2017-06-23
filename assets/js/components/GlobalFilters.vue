@@ -112,6 +112,7 @@ import * as d3 from 'd3';
 import {FILTERS} from '../globals.js'
 import {truncate} from 'js/lib/util';
 import _programme_areas from 'js/constants/programme-areas.json5';
+import {COUNTRIES} from './mixins/WithCountries';
 
 export default Vue.extend({
 
@@ -125,10 +126,13 @@ export default Vue.extend({
     this.format_pa = function(programme_area) {
       return _programme_areas[programme_area]['short_name'];
     };
+    this.format_bs = function(country_code) {
+      return COUNTRIES[country_code]['name'];
+    }
 
     this.FILTER_SETTINGS = {
       fm: {name:'FM'},
-      beneficiary: {name: 'BS'},
+      beneficiary: {name: 'BS', formatter: this.format_bs},
       sector: {name: 'PS', truncate: 20},
       area: {name:'PA', formatter: this.format_pa},
       donor: {name: 'DS'},
