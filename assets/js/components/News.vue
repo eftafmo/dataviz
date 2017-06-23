@@ -2,7 +2,7 @@
     <ul class="news" v-if="hasData">
       <li v-for="news in data">
         <div class="content-item news_content">
-        <a :href="`${news.link}`">
+        <a :href="`${news.link}`" target="_blank">
           <div class="body clearfix">
             <img :src="`${news.image}`">
             <h4 class="title">{{news.title}}</h4>
