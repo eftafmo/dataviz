@@ -68,8 +68,8 @@ export default Vue.extend({
   },
 
   methods: {
-  formatDate(date){
-    date = new Date;
+  formatDate(timestamp){
+    const date = new Date(timestamp);
     let nav_lang;
 
     if (navigator.languages)
