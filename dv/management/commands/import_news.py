@@ -37,11 +37,12 @@ class Command(BaseCommand):
             news.summary = item['summary']
             news.image = item['image']
             news.is_partnership = item['is_partnership'] == 'yes'
-            news.project_id = item['project_id']
+            if item['project_id']:
+                news.project_id = item['project_id'][0:9].upper().strip()
             news.save()
 
             for prg in item['programme_id'].split(', '):
-                news.programmes.add(prg)
+                news.programmes.add(prg.upper().strip())
 
         except Exception as err:
             self.stderr.write(('ERROR: %s' % repr(err)))
