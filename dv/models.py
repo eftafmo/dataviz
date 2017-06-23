@@ -484,6 +484,24 @@ class Project(_MainModel):
     is_published = models.BooleanField()
 
 
+class ProjectTheme(_BaseModel):
+    IMPORT_SOURCES = [
+        {
+            'src': 'ProjectThemes',
+            'map': {
+                'project': 'ProjectCode',
+                'name': 'Theme',
+            }
+        },
+    ]
+
+    project = models.ForeignKey(Project, related_name='themes')
+    name = models.CharField(max_length=512)  # not unique
+
+    def __str__(self):
+        return "%s - %s" % (self.project_id, self.name)
+
+
 class Indicator(_MainModel):
     IMPORT_SOURCES = [
         {
