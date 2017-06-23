@@ -438,12 +438,10 @@ class Project(_MainModel):
                 #'Predefined',
                 #'PlannedSummary',
                 #'ActualSummary',
-                #'IsPublished',
                 #'IsSmallGrantScheme',
                 #'IsPredefined',
                 #'IsBestPracticeProject',
                 #'IsMobility',
-                #'HasEnded'
             }
         },
     ]

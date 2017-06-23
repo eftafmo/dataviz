@@ -235,6 +235,7 @@ def projects(request):
             'created': item.created,
             'summary': item.summary,
             'image': item.image,
+            'nuts': item.project.nuts,
         })
 
     out = []
