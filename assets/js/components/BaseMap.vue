@@ -410,13 +410,13 @@ export default Vue.extend({
                         <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
                         <span class="name">${COUNTRIES[d.id].name}</span>
                       </div>
-                      ${$this.format(d.total || 0)}`
+                      ${$this.currency(d.total || 0)}`
                       +" <button class='btn btn-anchor'>X</button>";
 
             return `<div class="title-container">
                       <span class="name">${this.name} (${d.id})</span>
                     </div>
-                    ${$this.format(d.amount || 0)}
+                    ${$this.currency(d.amount || 0)}
                     <small>(Temporary)<small>`
                     +" <button class='btn btn-anchor'>X</button>";
           })

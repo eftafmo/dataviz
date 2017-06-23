@@ -314,7 +314,7 @@ export default Vue.extend({
           .attr('class', 'd3-tip benef')
           .html(function(d){
           let allocation_value = d.allocations.map((d_) => d_.value)
-          let allocation_content = d.allocations.map((d_) => d_.name + ": " + $this.format(d_.value))
+          let allocation_content = d.allocations.map((d_) => d_.name + ": " + $this.currency(d_.value))
 
           //remove from allocation from content if value 0
           for (let i in allocation_value) {

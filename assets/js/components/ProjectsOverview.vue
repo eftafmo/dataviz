@@ -2,8 +2,8 @@
     <div  v-if="hasData" class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="transitioned">
-          <strong>{{ format(data.project_count) }} projects</strong>
-          <small>{{ format(data.project_count_positive) }} projects ({{ data.project_percent_positive }} %) have had positive effects that are likely to continue beyond the funding period</small>
+          <strong>{{ currency(data.project_count) }} projects</strong>
+          <small>{{ currency(data.project_count_positive) }} projects ({{ data.project_percent_positive }} %) have had positive effects that are likely to continue beyond the funding period</small>
         </div>
       </transition>
     </div>
@@ -50,7 +50,6 @@ export default Vue.extend({
   data() {
     return {
       transitioned: false,
-      showsCurrency: false,
     }
   },
 

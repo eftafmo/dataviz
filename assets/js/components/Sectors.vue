@@ -36,7 +36,7 @@
           <span
               v-show="filters.sector != sector.data.id"
               :key="`v-${getLabelID(sector)}`">
-            {{ format(sector.value) }}
+            {{ currency(sector.value) }}
           </span>
           <span
               v-if="isSelectedSector(sector)"
@@ -75,7 +75,7 @@
                   {{ area.data.name }}
                 </span>
                 <span :key="`v-${getLabelID(area)}`">
-                  {{ format(area.value) }}
+                  {{ currency(area.value) }}
                 </span>
               </a>
             </li>
@@ -627,7 +627,7 @@ export default Vue.extend({
 
              return "<div class='title-container'>"
               + "<span>"+d.data.name+"</span></div>"
-              + $this.format(d.value)
+              + $this.currency(d.value)
               // TODO: 'grant allocation' should be taken from data
               + " grant allocation"
               + " <span class='action'>~Click to filter by priority " + filter_by + " </span>"

@@ -17,9 +17,6 @@ export default {
     return {
       filters: FILTERS,
 
-      // unless overriden, displayed values are formatted as currency
-      showsCurrency: true,
-
       // this is only used internally. we can't come up with a nicer name,
       // because properties beginning with underscore aren't reactive
       dataset__: null,
@@ -52,7 +49,7 @@ export default {
                 && this.$el);
     },
 
-    format() {
+    currency() {
       const locale = {
         // see https://github.com/d3/d3-format/blob/master/locale/
         // TODO: derive and extend the browser locale?
@@ -65,7 +62,7 @@ export default {
       };
 
       // show currency. thousand separators. decimal int.
-      const format = this.showsCurrency ? "$,d" : "d";
+      const format = "$,d";
 
       return d3.formatLocale(locale).format(format);
     },

@@ -90,7 +90,7 @@ export default BaseMap.extend({
         } )
 
       projects.select("text").merge(texts)
-        .text( (d) => this.format(d.total / Math.pow(10,6)) );
+        .text( (d) => this.currency(d.total / Math.pow(10,6)) );
 
 
     },

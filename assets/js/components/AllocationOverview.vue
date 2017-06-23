@@ -2,8 +2,8 @@
     <div  v-if="hasData" class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="transitioned">
-          <strong>{{ format(data.allocation) }}</strong>
-          <small>{{ format(data.bilateral_allocation) }} for bilateral relations</small>
+          <strong>{{ currency(data.allocation) }}</strong>
+          <small>{{ currency(data.bilateral_allocation) }} for bilateral relations</small>
         </div>
       </transition>
     </div>

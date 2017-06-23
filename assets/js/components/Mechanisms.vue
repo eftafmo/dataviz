@@ -6,7 +6,7 @@
   <div v-if="hasData" class="legend">
     <fm-legend :fms="data" class="clearfix">
       <template slot="fm-content" scope="x">
-        <span class="value" :style="{color: x.fm.colour}">{{ format(x.fm.value) }}</span>
+        <span class="value" :style="{color: x.fm.colour}">{{ currency(x.fm.value) }}</span>
         <span class="name">{{ x.fm.name }}</span>
       </template>
     </fm-legend>
@@ -180,7 +180,7 @@ export default Vue.extend({
             return `<div class="title-container">
                       <span class="name">${d.name}</span>
                     </div>
-                    <div>- ${$this.format(d.value)}  </div>
+                    <div>- ${$this.currency(d.value)}  </div>
                     <div>- ${d.beneficiaries.size()} beneficiary states </div>
                     <div>- ${d.sectors.size()} priority sectors </div>
                     <span class="action">~Click to filter by financial mechanism</span>
@@ -236,7 +236,7 @@ export default Vue.extend({
 
       /* // this is handled in tooltip already
       fentered
-        .append("title").text( (d) => this.format(d.value) );
+        .append("title").text( (d) => this.currency(d.value) );
       fentered
         .append("desc").text( (d) => d.name );
       */
