@@ -1,0 +1,192 @@
+{
+  "Integrated marine and inland water management": {
+    "name": "Integrated marine and inland water management",
+    "short_name": "Water",
+    "sort_order": 1
+  },
+  "Biodiversity and ecosystem services": {
+    "name": "Biodiversity and ecosystem services",
+    "short_name": "Biodiversity",
+    "sort_order": 2
+  },
+  "Environmental monitoring and integrated planning and control": {
+    "name": "Environmental monitoring and integrated planning and control",
+    "short_name": "Monitoring & Control",
+    "sort_order": 3
+  },
+  "Reduction of hazardous substances": {
+    "name": "Reduction of hazardous substances",
+    "short_name": "Hazardous Substances",
+    "sort_order": 4
+  },
+  "Energy efficiency": {
+    "name": "Energy efficiency",
+    "short_name": "Energy Efficiency",
+    "sort_order": 5
+  },
+  "Renewable energy": {
+    "name": "Renewable energy",
+    "short_name": "Renewable enegry",
+    "sort_order": 6
+  },
+  "Adaptation to climate change": {
+    "name": "Adaptation to climate change",
+    "short_name": "Adaptation",
+    "sort_order": 7
+  },
+  "Maritime sector": {
+    "name": "Maritime sector",
+    "short_name": "Maritime",
+    "sort_order": 8
+  },
+  "Environmental and climate change-related research and technology": {
+    "name": "Environmental and climate change-related research and technology",
+    "short_name": "Environmental research",
+    "sort_order": 9
+  },
+  "Funds for non-governmental organisations": {
+    "name": "Funds for non-governmental organisations",
+    "short_name": "NGO",
+    "sort_order": 10
+  },
+  "Children and youth at risk": {
+    "name": "Children and youth at risk",
+    "short_name": "Children & Youth",
+    "sort_order": 11
+  },
+  "Local and regional initiatives to reduce national inequalities and to promote social inclusion": {
+    "name": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "short_name": "Social inclusion",
+    "sort_order": 12
+  },
+  "Public health initiatives": {
+    "name": "Public health initiatives",
+    "short_name": "Health",
+    "sort_order": 13
+  },
+  "Mainstreaming gender equality and promoting work-life balance": {
+    "name": "Mainstreaming gender equality and promoting work-life balance",
+    "short_name": "Gender",
+    "sort_order": 14
+  },
+  "Institutional framework in the asylum and migration sector": {
+    "name": "Institutional framework in the asylum and migration sector",
+    "short_name": "Asylum",
+    "sort_order": 15
+  },
+  "Conservation and revitalisation of cultural and natural heritage": {
+    "name": "Conservation and revitalisation of cultural and natural heritage",
+    "short_name": "Cultural heritage",
+    "sort_order": 16
+  },
+  "Promotion of diversity in culture and arts within European cultural heritage": {
+    "name": "Promotion of diversity in culture and arts within European cultural heritage",
+    "short_name": "Cultural exchange",
+    "sort_order": 17
+  },
+  "Research within priority sectors": {
+    "name": "Research within priority sectors",
+    "short_name": "Research",
+    "sort_order": 18
+  },
+  "Scholarships": {
+    "name": "Scholarships",
+    "short_name": "Scholarships",
+    "sort_order": 19
+  },
+  "Carbon capture and storage (CCS)": {
+    "name": "Carbon capture and storage (CCS)",
+    "short_name": "CCS",
+    "sort_order": 20
+  },
+  "Green Industry Innovation": {
+    "name": "Green Industry Innovation",
+    "short_name": "Green Industry",
+    "sort_order": 21
+  },
+  "Global fund for decent work and tripartite dialogue": {
+    "name": "Global fund for decent work and tripartite dialogue",
+    "short_name": "Tripartite",
+    "sort_order": 22
+  },
+  "Bilateral research cooperation": {
+    "name": "Bilateral research cooperation",
+    "short_name": "Research",
+    "sort_order": 23
+  },
+  "Bilateral scholarship programme": {
+    "name": "Bilateral scholarship programme",
+    "short_name": "Scholarships",
+    "sort_order": 24
+  },
+  "Capacity-building and Institutional Cooperation between Beneficiary State and Norwegian Public Institutions, Local and Regional Authorities": {
+    "name": "Capacity-building and Institutional Cooperation between Beneficiary State and Norwegian Public Institutions, Local and Regional Authorities",
+    "short_name": "Capacity bulding",
+    "sort_order": 25
+  },
+  "Cross-border cooperation": {
+    "name": "Cross-border cooperation",
+    "short_name": "Cross border",
+    "sort_order": 26
+  },
+  "Domestic and Gender-based violence": {
+    "name": "Domestic and Gender-based violence",
+    "short_name": "Gender based violence",
+    "sort_order": 29
+  },
+  "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups": {
+    "name": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "short_name": "Schengen",
+    "sort_order": 30
+  },
+  "Judicial capacity-building and cooperation": {
+    "name": "Judicial capacity-building and cooperation",
+    "short_name": "Judicial",
+    "sort_order": 31
+  },
+  "Correctional services, including non-custodial sanctions": {
+    "name": "Correctional services, including non-custodial sanctions",
+    "short_name": "Correctional services",
+    "sort_order": 32
+  },
+  "Justice and Home Affairs": {
+    "name": "Justice and Home Affairs",
+    "short_name": "Justice and Home Affairs",
+    "sort_order": 37
+  },
+  "Civil Society Support": {
+    "name": "Civil Society Support",
+    "short_name": "Civil Society Support",
+    "sort_order": 38
+  },
+  "Cultural heritage": {
+    "name": "Cultural heritage",
+    "short_name": "Cultural heritage",
+    "sort_order": 44
+  },
+  "Technical assistance": {
+    "name": "Technical assistance",
+    "short_name": "Technical assistance",
+    "sort_order": 330
+  },
+  "Fund for bilateral relations at national level": {
+    "name": "Fund for bilateral relations at national level",
+    "short_name": "Bilateral fund",
+    "sort_order": 340
+  },
+  "Reserve for unforeseen developments": {
+    "name": "Reserve for unforeseen developments",
+    "short_name": "Unforeseen development",
+    "sort_order": 390
+  },
+  "Other used in special cases": {
+    "name": "Other used in special cases",
+    "short_name": "Other",
+    "sort_order": 400
+  },
+  "Reserve for projects under 2004-2009 period": {
+    "name": "Reserve for projects under 2004-2009 period",
+    "short_name": "Reserve FM2004-09",
+    "sort_order": 420
+  }
+}
