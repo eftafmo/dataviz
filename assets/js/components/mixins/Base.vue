@@ -20,10 +20,32 @@ export default {
       // this is only used internally. we can't come up with a nicer name,
       // because properties beginning with underscore aren't reactive
       dataset__: null,
+
+      locale: {
+        // see https://github.com/d3/d3-format/blob/master/locale/
+        // TODO: derive and extend the browser locale?
+        // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
+        "decimal": ",", // that's the european way
+        "thousands": ".", // dot, the european way
+        "grouping": [3],
+        "currency": ["€", ""],
+        "percent": "%",
+      },
     };
   },
 
   computed: {
+    currency() {
+      // show currency. thousand separators. decimal int.
+      const format = "$,d";
+
+      return d3.formatLocale(this.locale).format(format);
+    },
+    number() {
+      const format = ",d";
+      return d3.formatLocale(this.locale).format(format);
+    },
+
     dataset: {
       // make dataset a settable computed
       get() {
@@ -47,24 +69,6 @@ export default {
     isReady() {
       return !!(this.hasData
                 && this.$el);
-    },
-
-    currency() {
-      const locale = {
-        // see https://github.com/d3/d3-format/blob/master/locale/
-        // TODO: derive and extend the browser locale?
-        // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
-        "decimal": ",", // that's the european way
-        "thousands": ".", // dot, the european way
-        "grouping": [3],
-        "currency": ["€", ""],
-        "percent": "%",
-      };
-
-      // show currency. thousand separators. decimal int.
-      const format = "$,d";
-
-      return d3.formatLocale(locale).format(format);
     },
   },
 

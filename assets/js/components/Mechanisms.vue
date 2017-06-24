@@ -105,8 +105,8 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 import {colour2gray, slugify} from 'js/lib/util';
 
-import BaseMixin from './mixins/Base.vue';
-import ChartMixin from './mixins/Chart.vue';
+import BaseMixin from './mixins/Base';
+import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 
@@ -177,22 +177,27 @@ export default Vue.extend({
   },
 
   methods: {
+    tooltipTemplate(d) {
+      return `
+        <div class="title-container">
+          <span class="name">${d.name}</span>
+        </div>
+        <ul>
+          <li>${this.currency(d.value)}</li>
+          <li>${d.beneficiaries.size()} beneficiary states</li>
+          <li>${d.sectors.size()} priority sectors</li>
+        </ul>
+        <span class="action">~Click to filter by financial mechanism</span>
+        <button class="btn btn-anchor">X</button>
+      `;
+    },
+
     createTooltip() {
       const $this = this;
 
       let tip = d3.tip()
           .attr('class', 'd3-tip fms')
-          .html(function(d) {
-            return `<div class="title-container">
-                      <span class="name">${d.name}</span>
-                    </div>
-                    <div>- ${$this.currency(d.value)}  </div>
-                    <div>- ${d.beneficiaries.size()} beneficiary states </div>
-                    <div>- ${d.sectors.size()} priority sectors </div>
-                    <span class="action">~Click to filter by financial mechanism</span>
-                    <button class="btn btn-anchor">X</button>
-            `;
-          })
+          .html(this.tooltipTemplate)
           .direction('s')
           .offset([0, 0])
 

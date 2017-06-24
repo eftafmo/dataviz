@@ -2,10 +2,15 @@
 // (they should auto-register)
 
 import Overview from './Overview';
+
 import Mechanisms from './Mechanisms';
+import ProjectsMechanisms from './ProjectsMechanisms';
+
 import Sectors from './Sectors';
+
 import AllocationMap from './AllocationMap';
 import ProjectsMap from './ProjectsMap';
+
 import Beneficiaries from './Beneficiaries';
 import GlobalFilters from './GlobalFilters';
 import Results from './Results';
@@ -20,6 +25,7 @@ export {
   Overview,
   HomepageInfo,
   Mechanisms,
+  ProjectsMechanisms,
   Sectors,
   AllocationMap,
   ProjectsMap,
@@ -32,4 +38,3 @@ export {
   News,
   ProjectsOverview,
 };
-

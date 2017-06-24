@@ -52,7 +52,7 @@ export const Projects = Viz.extend({
   name: 'Projects',
 
   components: {
-    mechanisms: components.Mechanisms,
+    mechanisms: components.ProjectsMechanisms,
     sectors: components.Sectors.extend({
       mixins: [ProjectsMixin],
     }),
