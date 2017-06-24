@@ -136,33 +136,39 @@ export default Vue.extend({
       // filter dataset by everything except fm
       const _filters = d3.keys(this.filters).filter( (f) => f != 'fm' );
       const dataset = this.filter(this.dataset, _filters);
+      const aggregated = this.aggregate(
+        dataset,
+        [{source: 'fm', destination: 'name'}],
+        [
+          {source: 'allocation', destination: 'value'},
+          //'bilateral_allocation',
+          'project_count',
+          //'project_count_positive',
+          //'project_count_ended',
+          {source: 'beneficiary', destination: 'beneficiaries', type: String},
+          {source: 'sector', destination: 'sectors', type: String},
+        ],
+        false
+      );
 
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
-      const fmdata = {}
+      const out = [];
       for (const fm in this.FMS) {
-        fmdata[fm] = {
-          'value': 0,
-          'beneficiaries': d3.set(),
-          'sectors': d3.set(),
+        const basefm = this.FMS[fm];
+
+        const item = {
+          value: 0,
+          project_count: 0,
+          beneficiaries: d3.set(),
+          sectors: d3.set(),
         };
-        Object.assign(fmdata[fm], this.FMS[fm]);
+
+        Object.assign(item, basefm, aggregated[basefm.name]);
+        out.push(item);
       }
 
-      for (const d of dataset) {
-        const id = slugify(d.fm),
-              fm = fmdata[id],
-              value = +d.allocation;
-
-        // backend might send us empty data...
-        if(value === 0) continue;
-
-        fm.value += value;
-        fm.sectors.add(d.sector);
-        fm.beneficiaries.add(d.beneficiary);
-      }
-
-      return d3.values(fmdata);
+      return out;
     },
 
     nonzero() {

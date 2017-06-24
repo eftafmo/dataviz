@@ -114,6 +114,119 @@ export default {
       return data.filter(filterfunc);
     },
 
+    aggregate(data, by, on, flatten=true) {
+      /*
+         by: array of columns names to aggregate by,
+         on: array of columns names to aggregate on,
+         flatten: whether to return the data as an array or the raw tree.
+
+         a column spec can be either a string or an object of the form
+         {
+           source: 'input_column_name',
+           destination: 'output_column_name',
+         }
+         `columns` also take a `type` property, which defaults to Number
+       */
+
+      const bycols = {};
+      for (const col of by) {
+        let src, dst;
+        if (typeof col == 'string') {
+          src = dst = col;
+        } else {
+          src = col.source;
+          dst = col.destination;
+
+          if (dst === undefined) dst = src;
+        }
+
+        bycols[src] = dst;
+      }
+      const _bycols = Object.keys(bycols);
+
+      const oncols = {};
+      for (const col of on) {
+        let src, dst, type;
+        if (typeof col == 'string') {
+          src = dst = col;
+          type = Number;
+        } else {
+          src = col.source;
+          dst = col.destination;
+          type = col.type;
+
+          if (dst === undefined) dst = src;
+          if (type === undefined) type = Number;
+        }
+
+        oncols[src] = {destination: dst, type: type};
+      };
+
+      // each aggreggation level is a sub-dictionary,
+      // each aggreggation item a key.
+      const aggregator = {};
+
+      for (const item of data) {
+        const base = {};
+        let row = aggregator;
+        for (let i=0, j=_bycols.length; i<j; i++) {
+          const srccol = _bycols[i],
+                dstcol = bycols[srccol],
+                value = item[srccol];
+
+          base[dstcol] = value;
+
+          if (row[value] === undefined)
+            row[value] = i == j - 1 ? base : {};
+
+          row = row[value];
+        }
+
+        for (const srccol in oncols) {
+          const _col = oncols[srccol],
+                dstcol = _col.destination,
+                type = _col.type,
+                value = type(item[srccol]);
+
+          let current = row[dstcol];
+
+          if (type === Number) {
+            // numbers are added together
+            if (current === undefined)
+              current = row[dstcol] = 0;
+
+            row[dstcol] = current + value;
+          }
+          else if (type === String) {
+            // strings are consolidated into a set
+            if (current === undefined)
+              current = row[dstcol] = d3.set();
+
+            current.add(value);
+          }
+          else console.warn(srccol, ":: unkwown type", type)
+        }
+      }
+
+      if (!flatten) return aggregator;
+
+      const out = [],
+            levels = by.length;
+
+      function recurse(obj, level) {
+        if (level == levels) {
+          out.push(obj);
+          return;
+        }
+        for (const k in obj) {
+          recurse(obj[k], level + 1);
+        }
+      }
+
+      recurse(aggregator, 0);
+      return out;
+    },
+
     _main() {
       this.beforeMain();
       this.main();
