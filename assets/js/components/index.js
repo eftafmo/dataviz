@@ -12,6 +12,9 @@ import AllocationMap from './AllocationMap';
 import ProjectsMap from './ProjectsMap';
 
 import Beneficiaries from './Beneficiaries';
+import ProjectsBeneficiaries from './ProjectsBeneficiaries';
+
+
 import GlobalFilters from './GlobalFilters';
 import Results from './Results';
 import AllocationOverview from './AllocationOverview';
@@ -24,12 +27,18 @@ import ProjectsOverview from './ProjectsOverview';
 export {
   Overview,
   HomepageInfo,
+
   Mechanisms,
   ProjectsMechanisms,
+
   Sectors,
+
   AllocationMap,
   ProjectsMap,
+
   Beneficiaries,
+  ProjectsBeneficiaries,
+
   GlobalFilters,
   AllocationOverview,
   Results,

@@ -57,7 +57,7 @@ export const Projects = Viz.extend({
       mixins: [ProjectsMixin],
     }),
     xmap: components.ProjectsMap,
-    beneficiaries: components.Beneficiaries,
+    beneficiaries: components.ProjectsBeneficiaries,
     overview: components.ProjectsOverview,
     programmes: components.Programmes,
     news: components.News,

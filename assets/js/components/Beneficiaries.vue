@@ -115,8 +115,6 @@ import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
-import FMs from 'js/constants/financial-mechanisms.json5';
-
 
 export default Vue.extend({
   mixins: [
@@ -229,24 +227,26 @@ export default Vue.extend({
 
       // we'll use this to preserve order, and as a basis for each bar item
       const fms = this.filters.fm ?
-                  [FMs[slugify(this.filters.fm)]] : d3.values(FMs);
+                  [this.FMS[slugify(this.filters.fm)]] : d3.values(this.FMS);
 
       // generate series data from the allocation data
       for (const beneficiary of beneficiarydata) {
         // create a new allocations entry for this
-        const allocations = [];
+        const localdata = [];
         let oldend = 0;
 
         for (const fm of fms) {
-          let value = beneficiary.allocation[fm.name];
+          let value = beneficiary.allocation[fm.name],
+              project_count = beneficiary.project_count[fm.name];
           // we want 0-valued items too, so they transition properly
           if (value === undefined)
             value = 0;
 
           const newend = oldend + value;
 
-          allocations.push(Object.assign({}, fm, {
+          localdata.push(Object.assign({}, fm, {
             value: value,
+            project_count: project_count,
             // naming is hard
             d: [oldend, newend],
           }))
@@ -254,9 +254,8 @@ export default Vue.extend({
           oldend = newend;
         }
 
-        // switch the old entry for the new one
-        delete beneficiary.allocation;
-        beneficiary.allocations = allocations;
+        // add the local data
+        beneficiary.data = localdata;
       }
 
       // sort by name
@@ -279,7 +278,7 @@ export default Vue.extend({
 
       // the real deal
       const fms = selection.selectAll("g.fm > rect").data(
-        (d) => d.allocations,
+        (d) => d.data,
         (d) => d.id
       );
 
@@ -307,30 +306,36 @@ export default Vue.extend({
         //.remove();
     },
 
+    tooltipTemplate(d) {
+      // TODO: this is getting beyond silly.
+      const data = d.data
+                    .filter( (x) => x.value != 0 );
+      const datatxt = data
+        .map( (x) => `
+          <dl>
+            <dt>${ x.name }</dt>
+            <dd>${ this.currency(x.value) }</dd>
+          </dl>
+        ` )
+        .join("");
+
+      return `
+        <div class="title-container">
+          <img src="/assets/imgs/${this.get_flag_name(d.id)}.png" />
+          <span class="name">${d.name}</span>
+        </div>
+        ${ datatxt }
+        <span class="action">~Click to filter by beneficiary state</span>
+        <button class="btn btn-anchor">X</button>
+      `;
+    },
+
     createTooltip() {
       const $this = this;
       // add tooltip
       let tip = d3.tip()
           .attr('class', 'd3-tip benef')
-          .html(function(d){
-          let allocation_value = d.allocations.map((d_) => d_.value)
-          let allocation_content = d.allocations.map((d_) => d_.name + ": " + $this.currency(d_.value))
-
-          //remove from allocation from content if value 0
-          for (let i in allocation_value) {
-            if (allocation_value[i] == 0){
-               allocation_content.splice(i,1)
-            }
-          }
-
-          allocation_content = allocation_content.join('\n')
-            return "<div class='title-container'>"
-              + "<img src=/assets/imgs/" + get_flag_name(d.id) + ".png/>"
-              + "<span class='name'>"+ d.name + "</span></div>"
-              +  allocation_content
-              + " <span class='action'>~Click to filter by beneficiary state</span>"
-              +" <button class='btn btn-anchor'>X</button>"
-          })
+          .html(this.tooltipTemplate)
           .direction('n')
           .offset(function(d) {
             const zeroed = (-this.getBBox().width / 2
@@ -436,7 +441,7 @@ export default Vue.extend({
 
       // aand we also want to run it in EXIT, but with empty data
       // (normally the old data gets sent, so the fms don't get disappeared)
-      beneficiaries.exit().each( (d) => (d.allocations.splice(0)) )
+      beneficiaries.exit().each( (d) => (d.data.splice(0)) )
                    .select("g.fms")
         .transition(t_)
         .call(this.renderBeneficiaryData);

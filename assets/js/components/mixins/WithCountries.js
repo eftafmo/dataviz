@@ -3,14 +3,17 @@
  * using webpack's svg-sprite-loader.
  */
 
-import _cs from 'js/constants/countries.json5';
+import _COUNTRIES from 'js/constants/countries.json5';
 
 export const COUNTRIES = {};
-for (const code in _cs.donors) {
-  COUNTRIES[code] = Object.assign({type: "donor"}, _cs.donors[code]);
+export const DONORS = _COUNTRIES.donors;
+export const BENEFICIARIES = _COUNTRIES.beneficiaries;
+
+for (const code in DONORS) {
+  COUNTRIES[code] = Object.assign({type: "donor"}, DONORS[code]);
 }
-for (const code in _cs.beneficiaries) {
-  COUNTRIES[code] = Object.assign({type: "beneficiary"}, _cs.beneficiaries[code]);
+for (const code in BENEFICIARIES) {
+  COUNTRIES[code] = Object.assign({type: "beneficiary"}, BENEFICIARIES[code]);
 }
 
 export function get_flag_name(code) {
@@ -36,8 +39,11 @@ for (const code in COUNTRIES) {
 
 import * as d3 from 'd3';
 
+
 export default {
   beforeCreate() {
+    this.DONORS = DONORS;
+    this.BENEFICIARIES = BENEFICIARIES;
     this.COUNTRIES = COUNTRIES;
   },
 
@@ -49,44 +55,59 @@ export default {
       const _filters = d3.keys(this.filters)
                          .filter((f) => f != 'beneficiary');
       const dataset = this.filter(this.dataset, _filters);
+      const aggregated = this.aggregate(
+        dataset,
+        ['beneficiary', 'fm'],
+        [
+          'allocation',
+          //'bilateral_allocation',
+          'project_count',
+          //'project_count_positive',
+          //'project_count_ended',
+          //{source: 'sector', destination: 'sectors', type: String},
+        ],
+        false
+      );
 
-      const beneficiaries = {}
-      for (const d of dataset) {
-        const bid = d.beneficiary,
-              fm = d.fm,
-              value = +d.allocation;
+      // base the data on the beneficiary list from constants
+      const out = {}
+      for (const bid in this.BENEFICIARIES) {
+        const item = {
+          allocation: {},
+          project_count: {},
+          total: 0,
+          //sectors: d3.set(),
+        };
 
-        if (value === 0) continue;
+        Object.assign(item, this.BENEFICIARIES[bid]);
 
-        let beneficiary = beneficiaries[bid];
-        if (beneficiary === undefined)
-          beneficiary = beneficiaries[bid] = {
-            id: bid,
-            name: COUNTRIES[bid].name,
-            total: 0,
-            allocation: {},
-            sectors: d3.set(),
-          };
+        const data = aggregated[bid];
+        for (const fm in data) {
+          const d = data[fm],
+                allocation = d.allocation,
+                project_count = d.project_count;
 
-        let allocation = beneficiary.allocation[fm];
-        if (allocation === undefined)
-          allocation = beneficiary.allocation[fm] = 0;
+          item.total += allocation;
+          item.allocation[fm] = allocation;
+          item.project_count[fm] = project_count;
+        }
 
-        beneficiary.total += value;
-        beneficiary.allocation[fm] = allocation + value;
-        beneficiary.sectors.add(d.sector);
+        // skip 0-valued items for now
+        if (item.total == 0) continue;
+
+        out[bid] = item;
       }
 
-      return beneficiaries;
+      return out;
     },
   },
 
   methods: {
     isBeneficiary(d) {
-      return this.COUNTRIES[d.id].type == "beneficiary";
+      return this.BENEFICIARIES[d.id] !== undefined;
     },
     isDonor(d) {
-      return this.COUNTRIES[d.id].type == "donor";
+      return this.DONORS[d.id] == undefined;
     },
 
     toggleBeneficiary(b, etarget) {
