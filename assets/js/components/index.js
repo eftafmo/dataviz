@@ -7,6 +7,7 @@ import Mechanisms from './Mechanisms';
 import ProjectsMechanisms from './ProjectsMechanisms';
 
 import Sectors from './Sectors';
+import ProjectsSectors from './ProjectsSectors';
 
 import AllocationMap from './AllocationMap';
 import ProjectsMap from './ProjectsMap';
@@ -32,6 +33,7 @@ export {
   ProjectsMechanisms,
 
   Sectors,
+  ProjectsSectors,
 
   AllocationMap,
   ProjectsMap,

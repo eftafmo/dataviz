@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import BaseMixin from './components/mixins/Base';
-import ProjectsMixin from './components/mixins/Projects';
 import * as components from './components/index';
 import {Tabs, Tab} from 'vue-tabs-component';
 
@@ -53,9 +52,7 @@ export const Projects = Viz.extend({
 
   components: {
     mechanisms: components.ProjectsMechanisms,
-    sectors: components.Sectors.extend({
-      mixins: [ProjectsMixin],
-    }),
+    sectors: components.ProjectsSectors,
     xmap: components.ProjectsMap,
     beneficiaries: components.ProjectsBeneficiaries,
     overview: components.ProjectsOverview,
