@@ -3,7 +3,6 @@ import Vue from 'vue';
 import BaseMixin from './components/mixins/Base';
 import ProjectsMixin from './components/mixins/Projects';
 import * as components from './components/index';
-import {Tabs, Tab} from 'vue-tabs-component';
 
 
 const Base = Vue.extend({
@@ -42,8 +41,6 @@ export const Grants = Viz.extend({
     overview: components.AllocationOverview,
     programmes: components.Programmes,
     results: components.Results,
-    tabs: Tabs,
-    tab: Tab,
     sidebar: components.Sidebar,
   },
 });
@@ -61,8 +58,6 @@ export const Projects = Viz.extend({
     overview: components.ProjectsOverview,
     programmes: components.Programmes,
     news: components.News,
-    tabs: Tabs,
-    tab: Tab,
     sidebar: components.Sidebar,
   },
 });
