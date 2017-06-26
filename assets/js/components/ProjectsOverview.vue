@@ -3,9 +3,11 @@
       <transition name="fade">
         <div class="allocation" :key="transitioned">
           <strong>{{ number(data.project_count) }} projects</strong>
-          <small>
-            {{ number(data.project_count_ended) }} projects completed<template v-if="data.project_count_positive">, of which {{ data.project_percent_positive }}% have had positive effects that are likely to continue beyond the funding period.</template>
-          </small>
+            <template v-if="data.project_count_ended">
+              <small>
+                {{ data.project_percent_positive }}% of completed projects have had positive effects that are likely to continue beyond the funding period.
+              </small>
+            </template>
         </div>
       </transition>
     </div>
