@@ -3,7 +3,7 @@
       <transition name="fade">
         <div class="allocation" :key="transitioned">
           <strong>{{ format(data.project_count) }} projects</strong>
-          <small>{{ format(data.project_count_positive) }} projects ({{ data.project_percent_positive }} %) have had positive effects that are likely to continue beyond the funding period</small>
+          <small>{{ data.project_percent_positive }}% of completed projects have had positive effects that are likely to continue beyond the funding period.</small>
         </div>
       </transition>
     </div>
@@ -78,10 +78,9 @@ export default Vue.extend({
       return out;
     },
   },
+
   methods: {
-
     handleFilter() {
-
       this.transitioned = !this.transitioned;
     },
 
