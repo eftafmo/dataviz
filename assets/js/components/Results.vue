@@ -4,7 +4,7 @@
         <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
-            <small v-show="hideSector">{{ item.sector }}</small>
+            <small v-show="!filters.sector">{{ item.sector }}</small>
             <ul v-for="(value, indicator) in item.indicators" class="indicators">
                <li class="indicator clearfix" :style="{borderColor: sectorcolour(item.sector)}">
                   <div class="indicator-achievement"> {{ value }}</div>
@@ -99,12 +99,6 @@ export default Vue.extend({
       // TODO: sorting order?
 
       return results;
-    },
-    hideSector() {
-      if(FILTERS['sector'])
-        return false
-      else
-      return true
     },
   },
 
