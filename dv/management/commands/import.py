@@ -84,7 +84,6 @@ class Command(BaseCommand):
             OrganisationRole,
             Organisation_OrganisationRole,
         )
-        models = (ProjectTheme,)
 
         self.stderr.style_func = None
         def _write(*args, **kwargs):
