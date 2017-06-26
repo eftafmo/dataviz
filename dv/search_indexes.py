@@ -18,8 +18,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # specific facets
 
     # specific fields
-    # TODO use template here to include more than summary, e.g. programme name and beneficiary state
-    text = indexes.CharField(model_attr='summary', document=True)
+    text = indexes.CharField(document=True, use_template=True)
 
 
     def get_model(self):
@@ -67,7 +66,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     geotarget = indexes.FacetCharField(model_attr='geotarget')
 
     # specific fields
-    text = indexes.CharField(model_attr='name', document=True)
+    text = indexes.CharField(document=True, use_template=True)
 
     def get_model(self):
         return Project
@@ -96,13 +95,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     programme_area_ss = indexes.FacetMultiValueField()
     priority_sector_ss = indexes.FacetMultiValueField()
 
-    text = indexes.CharField(model_attr='name', document=True)
+    text = indexes.CharField(document=True, use_template=True)
 
     kind = indexes.FacetCharField()
 
     # specific facets
     # haystack handles null apparently
-    org_type_caegory = indexes.FacetCharField(model_attr='orgtype__category')
+    org_type_category = indexes.FacetCharField(model_attr='orgtype__category')
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
     nuts = indexes.FacetCharField(model_attr='nuts')

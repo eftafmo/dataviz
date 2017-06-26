@@ -95,7 +95,7 @@
     
     <field name="kind" type="string" indexed="true" stored="true" multiValued="false" />
     
-    <field name="org_type_caegory" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="org_type_category" type="string" indexed="true" stored="true" multiValued="false" />
     
     <field name="org_type" type="string" indexed="true" stored="true" multiValued="false" />
     

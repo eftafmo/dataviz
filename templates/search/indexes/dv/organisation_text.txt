@@ -1,0 +1,8 @@
+{{ object.name }}
+{% for org_role in object.roles.all %}
+    {% if org_role.is_programme %}
+        {{ org_role.programme.state.name }}
+    {% else %}
+        {{ org_role.project.state.name }}
+    {% endif %}
+{% endfor %}
