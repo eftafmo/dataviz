@@ -1,16 +1,18 @@
 <template>
     <ul class="results" v-if="hasData">
-      <li v-for="(item, outcome) in data">
+      <li v-for="(items, outcome) in data">
         <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
-            <small v-show="!filters.sector">{{ item.sector }}</small>
-            <ul v-for="(value, indicator) in item.indicators" class="indicators">
-               <li class="indicator clearfix" :style="{borderColor: sectorcolour(item.sector)}">
-                  <div class="indicator-achievement"> {{ value }}</div>
-                  <div class="indicator-name"> {{ indicator }} </div>
-               </li>
-               </ul>
+            <div v-for="(indicators, sector) in items">
+              <small v-show="!filters.sector">{{ sector }}</small>
+              <ul v-for="(value, indicator) in indicators" class="indicators">
+                 <li class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
+                    <div class="indicator-achievement"> {{ value }}</div>
+                    <div class="indicator-name"> {{ indicator }} </div>
+                 </li>
+              </ul>
+            </div>
           </div>
         </div>
       </li>
@@ -71,6 +73,7 @@ export default Vue.extend({
       const results = {};
 
       for (const d of dataset) {
+        const sector = d.sector;
         for (const o in d.results) {
           const values = d.results[o];
 
@@ -78,26 +81,24 @@ export default Vue.extend({
 
           let outcome = results[o];
           if (outcome === undefined)
-            outcome = results[o] = {
-              sector: d.sector,
-              indicators: {},
-            };
+            outcome = results[o] = {}
+          if (outcome[sector] == undefined)
+            outcome[sector] = {}
 
-          for (let i in values) {
-            const value = +values[i];
+          for (let indicator in values) {
+            const value = +values[indicator];
 
             if (value === 0) continue;
 
-            i = i.replace(/^Number of /, '');
+            indicator = indicator.replace(/^Number of /, '');
 
-            let sum = outcome.indicators[i] || 0;
-            outcome.indicators[i] = sum + value;
+            let sum = outcome[indicator] || 0;
+            outcome[sector][indicator] = sum + value;
           }
         }
       }
 
       // TODO: sorting order?
-
       return results;
     },
   },
