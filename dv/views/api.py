@@ -198,19 +198,18 @@ def projects(request):
     ).annotate(
         project_count=Count('code')
     )
-    project_counts = defaultdict(lambda: {
-        'total': 0,
-        'positive_effects': 0,
-        'has_ended': 0,
-    })
+
+    project_count, project_count_ended, project_count_positive = (
+        defaultdict(int), defaultdict(int), defaultdict(int)
+    )
     for item in project_counts_raw:
         key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id']
-        project_counts[key]['total'] += item['project_count']
+        project_count[key] += item['project_count']
         if item['has_ended']:
-            project_counts[key]['has_ended'] += item['project_count']
+            project_count_ended[key] += item['project_count']
             if item['is_positive_fx']:
                 # Only count positive effects for projects which have ended
-                project_counts[key]['positive_effects'] += item['project_count']
+                project_count_positive[key] += item['project_count']
 
     news_raw = (
         News.objects.all()
@@ -248,11 +247,9 @@ def projects(request):
             'area': a.programme_area.name,
             'beneficiary': a.state.code,
             'allocation': a.gross_allocation,
-            'project_counts': project_counts.get(key, {
-                'total': 0,
-                'positive_effects': 0,
-                'has_ended': 0,
-            }),
+            'project_count': project_count.get(key, 0),
+            'project_count_ended': project_count_ended.get(key, 0),
+            'project_count_positive': project_count_positive.get(key, 0),
             'news': news.get(key, []),
             'programmes': {
                 p['programme__code']: {

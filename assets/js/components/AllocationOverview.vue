@@ -2,8 +2,8 @@
     <div  v-if="hasData" class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="transitioned">
-          <strong>{{ format(data.allocation) }}</strong>
-          <small>{{ format(data.bilateral_allocation) }} for bilateral relations</small>
+          <strong>{{ currency(data.allocation) }}</strong>
+          <small>{{ currency(data.bilateral_allocation) }} for bilateral relations</small>
         </div>
       </transition>
     </div>
@@ -56,29 +56,24 @@ export default Vue.extend({
   computed: {
     data() {
       const dataset = this.filter(this.dataset);
-
-      const out = {
-        allocation: 0,
-        bilateral_allocation: 0,
-      };
-
-      for (const row of dataset) {
-        out.allocation += +row.allocation;
-        out.bilateral_allocation += +row.bilateral_allocation;
-      }
+      const out = this.aggregate(
+        dataset,
+        [],
+        [
+          'allocation',
+          'bilateral_allocation',
+        ],
+        false
+      );
 
       return out;
     },
   },
+
   methods: {
-
     handleFilter() {
-
       this.transitioned = !this.transitioned;
     },
-
   },
-
 });
-
 </script>
