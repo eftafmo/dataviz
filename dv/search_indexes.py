@@ -18,7 +18,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # specific facets
 
     # specific fields
-    # TODO use template here to include more than summary
+    # TODO use template here to include more than summary, e.g. programme name and beneficiary state
     text = indexes.CharField(model_attr='summary', document=True)
 
 
@@ -147,4 +147,4 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'project__name', flat=True).distinct())
 
     def prepare_role_ss(self, obj):
-        return list(obj.role.all().values_list('code', flat=True).distinct())
+        return list(obj.role.all().values_list('role', flat=True).distinct())
