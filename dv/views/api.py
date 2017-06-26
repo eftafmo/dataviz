@@ -94,6 +94,8 @@ def grants(request):
         'programme_area__priority_sector',
     ).prefetch_related(
         'programme_area__outcomes__programmes',
+    ).exclude(
+        gross_allocation=0
     )
     programmes = ProgrammeOutcome.objects.all().select_related(
         'programme',
@@ -171,6 +173,8 @@ def projects(request):
         'programme_area__priority_sector',
     ).prefetch_related(
         'programme_area__outcomes__programmes',
+    ).exclude(
+        gross_allocation=0
     )
 
     # get the real state_id from ProgrammeOutcome, refs IN22
