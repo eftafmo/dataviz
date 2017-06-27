@@ -68,20 +68,34 @@ export default BaseMap.extend({
             <img src="/assets/imgs/${ this.get_flag_name(d.id) }.png" />
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
-          ${ this.currency(d.total || 0) }
+          <ul>
+            <li>${ this.number(this.get_project_count(d)) } projects</li>
+            <li>${ this.currency(d.total || 0) } gross allocation</li>
+          </ul>
         `;
       else
         return `
           <div class="title-container">
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
-          ${ this.currency(d.amount || 0) }
+          <ul>
+            <li>${ this.number(this.get_project_count(d)) } projects</li>
+            <li>${ this.currency(d.amount || 0) } gross allocation</li>
+          </ul>
           <small>(Temporary)<small>
         `;
     },
 
+    get_project_count(d) {
+      // the project count is split among fms (which is probably useless)
+      return d3.sum(d3.values(d.project_count)) || 0;
+    },
+
     renderData() {
       const beneficiarydata = d3.values(this.beneficiarydata);
+      const states = this.chart.select('.states').selectAll('path'),
+            beneficiaries = states.filter(this.isBeneficiary)
+                                  .data(beneficiarydata, (d) => d.id );
 
       const projects = this.chart.select(".data").selectAll("g")
                            .data(beneficiarydata, (d) => d.id );
@@ -97,21 +111,18 @@ export default BaseMap.extend({
         .attr("y", (d) => this.geodetails[d.id].centroid[1] )
         .attr("dy", ".33em"); // magical self-centering offset
 
-      // TODO: get rid of the silly Math.pows (when switching to real data) :)
-
       // the circle radius is only meant to fit the text,
       // not show some smart correlation :)
       projects.select("circle").merge(circles)
         .attr("r", (d) => {
+          const count = this.get_project_count(d);
           // return enough for the the text to fit plus spacing...
           // ... for... another half a character
-          return (Math.round(d.total / Math.pow(10,6)).toString().length + 1/2) * this.numberWidth / 2;
+          return (count.toString().length + 1/2) * this.numberWidth / 2;
         } )
 
       projects.select("text").merge(texts)
-        .text( (d) => this.currency(d.total / Math.pow(10,6)) );
-
-
+        .text(this.get_project_count);
     },
   },
 });
