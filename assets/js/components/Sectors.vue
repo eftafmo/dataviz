@@ -36,7 +36,7 @@
           <span
               v-show="filters.sector != sector.data.id"
               :key="`v-${getLabelID(sector)}`">
-            {{ currency(sector.value) }}
+            {{ value(sector) }}
           </span>
           <span
               v-if="isSelectedSector(sector)"
@@ -75,7 +75,7 @@
                   {{ area.data.name }}
                 </span>
                 <span :key="`v-${getLabelID(area)}`">
-                  {{ currency(area.value) }}
+                  {{ value(area) }}
                 </span>
               </a>
             </li>
@@ -533,6 +533,11 @@ export default Vue.extend({
   },
 
   methods: {
+    value(item) {
+      // the value displayed in legend
+      return this.currency(item.value);
+    },
+
     areasBeforeEnter(el) {
       // get height from a clone, it's safer
       const c = el.cloneNode(true);
