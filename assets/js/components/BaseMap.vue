@@ -394,32 +394,26 @@ export default Vue.extend({
         }`;
     },
 
-    createTooltip() {
-      const $this = this;
-
-      let tip = d3.tip()
-          .attr('class', 'd3-tip map')
-          .html(function(d) {
-            // this function is common to both countries and regions, so...
-
-            // not the smartest way to tell if this is a country, but it works
-            // TODO: add country financial data
-            // TODO: move flag to css
-            if (d.id.length == 2)
-              return `<div class="title-container">
-                        <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
-                        <span class="name">${COUNTRIES[d.id].name}</span>
+    tooltipTemplate(d) {
+     if (d.id.length == 2)
+            return `<div class="title-container">
+                      <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
+                      <span class="name">${COUNTRIES[d.id].name}</span>
                       </div>
-                      ${$this.currency(d.total || 0)}`
-                      +" <button class='btn btn-anchor'>X</button>";
+                      ${this.currency(d.total || 0)}`;
 
             return `<div class="title-container">
                       <span class="name">${this.name} (${d.id})</span>
                     </div>
-                    ${$this.currency(d.amount || 0)}
-                    <small>(Temporary)<small>`
-                    +" <button class='btn btn-anchor'>X</button>";
-          })
+                    ${this.currency(d.amount || 0)}
+                    <small>(Temporary)<small>`;
+    },
+
+
+    createTooltip() {
+      let tip = d3.tip()
+          .attr('class', 'd3-tip map')
+          .html(this.tooltipTemplate)
           .direction('n')
           .offset([0, 0])
 

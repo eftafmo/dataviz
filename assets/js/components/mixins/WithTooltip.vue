@@ -1,13 +1,20 @@
 <style lang="less">
 
 .d3-tip {
+
+ li {
+  list-style-type: none;
+ }
+
+ ul {
+  padding-left: 0;
+ }
+
   min-width: 320px;
   max-width: 420px;
   padding: 1rem 2rem;
   background: white;
   box-shadow: 0px 0px 3px #aaa;
-  white-space: pre;
-  line-height: 1.5;
   .btn {
     position: absolute;
     top: 10px;
@@ -47,6 +54,10 @@
     display: block;
     margin-top: 1rem;
     text-align: right;
+
+    &:before {
+      content:'~';
+    }
   }
 
   .title-container {

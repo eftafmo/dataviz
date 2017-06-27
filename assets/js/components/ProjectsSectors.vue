@@ -25,8 +25,7 @@ export default Sectors.extend({
           <li>${ this.number(d.data.project_count) } projects</li>
           <li>${ this.currency(d.value) } grant allocation</li>
         </ul>
-        <span class="action">~Click to filter by ${ thing }</span>
-        <button class="btn btn-anchor">X</button>
+        <span class="action">Click to filter by ${ thing }</span>
       `;
     },
   }

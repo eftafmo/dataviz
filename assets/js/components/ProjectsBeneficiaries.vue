@@ -27,9 +27,7 @@ export default Beneficiaries.extend({
           <span class="name">${d.name}</span>
         </div>
         ${ datatxt }
-        <span class="action">~Click to filter by beneficiary state</span>
-        <button class="btn btn-anchor">X</button>
-      `;
+        <span class="action">Click to filter by beneficiary state</span>`;
     },
   }
 });

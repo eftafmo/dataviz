@@ -649,8 +649,7 @@ export default Vue.extend({
           <span>${ d.data.name }</span>
         </div>
         ${ this.currency(d.value) } grant allocation
-        <span class="action">~Click to filter by ${ thing }</span>
-        <button class="btn btn-anchor">X</button>
+        <span class="action">Click to filter by ${ thing }</span>
       `;
     },
 

@@ -187,8 +187,7 @@ export default Vue.extend({
           <li>${d.beneficiaries.size()} beneficiary states</li>
           <li>${d.sectors.size()} priority sectors</li>
         </ul>
-        <span class="action">~Click to filter by financial mechanism</span>
-        <button class="btn btn-anchor">X</button>
+        <span class="action">Click to filter by financial mechanism</span>
       `;
     },
 
