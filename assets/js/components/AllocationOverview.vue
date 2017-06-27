@@ -12,11 +12,9 @@
 <style>
 .sidebar-header {
   position: relative;
-  padding: 0 !important;
 }
 
 .allocation {
-  padding: 1rem;
   width: 100%;
 }
 
@@ -26,8 +24,8 @@
 
 .allocation.fade-enter-active {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 1rem;
+  width: calc(100% - 2rem);
 }
 
 .allocation.fade-enter-active, .allocation.fade-leave-active {
