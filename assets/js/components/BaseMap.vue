@@ -217,7 +217,7 @@ import {slugify} from 'js/lib/util'
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin, {get_flag_name, COUNTRIES} from './mixins/WithCountries';
+import WithCountriesMixin from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
@@ -239,6 +239,7 @@ export default Vue.extend({
     this.regions = null;
     // cache for computed geofeature-related data
     this.geodetails = {};
+    this.region_names = {};
     // cache for geojson data
     this._region_borders = {};
     // cache for allocation data
@@ -273,16 +274,6 @@ export default Vue.extend({
   computed: {
     scaleFactor() {
       return this.width / this.svgWidth / this.zoom;
-    },
-
-    getBeneficiaries() {
-      const beneficiaries = {}
-      for (let c in COUNTRIES) {
-        if(COUNTRIES[c].type == 'beneficiary'){
-          beneficiaries[c] = COUNTRIES[c]
-        }
-      }
-      return beneficiaries
     },
 
     projection() {
@@ -338,7 +329,7 @@ export default Vue.extend({
             layer = 'nuts3',
             cache = this._region_borders;
 
-      const countries = Object.keys(COUNTRIES);
+      const countries = Object.keys(this.COUNTRIES);
       countries.forEach( (c) => cache[c] = [] );
 
       const features = topojson.feature(data, data.objects[layer]).features;
@@ -394,21 +385,9 @@ export default Vue.extend({
         }`;
     },
 
-    tooltipTemplate(d) {
-     if (d.id.length == 2)
-            return `<div class="title-container">
-                      <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
-                      <span class="name">${COUNTRIES[d.id].name}</span>
-                      </div>
-                      ${this.currency(d.total || 0)}`;
-
-            return `<div class="title-container">
-                      <span class="name">${this.name} (${d.id})</span>
-                    </div>
-                    ${this.currency(d.amount || 0)}
-                    <small>(Temporary)<small>`;
+    tooltipTemplate() {
+      console.log('wtf')
     },
-
 
     createTooltip() {
       let tip = d3.tip()
@@ -546,12 +525,14 @@ export default Vue.extend({
 
       const countries = states.selectAll("path")
              .data(
-               _features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ),
+               _features(layers.nuts0).filter(
+                 (d) => this.COUNTRIES[d.id] !== undefined
+               ),
                (d) => d.id
              )
              .enter()
              .append("path")
-             .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
+             .attr("class", (d) => `${this.COUNTRIES[d.id].type} ${d.id}` )
              .attr("fill", this.beneficiary_colour.default)
              .attr("d", path)
              // while at this, cache the centroids and bounding box,
@@ -594,7 +575,7 @@ export default Vue.extend({
       // renders NUTS-lvl3 regions for the selected country
       const $this = this;
       const state = this.filters.beneficiary;
-      console.log(this.filters)
+
       // only render the current state, but capture the rest for exit()
       const containers = this.chart.select('.regions').selectAll('g')
                              .data(
@@ -616,9 +597,11 @@ export default Vue.extend({
 
       const rentered = regions.enter().append('path')
              .attr('d', this.path)
-             .each(this.cacheGeoDetails)
-             // cache the name with the node
-             .property('name', (d) => d.properties.name )
+             .each( (d) => {
+               this.cacheGeoDetails(d);
+               // remember the region name
+               this.region_names[d.id] = d.properties.name;
+             } )
              .attr('fill', this.default_region_colour)
              .on('mouseenter',
                  function(d, i) {
@@ -739,7 +722,7 @@ export default Vue.extend({
                            () => this.fmcolour(slugify(val)); // awful §
 
       this.chart.select('.states').selectAll('path')
-        .filter( (d) => COUNTRIES[d.id].type == "donor" && d.id != "NO" )
+        .filter( (d) => this.isDonor(d.id) && d.id != "NO" )
         .transition(t)
         .attr("fill", colourfuncEEA);
 

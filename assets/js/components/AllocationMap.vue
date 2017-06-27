@@ -13,6 +13,25 @@ export default BaseMap.extend({
   },
 
   methods: {
+    tooltipTemplate(d) {
+      if (d.id.length == 2)
+        return `
+          <div class="title-container">
+            <img src="/assets/imgs/${ this.get_flag_name(d.id) }.png" />
+            <span class="name">${ this.COUNTRIES[d.id].name }</span>
+          </div>
+          ${ this.currency(d.total || 0) }
+        `;
+      else
+        return `
+          <div class="title-container">
+            <span class="name">${ this.region_names[d.id] } (${d.id})</span>
+          </div>
+          ${ this.currency(d.amount || 0) }
+          <small>(Temporary)<small>
+        `;
+    },
+
     renderData() {
       const t = this.getTransition();
       const beneficiarydata = d3.values(this.beneficiarydata);
