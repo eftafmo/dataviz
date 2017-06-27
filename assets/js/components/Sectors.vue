@@ -36,7 +36,7 @@
           <span
               v-show="filters.sector != sector.data.id"
               :key="`v-${getLabelID(sector)}`">
-            {{ format(sector.value) }}
+            {{ currency(sector.value) }}
           </span>
           <span
               v-if="isSelectedSector(sector)"
@@ -75,7 +75,7 @@
                   {{ area.data.name }}
                 </span>
                 <span :key="`v-${getLabelID(area)}`">
-                  {{ format(area.value) }}
+                  {{ currency(area.value) }}
                 </span>
               </a>
             </li>
@@ -350,43 +350,64 @@ export default Vue.extend({
       const _filters = d3.keys(this.filters)
                          .filter((f) => f != 'sector' && f != 'area');
       const dataset = this.filter(this.dataset, _filters);
+      const aggregated = this.aggregate(
+        dataset,
+        ['sector', 'area', 'fm'],
+        [
+          'allocation',
+          //'bilateral_allocation',
+          'project_count',
+          //'project_count_positive',
+          //'project_count_ended',
+          //{source: 'sector', destination: 'sectors', type: String},
+        ],
+        false
+      );
 
-      const sectors = {}
-      for (const d of dataset) {
-        const s = d.sector,
-              a = d.area,
-              sid = slugify(s),
-              aid = slugify(a),
-              fm = d.fm,
-              value = +d.allocation;
+      const out = {}
+      for (const sname in aggregated) {
+        const areas = aggregated[sname],
+              sid = slugify(sname);
 
-        // backend might send us empty data...
-        if(value === 0) continue;
-
-        let sector = sectors[sid];
+        let sector = out[sid];
         if (sector === undefined)
-          sector = sectors[sid] = {
+          sector = out[sid] = {
             id: sid,
-            name: s,
+            name: sname,
             children: {},
+            project_count: 0,
+            total: 0,
           };
 
-        let area = sector.children[aid];
-        if (area === undefined)
-          area = sector.children[aid] = {
-            id: aid,
-            name: a,
-            allocation: {},
-          };
+        for (const aname in areas) {
+          const fms = areas[aname],
+                aid = slugify(aname)
 
-        let allocation = area.allocation[fm];
-        if (allocation === undefined)
-          allocation = area.allocation[fm] = 0;
+          let area = sector.children[aid];
+          if (area === undefined)
+            area = sector.children[aid] = {
+              id: aid,
+              name: aname,
+              // TODO: do we actually need this split by fm?
+              allocation: {},
+              // TODO: so... keep the project count per fm, or total?
+              project_count: 0,
+              total: 0,
+            };
 
-        area.allocation[fm] = allocation + value;
+          for (const fmname in fms) {
+            const fm = fms[fmname];
+
+            area.allocation[fmname] = fm.allocation;
+            area.total += fm.allocation;
+            area.project_count += fm.project_count;
+            sector.total += fm.allocation;
+            sector.project_count += fm.project_count;
+          }
+        }
       }
 
-      return sectors;
+      return out;
     },
 
     filtered_dataset() {
@@ -614,25 +635,25 @@ export default Vue.extend({
 
     get_image(sname) { return slugify(sname); },
 
-    createTooltip() {
-    const $this = this;
-       // add tooltip
-    let tip = d3.tip()
-          .attr('class', 'd3-tip sect')
-          .html(function(d){
-            let filter_by = "sector"
-            if (d.depth==2){
-              filter_by = "area"
-            }
+    tooltipTemplate(d) {
+      // TODO: such horribleness.
+      const thing = d.depth == 1 ? "priority sector" : "programme area";
 
-             return "<div class='title-container'>"
-              + "<span>"+d.data.name+"</span></div>"
-              + $this.format(d.value)
-              // TODO: 'grant allocation' should be taken from data
-              + " grant allocation"
-              + " <span class='action'>~Click to filter by priority " + filter_by + " </span>"
-              +" <button class='btn btn-anchor'>X</button>"
-           })
+      return `
+        <div class="title-container">
+          <span>${ d.data.name }</span>
+        </div>
+        ${ this.currency(d.value) } grant allocation
+        <span class="action">~Click to filter by ${ thing }</span>
+        <button class="btn btn-anchor">X</button>
+      `;
+    },
+
+    createTooltip() {
+       // add tooltip
+      let tip = d3.tip()
+          .attr('class', 'd3-tip sect')
+          .html(this.tooltipTemplate)
           .offset([15,30])
           .direction('s');
 

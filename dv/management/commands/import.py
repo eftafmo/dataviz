@@ -14,7 +14,7 @@ from django.db import IntegrityError
 from dv.models import (
     NUTS,
     State, PrioritySector, ProgrammeArea, Programme, Programme_ProgrammeArea,
-    Outcome, ProgrammeOutcome, Project, Indicator, ProgrammeIndicator,
+    Outcome, ProgrammeOutcome, Project, ProjectTheme, Indicator, ProgrammeIndicator,
     OrganisationType, Organisation, OrganisationRole,
     FinancialMechanism, Allocation, Organisation_OrganisationRole)
 from dv.lib.utils import is_iter
@@ -76,6 +76,7 @@ class Command(BaseCommand):
             Outcome,
             ProgrammeOutcome,
             Project,
+            ProjectTheme,
             Indicator,
             ProgrammeIndicator,
             OrganisationType,

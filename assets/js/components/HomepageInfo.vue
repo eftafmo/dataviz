@@ -1,7 +1,7 @@
 <template>
 <div v-if="hasData" class="info-viz">
    <div class="total-spent">
-      <h1>{{format(data.allocation_total)}}</h1>
+      <h1>{{currency(data.allocation_total)}}</h1>
       <h3>spent on</h3>
    </div>
 <!-- <div  class="circle-wrapper"> -->

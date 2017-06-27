@@ -438,12 +438,10 @@ class Project(_MainModel):
                 #'Predefined',
                 #'PlannedSummary',
                 #'ActualSummary',
-                #'IsPublished',
                 #'IsSmallGrantScheme',
                 #'IsPredefined',
                 #'IsBestPracticeProject',
                 #'IsMobility',
-                #'HasEnded'
             }
         },
     ]
@@ -484,6 +482,24 @@ class Project(_MainModel):
     is_improved_knowledge = models.BooleanField()
     is_continued_coop = models.BooleanField()
     is_published = models.BooleanField()
+
+
+class ProjectTheme(_BaseModel):
+    IMPORT_SOURCES = [
+        {
+            'src': 'ProjectThemes',
+            'map': {
+                'project': 'ProjectCode',
+                'name': 'Theme',
+            }
+        },
+    ]
+
+    project = models.ForeignKey(Project, related_name='themes')
+    name = models.CharField(max_length=512)  # not unique
+
+    def __str__(self):
+        return "%s - %s" % (self.project_id, self.name)
 
 
 class Indicator(_MainModel):
@@ -678,6 +694,7 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
 
     organisation = models.ForeignKey(Organisation, related_name='roles')
     organisation_role = models.ForeignKey(OrganisationRole, related_name='organisations')
+
 
     # TODO 1: this shouldn't be stored in case the org is a project one
     # TODO 2: this makes no sense, both of them nullable

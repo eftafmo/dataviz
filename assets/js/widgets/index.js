@@ -1,4 +1,8 @@
-// import widget components for their side effects
-// (they should auto-register)
+import Vue from 'vue';
+import {Tabs, Tab} from 'vue-tabs-component';
+import Tag from './Tag';
 
-import './Tag';
+
+Vue.component('tabs', Tabs);
+Vue.component('tab', Tab);
+Vue.component('tag', Tag);

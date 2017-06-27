@@ -9,12 +9,12 @@
             <ul class="list-filters">
              <transition-group name="list">
                 <li class="filter-item"
-                     v-for="(item, type, value) in items"
-                     :filter="type"
+                     v-for="(item, key) in data"
+                     :filter="key"
                      v-if="item != null"
                      @click="removeFilter"
-                     v-bind:key="item">
-                 {{type}} : {{item}}
+                     :key="key">
+                 {{item.name}}: {{item.value}}
                 </li>
               </transition-group>
             </ul>
@@ -110,6 +110,9 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import {FILTERS} from '../globals.js'
+import {truncate} from 'js/lib/util';
+import _programme_areas from 'js/constants/programme-areas.json5';
+import {COUNTRIES} from './mixins/WithCountries';
 
 export default Vue.extend({
 
@@ -118,6 +121,25 @@ export default Vue.extend({
       items: FILTERS,
      }
    },
+
+  beforeCreate() {
+    this.format_pa = function(programme_area) {
+      return _programme_areas[programme_area]['short_name'];
+    };
+    this.format_bs = function(country_code) {
+      return COUNTRIES[country_code]['name'];
+    }
+
+    this.FILTER_SETTINGS = {
+      fm: {name:'FM'},
+      beneficiary: {name: 'BS', formatter: this.format_bs},
+      sector: {name: 'PS', truncate: 20},
+      area: {name:'PA', formatter: this.format_pa},
+      donor: {name: 'DS'},
+      DPP: {name: 'Programme partner', truncate: 60},
+      dpp: {name: 'Project partner', truncate: 60},
+    }
+  },
 
   computed : {
     hasFilters() {
@@ -131,7 +153,28 @@ export default Vue.extend({
       component_parent.classList.remove('visible') ;
       return false;
     },
+    data() {
+      const filters = {}
+      for (const key in FILTERS) {
+        if (FILTERS[key]) {
+          const settings = this.FILTER_SETTINGS[key];
+          let filter_value = FILTERS[key];
+          if (settings['formatter']) {
+            filter_value = settings['formatter'](filter_value);
+          }
+          if (settings['truncate']) {
+            filter_value = truncate(filter_value, settings['truncate']);
+          }
+          filters[key] = {
+            name: settings['name'],
+            value: filter_value,
+          }
+        }
+      }
+      return filters;
+    },
   },
+
 
   methods: {
     removeFilter(e){

@@ -10,3 +10,4 @@ pysolr==3.6.0
 # django-haystack==2.6.1 # This is the latest but too old, until next release go bleeding edge:
 -e git://github.com/django-haystack/django-haystack.git#egg=django-haystack
 djangorestframework>=3.6.3,<3.7
+pysolr==3.6.0

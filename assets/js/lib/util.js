@@ -29,3 +29,7 @@ export function slugify(text) {
     .replace(/^-+/, '')             // Trim - from start of text
     .replace(/-+$/, '');            // Trim - from end of text
 }
+
+export function truncate(text, max) {
+  return text.substr(0,max-1) + (text.length>max?'\u2026':'');
+}

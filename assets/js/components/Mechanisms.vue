@@ -6,7 +6,7 @@
   <div v-if="hasData" class="legend">
     <fm-legend :fms="data" class="clearfix">
       <template slot="fm-content" scope="x">
-        <span class="value" :style="{color: x.fm.colour}">{{ format(x.fm.value) }}</span>
+        <span class="value" :style="{color: x.fm.colour}">{{ currency(x.fm.value) }}</span>
         <span class="name">{{ x.fm.name }}</span>
       </template>
     </fm-legend>
@@ -105,8 +105,8 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 import {colour2gray, slugify} from 'js/lib/util';
 
-import BaseMixin from './mixins/Base.vue';
-import ChartMixin from './mixins/Chart.vue';
+import BaseMixin from './mixins/Base';
+import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 
@@ -136,33 +136,39 @@ export default Vue.extend({
       // filter dataset by everything except fm
       const _filters = d3.keys(this.filters).filter( (f) => f != 'fm' );
       const dataset = this.filter(this.dataset, _filters);
+      const aggregated = this.aggregate(
+        dataset,
+        [{source: 'fm', destination: 'name'}],
+        [
+          {source: 'allocation', destination: 'value'},
+          //'bilateral_allocation',
+          'project_count',
+          //'project_count_positive',
+          //'project_count_ended',
+          {source: 'beneficiary', destination: 'beneficiaries', type: String},
+          {source: 'sector', destination: 'sectors', type: String},
+        ],
+        false
+      );
 
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
-      const fmdata = {}
+      const out = [];
       for (const fm in this.FMS) {
-        fmdata[fm] = {
-          'value': 0,
-          'beneficiaries': d3.set(),
-          'sectors': d3.set(),
+        const basefm = this.FMS[fm];
+
+        const item = {
+          value: 0,
+          project_count: 0,
+          beneficiaries: d3.set(),
+          sectors: d3.set(),
         };
-        Object.assign(fmdata[fm], this.FMS[fm]);
+
+        Object.assign(item, basefm, aggregated[basefm.name]);
+        out.push(item);
       }
 
-      for (const d of dataset) {
-        const id = slugify(d.fm),
-              fm = fmdata[id],
-              value = +d.allocation;
-
-        // backend might send us empty data...
-        if(value === 0) continue;
-
-        fm.value += value;
-        fm.sectors.add(d.sector);
-        fm.beneficiaries.add(d.beneficiary);
-      }
-
-      return d3.values(fmdata);
+      return out;
     },
 
     nonzero() {
@@ -171,22 +177,27 @@ export default Vue.extend({
   },
 
   methods: {
+    tooltipTemplate(d) {
+      return `
+        <div class="title-container">
+          <span class="name">${d.name}</span>
+        </div>
+        <ul>
+          <li>${this.currency(d.value)}</li>
+          <li>${d.beneficiaries.size()} beneficiary states</li>
+          <li>${d.sectors.size()} priority sectors</li>
+        </ul>
+        <span class="action">~Click to filter by financial mechanism</span>
+        <button class="btn btn-anchor">X</button>
+      `;
+    },
+
     createTooltip() {
       const $this = this;
 
       let tip = d3.tip()
           .attr('class', 'd3-tip fms')
-          .html(function(d) {
-            return `<div class="title-container">
-                      <span class="name">${d.name}</span>
-                    </div>
-                    <div>- ${$this.format(d.value)}  </div>
-                    <div>- ${d.beneficiaries.size()} beneficiary states </div>
-                    <div>- ${d.sectors.size()} priority sectors </div>
-                    <span class="action">~Click to filter by financial mechanism</span>
-                    <button class="btn btn-anchor">X</button>
-            `;
-          })
+          .html(this.tooltipTemplate)
           .direction('s')
           .offset([0, 0])
 
@@ -236,7 +247,7 @@ export default Vue.extend({
 
       /* // this is handled in tooltip already
       fentered
-        .append("title").text( (d) => this.format(d.value) );
+        .append("title").text( (d) => this.currency(d.value) );
       fentered
         .append("desc").text( (d) => d.name );
       */

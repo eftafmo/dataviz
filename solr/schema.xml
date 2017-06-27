@@ -80,41 +80,41 @@
     <field name="id" type="string" indexed="true" stored="true" multiValued="false" required="true"/>
     <field name="django_ct" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="django_id" type="string" indexed="true" stored="true" multiValued="false"/>
-    
+
     <field name="state_name" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="programme_name" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="project_name" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="programme_area_ss" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="priority_sector_ss" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="text" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
+
     <field name="kind" type="string" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="org_type_caegory" type="string" indexed="true" stored="true" multiValued="false" />
-    
+
+    <field name="org_type_category" type="string" indexed="true" stored="true" multiValued="false" />
+
     <field name="org_type" type="string" indexed="true" stored="true" multiValued="false" />
-    
+
     <field name="country" type="string" indexed="true" stored="true" multiValued="false" />
-    
+
     <field name="nuts" type="string" indexed="true" stored="true" multiValued="false" />
-    
+
     <field name="role_ss" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="financial_mechanism_ss" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="outcome_ss" type="string" indexed="true" stored="true" multiValued="true" />
-    
+
     <field name="programme_status" type="string" indexed="true" stored="true" multiValued="false" />
-    
+
     <field name="project_status" type="string" indexed="true" stored="true" multiValued="false" />
-    
+
     <field name="geotarget" type="string" indexed="true" stored="true" multiValued="false" />
-    
+
     <uniqueKey>id</uniqueKey>
 
     <!--

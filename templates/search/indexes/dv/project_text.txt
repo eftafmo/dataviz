@@ -1,0 +1,3 @@
+{{ object.name }}
+{{ object.state.name }}
+{{ object.programme.name }}

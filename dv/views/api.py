@@ -94,6 +94,8 @@ def grants(request):
         'programme_area__priority_sector',
     ).prefetch_related(
         'programme_area__outcomes__programmes',
+    ).exclude(
+        gross_allocation=0
     )
     programmes = ProgrammeOutcome.objects.all().select_related(
         'programme',
@@ -159,6 +161,7 @@ def grants(request):
 
     return JsonResponse(out)
 
+
 def projects(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed()
@@ -170,6 +173,8 @@ def projects(request):
         'programme_area__priority_sector',
     ).prefetch_related(
         'programme_area__outcomes__programmes',
+    ).exclude(
+        gross_allocation=0
     )
 
     # get the real state_id from ProgrammeOutcome, refs IN22
@@ -188,17 +193,27 @@ def projects(request):
         programme__isnull=True,
     ).distinct()
 
-    project_counts_raw = list(Project.objects.values(
+    project_counts_raw = Project.objects.values(
         'financial_mechanism_id',
         'programme_area_id',
         'state_id',
+        'has_ended',
+        'is_positive_fx'
     ).annotate(
         project_count=Count('code')
-    ))
-    project_counts = {}
+    )
+
+    project_count, project_count_ended, project_count_positive = (
+        defaultdict(int), defaultdict(int), defaultdict(int)
+    )
     for item in project_counts_raw:
         key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id']
-        project_counts[key] = item['project_count']
+        project_count[key] += item['project_count']
+        if item['has_ended']:
+            project_count_ended[key] += item['project_count']
+            if item['is_positive_fx']:
+                # Only count positive effects for projects which have ended
+                project_count_positive[key] += item['project_count']
 
     news_raw = (
         News.objects.all()
@@ -223,6 +238,7 @@ def projects(request):
             'created': item.created,
             'summary': item.summary,
             'image': item.image,
+            'nuts': item.project.nuts,
         })
 
     out = []
@@ -235,7 +251,9 @@ def projects(request):
             'area': a.programme_area.name,
             'beneficiary': a.state.code,
             'allocation': a.gross_allocation,
-            'project_count': project_counts.get(key, 0),
+            'project_count': project_count.get(key, 0),
+            'project_count_ended': project_count_ended.get(key, 0),
+            'project_count_positive': project_count_positive.get(key, 0),
             'news': news.get(key, []),
             'programmes': {
                 p['programme__code']: {

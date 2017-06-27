@@ -19,27 +19,20 @@
 </style>
 
 <script>
-  import Vue from 'vue';
-
-/*
-   even if this is imported only for side effects externally,
-   it still needs a default export or vue won't be able to inject
-   its default render function (using the local template)
-*/
-  export default Vue.component('tag', {
-    props: {
-      dismissable: {
-        type: Boolean,
-        default: false
-      }
-    },
-    methods: {
-      dismiss: function(event) {
-        this.$emit('dismiss');
-        // console.log('this', this);
-        // console.log('event', event);
-        // alert('dismiss tag');
-      }
+export default {
+  props: {
+    dismissable: {
+      type: Boolean,
+      default: false
     }
-  })
+  },
+  methods: {
+    dismiss: function(event) {
+      this.$emit('dismiss');
+      // console.log('this', this);
+      // console.log('event', event);
+      // alert('dismiss tag');
+    }
+  }
+};
 </script>
