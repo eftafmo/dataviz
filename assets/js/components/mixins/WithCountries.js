@@ -107,7 +107,7 @@ export default {
       return this.BENEFICIARIES[d.id] !== undefined;
     },
     isDonor(d) {
-      return this.DONORS[d.id] == undefined;
+      return this.DONORS[d.id] !== undefined;
     },
 
     toggleBeneficiary(b, etarget) {
