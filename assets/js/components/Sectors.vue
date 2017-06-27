@@ -7,7 +7,7 @@
   </svg>
   <transition appear>
   <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
-    <use :href="`#${get_image(filters.sector)}`" />
+    <use :xlink:href="`#${get_image(filters.sector)}`" />
   </svg>
   </transition>
 </chart-container>
