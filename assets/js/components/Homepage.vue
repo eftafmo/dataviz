@@ -33,6 +33,10 @@
 <style lang="less">
 .overview-viz {
   .chart {
+    g.group {
+      cursor: pointer;
+    }
+
     path.chord {
       fill: #ccc;
       /*fill-opacity: .8;*/
@@ -45,6 +49,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    pointer-events: none;
     //background-color: rgba(200,200,200,.1);
 
     text-align: center;
@@ -63,10 +68,11 @@
       position: absolute;
       width: 50%;
       left: 25%;
+      pointer-events: initial;
     }
 
     .heading {
-      top: 10%;
+
       font-size: 1.5em;
 
       /*
@@ -380,8 +386,23 @@ var g = this.chart.selectAll("g.group")
   .enter().append("g")
   .attr("class", "group")
   .on("mouseover", fade(opacityLow))
-  .on("mouseout", fade(opacityDefault));
+  .on("mouseout", fade(opacityDefault))
+  .on("click", (d, i) => {
+    const name = names[i];
+    if (name === "") return;
 
+    const fm = this.FMS[slugify(name)]
+    if (fm !== undefined) {
+      this.toggleFm(fm);
+      return;
+    }
+
+    const beneficiary = d3.values(this.BENEFICIARIES).find(
+      (x) => x.name == name
+    );
+
+    this.toggleBeneficiary(beneficiary);
+  } )
 
 
 g.append("path")
