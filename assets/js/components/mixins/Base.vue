@@ -1,3 +1,16 @@
+<style lang="less">
+@duration: .5s;
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity @duration;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>
+
+
 <script>
 import * as d3 from 'd3';
 import {FILTERS, Q} from '../../globals.js'
@@ -31,6 +44,9 @@ export default {
         "currency": ["€", ""],
         "percent": "%",
       },
+
+      // helper for transitions
+      changed: false,
     };
   },
 
@@ -319,11 +335,20 @@ export default {
   },
   watch: {
     'isReady': '_main',
+
     // make sure every key exists from the start
     'filters.fm': 'handleFilterFm',
     'filters.beneficiary': 'handleFilterBeneficiary',
     'filters.sector': 'handleFilterSector',
     'filters.area': 'handleFilterArea',
+
+    // this one is used only for vue transitions
+    'filters': {
+      deep: true,
+      handler() {
+        this.changed = !this.changed;
+      },
+    },
   },
 };
 </script>

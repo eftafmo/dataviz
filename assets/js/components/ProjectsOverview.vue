@@ -1,7 +1,7 @@
 <template>
     <div  v-if="hasData" class="sidebar-header">
       <transition name="fade">
-        <div class="allocation" :key="transitioned">
+        <div class="allocation" :key="changed">
           <strong>{{ number(data.project_count) }} projects</strong>
             <template v-if="data.project_count_ended">
               <small>
@@ -31,6 +31,7 @@ export default AllocationOverview.extend({
           'project_count',
           'project_count_positive',
           'project_count_ended',
+
         ],
         false
       );

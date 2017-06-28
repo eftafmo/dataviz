@@ -7,13 +7,13 @@
     </svg>
 
     <div v-if="hasData" class="info">
-      <div class="heading">
+      <transition name="fade"><div class="heading" :key="changed">
         <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
-      </div>
-      <div class="data-wrapper"><ul class="data">
+      </div></transition>
+      <div class="data-wrapper"><transition name="fade"><ul class="data" :key="changed">
         <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
         <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
-      </ul></div>
+      </ul></transition></div>
       <div class="ending">
         <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations</p>
       </div>
