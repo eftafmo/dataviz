@@ -3,14 +3,14 @@
       <li v-for="beneficiary in data.beneficiaries">
         <div class="content-item programmes_content">
           <div class="body">
-            <div class="title-wrapper">
+            <div @click="toggleContent($event)" class="title-wrapper">
                 <div class="flag">
                     <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
                 </div>
                 <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
                 <small>({{ beneficiary.programmes.length }} programmes)</small>
             </div>
-            <ul class="programme-list">
+            <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
                <li v-for="programme in beneficiary.programmes" class="programme-item">
                  <a class="programme-sublist-item" target="_blank" v-bind:href=programme.programme_url> {{ programme.programme_name }} </a>
                  <!--<div class="programme-sublist-wrapper">
@@ -121,6 +121,15 @@
         transform: rotate(90deg);
     }
   }
+
+  .programme-list {
+    display: none;
+  }
+
+  .programme-list.active {
+    display: block;
+  }
+
 
   .title-wrapper > * {
     display: inline-block;
@@ -240,7 +249,12 @@ export default Vue.extend({
       //         item.classList.remove('active')
       // }
 
-      const target = e.target.parentNode
+      //TODO : get rid of the parenNode logic
+      let target;
+      if (e.target.parentNode.classList.contains('flag'))
+        target = e.target.parentNode.parentNode.parentNode.querySelector('.programme-list');
+      else
+         target = e.target.parentNode.parentNode.querySelector('.programme-list');
       if(target.classList.contains('active')){
         target.classList.remove('active')
       }
