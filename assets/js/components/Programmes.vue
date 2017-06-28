@@ -169,7 +169,6 @@ export default Vue.extend({
       const dataset = this.filter(this.dataset);
       const beneficiaries = {};
       let totalcount = 0;
-      const $this = this;
 
       for (const d of dataset) {
         const programmes = d.programmes;
