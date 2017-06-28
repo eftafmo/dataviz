@@ -9,10 +9,10 @@
       class="fm"
       :class="[
         fm.id,
-        $parent.getFilterClassFm(fm),
+        getFilterClassFm(fm),
         { zero: fm.value == 0 },
       ]"
-      @click="$parent.toggleFm(fm, $event.target)"
+      @click="toggleFm(fm, $event.target)"
   >
     <slot name="fm-content" :fm="fm">{{ fm.name }}</slot>
   </li>
@@ -46,6 +46,30 @@
 <script>
 import Vue from 'vue';
 export default Vue.extend({
-     props: ['fms'],
+  props: ['fms'],
+
+  methods: {
+    _findAncestorProperty(name) {
+      let current = this,
+          property = undefined;
+
+      while (property === undefined) {
+        current = current.$parent;
+        property = current[name];
+      }
+
+      return property;
+    },
+
+    getFilterClassFm(fm) {
+      const func = this._findAncestorProperty('getFilterClassFm');
+      return func(fm);
+    },
+
+    toggleFm(fm, etarget) {
+      const func = this._findAncestorProperty('toggleFm');
+      return func(fm, etarget);
+    },
+  },
 });
 </script>

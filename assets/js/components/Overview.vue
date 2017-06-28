@@ -1,18 +1,16 @@
 <template>
 <div class="overview-viz">
-  <div v-if="hasData" class="legend">
-    <fm-legend :fms="FMS" class="clearfix">
-      <template slot="fm-content" scope="x">
-        <span :style="{backgroundColor: x.fm.colour}"></span>
-        {{ x.fm.name }}
-      </template>
-    </fm-legend>
-  </div>
   <chart-container :width="width" :height="height">
     <svg :viewBox="`0 0 ${width} ${height}`">
       <!-- with a bit of hardcoded rotation, because -->
       <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
     </svg>
+    <fm-legend :fms="FMS" class="legend clearfix">
+      <template slot="fm-content" scope="x">
+        <span :style="{backgroundColor: x.fm.colour}"></span>
+        {{ x.fm.name }}
+      </template>
+    </fm-legend>
   </chart-container>
 </div>
 </template>
@@ -28,8 +26,10 @@
   }
 
   .legend {
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+
     .fm span {
       width: 10px; height: 10px;
       display: inline-block;
