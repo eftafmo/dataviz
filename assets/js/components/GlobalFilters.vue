@@ -57,6 +57,12 @@
   }
 }
 
+.filters-label {
+  @media(max-width:800px){
+    display: none;
+  }
+}
+
 .filter-item {
   display: inline-block;
     &:after {
