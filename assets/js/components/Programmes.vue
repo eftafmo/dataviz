@@ -72,7 +72,9 @@
     color: #3D90F3;
   }
 
-  a.programme-sublist-item:hover {
+  a.programme-sublist-item:hover,
+  .title-wrapper:hover {
+    text-shadow: 1px 1px 1px #bbb;
     text-decoration: None;
   }
 
@@ -138,6 +140,7 @@
 
   .title-wrapper {
     display: flex;
+    cursor: pointer;
     align-items: center;
     margin: 1rem 0;
   }
