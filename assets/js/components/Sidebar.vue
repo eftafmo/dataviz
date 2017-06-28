@@ -16,6 +16,9 @@
     z-index: 1;
   }
 }
+.sidebar-open {
+  overflow: hidden;
+}
 </style>
 
 <script>
@@ -51,6 +54,7 @@ export default Vue.extend({
         if (!this.isMobileExpanded) {
           this.isMobileExpanded = true;
           this.$el.classList.add('is-expanded-on-mobile');
+          document.querySelector('body').classList.add('sidebar-open');
         }
       },
     mobileCollapse(e) {
@@ -60,6 +64,7 @@ export default Vue.extend({
         this.isMobileExpanded = false;
         var el = this.$el;
         el.classList.remove('is-expanded-on-mobile');
+        document.querySelector('body').classList.remove('sidebar-open')
       }
     },
   },
