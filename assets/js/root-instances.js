@@ -13,7 +13,7 @@ export const Homepage = Base.extend({
   name: 'Homepage',
 
   components: {
-    overview: components.Overview,
+    overview: components.Homepage,
     info: components.HomepageInfo,
     globalfilters: components.GlobalFilters,
 
