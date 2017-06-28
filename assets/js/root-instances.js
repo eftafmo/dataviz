@@ -6,6 +6,9 @@ import * as components from './components/index';
 
 const Base = Vue.extend({
   mixins: [BaseMixin],
+  components: {
+    globalfilters: components.GlobalFilters,
+  },
 });
 
 
@@ -15,16 +18,13 @@ export const Homepage = Base.extend({
   components: {
     overview: components.Homepage,
     info: components.HomepageInfo,
-    globalfilters: components.GlobalFilters,
-
   },
 });
 
 
 const Viz = Base.extend({
-  // TODO: do we want the filter bar on all pages?7
   components: {
-    globalfilters: components.GlobalFilters,
+    sidebar: components.Sidebar,
   },
 });
 
@@ -40,7 +40,6 @@ export const Grants = Viz.extend({
     overview: components.AllocationOverview,
     programmes: components.Programmes,
     results: components.Results,
-    sidebar: components.Sidebar,
   },
 });
 
@@ -55,6 +54,5 @@ export const Projects = Viz.extend({
     overview: components.ProjectsOverview,
     programmes: components.Programmes,
     news: components.News,
-    sidebar: components.Sidebar,
   },
 });
