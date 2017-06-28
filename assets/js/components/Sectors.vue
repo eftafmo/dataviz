@@ -546,7 +546,7 @@ export default Vue.extend({
       c.style.height = "auto";
       el.parentNode.appendChild(c);
       const h = c.clientHeight;
-      c.remove();
+      el.parentNode.removeChild(c);
 
       // start from 0, but only if we didn't interrupt another transition
       const _idx = this._areasCancelled.indexOf(el);
