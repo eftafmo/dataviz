@@ -4,10 +4,10 @@
         <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
-            <div v-for="(indicators, sector) in items">
+            <div v-for="(rows, sector) in items">
               <small v-show="!filters.sector">{{ sector }}</small>
-              <ul v-for="(value, indicator) in indicators" class="indicators">
-                 <li class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
+              <ul v-for="indicators in rows" class="indicators">
+                 <li v-for="(value, indicator) in indicators" class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
                     <div class="indicator-achievement"> {{ value }}</div>
                     <div class="indicator-name"> {{ indicator }} </div>
                  </li>
@@ -86,19 +86,40 @@ export default Vue.extend({
             outcome[sector] = {}
 
           for (let indicator in values) {
-            const value = +values[indicator];
-
+            const value = +values[indicator]['achievement'];
             if (value === 0) continue;
+
+            const priority = values[indicator]['order'];
+            if (outcome[sector][priority] === undefined) {
+              outcome[sector][priority] = {}
+            }
 
             indicator = indicator.replace(/^Number of /, '');
 
-            let sum = outcome[indicator] || 0;
-            outcome[sector][indicator] = sum + value;
+            let sum = outcome[sector][priority][indicator] || 0;
+            outcome[sector][priority][indicator] = sum + value;
           }
         }
       }
 
-      // TODO: sorting order?
+      // remove SortOrder 3 indicators from results where higher priority indicators are available
+      for (const outcome in results) {
+        const item = results[outcome];
+        for (const sector in item) {
+          const _dict = item[sector]; // {priority: {indicator:value}}
+          if ('3' in _dict && Object.keys(_dict).length > 1) {
+            delete _dict['3'];
+          }
+          // now flatten, ordered by priority *unguaranteed*
+          const flattened = []
+          for (const priority in _dict) {
+            flattened.push(_dict[priority]);
+          }
+          item[sector] = flattened;
+        }
+      }
+
+      // TODO: fix sorting order when adding priority=1 indicators
       return results;
     },
   },

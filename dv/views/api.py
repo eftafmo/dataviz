@@ -122,7 +122,10 @@ def grants(request):
         for pi in all_results:
             if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code:
                 results[pi.result_text].update({
-                    pi.indicator.name: pi.achievement
+                    pi.indicator.name: {
+                      'achievement': pi.achievement,
+                      'order': pi.order,
+                    }
                 })
         out.append({
             # TODO: switch these to ids(?)
