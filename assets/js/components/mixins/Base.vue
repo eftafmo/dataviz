@@ -214,6 +214,13 @@ export default {
               current = row[dstcol] = d3.set();
 
             current.add(value);
+          } else if (type === Object) {
+            // keys of objects are consolidated into a set
+            if (current === undefined)
+              current = row[dstcol] = d3.set();
+            for (const prg_code of Object.keys(value)) {
+              current.add(prg_code);
+            }
           }
           else console.warn(srccol, ":: unkwown type", type)
         }
