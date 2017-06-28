@@ -72,6 +72,9 @@
   }
  @media(max-width: 800px){
   display: block;
+  &:after {
+    position: absolute;
+  }
  }
 }
 
