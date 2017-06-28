@@ -1,186 +1,104 @@
 <template>
 <div v-if="hasData" class="info-viz">
-   <div class="total-spent">
-      <h1>{{currency(data.allocation_total)}}</h1>
-      <h3>spent on</h3>
-   </div>
-<!-- <div  class="circle-wrapper"> -->
-    <div class="circle">
-      <div class="programmes-count">
-        <span>{{data.programmes_total}}</span><br>Programmes
-      </div>
-      <div class="projects-count">
-        <span>{{data.projectcount}}</span><br>Projects
-      </div>
-    </div>
-    <div class="line-wrapper">
-      <div class="donor-count">
-        <span class="mobile_only">FROM</span>
-        <span>3</span> Donor states
-      </div>
-      <div class="states-count">
-        <span class="mobile_only">TO</span>
-        <span>{{data.beneficiaries.length}}</span> Beneficiary states
-      </div>
+  <div class="heading">
+    <p><span class="amount">{{ currency(data.allocation_total) }}</span> spent on</p>
   </div>
- <!-- </div> -->
-
-  <div class="overview-info">to reduce social and economic disparities across europe and to strenghten bilateral relations</div>
+  <div class="data-wrapper"><ul class="data">
+    <li class="programmes"><span class="amount">{{ number(data.programmes_total) }}</span> Programmes</li>
+    <li class="projects"><span class="amount">{{ number(data.projectcount) }}</span> Projects</li>
+  </ul></div>
+  <div class="ending">
+    <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations</p>
+  </div>
 </div>
 </template>
 
 
 <style lang="less">
 .info-viz {
+  text-align: center;
+  font-size: 2rem;
 
-  .donor-count, .states-count {
-    word-spacing: 30rem;
-    text-align: center;
-    max-width: 150px;
-    span {
-      font-weight: bold;
-    }
-    font-size: 1.7rem;
+  p, ul, li {
+    margin: 0;
   }
 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  //background-color: rgba(200,200,200,.1);
 
-  .donor-count {
-    margin-left: 15%;
+  span.amount {
+    display: block;
+    font-weight: bold;
   }
 
-  .states-count {
-    margin-right: 8%;
-  }
-
-  .line-wrapper {
-    display: flex;
-    justify-content: space-between;
+  & > div {
     position: absolute;
-    top: 40%;
-    z-index: -1;
-    width: 100%;
-    margin-bottom: 3rem;
-    @media (min-width:768px) and (max-width:1000px){
-      top: auto;
-      bottom: 0;
-      > div {
-        margin: 0;
-      }
-    }
+    width: 50%;
+    left: 25%;
   }
 
-  .total-spent {
-    position: absolute;
-    top: 1rem;
-    left: 45%;
-    text-align: center;
-    @media (min-width:768px) and (max-width: 1400px) {
-      left: 43%;
+  .heading {
+    top: 10%;
+    font-size: 1.5em;
+
+    /*
+    .amount {
+      font-size: 1.2em;
     }
+    */
   }
 
-  .overview-info {
-    position: absolute;
-    left: 38%;
-    text-align: center;
-    max-width: 350px;
-    font-size: 2rem;
-    bottom: 9%;
-    @media (min-width:768px) and (max-width:1400px){
-      left: 42%;
-      text-align: center;
-      max-width: 200px;
-      font-size: 1.5rem;
-      bottom: 9%;
-    }
-    @media (min-width: 768px) and (max-width: 900px) {
-      left: 39%;
-     }
-  }
-
-  .circle-wrapper {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    font-size: 3rem;
-    text-align: center;
-  }
-    .circle {
-    span {
-      font-weight: bold;
-      font-size: 4.5rem;
-    }
-    background: rgba(251, 251, 251, 0.86);
-    padding: 6rem 7rem;
-    border-radius: 116rem;
-    border: 4px solid white;
-    z-index: 1;
-    text-align: center;
-    position: absolute;
+  .data-wrapper {
+    width: 40%;
+    padding-bottom: 40%;
+    left: 30%;
     top: 30%;
-    left: 39%;
-    font-size: 3rem;
-    @media (min-width:768px) and (max-width:1400px){
-      top: 33%;
-      left: 40%;
-      font-size: 2rem;
-      padding: 4rem 5rem;
-      span {
-        font-size: 3.5rem;
+    //background-color: rgba(251, 251, 251, 0.8);
+    background-image: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
+    border: .2em solid white;
+    border-radius: 50%;
+  }
+
+  .data {
+    list-style-type: none;
+    padding: 0;
+
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+
+    & > li:not(:last-child) {
+      margin-bottom: .5em;
+    }
+
+    .programmes {
+      font-size: 1.5em;
+      line-height: 1.6em;
+
+      .amount {
+        font-size: 1.8em;
       }
     }
-    @media (min-width: 768px) and (max-width: 800px) {
-          left: 36%;
+
+    .projects {
+      font-size: 1em;
+
+      .amount {
+        font-size: 2em;
+      }
     }
+  }
 
-
-    }
-    //mobile
-    @media(max-width:768px) {
-      padding-top: 1rem;
-      border-top: 1px solid #ddd;
-      .circle,
-      .line-wrapper,
-      .total-spent,
-      .overview-info {
-        position: static;
-      }
-      //square in this case
-      .circle {
-        background: rgb(35, 97, 146);
-        border-radius: 0;
-        color: white;
-        padding: 1rem;
-        margin: 2rem;
-        max-width: 327px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .donor-count, .states-count, .overview-info {
-        margin: 0;
-        max-width: none;
-      }
-
-      .overview-info {
-        margin-bottom: 2rem;
-        border-top: solid #236192;
-        padding-top: 1rem;
-      }
-
-      .total-spent h1{
-        display: inline-block;
-        color: #236192;
-        border-bottom: solid #236192;
-        margin: 0;
-      }
-
-    }
+  .ending {
+    bottom: 0%;
+    font-size: 1.2em;
+  }
 }
 </style>
 
