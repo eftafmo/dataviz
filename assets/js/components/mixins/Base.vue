@@ -130,6 +130,7 @@ export default {
            destination: 'output_column_name',
          }
          `columns` also take a `type` property, which defaults to Number
+           and a `filter_by` property, which expects boolean values (false rows are excluded)
        */
 
       const bycols = {};
@@ -150,7 +151,7 @@ export default {
 
       const oncols = {};
       for (const col of on) {
-        let src, dst, type;
+        let src, dst, type, filter_by;
         if (typeof col == 'string') {
           src = dst = col;
           type = Number;
@@ -158,12 +159,13 @@ export default {
           src = col.source;
           dst = col.destination;
           type = col.type;
+          filter_by = col.filter_by;
 
           if (dst === undefined) dst = src;
           if (type === undefined) type = Number;
         }
 
-        oncols[src] = {destination: dst, type: type};
+        oncols[src] = {destination: dst, type: type, filter_by: filter_by};
       };
 
       // each aggreggation level is a sub-dictionary,
@@ -190,9 +192,14 @@ export default {
           const _col = oncols[srccol],
                 dstcol = _col.destination,
                 type = _col.type,
+                filter_by = _col.filter_by,
                 value = type(item[srccol]);
 
           let current = row[dstcol];
+
+          if (filter_by && !item[filter_by]) {
+            continue;
+          }
 
           if (type === Number) {
             // numbers are added together

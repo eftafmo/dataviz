@@ -130,6 +130,7 @@ def grants(request):
             'sector': a.programme_area.priority_sector.name,
             'area': a.programme_area.name,
             'beneficiary': a.state.code,
+            'is_not_ta': a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
 
             'bilateral_allocation': sum(p.allocation
