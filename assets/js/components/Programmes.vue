@@ -72,10 +72,15 @@
     color: #3D90F3;
   }
 
-  a.programme-sublist-item:hover,
   .title-wrapper:hover {
-    text-shadow: 1px 1px 1px #bbb;
-    text-decoration: None;
+    text-decoration: underline;
+  }
+
+  a.programme-sublist-item:hover{
+    &:before {
+
+    text-decoration: none;
+    }
   }
 
   a.programme-sublist-item {
