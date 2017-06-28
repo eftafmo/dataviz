@@ -2,11 +2,11 @@
   "eea-grants": {
     id: "eea-grants",
     name: "EEA Grants",
-    colour: "rgb(35, 97, 146)",
+    colour: "rgb(0, 117, 188)",
   },
   "norway-grants": {
     id: "norway-grants",
     name: "Norway Grants",
-    colour: "rgb(166, 25, 46)",
+    colour: "rgb(233, 79, 53)",
   },
 }

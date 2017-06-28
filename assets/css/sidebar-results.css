@@ -36,7 +36,7 @@
   height: 60px;
 }
 .sidebar .sidebar-header strong {
-  color: #005494;
+  color: rgb(0, 117, 188);
   font-size: larger;
 }
 .sidebar .sidebar-header small {
@@ -134,11 +134,11 @@
   background: #50B9FF;
 }
 .tabs-component-tab.is-active a {
-  color: #005494;
+  color: rgb(0, 117, 188);
   font-weight: 600;
 }
 .tabs-component-tab.is-active::after {
-  background: #005494;
+  background: rgb(0, 117, 188);
 }
 @media (max-width: 768px) {
   .tabs-component-tab {
@@ -201,7 +201,7 @@
   margin: 0;
   font-size: 1.4rem;
   font-weight: inherit;
-  color: #005494;
+  color: rgb(0, 117, 188);
 }
 
 .content-item {
