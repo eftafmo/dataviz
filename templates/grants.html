@@ -8,34 +8,34 @@
   <h1 class="page-title">Our Grants</h1>
 
   <div class="grant-dataviz" id="financial-mechanisms">
-  <h2>Funding by financial mechanism</h2>
+    <h2>Funding by financial mechanism</h2>
     <mechanisms
         :initial="dataset"
-    />
+    ></mechanisms>
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
-  <h2>Allocation by priority sector</h2>
+    <h2>Allocation by priority sector</h2>
     <sectors
         :initial="dataset"
-    />
+    ></sectors>
   </div>
 </div>
 
 <div class="lg-column">
   <div class="grant-dataviz" id="funding-map">
-  <h2>Funding map</h2>
+    <h2>Funding map</h2>
     <xmap
         :initial="dataset"
         details-datasource="{% url "api:beneficiary-allocation-detail" "XX" %}"
-    />
+    ></xmap>
   </div>
 
   <div class="grant-dataviz" id="beneficiary-states">
-  <h2>Funding across beneficiary states</h2>
+    <h2>Funding across beneficiary states</h2>
     <beneficiaries
         :initial="dataset"
-    />
+    ></beneficiaries>
   </div>
 </div>
 {% endblock %}
@@ -43,19 +43,24 @@
 {% block aside %}
 <sidebar>
   <overview
-      :initial="dataset">
-  </overview>
+      :initial="dataset"
+  ></overview>
+
   <tabs cache-lifetime="">
     <tab name="Results">
-      <results class="sidebar-content"
-        :initial="dataset" />
+      <results
+          class="sidebar-content"
+          :initial="dataset"
+      ></results>
     </tab>
     <tab name="Programmes">
-      <programmes class="sidebar-content"
-        :initial="dataset" />
+      <programmes
+          class="sidebar-content"
+          :initial="dataset"
+      ></programmes>
     </tab>
   </tabs>
- </sidebar>
+</sidebar>
 {% endblock %}
 
 {% block finally %}
