@@ -5,6 +5,20 @@
       <!-- with a bit of hardcoded rotation, because -->
       <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
     </svg>
+
+    <div v-if="hasData" class="info">
+      <div class="heading">
+        <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
+      </div>
+      <div class="data-wrapper"><ul class="data">
+        <li class="programmes"><span class="amount">{{ number(aggregated.programmes_total) }}</span> Programmes</li>
+        <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
+      </ul></div>
+      <div class="ending">
+        <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations</p>
+      </div>
+    </div>
+
     <fm-legend :fms="FMS" class="legend clearfix">
       <template slot="fm-content" scope="x">
         <span :style="{backgroundColor: x.fm.colour}"></span>
@@ -22,6 +36,92 @@
     path.chord {
       fill: #ccc;
       /*fill-opacity: .8;*/
+    }
+  }
+
+  .info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    //background-color: rgba(200,200,200,.1);
+
+    text-align: center;
+    font-size: 2rem;
+
+    p, ul, li {
+      margin: 0;
+    }
+
+    span.amount {
+      display: block;
+      font-weight: bold;
+    }
+
+    & > div {
+      position: absolute;
+      width: 50%;
+      left: 25%;
+    }
+
+    .heading {
+      top: 10%;
+      font-size: 1.5em;
+
+      /*
+      .amount {
+        font-size: 1.2em;
+      }
+      */
+    }
+
+    .data-wrapper {
+      width: 40%;
+      padding-bottom: 40%;
+      left: 30%;
+      top: 30%;
+      //background-color: rgba(251, 251, 251, 0.8);
+      background-image: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
+      border: .2em solid white;
+      border-radius: 50%;
+    }
+
+    .data {
+      list-style-type: none;
+      padding: 0;
+
+      position: absolute;
+      width: 100%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+
+      & > li:not(:last-child) {
+        margin-bottom: .5em;
+      }
+
+      .programmes {
+        font-size: 1.5em;
+        line-height: 1.6em;
+
+        .amount {
+          font-size: 1.8em;
+        }
+      }
+
+      .projects {
+        font-size: 1em;
+
+        .amount {
+          font-size: 2em;
+        }
+      }
+    }
+
+    .ending {
+      bottom: 0%;
+      font-size: 1.2em;
     }
   }
 
@@ -45,13 +145,11 @@
     margin-bottom: 3rem;
     @media (min-width: 800px)and (max-width:1000px){
       width: 84%;
-
     }
     @media (min-width:1000px) {
       width: 60%;
     }
   }
-
 }
 </style>
 
@@ -90,6 +188,21 @@ export default Vue.extend({
   },
 
   computed: {
+    filtered() {
+      return this.filter(this.dataset);
+    },
+
+    aggregated() {
+      return this.aggregate(
+        this.filtered,
+        [],
+        [
+          'allocation', 'project_count',
+        ],
+        false
+      );
+    },
+
     data() {
       const $this=this;
       const _dataset = {};

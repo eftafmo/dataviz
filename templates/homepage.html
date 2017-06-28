@@ -3,19 +3,11 @@
 
 {% block main %}
   <div class="homepage_content_wrapper">
-    <div class="grant-dataviz" id="overview">
-      <overview
-          :width="500"
-          :height="400"
-          :initial="dataset"
-      />
-    </div>
-    <div id="info">
-      <info
-          :initial="dataset"
-      />
-
-    </div>
+    <overview
+        :width="500"
+        :height="400"
+        :initial="dataset"
+    ></overview>
   </div>
 
   <section class="section align-center">

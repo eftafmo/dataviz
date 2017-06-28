@@ -17,7 +17,6 @@ export const Homepage = Base.extend({
 
   components: {
     overview: components.Homepage,
-    info: components.HomepageInfo,
   },
 });
 

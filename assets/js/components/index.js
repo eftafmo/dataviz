@@ -21,13 +21,11 @@ import Results from './Results';
 import AllocationOverview from './AllocationOverview';
 import Programmes from './Programmes';
 import Sidebar from './Sidebar';
-import HomepageInfo from './HomepageInfo';
 import News from './News';
 import ProjectsOverview from './ProjectsOverview';
 
 export {
   Homepage,
-  HomepageInfo,
 
   Mechanisms,
   ProjectsMechanisms,
