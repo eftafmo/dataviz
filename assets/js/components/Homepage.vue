@@ -72,7 +72,7 @@
     }
 
     .heading {
-
+      top: 10%;
       font-size: 1.5em;
 
       /*
