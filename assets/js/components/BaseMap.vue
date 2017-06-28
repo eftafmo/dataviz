@@ -386,7 +386,7 @@ export default Vue.extend({
     },
 
     tooltipTemplate() {
-      console.log('wtf')
+      throw new Error("Not implemented");
     },
 
     createTooltip() {
