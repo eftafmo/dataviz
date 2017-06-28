@@ -130,7 +130,7 @@ export default {
            destination: 'output_column_name',
          }
          `columns` also take a `type` property, which defaults to Number
-           and a `filter_by` property, which expects boolean values (false rows are excluded)
+           and a `filter_by` property, which expects boolean values (false and undefined rows are excluded)
        */
 
       const bycols = {};

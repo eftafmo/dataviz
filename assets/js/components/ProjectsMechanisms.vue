@@ -18,6 +18,7 @@ export default Mechanisms.extend({
           <li>${this.currency(d.value)} gross allocation</li>
           <li>${d.beneficiaries.size()} beneficiary states</li>
           <li>${d.sectors.size()} priority sectors</li>
+          <li>${d.areas.size()} programme areas</li>
         </ul>
         <span class="action">Click to filter by financial mechanism</span>
       `;
