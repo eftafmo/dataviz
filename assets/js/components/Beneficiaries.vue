@@ -12,6 +12,16 @@
     <dropdown filter="beneficiary" title="Select a beneficiary state" :items="beneficiarydata"></dropdown>
   </div>
   <svg width="100%" :height="height + 'px'">
+    <filter id="drop-shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+      <feOffset dx="0" dy="0" result="offsetblur"/>
+      <feFlood flood-color="rgba(0,0,0,0.3)"/>
+      <feComposite in="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
     <filter id="grayscale">
       <feColorMatrix type="matrix"
                      values="0.3333 0.3333 0.3333 0 0
@@ -421,7 +431,8 @@ export default Vue.extend({
         .attr("x", this.flagPadding)
         .attr("y", (this.itemHeight - this.flagHeight) / 2)
         .attr("width", this.flagWidth)
-        .attr("height", this.flagHeight);
+        .attr("height", this.flagHeight)
+        .style("filter", "url(#drop-shadow)");
 
       /*
        * render fm data
@@ -481,7 +492,7 @@ export default Vue.extend({
         // and transition its matrix
 
         selection.select("g.label").select("use")
-                 .attr("filter", yes ? null : "url('#grayscale')")
+                 .style("filter", yes ? "url(#drop-shadow)" : "url('#grayscale')")
                  .attr("opacity", yes ? 1 : this.inactive_opacity);
 
         // the fm bars
