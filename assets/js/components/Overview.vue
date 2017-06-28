@@ -21,84 +21,13 @@
 <style lang="less">
 .overview-viz {
   .chart {
-    position: relative;
     path.chord {
       fill: #ccc;
       /*fill-opacity: .8;*/
     }
   }
 
-  .donor-count, .states-count {
-    word-spacing: 30rem;
-    text-align: center;
-    max-width: 150px;
-    span {
-      font-weight: bold;
-    }
-    font-size: 1.7rem;
-  }
-
-
-  .donor-count {
-    margin-left: 15%;
-  }
-
-  .states-count {
-    margin-right: 8%;
-  }
-
-  .line-wrapper {
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: 40%;
-    width: 100%;
-  }
-
-  .total-spent {
-    position: absolute;
-    top: 1rem;
-    left: 45%;
-    text-align: center;
-  }
-
-  .overview-info {
-    position: absolute;
-    left: 38%;
-    text-align: center;
-    max-width: 350px;
-    font-size: 2rem;
-    bottom: 9%;
-  }
-
-  .circle-wrapper {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    font-size: 3rem;
-    text-align: center;
-    span {
-      font-weight: bold;
-      font-size: 4.5rem;
-    }
-    .circle {
-      background: rgba(251, 251, 251, 0.86);
-      padding: 6rem 7rem;
-      border-radius: 100rem;
-      border: 4px solid white;
-      margin-left: 5rem;
-      margin-top: 2rem;
-      z-index: 1;
-    }
-  }
-
   .legend {
-    cursor: pointer;
     position: relative;
     z-index: 1;
     .fm span {
@@ -107,27 +36,13 @@
     }
     li {
       list-style-type: none;
-      display: inline-block;
-      margin-right: 2rem;
-    }
-    .fm {
-      transition: all .5s ease;
-      display: block;
-    }
-    .fm.disabled {
-      filter: grayscale(100%);
-      opacity: 0.5;
-    }
-
-    .fm.selected {
-      text-shadow: 0 0 1px #999;
     }
   }
 
   .chart-container {
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
     @media (min-width: 800px)and (max-width:1000px){
       width: 84%;
 
