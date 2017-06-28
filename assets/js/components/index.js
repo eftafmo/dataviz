@@ -1,7 +1,7 @@
 // import widget components for their side effects
 // (they should auto-register)
 
-import Overview from './Overview';
+import Homepage from './Homepage';
 
 import Mechanisms from './Mechanisms';
 import ProjectsMechanisms from './ProjectsMechanisms';
@@ -21,13 +21,11 @@ import Results from './Results';
 import AllocationOverview from './AllocationOverview';
 import Programmes from './Programmes';
 import Sidebar from './Sidebar';
-import HomepageInfo from './HomepageInfo';
 import News from './News';
 import ProjectsOverview from './ProjectsOverview';
 
 export {
-  Overview,
-  HomepageInfo,
+  Homepage,
 
   Mechanisms,
   ProjectsMechanisms,

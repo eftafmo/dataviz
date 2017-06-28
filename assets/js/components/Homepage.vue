@@ -1,18 +1,30 @@
 <template>
 <div class="overview-viz">
-  <div v-if="hasData" class="legend">
-    <fm-legend :fms="FMS" class="clearfix">
-      <template slot="fm-content" scope="x">
-        <span :style="{backgroundColor: x.fm.colour}"></span>
-        {{ x.fm.name }}
-      </template>
-    </fm-legend>
-  </div>
   <chart-container :width="width" :height="height">
     <svg :viewBox="`0 0 ${width} ${height}`">
       <!-- with a bit of hardcoded rotation, because -->
       <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
     </svg>
+
+    <div v-if="hasData" class="info">
+      <transition name="fade"><div class="heading" :key="changed">
+        <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
+      </div></transition>
+      <div class="data-wrapper"><transition name="fade"><ul class="data" :key="changed">
+        <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
+        <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
+      </ul></transition></div>
+      <div class="ending">
+        <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations</p>
+      </div>
+    </div>
+
+    <fm-legend :fms="FMS" class="legend clearfix">
+      <template slot="fm-content" scope="x">
+        <span :style="{backgroundColor: x.fm.colour}"></span>
+        {{ x.fm.name }}
+      </template>
+    </fm-legend>
   </chart-container>
 </div>
 </template>
@@ -21,122 +33,129 @@
 <style lang="less">
 .overview-viz {
   .chart {
-    position: relative;
+    g.group {
+      cursor: pointer;
+    }
+
     path.chord {
       fill: #ccc;
       /*fill-opacity: .8;*/
     }
   }
 
-  .donor-count, .states-count {
-    word-spacing: 30rem;
-    text-align: center;
-    max-width: 150px;
-    span {
-      font-weight: bold;
-    }
-    font-size: 1.7rem;
-  }
-
-
-  .donor-count {
-    margin-left: 15%;
-  }
-
-  .states-count {
-    margin-right: 8%;
-  }
-
-  .line-wrapper {
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: 40%;
-    width: 100%;
-  }
-
-  .total-spent {
-    position: absolute;
-    top: 1rem;
-    left: 45%;
-    text-align: center;
-  }
-
-  .overview-info {
-    position: absolute;
-    left: 38%;
-    text-align: center;
-    max-width: 350px;
-    font-size: 2rem;
-    bottom: 9%;
-  }
-
-  .circle-wrapper {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  .info {
     position: absolute;
     top: 0;
-    font-size: 3rem;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    //background-color: rgba(200,200,200,.1);
+
     text-align: center;
-    span {
-      font-weight: bold;
-      font-size: 4.5rem;
+    font-size: 2rem;
+
+    p, ul, li {
+      margin: 0;
     }
-    .circle {
-      background: rgba(251, 251, 251, 0.86);
-      padding: 6rem 7rem;
-      border-radius: 100rem;
-      border: 4px solid white;
-      margin-left: 5rem;
-      margin-top: 2rem;
-      z-index: 1;
+
+    span.amount {
+      display: block;
+      font-weight: bold;
+    }
+
+    & > div {
+      position: absolute;
+      width: 50%;
+      left: 25%;
+      pointer-events: initial;
+    }
+
+    .heading {
+      top: 10%;
+      font-size: 1.5em;
+
+      /*
+      .amount {
+        font-size: 1.2em;
+      }
+      */
+    }
+
+    .data-wrapper {
+      width: 40%;
+      padding-bottom: 40%;
+      left: 30%;
+      top: 30%;
+      //background-color: rgba(251, 251, 251, 0.8);
+      background-image: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
+      border: .2em solid white;
+      border-radius: 50%;
+    }
+
+    .data {
+      list-style-type: none;
+      padding: 0;
+
+      position: absolute;
+      width: 100%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+
+      & > li:not(:last-child) {
+        margin-bottom: .5em;
+      }
+
+      .programmes {
+        font-size: 1.5em;
+        line-height: 1.6em;
+
+        .amount {
+          font-size: 1.8em;
+        }
+      }
+
+      .projects {
+        font-size: 1em;
+
+        .amount {
+          font-size: 2em;
+        }
+      }
+    }
+
+    .ending {
+      bottom: 0%;
+      font-size: 1.2em;
     }
   }
 
   .legend {
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+
     .fm span {
       width: 10px; height: 10px;
       display: inline-block;
     }
     li {
       list-style-type: none;
-      display: inline-block;
-      margin-right: 2rem;
-    }
-    .fm {
-      transition: all .5s ease;
-      display: block;
-    }
-    .fm.disabled {
-      filter: grayscale(100%);
-      opacity: 0.5;
-    }
-
-    .fm.selected {
-      text-shadow: 0 0 1px #999;
     }
   }
 
   .chart-container {
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
     @media (min-width: 800px)and (max-width:1000px){
       width: 84%;
-
     }
     @media (min-width:1000px) {
       width: 60%;
     }
   }
-
 }
 </style>
 
@@ -175,6 +194,22 @@ export default Vue.extend({
   },
 
   computed: {
+    filtered() {
+      return this.filter(this.dataset);
+    },
+
+    aggregated() {
+      return this.aggregate(
+        this.filtered,
+        [],
+        [
+          'allocation', 'project_count',
+          {source: 'programmes', type: Array},
+        ],
+        false
+      );
+    },
+
     data() {
       const $this=this;
       const _dataset = {};
@@ -351,8 +386,23 @@ var g = this.chart.selectAll("g.group")
   .enter().append("g")
   .attr("class", "group")
   .on("mouseover", fade(opacityLow))
-  .on("mouseout", fade(opacityDefault));
+  .on("mouseout", fade(opacityDefault))
+  .on("click", (d, i) => {
+    const name = names[i];
+    if (name === "") return;
 
+    const fm = this.FMS[slugify(name)]
+    if (fm !== undefined) {
+      this.toggleFm(fm);
+      return;
+    }
+
+    const beneficiary = d3.values(this.BENEFICIARIES).find(
+      (x) => x.name == name
+    );
+
+    this.toggleBeneficiary(beneficiary);
+  } )
 
 
 g.append("path")
