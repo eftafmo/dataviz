@@ -11,7 +11,7 @@
         <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
       </div>
       <div class="data-wrapper"><ul class="data">
-        <li class="programmes"><span class="amount">{{ number(aggregated.programmes_total) }}</span> Programmes</li>
+        <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
         <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
       </ul></div>
       <div class="ending">
@@ -198,6 +198,7 @@ export default Vue.extend({
         [],
         [
           'allocation', 'project_count',
+          {source: 'programmes', type: Array},
         ],
         false
       );

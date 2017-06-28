@@ -193,7 +193,7 @@ export default {
                 dstcol = _col.destination,
                 type = _col.type,
                 filter_by = _col.filter_by,
-                value = type(item[srccol]);
+                value = type == Number ? Number(item[srccol]) : item[srccol];
 
           let current = row[dstcol];
 
@@ -208,21 +208,26 @@ export default {
 
             row[dstcol] = current + value;
           }
-          else if (type === String) {
-            // strings are consolidated into a set
+          else if (type === String || type === Array || type === Object) {
+            // strings, arrays items and object keys are consolidated into sets
             if (current === undefined)
               current = row[dstcol] = d3.set();
 
-            current.add(value);
-          } else if (type === Object) {
-            // keys of objects are consolidated into a set
-            if (current === undefined)
-              current = row[dstcol] = d3.set();
-            for (const prg_code of Object.keys(value)) {
-              current.add(prg_code);
+            if (type === String) {
+              current.add(value);
+            }
+            else if (type === Array) {
+              for (const v of value) {
+                current.add(v);
+              }
+            }
+            else if (type === Object) {
+              for (const k in value) {
+                current.add(k);
+              }
             }
           }
-          else console.warn(srccol, ":: unkwown type", type)
+          else console.warn(srccol, ":: unkwown type", type);
         }
       }
 
