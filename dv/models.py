@@ -59,7 +59,7 @@ class _MainModel(_BaseModel):
 class FinancialMechanism(_MainModel):
     IMPORT_SOURCES = [
         {
-            'src': 'PrioritySector',
+            'src': 'BeneficiaryStatePrioritySector',
             'map': {
                 'code': 'FMCode',
                 'name': 'FinancialMechanism',
@@ -120,7 +120,7 @@ class State(_MainModel):
 class PrioritySector(_MainModel):
     IMPORT_SOURCES = [
         {
-            'src': 'PrioritySector',
+            'src': 'BeneficiaryStatePrioritySector',
             'map': {
                 'type': 'FMCode',
                 'code': 'PSCode',
@@ -139,7 +139,7 @@ class ProgrammeArea(_MainModel):
     # programme areas are defined in the same sheet with priority sectors
     IMPORT_SOURCES = [
         {
-            'src': 'PrioritySector',
+            'src': 'BeneficiaryStatePrioritySector',
             'map': {
                 'priority_sector': 'PSCode',
                 'code': 'PACode',
@@ -147,6 +147,8 @@ class ProgrammeArea(_MainModel):
                 'short_name': 'ProgrammeAreaShortName',
                 'order': 'SortOrder',
                 'objective': 'ProgrammeAreaObjective',
+                'url': 'UrlPAPage',
+                'is_not_ta': 'IsProgrammeArea',
             }
         },
     ]
@@ -161,6 +163,10 @@ class ProgrammeArea(_MainModel):
     priority_sector = models.ForeignKey(PrioritySector)
     # Allocation also branches off towards FM
     allocations = models.ManyToManyField(State, through="Allocation")
+
+    # Technical assistance sectors and programme areas are not always displayed
+    is_not_ta = models.BooleanField()
+    url = models.CharField(max_length=256, null=True)
 
 
 class Allocation(_MainModel):
