@@ -535,6 +535,7 @@ class ProgrammeIndicator(_BaseModel):
                 'result_text': 'ResultText',
                 'state': ('name', 'BeneficiaryState'),
                 'achievement': 'Achievement',
+                'order': 'SortOrder',
             }
         },
     ]
@@ -554,6 +555,7 @@ class ProgrammeIndicator(_BaseModel):
     result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
 
     achievement = models.IntegerField()
+    order = models.SmallIntegerField()
 
     def __str__(self):
         return "%s - %s" % (self.programme.code, self.indicator.code)
