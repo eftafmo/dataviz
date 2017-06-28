@@ -169,6 +169,7 @@ export default Vue.extend({
       const dataset = this.filter(this.dataset);
       const beneficiaries = {};
       let totalcount = 0;
+      const $this = this;
 
       for (const d of dataset) {
         const programmes = d.programmes;
@@ -225,7 +226,7 @@ export default Vue.extend({
       }
 
       //Sort by country
-      out.beneficiaries.sort((a,b) => d3.ascending(a.id,b.id));
+      out.beneficiaries.sort((a,b) => d3.ascending(this.get_country_name(a.id),this.get_country_name(b.id)));
       return out;
     },
   },
