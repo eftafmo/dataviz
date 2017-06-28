@@ -64,6 +64,9 @@
       font-family: 'eeag-icons' !important;
       vertical-align: middle;
   }
+ @media(max-width: 800px){
+  display: block;
+ }
 }
 
 .list-enter-active, .list-leave-active {
