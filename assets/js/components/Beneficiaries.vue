@@ -105,7 +105,7 @@
 
       text {
         font-size: .8em;
-        font-family: 'Open sans', sans-serif;
+        font-family: 'Arial', 'Open sans', sans-serif;
         text-anchor: end;
       }
     }
