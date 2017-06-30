@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^partners/$', views.partners, name='partners'),
     url(r'^projects/$', views.projects, name='projects'),
 
-    url(r'^search/$', views.search, name='search'),
+    url(r'^search/$', views.FacetedSearchView.as_view(), name='haystack_search'),
 
     # [dev-only] sandbox for testing ui components
     url(r'^sandbox/$', views.sandbox, name='sandbox'),

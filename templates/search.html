@@ -5,9 +5,9 @@
     <div class="container">
       <div class="search-top-inner">
         <h1 class="page-title">Search</h1>
-        <form action="" class="search-form">
+        <form class="search-form" id="main-search-form">
           <span class="input-box">
-            <input type="search" placeholder="Search" autofocus>
+            <input type="search" placeholder="Search" name="q" autofocus>
           </span>
           <button type="submit" class="btn btn-primary">Search</button>
         </form>
@@ -29,13 +29,13 @@
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
-        254 results found
+        {{ paginator.count }} results found
       </span>
       <span class="search-results-options">
         <select name="" id="" class="subtle-select">
           <option value="">10 results per page</option>
         </select>
-         | 
+         |
         <select name="" id="" class="subtle-select">
           <option value="">Sorted by Country A-Z</option>
         </select>
@@ -46,35 +46,17 @@
     </div>
 
     <ul class="no-list">
+      {% for res in page_obj.object_list %}
       <li>
         <div class="search-result search-result-programme">
           <span class="country">
-            <img src="" alt="flag"> Country
+            <img src="" alt="flag"> {{ res.state_name.0 }}
           </span>
-          <h4 class="title"><a href="#result">Programme title</a></h4>
-          <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, rerum, blanditiis? Molestias accusantium provident, porro quidem assumenda commodi illum explicabo. Fugit atque quos illo, esse. Reiciendis dolores repellendus ipsam aut?</p>
+          <h4 class="title"><a href="{{ res.url }}">{{ res.programme_name.0 }}</a></h4>
+          <p class="description">{{ res.text }}</p>
         </div>
       </li>
-
-      <li>
-        <div class="search-result search-result-project">
-          <span class="country">
-            <img src="" alt="flag"> Country
-          </span>
-          <h4 class="title"><a href="#result">Project title</a></h4>
-          <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, rerum, blanditiis? Molestias accusantium provident, porro quidem assumenda commodi illum explicabo. Fugit atque quos illo, esse. Reiciendis dolores repellendus ipsam aut?</p>
-        </div>
-      </li>
-
-      <li>
-        <div class="search-result search-result-organization">
-          <span class="country">
-            <img src="" alt="flag"> Country
-          </span>
-          <h4 class="title"><a href="#result">Organization name</a></h4>
-          <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, rerum, blanditiis? Molestias accusantium provident, porro quidem assumenda commodi illum explicabo. Fugit atque quos illo, esse. Reiciendis dolores repellendus ipsam aut?</p>
-        </div>
-      </li>
+      {% endfor %}
     </ul>
 
 
@@ -104,18 +86,31 @@
     </div>
     <div class="sidebar-body">
 
+      <!--
+      {% if page_obj.object_list %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="">Funding period</label>
-          <select name="" id="">
+          <label for="funding-period-facet">Funding period</label>
+          <select name="" id="funding-period-facet">
             <option value="">2009 - 2014</option>
           </select>
         </div>
       </div>
+      -->
 
+      {% if facets.fields.state_name %}
       <div class="input-group">
-        some checkboxes        
+        <div class="input-box input-block">
+          <label for="state-facet">Beneficiary State</label>
+          <select name="state_name" id="state-facet" form="main-search-form">
+            {% for st in facets.fields.state_name %}
+              <option value="{{ st.0 }}">{{ st.0 }} ({{ st.1 }})</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
+      {% endif %}
+      {% endif %}
 
     </div>
   </div>

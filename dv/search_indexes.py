@@ -5,12 +5,12 @@ from dv.models import Programme, Project, Organisation, Allocation, ProgrammeOut
 class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     # some non-DRY code here, but the factor out is not trivial due to common indexes having different model lookup
-    state_name = indexes.FacetCharField(model_attr='state__name')
+    state_name = indexes.FacetMultiValueField(model_attr='state__name')
     programme_area_ss = indexes.FacetMultiValueField(model_attr='programme_areas__name')
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_areas__priority_sector__name')
     financial_mechanism_ss = indexes.FacetMultiValueField()
     outcome_ss = indexes.FacetMultiValueField()
-    programme_name = indexes.FacetCharField(model_attr='name')
+    programme_name = indexes.FacetMultiValueField(model_attr='name')
     programme_status = indexes.FacetCharField(model_attr='status')
 
     kind = indexes.FacetCharField()
@@ -20,12 +20,21 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
 
+    # extra data; avoid db hit
+    url = indexes.CharField(model_attr='url', indexed=False, null=True)
+
 
     def get_model(self):
         return Programme
 
     def prepare_kind(self, obj):
         return 'Programme'
+
+    def prepare_state_name(self, obj):
+        return [obj.state.name]
+
+    def prepare_programme_name(self, obj):
+        return [obj.name]
 
     def prepare_programme_area_ss(self, obj):
         return list(obj.programme_areas.values_list(
@@ -53,10 +62,10 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
-    state_name = indexes.FacetCharField(model_attr='state__name')
+    state_name = indexes.FacetMultiValueField(model_attr='state__name')
     programme_area_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__name')
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__priority_sector__name')
-    programme_name = indexes.FacetCharField(model_attr='programme__name')
+    programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
     programme_status = indexes.FacetCharField(model_attr='programme__status')
 
     kind = indexes.FacetCharField()
