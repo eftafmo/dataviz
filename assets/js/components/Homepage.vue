@@ -65,6 +65,13 @@
     .links {
       fill: url("#link-gradient");
       fill-opacity: .75;
+
+      .highlighted {
+        fill-opacity: 1;
+      }
+      .non-highlighted {
+        fill-opacity: .25;
+      }
     }
   }
 
@@ -315,6 +322,13 @@ export default Vue.extend({
             chords = this.data,
             t = this.getTransition();
 
+      // avoid other transitions while this runs ¬
+      t
+        .on("start",
+            () => this._transitioning = true )
+        .on("end",
+            () => this._transitioning = false )
+
       const fms = this.chart.select("g.fms")
                       .selectAll("path")
                       .data(chords.sources),
@@ -354,13 +368,17 @@ export default Vue.extend({
         .attr("stroke", fmcolour)
         .on("click", function(d) {
           $this.toggleFm($this.FM_ARRAY[d.index]);
-        });
+        })
+        .on("mouseenter", this.mkhighlight("source"))
+        .on("mouseleave", this.mkunhighlight("source"));
 
       const bentered = beneficiaries.enter()
         .append("path")
         .on("click", function(d) {
           $this.toggleBeneficiary($this.BENEFICIARY_ARRAY[d.index]);
-        });
+        })
+        .on("mouseenter", this.mkhighlight("target"))
+        .on("mouseleave", this.mkunhighlight("target"));
 
       for (const sel of [fentered, bentered]) {
         sel
@@ -381,12 +399,64 @@ export default Vue.extend({
         .each(function(d){
           this._prev = extract_link_coords(d);
         })
+        .on("mouseenter", this.highlight)
+        .on("mouseleave", this.unhighlight)
         .attr("d", this.link);
 
       links
         .transition(t)
         .attrTween('d', mktweener(this.link, extract_link_coords));
     },
+
+    _highlight(index, yes) {
+      // avoid funny race conditions ¬
+      if(this._transitioning) return;
+
+      //const t = this.getTransition(this.short_duration);
+
+      const links = this.chart.select("g.links").selectAll("path");
+
+      links.filter( (d, i) => i == index )
+           .classed("highlighted", yes);
+      links.filter( (d, i) => i != index)
+           .classed("non-highlighted", yes);
+    },
+
+    _grouphighlight(index, type, yes) {
+      // avoid funny race conditions ¬
+      if(this._transitioning) return;
+
+      //const t = this.getTransition(this.short_duration);
+
+      const links = this.chart.select("g.links").selectAll("path");
+
+      links.filter( (d) => d[type].index == index )
+           .classed("highlighted", yes);
+      links.filter( (d) => d[type].index != index )
+           .classed("non-highlighted", yes);
+    },
+
+    highlight(d, i) {
+      this._highlight(i, true);
+    },
+
+    unhighlight(d, i) {
+      this._highlight(i, false);
+    },
+
+    mkhighlight(type) {
+      const $this = this;
+      return function(d, i) {
+        $this._grouphighlight(i, type, true);
+      };
+    },
+
+    mkunhighlight(type) {
+      const $this = this;
+      return function(d, i) {
+        $this._grouphighlight(i, type, false);
+      };
+    }
   },
 });
 </script>
