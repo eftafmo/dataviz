@@ -2,6 +2,13 @@
 <div class="overview-viz">
   <chart-container :width="width" :height="height">
     <svg :viewBox="`0 0 ${width} ${height}`">
+      <defs>
+        <linearGradient id="link-gradient">
+          <stop offset="10%"  stop-color="#ccc"/>
+          <stop offset="90%" stop-color="#eee"/>
+        </linearGradient>
+      </defs>
+
       <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
         <g class="fms"></g>
         <g class="beneficiaries"></g>
@@ -37,11 +44,26 @@
 .overview-viz {
   .chart {
     .fms, .beneficiaries  {
-      fill: brown;
+      cursor: pointer;
+      stroke-width: 1.34; // this should be equal to itemPadding
+
+      path:hover {
+        stroke-opacity: 1;
+      }
+    }
+
+    .fms {
+      stroke-opacity: .1;
+    }
+
+    .beneficiaries {
+      fill: #ccc;
+      stroke: #ccc;
+      stroke-opacity: .5;
     }
 
     .links {
-      fill: #ccc;
+      fill: url("#link-gradient");
       fill-opacity: .75;
     }
   }
@@ -187,7 +209,8 @@ export default Vue.extend({
       height: 500,
 
       padding: Math.PI / 2, // padding between groups, in radians
-      itemPadding: Math.PI / 180, // padding between items, in radians
+      //itemPadding: 0,
+      itemPadding: Math.PI / 180 / 3, // padding between items, in radians
 
       inner_radius: .85, // percentage of outer radius
 
@@ -209,6 +232,11 @@ export default Vue.extend({
       return this.radius * this.inner_radius;
     },
 
+    linksRadius() {
+      // links should be exactly itemPadding apart
+      return this.innerRadius - this.radius * this.itemPadding;
+    },
+
     arc() {
       return d3.arc()
         .outerRadius(this.radius)
@@ -217,7 +245,7 @@ export default Vue.extend({
 
     link() {
       return d3.ribbon()
-        .radius(this.innerRadius);
+        .radius(this.linksRadius);
     },
 
     chord() {
@@ -242,6 +270,15 @@ export default Vue.extend({
       );
     },
 
+    // TODO: actually, these should come from the mixins
+    // (and the constants should be arrays, and the objects pre-computed)
+    FM_ARRAY() {
+      return d3.values(this.FMS);
+    },
+    BENEFICIARY_ARRAY() {
+      return d3.values(this.BENEFICIARIES);
+    },
+
     data() {
       const matrix = [],
             dataset = this.aggregate(
@@ -250,21 +287,20 @@ export default Vue.extend({
 
       // base the dataset on the constant list of FMs and beneficiaries,
       // to ensure 0-valued items exist regardless of filtering
-      for (const fmid in this.FMS) {
-        const fmname = this.FMS[fmid].name,
-              fmdata = dataset[fmname],
+      for (const fm of this.FM_ARRAY) {
+        const fmdata = dataset[fm.name],
               allocations = Array();
 
         matrix.push(allocations);
 
         if (fmdata === undefined) {
-          allocations.length = d3.keys(this.BENEFICIARIES).length;
+          allocations.length = this.BENEFICIARY_ARRAY.length;
           allocations.fill(0);
           continue;
         }
 
-        for (const bnfid in this.BENEFICIARIES) {
-          const bnfdata = fmdata[bnfid];
+        for (const bnf of this.BENEFICIARY_ARRAY) {
+          const bnfdata = fmdata[bnf.id];
           allocations.push(bnfdata !== undefined ? bnfdata.allocation : 0);
         }
       }
@@ -275,7 +311,9 @@ export default Vue.extend({
 
   methods: {
     renderChart() {
-      const chords = this.data;
+      const $this = this,
+            chords = this.data,
+            t = this.getTransition();
 
       const fms = this.chart.select("g.fms")
                       .selectAll("path")
@@ -287,20 +325,67 @@ export default Vue.extend({
                       .selectAll("path")
                       .data(chords);
 
-      fms.enter()
-        .append("path")
-      .merge(fms)
-        .attr("d", this.arc);
+      const fmcolour = (d) => this.FM_ARRAY[d.index].colour,
+            extract_coords = (d) => ({
+              startAngle: d.startAngle,
+              endAngle: d.endAngle,
+            }),
+            extract_link_coords = (d) => ({
+              source: extract_coords(d.source),
+              target: extract_coords(d.target),
+            });
 
-      beneficiaries.enter()
+      function mktweener(tweenfunc, coordsfunc) {
+        return function(d) {
+	  const interpolate = d3.interpolate(
+	    this._prev, coordsfunc(d)
+	  );
+          this._prev = interpolate(0);
+
+          return function(x) {
+            return tweenfunc(interpolate(x));
+          }
+        }
+      }
+
+      const fentered = fms.enter()
         .append("path")
-      .merge(beneficiaries)
-        .attr("d", this.arc);
+        .attr("fill", fmcolour)
+        .attr("stroke", fmcolour)
+        .on("click", function(d) {
+          $this.toggleFm($this.FM_ARRAY[d.index]);
+        });
+
+      const bentered = beneficiaries.enter()
+        .append("path")
+        .on("click", function(d) {
+          $this.toggleBeneficiary($this.BENEFICIARY_ARRAY[d.index]);
+        });
+
+      for (const sel of [fentered, bentered]) {
+        sel
+          .each(function(d){
+            this._prev = extract_coords(d);
+          })
+          .attr("d", this.arc);
+      }
+
+      for (const sel of [fms, beneficiaries]) {
+        sel
+          .transition(t)
+          .attrTween('d', mktweener(this.arc, extract_coords));
+      }
 
       links.enter()
         .append("path")
-      .merge(links)
+        .each(function(d){
+          this._prev = extract_link_coords(d);
+        })
         .attr("d", this.link);
+
+      links
+        .transition(t)
+        .attrTween('d', mktweener(this.link, extract_link_coords));
     },
   },
 });
