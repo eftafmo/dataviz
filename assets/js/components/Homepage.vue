@@ -59,6 +59,7 @@
 
       path.blank {
         fill: none;
+        //fill: palegoldenrod;
         stroke: none;
       }
 
@@ -293,9 +294,31 @@ export default Vue.extend({
     },
 
     blank() {
-      return d3.arc()
-        .outerRadius(this.radius + this.margin)
-        .innerRadius(this.radius);
+      const outerRadius = this.radius + this.margin,
+            innerRadius = this.radius,
+            txtheight = this.textDimensions.height,
+            txtrads = txtheight / innerRadius;
+
+      const arcfunc = d3.arc()
+        .outerRadius(outerRadius)
+        .innerRadius(innerRadius);
+
+      return function(d) {
+        const coords = {startAngle: d.startAngle, endAngle: d.endAngle},
+              height = (d.endAngle - d.startAngle) * innerRadius;
+
+        if (height > txtheight) {
+          // shave off a few pixels so this doesn't cover sibling cramped texts
+          const center = (d.startAngle + d.endAngle) / 2;
+          coords.startAngle = Math.min(
+            d.startAngle + txtrads / 2, center - txtrads / 2
+          );
+          coords.endAngle = Math.max(
+            d.endAngle - txtrads / 2, center + txtrads / 2
+          );
+        }
+        return arcfunc(coords);
+      }
     },
 
     link() {
