@@ -9,7 +9,7 @@
         </linearGradient>
       </defs>
 
-      <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
+      <g class="chart" :transform="`translate(${width / 2},${height / 2})`">
         <g class="fms"></g>
         <g class="beneficiaries"></g>
         <g class="links"></g>
@@ -137,7 +137,7 @@
     }
 
     .heading {
-      top: 10%;
+      top: 5%;
       font-size: 1.5em;
 
       /*
@@ -151,9 +151,10 @@
       width: 40%;
       padding-bottom: 40%;
       left: 30%;
-      top: 30%;
-      //background-color: rgba(251, 251, 251, 0.8);
-      background-image: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(251, 251, 251, 0.8);
+      background: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
       border: .2em solid white;
       border-radius: 50%;
     }
@@ -246,7 +247,6 @@ export default Vue.extend({
   data() {
     return {
       width: 500,
-      height: 500,
 
       padding: Math.PI / 2, // padding between main groups, in radians
       //itemPadding: 0,
@@ -262,6 +262,10 @@ export default Vue.extend({
   },
 
   computed: {
+    height() {
+      return this.width * Math.sin(Math.PI / 2 - this.padding / 2);
+    },
+
     textDimensions() {
       // calculate maximum text width.
       // (fms group shows country names as well and uses the same font.)
@@ -278,7 +282,7 @@ export default Vue.extend({
     },
 
     textPadding() {
-      return this.text_padding * Math.min(this.width, this.height);
+      return this.text_padding * this.width;
     },
 
     margin() {
@@ -287,7 +291,7 @@ export default Vue.extend({
     },
 
     radius() {
-      return Math.min(this.width, this.height) / 2 - this.margin;
+      return this.width / 2 - this.margin;
     },
 
     innerRadius() {
