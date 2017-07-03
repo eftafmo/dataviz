@@ -43,20 +43,44 @@
 <style lang="less">
 .overview-viz {
   .chart {
-    .fms, .beneficiaries  {
+    .fms > g, .beneficiaries > g {
       cursor: pointer;
-      stroke-width: 1.34; // this should be equal to itemPadding
+      pointer-events: all;
 
-      path:hover {
+      path.arc {
+        fill: inherit;
+        stroke: inherit;
+        stroke-width: 1.34; // this should be equal to itemPadding
+      }
+
+      &:hover path.arc {
         stroke-opacity: 1;
+      }
+
+      path.blank {
+        fill: none;
+        stroke: none;
+      }
+
+      text {
+        fill: #333;
+        stroke: none;
+        font-size: .5em;
+      }
+
+      &:hover text {
+        fill: #000;
+        stroke: #333;
+        stroke-width: .2;
+        stroke-opacity: .5;
       }
     }
 
-    .fms {
+    .fms > g path.arc {
       stroke-opacity: .1;
     }
 
-    .beneficiaries {
+    .beneficiaries > g path.arc {
       fill: #ccc;
       stroke: #ccc;
       stroke-opacity: .5;
@@ -215,9 +239,10 @@ export default Vue.extend({
       width: 500,
       height: 500,
 
-      padding: Math.PI / 2, // padding between groups, in radians
+      padding: Math.PI / 2, // padding between main groups, in radians
       //itemPadding: 0,
       itemPadding: Math.PI / 180 / 3, // padding between items, in radians
+      text_padding: .01, // percentage of width/height
 
       inner_radius: .85, // percentage of outer radius
 
@@ -226,9 +251,26 @@ export default Vue.extend({
   },
 
   computed: {
+    textDimensions() {
+      // calculate maximum text width.
+      // (fms group shows country names as well and uses the same font.)
+      const fakeB = this.chart.select(".beneficiaries").append("g");
+      const txt = fakeB.append("text").attr("visibility", "hidden");
+
+      txt.text(this.longestCountry);
+      const bounds = txt.node().getBBox();
+      fakeB.remove();
+
+      return {width: bounds.width, height: bounds.height};
+    },
+
+    textPadding() {
+      return this.text_padding * Math.min(this.width, this.height);
+    },
+
     margin() {
-      // TODO: calculate maximum text width
-      return 20;
+      if (!this.isReady) return 0;
+      return this.textDimensions.width + this.textPadding;
     },
 
     radius() {
@@ -240,7 +282,7 @@ export default Vue.extend({
     },
 
     linksRadius() {
-      // links should be exactly itemPadding apart
+      // links should be exactly itemPadding away from the arcs
       return this.innerRadius - this.radius * this.itemPadding;
     },
 
@@ -248,6 +290,12 @@ export default Vue.extend({
       return d3.arc()
         .outerRadius(this.radius)
         .innerRadius(this.innerRadius);
+    },
+
+    blank() {
+      return d3.arc()
+        .outerRadius(this.radius + this.margin)
+        .innerRadius(this.radius);
     },
 
     link() {
@@ -327,19 +375,20 @@ export default Vue.extend({
         .on("start",
             () => this._transitioning = true )
         .on("end",
-            () => this._transitioning = false )
+            () => this._transitioning = false );
 
       const fms = this.chart.select("g.fms")
-                      .selectAll("path")
+                      .selectAll("g")
                       .data(chords.sources),
             beneficiaries = this.chart.select("g.beneficiaries")
-                      .selectAll("path")
+                      .selectAll("g")
                       .data(chords.targets),
             links = this.chart.select("g.links")
                       .selectAll("path")
                       .data(chords);
 
       const fmcolour = (d) => this.FM_ARRAY[d.index].colour,
+
             extract_coords = (d) => ({
               startAngle: d.startAngle,
               endAngle: d.endAngle,
@@ -347,7 +396,13 @@ export default Vue.extend({
             extract_link_coords = (d) => ({
               source: extract_coords(d.source),
               target: extract_coords(d.target),
-            });
+            }),
+
+            txtTransform = (d, direction) => `rotate(${(
+              (d.startAngle + d.endAngle) / 2
+              / Math.PI * 180
+              - 90 * direction
+            )})`;
 
       function mktweener(tweenfunc, coordsfunc) {
         return function(d) {
@@ -363,44 +418,91 @@ export default Vue.extend({
       }
 
       const fentered = fms.enter()
-        .append("path")
-        .attr("fill", fmcolour)
-        .attr("stroke", fmcolour)
-        .on("click", function(d) {
-          $this.toggleFm($this.FM_ARRAY[d.index]);
-        })
-        .on("mouseenter", this.mkhighlight("source"))
-        .on("mouseleave", this.mkunhighlight("source"));
+        .append("g")
+        .style("fill", fmcolour)
+        .style("stroke", fmcolour);
 
       const bentered = beneficiaries.enter()
-        .append("path")
-        .on("click", function(d) {
-          $this.toggleBeneficiary($this.BENEFICIARY_ARRAY[d.index]);
-        })
-        .on("mouseenter", this.mkhighlight("target"))
-        .on("mouseleave", this.mkunhighlight("target"));
+        .append("g");
 
-      for (const sel of [fentered, bentered]) {
+      const _options = {
+        source: {
+          items: this.FM_ARRAY,
+          filterfunc: this.toggleFm,
+          direction: -1,
+        },
+        target: {
+          items: this.BENEFICIARY_ARRAY,
+          filterfunc: this.toggleBeneficiary,
+          direction: 1,
+        }
+      };
+
+      const setUp = (sel, type) => {
+        const opts = _options[type];
+        const item = (i) => opts.items[i];
+
         sel
-          .each(function(d){
+          .attr("class", (d, i) => item(i).id )
+          .on("click", (d, i) => opts.filterfunc(item(i)) )
+          .on("mouseenter", this.mkhighlight(type))
+          .on("mouseleave", this.mkunhighlight(type));
+
+        const arc = sel
+          .append("path")
+          .attr("class", "arc")
+          .each(function(d) {
             this._prev = extract_coords(d);
           })
           .attr("d", this.arc);
-      }
+
+        // blank stuff so the area behind the text reacts to mouse events
+        const blank = sel
+          .append("path")
+          .attr("class", "blank")
+          .each(function(d) {
+            this._prev = extract_coords(d);
+          })
+          .attr("d", this.blank);
+
+        const txt = sel
+          .append("text")
+          .text( (d, i) => item(i).name )
+          .attr("x", (d) => this.radius * opts.direction )
+          .attr("dx", this.textPadding * opts.direction)
+          .attr("dy", ".33em")
+          .attr("text-anchor", (d) => opts.direction == 1 ? "start" : "end")
+          .attr("transform", (d) => txtTransform(d, opts.direction) )
+          .attr("opacity", 1);
+      };
+
+      fentered.call(setUp, "source");
+      bentered.call(setUp, "target");
 
       for (const sel of [fms, beneficiaries]) {
-        sel
+        sel.select("path.arc")
           .transition(t)
           .attrTween('d', mktweener(this.arc, extract_coords));
+
+        sel.select("path.blank")
+          // don't tween this, save some cpu cycles
+          //.transition(t)
+          //.attrTween('d', mktweener(this.blank, extract_coords));
+          .attr('d', this.blank);
+
+        sel.select("text")
+          .transition(t)
+          .attr("transform", (d) => txtTransform(d, sel === fms ? -1 : 1) )
+          .attr("opacity", (d) => d.value == 0 ? 0 : 1);
       }
 
       links.enter()
         .append("path")
-        .each(function(d){
-          this._prev = extract_link_coords(d);
-        })
         .on("mouseenter", this.highlight)
         .on("mouseleave", this.unhighlight)
+        .each(function(d) {
+          this._prev = extract_link_coords(d);
+        })
         .attr("d", this.link);
 
       links
@@ -409,8 +511,8 @@ export default Vue.extend({
     },
 
     _highlight(index, yes) {
-      // avoid funny race conditions ¬
-      if(this._transitioning) return;
+      //// avoid funny race conditions ¬
+      //if(this._transitioning) return;
 
       //const t = this.getTransition(this.short_duration);
 
@@ -423,8 +525,8 @@ export default Vue.extend({
     },
 
     _grouphighlight(index, type, yes) {
-      // avoid funny race conditions ¬
-      if(this._transitioning) return;
+      //// avoid funny race conditions ¬
+      //if(this._transitioning) return;
 
       //const t = this.getTransition(this.short_duration);
 

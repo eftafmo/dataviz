@@ -37,14 +37,28 @@ for (const code in COUNTRIES) {
   req(`./${get_flag_name(code)}.png`);
 }
 
+
 import * as d3 from 'd3';
 
+
+function get_longest_name(obj) {
+  return d3.values(obj).reduce( (longest, item) => (
+    longest.length > item.name.length ? longest : item.name
+  ) );
+}
 
 export default {
   beforeCreate() {
     this.DONORS = DONORS;
     this.BENEFICIARIES = BENEFICIARIES;
     this.COUNTRIES = COUNTRIES;
+  },
+
+  data() {
+    return {
+      longestCountry: get_longest_name(this.COUNTRIES),
+      longestBeneficiary: get_longest_name(this.BENEFICIARIES),
+    };
   },
 
   computed: {
