@@ -43,7 +43,7 @@
 <style lang="less">
 .overview-viz {
   .chart {
-    .fms > g, .beneficiaries > g {
+    .fms > g.item, .beneficiaries > g.item {
       cursor: pointer;
       pointer-events: all;
 
@@ -77,14 +77,22 @@
       }
     }
 
-    .fms > g path.arc {
+    .fms > g.item path.arc {
       stroke-opacity: .1;
     }
 
-    .beneficiaries > g path.arc {
+    .beneficiaries > g.item path.arc {
       fill: #ccc;
       stroke: #ccc;
       stroke-opacity: .5;
+    }
+
+    .fms text {
+      text-anchor: end;
+    }
+
+    .beneficiaries text {
+      text-anchor: start;
     }
 
     .links {
@@ -245,6 +253,8 @@ export default Vue.extend({
       itemPadding: Math.PI / 180 / 3, // padding between items, in radians
       text_padding: .01, // percentage of width/height
 
+      text_spacing: 2, // vertical spacing, in text-height units
+
       inner_radius: .85, // percentage of outer radius
 
       beneficiary_colour: "#ccc",
@@ -255,8 +265,10 @@ export default Vue.extend({
     textDimensions() {
       // calculate maximum text width.
       // (fms group shows country names as well and uses the same font.)
-      const fakeB = this.chart.select(".beneficiaries").append("g");
-      const txt = fakeB.append("text").attr("visibility", "hidden");
+      const fakeB = this.chart.select(".beneficiaries")
+                        .append("g").attr("class", "item");
+      const txt = fakeB.append("g").attr("class", "text")
+                       .append("text").attr("visibility", "hidden");
 
       txt.text(this.longestCountry);
       const bounds = txt.node().getBBox();
@@ -287,6 +299,18 @@ export default Vue.extend({
       return this.innerRadius - this.radius * this.itemPadding;
     },
 
+    textHeight() {
+      return this.textDimensions.height;
+    },
+
+    textRadians() {
+      return this.textHeight / this.radius;
+    },
+
+    textDegrees() {
+      return this.textRadians / Math.PI * 180;
+    },
+
     arc() {
       return d3.arc()
         .outerRadius(this.radius)
@@ -296,8 +320,8 @@ export default Vue.extend({
     blank() {
       const outerRadius = this.radius + this.margin,
             innerRadius = this.radius,
-            txtheight = this.textDimensions.height,
-            txtrads = txtheight / innerRadius;
+            txtheight = this.textHeight,
+            txtrads = this.textRadians;
 
       const arcfunc = d3.arc()
         .outerRadius(outerRadius)
@@ -401,10 +425,10 @@ export default Vue.extend({
             () => this._transitioning = false );
 
       const fms = this.chart.select("g.fms")
-                      .selectAll("g")
+                      .selectAll("g.item")
                       .data(chords.sources),
             beneficiaries = this.chart.select("g.beneficiaries")
-                      .selectAll("g")
+                      .selectAll("g.item")
                       .data(chords.targets),
             links = this.chart.select("g.links")
                       .selectAll("path")
@@ -466,7 +490,7 @@ export default Vue.extend({
         const item = (i) => opts.items[i];
 
         sel
-          .attr("class", (d, i) => item(i).id )
+          .attr("class", (d, i) => "item " + item(i).id )
           .on("click", (d, i) => opts.filterfunc(item(i)) )
           .on("mouseenter", this.mkhighlight(type))
           .on("mouseleave", this.mkunhighlight(type));
@@ -489,15 +513,52 @@ export default Vue.extend({
           .attr("d", this.blank);
 
         const txt = sel
-          .append("text")
-          .text( (d, i) => item(i).name )
-          .attr("x", (d) => this.radius * opts.direction )
-          .attr("dx", this.textPadding * opts.direction)
-          .attr("dy", ".33em")
-          .attr("text-anchor", (d) => opts.direction == 1 ? "start" : "end")
+          .append("g")
+          .attr("class", "text")
           .attr("transform", (d) => txtTransform(d, opts.direction) )
-          .attr("opacity", 1);
+          .attr("opacity", 1)
+          .call(itemText, type);
       };
+
+      const _textProps = (sel, opts) => {
+        sel
+          .attr("x", this.radius * opts.direction )
+          .attr("dx", this.textPadding * opts.direction)
+          .attr("dy", ".33em");
+      }
+
+      const itemText = (sel, type) => {
+        const opts = _options[type];
+
+        if (type == "target") {
+          sel
+            .append("text")
+            .text( (d, i) => opts.items[i].name )
+            .call(_textProps, opts);
+
+          return;
+        }
+
+        sel
+          .filter( (d, i) => opts.items[i].id == "norway-grants" )
+          .append("text")
+          .text("Norway")
+          .call(_textProps, opts);
+
+        sel
+          .filter( (d, i) => opts.items[i].id == "eea-grants" )
+          .selectAll("text").data(
+            d3.values(this.DONORS).map( (x) => x.name )
+          )
+          .enter()
+          .append("text")
+          .attr("transform", (d, i, data) => `rotate(${
+            this.textDegrees * this.text_spacing
+            * (i - (data.length - 1) / 2) * opts.direction
+          })` )
+          .text( (d) => d )
+          .call(_textProps, opts);
+      }
 
       fentered.call(setUp, "source");
       bentered.call(setUp, "target");
@@ -513,7 +574,7 @@ export default Vue.extend({
           //.attrTween('d', mktweener(this.blank, extract_coords));
           .attr('d', this.blank);
 
-        sel.select("text")
+        sel.select("g.text")
           .transition(t)
           .attr("transform", (d) => txtTransform(d, sel === fms ? -1 : 1) )
           .attr("opacity", (d) => d.value == 0 ? 0 : 1);
