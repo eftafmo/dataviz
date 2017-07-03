@@ -2,8 +2,18 @@
 <div class="overview-viz">
   <chart-container :width="width" :height="height">
     <svg :viewBox="`0 0 ${width} ${height}`">
-      <!-- with a bit of hardcoded rotation, because -->
-      <g class="chart" :transform="`rotate(-3.5),translate(${width/2},${height/2})`" />
+      <defs>
+        <linearGradient id="link-gradient">
+          <stop offset="10%"  stop-color="#ccc"/>
+          <stop offset="90%" stop-color="#eee"/>
+        </linearGradient>
+      </defs>
+
+      <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
+        <g class="fms"></g>
+        <g class="beneficiaries"></g>
+        <g class="links"></g>
+      </g>
     </svg>
 
     <div v-if="hasData" class="info">
@@ -33,13 +43,60 @@
 <style lang="less">
 .overview-viz {
   .chart {
-    g.group {
+    .fms > g, .beneficiaries > g {
       cursor: pointer;
+      pointer-events: all;
+
+      path.arc {
+        fill: inherit;
+        stroke: inherit;
+        stroke-width: 1.34; // this should be equal to itemPadding
+      }
+
+      &:hover path.arc {
+        stroke-opacity: 1;
+      }
+
+      path.blank {
+        fill: none;
+        //fill: palegoldenrod;
+        stroke: none;
+      }
+
+      text {
+        fill: #333;
+        stroke: none;
+        font-size: .5em;
+      }
+
+      &:hover text {
+        fill: #000;
+        stroke: #333;
+        stroke-width: .2;
+        stroke-opacity: .5;
+      }
     }
 
-    path.chord {
+    .fms > g path.arc {
+      stroke-opacity: .1;
+    }
+
+    .beneficiaries > g path.arc {
       fill: #ccc;
-      /*fill-opacity: .8;*/
+      stroke: #ccc;
+      stroke-opacity: .5;
+    }
+
+    .links {
+      fill: url("#link-gradient");
+      fill-opacity: .75;
+
+      .highlighted {
+        fill-opacity: 1;
+      }
+      .non-highlighted {
+        fill-opacity: .25;
+      }
     }
   }
 
@@ -163,10 +220,8 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
+import xchord from 'js/lib/x-chord';
 import {slugify} from 'js/lib/util';
-
-import stretchedChord from 'js/lib/d3.stretched.chord';
-import customChordLayout from 'js/lib/d3.layout.chord.sort';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
@@ -180,20 +235,103 @@ export default Vue.extend({
     WithFMsMixin, WithCountriesMixin
   ],
 
-  props: {
-    width: Number,
-    height: Number,
-  },
-
   data() {
     return {
-      pullOut: 30,
+      width: 500,
+      height: 500,
+
+      padding: Math.PI / 2, // padding between main groups, in radians
+      //itemPadding: 0,
+      itemPadding: Math.PI / 180 / 3, // padding between items, in radians
+      text_padding: .01, // percentage of width/height
+
+      inner_radius: .85, // percentage of outer radius
+
       beneficiary_colour: "#ccc",
-      emptyPerc: 0.7, // "percentage" of circle that becomes empty
     };
   },
 
   computed: {
+    textDimensions() {
+      // calculate maximum text width.
+      // (fms group shows country names as well and uses the same font.)
+      const fakeB = this.chart.select(".beneficiaries").append("g");
+      const txt = fakeB.append("text").attr("visibility", "hidden");
+
+      txt.text(this.longestCountry);
+      const bounds = txt.node().getBBox();
+      fakeB.remove();
+
+      return {width: bounds.width, height: bounds.height};
+    },
+
+    textPadding() {
+      return this.text_padding * Math.min(this.width, this.height);
+    },
+
+    margin() {
+      if (!this.isReady) return 0;
+      return this.textDimensions.width + this.textPadding;
+    },
+
+    radius() {
+      return Math.min(this.width, this.height) / 2 - this.margin;
+    },
+
+    innerRadius() {
+      return this.radius * this.inner_radius;
+    },
+
+    linksRadius() {
+      // links should be exactly itemPadding away from the arcs
+      return this.innerRadius - this.radius * this.itemPadding;
+    },
+
+    arc() {
+      return d3.arc()
+        .outerRadius(this.radius)
+        .innerRadius(this.innerRadius);
+    },
+
+    blank() {
+      const outerRadius = this.radius + this.margin,
+            innerRadius = this.radius,
+            txtheight = this.textDimensions.height,
+            txtrads = txtheight / innerRadius;
+
+      const arcfunc = d3.arc()
+        .outerRadius(outerRadius)
+        .innerRadius(innerRadius);
+
+      return function(d) {
+        const coords = {startAngle: d.startAngle, endAngle: d.endAngle},
+              height = (d.endAngle - d.startAngle) * innerRadius;
+
+        if (height > txtheight) {
+          // shave off a few pixels so this doesn't cover sibling cramped texts
+          const center = (d.startAngle + d.endAngle) / 2;
+          coords.startAngle = Math.min(
+            d.startAngle + txtrads / 2, center - txtrads / 2
+          );
+          coords.endAngle = Math.max(
+            d.endAngle - txtrads / 2, center + txtrads / 2
+          );
+        }
+        return arcfunc(coords);
+      }
+    },
+
+    link() {
+      return d3.ribbon()
+        .radius(this.linksRadius);
+    },
+
+    chord() {
+      return xchord()
+        .padding(this.padding)
+        .itemPadding(this.itemPadding);
+    },
+
     filtered() {
       return this.filter(this.dataset);
     },
@@ -210,247 +348,240 @@ export default Vue.extend({
       );
     },
 
+    // TODO: actually, these should come from the mixins
+    // (and the constants should be arrays, and the objects pre-computed)
+    FM_ARRAY() {
+      return d3.values(this.FMS);
+    },
+    BENEFICIARY_ARRAY() {
+      return d3.values(this.BENEFICIARIES);
+    },
+
     data() {
-      const $this=this;
-      const _dataset = {};
-      const fmnames = d3.values(this.FMS).map( (fm) => fm.name ),
-            _fmsobj = {};
-      fmnames.forEach( (n) => _fmsobj[n] = 0 );
-
-      for (const d of this.dataset) {
-        const value = +d.allocation,
-              b = d.beneficiary;
-        if (value == 0) continue;
-
-        let beneficiary = _dataset[b];
-        if (beneficiary === undefined)
-          beneficiary = _dataset[b] = Object.assign(
-            { name: this.COUNTRIES[b].name },
-            _fmsobj
-          )
-        beneficiary[d.fm] += value;
-      }
-      const dataset = d3.values(_dataset);
-      dataset.sort((a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0));
-
-
-      // the chord layout needs a matrix as input
-      const from_ = fmnames,
-            to_ = dataset.map( (d) => d.name );
-
-      // items are in fact a circle, starting clockwise with first country,
-      // then a dummy item, then the financial mechanisms bottom to top,
-      from_.reverse();
-      // end ending with another dummy item
-      const names = [].concat(to_, [""], from_, [""]);
-
-      let total = 0;
-
-      const to_matrix = dataset.map( (row) => {
-        return from_.map( (f) => {
-          const val = +row[f];
-          // we take this wonderful opportunity for some side-effects
-          total += val;
-          return val;
-        });
-      });
-
-      const from_matrix = d3.transpose(to_matrix);
-
-      // we're gonna use these to fill the matrix rows
-      const from_zeros = new Array(from_.length).fill(0),
-            to_zeros = new Array(to_.length).fill(0);
-
-
-      const build_to = (row, _i, _arr, dummy) => [].concat(
-              to_zeros, [0], row, dummy ? [dummy] : [0]
-            ),
-            build_from = (row, _i, _arr, dummy) => [].concat(
-              row, dummy ? [dummy] : [0], from_zeros, [0]
+      const matrix = [],
+            dataset = this.aggregate(
+              this.filtered, ['fm', 'beneficiary'], ['allocation'], false
             );
 
-      const _empty = Math.round(total * this.emptyPerc);
+      // base the dataset on the constant list of FMs and beneficiaries,
+      // to ensure 0-valued items exist regardless of filtering
+      for (const fm of this.FM_ARRAY) {
+        const fmdata = dataset[fm.name],
+              allocations = Array();
 
-      const matrix = [].concat(
-        to_matrix.map(build_to),
-        // bottom dummy
-        [build_to(from_zeros, null, null, _empty)],
+        matrix.push(allocations);
 
-        from_matrix.map(build_from),
-        // top dummy
-        [build_from(to_zeros, null, null, _empty)]
-      );
-      return {
-        names,
-        matrix,
-        total,
-        _empty,
-      };
+        if (fmdata === undefined) {
+          allocations.length = this.BENEFICIARY_ARRAY.length;
+          allocations.fill(0);
+          continue;
+        }
+
+        for (const bnf of this.BENEFICIARY_ARRAY) {
+          const bnfdata = fmdata[bnf.id];
+          allocations.push(bnfdata !== undefined ? bnfdata.allocation : 0);
+        }
+      }
+
+      return this.chord(matrix);
     },
   },
 
   methods: {
     renderChart() {
-      var data = this.data,
-          names = data.names,
-          matrix = data.matrix,
-          total = data.total,
-          _empty = data._empty;
+      const $this = this,
+            chords = this.data,
+            t = this.getTransition();
 
-      var width = this.width,
-          height = this.height;
+      // avoid other transitions while this runs ¬
+      t
+        .on("start",
+            () => this._transitioning = true )
+        .on("end",
+            () => this._transitioning = false );
 
-      var outerRadius = Math.min(width, height) / 2 * 0.8,
-          innerRadius = outerRadius * 0.85,
-          pullOutSize = this.pullOut,
-          emptyPerc = this.emptyPerc,
-          opacityDefault = 0.7, // default opacity of chords
-          opacityLow = 0 // opacity of non-hovered chords
+      const fms = this.chart.select("g.fms")
+                      .selectAll("g")
+                      .data(chords.sources),
+            beneficiaries = this.chart.select("g.beneficiaries")
+                      .selectAll("g")
+                      .data(chords.targets),
+            links = this.chart.select("g.links")
+                      .selectAll("path")
+                      .data(chords);
 
-          //Calculate how far the Chord Diagram needs to be rotated clockwise to make the dummy
-          //invisible chord center vertically
-      var offset = (2 * Math.PI) * (
-        _empty / (total + _empty)
-      ) / 4;
+      const fmcolour = (d) => this.FM_ARRAY[d.index].colour,
 
+            extract_coords = (d) => ({
+              startAngle: d.startAngle,
+              endAngle: d.endAngle,
+            }),
+            extract_link_coords = (d) => ({
+              source: extract_coords(d.source),
+              target: extract_coords(d.target),
+            }),
 
+            txtTransform = (d, direction) => `rotate(${(
+              (d.startAngle + d.endAngle) / 2
+              / Math.PI * 180
+              - 90 * direction
+            )})`;
 
+      function mktweener(tweenfunc, coordsfunc) {
+        return function(d) {
+	  const interpolate = d3.interpolate(
+	    this._prev, coordsfunc(d)
+	  );
+          this._prev = interpolate(0);
 
-////////////////////////////////////////////////////////////
-////////////////// Extra Functions /////////////////////////
-////////////////////////////////////////////////////////////
+          return function(x) {
+            return tweenfunc(interpolate(x));
+          }
+        }
+      }
 
-//Include the offset in de start and end angle to rotate the Chord diagram clockwise
-const startAngle= (d) => d.startAngle + offset;
-const endAngle = (d) => d.endAngle + offset;
+      const fentered = fms.enter()
+        .append("g")
+        .style("fill", fmcolour)
+        .style("stroke", fmcolour);
 
-// Returns an event handler for fading a given chord group
-const fade = (opacity) => {
-  return (d, i) => {
-  this.chart.selectAll("path.chord")
-    .filter(function(d) { return d.source.index !== i && d.target.index !== i && names[d.source.index] !== ""; })
-    .transition()
-    .style("opacity", opacity);
-  };
-}//fade
+      const bentered = beneficiaries.enter()
+        .append("g");
 
-// Fade function when hovering over chord
-const fadeOnChord = (d) => {
-  var chosen = d;
-  this.chart.selectAll("path.chord")
-    .transition()
-    .style("opacity", function(d) {
-      return d.source.index === chosen.source.index && d.target.index === chosen.target.index ? opacityDefault : opacityLow;
-    });
-}//fadeOnChord
-
-      const getColour = (d, i) => {
-        const name = names[i];
-        if (name === "") return "none";
-
-        const fm = this.FMS[slugify(name)]
-        if (fm === undefined) return this.beneficiary_colour;
-
-        return fm.colour;
+      const _options = {
+        source: {
+          items: this.FM_ARRAY,
+          filterfunc: this.toggleFm,
+          direction: -1,
+        },
+        target: {
+          items: this.BENEFICIARY_ARRAY,
+          filterfunc: this.toggleBeneficiary,
+          direction: 1,
+        }
       };
 
-////////////////////////////////////////////////////////////
-///////////////////////// init /////////////////////////////
-////////////////////////////////////////////////////////////
+      const setUp = (sel, type) => {
+        const opts = _options[type];
+        const item = (i) => opts.items[i];
 
-//Custom sort function of the chords to keep them in the original order
-var chord = customChordLayout() //d3.layout.chord()
-  .padding(.02)
-  .sortChords(d3.descending) //which chord should be shown on top when chords cross. Now the biggest chord is at the bottom
-  .matrix(matrix);
+        sel
+          .attr("class", (d, i) => item(i).id )
+          .on("click", (d, i) => opts.filterfunc(item(i)) )
+          .on("mouseenter", this.mkhighlight(type))
+          .on("mouseleave", this.mkunhighlight(type));
 
-var arc = d3.arc()
-  .innerRadius(innerRadius)
-  .outerRadius(outerRadius)
-  .startAngle(startAngle) //startAngle and endAngle now include the offset in degrees
-  .endAngle(endAngle);
+        const arc = sel
+          .append("path")
+          .attr("class", "arc")
+          .each(function(d) {
+            this._prev = extract_coords(d);
+          })
+          .attr("d", this.arc);
 
+        // blank stuff so the area behind the text reacts to mouse events
+        const blank = sel
+          .append("path")
+          .attr("class", "blank")
+          .each(function(d) {
+            this._prev = extract_coords(d);
+          })
+          .attr("d", this.blank);
 
-var path = stretchedChord() //Call the stretched chord function
-  .radius(innerRadius)
-  .startAngle(startAngle)
-  .endAngle(endAngle)
-  .pullOutSize(pullOutSize);
+        const txt = sel
+          .append("text")
+          .text( (d, i) => item(i).name )
+          .attr("x", (d) => this.radius * opts.direction )
+          .attr("dx", this.textPadding * opts.direction)
+          .attr("dy", ".33em")
+          .attr("text-anchor", (d) => opts.direction == 1 ? "start" : "end")
+          .attr("transform", (d) => txtTransform(d, opts.direction) )
+          .attr("opacity", 1);
+      };
 
-////////////////////////////////////////////////////////////
-//////////////////// Draw outer Arcs ///////////////////////
-////////////////////////////////////////////////////////////
+      fentered.call(setUp, "source");
+      bentered.call(setUp, "target");
 
-var g = this.chart.selectAll("g.group")
-  .data(chord.groups)
-  .enter().append("g")
-  .attr("class", "group")
-  .on("mouseover", fade(opacityLow))
-  .on("mouseout", fade(opacityDefault))
-  .on("click", (d, i) => {
-    const name = names[i];
-    if (name === "") return;
+      for (const sel of [fms, beneficiaries]) {
+        sel.select("path.arc")
+          .transition(t)
+          .attrTween('d', mktweener(this.arc, extract_coords));
 
-    const fm = this.FMS[slugify(name)]
-    if (fm !== undefined) {
-      this.toggleFm(fm);
-      return;
-    }
+        sel.select("path.blank")
+          // don't tween this, save some cpu cycles
+          //.transition(t)
+          //.attrTween('d', mktweener(this.blank, extract_coords));
+          .attr('d', this.blank);
 
-    const beneficiary = d3.values(this.BENEFICIARIES).find(
-      (x) => x.name == name
-    );
+        sel.select("text")
+          .transition(t)
+          .attr("transform", (d) => txtTransform(d, sel === fms ? -1 : 1) )
+          .attr("opacity", (d) => d.value == 0 ? 0 : 1);
+      }
 
-    this.toggleBeneficiary(beneficiary);
-  } )
+      links.enter()
+        .append("path")
+        .on("mouseenter", this.highlight)
+        .on("mouseleave", this.unhighlight)
+        .each(function(d) {
+          this._prev = extract_link_coords(d);
+        })
+        .attr("d", this.link);
 
-
-g.append("path")
-  .style("stroke", getColour)
-  .style("fill", getColour)
-  .style("pointer-events", function(d,i) { return (names[i] === "" ? "none" : "auto"); })
-  .attr("d", arc)
-  .attr("transform", function(d, i) { //Pull the two slices apart
-        d.pullOutSize = pullOutSize * ( d.startAngle + 0.001 > Math.PI ? -1 : 1);
-        return "translate(" + d.pullOutSize + ',' + 0 + ")";
-  });
-
-////////////////////////////////////////////////////////////
-////////////////////// Append Names ////////////////////////
-////////////////////////////////////////////////////////////
-
-//The text also needs to be displaced in the horizontal directions
-//And also rotated with the offset in the clockwise direction
-g.append("text")
-  .each(function(d) { d.angle = ((d.startAngle + d.endAngle) / 2) + offset;})
-  .attr("dy", ".35em")
-  .attr("class", "titles")
-  .style("font-size", "10px" )
-  .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-  .attr("transform", function(d,i) {
-    var c = arc.centroid(d);
-    return "translate(" + (c[0] + d.pullOutSize) + "," + c[1] + ")"
-    + "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-    + "translate(" + 20 + ",0)"
-    + (d.angle > Math.PI ? "rotate(180)" : "")
-  })
-  .text(function(d,i) { return names[i]; });
-
-////////////////////////////////////////////////////////////
-//////////////////// Draw inner chords /////////////////////
-////////////////////////////////////////////////////////////
-
-this.chart.selectAll("path.chord")
-  .data(chord.chords)
-  .enter().append("path")
-  .attr("class", "chord")
-  .style("stroke", "none")
-  .style("opacity", function(d) { return (names[d.source.index] === "" ? 0 : opacityDefault); }) //Make the dummy strokes have a zero opacity (invisible)
-  .style("pointer-events", function(d,i) { return (names[d.source.index] === "" ? "none" : "auto"); }) //Remove pointer events from dummy strokes
-  .attr("d", path)
-  .on("mouseover", fadeOnChord)
-  .on("mouseout", fade(opacityDefault));
+      links
+        .transition(t)
+        .attrTween('d', mktweener(this.link, extract_link_coords));
     },
+
+    _highlight(index, yes) {
+      //// avoid funny race conditions ¬
+      //if(this._transitioning) return;
+
+      //const t = this.getTransition(this.short_duration);
+
+      const links = this.chart.select("g.links").selectAll("path");
+
+      links.filter( (d, i) => i == index )
+           .classed("highlighted", yes);
+      links.filter( (d, i) => i != index)
+           .classed("non-highlighted", yes);
+    },
+
+    _grouphighlight(index, type, yes) {
+      //// avoid funny race conditions ¬
+      //if(this._transitioning) return;
+
+      //const t = this.getTransition(this.short_duration);
+
+      const links = this.chart.select("g.links").selectAll("path");
+
+      links.filter( (d) => d[type].index == index )
+           .classed("highlighted", yes);
+      links.filter( (d) => d[type].index != index )
+           .classed("non-highlighted", yes);
+    },
+
+    highlight(d, i) {
+      this._highlight(i, true);
+    },
+
+    unhighlight(d, i) {
+      this._highlight(i, false);
+    },
+
+    mkhighlight(type) {
+      const $this = this;
+      return function(d, i) {
+        $this._grouphighlight(i, type, true);
+      };
+    },
+
+    mkunhighlight(type) {
+      const $this = this;
+      return function(d, i) {
+        $this._grouphighlight(i, type, false);
+      };
+    }
   },
 });
 </script>

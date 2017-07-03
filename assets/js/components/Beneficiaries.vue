@@ -122,7 +122,7 @@ import {colour2gray, slugify} from 'js/lib/util';
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
+import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
@@ -143,11 +143,6 @@ export default Vue.extend({
         flagHeight: 1.4,
         flagPadding: .4,
       },
-
-      // an amazing way to calculate "Czech Republic"
-      longestTxt: d3.values(COUNTRIES).reduce(function(longest, country) {
-        return longest.length > country.name.length ? longest : country.name;
-      }, ''),
     };
   },
 
@@ -213,7 +208,7 @@ export default Vue.extend({
       const fakeB = this.chart.select(".beneficiaries").append("g").attr("class", "beneficiary");
       const txt = fakeB.append("g").attr("class", "label").append("text").attr("visibility", "hidden");
 
-      txt.text(this.longestTxt);
+      txt.text(this.longestBeneficiary);
       const txtwidth = txt.node().getBBox().width;
       fakeB.remove();
 
