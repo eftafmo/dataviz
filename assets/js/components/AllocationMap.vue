@@ -27,7 +27,7 @@ export default BaseMap.extend({
           <div class="title-container">
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
-          ${ this.currency(d.amount || 0) }
+          ${ this.currency(d.allocation || 0) }
           <small>(Temporary)<small>
         `;
     },
@@ -87,16 +87,16 @@ export default BaseMap.extend({
           if (item === undefined) {
             item = totals[id] = {
               id: id,
-              amount: 0,
+              allocation: 0,
             };
           }
 
-          item.amount += +row.amount;
+          item.allocation += +row.allocation;
 
           // save another iteration and track the max
-          max = Math.max(item.amount, max);
+          max = Math.max(item.allocation, max);
           // save this too, we'll use it to get the min
-          _totals[id] = item.amount;
+          _totals[id] = item.allocation;
         }
         const min = d3.min(d3.values(_totals));
 
@@ -123,7 +123,7 @@ export default BaseMap.extend({
 
         regions
                .transition(t)
-               .attr("fill", (d) => interpolateYlGn(x(d.amount)) );
+               .attr("fill", (d) => interpolateYlGn(x(d.allocation)) );
 
         regions.exit()
                .transition(t)
