@@ -376,9 +376,12 @@ def partners(request):
             DPP[key][donor_state][org_id] = {
                 'name': item['programme__organisation_roles__organisation__name'],
                 'programmes': [item['programme_id']],
+                'states': [item['state__code']]
             }
         else:
             DPP[key][donor_state][org_id]['programmes'].append(item['programme_id'])
+            beneficiaries = DPP[key][donor_state][org_id].get('states', [])
+            beneficiaries.append(item['state__code'])
 
     # Statistics for donor *project* partners
     project_counts_raw = Organisation_OrganisationRole.objects.all().select_related(
