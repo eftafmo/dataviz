@@ -602,6 +602,16 @@ def beneficiary_allocation_detail(request, beneficiary):
     #print(_verify1, _verify2)
     return JsonResponse(allocations)
 
+
 class ProjectList(ListAPIView):
-    queryset = Project.objects.all().order_by('code')
     serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        programme = self.request.query_params.get('programme', None)
+        queryset = Project.objects.all()
+        if programme is not None:
+            queryset = queryset.filter(programme_id=programme)
+        beneficiary = self.request.query_params.get('beneficiary', None)
+        if beneficiary is not None:
+            queryset = queryset.filter(state_id=beneficiary)
+        return queryset.order_by('code')
