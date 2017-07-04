@@ -351,6 +351,11 @@ def partners(request):
     ).prefetch_related(
         'programme__organisation_roles',
         'programme__organisation_roles__organisation',
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme_id__isnull=True,
+    ).filter(
+        programme__organisation_roles__organisation_role_id='DPP'
     ).values(
         'outcome__programme_area__code',
         'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
@@ -358,11 +363,6 @@ def partners(request):
         'programme__organisation_roles__organisation_id',
         'programme__organisation_roles__organisation__country',
         'programme__organisation_roles__organisation__name',
-    ).exclude(
-        # Because sector Other has programme outcomes, but not programmes
-        programme_id__isnull=True,
-    ).extra(
-        where=['"dv_organisation_organisationrole"."organisation_role_id" = \'DPP\'']
     ).distinct()
     DPP = defaultdict(lambda: defaultdict(dict))
     for item in DPP_raw:
