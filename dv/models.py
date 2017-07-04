@@ -707,7 +707,7 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
     # TODO 1: this shouldn't be stored in case the org is a project one
     # TODO 2: this makes no sense, both of them nullable
     # programme and project are denormalised to include BS
-    programme = models.ForeignKey(Programme, null=True)
+    programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles')
     project = models.ForeignKey(Project, null=True)
     is_programme = models.NullBooleanField(default=None)
     is_implementing_partner = models.BooleanField()
@@ -730,8 +730,8 @@ class News(models.Model):
     created = models.DateTimeField(null=True)
     updated = models.DateTimeField(null=True)
 
-    programmes = models.ManyToManyField(Programme)
-    project = models.ForeignKey(Project, null=True)
+    programmes = models.ManyToManyField(Programme, related_name='news')
+    project = models.ForeignKey(Project, null=True, related_name='news')
     summary = models.TextField(null=True)
     image = models.URLField(max_length=2000)
     is_partnership = models.BooleanField(default=False)

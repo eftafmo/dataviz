@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^overview.json', views.overview, name='overview'),
     url(r'^grants.json', views.grants, name='grants'),
     url(r'^projects.json', views.projects, name='projects'),
+    url(r'^partners.json', views.partners, name='partners'),
     url(r'^beneficiary-allocation/(?P<beneficiary>[A-Z]{2}).json',
         views.beneficiary_allocation_detail,
         name='beneficiary-allocation-detail'),

@@ -13,7 +13,8 @@ from dv.models import (
     Allocation,
     State, Project,
     ProgrammeIndicator, ProgrammeOutcome,
-    NUTS, News
+    NUTS, News,
+    Organisation_OrganisationRole,
 )
 from dv.serializers import (
     ProjectSerializer,
@@ -223,10 +224,7 @@ def projects(request):
         News.objects.all()
         .select_related(
             'project',
-            'project__financial_mechanism',
-            'project__state',
-            'project__programme_area',)
-        .exclude(project_id__isnull=True)
+        ).exclude(project_id__isnull=True)
         .order_by('-created')
     )
     news = defaultdict(list)
@@ -273,6 +271,197 @@ def projects(request):
                     # Exclude technical assistance programmes from this list
                 )
             },
+        })
+
+    """
+    # use for testing with django-debug-toolbar:
+    from django.http import HttpResponse
+    from pprint import pformat
+    return HttpResponse('<html><body><pre>%s</pre></body></html>' % pformat(out))
+    """
+
+    return JsonResponse(out)
+
+
+def partners(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+
+    # Because everything else is International
+    DONOR_STATES = {
+        'Norway': 'Norway',
+        'Iceland': 'Iceland',
+        'Liechtenstein': 'Liechtenstein',
+    }
+
+    allocations = Allocation.objects.all().select_related(
+        'financial_mechanism',
+        'state',
+        'programme_area',
+        'programme_area__priority_sector',
+    ).prefetch_related(
+        'programme_area__outcomes__programmes',
+    ).exclude(
+        gross_allocation=0
+    )
+
+    # List of programmes having DPP or dpp, grouped by PA and BS
+    # Needed for size of PS/PA chart slices
+    partnership_programmes = ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area',
+        'programme__organisation_roles',
+    ).values(
+        'programme__code',
+        'programme__name',
+        'outcome__programme_area__code',
+        'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=True,
+        programme__is_tap=True,  # not really needed
+    ).filter(
+        programme__organisation_roles__organisation_role_id__in=['DPP', 'PJDPP']
+    ).distinct()
+
+    # Get donor countries for each programme
+    programme_donors_raw = Organisation_OrganisationRole.objects.all().select_related(
+        'organisation'
+    ).values(
+        'programme_id',
+        'organisation__country'
+    ).exclude(
+        programme_id__isnull=True,
+    ).filter(
+        organisation_role_id__in=['DPP', 'PJDPP']
+    ).distinct()
+
+    programme_donors = defaultdict(list)
+    for item in programme_donors_raw:
+        programme_donors[item['programme_id']].append(
+            DONOR_STATES.get(
+                item['organisation__country'], 'International'
+            )
+        )
+
+    # Get Donor *Programme* Partners by PA and BS (via programmes)
+    DPP_raw = ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area',
+    ).prefetch_related(
+        'programme__organisation_roles',
+        'programme__organisation_roles__organisation',
+    ).values(
+        'outcome__programme_area__code',
+        'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
+        'programme_id',
+        'programme__organisation_roles__organisation_id',
+        'programme__organisation_roles__organisation__country',
+        'programme__organisation_roles__organisation__name',
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme_id__isnull=True,
+    ).extra(
+        where=['"dv_organisation_organisationrole"."organisation_role_id" = \'DPP\'']
+    ).distinct()
+    DPP = defaultdict(lambda: defaultdict(dict))
+    for item in DPP_raw:
+        key = item['outcome__programme_area__code'] + item['state__code']
+        org_id = item['programme__organisation_roles__organisation_id']
+        donor_state = DONOR_STATES.get(
+            item['programme__organisation_roles__organisation__country'],
+            'International'
+        )
+        if org_id not in DPP[key][donor_state]:
+            DPP[key][donor_state][org_id] = {
+                'name': item['programme__organisation_roles__organisation__name'],
+                'programmes': [item['programme_id']],
+            }
+        else:
+            DPP[key][donor_state][org_id]['programmes'].append(item['programme_id'])
+
+    # Statistics for donor *project* partners
+    project_counts_raw = Organisation_OrganisationRole.objects.all().select_related(
+        'organisation',
+        'project',
+    ).values(
+        'organisation__country',
+        'project_id',
+        'programme_id',
+        'project__state_id',
+        'project__programme_area_id',
+    ).filter(
+        organisation_role_id='PJDPP'
+    ).distinct()
+
+    dpp_project_count, dpp_programmes, dpp_states = (
+        defaultdict(lambda: defaultdict(int)),
+        defaultdict(lambda: defaultdict(dict)),
+        defaultdict(lambda: defaultdict(dict)),
+    )
+    for item in project_counts_raw:
+        key = item['project__programme_area_id'] + item['project__state_id']
+        donor_state = DONOR_STATES.get(
+            item['organisation__country'],
+            'International'
+        )
+        dpp_project_count[key][donor_state] += 1
+        dpp_programmes[key][donor_state][item['programme_id']] = item['programme_id']
+        dpp_states[key][donor_state][item['project__state_id']] = item['project__state_id']
+
+    # Bilateral news, they are always related to programmes, not projects
+    news_raw = ProgrammeOutcome.objects.all(
+    ).filter(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=False,
+        programme__news__is_partnership=True
+    ).values(
+        'outcome__programme_area__code',
+        'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
+        'programme__news__link',
+        'programme__news__summary',
+        'programme__news__image',
+        'programme__news__title',
+        'programme__news__created',
+        'programme__news__is_partnership',
+    ).distinct()
+
+    news = defaultdict(list)
+    for item in news_raw:
+        key = item['outcome__programme_area__code'] + item['state__code']
+        news[key].append({
+            'title': item['programme__news__title'],
+            'link': item['programme__news__link'],
+            'created': item['programme__news__created'],
+            'summary': item['programme__news__summary'],
+            'image': item['programme__news__image'],
+        })
+
+    out = []
+    for a in allocations:
+        key = a.programme_area.code + a.state_id
+        out.append({
+            # TODO: switch these to ids(?)
+            'fm': a.financial_mechanism.grant_name,
+            'sector': a.programme_area.priority_sector.name,
+            'area': a.programme_area.name,
+            'beneficiary': a.state.code,
+            'allocation': a.gross_allocation,
+            'dpp_project_count': dpp_project_count.get(key, 0),
+            'dpp_programmes': dpp_programmes.get(key, {}),
+            'dpp_states': dpp_states.get(key, {}),
+            'news': news.get(key, []),
+            'partnership_programmes': {
+                p['programme__code']: {
+                    'donor_states': programme_donors[p['programme__code']]
+                }
+                for p in partnership_programmes
+                if (
+                    p['outcome__programme_area__code'] == a.programme_area.code and
+                    p['state__code'] == a.state.code
+                )
+            },
+            'donor_programme_partners': DPP.get(key, {})
         })
 
     """
