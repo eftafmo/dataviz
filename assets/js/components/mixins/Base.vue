@@ -39,7 +39,7 @@ export default {
         // TODO: derive and extend the browser locale?
         // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
         "decimal": ",", // that's the european way
-        "thousands": "\u202f", // small space
+        "thousands": "\u00A0", // nbsp
         "grouping": [3],
         "currency": ["€", ""],
         "percent": "%",
