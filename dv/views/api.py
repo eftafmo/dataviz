@@ -358,7 +358,7 @@ def partners(request):
         # Because sector Other has programme outcomes, but not programmes
         programme_id__isnull=True,
     ).filter(
-        programme__organisation_roles__organisation_role_id='DPP'
+        programme__organisation_roles__organisation_role_id__in=['DPP', 'PO']
     ).values(
         'outcome__programme_area__code',
         'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
@@ -366,8 +366,12 @@ def partners(request):
         'programme__organisation_roles__organisation_id',
         'programme__organisation_roles__organisation__country',
         'programme__organisation_roles__organisation__name',
+        'programme__organisation_roles__organisation_role_id',
     ).distinct()
-    DPP = defaultdict(dict)
+    DPP, programme_operators = (
+        defaultdict(dict),
+        defaultdict(dict),
+    )
     for item in DPP_raw:
         donor_state = DONOR_STATES.get(
             item['programme__organisation_roles__organisation__country'],
@@ -375,17 +379,23 @@ def partners(request):
         )
         key = item['outcome__programme_area__code'] + item['state__code'] + donor_state
         org_id = item['programme__organisation_roles__organisation_id']
-        if org_id not in DPP[key]:
-            DPP[key][org_id] = {
-                'name': item['programme__organisation_roles__organisation__name'],
-                'programmes': [item['programme_id']],
-                'states': [item['state__code']],
-            }
-        else:
-            DPP[key][org_id]['programmes'].append(item['programme_id'])
-            beneficiaries = DPP[key][org_id].get('states', [])
-            if not item['state__code'] in beneficiaries:
-                beneficiaries.append(item['state__code'])
+        org_name = item['programme__organisation_roles__organisation__name']
+        if item['programme__organisation_roles__organisation_role_id'] == 'DPP':
+            # Donor Programme Partner
+            if org_id not in DPP[key]:
+                DPP[key][org_id] = {
+                    'name': org_name,
+                    'programmes': [item['programme_id']],
+                    'states': [item['state__code']],
+                }
+            else:
+                DPP[key][org_id]['programmes'].append(item['programme_id'])
+                beneficiaries = DPP[key][org_id].get('states', [])
+                if not item['state__code'] in beneficiaries:
+                    beneficiaries.append(item['state__code'])
+        elif item['programme__organisation_roles__organisation_role_id'] == 'PO':
+            # Programme Operator
+            programme_operators[key][org_id] = org_name
 
     # Statistics for donor *project* partners
     project_counts_raw = Organisation_OrganisationRole.objects.all().select_related(
@@ -393,12 +403,15 @@ def partners(request):
         'project',
     ).values(
         'organisation__country',
+        'organisation_id',
+        'organisation__name',
         'project_id',
         'programme_id',
         'project__state_id',
         'project__programme_area_id',
+        'organisation_role_id',
     ).filter(
-        organisation_role_id='PJDPP'
+        organisation_role_id__in=['PJDPP', 'PJPT']
     ).distinct()
 
     dpp_project_count, dpp_programmes, dpp_states = (
@@ -406,15 +419,25 @@ def partners(request):
         defaultdict(dict),
         defaultdict(dict),
     )
+    dpp_orgs, project_promoters = (
+        defaultdict(lambda: defaultdict(dict)),
+        defaultdict(lambda: defaultdict(dict)),
+    )
     for item in project_counts_raw:
         donor_state = DONOR_STATES.get(
             item['organisation__country'],
             'International'
         )
         key = item['project__programme_area_id'] + item['project__state_id'] + donor_state
-        dpp_project_count[key] += 1
-        dpp_programmes[key][item['programme_id']] = item['programme_id']
-        dpp_states[key][item['project__state_id']] = item['project__state_id']
+        if item['organisation_role_id'] == 'PJDPP':
+            # Donor project partners
+            dpp_project_count[key] += 1
+            dpp_programmes[key][item['programme_id']] = item['programme_id']
+            dpp_states[key][item['project__state_id']] = item['project__state_id']
+            dpp_orgs[key][item['organisation_id']] = item['organisation__name']
+        elif item['organisation_role_id'] == 'PJPT':
+            # Project promoter
+            project_promoters[key][item['organisation_id']] = item['organisation__name']
 
     # Bilateral news, they are always related to programmes, not projects
     news_raw = ProgrammeOutcome.objects.all(
@@ -473,7 +496,10 @@ def partners(request):
                         donor_state in programme_donors[p['programme__code']]
                     )
                 },
-                'donor_programme_partners': DPP.get(key, {})
+                'donor_programme_partners': DPP.get(key, {}),
+                'donor_project_partners': dpp_orgs.get(key, {}),
+                'project_promoters': project_promoters.get(key, {}),
+                'programme_operators': programme_operators.get(key, {}),
             })
 
     """
