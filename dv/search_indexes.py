@@ -22,6 +22,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 
     # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
+    name = indexes.CharField(model_attr='name', indexed=False)
 
 
     def get_model(self):
@@ -63,6 +64,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     state_name = indexes.FacetMultiValueField(model_attr='state__name')
+    financial_mechanism_ss = indexes.FacetMultiValueField()
     programme_area_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__name')
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__priority_sector__name')
     programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
@@ -77,11 +79,21 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
 
+    # extra data; avoid db hit
+    url = indexes.CharField(model_attr='url', indexed=False, null=True)
+    name = indexes.CharField(model_attr='name', indexed=False)
+
     def get_model(self):
         return Project
 
     def prepare_kind(self, obj):
         return 'Project'
+
+    def prepare_financial_mechanism_ss(self, obj):
+        return list(obj.programme_area.allocation_set.values_list(
+            'financial_mechanism__name',
+            flat=True,
+        ).distinct())
 
     def prepare_programme_area_ss(self, obj):
         return list(obj.programme.programme_areas.values_list(
@@ -99,6 +111,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     # make sure you rebuild_index from zero when adding such "upgrade" here
     state_name = indexes.FacetMultiValueField()
     # programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
+    financial_mechanism_ss = indexes.FacetMultiValueField()
     programme_name = indexes.FacetMultiValueField()
     project_name = indexes.FacetMultiValueField()
     programme_area_ss = indexes.FacetMultiValueField()
@@ -116,11 +129,26 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     nuts = indexes.FacetCharField(model_attr='nuts')
     role_ss = indexes.FacetMultiValueField()
 
+    # extra data; avoid db hit
+    name = indexes.CharField(model_attr='name', indexed=False)
+
     def get_model(self):
         return Organisation
 
     def prepare_kind(self, obj):
         return 'Organisation'
+
+    def prepare_financial_mechanism_ss(self, obj):
+        result = set()
+        result = result.union(obj.roles.filter(is_programme=False).values_list(
+            'project__programme_area__allocation__financial_mechanism__name',
+            flat=True,
+        ).distinct())
+        result = result.union(obj.roles.filter(is_programme=True).values_list(
+            'programme__programme_areas__allocation__financial_mechanism__name',
+            flat=True,
+        ).distinct())
+        return list(result)
 
     def prepare_state_name(self, obj):
         result = set()
@@ -138,7 +166,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'programme__programme_areas__name', flat=True).distinct())
         return list(result)
 
-    def prepare_priority_sector(self, obj):
+    def prepare_priority_sector_ss(self, obj):
         result = set()
         result = result.union(obj.roles.filter(is_programme=False).values_list(
             'project__programme_area__priority_sector__name', flat=True).distinct())
