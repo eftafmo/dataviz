@@ -1,8 +1,9 @@
 import json5
 from django.shortcuts import render
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
+from haystack.forms import FacetedSearchForm
 
-from .search_form import ProgFacetedSearchForm
+from .search_form import EeaFacetedSearchForm
 
 def home(request):
     return render(request, 'homepage.html')
@@ -28,7 +29,7 @@ logger = logging.getLogger()
 
 
 class FacetedSearchView(BaseFacetedSearchView):
-    form_class = ProgFacetedSearchForm
+    form_class = EeaFacetedSearchForm
     facet_fields = [
         'state_name',
         'programme_area_ss',
@@ -43,9 +44,7 @@ class FacetedSearchView(BaseFacetedSearchView):
     paginate_by = 20
     context_object_name = 'object_list'
     initial = {
-        'q': 'family',
-        'state_name': '',
-        'kind': 'Programme',
+        'kind': ['Programme'],
     }
 
     def form_invalid(self, form):

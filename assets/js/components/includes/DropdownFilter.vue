@@ -1,5 +1,5 @@
 <template>
-  <select @change="setFilter">
+  <select class="viz-select" @change="setFilter">
     <option value="">
       {{ title }}
     </option>
@@ -14,7 +14,7 @@
 </template>
 
 <style lang="less">
-  select {
+  .viz-select {
     position: absolute;
     top: 30px;
     right: 0;

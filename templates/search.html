@@ -6,18 +6,26 @@
       <div class="search-top-inner">
         <h1 class="page-title">Search</h1>
         <form class="search-form" id="main-search-form">
-          <span class="input-box">
-            <input type="search" placeholder="Search" name="q" autofocus>
-          </span>
-          <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-
+          <div class="clearfix">
+            <span class="input-box">
+              <input type="search" placeholder="Search" name="q" autofocus
+              value="{{ form.q.data | default_if_none:"" }}">
+            </span>
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
         <div class="search-tabs">
           <span class="muted">Search for:</span>
-          <a href="#programmes" class="is-selected">Programmes</a>
-          <a href="#projects">Projects</a>
-          <a href="#organizations">Organizations</a>
+          <input type="radio" name="kind" id="programme-tab" value="Programme"
+                 {% if not form.facets.kind or form.facets.kind.0 == 'Programme' %}checked{% endif %}>
+          <label for="programme-tab">Programmes</label>
+          <input type="radio" name="kind" id="project-tab" value="Project"
+                 {% if form.facets.kind.0 == 'Project'%}checked{% endif %}>
+          <label for="project-tab">Projects</label>
+          <input type="radio" name="kind" id="organisation-tab" value="Organisation"
+                 {% if form.facets.kind.0 == 'Organisation'%}checked{% endif %}>
+          <label for="organisation-tab">Organisations</label>
         </div>
+        </form>
 
       </div>
     </div>
@@ -52,7 +60,13 @@
           <span class="country">
             <img src="" alt="flag"> {{ res.state_name.0 }}
           </span>
-          <h4 class="title"><a href="{{ res.url }}">{{ res.programme_name.0 }}</a></h4>
+          <h4 class="title">
+            {% if res.url %}
+              <a href="{{ res.url }}">{{ res.name }}</a>
+            {% else %}
+              <span>{{ res.name }}</span>
+            {% endif %}
+          </h4>
           <p class="description">{{ res.text }}</p>
         </div>
       </li>
@@ -82,7 +96,7 @@
     <div class="sidebar-header">
       <h3 class="sidebar-title">Search filters</h3>
       <button class="no-btn small muted" type="reset">Reset</button>
-      <button class="no-btn small muted" id="toggle-sidebar-filters-close" type="button">Close</button>
+{#      <button class="no-btn small muted" id="toggle-sidebar-filters-close" type="button">Close</button>#}
     </div>
     <div class="sidebar-body">
 
@@ -98,18 +112,81 @@
       </div>
       -->
 
-      {% if facets.fields.state_name %}
+      {% if facets.fields.financial_mechanism_ss %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="state-facet">Beneficiary State</label>
-          <select name="state_name" id="state-facet" form="main-search-form">
-            {% for st in facets.fields.state_name %}
-              <option value="{{ st.0 }}">{{ st.0 }} ({{ st.1 }})</option>
+          <label for="financial-mechanism-facet">Financial Mechanism</label>
+          <select multiple name="financial_mechanism_ss" id="financial-mechanism-facet" form="main-search-form">
+            {% for o in facets.fields.financial_mechanism_ss %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.financial_mechanism_ss %}selected{% endif %}>
+                {{ o.0 }} ({{ o.1 }})
+              </option>
             {% endfor %}
           </select>
         </div>
       </div>
       {% endif %}
+
+      {% if facets.fields.state_name %}
+      <div class="input-group">
+        <div class="input-box input-block">
+          <label for="state-facet">Beneficiary States</label>
+          <select multiple name="state_name" id="state-facet" form="main-search-form">
+            {% for o in facets.fields.state_name %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.state_name %}selected{% endif %}>
+                {{ o.0 }} ({{ o.1 }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if facets.fields.priority_sector_ss %}
+      <div class="input-group">
+        <div class="input-box input-block">
+          <label for="priority-sector-facet">Priority Sectors</label>
+          <select multiple name="priority_sector_ss" id="priority-sector-facet" form="main-search-form">
+            {% for o in facets.fields.priority_sector_ss %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.priority_sector_ss %}selected{% endif %}>
+                {{ o.0 }} ({{ o.1 }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if facets.fields.programme_area_ss %}
+      <div class="input-group">
+        <div class="input-box input-block">
+          <label for="programme-area-facet">Programme Areas</label>
+          <select multiple name="programme_area_ss" id="programme-area-facet" form="main-search-form">
+            {% for o in facets.fields.programme_area_ss %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_area_ss %}selected{% endif %}>
+                {{ o.0 }} ({{ o.1 }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if facets.fields.outcome_ss %}
+      <div class="input-group">
+        <div class="input-box input-block">
+          <label for="outcome-facet">Outcomes</label>
+          <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form">
+            {% for o in facets.fields.outcome_ss %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.outcome_ss %}selected{% endif %}>
+                {{ o.0 }} ({{ o.1 }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      {% endif %}
+
       {% endif %}
 
     </div>
