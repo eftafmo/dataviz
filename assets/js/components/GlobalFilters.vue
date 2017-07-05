@@ -38,7 +38,9 @@
 .list-filters {
   overflow: hidden;
   white-space: normal;
-  margin-left: -2rem;
+  @media(max-width: 800px){
+    margin-left: -2rem;
+  }
 }
 
 .global-filters {
