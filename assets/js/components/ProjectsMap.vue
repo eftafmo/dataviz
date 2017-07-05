@@ -38,12 +38,8 @@ export default BaseMap.extend({
 
   data() {
     return {
-      //beneficiary_colour_default: '#fff',
-
-      // TODO: ! .. :)
-      beneficiary_colour_default: '#000',
-      //duration: 2000,
-    }
+      beneficiary_colour_default: '#fff',
+    };
   },
 
   computed: {
@@ -131,11 +127,19 @@ export default BaseMap.extend({
       // only now bind the data
       beneficiaries = beneficiaries.data(beneficiarydata, (d) => d.id );
 
-      const projects = beneficiaries.select("g");
+      const projects = beneficiaries
+        .filter( (d) => d.id !== this.filters.beneficiary )
+        .select("g");
 
       projects
         .transition(t)
         .attr("opacity", 1);
+
+      beneficiaries
+        .filter( (d) => d.id == this.filters.beneficiary )
+        .select("g")
+        .transition(t)
+        .attr("opacity", 0);
 
       beneficiaries.exit().select("g")
         .transition(t)
@@ -174,6 +178,10 @@ export default BaseMap.extend({
         .text(this.get_project_count)
         .transition(t)
         .attr("opacity", 1);
+    },
+
+    _renderRegionData(state, regiondata, t) {
+      //
     },
   },
 });

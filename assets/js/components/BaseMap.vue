@@ -86,9 +86,6 @@
     stroke: #005494;
   }
 
-@import "./nightmap.less";
-
-
   // styles
   .rendering {
     // don't show the base map until all data has been loaded
@@ -535,6 +532,7 @@ export default Vue.extend({
              .enter()
              .append("g")
              .attr("class", (d) => `${this.COUNTRIES[d.id].type} ${d.id}` )
+             .attr("opacity", 1);
 
       const paths = states
              .append("path")
@@ -581,22 +579,25 @@ export default Vue.extend({
       const state = this.filters.beneficiary;
 
       // only render the current state, but capture the rest for exit()
-      const states = this.chart.select('.regions').selectAll('g.state')
-                         .data(
-                           state ? [state] : [],
-                           (d) => d
-                         );
+      const containers = this
+        .chart.select('.regions').selectAll('g.state')
+        .data(
+          state ? [state] : [],
+          (d) => d
+        );
 
-      const sentered = states.enter()
-                             .append('g')
-                             .attr('class', (d) => "state " + d )
-                             .attr('opacity', 0);
+      const centered = containers
+        .enter()
+        .append('g')
+        .attr('class', (d) => "state " + d )
+        .attr('opacity', 0);
 
-      const regions = sentered.selectAll('g')
-                              .data(
-                                state ? this._region_borders[state] : [],
-                                (d) => d.id
-                              );
+      const regions = centered
+        .selectAll('g')
+        .data(
+          state ? this._region_borders[state] : [],
+          (d) => d.id
+        );
 
       regions.enter()
         .append('g')
@@ -615,7 +616,7 @@ export default Vue.extend({
         .attr('d', this.path)
         .attr('fill', this.region_colour_default);
 
-      states.merge(sentered)
+      containers.merge(centered)
         .style('display', null)
         .classed('transitioning', true)
         .transition(t)
@@ -625,7 +626,7 @@ export default Vue.extend({
             .classed('transitioning', false);
         });
 
-      states.exit()
+      containers.exit()
         .classed('transitioning', true)
         .transition(t)
         .attr('opacity', 0)
@@ -704,7 +705,20 @@ export default Vue.extend({
                        this.zoom = d3.event.transform.k;
                        this.updateStyle();
                      })
-                     .on("start", () => this.renderRegions(t) )
+                     .on("start", () => {
+                       // fade out / in state layer and show regions
+                       if (old)
+                         this.chart.select('.states > g.beneficiary.' + old)
+                             .transition(t)
+                             .attr("opacity", 1);
+
+                       if (val)
+                         this.chart.select('.states > g.beneficiary.' + val)
+                             .transition(t)
+                             .attr("opacity", 0);
+
+                       this.renderRegions(t)
+                     })
 
       chart
         .transition(t)
