@@ -105,7 +105,7 @@
       }
       .graticule {
         stroke: #333;
-        // commented out this one because it's being set dynamically
+        // commented out this because it's being set dynamically
         //stroke-width: .2;
         stroke-opacity: .5;
         fill: none;
@@ -129,8 +129,6 @@
     }
 
     .states {
-      .with-boundary;
-
       .beneficiary {
         cursor: pointer;
 
@@ -138,18 +136,23 @@
           cursor: not-allowed;
         }
 
-        &:hover {
+        path {
+          .with-boundary;
+        }
+
+        &:hover path {
           .hovered;
         }
       }
     }
 
     .regions {
-      .with-boundary;
       cursor: pointer;
       // regions get their fill inline
 
       path {
+        .with-boundary;
+
         &:hover {
           stroke: black;
           //.hovered;
@@ -261,8 +264,6 @@ export default Vue.extend({
       beneficiary_colour_default: '#ddd',
       beneficiary_colour_hovered: '#9dccec',
       beneficiary_colour_zero: '#fff',
-
-      zoom: 1,
     };
   },
 
@@ -366,7 +367,7 @@ export default Vue.extend({
 
     getScaleFactor() {
       // don't make this computed, it changes too fast
-      return this.width / this.svgWidth / this.zoom;
+      return this.width / this.svgWidth / this.realtimeZoom;
     },
 
     mkStyle() {
@@ -375,9 +376,9 @@ export default Vue.extend({
             graticule_stroke = this.graticule_stroke * scaleFactor;
 
       return `
-        .map-viz .chart .terrain,
-        .map-viz .chart .states,
-        .map-viz .chart .regions {
+        .map-viz .chart .terrain path,
+        .map-viz .chart .states path,
+        .map-viz .chart .regions path {
           stroke-width: ${terrain_stroke};
         }
         .map-viz .chart .base .graticule {
@@ -699,10 +700,43 @@ export default Vue.extend({
             chart = this.chart,
             t = this.getTransition();
 
+      let transformer = d3.zoomIdentity,
+          k = 1, x, y;
+
+      if (val) {
+        const spacing = .1 * Math.min($this.width, $this.height);
+
+        const bounds = $this.geodetails[val].bounds,
+              x1 = bounds[0][0],
+              x2 = bounds[1][0],
+
+              y1 = bounds[0][1],
+              y2 = bounds[1][1],
+
+              dx = x2 - x1,
+              dy = y2 - y1,
+
+              _x = (x1 + x2) / 2,
+              _y = (y1 + y2) / 2,
+
+              w = $this.width,
+              h = $this.height;
+
+        k = Math.min((w - spacing) / dx,
+                     (h - spacing) / dy);
+
+        x = w / 2 - _x * k;
+        y = h / 2 - _y * k;
+
+        transformer = transformer.translate(x, y).scale(k);
+      }
+
+      this.zoomLevel = k;
+
       const zoom = d3.zoom()
                      .on("zoom", () => {
                        chart.attr("transform", d3.event.transform);
-                       this.zoom = d3.event.transform.k;
+                       this.realtimeZoom = d3.event.transform.k;
                        this.updateStyle();
                      })
                      .on("start", () => {
@@ -722,39 +756,7 @@ export default Vue.extend({
 
       chart
         .transition(t)
-        .call(zoom.transform,
-              transformer);
-
-      function transformer() {
-        const tr = d3.zoomIdentity;
-
-        if (!val) return tr; // zooms out
-
-        const spacing = .1 * Math.min($this.width, $this.height);
-
-        const bounds = $this.geodetails[val].bounds,
-              x1 = bounds[0][0],
-              x2 = bounds[1][0],
-
-              y1 = bounds[0][1],
-              y2 = bounds[1][1],
-
-              dx = x2 - x1,
-              dy = y2 - y1,
-
-              _x = (x1 + x2) / 2,
-              _y = (y1 + y2) / 2,
-
-              w = $this.width,
-              h = $this.height,
-
-              k = Math.min((w - spacing) / dx,
-                           (h - spacing) / dy),
-              x = w / 2 - _x * k,
-              y = h / 2 - _y * k;
-
-        return tr.translate(x, y).scale(k);
-      }
+        .call(zoom.transform, transformer);
     },
 
     handleFilterFm(val, old) {
@@ -809,7 +811,7 @@ export default Vue.extend({
     svgWidth: "updateStyle",
 
 // TODO: !!
-//isReady() { setTimeout(() => this.filters.beneficiary = "RO", 300); },
+isReady() { setTimeout(() => this.filters.beneficiary = "RO", 300); },
 
   },
 });
