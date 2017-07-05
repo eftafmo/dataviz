@@ -1,3 +1,16 @@
+<style lang="less">
+@duration: .5s;
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity @duration;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>
+
+
 <script>
 import * as d3 from 'd3';
 import {FILTERS, Q} from '../../globals.js'
@@ -26,11 +39,14 @@ export default {
         // TODO: derive and extend the browser locale?
         // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
         "decimal": ",", // that's the european way
-        "thousands": ".", // dot, the european way
+        "thousands": "\u00A0", // nbsp
         "grouping": [3],
         "currency": ["€", ""],
         "percent": "%",
       },
+
+      // helper for transitions
+      changed: false,
     };
   },
 
@@ -130,6 +146,7 @@ export default {
            destination: 'output_column_name',
          }
          `columns` also take a `type` property, which defaults to Number
+           and a `filter_by` property, which expects boolean values (false and undefined rows are excluded)
        */
 
       const bycols = {};
@@ -150,7 +167,7 @@ export default {
 
       const oncols = {};
       for (const col of on) {
-        let src, dst, type;
+        let src, dst, type, filter_by;
         if (typeof col == 'string') {
           src = dst = col;
           type = Number;
@@ -158,12 +175,13 @@ export default {
           src = col.source;
           dst = col.destination;
           type = col.type;
+          filter_by = col.filter_by;
 
           if (dst === undefined) dst = src;
           if (type === undefined) type = Number;
         }
 
-        oncols[src] = {destination: dst, type: type};
+        oncols[src] = {destination: dst, type: type, filter_by: filter_by};
       };
 
       // each aggreggation level is a sub-dictionary,
@@ -190,9 +208,14 @@ export default {
           const _col = oncols[srccol],
                 dstcol = _col.destination,
                 type = _col.type,
-                value = type(item[srccol]);
+                filter_by = _col.filter_by,
+                value = type == Number ? Number(item[srccol]) : item[srccol];
 
           let current = row[dstcol];
+
+          if (filter_by && !item[filter_by]) {
+            continue;
+          }
 
           if (type === Number) {
             // numbers are added together
@@ -201,14 +224,26 @@ export default {
 
             row[dstcol] = current + value;
           }
-          else if (type === String) {
-            // strings are consolidated into a set
+          else if (type === String || type === Array || type === Object) {
+            // strings, arrays items and object keys are consolidated into sets
             if (current === undefined)
               current = row[dstcol] = d3.set();
 
-            current.add(value);
+            if (type === String) {
+              current.add(value);
+            }
+            else if (type === Array) {
+              for (const v of value) {
+                current.add(v);
+              }
+            }
+            else if (type === Object) {
+              for (const k in value) {
+                current.add(k);
+              }
+            }
           }
-          else console.warn(srccol, ":: unkwown type", type)
+          else console.warn(srccol, ":: unkwown type", type);
         }
       }
 
@@ -300,11 +335,20 @@ export default {
   },
   watch: {
     'isReady': '_main',
+
     // make sure every key exists from the start
     'filters.fm': 'handleFilterFm',
     'filters.beneficiary': 'handleFilterBeneficiary',
     'filters.sector': 'handleFilterSector',
     'filters.area': 'handleFilterArea',
+
+    // this one is used only for vue transitions
+    'filters': {
+      deep: true,
+      handler() {
+        this.changed = !this.changed;
+      },
+    },
   },
 };
 </script>

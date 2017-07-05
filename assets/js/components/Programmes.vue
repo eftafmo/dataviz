@@ -3,14 +3,14 @@
       <li v-for="beneficiary in data.beneficiaries">
         <div class="content-item programmes_content">
           <div class="body">
-            <div class="title-wrapper">
+            <div @click="toggleContent($event)" class="title-wrapper">
                 <div class="flag">
                     <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
                 </div>
                 <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
                 <small>({{ beneficiary.programmes.length }} programmes)</small>
             </div>
-            <ul class="programme-list">
+            <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
                <li v-for="programme in beneficiary.programmes" class="programme-item">
                  <a class="programme-sublist-item" target="_blank" v-bind:href=programme.programme_url> {{ programme.programme_name }} </a>
                  <!--<div class="programme-sublist-wrapper">
@@ -72,8 +72,15 @@
     color: #3D90F3;
   }
 
-  a.programme-sublist-item:hover {
-    text-decoration: None;
+  .title-wrapper:hover {
+    text-decoration: underline;
+  }
+
+  a.programme-sublist-item:hover{
+    &:before {
+
+    text-decoration: none;
+    }
   }
 
   a.programme-sublist-item {
@@ -122,6 +129,15 @@
     }
   }
 
+  .programme-list {
+    display: none;
+  }
+
+  .programme-list.active {
+    display: block;
+  }
+
+
   .title-wrapper > * {
     display: inline-block;
     margin-right: .5rem;
@@ -129,6 +145,7 @@
 
   .title-wrapper {
     display: flex;
+    cursor: pointer;
     align-items: center;
     margin: 1rem 0;
   }
@@ -225,7 +242,7 @@ export default Vue.extend({
       }
 
       //Sort by country
-      out.beneficiaries.sort((a,b) => d3.ascending(a.id,b.id));
+      out.beneficiaries.sort((a,b) => d3.ascending(this.get_country_name(a.id),this.get_country_name(b.id)));
       return out;
     },
   },
@@ -240,7 +257,12 @@ export default Vue.extend({
       //         item.classList.remove('active')
       // }
 
-      const target = e.target.parentNode
+      //TODO : get rid of the parenNode logic
+      let target;
+      if (e.target.parentNode.classList.contains('flag'))
+        target = e.target.parentNode.parentNode.parentNode.querySelector('.programme-list');
+      else
+         target = e.target.parentNode.parentNode.querySelector('.programme-list');
       if(target.classList.contains('active')){
         target.classList.remove('active')
       }

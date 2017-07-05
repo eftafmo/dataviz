@@ -38,8 +38,6 @@
         <g class="frames" />
       </g>
 
-      <g class="data" /> <!-- this one's for actual visualisations -->
-
     </g>
   </svg>
 </chart-container>
@@ -107,7 +105,7 @@
       }
       .graticule {
         stroke: #333;
-        // commented out this one because it's being set dynamically
+        // commented out this because it's being set dynamically
         //stroke-width: .2;
         stroke-opacity: .5;
         fill: none;
@@ -131,28 +129,30 @@
     }
 
     .states {
-      .with-boundary;
-
-      // TODO: should donors be clickable?
-      path.beneficiary {
+      .beneficiary {
         cursor: pointer;
 
         &.zero {
           cursor: not-allowed;
         }
 
-        &:hover {
+        path {
+          .with-boundary;
+        }
+
+        &:hover path {
           .hovered;
         }
       }
     }
 
     .regions {
-      .with-boundary;
       cursor: pointer;
       // regions get their fill inline
 
       path {
+        .with-boundary;
+
         &:hover {
           stroke: black;
           //.hovered;
@@ -217,7 +217,7 @@ import {slugify} from 'js/lib/util'
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin, {get_flag_name, COUNTRIES} from './mixins/WithCountries';
+import WithCountriesMixin from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
@@ -239,6 +239,7 @@ export default Vue.extend({
     this.regions = null;
     // cache for computed geofeature-related data
     this.geodetails = {};
+    this.region_names = {};
     // cache for geojson data
     this._region_borders = {};
     // cache for allocation data
@@ -258,33 +259,15 @@ export default Vue.extend({
 
       terrain_stroke: 0.5,
       graticule_stroke: 0.2,
-      donor_inactive_colour: "#85adcb",
-      default_region_colour: "#fff",
-      beneficiary_colour: {
-        default: '#ddd',
-        hovered: '#9dccec',
-        zero: '#fff',
-      },
-
-      zoom: 1,
+      donor_colour_inactive: "#85adcb",
+      region_colour_default: "#fff",
+      beneficiary_colour_default: '#ddd',
+      beneficiary_colour_hovered: '#9dccec',
+      beneficiary_colour_zero: '#fff',
     };
   },
 
   computed: {
-    scaleFactor() {
-      return this.width / this.svgWidth / this.zoom;
-    },
-
-    getBeneficiaries() {
-      const beneficiaries = {}
-      for (let c in COUNTRIES) {
-        if(COUNTRIES[c].type == 'beneficiary'){
-          beneficiaries[c] = COUNTRIES[c]
-        }
-      }
-      return beneficiaries
-    },
-
     projection() {
       /*
        * "The European grid is a proposed, multipurpose Pan-European mapping standard.
@@ -338,7 +321,7 @@ export default Vue.extend({
             layer = 'nuts3',
             cache = this._region_borders;
 
-      const countries = Object.keys(COUNTRIES);
+      const countries = Object.keys(this.COUNTRIES);
       countries.forEach( (c) => cache[c] = [] );
 
       const features = topojson.feature(data, data.objects[layer]).features;
@@ -361,7 +344,7 @@ export default Vue.extend({
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
-      //this.setStyle();
+      //this.updateStyle();
 
       // TODO: move these somewhere else, and don't hijack default render
       this.renderBase();
@@ -372,54 +355,46 @@ export default Vue.extend({
       this.rendered = true;
     },
 
-    setStyle() {
+    updateStyle() {
       let style = this.dynamicStyle;
       if (!style) {
         style = document.createElement("style");
         this.$el.appendChild(style);
         this.dynamicStyle = style;
       }
+      style.innerHTML = this.mkStyle();
+    },
 
-      const terrain_stroke = this.terrain_stroke * this.scaleFactor,
-            graticule_stroke = this.graticule_stroke * this.scaleFactor;
+    getScaleFactor() {
+      // don't make this computed, it changes too fast
+      return this.width / this.svgWidth / this.realtimeZoom;
+    },
 
-      style.innerHTML = `
-        .map-viz .chart .terrain,
-        .map-viz .chart .states,
-        .map-viz .chart .regions {
+    mkStyle() {
+      const scaleFactor = this.getScaleFactor(),
+            terrain_stroke = this.terrain_stroke * scaleFactor,
+            graticule_stroke = this.graticule_stroke * scaleFactor;
+
+      return `
+        .map-viz .chart .terrain path,
+        .map-viz .chart .states path,
+        .map-viz .chart .regions path {
           stroke-width: ${terrain_stroke};
         }
         .map-viz .chart .base .graticule {
           stroke-width: ${graticule_stroke};
-        }`;
+        }
+      `;
+    },
+
+    tooltipTemplate() {
+      throw new Error("Not implemented");
     },
 
     createTooltip() {
-      const $this = this;
-
       let tip = d3.tip()
           .attr('class', 'd3-tip map')
-          .html(function(d) {
-            // this function is common to both countries and regions, so...
-
-            // not the smartest way to tell if this is a country, but it works
-            // TODO: add country financial data
-            // TODO: move flag to css
-            if (d.id.length == 2)
-              return `<div class="title-container">
-                        <img src="/assets/imgs/${get_flag_name(d.id)}.png" />
-                        <span class="name">${COUNTRIES[d.id].name}</span>
-                      </div>
-                      ${$this.currency(d.total || 0)}`
-                      +" <button class='btn btn-anchor'>X</button>";
-
-            return `<div class="title-container">
-                      <span class="name">${this.name} (${d.id})</span>
-                    </div>
-                    ${$this.currency(d.amount || 0)}
-                    <small>(Temporary)<small>`
-                    +" <button class='btn btn-anchor'>X</button>";
-          })
+          .html(this.tooltipTemplate)
           .direction('n')
           .offset([0, 0])
 
@@ -508,9 +483,7 @@ export default Vue.extend({
             layers = data.objects;
 
       const _mesh = (obj, filter) => topojson.mesh(data, obj, filter),
-            _features = (obj) => topojson.feature(data, obj).features;
-
-      const states = this.chart.select('.states'),
+            _features = (obj) => topojson.feature(data, obj).features,
             path = this.path;
 
       const scaleLi = 5;
@@ -550,48 +523,53 @@ export default Vue.extend({
           .each(drawFrameLi);
       }
 
-      const countries = states.selectAll("path")
+      const states = this.chart.select('.states').selectAll('g')
              .data(
-               _features(layers.nuts0).filter( (d) => COUNTRIES[d.id] ),
+               _features(layers.nuts0).filter(
+                 (d) => this.COUNTRIES[d.id] !== undefined
+               ),
                (d) => d.id
              )
              .enter()
+             .append("g")
+             .attr("class", (d) => `${this.COUNTRIES[d.id].type} ${d.id}` )
+             .attr("opacity", 1);
+
+      const paths = states
              .append("path")
-             .attr("class", (d) => `${COUNTRIES[d.id].type} ${d.id}` )
-             .attr("fill", this.beneficiary_colour.default)
+             .attr("fill", this.beneficiary_colour_default)
              .attr("d", path)
              // while at this, cache the centroids and bounding box,
              // because the geo-data will get wiped during data manipulation
              .each(this.cacheGeoDetails);
 
-      countries
+      paths
         .filter( (d) => d.id == "LI" )
         .call(magnifyLiechtenstein);
 
+      // hardcoding the donor colours a bit, because we want to
+      // transition them later
+      paths
+        .filter(this.isDonor)
+        .attr("fill", (d) => (
+          d.id == "NO" ? "url(#multi-fm)" : this.fmcolour("eea-grants") // §
+        ) );
+
       /* mouse events */
-      countries
-        .on("mouseenter",
-            function(){ d3.select(this).raise(); }
-        )
-      countries
+      // (only beneficiaries get them)
+      states
         .filter(this.isBeneficiary)
         .on("click", function (d) {
           $this.toggleBeneficiary(d, this);
         })
-        // adding tooltip only for beneficiaries
-        .on('mouseenter', this.tip.show)
+        .on('mouseenter', function(d, i) {
+          d3.select(this).raise();
+          $this.tip.show.call(this, d, i);
+        })
         .on('mouseleave', this.tip.hide);
-
-      // hardcoding the donor colours a bit, because we want to
-      // transition them later
-      countries
-        .filter(this.isDonor)
-        .attr("fill", (d) => d.id == "NO" ?
-                             "url(#multi-fm)" : this.fmcolour("eea-grants") // §
-        );
     },
 
-    renderData() {
+    renderData(t) {
       // children should implement this as needed
       return;
     },
@@ -600,76 +578,121 @@ export default Vue.extend({
       // renders NUTS-lvl3 regions for the selected country
       const $this = this;
       const state = this.filters.beneficiary;
-      console.log(this.filters)
+
       // only render the current state, but capture the rest for exit()
-      const containers = this.chart.select('.regions').selectAll('g')
-                             .data(
-                               state ? [state] : [],
-                               (d) => d
-                             );
+      const containers = this
+        .chart.select('.regions').selectAll('g.state')
+        .data(
+          state ? [state] : [],
+          (d) => d
+        );
 
-      const conentered = containers.enter()
-                                   .append('g')
-                                   .attr('class', (d) => d )
-                                   .attr('opacity', 0);
+      const centered = containers
+        .enter()
+        .append('g')
+        .attr('class', (d) => "state " + d )
+        .attr('opacity', 0);
 
+      const regions = centered
+        .selectAll('g')
+        .data(
+          state ? this._region_borders[state] : [],
+          (d) => d.id
+        );
 
-      const regions = conentered.selectAll('path')
-                                .data(
-                                  state ? this._region_borders[state] : [],
-                                  (d) => d.id
-                                );
+      regions.enter()
+        .append('g')
+        .each( (d) => {
+          this.cacheGeoDetails(d);
+          // remember the region name
+          this.region_names[d.id] = d.properties.name;
+        } )
+        .on('mouseenter', function(d, i) {
+          d3.select(this).raise();
+          $this.tip.show.call(this, d, i);
+        })
+        .on('mouseleave', this.tip.hide)
 
-      const rentered = regions.enter().append('path')
-             .attr('d', this.path)
-             .each(this.cacheGeoDetails)
-             // cache the name with the node
-             .property('name', (d) => d.properties.name )
-             .attr('fill', this.default_region_colour)
-             .on('mouseenter',
-                 function(d, i) {
-                   d3.select(this).raise();
-                   $this.tip.show.call(this, d, i);
-                 }
-             )
-             .on('mouseleave', this.tip.hide);
+        .append('path')
+        .attr('d', this.path)
+        .attr('fill', this.region_colour_default);
 
-      // don't add a title, it's shown by the tooltip
-      //rentered
-      // .append('title')
-      // .text( (d) => d.properties.name );
-
-      containers.merge(conentered)
-                .style('display', null)
-                .classed('transitioning', true)
-                .transition(t)
-                .attr('opacity', 1)
-                .on('end', function() {
-                  d3.select(this)
-                    .classed('transitioning', false);
-                });
+      containers.merge(centered)
+        .style('display', null)
+        .classed('transitioning', true)
+        .transition(t)
+        .attr('opacity', 1)
+        .on('end', function() {
+          d3.select(this)
+            .classed('transitioning', false);
+        });
 
       containers.exit()
-                .classed('transitioning', true)
-                .transition(t)
-                .attr('opacity', 0)
-                .on('end', function() {
-                  d3.select(this)
-                    .style('display', 'none')
-                    .classed('transitioning', false);
-                })
+        .classed('transitioning', true)
+        .transition(t)
+        .attr('opacity', 0)
+        .on('end', function() {
+          d3.select(this)
+            .style('display', 'none')
+            .classed('transitioning', false);
+        })
 
-                // also reset regions to default colour
-                .selectAll('path')
-                .attr('fill', this.default_region_colour)
+        // also reset regions to default colour
+        .selectAll('path')
+        .attr('fill', this.region_colour_default)
 
       // finally,
       this.renderRegionData(t)
     },
 
     renderRegionData(t) {
-      // children should implement this as needed
-      return;
+      const state = this.filters.beneficiary;
+
+      // this could be called by another filter.
+      // bail out if no beneficiary selected.
+      if (state === null) return;
+
+      let dataset = this._region_data[state];
+
+      // finally, trigger the whole logic
+      if (dataset === undefined) {
+        // reset the transition, data might arrive too late to use it.
+        // TODO: run a throbber / suggest data loading somehow?
+        t = undefined;
+
+        // fetch the data, fill the cache, render
+        const url = this.detailsDatasource.replace('XX', state);
+
+        d3.json(url, (error, data) => {
+          if (error) throw error;
+          dataset = this._region_data[state] = data;
+          this._renderRegionData(state, this.computeRegionData(dataset), t);
+        } );
+      } else {
+        this._renderRegionData(state, this.computeRegionData(dataset), t);
+      }
+    },
+
+    computeRegionData(regiondataset) {
+      const _filters = d3.keys(this.filters).filter( (f) => f != 'beneficiary' );
+      const dataset = this.filter(regiondataset, _filters);
+
+      const aggregated = this.aggregate(
+        dataset,
+        ['id'],
+        [
+          'allocation',
+          'project_count',
+          {source: 'sector', destination: 'sectors', type: String, filter_by: 'is_not_ta'},
+        ],
+        true
+      );
+
+      return aggregated;
+    },
+
+    _renderRegionData(state, regiondata, t) {
+      throw new Error("Not implemented");
     },
 
     handleFilterBeneficiary(val, old) {
@@ -677,24 +700,10 @@ export default Vue.extend({
             chart = this.chart,
             t = this.getTransition();
 
-      const zoom = d3.zoom()
-                     .on("zoom", () => {
-                       chart.attr("transform", d3.event.transform);
-                       this.zoom = d3.event.transform.k;
-                       this.setStyle();
-                     })
-                     .on("start", () => this.renderRegions(t) )
+      let transformer = d3.zoomIdentity,
+          k = 1, x, y;
 
-      chart
-        .transition(t)
-        .call(zoom.transform,
-              transformer);
-
-      function transformer() {
-        const tr = d3.zoomIdentity;
-
-        if (!val) return tr; // zooms out
-
+      if (val) {
         const spacing = .1 * Math.min($this.width, $this.height);
 
         const bounds = $this.geodetails[val].bounds,
@@ -711,15 +720,43 @@ export default Vue.extend({
               _y = (y1 + y2) / 2,
 
               w = $this.width,
-              h = $this.height,
+              h = $this.height;
 
-              k = Math.min((w - spacing) / dx,
-                           (h - spacing) / dy),
-              x = w / 2 - _x * k,
-              y = h / 2 - _y * k;
+        k = Math.min((w - spacing) / dx,
+                     (h - spacing) / dy);
 
-        return tr.translate(x, y).scale(k);
+        x = w / 2 - _x * k;
+        y = h / 2 - _y * k;
+
+        transformer = transformer.translate(x, y).scale(k);
       }
+
+      this.zoomLevel = k;
+
+      const zoom = d3.zoom()
+                     .on("zoom", () => {
+                       chart.attr("transform", d3.event.transform);
+                       this.realtimeZoom = d3.event.transform.k;
+                       this.updateStyle();
+                     })
+                     .on("start", () => {
+                       // fade out / in state layer and show regions
+                       if (old)
+                         this.chart.select('.states > g.beneficiary.' + old)
+                             .transition(t)
+                             .attr("opacity", 1);
+
+                       if (val)
+                         this.chart.select('.states > g.beneficiary.' + val)
+                             .transition(t)
+                             .attr("opacity", 0);
+
+                       this.renderRegions(t)
+                     })
+
+      chart
+        .transition(t)
+        .call(zoom.transform, transformer);
     },
 
     handleFilterFm(val, old) {
@@ -728,7 +765,7 @@ export default Vue.extend({
       /*
        * part 0: re-render data-dependent stuff
        */
-      this.renderData();
+      this.renderData(t);
 
       /*
        * part 1: change the donor colours
@@ -738,14 +775,14 @@ export default Vue.extend({
       // (use ids everywhere)?
       const colourfuncEEA = () => val != "Norway Grants" ?
                                   this.fmcolour("eea-grants") :
-                                  this.donor_inactive_colour;
+                                  this.donor_colour_inactive;
 
       const colourfuncNO = val === null ?
                            (d) => this.fmcolour(d) :
                            () => this.fmcolour(slugify(val)); // awful §
 
       this.chart.select('.states').selectAll('path')
-        .filter( (d) => COUNTRIES[d.id].type == "donor" && d.id != "NO" )
+        .filter( (d) => this.isDonor(d.id) && d.id != "NO" )
         .transition(t)
         .attr("fill", colourfuncEEA);
 
@@ -764,13 +801,14 @@ export default Vue.extend({
     },
 
     handleFilter(type, val, old) {
-      this.renderData();
-      this.renderRegionData();
+      const t = this.getTransition();
+      this.renderData(t);
+      this.renderRegionData(t);
     },
   },
 
   watch: {
-    svgWidth: "setStyle",
+    svgWidth: "updateStyle",
   },
 });
 </script>

@@ -27,7 +27,7 @@
 
 body {
   margin: 0;
-  font-family: 'Open sans', sans-serif;
+  font-family: 'Arial', 'Open sans', sans-serif;
   font-size: 1.5rem;
   line-height: 1.3334;
   background-color: #fff;
@@ -73,7 +73,7 @@ a.muted:hover {
 .page-title {
   margin-top: 0;
   margin-bottom: 2rem;
-  color: #005494;
+  color: rgb(0, 117, 188);
   font-weight: normal;
   font-size: 2.4rem;
 }
@@ -103,7 +103,7 @@ a.muted:hover {
 .grant-dataviz h2 {
   text-align: left;
   font-weight: 400;
-  color: rgb(35, 97, 146);
+  color: rgb(0, 117, 188);
   margin-top: 1rem;
 }
 

@@ -1,13 +1,14 @@
 <template>
     <ul class="results" v-if="hasData">
-      <li v-for="(items, outcome) in data">
+     <div v-for="items in data">
+      <li v-for="(sectors, outcome) in items">
         <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
-            <div v-for="(indicators, sector) in items">
+            <div v-for="(indicators, sector) in sectors">
               <small v-show="!filters.sector">{{ sector }}</small>
-              <ul v-for="(value, indicator) in indicators" class="indicators">
-                 <li class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
+              <ul class="indicators">
+                 <li v-for="(value, indicator) in indicators" class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
                     <div class="indicator-achievement"> {{ value }}</div>
                     <div class="indicator-name"> {{ indicator }} </div>
                  </li>
@@ -16,6 +17,7 @@
           </div>
         </div>
       </li>
+     </div>
     </ul>
 </template>
 
@@ -79,27 +81,42 @@ export default Vue.extend({
 
           if (!values) continue;
 
-          let outcome = results[o];
-          if (outcome === undefined)
-            outcome = results[o] = {}
-          if (outcome[sector] == undefined)
-            outcome[sector] = {}
-
           for (let indicator in values) {
-            const value = +values[indicator];
-
+            const value = +values[indicator]['achievement'];
             if (value === 0) continue;
+
+            const priority = values[indicator]['order'];
+            if (results[priority] === undefined) {
+              results[priority] = {}
+            }
+            if (results[priority][o] === undefined) {
+              results[priority][o] = {}
+            }
+            if (results[priority][o][sector] === undefined) {
+              results[priority][o][sector] = {}
+            }
+            let outcome = results[priority][o][sector];
 
             indicator = indicator.replace(/^Number of /, '');
 
             let sum = outcome[indicator] || 0;
-            outcome[sector][indicator] = sum + value;
+            outcome[indicator] = sum + value;
           }
         }
       }
 
-      // TODO: sorting order?
-      return results;
+      // remove all SortOrder 3 indicators from results if higher priority indicators are available
+      if (Object.keys(results).length > 1) {
+        delete results['3'];
+      }
+
+      const flattened = [];
+      // now flatten, hopefully ordered by priority *unguaranteed*
+      for (const priority in results) {
+        flattened.push(results[priority]);
+      }
+      // TODO: check sorting order when adding priority=1 indicators
+      return flattened;
     },
   },
 

@@ -13,7 +13,8 @@ from dv.models import (
     Allocation,
     State, Project,
     ProgrammeIndicator, ProgrammeOutcome,
-    NUTS, News
+    NUTS, News,
+    Organisation_OrganisationRole,
 )
 from dv.serializers import (
     ProjectSerializer,
@@ -122,7 +123,10 @@ def grants(request):
         for pi in all_results:
             if pi.state_id == a.state.code and pi.programme_area_id == a.programme_area.code:
                 results[pi.result_text].update({
-                    pi.indicator.name: pi.achievement
+                    pi.indicator.name: {
+                      'achievement': pi.achievement,
+                      'order': pi.order,
+                    }
                 })
         out.append({
             # TODO: switch these to ids(?)
@@ -130,6 +134,7 @@ def grants(request):
             'sector': a.programme_area.priority_sector.name,
             'area': a.programme_area.name,
             'beneficiary': a.state.code,
+            'is_not_ta': a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
 
             'bilateral_allocation': sum(p.allocation
@@ -219,10 +224,7 @@ def projects(request):
         News.objects.all()
         .select_related(
             'project',
-            'project__financial_mechanism',
-            'project__state',
-            'project__programme_area',)
-        .exclude(project_id__isnull=True)
+        ).exclude(project_id__isnull=True)
         .order_by('-created')
     )
     news = defaultdict(list)
@@ -250,6 +252,7 @@ def projects(request):
             'sector': a.programme_area.priority_sector.name,
             'area': a.programme_area.name,
             'beneficiary': a.state.code,
+            'is_not_ta': a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
             'project_count': project_count.get(key, 0),
             'project_count_ended': project_count_ended.get(key, 0),
@@ -280,7 +283,236 @@ def projects(request):
     return JsonResponse(out)
 
 
-def beneficiary_allocation_detail(request, beneficiary):
+def partners(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+
+    # Because everything else is International
+    DONOR_STATES = {
+        'Iceland': 'Iceland',
+        'Liechtenstein': 'Liechtenstein',
+        'Norway': 'Norway',
+        'International': 'International',
+    }
+
+    # Even if allocations are duplicated for each donor state, FM chart looks the same
+    allocations = Allocation.objects.all().select_related(
+        'financial_mechanism',
+        'state',
+        'programme_area',
+        'programme_area__priority_sector',
+    ).prefetch_related(
+        'programme_area__outcomes__programmes',
+    ).exclude(
+        gross_allocation=0
+    )
+
+    # List of programmes having DPP or dpp, grouped by PA and BS
+    # Needed for size of PS/PA chart slices
+    partnership_programmes = ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area',
+        'programme__organisation_roles',
+    ).values(
+        'programme__code',
+        'programme__name',
+        'outcome__programme_area__code',
+        'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=True,
+        programme__is_tap=True,  # not really needed
+    ).filter(
+        programme__organisation_roles__organisation_role_id__in=['DPP', 'PJDPP']
+    ).distinct()
+
+    # Get donor countries for each programme
+    programme_donors_raw = Organisation_OrganisationRole.objects.all().select_related(
+        'organisation'
+    ).values(
+        'programme_id',
+        'organisation__country'
+    ).exclude(
+        programme_id__isnull=True,
+    ).filter(
+        organisation_role_id__in=['DPP', 'PJDPP']
+    ).distinct()
+
+    # Helper dict to get the donor states of each programme
+    programme_donors = defaultdict(list)
+    for item in programme_donors_raw:
+        programme_donors[item['programme_id']].append(
+            DONOR_STATES.get(
+                item['organisation__country'], 'International'
+            )
+        )
+
+    # Get Donor *Programme* Partners by PA and BS (via programmes)
+    DPP_raw = ProgrammeOutcome.objects.all().select_related(
+        'programme',
+        'outcome__programme_area',
+    ).prefetch_related(
+        'programme__organisation_roles',
+        'programme__organisation_roles__organisation',
+    ).exclude(
+        # Because sector Other has programme outcomes, but not programmes
+        programme_id__isnull=True,
+    ).filter(
+        programme__organisation_roles__organisation_role_id__in=['DPP', 'PO']
+    ).values(
+        'outcome__programme_area__code',
+        'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
+        'programme_id',
+        'programme__organisation_roles__organisation_id',
+        'programme__organisation_roles__organisation__country',
+        'programme__organisation_roles__organisation__name',
+        'programme__organisation_roles__organisation_role_id',
+    ).distinct()
+    DPP, programme_operators = (
+        defaultdict(dict),
+        defaultdict(dict),
+    )
+    for item in DPP_raw:
+        donor_state = DONOR_STATES.get(
+            item['programme__organisation_roles__organisation__country'],
+            'International'
+        )
+        key = item['outcome__programme_area__code'] + item['state__code'] + donor_state
+        org_id = item['programme__organisation_roles__organisation_id']
+        org_name = item['programme__organisation_roles__organisation__name']
+        if item['programme__organisation_roles__organisation_role_id'] == 'DPP':
+            # Donor Programme Partner
+            if org_id not in DPP[key]:
+                DPP[key][org_id] = {
+                    'name': org_name,
+                    'programmes': [item['programme_id']],
+                    'states': [item['state__code']],
+                }
+            else:
+                DPP[key][org_id]['programmes'].append(item['programme_id'])
+                beneficiaries = DPP[key][org_id].get('states', [])
+                if not item['state__code'] in beneficiaries:
+                    beneficiaries.append(item['state__code'])
+        elif item['programme__organisation_roles__organisation_role_id'] == 'PO':
+            # Programme Operator
+            programme_operators[key][org_id] = org_name
+
+    # Statistics for donor *project* partners
+    project_counts_raw = Organisation_OrganisationRole.objects.all().select_related(
+        'organisation',
+        'project',
+    ).values(
+        'organisation__country',
+        'organisation_id',
+        'organisation__name',
+        'project_id',
+        'programme_id',
+        'project__state_id',
+        'project__programme_area_id',
+        'organisation_role_id',
+    ).filter(
+        organisation_role_id__in=['PJDPP', 'PJPT']
+    ).distinct()
+
+    dpp_project_count, dpp_programmes, dpp_states = (
+        defaultdict(int),
+        defaultdict(dict),
+        defaultdict(dict),
+    )
+    dpp_orgs, project_promoters = (
+        defaultdict(lambda: defaultdict(dict)),
+        defaultdict(lambda: defaultdict(dict)),
+    )
+    for item in project_counts_raw:
+        donor_state = DONOR_STATES.get(
+            item['organisation__country'],
+            'International'
+        )
+        key = item['project__programme_area_id'] + item['project__state_id'] + donor_state
+        if item['organisation_role_id'] == 'PJDPP':
+            # Donor project partners
+            dpp_project_count[key] += 1
+            dpp_programmes[key][item['programme_id']] = item['programme_id']
+            dpp_states[key][item['project__state_id']] = item['project__state_id']
+            dpp_orgs[key][item['organisation_id']] = item['organisation__name']
+        elif item['organisation_role_id'] == 'PJPT':
+            # Project promoter
+            project_promoters[key][item['organisation_id']] = item['organisation__name']
+
+    # Bilateral news, they are always related to programmes, not projects
+    news_raw = ProgrammeOutcome.objects.all(
+    ).filter(
+        # Because sector Other has programme outcomes, but not programmes
+        programme__isnull=False,
+        programme__news__is_partnership=True
+    ).values(
+        'outcome__programme_area__code',
+        'state__code',  # get the real state_id from ProgrammeOutcome, because IN22
+        'programme_id',
+        'programme__news__link',
+        'programme__news__summary',
+        'programme__news__image',
+        'programme__news__title',
+        'programme__news__created',
+        'programme__news__is_partnership',
+    ).distinct()
+
+    news = defaultdict(list)
+    for item in news_raw:
+        donor_states = programme_donors.get(item['programme_id'], [])
+        for donor_state in donor_states:
+            key = item['outcome__programme_area__code'] + item['state__code'] + donor_state
+            # TODO group programmes by donor state
+            news[key].append({
+                'title': item['programme__news__title'],
+                'link': item['programme__news__link'],
+                'created': item['programme__news__created'],
+                'summary': item['programme__news__summary'],
+                'image': item['programme__news__image'],
+            })
+
+    out = []
+    for a in allocations:
+        for donor_state in DONOR_STATES:
+            key = a.programme_area.code + a.state_id + donor_state
+            out.append({
+                # TODO: switch these to ids(?)
+                'fm': a.financial_mechanism.grant_name,
+                'sector': a.programme_area.priority_sector.name,
+                'area': a.programme_area.name,
+                'beneficiary': a.state.code,
+                'donor_state': donor_state,
+                'allocation': a.gross_allocation,
+                'dpp_project_count': dpp_project_count.get(key, 0),
+                'dpp_programmes': dpp_programmes.get(key, {}),
+                'dpp_states': dpp_states.get(key, {}),
+                'news': news.get(key, []),
+                'partnership_programmes': {
+                    p['programme__code']: p['programme__code']
+                    for p in partnership_programmes
+                    if (
+                        p['outcome__programme_area__code'] == a.programme_area.code and
+                        p['state__code'] == a.state.code and
+                        donor_state in programme_donors[p['programme__code']]
+                    )
+                },
+                'donor_programme_partners': DPP.get(key, {}),
+                'donor_project_partners': dpp_orgs.get(key, {}),
+                'project_promoters': project_promoters.get(key, {}),
+                'programme_operators': programme_operators.get(key, {}),
+            })
+
+    """
+    # use for testing with django-debug-toolbar:
+    from django.http import HttpResponse
+    from pprint import pformat
+    return HttpResponse('<html><body><pre>%s</pre></body></html>' % pformat(out))
+    """
+
+    return JsonResponse(out)
+
+
+def beneficiary_detail(request, beneficiary):
     """
     Returns NUTS3-level allocations for the given state.
     """
@@ -298,12 +530,15 @@ def beneficiary_allocation_detail(request, beneficiary):
         'sector': F('outcome__programme_area__priority_sector__name'),
         'fm': F('outcome__programme_area__priority_sector__type__grant_name'),
     }
-    allocations = (
+    data = (
         Project.objects.filter(state=state)
         .exclude(allocation=0)
         .annotate(**fields)
         .values(*fields.keys())
-        .annotate(amount=Sum('allocation'))
+        .annotate(
+            allocation=Sum('allocation'),
+            project_count=Count('code'),
+        )
     )
 
     # split all non-level3 allocation among level3s, but
@@ -323,14 +558,18 @@ def beneficiary_allocation_detail(request, beneficiary):
         .values_list('code', flat=True)
     )
 
-    allocs = defaultdict(int)
+    dataset = defaultdict(lambda: {
+        'allocation': 0,
+        'project_count': 0,
+    })
     fkeys = tuple(fields.keys())
     codeidx = fkeys.index('id')
     #_verify1 = Decimal('0');
 
-    for a in allocations:
-        amount = a.pop('amount')
-        #_verify1 += amount
+    for a in data:
+        allocation = a.pop('allocation')
+        project_count = a.pop('project_count')
+        #_verify1 += allocation
 
         code = a['id']
         if len(code) > 2 and code.endswith('Z'): # extra-regio
@@ -339,10 +578,14 @@ def beneficiary_allocation_detail(request, beneficiary):
         # use fields' keys to ensure predictable order
         key = tuple(a[k] for k in fkeys)
         if len(code) == 5:
-            allocs[key] += amount
+            row = dataset[key]
+            row['allocation'] += allocation
+            row['project_count'] += project_count
             continue
 
-        # else split among children
+        # else split allocation among children,
+        # and add project count to all children
+        # TODO: or ignore it entirely. customer input needed.
         children = (nuts3s if len(code) == 2
                     else [n for n in nuts3s if n.startswith(code)])
 
@@ -350,26 +593,41 @@ def beneficiary_allocation_detail(request, beneficiary):
             # TODO: this is an error. log it, etc.
             continue
 
-        amount = amount / len(children)
+        allocation = allocation / len(children)
 
         for nuts in children:
             childkey = key[:codeidx] + (nuts, ) + key[codeidx+1:]
-            allocs[childkey] += amount
+            row = dataset[childkey]
+            row['allocation'] += allocation
+            # TODO: do we want to enable this?
+            #row['project_count'] += project_count
 
-    allocations = []
+    out = []
     #_verify2 = Decimal('0');
 
-    for key, amount in allocs.items():
-        allocation = dict(zip(fkeys, key))
-        #_verify2 += amount
+    for key, row in dataset.items():
+        item = dict(zip(fkeys, key))
+        #_verify2 += allocation
 
         # strip away some of that crazy precision
-        allocation['amount'] = amount.quantize(Decimal('1.00'))
-        allocations.append(allocation)
+        row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+
+        item.update(row)
+        out.append(item)
 
     #print(_verify1, _verify2)
-    return JsonResponse(allocations)
+    return JsonResponse(out)
+
 
 class ProjectList(ListAPIView):
-    queryset = Project.objects.all().order_by('code')
     serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        programme = self.request.query_params.get('programme', None)
+        queryset = Project.objects.all()
+        if programme is not None:
+            queryset = queryset.filter(programme_id=programme)
+        beneficiary = self.request.query_params.get('beneficiary', None)
+        if beneficiary is not None:
+            queryset = queryset.filter(state_id=beneficiary)
+        return queryset.order_by('code')

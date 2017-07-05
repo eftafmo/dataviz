@@ -12,6 +12,16 @@
     <dropdown filter="beneficiary" title="Select a beneficiary state" :items="beneficiarydata"></dropdown>
   </div>
   <svg width="100%" :height="height + 'px'">
+    <filter id="drop-shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+      <feOffset dx="0" dy="0" result="offsetblur"/>
+      <feFlood flood-color="rgba(0,0,0,0.3)"/>
+      <feComposite in="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
     <filter id="grayscale">
       <feColorMatrix type="matrix"
                      values="0.3333 0.3333 0.3333 0 0
@@ -95,7 +105,7 @@
 
       text {
         font-size: .8em;
-        font-family: 'Open sans', sans-serif;
+        font-family: 'Arial', 'Open sans', sans-serif;
         text-anchor: end;
       }
     }
@@ -112,7 +122,7 @@ import {colour2gray, slugify} from 'js/lib/util';
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
+import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
@@ -133,11 +143,6 @@ export default Vue.extend({
         flagHeight: 1.4,
         flagPadding: .4,
       },
-
-      // an amazing way to calculate "Czech Republic"
-      longestTxt: d3.values(COUNTRIES).reduce(function(longest, country) {
-        return longest.length > country.name.length ? longest : country.name;
-      }, ''),
     };
   },
 
@@ -203,7 +208,7 @@ export default Vue.extend({
       const fakeB = this.chart.select(".beneficiaries").append("g").attr("class", "beneficiary");
       const txt = fakeB.append("g").attr("class", "label").append("text").attr("visibility", "hidden");
 
-      txt.text(this.longestTxt);
+      txt.text(this.longestBeneficiary);
       const txtwidth = txt.node().getBBox().width;
       fakeB.remove();
 
@@ -325,8 +330,7 @@ export default Vue.extend({
           <span class="name">${d.name}</span>
         </div>
         ${ datatxt }
-        <span class="action">~Click to filter by beneficiary state</span>
-        <button class="btn btn-anchor">X</button>
+        <span class="action">Click to filter by beneficiary state</span>
       `;
     },
 
@@ -422,7 +426,8 @@ export default Vue.extend({
         .attr("x", this.flagPadding)
         .attr("y", (this.itemHeight - this.flagHeight) / 2)
         .attr("width", this.flagWidth)
-        .attr("height", this.flagHeight);
+        .attr("height", this.flagHeight)
+        .style("filter", "url(#drop-shadow)");
 
       /*
        * render fm data
@@ -482,7 +487,7 @@ export default Vue.extend({
         // and transition its matrix
 
         selection.select("g.label").select("use")
-                 .attr("filter", yes ? null : "url('#grayscale')")
+                 .style("filter", yes ? "url(#drop-shadow)" : "url('#grayscale')")
                  .attr("opacity", yes ? 1 : this.inactive_opacity);
 
         // the fm bars

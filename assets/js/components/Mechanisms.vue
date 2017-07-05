@@ -145,8 +145,10 @@ export default Vue.extend({
           'project_count',
           //'project_count_positive',
           //'project_count_ended',
-          {source: 'beneficiary', destination: 'beneficiaries', type: String},
-          {source: 'sector', destination: 'sectors', type: String},
+          {source: 'beneficiary', destination: 'beneficiaries', type: String, filter_by: 'is_not_ta'},
+          {source: 'sector', destination: 'sectors', type: String, filter_by: 'is_not_ta'},
+          {source: 'area', destination: 'areas', type: String, filter_by: 'is_not_ta'},
+          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
         ],
         false
       );
@@ -162,6 +164,7 @@ export default Vue.extend({
           project_count: 0,
           beneficiaries: d3.set(),
           sectors: d3.set(),
+          areas: d3.set(),
         };
 
         Object.assign(item, basefm, aggregated[basefm.name]);
@@ -186,9 +189,10 @@ export default Vue.extend({
           <li>${this.currency(d.value)}</li>
           <li>${d.beneficiaries.size()} beneficiary states</li>
           <li>${d.sectors.size()} priority sectors</li>
+          <li>${d.areas.size()} programme areas</li>
+          <li>${d.programmes.size()} programmes</li>
         </ul>
-        <span class="action">~Click to filter by financial mechanism</span>
-        <button class="btn btn-anchor">X</button>
+        <span class="action">Click to filter by financial mechanism</span>
       `;
     },
 

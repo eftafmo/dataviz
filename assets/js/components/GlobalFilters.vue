@@ -38,6 +38,7 @@
 .list-filters {
   overflow: hidden;
   white-space: normal;
+  margin-left: -2rem;
 }
 
 .global-filters {
@@ -57,6 +58,12 @@
   }
 }
 
+.filters-label {
+  @media(max-width:800px){
+    display: none;
+  }
+}
+
 .filter-item {
   display: inline-block;
     &:after {
@@ -64,6 +71,12 @@
       font-family: 'eeag-icons' !important;
       vertical-align: middle;
   }
+ @media(max-width: 800px){
+  display: block;
+  &:after {
+    position: absolute;
+  }
+ }
 }
 
 .list-enter-active, .list-leave-active {

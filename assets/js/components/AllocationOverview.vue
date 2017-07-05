@@ -1,7 +1,7 @@
 <template>
     <div  v-if="hasData" class="sidebar-header">
       <transition name="fade">
-        <div class="allocation" :key="transitioned">
+        <div class="allocation" :key="changed">
           <strong>{{ currency(data.allocation) }}</strong>
           <small>{{ currency(data.bilateral_allocation) }} for bilateral relations</small>
         </div>
@@ -12,11 +12,9 @@
 <style>
 .sidebar-header {
   position: relative;
-  padding: 0 !important;
 }
 
 .allocation {
-  padding: 1rem;
   width: 100%;
 }
 
@@ -26,15 +24,8 @@
 
 .allocation.fade-enter-active {
   position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.allocation.fade-enter-active, .allocation.fade-leave-active {
-  transition: opacity .5s;
-}
-.allocation.fade-enter, .allocation.fade-leave-to {
-  opacity: 0
+  top: 1rem;
+  width: calc(100% - 2rem);
 }
 </style>
 
@@ -67,12 +58,6 @@ export default Vue.extend({
       );
 
       return out;
-    },
-  },
-
-  methods: {
-    handleFilter() {
-      this.transitioned = !this.transitioned;
     },
   },
 });

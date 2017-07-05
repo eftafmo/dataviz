@@ -1,51 +1,22 @@
-// import widget components for their side effects
-// (they should auto-register)
+export {default as Homepage} from './Homepage';
 
-import Overview from './Overview';
+export {default as Mechanisms} from './Mechanisms';
+export {default as ProjectsMechanisms} from './ProjectsMechanisms';
 
-import Mechanisms from './Mechanisms';
-import ProjectsMechanisms from './ProjectsMechanisms';
+export {default as Sectors} from './Sectors';
+export {default as ProjectsSectors} from './ProjectsSectors';
 
-import Sectors from './Sectors';
-import ProjectsSectors from './ProjectsSectors';
+export {default as AllocationMap} from './AllocationMap';
+export {default as ProjectsMap} from './ProjectsMap';
 
-import AllocationMap from './AllocationMap';
-import ProjectsMap from './ProjectsMap';
-
-import Beneficiaries from './Beneficiaries';
-import ProjectsBeneficiaries from './ProjectsBeneficiaries';
+export {default as Beneficiaries} from './Beneficiaries';
+export {default as ProjectsBeneficiaries} from './ProjectsBeneficiaries';
 
 
-import GlobalFilters from './GlobalFilters';
-import Results from './Results';
-import AllocationOverview from './AllocationOverview';
-import Programmes from './Programmes';
-import Sidebar from './Sidebar';
-import HomepageInfo from './HomepageInfo';
-import News from './News';
-import ProjectsOverview from './ProjectsOverview';
-
-export {
-  Overview,
-  HomepageInfo,
-
-  Mechanisms,
-  ProjectsMechanisms,
-
-  Sectors,
-  ProjectsSectors,
-
-  AllocationMap,
-  ProjectsMap,
-
-  Beneficiaries,
-  ProjectsBeneficiaries,
-
-  GlobalFilters,
-  AllocationOverview,
-  Results,
-  Programmes,
-  Sidebar,
-  News,
-  ProjectsOverview,
-};
+export {default as GlobalFilters} from './GlobalFilters';
+export {default as Results} from './Results';
+export {default as AllocationOverview} from './AllocationOverview';
+export {default as Programmes} from './Programmes';
+export {default as Sidebar} from './Sidebar';
+export {default as News} from './News';
+export {default as ProjectsOverview} from './ProjectsOverview';

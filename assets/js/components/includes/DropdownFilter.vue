@@ -30,6 +30,8 @@
     }
     @media (max-width: 600px){
       top: 8px;
+      width: 100%;
+      right: 4px;
     }
   }
 

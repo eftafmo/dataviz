@@ -7,7 +7,7 @@
   </svg>
   <transition appear>
   <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
-    <use :href="`#${get_image(filters.sector)}`" />
+    <use :xlink:href="`#${get_image(filters.sector)}`" />
   </svg>
   </transition>
 </chart-container>
@@ -36,7 +36,7 @@
           <span
               v-show="filters.sector != sector.data.id"
               :key="`v-${getLabelID(sector)}`">
-            {{ currency(sector.value) }}
+            {{ value(sector) }}
           </span>
           <span
               v-if="isSelectedSector(sector)"
@@ -75,7 +75,7 @@
                   {{ area.data.name }}
                 </span>
                 <span :key="`v-${getLabelID(area)}`">
-                  {{ currency(area.value) }}
+                  {{ value(area) }}
                 </span>
               </a>
             </li>
@@ -533,6 +533,11 @@ export default Vue.extend({
   },
 
   methods: {
+    value(item) {
+      // the value displayed in legend
+      return this.currency(item.value);
+    },
+
     areasBeforeEnter(el) {
       // get height from a clone, it's safer
       const c = el.cloneNode(true);
@@ -541,7 +546,7 @@ export default Vue.extend({
       c.style.height = "auto";
       el.parentNode.appendChild(c);
       const h = c.clientHeight;
-      c.remove();
+      el.parentNode.removeChild(c);
 
       // start from 0, but only if we didn't interrupt another transition
       const _idx = this._areasCancelled.indexOf(el);
@@ -643,9 +648,10 @@ export default Vue.extend({
         <div class="title-container">
           <span>${ d.data.name }</span>
         </div>
-        ${ this.currency(d.value) } grant allocation
-        <span class="action">~Click to filter by ${ thing }</span>
-        <button class="btn btn-anchor">X</button>
+        <ul>
+          <li>${ this.currency(d.value) } gross allocation</li>
+        </ul>
+        <span class="action">Click to filter by ${ thing }</span>
       `;
     },
 
