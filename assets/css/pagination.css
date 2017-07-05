@@ -1,17 +1,17 @@
 .pagination {
 
 }
-.pagination a {
+.pagination button {
   display: inline-block;
   padding: .5rem 1rem;
   color: inherit;
   text-align: center;
 }
-.pagination a:hover {
+.pagination button:hover {
   background-color: #f2f2f2;
   text-decoration: none;
 }
-.pagination a.is-current-page {
+.pagination button.is-current-page {
   background-color: #f2f2f2;
   font-weight: bold;
   cursor: default;

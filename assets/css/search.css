@@ -145,6 +145,7 @@
 }
 .search-result .country img {
   vertical-align: middle;
+  border: 1px solid grey;
 }
 .search-result .title {
   margin: 0 0 .5rem;

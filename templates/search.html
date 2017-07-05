@@ -11,7 +11,7 @@
               <input type="search" placeholder="Search" name="q" autofocus
               value="{{ form.q.data | default_if_none:"" }}">
             </span>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary" name="page" value="1">Search</button>
           </div>
         <div class="search-tabs">
           <span class="muted">Search for:</span>
@@ -58,7 +58,10 @@
       <li>
         <div class="search-result search-result-programme">
           <span class="country">
-            <img src="" alt="flag"> {{ res.state_name.0 }}
+            <img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
+                 alt="flag"
+                 height="20px"
+            > {{ res.state_name.0 }}
           </span>
           <h4 class="title">
             {% if res.url %}
@@ -74,19 +77,51 @@
     </ul>
 
 
+    {% if is_paginated %}
     <div class="search-results-footer">
       <div class="pagination">
-        <a href="" class="pagination-next">Next</a>
-        <a href="" class="pagination-previous">Previous</a>
+        <button
+          class="pagination-next"
+          {% if page_obj.has_previous %}
+            name="page"
+            value="{{ page_obj.previous_page_number }}"
+            type="submit"
+            form="main-search-form"
+          {% else %}
+            disabled="disabled"
+          {% endif %}
+        >Next</button>
+
         <div class="pagination-pages">
-          <a href="">1</a>
-          <a href="" class="is-current-page">2</a>
-          <a href="">3</a>
-          <a href="">4</a>
-          <a href="">5</a>
+          {% for page_num in paginator.page_range %}
+            <button
+              name="page"
+              value="{{ page_num }}"
+              type="submit"
+              form="main-search-form"
+              {% if page_obj.number == page_num %}
+                class="is-current-page"
+                disabled="disabled"
+              {% endif %}
+            >{{ page_num }}</button>
+          {% endfor %}
         </div>
+
+        <button
+          class="pagination-previous"
+          {% if page_obj.has_next %}
+            name="page"
+            value="{{ page_obj.next_page_number }}"
+            type="submit"
+            form="main-search-form"
+          {% else %}
+            disabled="disabled"
+          {% endif %}
+        >Previous</button>
+
       </div>
     </div>
+    {% endif %}
 
   </div>
 {% endblock %}

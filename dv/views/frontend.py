@@ -41,8 +41,9 @@ class FacetedSearchView(BaseFacetedSearchView):
         'kind',
     ]
     template_name = 'search.html'
-    paginate_by = 20
+    paginate_by = 10
     context_object_name = 'object_list'
+    # FIXME this does not seem to work anymore.
     initial = {
         'kind': ['Programme'],
     }
