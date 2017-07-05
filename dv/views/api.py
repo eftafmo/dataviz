@@ -512,7 +512,7 @@ def partners(request):
     return JsonResponse(out)
 
 
-def beneficiary_allocation_detail(request, beneficiary):
+def beneficiary_detail(request, beneficiary):
     """
     Returns NUTS3-level allocations for the given state.
     """
@@ -530,12 +530,15 @@ def beneficiary_allocation_detail(request, beneficiary):
         'sector': F('outcome__programme_area__priority_sector__name'),
         'fm': F('outcome__programme_area__priority_sector__type__grant_name'),
     }
-    allocations = (
+    data = (
         Project.objects.filter(state=state)
         .exclude(allocation=0)
         .annotate(**fields)
         .values(*fields.keys())
-        .annotate(amount=Sum('allocation'))
+        .annotate(
+            allocation=Sum('allocation'),
+            project_count=Count('code'),
+        )
     )
 
     # split all non-level3 allocation among level3s, but
@@ -555,14 +558,18 @@ def beneficiary_allocation_detail(request, beneficiary):
         .values_list('code', flat=True)
     )
 
-    allocs = defaultdict(int)
+    dataset = defaultdict(lambda: {
+        'allocation': 0,
+        'project_count': 0,
+    })
     fkeys = tuple(fields.keys())
     codeidx = fkeys.index('id')
     #_verify1 = Decimal('0');
 
-    for a in allocations:
-        amount = a.pop('amount')
-        #_verify1 += amount
+    for a in data:
+        allocation = a.pop('allocation')
+        project_count = a.pop('project_count')
+        #_verify1 += allocation
 
         code = a['id']
         if len(code) > 2 and code.endswith('Z'): # extra-regio
@@ -571,10 +578,14 @@ def beneficiary_allocation_detail(request, beneficiary):
         # use fields' keys to ensure predictable order
         key = tuple(a[k] for k in fkeys)
         if len(code) == 5:
-            allocs[key] += amount
+            row = dataset[key]
+            row['allocation'] += allocation
+            row['project_count'] += project_count
             continue
 
-        # else split among children
+        # else split allocation among children,
+        # and add project count to all children
+        # TODO: or ignore it entirely. customer input needed.
         children = (nuts3s if len(code) == 2
                     else [n for n in nuts3s if n.startswith(code)])
 
@@ -582,25 +593,30 @@ def beneficiary_allocation_detail(request, beneficiary):
             # TODO: this is an error. log it, etc.
             continue
 
-        amount = amount / len(children)
+        allocation = allocation / len(children)
 
         for nuts in children:
             childkey = key[:codeidx] + (nuts, ) + key[codeidx+1:]
-            allocs[childkey] += amount
+            row = dataset[childkey]
+            row['allocation'] += allocation
+            # TODO: do we want to enable this?
+            #row['project_count'] += project_count
 
-    allocations = []
+    out = []
     #_verify2 = Decimal('0');
 
-    for key, amount in allocs.items():
-        allocation = dict(zip(fkeys, key))
-        #_verify2 += amount
+    for key, row in dataset.items():
+        item = dict(zip(fkeys, key))
+        #_verify2 += allocation
 
         # strip away some of that crazy precision
-        allocation['amount'] = amount.quantize(Decimal('1.00'))
-        allocations.append(allocation)
+        row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+
+        item.update(row)
+        out.append(item)
 
     #print(_verify1, _verify2)
-    return JsonResponse(allocations)
+    return JsonResponse(out)
 
 
 class ProjectList(ListAPIView):
