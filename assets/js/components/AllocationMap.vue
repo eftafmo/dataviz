@@ -35,12 +35,12 @@ export default BaseMap.extend({
     renderData() {
       const t = this.getTransition();
       const beneficiarydata = d3.values(this.beneficiarydata);
-      const states = this.chart.select('.states').selectAll('path'),
-            beneficiaries = states.filter(this.isBeneficiary)
-                                  .data(beneficiarydata, (d) => d.id );
+      const beneficiaries = this.chart.selectAll('.states > g.beneficiary')
+                                .data(beneficiarydata, (d) => d.id );
 
       beneficiaries
         .classed("zero", false)
+        .select("path")
         .transition(t)
         .attr("fill", this.beneficiary_colour_default);
 
@@ -55,6 +55,7 @@ export default BaseMap.extend({
             total: 0,
           });
         })
+        .select("path")
         .transition(t)
         .attr("fill", this.beneficiary_colour_zero);
 
@@ -75,8 +76,8 @@ export default BaseMap.extend({
                   .domain([min, max])
                   .range([.1, 1]);
 
-      const regions = this.chart.select('g.regions > g.' + state)
-                          .selectAll('path')
+      const regions = this.chart.select('g.regions > g.state.' + state)
+                          .selectAll('g')
                           .data(regiondata, (d) => d.id );
 
       // protect against data that has unknown NUTS codes
@@ -89,11 +90,11 @@ export default BaseMap.extend({
           _badregions.map( (d) => d.id ).join(", ")
         );
 
-      regions
+      regions.select("path")
         .transition(t)
         .attr("fill", (d) => interpolateYlGn(x(d.allocation)) );
 
-      regions.exit()
+      regions.exit().select("path")
              .transition(t)
              .attr("fill", interpolateYlGn(0));
       // TODO: and reset data to 0 ?

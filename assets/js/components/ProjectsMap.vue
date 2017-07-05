@@ -1,16 +1,14 @@
 <style lang="less">
 .map-viz {
   .chart {
-    .data {
-      // temporary hack until this stuff gets grouped with the country path
-      pointer-events: none;
-
+    .states .beneficiary {
       circle {
         fill: rgb(196, 17, 48);
         fill-opacity: .4;
         transform-origin: 50% 50%;
       }
-      circle:hover {
+
+      &:hover circle {
         transform: scale(1.2, 1.2)
       }
 
@@ -44,7 +42,7 @@ export default BaseMap.extend({
 
       // TODO: ! .. :)
       beneficiary_colour_default: '#000',
-      duration: 2000,
+      //duration: 2000,
     }
   },
 
@@ -54,16 +52,16 @@ export default BaseMap.extend({
       // as it will appear for project counts
       if (!this.isReady) return 0;
 
-      // TODO: should this ever get recomputed?
-
       // respect where the text will appear so css applies properly
-      const fakeG = this.chart.select(".data").append("g");
-      const txt = fakeG.append("text")
+      const fakeB = this.chart.select(".states")
+                        .append("g")
+                        .attr("class", "beneficiary");
+      const txt = fakeB.append("text")
                        .attr("visibility", "hidden")
                        .text("1234567890");
 
       const txtwidth = txt.node().getBBox().width;
-      fakeG.remove();
+      fakeB.remove();
 
       // return one character's width with some safety extra
       return txtwidth / 10 * 1.1;
@@ -101,30 +99,52 @@ export default BaseMap.extend({
       return d3.sum(d3.values(d.project_count)) || 0;
     },
 
-    renderData() {
-      const beneficiarydata = d3.values(this.beneficiarydata);
-      const states = this.chart.select('.states').selectAll('path'),
-            beneficiaries = states.filter(this.isBeneficiary)
-                                  .data(beneficiarydata, (d) => d.id );
+    mkProjectCircles(sel) {
+      const container = sel.append("g")
+                           .attr("opacity", 1);
 
-      const projects = this.chart.select(".data").selectAll("g")
-                           .data(beneficiarydata, (d) => d.id );
-
-      const pentered = projects.enter().append("g")
-                               .attr("opacity", 1);
-
-      const circles = pentered.append("circle")
+      container
+        .append("circle")
         .attr("cx", (d) => this.geodetails[d.id].centroid[0] )
-        .attr("cy", (d) => this.geodetails[d.id].centroid[1] )
+        .attr("cy", (d) => this.geodetails[d.id].centroid[1] );
 
-      const texts = pentered.append("text")
+      container
+        .append("text")
         .attr("x", (d) => this.geodetails[d.id].centroid[0] )
         .attr("y", (d) => this.geodetails[d.id].centroid[1] )
         .attr("dy", ".33em"); // magical self-centering offset
+    },
+
+    renderData(t) {
+      const $this = this;
+
+      if (t === undefined) t = this.getTransition();
+
+      const beneficiarydata = d3.values(this.beneficiarydata);
+      let beneficiaries = this.chart.selectAll('.states > g.beneficiary');
+
+      // do an initial render of the circles,
+      // (because we never have an enter selection for beneficiaries)
+      beneficiaries.filter( (d) => (d.type == "Feature" ) )
+                   .call(this.mkProjectCircles)
+
+      // only now bind the data
+      beneficiaries = beneficiaries.data(beneficiarydata, (d) => d.id );
+
+      const projects = beneficiaries.select("g");
+
+      projects
+        .transition(t)
+        .attr("opacity", 1);
+
+      beneficiaries.exit().select("g")
+        .transition(t)
+        .attr("opacity", 0);
 
       // the circle radius is only meant to fit the text,
       // not show some smart correlation :)
-      projects.select("circle").merge(circles)
+      projects.select("circle")
+        .transition(t)
         .attr("r", (d) => {
           const count = this.get_project_count(d);
           // return enough for the the text to fit plus spacing...
@@ -132,8 +152,28 @@ export default BaseMap.extend({
           return (count.toString().length + 1/2) * this.numberWidth / 2;
         } )
 
-      projects.select("text").merge(texts)
-        .text(this.get_project_count);
+      projects.select("text")
+        .filter(function(d) {
+          return this.textContent != $this.get_project_count(d);
+        })
+        .each(function() {
+          // clone the old text and fade it out
+          const clone = d3.select(
+            this.parentNode.appendChild(this.cloneNode(true))
+          );
+          clone
+            .attr("opacity", 1)
+            .transition(t)
+            .attr("opacity", 0)
+            .on("end", function() {
+              clone.remove();
+            })
+        })
+        // while the real thing gets faded back in
+        .attr("opacity", 0)
+        .text(this.get_project_count)
+        .transition(t)
+        .attr("opacity", 1);
     },
   },
 });
