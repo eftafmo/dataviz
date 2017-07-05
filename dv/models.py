@@ -240,7 +240,7 @@ class Programme(_MainModel):
         mapping = cls.IMPORT_SOURCES[src_idx]['map']
         data[mapping['summary']] = bleach.clean(
             data[mapping['summary']], strip=True, strip_comments=True)
-        data[mapping['summary']] = cls.__post_bleach_comments_re('', data[mapping['summary']])
+        data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
 
         return super().from_data(data, src_idx)
 
