@@ -23,7 +23,7 @@ export default Sectors.extend({
         </div>
         <ul>
           <li>${ this.number(d.data.project_count) } projects</li>
-          <li>${ this.currency(d.value) } grant allocation</li>
+          <li>${ this.currency(d.value) } gross allocation</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>
       `;
