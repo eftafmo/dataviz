@@ -179,10 +179,14 @@ export default BaseMap.extend({
         .transition(t)
         .attr("r", (d) => {
           const count = this.get_project_count(d);
-          // return enough for the the text to fit plus spacing...
-          // ... for... another half a character
-          return (count.toString().length + 1/2) * this.numberWidth / 2;
-        } )
+          // return enough for the the text to fit, plus spacing
+          // for another half a character, but not if zero
+          return (
+            count == 0 ?
+            this.numberWidth / 3 :
+            (count.toString().length + 1/2) * this.numberWidth / 2
+          );
+        } );
 
       sel.select("text")
         .filter(function(d) {
@@ -203,7 +207,10 @@ export default BaseMap.extend({
         })
         // while the real thing gets faded back in
         .attr("opacity", 0)
-        .text(this.get_project_count)
+        .text((d) => {
+          const count = this.get_project_count(d);
+          return count == 0 ? "" : count
+        } )
         .transition(t)
         .attr("opacity", 1);
     },

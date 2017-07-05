@@ -561,7 +561,8 @@ def beneficiary_detail(request, beneficiary):
             childkey = key[:codeidx] + (nuts, ) + key[codeidx+1:]
             row = dataset[childkey]
             row['allocation'] += allocation
-            row['project_count'] += project_count
+            # TODO: do we want to enable this?
+            #row['project_count'] += project_count
 
     out = []
     #_verify2 = Decimal('0');
