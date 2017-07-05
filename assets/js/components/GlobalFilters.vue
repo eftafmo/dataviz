@@ -43,6 +43,12 @@
   }
 }
 
+#reset-filters {
+  @media(max-width: 800px) {
+    margin-right: -2rem;
+  }
+}
+
 .global-filters {
   overflow: hidden;
   padding: 0;
