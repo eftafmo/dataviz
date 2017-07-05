@@ -88,6 +88,9 @@
     stroke: #005494;
   }
 
+@import "./nightmap.less";
+
+
   // styles
   .rendering {
     // don't show the base map until all data has been loaded
@@ -259,23 +262,17 @@ export default Vue.extend({
 
       terrain_stroke: 0.5,
       graticule_stroke: 0.2,
-      donor_inactive_colour: "#85adcb",
-      default_region_colour: "#fff",
-      beneficiary_colour: {
-        default: '#ddd',
-        hovered: '#9dccec',
-        zero: '#fff',
-      },
+      donor_colour_inactive: "#85adcb",
+      region_colour_default: "#fff",
+      beneficiary_colour_default: '#ddd',
+      beneficiary_colour_hovered: '#9dccec',
+      beneficiary_colour_zero: '#fff',
 
       zoom: 1,
     };
   },
 
   computed: {
-    scaleFactor() {
-      return this.width / this.svgWidth / this.zoom;
-    },
-
     projection() {
       /*
        * "The European grid is a proposed, multipurpose Pan-European mapping standard.
@@ -352,7 +349,7 @@ export default Vue.extend({
     render() {
       // no reason to run this explicitly
       // because it's triggered by the change in svgWidth
-      //this.setStyle();
+      //this.updateStyle();
 
       // TODO: move these somewhere else, and don't hijack default render
       this.renderBase();
@@ -363,18 +360,27 @@ export default Vue.extend({
       this.rendered = true;
     },
 
-    setStyle() {
+    updateStyle() {
       let style = this.dynamicStyle;
       if (!style) {
         style = document.createElement("style");
         this.$el.appendChild(style);
         this.dynamicStyle = style;
       }
+      style.innerHTML = this.mkStyle();
+    },
 
-      const terrain_stroke = this.terrain_stroke * this.scaleFactor,
-            graticule_stroke = this.graticule_stroke * this.scaleFactor;
+    getScaleFactor() {
+      // don't make this computed, it changes too fast
+      return this.width / this.svgWidth / this.zoom;
+    },
 
-      style.innerHTML = `
+    mkStyle() {
+      const scaleFactor = this.getScaleFactor(),
+            terrain_stroke = this.terrain_stroke * scaleFactor,
+            graticule_stroke = this.graticule_stroke * scaleFactor;
+
+      return `
         .map-viz .chart .terrain,
         .map-viz .chart .states,
         .map-viz .chart .regions {
@@ -382,7 +388,8 @@ export default Vue.extend({
         }
         .map-viz .chart .base .graticule {
           stroke-width: ${graticule_stroke};
-        }`;
+        }
+      `;
     },
 
     tooltipTemplate() {
@@ -533,7 +540,7 @@ export default Vue.extend({
              .enter()
              .append("path")
              .attr("class", (d) => `${this.COUNTRIES[d.id].type} ${d.id}` )
-             .attr("fill", this.beneficiary_colour.default)
+             .attr("fill", this.beneficiary_colour_default)
              .attr("d", path)
              // while at this, cache the centroids and bounding box,
              // because the geo-data will get wiped during data manipulation
@@ -602,7 +609,7 @@ export default Vue.extend({
                // remember the region name
                this.region_names[d.id] = d.properties.name;
              } )
-             .attr('fill', this.default_region_colour)
+             .attr('fill', this.region_colour_default)
              .on('mouseenter',
                  function(d, i) {
                    d3.select(this).raise();
@@ -638,15 +645,60 @@ export default Vue.extend({
 
                 // also reset regions to default colour
                 .selectAll('path')
-                .attr('fill', this.default_region_colour)
+                .attr('fill', this.region_colour_default)
 
       // finally,
       this.renderRegionData(t)
     },
 
     renderRegionData(t) {
-      // children should implement this as needed
-      return;
+      const state = this.filters.beneficiary;
+
+      // this could be called by another filter.
+      // bail out if no beneficiary selected.
+      if (state === null) return;
+
+      let dataset = this._region_data[state];
+
+      // finally, trigger the whole logic
+      if (dataset === undefined) {
+        // reset the transition, data might arrive too late to use it.
+        // TODO: run a throbber / suggest data loading somehow?
+        t = undefined;
+
+        // fetch the data, fill the cache, render
+        const url = this.detailsDatasource.replace('XX', state);
+
+        d3.json(url, (error, data) => {
+          if (error) throw error;
+          dataset = this._region_data[state] = data;
+          this._renderRegionData(state, this.computeRegionData(dataset), t);
+        } );
+      } else {
+        this._renderRegionData(state, this.computeRegionData(dataset), t);
+      }
+    },
+
+    computeRegionData(regiondataset) {
+      const _filters = d3.keys(this.filters).filter( (f) => f != 'beneficiary' );
+      const dataset = this.filter(regiondataset, _filters);
+
+      const aggregated = this.aggregate(
+        dataset,
+        ['id'],
+        [
+          'allocation',
+          'project_count',
+          {source: 'sector', destination: 'sectors', type: String, filter_by: 'is_not_ta'},
+        ],
+        true
+      );
+
+      return aggregated;
+    },
+
+    _renderRegionData(state, regiondata, t) {
+      throw new Error("Not implemented");
     },
 
     handleFilterBeneficiary(val, old) {
@@ -658,7 +710,7 @@ export default Vue.extend({
                      .on("zoom", () => {
                        chart.attr("transform", d3.event.transform);
                        this.zoom = d3.event.transform.k;
-                       this.setStyle();
+                       this.updateStyle();
                      })
                      .on("start", () => this.renderRegions(t) )
 
@@ -666,6 +718,16 @@ export default Vue.extend({
         .transition(t)
         .call(zoom.transform,
               transformer);
+
+      const datacontainers = chart.selectAll(".data > g");
+
+      if (old) datacontainers.filter( (d) => d.id == old )
+                             .transition(t)
+                             .attr("opacity", 1);
+
+      if (val) datacontainers.filter( (d) => d.id == val )
+                             .transition(t)
+                             .attr("opacity", 0);
 
       function transformer() {
         const tr = d3.zoomIdentity;
@@ -715,7 +777,7 @@ export default Vue.extend({
       // (use ids everywhere)?
       const colourfuncEEA = () => val != "Norway Grants" ?
                                   this.fmcolour("eea-grants") :
-                                  this.donor_inactive_colour;
+                                  this.donor_colour_inactive;
 
       const colourfuncNO = val === null ?
                            (d) => this.fmcolour(d) :
@@ -747,7 +809,11 @@ export default Vue.extend({
   },
 
   watch: {
-    svgWidth: "setStyle",
+    svgWidth: "updateStyle",
+
+// TODO: !!
+isReady() { setTimeout(() => this.filters.beneficiary = "RO", 300); },
+
   },
 });
 </script>

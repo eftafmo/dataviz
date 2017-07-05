@@ -38,6 +38,16 @@ export default BaseMap.extend({
     ProjectsMixin,
   ],
 
+  data() {
+    return {
+      //beneficiary_colour_default: '#fff',
+
+      // TODO: ! .. :)
+      beneficiary_colour_default: '#000',
+      duration: 2000,
+    }
+  },
+
   computed: {
     numberWidth() {
       // compute the length of an average number character
@@ -100,7 +110,8 @@ export default BaseMap.extend({
       const projects = this.chart.select(".data").selectAll("g")
                            .data(beneficiarydata, (d) => d.id );
 
-      const pentered = projects.enter().append("g");
+      const pentered = projects.enter().append("g")
+                               .attr("opacity", 1);
 
       const circles = pentered.append("circle")
         .attr("cx", (d) => this.geodetails[d.id].centroid[0] )
