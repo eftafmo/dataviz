@@ -139,7 +139,10 @@
     .heading {
       top: 5%;
       font-size: 1.5em;
-
+      @media (max-width: 800px) {
+        top: -29px;
+        font-size: 95%;
+      }
       /*
       .amount {
         font-size: 1.2em;
@@ -157,6 +160,9 @@
       background: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
       border: .2em solid white;
       border-radius: 50%;
+      @media (max-width: 800px) {
+        font-size: 49%;
+      }
     }
 
     .data {
@@ -194,6 +200,12 @@
     .ending {
       bottom: 0%;
       font-size: 1.2em;
+      @media(max-width: 800px){
+      bottom: -19px;
+      font-size: 59%;
+      width: 100%;
+      left: 0;
+      }
     }
   }
 
@@ -201,6 +213,10 @@
     position: absolute;
     left: 0;
     top: 0;
+    @media(max-width: 800px){
+      left: -1.5rem;
+      top: -91px;
+    }
 
     .fm span {
       width: 10px; height: 10px;
@@ -215,6 +231,12 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 3rem;
+    @media(max-width: 800px){
+     margin-top: 4rem;
+     margin-left: -1.5rem;
+     margin-right: 0;
+     width: calc(~"100% + 2.8rem")
+    }
     @media (min-width: 800px)and (max-width:1000px){
       width: 84%;
     }
