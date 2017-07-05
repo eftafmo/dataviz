@@ -809,10 +809,6 @@ export default Vue.extend({
 
   watch: {
     svgWidth: "updateStyle",
-
-// TODO: !!
-isReady() { setTimeout(() => this.filters.beneficiary = "RO", 300); },
-
   },
 });
 </script>
