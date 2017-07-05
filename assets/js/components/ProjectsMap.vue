@@ -229,7 +229,8 @@ export default BaseMap.extend({
       regions.select("g")
         .call(this._updateProjects, t);
 
-      regions.exit().select("g")
+      regions.exit().merge(regions.filter( (d) => d.project_count == 0 ))
+        .select("g")
         .transition(t)
         .attr("opacity", 0);
     },
