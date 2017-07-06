@@ -12,11 +12,11 @@ const Base = Vue.extend({
 });
 
 
-export const Homepage = Base.extend({
-  name: 'Homepage',
+export const Index = Base.extend({
+  name: 'Index',
 
   components: {
-    overview: components.Homepage,
+    overview: components.Overview,
   },
 });
 
@@ -36,7 +36,7 @@ export const Grants = Viz.extend({
     sectors: components.Sectors,
     xmap: components.AllocationMap,
     beneficiaries: components.Beneficiaries,
-    overview: components.AllocationOverview,
+    overview: components.Summary,
     programmes: components.Programmes,
     results: components.Results,
   },
@@ -50,7 +50,7 @@ export const Projects = Viz.extend({
     sectors: components.ProjectsSectors,
     xmap: components.ProjectsMap,
     beneficiaries: components.ProjectsBeneficiaries,
-    overview: components.ProjectsOverview,
+    overview: components.ProjectsSummary,
     programmes: components.Programmes,
     news: components.News,
   },

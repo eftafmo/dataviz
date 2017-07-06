@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import AllocationOverview from './AllocationOverview';
+import Summary from './Summary';
 import ProjectsMixin from './mixins/Projects';
 
 
-export default AllocationOverview.extend({
+export default Summary.extend({
   mixins: [ProjectsMixin],
 
   computed: {
