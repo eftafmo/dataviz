@@ -22,7 +22,7 @@
       }
 
       &:hover > g circle {
-        transform: scale(1.2, 1.2)
+        fill-opacity: .7;
       }
     }
   }
