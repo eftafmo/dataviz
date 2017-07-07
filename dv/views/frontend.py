@@ -135,9 +135,15 @@ class EmbedComponent(TemplateView):
         jsfiles = webpack.get_files('scripts', 'js')
         cssfiles = webpack.get_files('styles', 'css')
 
+        def geturl(f):
+            url = f['url']
+            if url.startswith('/'):
+                url = '//' + self.request.get_host() + url
+            return url
+
         context.update({
-            'jsfiles': [f['url'] for f in jsfiles],
-            'cssfiles': [f['url'] for f in cssfiles],
+            'jsfiles': [geturl(f) for f in jsfiles],
+            'cssfiles': [geturl(f) for f in cssfiles],
             'object': obj,
             'datasource': self.request.build_absolute_uri(
                 reverse("api:" + scenario)
