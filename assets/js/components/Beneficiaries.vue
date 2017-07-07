@@ -419,7 +419,7 @@ export default Vue.extend({
         .attr("fill", this.label_colour)
         // v-align
         .attr("y", this.itemHeight / 2)
-        .attr("dy", ".33em"); // magin self-centering offset
+        .attr("dy", ".33em"); // magical self-centering offset
 
       country.append("use")
         .attr("xlink:href", (d) => `#${get_flag_name(d.id)}`)
