@@ -39,13 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    # this is configured manually in urls, so middleware gets applied
-    #django.contrib.staticfiles',
     'haystack',
     'rest_framework',
     'webpack_loader',
     'dv',
 ]
+
+if not DEBUG:
+    # needed in production for collectstatic.
+    # on dev the staticfiles view is configured manually in urls,
+    # because otherwise this skips middleware.
+    INSTALLED_APPS += ['django.contrib.staticfiles']
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': (
