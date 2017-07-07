@@ -1,11 +1,12 @@
 bleach>=2,<=3
 Django>=1.11,<1.12
+Jinja2>=2.9.6,<2.10
 pyexcel>=0.4.2,<0.5
 pyexcel-xls>=0.3.1,<0.4
 pyexcel-xlsx>=0.3.0,<0.4
 django-enumfields>=0.8.2,<0.9
 django-material>=0.12.5,<0.13
-django-webpack-loader>=0.4.1,<0.5
+django-webpack-loader>=0.5,<0.6
 pysolr==3.6.0
 # django-haystack==2.6.1 # This is the latest but too old, until next release go bleeding edge:
 -e git://github.com/django-haystack/django-haystack.git#egg=django-haystack

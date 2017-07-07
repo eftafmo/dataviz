@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # this is configured manually in urls, so middleware gets applied
+    #django.contrib.staticfiles',
     'haystack',
     'rest_framework',
     'webpack_loader',
@@ -56,6 +57,9 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'dv.middleware.CORSMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -64,6 +68,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'dv.urls'
+CORS_ALLOW_PATHS = ('/api/', '/assets/data/')
 
 TEMPLATES = [
     {
@@ -80,6 +85,12 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+    },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
     },
 ]
 

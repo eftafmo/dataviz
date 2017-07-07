@@ -1,8 +1,9 @@
-import binascii
+import random
 import re
-import six
+import time
+from binascii import crc32
 from collections import Iterable
-from django.utils import baseconv
+from django.utils.baseconv import base62
 
 
 def camel_case_to__(txt):
@@ -39,5 +40,11 @@ def uniq_hash(s):
     """
     if not isinstance(s, bytes):
         s = s.encode('utf-8')
-    crc = binascii.crc32(s)
-    return baseconv.base62.encode(crc)
+    crc = crc32(s)
+    return base62.encode(crc)
+
+def mkrandstr():
+    return (
+        base62.encode(int(time.time())) +
+        base62.encode(random.randint(0, 61))
+    )

@@ -1,3 +1,9 @@
+/*
+ * WARNING: this file is parsed in python.
+ *          if you modify or rename it, make sure
+ *          embedding code still works.
+ */
+
 import Vue from 'vue';
 
 import BaseMixin from './components/mixins/Base';

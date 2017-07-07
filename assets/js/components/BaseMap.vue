@@ -294,8 +294,22 @@ export default Vue.extend({
 
   created() {
     // this needs to fetch some extra-data
+
+    // TODO: would be nice if the host was provided by some constant,
+    // (or these guys were fully qualified)
+    // (but note: we still need to consider the current protocol)
+
+    let root = "";
+    if (this.datasource) {
+      const host = this.datasource.replace(/^(https?:)?\/\/([^\/]+)\/.*$/, '$2')
+      console.log(this.datasource, host)
+      root = location.protocol +'//' + host;
+    }
+
+    console.log(root)
+
     this.queue.defer( (callback) => {
-      d3.json(LAYERS, (error, data) => {
+      d3.json(root + LAYERS, (error, data) => {
         if (error) throw error;
         this.layers = data;
         this.renderBase();
@@ -303,7 +317,7 @@ export default Vue.extend({
       callback(null);
     });
     this.queue.defer( (callback) => {
-      d3.json(NUTS, (error, data) => {
+      d3.json(root + NUTS, (error, data) => {
         if (error) throw error;
         this.regions = data;
         this.renderStates();

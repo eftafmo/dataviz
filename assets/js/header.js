@@ -1,6 +1,9 @@
+// TODO: this is very bad. it messes with embeds.
+// should be a component or in a different js bundle.
 window.Header = (function() {
 
   var el = document.querySelector('.header');
+  if (!el) return; // TODO: at least make this selector more specific
 
   var backdrop = function() {
     var el = document.createElement('DIV');

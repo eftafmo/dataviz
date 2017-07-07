@@ -11,6 +11,10 @@ urlpatterns = [
 
     url(r'^search/$', views.FacetedSearchView.as_view(), name='haystack_search'),
 
+    url(r'^embed/(?P<scenario>[a-z]+)/(?P<component>[a-z][a-z-]+[a-z]).js$',
+        views.EmbedComponent.as_view(),
+        name='embed'),
+
     # [dev-only] sandbox for testing ui components
     url(r'^sandbox/$', views.sandbox, name='sandbox'),
 ]
