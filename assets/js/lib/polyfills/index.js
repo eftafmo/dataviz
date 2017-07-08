@@ -143,3 +143,8 @@ if (!Array.prototype.fill) {
     });
   });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+
+
+// URL implementation, public domain, courtesy of
+// https://github.com/github/url-polyfill
+import './url';

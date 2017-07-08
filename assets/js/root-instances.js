@@ -4,14 +4,11 @@
  *          embedding code still works.
  */
 
-import Vue from 'vue';
-
-import BaseMixin from './components/mixins/Base';
-import * as components from './components/index';
+import {default as Root} from './components/Root';
+import * as components from './components';
 
 
-const Base = Vue.extend({
-  mixins: [BaseMixin],
+const Base = Root.extend({
   components: {
     globalfilters: components.GlobalFilters,
   },
