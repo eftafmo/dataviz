@@ -224,55 +224,54 @@ export default Vue.extend({
           .rangeRound([0, width])
           .domain([0, d3.sum(this.data.map( (d) => d.value ))]);
 
-      const fms = chart
-	    .selectAll("g.fm > rect")
-            .data(this.data, (d) => d.id )
-
-      const fentered = fms.enter()
-            .append("g")
-            .attr("class", (d) => "fm " + d.id)
-            .attr("fill", (d) => d.colour )
-            .append("rect")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("width", 0)
-            .attr("height", "100%")
-            .attr("transform", (d, i) => {
-              // draw the second bar from right to left
-              if (i == 1) return (
-                `scale(-1,1) translate(-${width},0)`
-              );
-            })
-            .on("click", function (d) {
-              $this.toggleFm(d, this);
-            })
-            .on("mouseenter", this.tip.show)
-            .on("mouseleave", this.tip.hide);
-
-      /* // this is handled in tooltip already
+      const fms = chart.selectAll("g.fm")
+                       .data(this.data, (d) => d.id );
+      const fentered = fms.enter().append("g")
+                          .attr("class", (d) => "fm " + d.id );
       fentered
-        .append("title").text( (d) => this.currency(d.value) );
-      fentered
-        .append("desc").text( (d) => d.name );
-      */
+        .call(this.renderColours)
+      .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("height", "100%")
+        // start with a 0-width so we transition this during enter too
+        //.attr("width", (d) => x(d.value) )
+        .attr("width", 0)
+        .attr("transform", (d, i) => {
+          // draw the second bar from right to left
+          if (i == 1) return (
+            `scale(-1,1) translate(-${width},0)`
+          );
+        })
+        .on("click", function (d) {
+          $this.toggleFm(d, this);
+        })
+        .on("mouseenter", this.tip.show)
+        .on("mouseleave", this.tip.hide)
 
-      fms.merge(fentered)
         .transition(t)
         .attr("width", (d) => x(d.value) );
+
+      fms.select("rect")
+        .transition(t)
+        .attr("width", (d) => x(d.value) );
+    },
+
+    renderColours(selection) {
+      selection
+        .attr("fill", (d) => (
+          this.isDisabledFm(d) ?
+          colour2gray(d.colour, this.inactive_opacity) :
+          d.colour
+        ) );
     },
 
     handleFilterFm(val, old) {
       // transition the chart to disabled / selected.
       // (the legend is handled by vue.)
-      const t = this.getTransition();
-
-      this.chart.selectAll(".fm")
-        .transition(t)
-        .attr("fill", (d) => (
-          this.isDisabledFm(d) ?
-            colour2gray(d.colour, this.inactive_opacity) :
-            d.colour
-        ));
+      this.chart.selectAll("g.fm")
+          .transition(this.getTransition())
+          .call(this.renderColours);
     },
   },
 });
