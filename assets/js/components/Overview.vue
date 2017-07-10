@@ -207,6 +207,21 @@
       left: 0;
       }
     }
+
+     @media(min-width:800px)and(max-width:1400px){
+      .heading,
+      .ending {
+        transform: scale(0.8);
+      }
+
+      .ending {
+        font-size: 105%;
+      }
+
+      .data-wrapper {
+        transform: translateY(-50%) scale(0.8);
+      }
+    }
   }
 
   .legend {
