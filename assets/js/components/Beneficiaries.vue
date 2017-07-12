@@ -326,7 +326,9 @@ export default Vue.extend({
 
       return `
         <div class="title-container">
-          <img src="/assets/imgs/${this.get_flag_name(d.id)}.png" />
+        <svg>
+          <use xlink:href="#${this.get_flag_name(d.id)}" />
+        </svg>
           <span class="name">${d.name}</span>
         </div>
         ${ datatxt }

@@ -71,9 +71,10 @@
     margin-left: .5rem;
     margin-right: .5rem;
     border-bottom: 1px solid #eee;
-    img {
+    svg {
       max-width: 30px;
       box-shadow: 0px 0px 2px #aaa;
+      height: 20px;
     }
 
     span {
