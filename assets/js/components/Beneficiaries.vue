@@ -274,7 +274,8 @@ export default Vue.extend({
     renderBeneficiaryData(context) {
       // this could receive both a selection and a transition
       const selection = context.selection ? context.selection() : context,
-            t = context;
+            t = context == selection ? this.getTransition() : context;
+
 
       // handle the bg, it's already created
       selection.select("rect.bg")
@@ -282,7 +283,7 @@ export default Vue.extend({
         .attr("height", this.barHeight + this.barPadding * 2);
 
       // the real deal
-      const fms = selection.selectAll("g.fm > rect").data(
+      const fms = selection.selectAll("g.fm").data(
         (d) => d.data,
         (d) => d.id
       );
@@ -297,16 +298,18 @@ export default Vue.extend({
         .append("rect")
         .attr("y", this.barPadding)
         .attr("height", this.barHeight)
+        .attr("x", (d) => this.x(d.d[0]) )
+        .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]) );
 
-      .merge(fms) // ENTER + UPDATE
+      fms.select("rect") // UPDATE
         .transition(t)
-        .attr("x", (d) => this.x(d.d[0]))
-        .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]));
+        .attr("x", (d) => this.x(d.d[0]) )
+        .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]) );
 
-      fms.exit() // EXIT
+      fms.exit().select("rect") // EXIT
         .transition(t)
-        // shrink down to 0 if the first item, or expand to the end otherwise
-        .attr("x", (d) => this.x(d.d[0]))
+        // TODO: shrink down to 0 if the first item, or expand to the end otherwise
+        .attr("x", (d) => this.x(d.d[0]) )
         .attr("width", 0)
         //.remove();
     },
@@ -369,8 +372,8 @@ export default Vue.extend({
       const chart = this.chart;
       // using 2 transitions makes things easier to follow
       // (the removal / repositioning will be slightly delayed)
-      const t = this.getTransition(750),
-            t_ = this.getTransition(350);
+      const t = this.getTransition(),
+            t_ = this.getTransition(this.duration / 2);
 
       // most important thing first: animate the line!
       chart.select("line.domain")
@@ -387,7 +390,7 @@ export default Vue.extend({
 
       const bentered = beneficiaries.enter().append("g") /* ENTER */
         .attr("class", (d) => "beneficiary " + d.id)
-        .attr("transform", `translate(0,${this.height})`)
+        .attr("transform", `translate(0,${this.height})`);
 
       bentered.merge(beneficiaries) /* ENTER _and_ UPDATE */
         .transition(t)
@@ -453,6 +456,12 @@ export default Vue.extend({
         .transition(t_)
         .call(this.renderBeneficiaryData);
 
+      /*
+       * set the active / inactive colours if necessary
+       * (after the fms were drawn)
+       */
+      bentered
+        .call(this.renderActive);
 
       /*
        * and finally, events
@@ -466,13 +475,7 @@ export default Vue.extend({
         .on('mouseleave', this.tip.hide);
     },
 
-    handleFilterBeneficiary(val) {
-      // gray out sibling beneficiaries (or activate them all)
-      const beneficiaries = this.chart
-                                .select("g.beneficiaries")
-                                .selectAll("g.beneficiary")
-                                .transition(this.getTransition());
-
+    renderActive(beneficiaries) {
       const _inactivecolour = (c) => colour2gray(c, this.inactive_opacity);
       const _activate = (selection, yes) => {
         // activates or deactivates:
@@ -485,8 +488,7 @@ export default Vue.extend({
                   _inactivecolour(this.label_colour)
           );
 
-        // the flag. TODO: clone the filter per-element,
-        // and transition its matrix
+        // the flag. TODO: transition the filter's matrix
 
         selection.select("g.label").select("use")
                  .style("filter", yes ? "url(#drop-shadow)" : "url('#grayscale')")
@@ -500,6 +502,8 @@ export default Vue.extend({
       const activate = (selection) => _activate(selection, true),
             deactivate = (selection) => _activate(selection, false);
 
+      const val = this.filters.beneficiary;
+
       beneficiaries.filter(
         (d) => val === null || d.id == val
       ).call(activate);
@@ -507,6 +511,16 @@ export default Vue.extend({
       beneficiaries.filter(
         (d) => val !== null && d.id != val
       ).call(deactivate);
+    },
+
+    handleFilterBeneficiary() {
+      // gray out sibling beneficiaries (or activate them all)
+      const beneficiaries = this.chart
+                                .select("g.beneficiaries")
+                                .selectAll("g.beneficiary");
+      beneficiaries
+        .transition(this.getTransition())
+        .call(this.renderActive);
     },
 
     changedDimension() {
