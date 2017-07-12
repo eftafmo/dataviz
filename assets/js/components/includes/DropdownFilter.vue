@@ -16,7 +16,8 @@
 <style lang="less">
   .viz-select {
     position: absolute;
-    top: 30px;
+    top: 57px;
+    left: -4px;
     right: 0;
     border-color: #fff;
     background: #fff;
@@ -28,6 +29,7 @@
     option {
       color: black;
     }
+
     @media (max-width: 600px){
       top: 8px;
       width: 100%;
