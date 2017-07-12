@@ -117,7 +117,7 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import {colour2gray, slugify} from 'js/lib/util';
+import {slugify} from 'js/lib/util';
 
 import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
@@ -284,14 +284,25 @@ export default Vue.extend({
 
       // the real deal
       const fms = selection.selectAll("g.fm").data(
-        (d) => d.data,
+        (d) => d.data.map(
+          // keep beneficiary data for each fm, we'll need it later
+          (x) => Object.assign(x, {
+            beneficiary: {
+              id: d.id,
+              name: d.name,
+            },
+          })
+        ),
         (d) => d.id
       );
 
       fms.enter() // ENTER-only
         .append("g")
         .attr("class", (d) => "fm " + d.id )
-        .attr("fill", (d) => d.colour )
+        .attr("fill", (d) => (
+          this.filters.beneficiary === null || this.filters.beneficiary == d.beneficiary.id ?
+          d.colour : this.inactivecolour(d.colour)
+        ) )
         // adding a stroke as well prevents what looks like a sub-pixel gap
         // between fms. but needs to be done for background too, so, TODO
         //.attr("stroke", (d) => d.colour )
@@ -476,7 +487,6 @@ export default Vue.extend({
     },
 
     renderActive(beneficiaries) {
-      const _inactivecolour = (c) => colour2gray(c, this.inactive_opacity);
       const _activate = (selection, yes) => {
         // activates or deactivates:
 
@@ -485,7 +495,7 @@ export default Vue.extend({
           .attr("fill",
                 yes ?
                   this.label_colour :
-                  _inactivecolour(this.label_colour)
+                  this.inactivecolour(this.label_colour)
           );
 
         // the flag. TODO: transition the filter's matrix
@@ -496,7 +506,7 @@ export default Vue.extend({
 
         // the fm bars
         selection.select("g.fms").selectAll(".fm")
-          .attr("fill", (d) => yes ? d.colour : _inactivecolour(d.colour))
+          .attr("fill", (d) => yes ? d.colour : this.inactivecolour(d.colour))
       };
 
       const activate = (selection) => _activate(selection, true),

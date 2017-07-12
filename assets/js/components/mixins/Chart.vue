@@ -26,8 +26,6 @@ export default {
       duration: 500,
       // alternate
       short_duration: 250,
-      // opacity of filtered-out items
-      inactive_opacity: .7,
 
       // timings for debouncing render functions (in milliseconds)
       renderWait: {

@@ -14,6 +14,8 @@
 <script>
 import * as d3 from 'd3';
 import {FILTERS, Q} from '../../globals.js'
+import {colour2gray} from 'js/lib/util';
+
 
 export default {
   beforeCreate() {
@@ -33,6 +35,9 @@ export default {
       // this is only used internally. we can't come up with a nicer name,
       // because properties beginning with underscore aren't reactive
       dataset__: null,
+
+      // opacity of filtered-out items
+      inactive_opacity: .7,
 
       locale: {
         // see https://github.com/d3/d3-format/blob/master/locale/
@@ -60,6 +65,12 @@ export default {
     number() {
       const format = ",d";
       return d3.formatLocale(this.locale).format(format);
+    },
+
+    inactivecolour() {
+      return (
+        (c) => colour2gray(c, this.inactive_opacity)
+      );
     },
 
     dataset: {
