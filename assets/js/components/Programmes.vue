@@ -4,9 +4,9 @@
         <div class="content-item programmes_content">
           <div class="body">
             <div @click="toggleContent($event)" class="title-wrapper">
-                <div class="flag">
-                    <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
-                </div>
+                <svg class="flag">
+                    <use :xlink:href="`#${get_flag_name(beneficiary.id)}`"></use>
+                </svg>
                 <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
                 <small>({{ beneficiary.programmes.length }} programmes)</small>
             </div>
