@@ -145,7 +145,6 @@
 
 import Vue from 'vue';
 import * as d3 from 'd3';
-import axios from 'axios';
 
 import BaseMixin from './mixins/Base';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
