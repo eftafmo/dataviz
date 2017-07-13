@@ -65,6 +65,9 @@ export default {
     // this can be used by components displaying per-beneficiary data.
     // (although it's sad that each component should run this code. TODO?)
     beneficiarydata() {
+      // TODO: get rid of this. it's used only by maps,
+      // which have to do extra-computation because of the split by fm
+
       // filter dataset by everything except beneficiary
       const _filters = d3.keys(this.filters)
                          .filter((f) => f != 'beneficiary');

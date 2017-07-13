@@ -1,7 +1,7 @@
 <template>
 <div class="beneficiaries-viz">
    <div v-if="rendered" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="beneficiarydata"></dropdown>
+    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="nonzero"></dropdown>
   </div>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="FMS" class="clearfix">
@@ -128,8 +128,9 @@ import WithTooltipMixin from './mixins/WithTooltip';
 
 export default Vue.extend({
   mixins: [
-    BaseMixin,
-    ChartMixin, WithFMsMixin, WithCountriesMixin, WithTooltipMixin,
+    BaseMixin, ChartMixin,
+    WithFMsMixin, WithCountriesMixin,
+    WithTooltipMixin,
   ],
 
   data() {
@@ -185,7 +186,7 @@ export default Vue.extend({
       // before ready
       if (!this.isReady) return 0;
 
-      const count = this.data.length,
+      const count = this.data.filter( (d) => d.total != 0 ).length,
             height = this.itemHeight * count +
                      this.itemPadding * (count - 1);
 
@@ -228,45 +229,66 @@ export default Vue.extend({
     },
 
     data() {
-      const beneficiarydata = d3.values(this.beneficiarydata);
+      // filter dataset by everything except beneficiary
+      const _filters = d3.keys(this.filters)
+                         .filter((f) => f != 'beneficiary');
+      const dataset = this.filter(this.dataset, _filters);
+      const aggregated = this.aggregate(
+        dataset,
+        ['beneficiary', 'fm'],
+        [
+          'allocation',
+          'project_count',
+          //{source: 'sector', destination: 'sectors', type: String},
+        ],
+        false
+      );
 
+      const out = [];
       // we'll use this to preserve order, and as a basis for each bar item
-      const fms = this.filters.fm ?
-                  [this.FMS[slugify(this.filters.fm)]] : d3.values(this.FMS);
+      const fms = d3.values(this.FMS);
 
-      // generate series data from the allocation data
-      for (const beneficiary of beneficiarydata) {
-        // create a new allocations entry for this
-        const localdata = [];
-        let oldend = 0;
+      for (const bid in this.BENEFICIARIES) {
+        const data = aggregated[bid] || {};
 
+        const item = {
+          data: [],
+          total: 0,
+          //sectors: d3.set(),
+        };
+
+        Object.assign(item, this.BENEFICIARIES[bid]);
+
+        let oldend = 0; // used for series data
         for (const fm of fms) {
-          let value = beneficiary.allocation[fm.name],
-              project_count = beneficiary.project_count[fm.name];
-          // we want 0-valued items too, so they transition properly
-          if (value === undefined)
-            value = 0;
+          const values = data[fm.name] || {
+            beneficiary: bid,
+            allocation: 0,
+            project_count: 0,
+          },
+                allocation = values.allocation,
+                project_count = values.project_count;
 
-          const newend = oldend + value;
+          item.total += allocation;
 
-          localdata.push(Object.assign({}, fm, {
-            value: value,
-            project_count: project_count,
-            // naming is hard
-            d: [oldend, newend],
-          }))
+          delete values.fm;
+          Object.assign(values, fm);
 
+          const newend = oldend + allocation;
+          // the series data. naming is hard.
+          values.d = [oldend, newend];
           oldend = newend;
-        }
 
-        // add the local data
-        beneficiary.data = localdata;
+          item.data.push(values);
+        }
+        out.push(item);
       }
 
-      // sort by name
-      beneficiarydata.sort((a,b) => d3.ascending(a.name,b.name));
+      return out;
+    },
 
-      return beneficiarydata;
+    nonzero() {
+      return this.data.filter( (d) => d.total != 0 );
     },
   },
 
@@ -283,24 +305,14 @@ export default Vue.extend({
         .attr("height", this.barHeight + this.barPadding * 2);
 
       // the real deal
-      const fms = selection.selectAll("g.fm").data(
-        (d) => d.data.map(
-          // keep beneficiary data for each fm, we'll need it later
-          (x) => Object.assign(x, {
-            beneficiary: {
-              id: d.id,
-              name: d.name,
-            },
-          })
-        ),
-        (d) => d.id
-      );
+      const fms = selection.selectAll("g.fm")
+                           .data( (b) => b.data, (d) => d.id );
 
       fms.enter() // ENTER-only
         .append("g")
         .attr("class", (d) => "fm " + d.id )
         .attr("fill", (d) => (
-          this.filters.beneficiary === null || this.filters.beneficiary == d.beneficiary.id ?
+          this.filters.beneficiary === null || this.filters.beneficiary == d.beneficiary ?
           d.colour : this.inactivecolour(d.colour)
         ) )
         // adding a stroke as well prevents what looks like a sub-pixel gap
@@ -316,24 +328,17 @@ export default Vue.extend({
         .transition(t)
         .attr("x", (d) => this.x(d.d[0]) )
         .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]) );
-
-      fms.exit().select("rect") // EXIT
-        .transition(t)
-        // TODO: shrink down to 0 if the first item, or expand to the end otherwise
-        .attr("x", (d) => this.x(d.d[0]) )
-        .attr("width", 0)
-        //.remove();
     },
 
     tooltipTemplate(d) {
       // TODO: this is getting beyond silly.
       const data = d.data
-                    .filter( (x) => x.value != 0 );
+                    .filter( (x) => x.allocation != 0 );
       const datatxt = data
         .map( (x) => `
           <dl>
             <dt>${ x.name }</dt>
-            <dd>${ this.currency(x.value) }</dd>
+            <dd>${ this.currency(x.allocation) }</dd>
           </dl>
         ` )
         .join("");
@@ -397,27 +402,27 @@ export default Vue.extend({
        */
       const beneficiaries = chart.select(".beneficiaries")
             .selectAll("g.beneficiary")
-            .data(data, (d) => d.name ); /* JOIN */
+            .data(data, (d) => d.id );
 
-      const bentered = beneficiaries.enter().append("g") /* ENTER */
+      const bentered = beneficiaries.enter().append("g")
         .attr("class", (d) => "beneficiary " + d.id)
+        .attr("opacity", 0)
         .attr("transform", `translate(0,${this.height})`);
 
-      bentered.merge(beneficiaries) /* ENTER _and_ UPDATE */
+      const bboth = beneficiaries.merge(bentered);
+
+      bboth.filter( (d) => d.total != 0 ) // entered items can also be 0-ed
         .transition(t)
         .attr("opacity", 1)
         .attr("transform", (d, i) => `translate(0,${this.y(d, i)})`);
 
-      beneficiaries.exit() /* EXIT */
+      bboth.filter( (d) => d.total == 0 ) /* exit substitute */
         .transition(t)
         .attr("opacity", 0)
-        .attr("transform", `translate(0,${this.height})`)
-        // don't remove, save some dom operations
-        //.remove();
+        // translate items out of the viewport.
+        // disabled because it only makes sense with ordered values.
+        //.attr("transform", `translate(0,${this.height})`)
 
-      /*
-       *
-       */
       /*
        * render the row labels
        */
@@ -457,13 +462,6 @@ export default Vue.extend({
 
       // we want to run the item rendering both in ENTER and UPDATE
       fms.merge(beneficiaries.select("g.fms"))
-        .transition(t_)
-        .call(this.renderBeneficiaryData);
-
-      // aand we also want to run it in EXIT, but with empty data
-      // (normally the old data gets sent, so the fms don't get disappeared)
-      beneficiaries.exit().each( (d) => (d.data.splice(0)) )
-                   .select("g.fms")
         .transition(t_)
         .call(this.renderBeneficiaryData);
 
