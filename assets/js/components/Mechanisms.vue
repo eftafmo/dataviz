@@ -1,5 +1,8 @@
 <template>
 <div class="fms-viz">
+  <div v-if="rendered" class="dropdown">
+    <dropdown filter="fm" title="Both financial mechanisms" :items="nonzero"></dropdown>
+  </div>
   <svg viewBox="0 0 100 10"  preserveAspectRatio="none">
     <g class="chart"></g>
   </svg>
@@ -10,9 +13,6 @@
         <span class="name">{{ x.fm.name }}</span>
       </template>
     </fm-legend>
-  </div>
-  <div v-if="hasData" class="dropdown">
-    <dropdown filter="fm" title="Both financial mechanisms" :items="nonzero"></dropdown>
   </div>
 </div>
 </template>

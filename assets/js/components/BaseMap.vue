@@ -1,5 +1,8 @@
 <template>
 <div class="map-viz">
+  <div v-if="rendered" class="dropdown">
+    <dropdown filter="beneficiary" title="Select a country" :items="beneficiarydata"></dropdown>
+  </div>
   <chart-container :width="width" :height="height" :class="{ rendering: !rendered }">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
@@ -41,9 +44,6 @@
     </g>
   </svg>
 </chart-container>
-  <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a country" :items="beneficiarydata"></dropdown>
-  </div>
   <div class="legend">
     <ul class="legend-items">
       <li>

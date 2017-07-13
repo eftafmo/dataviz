@@ -1,5 +1,8 @@
 <template>
 <div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+  <div v-if="rendered" class="dropdown">
+    <dropdown filter="sector" title="Select a sector" :items="filtered_dataset"></dropdown>
+  </div>
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
@@ -84,9 +87,6 @@
       </li>
     </transition-group>
   </div>
-  <div v-if="hasData" class="dropdown">
-    <dropdown filter="sector" title="Select a sector" :items="filtered_dataset"></dropdown>
-  </div>
 </div>
 </template>
 
@@ -108,6 +108,10 @@
 
   svg {
     width: 100%;
+  }
+
+  select {
+    width: 125px;
   }
 
   .chart-container {
