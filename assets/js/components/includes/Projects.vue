@@ -8,7 +8,7 @@
        </li>
     </ul>
     <div v-if="posts.next" class="show-more small muted align-center">
-       <button @click="showMore()" type="button" class="btn-link">show 10 more results</button>
+       <button @click="showMore" type="button" class="btn-link">show 10 more results</button>
      </div>
   </div>
 </template>
@@ -79,7 +79,7 @@ export default Vue.extend({
       }
     },
 
-    showMore(){
+    showMore() {
       let href = this.posts.next;
       if(href){
         axios.get(""+href+"")
@@ -87,7 +87,7 @@ export default Vue.extend({
             this.posts.next = response.data.next
             this.posts.count = response.data.count
             this.posts.previous = response.data.previous
-            this.posts.results = this.posts.results.concat(response.data.results)
+            this.posts.results.push.apply(this.posts.results, response.data.results)
           })
           .catch(e => {
             this.errors.push(e)
