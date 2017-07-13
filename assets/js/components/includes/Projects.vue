@@ -8,15 +8,21 @@
        </li>
     </ul>
     <div v-if="posts.next" class="show-more small muted align-center">
-       &ndash;
        <button @click="showMore()" type="button" class="btn-link">show 10 more results</button>
-      &ndash;
      </div>
   </div>
 </template>
 
 <style lang="less">
-
+.programme-sublist-wrapper {
+  .show-more {
+    button {
+      &:before,&:after {
+        content:' – '
+      }
+    }
+  }
+}
 </style>
 
 <script>
