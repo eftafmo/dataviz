@@ -1,15 +1,18 @@
 <template>
-  <div v-if="nodes" class="programme-sublist-wrapper">
-    <small class="programme-sublist-header">{{ sector }}</small>
-    <ul class="programme-sublist">
-      <li class="programme-sublist-item"
-          v-for="value of data.results">
-           {{ value.name }}
-       </li>
-    </ul>
-    <div v-if="posts.next" class="show-more small muted align-center">
-       <button @click="showMore" type="button" class="btn-link">show 10 more results</button>
-     </div>
+  <div>
+    <div class="programme-item-header" @click="getProjects"> {{ name }} </div>
+    <div v-if="posts.length != 0" class="programme-sublist-wrapper">
+      <small class="programme-sublist-header">{{ sector }}</small>
+      <ul class="programme-sublist">
+        <li class="programme-sublist-item"
+            v-for="value of posts.results">
+             {{ value.name }}
+         </li>
+      </ul>
+      <div v-if="posts.next" class="show-more small muted align-center">
+         <button @click="showMore" type="button" class="btn-link">show 10 more results</button>
+       </div>
+    </div>
   </div>
 </template>
 
@@ -34,51 +37,32 @@ export default Vue.extend({
   props: {
     id: String,
     country: String,
-    doajax: Array,
     sector: String,
+    name: String
   },
 
  data() {
     return {
       posts: [],
       errors: [],
-      done: false,
-      nodes: false
       }
     },
 
-  computed : {
-    data() {
-      return this.posts
-    },
-  },
-
   methods: {
-    showNodes() {
-       if(this.country == this.doajax[0] && this.id == this.doajax[1] && this.done == false) {
-        this.nodes = true
-        return true
-       }
-    },
-
     getProjects() {
       const $this= this;
-      if(this.showNodes()) {
+      if(this.posts.length == 0){
         axios.get(`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`)
           .then(response => {
             this.posts = response.data
-            this.done = true;
           })
           .catch(e => {
             this.errors.push(e)
           });
       }
-      else {
-        this.nodes = false;
-        this.done = false;
-      }
+      else
+        this.posts=[]
     },
-
     showMore() {
       let href = this.posts.next;
       if(href){
@@ -97,9 +81,6 @@ export default Vue.extend({
 
   },
 
-   watch: {
-    'doajax': 'getProjects',
-  }
 });
 
 </script>

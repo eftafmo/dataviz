@@ -13,9 +13,7 @@
             <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
                <li v-for="programme in beneficiary.programmes"
                    class="programme-item">
-                 <div class="programme-item-header" @click="ajax($event)" :country="beneficiary.id" :id="programme.programme_code"> {{ programme.programme_name }} </div>
-                  <projects :doajax="doajax" :sector="programme.sector" :country="beneficiary.id" :id="programme.programme_code"/>
-
+                 <projects :sector="programme.sector" :country="beneficiary.id" :id="programme.programme_code" :name="programme.programme_name"/>
                </li>
             </ul>
           </div>
@@ -159,25 +157,8 @@ export default Vue.extend({
     'projects': Projects,
   },
 
-  data() {
-    return {
-      doajax: []
-    }
-  },
 
   computed: {
-    projectcount() {
-      // this could be useful to the parent?
-
-      // NOTE: WARNING: TODO: this sum is in fact wrong, because a programme
-      // can belong to multiple PAs. the sum per-beneficiary needs to be
-      // provided by the backend.
-
-      return data.projectcount;
-    },
-
-
-
     data() {
       const dataset = this.filter(this.dataset);
       const beneficiaries = {};
@@ -248,13 +229,6 @@ export default Vue.extend({
   },
 
   methods: {
-
-    ajax(e) {
-      let programme_code = e.target.getAttribute('id');
-      let country_code = e.target.getAttribute('country');
-      this.doajax = [country_code, programme_code]
-    },
-
     toggleContent(e) {
       //remove comment if you want to toggle between elements
 
