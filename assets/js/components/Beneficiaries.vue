@@ -11,25 +11,34 @@
       </template>
     </fm-legend>
   </div>
-  <svg width="100%" :height="height + 'px'">
-    <filter id="drop-shadow">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
-      <feOffset dx="0" dy="0" result="offsetblur"/>
-      <feFlood flood-color="rgba(0,0,0,0.3)"/>
-      <feComposite in="offsetblur" operator="in"/>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <filter id="grayscale">
-      <feColorMatrix type="matrix"
-                     values="0.3333 0.3333 0.3333 0 0
-                             0.3333 0.3333 0.3333 0 0
-                             0.3333 0.3333 0.3333 0 0
-                             0      0      0      1 0" />
-    </filter>
-    <g class="chart" :transform="`translate(${legendWidth},0)`">
+  <svg width="100%" :height="height + 'px'" class="chart">
+    <defs>
+      <filter id="drop-shadow">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+        <feOffset dx="0" dy="0" result="offsetblur"/>
+        <feFlood flood-color="rgba(0,0,0,0.3)"/>
+        <feComposite in="offsetblur" operator="in"/>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="inactive">
+        <feColorMatrix type="matrix"
+                       :values="matrix2value(grayscaleMatrix)" />
+      </filter>
+      <filter id="active">
+        <feColorMatrix type="matrix"
+                       :values="matrix2value(normalMatrix)" />
+      </filter>
+      <filter id="activating">
+        <feColorMatrix type="matrix" />
+      </filter>
+      <filter id="inactivating">
+        <feColorMatrix type="matrix" />
+      </filter>
+    </defs>
+    <g :transform="`translate(${legendWidth},0)`">
       <g class="beneficiaries" />
       <line class="domain" />
     </g>
@@ -108,6 +117,10 @@
         font-family: 'Arial', 'Open sans', sans-serif;
         text-anchor: end;
       }
+
+      g.flag {
+        filter: url("#drop-shadow");
+      }
     }
   }
 }
@@ -132,6 +145,21 @@ export default Vue.extend({
     WithFMsMixin, WithCountriesMixin,
     WithTooltipMixin,
   ],
+
+  beforeCreate() {
+    this.grayscaleMatrix = [
+        [0.3333, 0.3333, 0.3333, 0, 0],
+        [0.3333, 0.3333, 0.3333, 0, 0],
+        [0.3333, 0.3333, 0.3333, 0, 0],
+        [0     , 0     , 0     , 1, 0]
+    ];
+    this.normalMatrix = [
+        [1, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 0, 1, 0]
+    ];
+  },
 
   data() {
     return {
@@ -293,6 +321,10 @@ export default Vue.extend({
   },
 
   methods: {
+    matrix2value(matrix) {
+      return matrix.map( (x) => x.join(" ") ).join("\n");
+    },
+
     renderBeneficiaryData(context) {
       // this could receive both a selection and a transition
       const selection = context.selection ? context.selection() : context,
@@ -371,7 +403,7 @@ export default Vue.extend({
               Math.max(zeroed,
                        // an amazing way to calculate the mouse position for d3-tip
                        d3.event.clientX
-                       -$this.chart.node().ownerSVGElement.getBoundingClientRect().left
+                       -$this.chart.node().getBoundingClientRect().left
                        + zeroed
                        -$this.legendWidth
                       )
@@ -442,13 +474,14 @@ export default Vue.extend({
         .attr("y", this.itemHeight / 2)
         .attr("dy", ".33em"); // magical self-centering offset
 
-      country.append("use")
+      country.append("g")
+        .attr("class", "flag")
+      .append("use")
         .attr("xlink:href", (d) => `#${get_flag_name(d.id)}`)
         .attr("x", this.flagPadding)
         .attr("y", (this.itemHeight - this.flagHeight) / 2)
         .attr("width", this.flagWidth)
         .attr("height", this.flagHeight)
-        .style("filter", "url(#drop-shadow)");
 
       /*
        * render fm data
@@ -485,25 +518,71 @@ export default Vue.extend({
     },
 
     renderActive(beneficiaries) {
-      const _activate = (selection, yes) => {
+      const $this = this;
+
+      const _activate = (context, yes) => {
+        const selection = context.selection ? context.selection() : context,
+              t = context == selection ? this.getTransition() : context;
+
         // activates or deactivates:
 
         // the text
         selection.select("g.label").select("text")
+          .transition(t)
           .attr("fill",
                 yes ?
                   this.label_colour :
                   this.inactivecolour(this.label_colour)
           );
 
-        // the flag. TODO: transition the filter's matrix
+        // the flag
+        selection.select("g.label").select("g.flag")
+          .transition(t)
+          .attr("opacity", yes ? 1 : this.inactive_opacity)
+        .select("use")
+          .on("start", function() {
+            const current = d3.select(this).style("filter")
+                              .replace(/url\([\'\"]?#(\w+)[\'\"]?\)/, "$1");
 
-        selection.select("g.label").select("use")
-                 .style("filter", yes ? "url(#drop-shadow)" : "url('#grayscale')")
-                 .attr("opacity", yes ? 1 : this.inactive_opacity);
+            if (yes && current == "inactive")
+              d3.select(this).style("filter", "url('#activating')");
+
+            else if (!yes && current == "active")
+              d3.select(this).style("filter", "url('#inactivating')");
+          })
+          .on("end", function() {
+            d3.select(this).style(
+              "filter", `url('#${yes ? "active" : "inactive"}')`
+            );
+          });
+
+        // the filters' matrices used by the flags
+        const interpolateActivating = d3.interpolateArray(
+                this.grayscaleMatrix, this.normalMatrix),
+              interpolateInactivating = d3.interpolateArray(
+                this.normalMatrix, this.grayscaleMatrix);
+
+        this.chart.select("defs #activating feColorMatrix")
+          .attr("values", this.matrix2value(this.grayscaleMatrix))
+          .transition(t)
+          .attrTween("values", function(d) {
+            return function(x) {
+              return $this.matrix2value(interpolateActivating(x));
+            };
+          });
+
+        this.chart.select("defs #inactivating feColorMatrix")
+          .attr("values", this.matrix2value(this.normalMatrix))
+          .transition(t)
+          .attrTween("values", function(d) {
+            return function(x) {
+              return $this.matrix2value(interpolateInactivating(x));
+            };
+          });
 
         // the fm bars
         selection.select("g.fms").selectAll(".fm")
+          .transition(t)
           .attr("fill", (d) => yes ? d.colour : this.inactivecolour(d.colour))
       };
 
