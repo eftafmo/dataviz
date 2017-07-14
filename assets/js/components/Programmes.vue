@@ -12,7 +12,9 @@
             </div>
             <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
                <li v-for="programme in beneficiary.programmes" class="programme-item">
+                 <slot name="programme-content" :programme="programme" :beneficiary="beneficiary">
                  <a class="programme-sublist-item" target="_blank" v-bind:href=programme.programme_url> {{ programme.programme_name }} </a>
+                 </slot>
                  <!--<div class="programme-sublist-wrapper">
                    <small class="programme-sublist-header">{{ programme.sector }}</small>
                    <ul class="programme-sublist">
