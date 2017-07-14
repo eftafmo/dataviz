@@ -56,5 +56,6 @@ export const Projects = Viz.extend({
     overview: components.ProjectsSummary,
     programmes: components.Programmes,
     news: components.News,
+    projects: components.Projects,
   },
 });
