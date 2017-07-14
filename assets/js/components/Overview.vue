@@ -557,7 +557,7 @@ export default Vue.extend({
           .append("g")
           .attr("class", "text")
           .attr("transform", (d) => txtTransform(d, opts.direction) )
-          .attr("opacity", 1)
+          .attr("opacity", (d) => d.value == 0 ? 0 : 1 )
           .call(itemText, type);
       };
 
