@@ -1,37 +1,26 @@
 <template>
-    <ul class="programmes" v-if="hasData">
-      <li v-for="beneficiary in data.beneficiaries">
-        <div class="content-item programmes_content">
-          <div class="body">
-            <div @click="toggleContent($event)" class="title-wrapper">
-                <div class="flag">
-                    <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
-                </div>
-                <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
-                <small>({{ beneficiary.programmes.length }} programmes)</small>
-            </div>
-            <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
-               <li v-for="programme in beneficiary.programmes" class="programme-item">
-                 <slot name="programme-content" :programme="programme" :beneficiary="beneficiary">
-                 <a class="programme-sublist-item" target="_blank" v-bind:href=programme.programme_url> {{ programme.programme_name }} </a>
-                 </slot>
-                 <!--<div class="programme-sublist-wrapper">
-                   <small class="programme-sublist-header">{{ programme.sector }}</small>
-                   <ul class="programme-sublist">
-                     <li class="programme-sublist-item"
-                         v-for="n in programme.projectcount"
-                         v-if="n <= 10"
-                     >
-                       Lorem ipsum {{ n }}
-                     </li>
-                   </ul>
-                 </div>-->
-               </li>
-            </ul>
+<ul class="programmes" v-if="hasData">
+  <li v-for="beneficiary in data.beneficiaries">
+    <div class="content-item programmes_content">
+      <div class="body">
+        <div @click="toggleContent($event)" class="title-wrapper">
+          <div class="flag">
+            <img :src="`/assets/imgs/${get_flag_name(beneficiary.id)}.png`"/>
           </div>
+          <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
+          <small>({{ beneficiary.programmes.length }} programmes)</small>
         </div>
-      </li>
-    </ul>
+        <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
+          <li v-for="programme in beneficiary.programmes" class="programme-item">
+            <slot name="programme-content" :programme="programme" :beneficiary="beneficiary">
+              <a class="programme-sublist-item" target="_blank" :href=programme.programme_url> {{ programme.programme_name }} </a>
+            </slot>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </li>
+</ul>
 </template>
 
 <style lang="less">
@@ -161,12 +150,12 @@
 </style>
 
 <script>
-
 import Vue from 'vue';
 import * as d3 from 'd3';
 
 import BaseMixin from './mixins/Base';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
+
 
 export default Vue.extend({
   mixins: [
