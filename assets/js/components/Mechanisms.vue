@@ -127,17 +127,17 @@ export default Vue.extend({
 
   data() {
     return {
+      // we don't filter by fm
+      filterable: ["beneficiary", "sector", "area"],
+
       inactive_opacity: .7,
     };
   },
 
   computed: {
     data() {
-      // filter dataset by everything except fm
-      const _filters = d3.keys(this.filters).filter( (f) => f != 'fm' );
-      const dataset = this.filter(this.dataset, _filters);
       const aggregated = this.aggregate(
-        dataset,
+        this.filtered,
         [{source: 'fm', destination: 'name'}],
         [
           {source: 'allocation', destination: 'value'},

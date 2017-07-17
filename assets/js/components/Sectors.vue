@@ -331,6 +331,9 @@ export default Vue.extend({
 
   data() {
     return {
+      // not filtering by sector / area
+      filterable: ["fm", "beneficiary"],
+
       width: 500,
       height: 500,
 
@@ -350,12 +353,8 @@ export default Vue.extend({
 
   computed: {
     filtered_sectors() {
-      // filter dataset by everything except sector / area
-      const _filters = d3.keys(this.filters)
-                         .filter((f) => f != 'sector' && f != 'area');
-      const dataset = this.filter(this.dataset, _filters);
       const aggregated = this.aggregate(
-        dataset,
+        this.filtered,
         ['sector', 'area', 'fm'],
         [
           'allocation',

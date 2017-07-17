@@ -32,6 +32,13 @@ export default {
     return {
       filters: FILTERS,
 
+      // what the dataset can be filtered on.
+      // default to all filters applicable to the Grants & Projects scenarios.
+      filterable: [
+        "fm", "beneficiary",
+        "sector", "area",
+      ],
+
       // this is only used internally. we can't come up with a nicer name,
       // because properties beginning with underscore aren't reactive
       dataset__: null,
@@ -83,9 +90,13 @@ export default {
       },
     },
 
+    filtered() {
+      return this.filter(this.dataset, this.filterable);
+    },
+
     data() {
       // convenience property, should be overriden by each component
-      return this.dataset;
+      return this.filtered;
     },
 
     hasData() {
@@ -129,8 +140,6 @@ export default {
       return filterfuncs;
     },
 
-    // TODO: change this to take the list of excluded filters instead.
-    // that's how every component uses it anyway.
     filter(data, filters) {
       const filterfuncs = this._mkfilterfuncs(filters);
       if (!filterfuncs) return data;

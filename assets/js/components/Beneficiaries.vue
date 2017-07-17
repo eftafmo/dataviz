@@ -163,6 +163,8 @@ export default Vue.extend({
 
   data() {
     return {
+      filterable: ["fm", "sector", "area"],
+
       label_colour: "#333",
       layout: {
         // these are all em-based values
@@ -257,12 +259,8 @@ export default Vue.extend({
     },
 
     data() {
-      // filter dataset by everything except beneficiary
-      const _filters = d3.keys(this.filters)
-                         .filter((f) => f != 'beneficiary');
-      const dataset = this.filter(this.dataset, _filters);
       const aggregated = this.aggregate(
-        dataset,
+        this.filtered,
         ['beneficiary', 'fm'],
         [
           'allocation',

@@ -22,7 +22,7 @@ export default BaseMap.extend({
             </svg>
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
-          ${ this.currency(d.total || 0) }
+          ${ this.currency(d.allocation || 0) }
         `;
       else
         return `
@@ -36,9 +36,8 @@ export default BaseMap.extend({
 
     renderData() {
       const t = this.getTransition();
-      const beneficiarydata = d3.values(this.beneficiarydata);
       const beneficiaries = this.chart.selectAll('.states > g.beneficiary')
-                                .data(beneficiarydata, (d) => d.id );
+                                .data(this.data, (d) => d.id );
 
       beneficiaries
         .classed("zero", false)
@@ -52,9 +51,8 @@ export default BaseMap.extend({
         .each(function() {
           // make that value 0 too. totally mean.
           Object.assign(d3.select(this).datum(), {
-            allocation: {},
+            allocation: 0,
             sectors: [],
-            total: 0,
           });
         })
         .select("path")

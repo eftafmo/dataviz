@@ -55,7 +55,7 @@ export default Vue.extend({
 
   computed: {
     data() {
-    const dataset = this.filter(this.dataset);
+    const dataset = this.filtered;
     const out = [];
     for (let d of dataset) {
       for (let news in d.news){

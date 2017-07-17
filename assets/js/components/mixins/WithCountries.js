@@ -62,61 +62,6 @@ export default {
   },
 
   computed: {
-    // this can be used by components displaying per-beneficiary data.
-    // (although it's sad that each component should run this code. TODO?)
-    beneficiarydata() {
-      // TODO: get rid of this. it's used only by maps,
-      // which have to do extra-computation because of the split by fm
-
-      // filter dataset by everything except beneficiary
-      const _filters = d3.keys(this.filters)
-                         .filter((f) => f != 'beneficiary');
-      const dataset = this.filter(this.dataset, _filters);
-      const aggregated = this.aggregate(
-        dataset,
-        ['beneficiary', 'fm'],
-        [
-          'allocation',
-          //'bilateral_allocation',
-          'project_count',
-          //'project_count_positive',
-          //'project_count_ended',
-          //{source: 'sector', destination: 'sectors', type: String},
-        ],
-        false
-      );
-
-      // base the data on the beneficiary list from constants
-      const out = {}
-      for (const bid in this.BENEFICIARIES) {
-        const item = {
-          allocation: {},
-          project_count: {},
-          total: 0,
-          //sectors: d3.set(),
-        };
-
-        Object.assign(item, this.BENEFICIARIES[bid]);
-
-        const data = aggregated[bid];
-        for (const fm in data) {
-          const d = data[fm],
-                allocation = d.allocation,
-                project_count = d.project_count;
-
-          item.total += allocation;
-          item.allocation[fm] = allocation;
-          item.project_count[fm] = project_count;
-        }
-
-        // skip 0-valued items for now
-        if (item.total == 0) continue;
-
-        out[bid] = item;
-      }
-
-      return out;
-    },
   },
 
   methods: {

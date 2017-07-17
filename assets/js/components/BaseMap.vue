@@ -1,7 +1,7 @@
 <template>
 <div class="map-viz">
   <div v-if="rendered" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a country" :items="beneficiarydata"></dropdown>
+    <dropdown filter="beneficiary" title="Select a country" :items="data"></dropdown>
   </div>
   <chart-container :width="width" :height="height" :class="{ rendering: !rendered }">
   <svg :viewBox="`0 0 ${width} ${height}`">
@@ -254,6 +254,8 @@ export default Vue.extend({
 
   data() {
     return {
+      filterable: ["fm", "sector", "area"],
+
       width: 800,
       height: 800,
 
@@ -289,6 +291,22 @@ export default Vue.extend({
 
     path() {
       return d3.geoPath().projection(this.projection);
+    },
+
+    data() {
+      const aggregated = this.aggregate(
+        this.filtered,
+        [
+          { source: "beneficiary", destination: "id" },
+        ],
+        ["allocation", "project_count"]
+      );
+
+      for (const item of aggregated) {
+        item.name = this.BENEFICIARIES[item.id].name;
+      }
+
+      return aggregated;
     },
   },
 
@@ -687,8 +705,7 @@ export default Vue.extend({
     },
 
     computeRegionData(regiondataset) {
-      const _filters = d3.keys(this.filters).filter( (f) => f != 'beneficiary' );
-      const dataset = this.filter(regiondataset, _filters);
+      const dataset = this.filter(regiondataset, this.filterable);
 
       const aggregated = this.aggregate(
         dataset,

@@ -46,9 +46,8 @@ export default Vue.extend({
 
   computed: {
     data() {
-      const dataset = this.filter(this.dataset);
       const out = this.aggregate(
-        dataset,
+        this.filtered,
         [],
         [
           'allocation',

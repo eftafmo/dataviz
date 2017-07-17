@@ -82,7 +82,7 @@ export default BaseMap.extend({
           </div>
           <ul>
             <li>${ this.number(this.get_project_count(d)) } projects</li>
-            <li>${ this.currency(d.total || 0) } gross allocation</li>
+            <li>${ this.currency(d.allocation || 0) } gross allocation</li>
           </ul>
         `;
       else
@@ -136,7 +136,6 @@ export default BaseMap.extend({
     renderData(t) {
       if (t === undefined) t = this.getTransition();
 
-      const beneficiarydata = d3.values(this.beneficiarydata);
       let beneficiaries = this.chart.selectAll('.states > g.beneficiary');
 
       // do an initial render of the circles,
@@ -145,7 +144,7 @@ export default BaseMap.extend({
                    .call(this._mkProjectCircles)
 
       // only now bind the data
-      beneficiaries = beneficiaries.data(beneficiarydata, (d) => d.id );
+      beneficiaries = beneficiaries.data(this.data, (d) => d.id );
 
       const projects = beneficiaries
         .filter( (d) => d.id !== this.filters.beneficiary )

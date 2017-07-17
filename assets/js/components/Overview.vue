@@ -283,6 +283,8 @@ export default Vue.extend({
 
   data() {
     return {
+      filterable: ["fm", "beneficiary"],
+
       width: 500,
 
       padding: Math.PI / 2, // padding between main groups, in radians
@@ -395,10 +397,6 @@ export default Vue.extend({
       return xchord()
         .padding(this.padding)
         .itemPadding(this.itemPadding);
-    },
-
-    filtered() {
-      return this.filter(this.dataset);
     },
 
     aggregated() {
