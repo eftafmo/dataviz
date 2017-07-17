@@ -302,11 +302,8 @@ export default Vue.extend({
     let root = "";
     if (this.datasource) {
       const host = this.datasource.replace(/^(https?:)?\/\/([^\/]+)\/.*$/, '$2')
-      console.log(this.datasource, host)
       root = location.protocol +'//' + host;
     }
-
-    console.log(root)
 
     this.queue.defer( (callback) => {
       d3.json(root + LAYERS, (error, data) => {
@@ -365,6 +362,8 @@ export default Vue.extend({
       this.renderStates();
 
       this.renderData();
+
+      if (this.filters.beneficiary) this.zoomTo(this.filters.beneficiary);
 
       this.rendered = true;
     },
@@ -709,7 +708,7 @@ export default Vue.extend({
       throw new Error("Not implemented");
     },
 
-    handleFilterBeneficiary(val, old) {
+    zoomTo(state, old) {
       const $this = this,
             chart = this.chart,
             t = this.getTransition();
@@ -717,10 +716,10 @@ export default Vue.extend({
       let transformer = d3.zoomIdentity,
           k = 1, x, y;
 
-      if (val) {
+      if (state) {
         const spacing = .1 * Math.min($this.width, $this.height);
 
-        const bounds = $this.geodetails[val].bounds,
+        const bounds = $this.geodetails[state].bounds,
               x1 = bounds[0][0],
               x2 = bounds[1][0],
 
@@ -760,8 +759,8 @@ export default Vue.extend({
                              .transition(t)
                              .attr("opacity", 1);
 
-                       if (val)
-                         this.chart.select('.states > g.beneficiary.' + val)
+                       if (state)
+                         this.chart.select('.states > g.beneficiary.' + state)
                              .transition(t)
                              .attr("opacity", 0);
 
@@ -771,6 +770,10 @@ export default Vue.extend({
       chart
         .transition(t)
         .call(zoom.transform, transformer);
+    },
+
+    handleFilterBeneficiary(val, old) {
+      this.zoomTo(val, old);
     },
 
     handleFilterFm(val, old) {
