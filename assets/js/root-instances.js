@@ -16,7 +16,7 @@ const Base = Root.extend({
 
 
 export const Index = Base.extend({
-  name: 'Index',
+  name: "Index",
 
   components: {
     overview: components.Overview,
@@ -32,28 +32,29 @@ const Viz = Base.extend({
 
 
 export const Grants = Viz.extend({
-  name: 'Grants',
+  name: "Grants",
 
   components: {
     mechanisms: components.Mechanisms,
     sectors: components.Sectors,
     xmap: components.AllocationMap,
     beneficiaries: components.Beneficiaries,
-    overview: components.Summary,
+    xsummary: components.Summary,
     programmes: components.Programmes,
     results: components.Results,
   },
 });
 
+
 export const Projects = Viz.extend({
-  name: 'Projects',
+  name: "Projects",
 
   components: {
     mechanisms: components.ProjectsMechanisms,
     sectors: components.ProjectsSectors,
     xmap: components.ProjectsMap,
     beneficiaries: components.ProjectsBeneficiaries,
-    overview: components.ProjectsSummary,
+    xsummary: components.ProjectsSummary,
     programmes: components.Programmes,
     news: components.News,
     projects: components.Projects,

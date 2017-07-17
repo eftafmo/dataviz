@@ -24,7 +24,7 @@ export default Summary.extend({
   computed: {
     data() {
       const out = this.aggregate(
-        filtered,
+        this.filtered,
         [],
         [
           'project_count',

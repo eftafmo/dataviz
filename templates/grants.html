@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block main %}
+
 <div class="lg-column">
   <h1 class="page-title">Our Grants</h1>
 
@@ -22,7 +23,9 @@
   </div>
 </div>
 
+
 <div class="lg-column">
+
   <div class="grant-dataviz" id="funding-map">
     <h2>Funding map</h2>
     <xmap
@@ -41,10 +44,11 @@
 {% endblock %}
 
 {% block aside %}
+
 <sidebar>
-  <overview
+  <xsummary
       :initial="dataset"
-  ></overview>
+  ></xsummary>
 
   <tabs cache-lifetime="">
     <tab name="Results">
@@ -61,6 +65,7 @@
     </tab>
   </tabs>
 </sidebar>
+
 {% endblock %}
 
 {% block finally %}
