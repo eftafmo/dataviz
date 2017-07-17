@@ -695,11 +695,17 @@ export default Vue.extend({
      */
     renderChart() {
       const $this = this,
+            currsector = this.filters.sector,
             // flatten data
             data = this._partition(this.data)
                        .descendants()
                        .slice(1);
       const t = this.getTransition();
+
+
+      // make sure getting instantiated with a filter works properly
+      if (!this.rendered && currsector)
+        this._prevsector.push(currsector);
 
       const arcs = this.chart
 	    .selectAll("g.arc > path")
@@ -709,14 +715,39 @@ export default Vue.extend({
         // the container:
         .append("g")
         .attr("id", this.getArcID)
-        .attr("class", "arc")
-        .attr("fill", (d) => d.data.colour )
-        // level 2 items are hidden
-        .attr("opacity", (d) => d.depth == 2 ? 0 : null )
-        // and really hidden
-        .style("display", (d) => d.depth == 2 ? "none" : null )
+        .attr("class", "arc");
 
-        // the arc:
+      aentered.filter( (d) => d.depth == 1 )
+        .attr("fill", (d) => d.data.colour );
+
+      const areas = aentered.filter( (d) => d.depth == 2 );
+      // areas are normally hidden, unless filtered by sector.
+      // they're also normally coloured.
+      if (!currsector) {
+        areas
+          .attr("opacity", 0)
+          .style("display", "none")
+          .attr("fill", (d) => d.data.colour );
+      } else {
+        areas
+          .attr("opacity", (d) => this.isSelectedSector(d.parent) ? 1 : 0 )
+          .style("display", (d) => this.isSelectedSector(d.parent) ? null : "none" );
+
+        if (this.filters.area === null) {
+          areas
+            .attr("fill", (d) => d.data.colour );
+        } else {
+          areas
+            .attr("fill", (d) => {
+              const c = d.data.colour;
+              if (this.isActiveArea(d)) return c;
+              return colour2gray(c, this.inactive_opacity);
+            } )
+        }
+      }
+
+      // the arc:
+      aentered
         .append("path")
         .each(function(d) {
           // cache current coordinates
