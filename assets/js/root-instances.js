@@ -51,6 +51,7 @@ export const Partners = Viz.extend({
   components: {
     mechanisms: components.PartnersMechanisms,
     sectors: components.PartnersSectors,
+    beneficiaries: components.PartnersBeneficiaries,
   },
 });
 

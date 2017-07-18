@@ -12,6 +12,7 @@ export {default as AllocationMap} from './AllocationMap';
 export {default as ProjectsMap} from './ProjectsMap';
 
 export {default as Beneficiaries} from './Beneficiaries';
+export {default as PartnersBeneficiaries} from './PartnersBeneficiaries';
 export {default as ProjectsBeneficiaries} from './ProjectsBeneficiaries';
 
 export {default as Summary} from './Summary';

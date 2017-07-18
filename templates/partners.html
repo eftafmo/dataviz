@@ -16,7 +16,7 @@
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
-    <h2>Organizations by priority sector involvement</h2>
+    <h2>Donor partner programmes by priority sector</h2>
     <sectors
         :initial="dataset"
     ></sectors>
@@ -34,13 +34,34 @@
   </div>
 
   <div class="grant-dataviz" id="donor-states">
-    <h2>Funding across beneficiary states</h2>
+    <h2>Organizations by donor state</h2>
     <donors
         :initial="dataset"
     ></donors>
   </div>
 
 </div>
+
+  <div class="grant-dataviz" id="beneficiary-states">
+    <h2>Organizations with donor partner by beneficiary state</h2>
+    <beneficiaries
+        :initial="dataset"
+    ></beneficiaries>
+  </div>
+
+  <div class="grant-dataviz" id="donor-programme-partners">
+    <h2>Donor programme partners</h2>
+    <programme-partners
+        :initial="dataset"
+    ></programme-partners>
+  </div>
+
+  <div class="grant-dataviz" id="donor-project-partners">
+    <h2>Donor project partners</h2>
+    <project-partners
+        :initial="dataset"
+    ></project-partners>
+  </div>
 
 {% endblock %}
 
