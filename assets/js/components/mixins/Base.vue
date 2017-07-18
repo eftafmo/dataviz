@@ -153,7 +153,7 @@ export default {
 
       return data.filter(filterfunc);
     },
-
+    //this works only for words that gain an 's' at the end for plural
     singularize(str, value) {
       let lastchar = str.substring(str.length-1, str.length);
       if (value == 1 && lastchar == 's')
