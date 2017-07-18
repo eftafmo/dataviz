@@ -45,6 +45,14 @@ export const Grants = Viz.extend({
   },
 });
 
+export const Partners = Viz.extend({
+  name: "Partners",
+
+  components: {
+    mechanisms: components.PartnersMechanisms,
+    sectors: components.PartnersSectors,
+  },
+});
 
 export const Projects = Viz.extend({
   name: "Projects",

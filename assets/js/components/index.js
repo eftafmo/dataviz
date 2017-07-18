@@ -1,9 +1,11 @@
 export {default as Overview} from './Overview';
 
 export {default as Mechanisms} from './Mechanisms';
+export {default as PartnersMechanisms} from './PartnersMechanisms';
 export {default as ProjectsMechanisms} from './ProjectsMechanisms';
 
 export {default as Sectors} from './Sectors';
+export {default as PartnersSectors} from './PartnersSectors';
 export {default as ProjectsSectors} from './ProjectsSectors';
 
 export {default as AllocationMap} from './AllocationMap';
