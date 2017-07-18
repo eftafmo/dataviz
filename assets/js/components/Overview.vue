@@ -29,12 +29,6 @@
       </div>
     </div>
 
-    <fm-legend :fms="FMS" class="legend clearfix">
-      <template slot="fm-content" scope="x">
-        <span :style="{backgroundColor: x.fm.colour}"></span>
-        {{ x.fm.name }}
-      </template>
-    </fm-legend>
   </chart-container>
 </div>
 </template>
