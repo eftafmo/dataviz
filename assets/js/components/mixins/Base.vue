@@ -154,6 +154,13 @@ export default {
       return data.filter(filterfunc);
     },
 
+    singularize(str, value) {
+      let lastchar = str.substring(str.length-1, str.length);
+      if (value == 1 && lastchar == 's')
+        str = str.substring(0, str.length-1);
+      return str
+    },
+
     aggregate(data, by, on, flatten=true) {
       /*
          by: array of columns names to aggregate by,

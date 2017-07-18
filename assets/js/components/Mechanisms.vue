@@ -187,10 +187,10 @@ export default Vue.extend({
         </div>
         <ul>
           <li>${this.currency(d.value)}</li>
-          <li>${d.beneficiaries.size()} beneficiary states</li>
-          <li>${d.sectors.size()} priority sectors</li>
-          <li>${d.areas.size()} programme areas</li>
-          <li>${d.programmes.size()} programmes</li>
+          <li>${d.beneficiaries.size()} `+  this.singularize(`beneficiary states`, d.beneficiaries.size()) + `</li>
+          <li>${d.sectors.size()} `+  this.singularize(`priority sectors`, d.sectors.size()) + `</li>
+          <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+          <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
         </ul>
         <span class="action">Click to filter by financial mechanism</span>
       `;
