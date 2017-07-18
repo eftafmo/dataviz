@@ -15,7 +15,9 @@ export default Sectors.extend({
 
     tooltipTemplate(d) {
       // TODO: such horribleness. sad face.
-      const thing = d.depth == 1 ? "priority sector" : "programme area";
+      const thing = d.depth == 1 ? "sector" : "programme area";
+      const num_bs = Object.keys(d.data.beneficiaries).length;
+      const num_prg = Object.keys(d.data.programmes).length;
 
       return `
         <div class="title-container">
@@ -23,7 +25,9 @@ export default Sectors.extend({
         </div>
         <ul>
           <li>${ this.number(d.data.project_count) } projects</li>
-          <li>${ this.currency(d.value) } gross allocation</li>
+          <li>${ this.currency(d.value) }</li>
+          <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
+          <li>${num_prg}  `+  this.singularize(`programmes`, num_prg) + `</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>
       `;

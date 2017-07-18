@@ -299,7 +299,13 @@ export default Vue.extend({
         [
           { source: "beneficiary", destination: "id" },
         ],
-        ["allocation", "project_count"]
+        [
+          "allocation",
+          "project_count",
+          {source: 'sector', destination: 'sectors', type:String, filter_by: 'is_not_ta'},
+          {source: 'area', destination: 'areas', type:String, filter_by: 'is_not_ta'},
+          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
+        ]
       );
 
       for (const item of aggregated) {

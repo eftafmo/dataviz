@@ -13,11 +13,7 @@ export default Beneficiaries.extend({
                     .filter( (x) => x.value != 0 );
       const datatxt = data
         .map( (x) => `
-          <dl>
-            <dt>${ x.name }</dt>
-            <dd>${ this.number(x.project_count) } projects</dd>
-            <dd>${ this.currency(x.value) } gross allocation</dd>
-          </dl>
+            <ul>${ x.name } : ${ this.number(x.project_count) } projects</ul>
         ` )
         .join("");
 
@@ -28,7 +24,7 @@ export default Beneficiaries.extend({
           </svg>
           <span class="name">${d.name}</span>
         </div>
-        ${ datatxt }
+        <ul> ${ datatxt } </ul>
         <span class="action">Click to filter by beneficiary state</span>`;
     },
   }

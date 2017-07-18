@@ -2,10 +2,12 @@
   "eea-grants": {
     id: "eea-grants",
     name: "EEA Grants",
+    donors: "Iceland, Liechtenstein, Norway",
     colour: "rgb(0, 117, 188)",
   },
   "norway-grants": {
     id: "norway-grants",
+    donors: "Norway",
     name: "Norway Grants",
     colour: "rgb(233, 79, 53)",
   },

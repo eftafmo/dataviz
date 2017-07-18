@@ -22,7 +22,12 @@ export default BaseMap.extend({
             </svg>
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
-          ${ this.currency(d.allocation || 0) }
+          <ul>
+            <li>${ this.currency(d.allocation || 0) }</li>
+            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+          </ul>
         `;
       else
         return `

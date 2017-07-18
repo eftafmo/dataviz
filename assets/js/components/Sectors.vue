@@ -363,6 +363,8 @@ export default Vue.extend({
           //'project_count_positive',
           //'project_count_ended',
           //{source: 'sector', destination: 'sectors', type: String},
+          {source: 'beneficiary', destination: 'beneficiaries', type:String, filter_by: 'is_not_ta'},
+          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
         ],
         false
       );
@@ -379,6 +381,8 @@ export default Vue.extend({
             name: sname,
             children: {},
             project_count: 0,
+            beneficiaries: {},
+            programmes: {},
             total: 0,
           };
 
@@ -395,6 +399,8 @@ export default Vue.extend({
               allocation: {},
               // TODO: so... keep the project count per fm, or total?
               project_count: 0,
+              beneficiaries: {},
+              programmes: {},
               total: 0,
             };
 
@@ -404,8 +410,12 @@ export default Vue.extend({
             area.allocation[fmname] = fm.allocation;
             area.total += fm.allocation;
             area.project_count += fm.project_count;
+            Object.assign(area.beneficiaries, fm.beneficiaries);
+            Object.assign(area.programmes, fm.programmes);
             sector.total += fm.allocation;
             sector.project_count += fm.project_count;
+            Object.assign(sector.beneficiaries, fm.beneficiaries);
+            Object.assign(sector.programmes, fm.programmes);
           }
         }
       }
@@ -645,14 +655,18 @@ export default Vue.extend({
 
     tooltipTemplate(d) {
       // TODO: such horribleness.
-      const thing = d.depth == 1 ? "priority sector" : "programme area";
+      const thing = d.depth == 1 ? "sector" : "programme area";
+      const num_bs = Object.keys(d.data.beneficiaries).length;
+      const num_prg = Object.keys(d.data.programmes).length;
 
       return `
         <div class="title-container">
           <span>${ d.data.name }</span>
         </div>
         <ul>
-          <li>${ this.currency(d.value) } gross allocation</li>
+          <li>${ this.currency(d.value) }</li>
+          <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
+          <li>${num_prg}  `+  this.singularize(`programmes`, num_prg) + `</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>
       `;

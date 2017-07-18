@@ -72,6 +72,8 @@ export default BaseMap.extend({
 
   methods: {
     tooltipTemplate(d) {
+      const num_projects = this.number(this.get_project_count(d));
+
       if (d.id.length == 2)
         return `
           <div class="title-container">
@@ -81,8 +83,11 @@ export default BaseMap.extend({
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
           <ul>
-            <li>${ this.number(this.get_project_count(d)) } projects</li>
-            <li>${ this.currency(d.allocation || 0) } gross allocation</li>
+            <li>${ num_projects } ` + this.singularize(`projects`, num_projects) + `</li>
+            <li>${ this.currency(d.allocation || 0) }</li>
+            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
           </ul>
         `;
       else
@@ -91,10 +96,9 @@ export default BaseMap.extend({
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
           <ul>
-            <li>${ this.number(this.get_project_count(d)) } projects</li>
-            <li>${ this.currency(d.allocation || 0) } gross allocation</li>
+            <li>${ num_projects } ` + this.singularize(`projects`, num_projects) + `</li>
+            <li>TODO: number of sectors, programme areas, programmes</li>
           </ul>
-          <small>(Temporary)<small>
         `;
     },
 

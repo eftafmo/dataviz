@@ -366,10 +366,7 @@ export default Vue.extend({
                     .filter( (x) => x.allocation != 0 );
       const datatxt = data
         .map( (x) => `
-          <dl>
-            <dt>${ x.name }</dt>
-            <dd>${ this.currency(x.allocation) }</dd>
-          </dl>
+            <li>${ x.name } : ${ this.currency(x.allocation) }</li>
         ` )
         .join("");
 
@@ -380,7 +377,7 @@ export default Vue.extend({
         </svg>
           <span class="name">${d.name}</span>
         </div>
-        ${ datatxt }
+        <ul> ${ datatxt } </ul>
         <span class="action">Click to filter by beneficiary state</span>
       `;
     },
