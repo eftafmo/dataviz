@@ -265,7 +265,7 @@ export default Vue.extend({
       region_colour_default: "#fff",
       beneficiary_colour_default: '#ddd',
       beneficiary_colour_hovered: '#9dccec',
-      beneficiary_colour_zero: '#fff',
+      beneficiary_colour_zero: '#eee',
     };
   },
 
