@@ -143,21 +143,25 @@ export default Vue.extend({
     BaseMixin, WithCountriesMixin,
   ],
 
+
+ updated() {
+  //TODO: this can be done a lot better
+    if (window.matchMedia("(max-width: 800px)").matches) {
+      if(this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]')){
+        const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]');
+        parent_nav.innerHTML = 'Programmes ('+this.data.projectcount+')'
+      }
+    }
+  },
+
+
   computed: {
-    projectcount() {
-      // this could be useful to the parent?
-
-      // NOTE: WARNING: TODO: this sum is in fact wrong, because a programme
-      // can belong to multiple PAs. the sum per-beneficiary needs to be
-      // provided by the backend.
-
-      return data.projectcount;
-    },
 
     data() {
       const dataset = this.filtered;
       const beneficiaries = {};
       let totalcount = 0;
+      let programmes_array = [];
 
       for (const d of dataset) {
         const programmes = d.programmes;
@@ -182,12 +186,7 @@ export default Vue.extend({
               programme_code: p,
               programme_name: programmes[p].name,
               programme_url: programmes[p].url,
-              projectcount: 0,
             };
-
-          programme.projectcount += projectcount;
-          beneficiary._projectcount += projectcount;
-          totalcount += projectcount;
         }
       }
 
@@ -204,6 +203,8 @@ export default Vue.extend({
               };
         out.beneficiaries.push(beneficiary);
         for (const p in programmes) {
+          if(programmes[p].programme_code)
+            out.projectcount += 1;
           const value = programmes[p];
           if (p === '_projectcount') {
             beneficiary.projectcount = value;
