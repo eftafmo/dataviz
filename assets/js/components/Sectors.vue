@@ -110,10 +110,6 @@
     width: 100%;
   }
 
-  select {
-    width: 125px;
-  }
-
   .chart-container {
     width: 40%;
     height: auto;
