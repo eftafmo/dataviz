@@ -47,15 +47,10 @@
   <div class="legend">
     <ul class="legend-items">
       <li>
-          <span v-if="!this.filters['fm']" class="square" :style="{background: fmcolour('eea-grants')}">
-            <span class="triangle" :style="{borderTopColor: fmcolour('norway-grants')}"></span>
-          </span>
-          <!-- special handling because filters[fm] can't be used for in fmcolour -->
-          <span  v-if="this.filters['fm']" >
-            <span v-if="this.filters['fm']=='EEA Grants'" class="square" :style="{background: fmcolour('eea-grants')}"> </span>
-            <span v-if="this.filters['fm']=='Norway Grants'" class="square" :style="{background: fmcolour('norway-grants')}"> </span>
-          </span>
-          Donor states
+        <svg class="square" v-if="rendered" height="20" width="20">
+          <rect height="20" width="20" fill="url(#multi-fm)"/>
+        </svg>
+        Donor states
       </li>
       <li>
         <span class="square"></span>
