@@ -9,7 +9,7 @@
   justify-content: center;
 }
 .homepage-nav a {
-  flex-grow: 1;
+  width: 33%;
   font-size: 2rem;
   color: rgb(0, 117, 188);
   max-width: 28rem;
