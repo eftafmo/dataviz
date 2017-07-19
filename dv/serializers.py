@@ -11,5 +11,6 @@ class ProjectSerializer(serializers.ModelSerializer):
             'code', 'name',
             'allocation',
             'state', 'nuts',
-            'programme', 'outcome'
+            'programme', 'outcome',
+            'url',
         )
