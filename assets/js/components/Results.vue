@@ -69,6 +69,15 @@ export default Vue.extend({
     BaseMixin, WithSectorsMixin,
   ],
 
+
+  updated() {
+    if (window.matchMedia("(max-width: 800px)").matches) {
+      const results_count = Object.keys(this.data[0]).length
+      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#results"]');
+      parent_nav.innerHTML = 'Results ('+results_count+')'
+    }
+  },
+
   computed: {
     data() {
       const dataset = this.filtered;
