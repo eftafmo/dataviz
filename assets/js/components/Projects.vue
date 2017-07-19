@@ -1,5 +1,5 @@
 <template>
-<programmes :datasource="datasource" :initial="initial">
+<programmes :datasource="datasource" :initial="initial" class="projects">
   <template slot="programme-content" scope="x">
     <projects
         :country="x.beneficiary.id"
@@ -10,7 +10,17 @@
   </template>
 </programmes>
 </template>
+<style lang="less">
+.projects {
+  .programme-item {
+    list-style-type: none;
+  }
+  .programme-list {
+    padding-left: 0.5rem;
+  }
+}
 
+</style>
 <script>
 import Vue from 'vue';
 

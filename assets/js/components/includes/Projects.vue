@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="projects">
     <div class="programme-item-header" @click="getProjects"> {{ name }} </div>
     <div v-if="posts.length != 0" class="programme-sublist-wrapper">
       <small class="programme-sublist-header">{{ sector }}</small>
       <ul class="programme-sublist">
         <li class="programme-sublist-item"
             v-for="value of posts.results">
-             {{ value.name }}
+             <span>{{ value.name }}</span>
          </li>
       </ul>
       <div v-if="posts.next" class="show-more small muted align-center">
@@ -17,14 +17,23 @@
 </template>
 
 <style lang="less">
-.programme-sublist-wrapper {
-  .show-more {
-    button {
-      &:before,&:after {
-        content:' – '
+.projects {
+  .programme-sublist-wrapper {
+    .show-more {
+      button {
+        &:before,&:after {
+          content:' – '
+        }
       }
     }
   }
+.programme-sublist-item {
+  list-style-type: inherit;
+  span {
+    color: #444;
+  }
+}
+
 }
 </style>
 
