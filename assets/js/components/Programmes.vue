@@ -37,8 +37,7 @@
   }
 
   .programme-list {
-    margin-left: .5rem;
-    padding-left: 0;
+    padding-left: 1.6rem;
     color: #444;
   }
 
@@ -59,10 +58,12 @@
     margin: 1rem 0;
   }
 
-  .programme-sublist-item:before {
-    content: "●";
-    margin-right: .5rem;
-    color: #3D90F3;
+  .programme-item {
+    list-style-type: square;
+    color: #56bafc;
+    a{
+      color: #444;
+    }
   }
 
   .title-wrapper:hover .title{
@@ -71,13 +72,8 @@
 
   a.programme-sublist-item:hover{
     &:before {
-
     text-decoration: none;
     }
-  }
-
-  a.programme-sublist-item {
-    color: inherit;
   }
 
   .flag {
@@ -95,7 +91,9 @@
   }
 
   .title {
-    color: #444;
+      color: #444;
+    font-weight: bold;
+    font-size: 1.3rem;
   }
 
   .programme-item-header:before {
