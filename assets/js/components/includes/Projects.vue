@@ -51,6 +51,7 @@
   .active.programme-item-header{
       &:before {
           transform: rotate(90deg);
+          top: 13px;
       }
   }
 
@@ -109,6 +110,7 @@ export default Vue.extend({
       const $this= this;
       let target = this.$el.querySelector('.programme-item-header')
       target.classList.add('spinning')
+      target.classList.toggle('active')
 
       if(this.posts.length == 0){
         axios.get(`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`)
