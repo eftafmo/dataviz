@@ -20,10 +20,9 @@
 .projects {
   .programme-sublist-wrapper {
     .show-more {
-      button {
         &:before,&:after {
-          content:' – '
-        }
+          content:' — ';
+          color: #3D90F3;
       }
     }
   }
