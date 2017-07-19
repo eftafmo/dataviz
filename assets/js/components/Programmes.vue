@@ -65,7 +65,7 @@
     color: #3D90F3;
   }
 
-  .title-wrapper:hover {
+  .title-wrapper:hover .title{
     text-decoration: underline;
   }
 
