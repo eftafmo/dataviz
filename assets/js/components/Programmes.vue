@@ -91,9 +91,9 @@
   }
 
   .title {
-      color: #444;
+    color: #444;
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .programme-item {
