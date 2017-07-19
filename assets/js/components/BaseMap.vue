@@ -188,17 +188,6 @@
         margin-right: 1rem;
         position: relative;
       }
-      .triangle {
-        width: 0;
-        height: 0;
-        border-left: 14px solid transparent;
-        border-right: 14px solid transparent;
-        border-top: 14px solid;
-        top: -2.1px;
-        position: absolute;
-        transform: rotate(135deg);
-        left: -9.1px;
-      }
   }
 }
 </style>
