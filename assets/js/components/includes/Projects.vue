@@ -6,7 +6,8 @@
       <ul class="programme-sublist">
         <li class="programme-sublist-item"
             v-for="value of posts.results">
-             <span>{{ value.name }}</span>
+             <a v-if="value.url" :href=value.url target="_blank">{{ value.name }}</a>
+             <span v-if="!value.url">{{ value.name }}</span>
          </li>
       </ul>
       <div v-if="posts.next" class="show-more small muted align-center">
