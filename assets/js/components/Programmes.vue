@@ -96,28 +96,9 @@
     font-size: 1.3rem;
   }
 
-  .programme-item-header:before {
-    display: inline-block;
-    content: "►";
-    margin-right: .5rem;
-    transition: all 300ms;
-  }
-
   .programme-item {
     margin: 1rem 0;
     font-size: 1.3rem;
-  }
-
-  .programme-item-header {
-    display: inline;
-    cursor: pointer;
-  }
-
-  .active .programme-item-header{
-    color: #005494;
-    &:before {
-        transform: rotate(90deg);
-    }
   }
 
   .programme-list {

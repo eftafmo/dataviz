@@ -27,13 +27,49 @@
       }
     }
   }
-.programme-sublist-item {
-  list-style-type: inherit;
-  span {
-    color: #444;
+  .programme-sublist-item {
+    list-style-type: inherit;
+    span {
+      color: #444;
+    }
   }
-}
+  .programme-item-header {
+    color: #444;
+    padding-left: 2rem;
+    display: block;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 
+  .programme-item-header.active {
+    color: #005494;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+  }
+  .active.programme-item-header{
+      &:before {
+          transform: rotate(90deg);
+      }
+  }
+
+  .programme-sublist-header {
+    margin-left: 2rem;
+  }
+
+  .programme-item-header:before {
+    content: "\25BA";
+    margin-right: .5rem;
+    transition: all 300ms;
+    left: 25px;
+    font-size: 1.1rem;
+    position: absolute;
+  }
+
+  .programme-sublist {
+      margin-left: 3.5rem;
+  }
 }
 </style>
 
@@ -60,6 +96,10 @@ export default Vue.extend({
   methods: {
     getProjects() {
       const $this= this;
+
+      let target = this.$el.querySelector('.programme-item-header')
+      target.classList.toggle('active')
+
       if(this.posts.length == 0){
         axios.get(`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`)
           .then(response => {

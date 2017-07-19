@@ -18,6 +18,9 @@
   .programme-list {
     padding-left: 0.5rem;
   }
+  .title {
+    font-weight: 400;
+  }
 }
 
 </style>
