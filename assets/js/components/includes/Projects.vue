@@ -34,6 +34,7 @@
     }
   }
   .programme-item-header {
+    position: relative;
     color: #444;
     padding-left: 2rem;
     display: block;
@@ -62,13 +63,24 @@
     content: "\25BA";
     margin-right: .5rem;
     transition: all 300ms;
-    left: 25px;
+    left: 4px;
     font-size: 1.1rem;
     position: absolute;
   }
 
   .programme-sublist {
       margin-left: 3.5rem;
+  }
+
+  .spinning:after {
+    content: '';
+    position: absolute;
+    top: -11px;
+    height: 37px;
+    width: 37px;
+    background: url(/assets/imgs/spinner.svg);
+    right: -20px;
+    transform: scale(0.6);
   }
 }
 </style>
@@ -96,20 +108,23 @@ export default Vue.extend({
   methods: {
     getProjects() {
       const $this= this;
-
       let target = this.$el.querySelector('.programme-item-header')
-      target.classList.toggle('active')
+      target.classList.add('spinning')
 
       if(this.posts.length == 0){
         axios.get(`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`)
           .then(response => {
             this.posts = response.data
+            if(target.classList.contains('spinning'))
+              target.classList.remove('spinning')
           })
           .catch(e => {
             this.errors.push(e)
           });
       }
       else
+        if(target.classList.contains('spinning'))
+              target.classList.remove('spinning')
         this.posts=[]
     },
     showMore() {
