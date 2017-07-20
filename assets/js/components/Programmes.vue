@@ -147,10 +147,9 @@ export default Vue.extend({
  updated() {
   //TODO: this can be done a lot better
     if (window.matchMedia("(max-width: 800px)").matches) {
-      if(this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]')){
         const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]');
+        if (!parent_nav) return;
         parent_nav.innerHTML = 'Programmes ('+this.data.projectcount+')'
-      }
     }
   },
 

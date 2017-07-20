@@ -74,7 +74,9 @@ export default Vue.extend({
   //TODO: this can be done a lot better
     if (window.matchMedia("(max-width: 800px)").matches) {
       const results_count = Object.keys(this.data[0]).length
+      if (!results_count) return;
       const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#results"]');
+      if (!parent_nav) return;
       parent_nav.innerHTML = 'Results ('+results_count+')'
     }
   },
