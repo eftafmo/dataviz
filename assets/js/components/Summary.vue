@@ -9,7 +9,7 @@
     </div>
 </template>
 
-<style>
+<style lang="less">
 .sidebar-header {
   position: relative;
 }
@@ -25,8 +25,15 @@
 .allocation.fade-enter-active {
   position: absolute;
   top: 1rem;
-  width: calc(100% - 2rem);
+  width: calc(~"100% - 2rem");
 }
+
+.allocation.fade-leave-active {
+  position: absolute;
+  top: 1rem;
+  width: calc(~"100% - 2rem");
+}
+
 </style>
 
 <script>
