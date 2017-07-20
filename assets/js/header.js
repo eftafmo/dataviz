@@ -2,7 +2,7 @@
 // should be a component or in a different js bundle.
 window.Header = (function() {
 
-  var el = document.querySelector('.eea-grants .header');
+  var el = document.querySelector('.dataviz-eea-grants .header');
   if (!el) return;
 
   var backdrop = function() {
