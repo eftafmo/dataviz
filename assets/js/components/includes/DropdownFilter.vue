@@ -15,11 +15,8 @@
 
 <style lang="less">
   .viz-select {
-    position: relative;
-    top: -40px;
-    @media (min-width: 1400px) {
-      top: -64px;
-    }
+    position: absolute;
+    top: 3rem;
     right: 0;
     border-color: #fff;
     background: #fff;
@@ -47,7 +44,6 @@
     @media (max-width: 950px) {
       width: 100%;
     }
-    text-align: right;
   }
 
 </style>
