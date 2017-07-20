@@ -2,8 +2,8 @@
 // should be a component or in a different js bundle.
 window.Header = (function() {
 
-  var el = document.querySelector('.header');
-  if (!el) return; // TODO: at least make this selector more specific
+  var el = document.querySelector('.eea-grants .header');
+  if (!el) return;
 
   var backdrop = function() {
     var el = document.createElement('DIV');
@@ -46,7 +46,7 @@ window.Header = (function() {
   var close = function() {
     if (active) {
       var target = menus[active];
-      
+
       document.body.classList.remove(_bodyClass(active));
       target.classList.remove('is-open');
 
