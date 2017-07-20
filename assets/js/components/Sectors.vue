@@ -102,8 +102,10 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  @media(min-width: 1000px) and (max-width: 1400px) {
+  @media(min-width: 1027px) and (max-width: 1400px) {
     display: block;
+    height: 472px;
+    overflow: hidden;
   }
 
   svg {
