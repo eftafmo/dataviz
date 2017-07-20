@@ -5,8 +5,9 @@
 
 {% block main %}
 
+<h1 class="page-title">Our Partners</h1>
+
 <div class="lg-column">
-  <h1 class="page-title">Our Partners</h1>
 
   <div class="grant-dataviz" id="financial-mechanisms">
     <h2>Financial mechanisms</h2>
@@ -20,6 +21,21 @@
     <sectors
         :initial="dataset"
     ></sectors>
+  </div>
+
+  <div class="grant-dataviz" id="donor-programme-partners">
+    <h2>Donor programme partners</h2>
+    <programme-partners
+        :initial="dataset"
+    ></programme-partners>
+  </div>
+
+
+  <div class="grant-dataviz" id="donor-project-partners">
+    <h2>Donor project partners</h2>
+    <project-partners
+        :initial="dataset"
+    ></project-partners>
   </div>
 
 </div>
@@ -40,28 +56,17 @@
     ></donors>
   </div>
 
-</div>
-
-  <div class="grant-dataviz" id="beneficiary-states">
+ <div class="grant-dataviz" id="beneficiary-states">
     <h2>Organizations with donor partner by beneficiary state</h2>
     <beneficiaries
         :initial="dataset"
     ></beneficiaries>
   </div>
 
-  <div class="grant-dataviz" id="donor-programme-partners">
-    <h2>Donor programme partners</h2>
-    <programme-partners
-        :initial="dataset"
-    ></programme-partners>
-  </div>
+</div>
 
-  <div class="grant-dataviz" id="donor-project-partners">
-    <h2>Donor project partners</h2>
-    <project-partners
-        :initial="dataset"
-    ></project-partners>
-  </div>
+
+
 
 {% endblock %}
 
