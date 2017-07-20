@@ -52,6 +52,7 @@
 @beneficiary_highlight: #e6e6e6;
 
 .beneficiaries-viz {
+  position: relative;
 
   @media (min-width:1400px){
       max-width: 100%;
@@ -59,6 +60,12 @@
 
   @media (max-width: 1000px) {
       max-width: 100%;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1400px) {
+      select {
+        right: -45%;
+      }
   }
 
   max-width: 70%;

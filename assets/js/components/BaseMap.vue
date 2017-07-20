@@ -70,6 +70,8 @@
   @beneficiary: #ddd;
   @hovered: #9dccec;
   @donor_inactive: #85adcb;
+
+  position: relative;
   // - strokes
   .with-boundary {
     stroke: #7f9fc8;

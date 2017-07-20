@@ -16,7 +16,10 @@
 <style lang="less">
   .viz-select {
     position: absolute;
-    top: 3rem;
+    top: -4rem;
+    @media (min-width: 1400px) {
+      top: -6.4rem;
+    }
     right: 0;
     border-color: #fff;
     background: #fff;

@@ -20,6 +20,7 @@
 
 <style lang="less">
 .fms-viz {
+  position: relative;
 
   svg {
     width: 100%;

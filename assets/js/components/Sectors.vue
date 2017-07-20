@@ -99,13 +99,12 @@
   @short_duration: .25s;
   @inactive_opacity: .7;
 
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   @media(min-width: 1027px) and (max-width: 1400px) {
     display: block;
-    height: 472px;
-    overflow: hidden;
   }
 
   svg {
