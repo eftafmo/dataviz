@@ -61,6 +61,12 @@
       max-width: 100%;
   }
 
+  .viz-select {
+    @media (min-width: 1000px) and (max-width: 1400px) {
+          right: -45%;
+    }
+  }
+
   max-width: 70%;
 
   svg {

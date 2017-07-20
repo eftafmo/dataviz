@@ -104,12 +104,16 @@
   justify-content: center;
   @media(min-width: 1027px) and (max-width: 1400px) {
     display: block;
-    height: 472px;
-    overflow: hidden;
   }
 
   svg {
     width: 100%;
+  }
+
+  .viz-select {
+    @media(min-width: 1400px) {
+      right: -104px;
+    }
   }
 
   .chart-container {
