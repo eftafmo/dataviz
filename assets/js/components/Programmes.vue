@@ -212,6 +212,11 @@ export default Vue.extend({
           }
           beneficiary.programmes.push(value);
         }
+        // Sort by programme code, the Tripartite programme always last
+        beneficiary.programmes.sort((a,b) => d3.ascending(
+          a.programme_code.replace('IN22', 'ZZZZ'),
+          b.programme_code.replace('IN22', 'ZZZZ')
+        ));
       }
 
       //Sort by country

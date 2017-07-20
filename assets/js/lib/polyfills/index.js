@@ -147,4 +147,4 @@ if (!Array.prototype.fill) {
 
 // URL implementation, public domain, courtesy of
 // https://github.com/github/url-polyfill
-import './url';
+//import './url'; # See import 'url-polyfill' in Root.js

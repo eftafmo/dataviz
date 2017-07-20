@@ -17,6 +17,7 @@
     "lodash.merge": "^4.6.0",
     "normalize.css": "^7.0.0",
     "topojson-client": "^3.0.0",
+    "url-polyfill": "^1.0.6",
     "vue": "^2.2.6",
     "vue-tabs-component": "^1.1.0"
   },
