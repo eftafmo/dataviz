@@ -109,7 +109,11 @@
     
     <field name="name" type="string" indexed="false" stored="true" multiValued="false" />
     
+    <field name="state_name_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
+    
     <field name="outcome_ss" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="outcome_ss_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
     
     <field name="programme_status" type="string" indexed="true" stored="true" multiValued="false" />
     

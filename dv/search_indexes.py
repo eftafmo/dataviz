@@ -1,15 +1,24 @@
 from haystack import indexes
-from dv.models import Programme, Project, Organisation, Allocation, ProgrammeOutcome
+from dv.models import (
+    Allocation,
+    Organisation,
+    Programme,
+    ProgrammeOutcome,
+    Project,
+    State,
+)
 
 
 class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     # some non-DRY code here, but the factor out is not trivial due to common indexes having different model lookup
     state_name = indexes.FacetMultiValueField(model_attr='state__name')
+    state_name_auto = indexes.EdgeNgramField(model_attr='state__name')
     programme_area_ss = indexes.FacetMultiValueField(model_attr='programme_areas__name')
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_areas__priority_sector__name')
     financial_mechanism_ss = indexes.FacetMultiValueField()
     outcome_ss = indexes.FacetMultiValueField()
+    outcome_ss_auto = indexes.EdgeNgramField()
     programme_name = indexes.FacetMultiValueField(model_attr='name')
     programme_status = indexes.FacetCharField(model_attr='status')
 
@@ -23,7 +32,6 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     name = indexes.CharField(model_attr='name', indexed=False)
-
 
     def get_model(self):
         return Programme
@@ -59,6 +67,9 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         ).values_list(
             'outcome__name', flat=True
         ).distinct())
+
+    def prepare_outcome_ss_auto(self, obj):
+        return ' '.join(self.prepare_outcome_ss(obj))
 
 
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
@@ -148,7 +159,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'programme__programme_areas__allocation__financial_mechanism__name',
             flat=True,
         ).distinct())
-        return list(result)
+        return list(filter(None, result))
 
     def prepare_state_name(self, obj):
         result = set()
@@ -156,7 +167,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'project__state__name', flat=True).distinct())
         result = result.union(obj.roles.filter(is_programme=True).values_list(
             'programme__state__name', flat=True).distinct())
-        return list(result)
+        return list(filter(None, result))
 
     def prepare_programme_area_ss(self, obj):
         result = set()
@@ -164,7 +175,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'project__programme_area__name', flat=True).distinct())
         result = result.union(obj.roles.filter(is_programme=True).values_list(
             'programme__programme_areas__name', flat=True).distinct())
-        return list(result)
+        return list(filter(None, result))
 
     def prepare_priority_sector_ss(self, obj):
         result = set()
@@ -172,7 +183,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'project__programme_area__priority_sector__name', flat=True).distinct())
         result = result.union(obj.roles.filter(is_programme=True).values_list(
             'programme__programme_areas__priority_sector__name', flat=True).distinct())
-        return list(result)
+        return list(filter(None, result))
 
     def prepare_programme_name(self, obj):
         return list(obj.roles.filter(is_programme=True).values_list(

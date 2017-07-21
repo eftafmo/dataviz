@@ -1,18 +1,15 @@
-import json5
 import os.path
 import re
 from django.conf import settings
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
-from haystack.forms import FacetedSearchForm
 from webpack_loader import utils as webpack
 from dv.lib import utils
 
-from .search_form import EeaFacetedSearchForm
-
+from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 
 SCENARIOS = (
     'index',
@@ -69,16 +66,40 @@ class FacetedSearchView(BaseFacetedSearchView):
         self.queryset = form.search()
         return super().form_invalid(form)
 
-    def get_context_data(self, **kwargs):
-        object_list = kwargs.pop('object_list', self.queryset)
-        context = super().get_context_data(object_list=object_list, **kwargs)
-        # for o in context['object_list']:
-        #     if isinstance(o.state_name, str):
-        #         logger.warning(' +++', o.state_name, type(o.state_name))
-        #         o.state_name = json5.loads(o.state_name)
-        #     if isinstance(o.programme_name, str):
-        #         o.programme_name = json5.loads(o.programme_name)
-        return context
+
+class TypeaheadFacetedSearchView(FacetedSearchView):
+    form_class = EeaAutoFacetedSearchForm
+    template_name = None
+
+    def get_data(self, context):
+        form = context['form']
+        sqs = context[self.context_object_name]
+
+        # we fish for values that match our search terms.
+        # say, the user is looking for Programmes that are related to outcomes containing
+        # words starting with green and familiy
+        # and are also narrowed down to only kind:Programme, Poland Programmes, and EEA FM
+        # we want to present to the js select2 multiselect only distinct, relevant values
+        # and no more than a certain limit, 10 possibilities
+        # TODO actually we look for term1 AND term2 match inside the CONCATENATION
+        # TODO of all Programme's outcomes; because of this concatenation the user adding words
+        # TODO will not necessarily improve his results: some words will fall inside one Outcome
+        # TODO and some in other Outcome belonging to the same Programme. It will look like
+        # TODO an AND match from our side but like an OR match from his side
+        # TODO this will be fun to fix :(
+        vals = set()
+        terms = form.auto_value.lower().split()
+        for res in sqs:
+            vals = vals.union(form.matched_multi_values(res, terms))
+            # limit this - we are going to ajax this often
+            if len(vals) >= 10:
+                break
+        return {
+            form.auto_name+'_auto': list(vals),
+        }
+
+    def render_to_response(self, context, **response_kwargs):
+        return JsonResponse(self.get_data(context), **response_kwargs)
 
 
 _COMPONENTS_DEFS_FILE = os.path.join(settings.BASE_DIR,
@@ -114,6 +135,7 @@ if not _COMPONENTS:
             components[name] = obj
 
         _COMPONENTS[scenario] = components
+
 
 class EmbedComponent(TemplateView):
     content_type = "text/javascript"

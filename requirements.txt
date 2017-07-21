@@ -12,4 +12,3 @@ pysolr==3.6.0
 -e git://github.com/django-haystack/django-haystack.git#egg=django-haystack
 djangorestframework>=3.6.3,<3.7
 pysolr==3.6.0
-json5==0.2.4

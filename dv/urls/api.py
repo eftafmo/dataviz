@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from dv.views import api as views
+from dv.views import frontend as front_views
 
 
 urlpatterns = [
@@ -22,5 +23,9 @@ urlpatterns = [
     url(r'^projects/',
         views.ProjectList.as_view(),
         name='project-list',
+        ),
+    url(r'^search_typeahead/$',
+        front_views.TypeaheadFacetedSearchView.as_view(),
+        name='haystack_search_typeahead'
         ),
 ]
