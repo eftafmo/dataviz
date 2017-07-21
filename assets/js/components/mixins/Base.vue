@@ -33,10 +33,26 @@ export default {
       filters: FILTERS,
 
       // what the dataset can be filtered on.
-      // default to all filters applicable to the Grants & Projects scenarios.
-      filterable: [
+      // default to filters applicable to all scenarios.
+      filter_by: [
         "fm", "beneficiary",
         "sector", "area",
+      ],
+
+      // aggregation columns.
+      aggregate_by: [],
+      // default to columns common to all scenarios.
+      aggregate_on: [
+        'allocation',
+        {source: 'beneficiary', destination: 'beneficiaries',
+         type: String, filter_by: 'is_not_ta'},
+        {source: 'sector', destination: 'sectors',
+         type: String, filter_by: 'is_not_ta'},
+        {source: 'area', destination: 'areas',
+         type: String, filter_by: 'is_not_ta'},
+        // TODO: Partners doesn't have "programmes". Fix.
+        {source: 'programmes',
+         type: Object, filter_by: 'is_not_ta'},
       ],
 
       // this is only used internally. we can't come up with a nicer name,
@@ -91,7 +107,11 @@ export default {
     },
 
     filtered() {
-      return this.filter(this.dataset, this.filterable);
+      return this.filter(this.dataset, this.filter_by);
+    },
+
+    aggregated() {
+      return this.aggregate(this.filtered, this.aggregate_by, this.aggregate_on);
     },
 
     data() {
@@ -161,11 +181,12 @@ export default {
       return str
     },
 
-    aggregate(data, by, on, flatten=true) {
+    aggregate(data, by, on, flatten=false) {
       /*
          by: array of columns names to aggregate by,
          on: array of columns names to aggregate on,
-         flatten: whether to return the data as an array or the raw tree.
+         flatten: whether to return the data as an array.
+                  defaults to false (returns the raw tree).
 
          a column spec can be either a string or an object of the form
          {
@@ -240,14 +261,14 @@ export default {
 
           let current = row[dstcol];
 
-          if (filter_by && !item[filter_by]) {
-            continue;
-          }
-
           if (type === Number) {
             // numbers are added together
             if (current === undefined)
               current = row[dstcol] = 0;
+
+            if (filter_by && !item[filter_by]) {
+              continue;
+            }
 
             row[dstcol] = current + value;
           }
@@ -255,6 +276,10 @@ export default {
             // strings, arrays items and object keys are consolidated into sets
             if (current === undefined)
               current = row[dstcol] = d3.set();
+
+            if (filter_by && !item[filter_by]) {
+              continue;
+            }
 
             if (type === String) {
               current.add(value);

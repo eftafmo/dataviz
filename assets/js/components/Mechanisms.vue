@@ -7,12 +7,14 @@
     <g class="chart"></g>
   </svg>
   <div v-if="hasData" class="legend">
-    <fm-legend :fms="data" class="clearfix">
-      <template slot="fm-content" scope="x">
-        <span class="value" :style="{color: x.fm.colour}">{{ currency(x.fm.value) }}</span>
-        <span class="name">{{ x.fm.name }}</span>
-      </template>
-    </fm-legend>
+    <slot name="legend" :data="data">
+      <fm-legend :fms="data" class="clearfix">
+        <template slot="fm-content" scope="x">
+          <span class="value" :style="{color: x.fm.colour}">{{ currency(x.fm.allocation) }}</span>
+          <span class="name">{{ x.fm.name }}</span>
+        </template>
+      </fm-legend>
+    </slot>
   </div>
 </div>
 </template>
@@ -49,21 +51,10 @@
   }
 
   .legend {
-    .fm.disabled {
-        filter: grayscale(100%);
-        opacity: 0.5;
-      }
-
-     .fm.selected {
-        text-shadow: 0 0 1px #999;
-      }
-
     .fm {
-      list-style-type: none;
       display: inline-block;
       border-right: 1px solid #ccc;
       padding: 0 2rem;
-      transition: all .5s ease;
 
       @media(min-width: 400px) {
        min-width: 150px;
@@ -126,10 +117,19 @@ export default Vue.extend({
     },
   },
 
+  created() {
+    // don't filter by fm
+    const idx = this.filter_by.indexOf("fm");
+
+    if (idx !== -1)
+      this.filter_by.splice(idx, 1);
+  },
+
   data() {
     return {
-      // we don't filter by fm
-      filterable: ["beneficiary", "sector", "area"],
+      aggregate_by: [
+        {source: 'fm', destination: 'name'}
+      ],
 
       inactive_opacity: .7,
     };
@@ -137,38 +137,25 @@ export default Vue.extend({
 
   computed: {
     data() {
-      const aggregated = this.aggregate(
-        this.filtered,
-        [{source: 'fm', destination: 'name'}],
-        [
-          {source: 'allocation', destination: 'value'},
-          //'bilateral_allocation',
-          'project_count',
-          //'project_count_positive',
-          //'project_count_ended',
-          {source: 'beneficiary', destination: 'beneficiaries', type: String, filter_by: 'is_not_ta'},
-          {source: 'sector', destination: 'sectors', type: String, filter_by: 'is_not_ta'},
-          {source: 'area', destination: 'areas', type: String, filter_by: 'is_not_ta'},
-          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
-        ],
-        false
-      );
+      const aggregated = this.aggregated;
 
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
       const out = [];
       for (const fm in this.FMS) {
         const basefm = this.FMS[fm];
+        let item = aggregated[basefm.name];
 
-        const item = {
-          value: 0,
-          project_count: 0,
-          beneficiaries: d3.set(),
-          sectors: d3.set(),
-          areas: d3.set(),
-        };
+        if (item === undefined) {
+          // mirror an existing object
+          item = {};
+          const sample = d3.values(aggregated)[0];
+          for (var k in sample) {
+            item[k] = sample[k].constructor();
+          }
+        }
 
-        Object.assign(item, basefm, aggregated[basefm.name]);
+        Object.assign(item, basefm);
         out.push(item);
       }
 
@@ -176,7 +163,7 @@ export default Vue.extend({
     },
 
     nonzero() {
-      return this.data.filter( (d) => d.value != 0 );
+      return this.data.filter( (d) => d.allocation != 0 );
     },
   },
 
@@ -190,7 +177,7 @@ export default Vue.extend({
           <span class="donor-states">${d.donors}</span>
         </div>
         <ul>
-          <li>${this.currency(d.value)}</li>
+          <li>${this.currency(d.allocation)}</li>
           <li>${d.beneficiaries.size()} `+  this.singularize(`beneficiary states`, d.beneficiaries.size()) + `</li>
           <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
           <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
@@ -226,7 +213,7 @@ export default Vue.extend({
 
       const x = d3.scaleLinear()
           .rangeRound([0, width])
-          .domain([0, d3.sum(this.data.map( (d) => d.value ))]);
+          .domain([0, d3.sum(this.data.map( (d) => d.allocation ))]);
 
       const fms = chart.selectAll("g.fm")
                        .data(this.data, (d) => d.id );
@@ -239,7 +226,7 @@ export default Vue.extend({
         .attr("y", 0)
         .attr("height", "100%")
         // start with a 0-width so we transition this during enter too
-        //.attr("width", (d) => x(d.value) )
+        //.attr("width", (d) => x(d.allocation) )
         .attr("width", 0)
         .attr("transform", (d, i) => {
           // draw the second bar from right to left
@@ -254,11 +241,11 @@ export default Vue.extend({
         .on("mouseleave", this.tip.hide)
 
         .transition(t)
-        .attr("width", (d) => x(d.value) );
+        .attr("width", (d) => x(d.allocation) );
 
       fms.select("rect")
         .transition(t)
-        .attr("width", (d) => x(d.value) );
+        .attr("width", (d) => x(d.allocation) );
     },
 
     renderColours(selection) {

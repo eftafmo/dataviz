@@ -240,7 +240,7 @@ export default Vue.extend({
 
   data() {
     return {
-      filterable: ["fm", "sector", "area"],
+      filter_by: ["fm", "sector", "area"],
 
       width: 800,
       height: 800,
@@ -697,7 +697,7 @@ export default Vue.extend({
     },
 
     computeRegionData(regiondataset) {
-      const dataset = this.filter(regiondataset, this.filterable);
+      const dataset = this.filter(regiondataset, this.filter_by);
 
       const aggregated = this.aggregate(
         dataset,

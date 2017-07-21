@@ -5,10 +5,6 @@
   </div>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="FMS" class="clearfix">
-      <template slot="fm-content" scope="x">
-        <span :style="{backgroundColor: x.fm.colour}"></span>
-        {{ x.fm.name }}
-      </template>
     </fm-legend>
   </div>
   <svg width="100%" :height="height + 'px'" class="chart">
@@ -80,12 +76,6 @@
 
   .legend {
     .fm {
-      list-style-type: none;
-      display: inline-block;
-      margin-right: 2rem;
-    }
-    span {
-      width: 10px; height: 10px;
       display: inline-block;
     }
   }
@@ -170,7 +160,7 @@ export default Vue.extend({
 
   data() {
     return {
-      filterable: ["fm", "sector", "area"],
+      filter_by: ["fm", "sector", "area"],
 
       label_colour: "#333",
       layout: {

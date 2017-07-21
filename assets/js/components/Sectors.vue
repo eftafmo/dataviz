@@ -328,9 +328,6 @@ export default Vue.extend({
 
   data() {
     return {
-      // not filtering by sector / area
-      filterable: ["fm", "beneficiary"],
-
       width: 500,
       height: 500,
 
@@ -346,6 +343,18 @@ export default Vue.extend({
     this._sectortree = null;
     // a queue to know which sector's child areas should be disappeared §
     this._prevsector = [];
+  },
+
+  created() {
+    // don't filter by sector / area
+    // don't filter by fm
+    const sidx = this.filter_by.indexOf("sector"),
+          aidx = this.filter_by.indexOf("area");
+
+    if (sidx !== -1)
+      this.filter_by.splice(sidx, 1);
+    if (aidx !== -1)
+      this.filter_by.splice(aidx, 1);
   },
 
   computed: {

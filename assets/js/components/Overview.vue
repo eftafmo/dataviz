@@ -277,7 +277,7 @@ export default Vue.extend({
 
   data() {
     return {
-      filterable: ["fm", "beneficiary"],
+      filter_by: ["fm", "beneficiary"],
 
       width: 500,
 
