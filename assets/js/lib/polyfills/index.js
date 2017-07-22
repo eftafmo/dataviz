@@ -1,3 +1,5 @@
+import 'url-polyfill';
+
 if (!Object.assign) {
   Object.defineProperty(Object, 'assign', {
     enumerable: false,
@@ -143,8 +145,3 @@ if (!Array.prototype.fill) {
     });
   });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
-
-
-// URL implementation, public domain, courtesy of
-// https://github.com/github/url-polyfill
-//import './url'; # See import 'url-polyfill' in Root.js

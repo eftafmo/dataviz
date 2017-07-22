@@ -2,7 +2,7 @@ import Vue from 'vue';
 import debounce from 'lodash.debounce';
 import BaseMixin from './mixins/Base';
 import {FILTERS} from '../globals';
-import 'url-polyfill';
+
 
 function getURL(obj) {
   // obj must have a .href property.
