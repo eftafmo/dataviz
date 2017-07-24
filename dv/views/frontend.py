@@ -49,7 +49,6 @@ class FacetedSearchView(BaseFacetedSearchView):
         'programme_area_ss',
         'priority_sector_ss',
         'financial_mechanism_ss',
-        'outcome_ss',
         'programme_name',
         'programme_status',
         'kind',
@@ -57,17 +56,40 @@ class FacetedSearchView(BaseFacetedSearchView):
     template_name = 'search.html'
     paginate_by = 10
     context_object_name = 'object_list'
-    # FIXME this does not seem to work anymore.
-    initial = {
-        'kind': ['Programme'],
-    }
 
     def form_invalid(self, form):
         self.queryset = form.search()
         return super().form_invalid(form)
 
 
-class TypeaheadFacetedSearchView(FacetedSearchView):
+class ProgrammeFacetedSearchView(FacetedSearchView):
+    facet_fields = FacetedSearchView.facet_fields + [
+        'outcome_ss',
+    ]
+    initial = {
+        'kind': ['Programme'],
+        # hack! we remove this at form init
+        'view_name': 'ProgrammeFacetedSearchView'
+    }
+
+
+class ProjectFacetedSearchView(FacetedSearchView):
+    initial = {
+        'kind': ['Project'],
+        # hack! we remove this at form init
+        'view_name': 'ProjectFacetedSearchView'
+    }
+
+
+class OrganisationFacetedSearchView(FacetedSearchView):
+    initial = {
+        'kind': ['Organisation'],
+        # hack! we remove this at form init
+        'view_name': 'OrganisationFacetedSearchView'
+    }
+
+
+class _TypeaheadFacetedSearchView(object):
     form_class = EeaAutoFacetedSearchForm
     template_name = None
 
@@ -102,6 +124,18 @@ class TypeaheadFacetedSearchView(FacetedSearchView):
 
     def render_to_response(self, context, **response_kwargs):
         return JsonResponse(self.get_data(context), **response_kwargs)
+
+
+class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, ProgrammeFacetedSearchView):
+    pass
+
+
+class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, ProjectFacetedSearchView):
+    pass
+
+
+class OrganisationTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, OrganisationFacetedSearchView):
+    pass
 
 
 _COMPONENTS_DEFS_FILE = os.path.join(settings.BASE_DIR,

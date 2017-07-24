@@ -1,3 +1,4 @@
+import importlib
 
 from haystack.forms import FacetedSearchForm
 
@@ -5,14 +6,20 @@ import logging
 logger = logging.getLogger()
 
 
+def _import_calling_view(view_name):
+    return getattr(importlib.import_module('..frontend', __name__), view_name)
+
+
 class EeaFacetedSearchForm(FacetedSearchForm):
 
     def __init__(self, *args, **kwargs):
-        from .frontend import FacetedSearchView
+        initial = kwargs.get('initial', {})
+        view_name = initial.pop('view_name', 'FacetedSearchView')
+        CallingView = _import_calling_view(view_name)
 
-        data = dict(kwargs.get('data', kwargs['initial']))
+        data = dict(kwargs.get('data', initial))
         self.facets = {}
-        for facet_name in FacetedSearchView.facet_fields:
+        for facet_name in CallingView.facet_fields:
             self.facets[facet_name] = data.get(facet_name, [])
         super().__init__(*args, **kwargs)
 

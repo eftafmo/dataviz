@@ -13,7 +13,7 @@
             </span>
             <button type="submit" class="btn btn-primary" name="page" value="1">Search</button>
           </div>
-        <div class="search-tabs">
+        <div class="search-tabs" id="search-tabs">
           <span class="muted">Search for:</span>
           <input type="radio" name="kind" id="programme-tab" value="Programme"
                  {% if form.facets.kind.0 == 'Programme' %}checked{% endif %}>
@@ -230,11 +230,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-      function select2AjaxFactory(facet) {
+      function select2AjaxFactory(kind, facet) {
         return {
           ajax: {
             url: function(params) {
-              return '/api/search_typeahead/?' + $("#main-search-form").serialize()
+              var u = '/api/search_' + kind + '_typeahead/?';
+              return u + $("#main-search-form").serialize()
             },
             data: function(params) {
               return {
@@ -252,11 +253,18 @@
           minimumInputLength: 2,
         }
       };
+      $("#search-tabs").change(function() {
+        var selected = $(this).find("input:checked");
+        if (selected.length) {
+          var action_url = '/search/' + selected.val().toLowerCase() + '/';
+          $("#main-search-form").attr("action", action_url);
+        }
+      });
       $("#financial-mechanism-facet").select2();
       $("#state-facet").select2();
       $("#priority-sector-facet").select2();
       $("#programme-area-facet").select2();
-      $("#outcome-facet").select2(select2AjaxFactory('outcome_ss'));
+      $("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss'));
     });
   </script>
 {% endblock %}
