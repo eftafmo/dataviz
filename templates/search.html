@@ -16,7 +16,7 @@
         <div class="search-tabs">
           <span class="muted">Search for:</span>
           <input type="radio" name="kind" id="programme-tab" value="Programme"
-                 {% if not form.facets.kind or form.facets.kind.0 == 'Programme' %}checked{% endif %}>
+                 {% if form.facets.kind.0 == 'Programme' %}checked{% endif %}>
           <label for="programme-tab">Programmes</label>
           <input type="radio" name="kind" id="project-tab" value="Project"
                  {% if form.facets.kind.0 == 'Project'%}checked{% endif %}>
@@ -207,15 +207,14 @@
       </div>
       {% endif %}
 
-      {% if facets.fields.outcome_ss %}
+      {% if form.facets.kind.0 == 'Programme' %}
       <div class="input-group">
         <div class="input-box input-block">
           <label for="outcome-facet">Outcomes</label>
           <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form">
-            {% for o in facets.fields.outcome_ss %}
-              <option value="{{ o.0 }}" {% if o.0 in form.facets.outcome_ss %}selected{% endif %}>
-                {{ o.0 }} ({{ o.1 }})
-              </option>
+            {% for o in form.facets.outcome_ss %}
+              <option value="{{ o }}" selected>{{ o }}</option>
+            {% empty %}
             {% endfor %}
           </select>
         </div>
@@ -226,4 +225,38 @@
 
     </div>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      function select2AjaxFactory(facet) {
+        return {
+          ajax: {
+            url: function(params) {
+              return '/api/search_typeahead/?' + $("#main-search-form").serialize()
+            },
+            data: function(params) {
+              return {
+                auto_name: facet,
+                auto_value: params.term,
+              }
+            },
+            processResults: function(response, params) {
+              return {
+                results: response.results,
+              }
+            },
+            delay: 300,
+          },
+          minimumInputLength: 2,
+        }
+      };
+      $("#financial-mechanism-facet").select2();
+      $("#state-facet").select2();
+      $("#priority-sector-facet").select2();
+      $("#programme-area-facet").select2();
+      $("#outcome-facet").select2(select2AjaxFactory('outcome_ss'));
+    });
+  </script>
 {% endblock %}

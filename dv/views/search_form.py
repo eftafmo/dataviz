@@ -10,7 +10,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
     def __init__(self, *args, **kwargs):
         from .frontend import FacetedSearchView
 
-        data = dict(kwargs.get('data', kwargs.get('initial', {})))
+        data = dict(kwargs.get('data', kwargs['initial']))
         self.facets = {}
         for facet_name in FacetedSearchView.facet_fields:
             self.facets[facet_name] = data.get(facet_name, [])

@@ -12,9 +12,11 @@
     "d3-sankey": "^0.4.2",
     "d3-scale-chromatic": "^1.1.1",
     "d3-tip": "^0.7.1",
+    "jquery": "^3.2.1",
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.0",
     "normalize.css": "^7.0.0",
+    "select2": "^4.0.3",
     "topojson-client": "^3.0.0",
     "vue": "^2.2.6",
     "vue-tabs-component": "^1.1.0"

@@ -92,10 +92,12 @@ class TypeaheadFacetedSearchView(FacetedSearchView):
         for res in sqs:
             vals = vals.union(form.matched_multi_values(res, terms))
             # limit this - we are going to ajax this often
-            if len(vals) >= 10:
+            if len(vals) >= 20:
                 break
         return {
-            form.auto_name+'_auto': list(vals),
+            'results': [ {'text': val, 'id': val} for val in vals ],
+            'results_for': form.auto_name,
+            'total_count': len(vals),
         }
 
     def render_to_response(self, context, **response_kwargs):
