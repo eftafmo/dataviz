@@ -36,36 +36,21 @@ import FMLegendComponent from './includes/FMLegend';
 const Mechanisms = BaseMechanisms.extend({
   mixins: [PartnersMixin],
 
-  created() {
-    this.aggregate_by.push('donor_state');
-  },
-
   computed: {
     aggregated() {
+      // allocation amounts are multiplied by the number of donors,
+      // so we need to fumble with the data a bit.
       const aggregated = this.aggregate(this.filtered,
                                         this.aggregate_by,
                                         this.aggregate_on);
 
-      const out = {};
-
-      for (const fm in aggregated) {
-        // data is duplicated for each donor state
-        const item = out[fm] = {
-          // TODO: "donors" is taken by constants. fix.
-          donor_states: [],
-        };
-
-        let itemdata;
-        for (const donor in aggregated[fm]) {
-          item.donor_states.push(donor);
-          itemdata = aggregated[fm][donor];
-        }
-
-        delete itemdata['donor_state'];
-        Object.assign(item, itemdata);
+      for (const k in aggregated) {
+        const item = aggregated[k];
+        // TODO: division by zero ever possible?
+        item.allocation = item.allocation / item.donor_states.size();
       }
 
-      return out;
+      return aggregated;
     },
   },
 
@@ -76,7 +61,7 @@ const Mechanisms = BaseMechanisms.extend({
           <span class="name">${d.name}</span>
         </div>
         <ul>
-          <li>Donor states: ${d.donor_states.join(", ")}</li>
+          <li>Donor states: ${d.donor_states.values().join(", ")}</li>
           <li>${this.currency(d.allocation)} gross allocation</li>
           <li>${d.beneficiaries.size()} `+  this.singularize(`beneficiary states`, d.beneficiaries.size()) + `</li>
           <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
