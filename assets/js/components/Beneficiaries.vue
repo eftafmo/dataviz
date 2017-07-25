@@ -1,7 +1,7 @@
 <template>
 <div class="beneficiaries-viz">
    <div v-if="rendered" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a beneficiary state" :items="nonzero"></dropdown>
+    <dropdown filter="beneficiary" title="No filter selected" :items="nonzero"></dropdown>
   </div>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="FMS" class="clearfix">

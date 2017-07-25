@@ -1,7 +1,7 @@
 <template>
 <div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <div v-if="rendered" class="dropdown">
-    <dropdown filter="sector" title="Select a sector" :items="filtered_dataset"></dropdown>
+    <dropdown filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
   </div>
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">

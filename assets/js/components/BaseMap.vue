@@ -1,7 +1,7 @@
 <template>
 <div class="map-viz">
   <div v-if="rendered" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a country" :items="data"></dropdown>
+    <dropdown filter="beneficiary" title="No filter selected" :items="data"></dropdown>
   </div>
   <chart-container :width="width" :height="height" :class="{ rendering: !rendered }">
   <svg :viewBox="`0 0 ${width} ${height}`">
