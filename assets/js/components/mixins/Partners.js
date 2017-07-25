@@ -13,8 +13,11 @@ export default {
         delete col.filter_by;
     }
 
-    this.aggregate_on.push(
-      {source: 'donor_state', destination: 'donor_states', type: String}
-    );
+    for (const colspec of [
+      {source: 'donor_state', destination: 'donor_states', type: String},
+      {source: 'partnership_programmes', type: Object},
+    ]) {
+      this.aggregate_on.push(colspec);
+    }
   },
 };
