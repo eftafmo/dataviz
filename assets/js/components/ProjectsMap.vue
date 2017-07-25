@@ -48,9 +48,8 @@ export default BaseMap.extend({
   },
 
   computed: {
-    numberWidth() {
-      // compute the length of an average number character
-      // as it will appear for project counts
+    textDimensions() {
+      // compute the dimensions of an average number character
       if (!this.isReady) return 0;
 
       // respect where the text will appear so css applies properly
@@ -61,12 +60,10 @@ export default BaseMap.extend({
                        .attr("visibility", "hidden")
                        .text("1234567890");
 
-      const bbox = txt.node().getBBox(),
-            txtwidth = (bbox.width / 10 + bbox.height) / 2;
+      const bounds = txt.node().getBBox();
       fakeB.remove();
 
-      // return one character's width with some safety extra
-      return txtwidth;
+      return {width: bounds.width / 10, height: bounds.height};
     },
   },
 
@@ -191,10 +188,13 @@ export default BaseMap.extend({
           const count = this.get_project_count(d);
           // return enough for the the text to fit, plus spacing
           // for another half a character, but not if zero
+          let len;
           return (
-            count == 0 ?
-            this.numberWidth / 3 :
-            (count.toString().length + 1/2) * this.numberWidth / 2
+            count == 0 ? this.textDimensions.width / 3 : (
+              (len = count.toString().length) == 1 ?
+              this.textDimensions.height :
+              (len + 1/2) * this.textDimensions.width
+            ) / 2 * 1.3 // a lil' bit of extra
           );
         } );
 
