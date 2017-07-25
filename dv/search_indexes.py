@@ -86,6 +86,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # specific facets
     project_status = indexes.FacetCharField(model_attr='status')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
+    geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
 
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
@@ -124,7 +125,9 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     # programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
     financial_mechanism_ss = indexes.FacetMultiValueField()
     programme_name = indexes.FacetMultiValueField()
+    programme_name_auto = indexes.EdgeNgramField()
     project_name = indexes.FacetMultiValueField()
+    project_name_auto = indexes.EdgeNgramField()
     programme_area_ss = indexes.FacetMultiValueField()
     priority_sector_ss = indexes.FacetMultiValueField()
 
@@ -138,6 +141,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
     nuts = indexes.FacetCharField(model_attr='nuts')
+    nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
     role_ss = indexes.FacetMultiValueField()
 
     # extra data; avoid db hit
@@ -189,9 +193,15 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return list(obj.roles.filter(is_programme=True).values_list(
             'programme__name', flat=True).distinct())
 
+    def prepare_programme_name_auto(self, obj):
+        return ' '.join(self.prepare_programme_name(obj))
+
     def prepare_project_name(self, obj):
         return list(obj.roles.filter(is_programme=False).values_list(
             'project__name', flat=True).distinct())
+
+    def prepare_project_name_auto(self, obj):
+        return ' '.join(self.prepare_project_name(obj))
 
     def prepare_role_ss(self, obj):
         return list(obj.role.all().values_list('role', flat=True).distinct())
