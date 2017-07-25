@@ -72,9 +72,20 @@ export default BaseMap.extend({
 
   methods: {
     tooltipTemplate(d) {
-      const num_projects = this.number(this.get_project_count(d));
+      const allocation = d.allocation || 0;
+      const num_projects = this.get_project_count(d);
 
-      if (d.id.length == 2)
+      if (d.id.length == 2) {
+        let extra = "";
+        if (num_projects) {
+          extra = `
+            <li>${ this.currency(d.allocation || 0) }</li>
+            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+          `;
+        }
+
         return `
           <div class="title-container">
           <svg>
@@ -83,14 +94,11 @@ export default BaseMap.extend({
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
           <ul>
-            <li>${ num_projects } ` + this.singularize(`projects`, num_projects) + `</li>
-            <li>${ this.currency(d.allocation || 0) }</li>
-            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
-            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+            <li>${ this.number(num_projects) } ` + this.singularize(`projects`, num_projects) + `</li>
+            ${ extra }
           </ul>
         `;
-      else
+      } else {
         return `
           <div class="title-container">
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
@@ -100,15 +108,11 @@ export default BaseMap.extend({
             <li>TODO: number of sectors, programme areas, programmes</li>
           </ul>
         `;
+      }
     },
 
     get_project_count(d) {
-      // the project count is split among fms (which is probably useless)
-      return (
-        typeof d.project_count === 'number' ?
-          d.project_count :
-          d3.sum(d3.values(d.project_count)) || 0
-      );
+      return d.project_count || 0;
     },
 
     _mkProjectCircles(sel, k) {
@@ -139,6 +143,7 @@ export default BaseMap.extend({
 
     renderData(t) {
       if (t === undefined) t = this.getTransition();
+      const dataset = d3.values(this.data);
 
       let beneficiaries = this.chart.selectAll('.states > g.beneficiary');
 
@@ -148,7 +153,7 @@ export default BaseMap.extend({
                    .call(this._mkProjectCircles)
 
       // only now bind the data
-      beneficiaries = beneficiaries.data(this.data, (d) => d.id );
+      beneficiaries = beneficiaries.data(dataset, (d) => d.id );
 
       const projects = beneficiaries
         .filter( (d) => d.id !== this.filters.beneficiary )
