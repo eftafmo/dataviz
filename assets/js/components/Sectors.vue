@@ -636,8 +636,12 @@ export default Vue.extend({
         prgs = d3.set();
 
         for (const c of d.children) {
-          for (const bs of c.data.beneficiaries.values()) bss.add(bs);
-          for (const prg of c.data.programmes.values()) prgs.add(prg);
+          if (c.data.beneficiaries)
+            for (const bs of c.data.beneficiaries.values())
+              bss.add(bs);
+          if (c.data.programmes)
+            for (const prg of c.data.programmes.values())
+              prgs.add(prg);
         }
       }
 

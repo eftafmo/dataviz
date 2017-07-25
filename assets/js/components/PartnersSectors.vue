@@ -10,7 +10,8 @@ export default Sectors.extend({
 
   methods: {
     value(d) {
-      return d.partnership_programmes.size();
+      return d.partnership_programmes === undefined ?
+             0 : d.partnership_programmes.size();
     },
 
     display(item) {
@@ -31,8 +32,12 @@ export default Sectors.extend({
         bss = d3.set();
 
         for (const c of d.children) {
-          for (const ds of c.data.donor_states.values()) dss.add(ds);
-          for (const bs of c.data.beneficiaries.values()) bss.add(bs);
+          if (c.data.donor_states)
+            for (const ds of c.data.donor_states.values())
+              dss.add(ds);
+          if (c.data.beneficiaries)
+            for (const bs of c.data.beneficiaries.values())
+              bss.add(bs);
         }
       }
 
