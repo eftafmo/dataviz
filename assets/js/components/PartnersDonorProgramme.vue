@@ -121,10 +121,13 @@ export default Vue.extend({
         for (let p in d.donor_programme_partners) {
                     let temp = donors_map.get(d.donor_programme_partners[p].name)
                     if(temp == undefined) {
-                      temp = donors_map.set(d.donor_programme_partners[p].name, d.donor_state)
+                      temp = donors_map.set(p , d.donor_state)
                     }
         }
       }
+
+
+      console.log(donors_map)
 
       for (let d in donor_states) {
        donors[d] = {
@@ -138,16 +141,18 @@ export default Vue.extend({
       donors_map.forEach(function(value,key){
         for (let d in donors) {
           if(donors[d].donor_state == value) {
-            donors[d].donor_programme_partners.push({name: key, states:[], programmes: []})
+            donors[d].donor_programme_partners.push({id: key, name: null, states:[], programmes: []})
           }
         }
       })
+
 
       for (let a of programmes) {
         for (let b in a ) {
           for (let c in donors){
             for (let d in donors[c].donor_programme_partners) {
-              if (a[b].name == donors[c].donor_programme_partners[d].name){
+              if (b == donors[c].donor_programme_partners[d].id){
+                donors[c].donor_programme_partners[d].name = a[b].name
                 for(let e of a[b].states){
                   if(donors[c].donor_programme_partners[d].states.indexOf(e) === -1){
                     donors[c].donor_programme_partners[d].states.push(e)
