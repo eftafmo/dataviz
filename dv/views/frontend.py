@@ -60,6 +60,11 @@ class FacetedSearchView(BaseFacetedSearchView):
         self.queryset = form.search()
         return super().form_invalid(form)
 
+    # def get_context_data(self, *args, **kwargs):
+    #     objls = kwargs.pop('object_list', self.queryset)
+    #     ctx = super().get_context_data(object_list=objls, **kwargs)
+    #     return ctx
+
 
 class ProgrammeFacetedSearchView(FacetedSearchView):
     facet_fields = FacetedSearchView.facet_fields + [

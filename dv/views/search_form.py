@@ -55,7 +55,11 @@ class EeaAutoFacetedSearchForm(EeaFacetedSearchForm):
 
     def matched_multi_values(self, solr_res, terms):
         vals = set()
-        for val in getattr(solr_res, self.auto_name):
+        solr_field_val = getattr(solr_res, self.auto_name)
+        # reduce to multival
+        if not isinstance(solr_field_val, list):
+            solr_field_val = [solr_field_val]
+        for val in solr_field_val:
             low_val = val.lower()
             for term in terms:
                 if term in low_val:

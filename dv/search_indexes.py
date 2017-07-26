@@ -13,14 +13,13 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     # some non-DRY code here, but the factor out is not trivial due to common indexes having different model lookup
     state_name = indexes.FacetMultiValueField(model_attr='state__name')
-    state_name_auto = indexes.EdgeNgramField(model_attr='state__name')
     programme_area_ss = indexes.FacetMultiValueField(model_attr='programme_areas__name')
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_areas__priority_sector__name')
     financial_mechanism_ss = indexes.FacetMultiValueField()
     outcome_ss = indexes.FacetMultiValueField()
     outcome_ss_auto = indexes.EdgeNgramField()
     programme_name = indexes.FacetMultiValueField(model_attr='name')
-    programme_status = indexes.FacetCharField(model_attr='status')
+    programme_status = indexes.FacetMultiValueField(model_attr='status')
 
     kind = indexes.FacetCharField()
 
@@ -122,6 +121,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     # This will upgrade the previous definitions from CharField to MultiValue
     # make sure you rebuild_index from zero when adding such "upgrade" here
     state_name = indexes.FacetMultiValueField()
+    # TODO fix this - we need both programme and project status on Organisation
     # programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
     financial_mechanism_ss = indexes.FacetMultiValueField()
     programme_name = indexes.FacetMultiValueField()
@@ -155,50 +155,75 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_financial_mechanism_ss(self, obj):
         result = set()
-        result = result.union(obj.roles.filter(is_programme=False).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=False, project__isnull=False
+        ).values_list(
             'project__programme_area__allocation__financial_mechanism__name',
             flat=True,
         ).distinct())
-        result = result.union(obj.roles.filter(is_programme=True).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=True, programme__isnull=False
+        ).values_list(
             'programme__programme_areas__allocation__financial_mechanism__name',
             flat=True,
         ).distinct())
-        return list(filter(None, result))
+        return list(result)
 
     def prepare_state_name(self, obj):
         result = set()
-        result = result.union(obj.roles.filter(is_programme=False).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=False, project__isnull=False
+        ).values_list(
             'project__state__name', flat=True).distinct())
-        result = result.union(obj.roles.filter(is_programme=True).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=True, programme__isnull=False
+        ).values_list(
             'programme__state__name', flat=True).distinct())
-        return list(filter(None, result))
+        return list(result)
+
+    def prepare_programme_status(self, obj):
+        pass
 
     def prepare_programme_area_ss(self, obj):
         result = set()
-        result = result.union(obj.roles.filter(is_programme=False).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=False, project__isnull=False
+        ).values_list(
             'project__programme_area__name', flat=True).distinct())
-        result = result.union(obj.roles.filter(is_programme=True).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=True, programme__isnull=False
+        ).values_list(
             'programme__programme_areas__name', flat=True).distinct())
-        return list(filter(None, result))
+        return list(result)
 
     def prepare_priority_sector_ss(self, obj):
         result = set()
-        result = result.union(obj.roles.filter(is_programme=False).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=False, project__isnull=False
+        ).values_list(
             'project__programme_area__priority_sector__name', flat=True).distinct())
-        result = result.union(obj.roles.filter(is_programme=True).values_list(
+        result = result.union(obj.roles.filter(
+            is_programme=True, programme__isnull=False
+        ).values_list(
             'programme__programme_areas__priority_sector__name', flat=True).distinct())
-        return list(filter(None, result))
+        return list(result)
 
     def prepare_programme_name(self, obj):
-        return list(obj.roles.filter(is_programme=True).values_list(
-            'programme__name', flat=True).distinct())
+        return list(obj.roles.filter(
+            is_programme=True, programme__isnull=False
+        ).values_list(
+            'programme__name', flat=True
+        ).distinct())
 
     def prepare_programme_name_auto(self, obj):
         return ' '.join(self.prepare_programme_name(obj))
 
     def prepare_project_name(self, obj):
-        return list(obj.roles.filter(is_programme=False).values_list(
-            'project__name', flat=True).distinct())
+        return list(obj.roles.filter(
+            is_programme=False, project__isnull=False
+        ).values_list(
+            'project__name', flat=True
+        ).distinct())
 
     def prepare_project_name_auto(self, obj):
         return ' '.join(self.prepare_project_name(obj))

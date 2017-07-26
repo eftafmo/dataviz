@@ -135,17 +135,17 @@
     </div>
     <div class="sidebar-body">
 
-      <!--
       {% if page_obj.object_list %}
-      <div class="input-group">
-        <div class="input-box input-block">
-          <label for="funding-period-facet">Funding period</label>
-          <select name="" id="funding-period-facet">
-            <option value="">2009 - 2014</option>
-          </select>
+        <!--
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="funding-period-facet">Funding period</label>
+            <select name="" id="funding-period-facet">
+              <option value="">2009 - 2014</option>
+            </select>
+          </div>
         </div>
-      </div>
-      -->
+        -->
 
       {% if facets.fields.financial_mechanism_ss %}
       <div class="input-group">
@@ -153,9 +153,11 @@
           <label for="financial-mechanism-facet">Financial Mechanism</label>
           <select multiple name="financial_mechanism_ss" id="financial-mechanism-facet" form="main-search-form">
             {% for o in facets.fields.financial_mechanism_ss %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.financial_mechanism_ss %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -168,9 +170,11 @@
           <label for="state-facet">Beneficiary States</label>
           <select multiple name="state_name" id="state-facet" form="main-search-form">
             {% for o in facets.fields.state_name %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.state_name %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -183,9 +187,11 @@
           <label for="priority-sector-facet">Priority Sectors</label>
           <select multiple name="priority_sector_ss" id="priority-sector-facet" form="main-search-form">
             {% for o in facets.fields.priority_sector_ss %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.priority_sector_ss %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -198,9 +204,11 @@
           <label for="programme-area-facet">Programme Areas</label>
           <select multiple name="programme_area_ss" id="programme-area-facet" form="main-search-form">
             {% for o in facets.fields.programme_area_ss %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_area_ss %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -212,9 +220,11 @@
           <label for="programme-status-facet">Programme Status</label>
           <select multiple name="programme_status" id="programme-status-facet" form="main-search-form">
             {% for o in facets.fields.programme_status %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_status %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -240,9 +250,11 @@
             <label for="project-programme-name-facet">Programme</label>
             <select multiple name="programme_name" id="project-programme-name-facet" form="main-search-form">
               {% for o in facets.fields.programme_name %}
+                {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_name %}selected{% endif %}>
                   {{ o.0 }} ({{ o.1 }})
                 </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -253,9 +265,11 @@
             <label for="project-status-facet">Project Status</label>
             <select multiple name="project_status" id="project-status-facet" form="main-search-form">
               {% for o in facets.fields.project_status %}
+                {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.project_status %}selected{% endif %}>
                   {{ o.0 }} ({{ o.1 }})
                 </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -305,9 +319,11 @@
             <label for="country-facet">Organisation Country</label>
             <select multiple name="country" id="country-facet" form="main-search-form">
               {% for o in facets.fields.country %}
+                {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.country %}selected{% endif %}>
                   {{ o.0 }} ({{ o.1 }})
                 </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -329,9 +345,11 @@
             <label for="org-type-category-facet">Organisation Type Category</label>
             <select multiple name="org_type_category" id="org-type-category-facet" form="main-search-form">
               {% for o in facets.fields.org_type_category %}
+                {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.org_type_category %}selected{% endif %}>
                   {{ o.0 }} ({{ o.1 }})
                 </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -343,9 +361,11 @@
             <label for="org-type-facet">Organisation Type</label>
             <select multiple name="org_type" id="org-type-facet" form="main-search-form">
               {% for o in facets.fields.org_type %}
+                {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.org_type %}selected{% endif %}>
                   {{ o.0 }} ({{ o.1 }})
                 </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -357,9 +377,11 @@
             <label for="role-facet">Organisation Role</label>
             <select multiple name="role_ss" id="role-facet" form="main-search-form">
               {% for o in facets.fields.role_ss %}
+                {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.role_ss %}selected{% endif %}>
                   {{ o.0 }} ({{ o.1 }})
                 </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
