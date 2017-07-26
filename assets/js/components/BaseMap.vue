@@ -6,13 +6,13 @@
   <chart-container :width="width" :height="height" :class="{ rendering: !rendered }">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
-      <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-        <rect x="0" y="0" width="50" height="25"
+      <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
+        <rect x="0" y="0" width="50" height="6"
               class="norway-grants"
               :fill="fmcolour('norway-grants')"
               :stroke="fmcolour('norway-grants')"
         />
-        <rect x="0" y="25" width="50" height="25"
+        <rect x="0" y="6" width="50" height="5"
               class="eea-grants"
               :fill="fmcolour('eea-grants')"
               :stroke="fmcolour('eea-grants')"
