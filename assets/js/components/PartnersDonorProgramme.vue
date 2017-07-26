@@ -11,7 +11,6 @@
        <td>{{progammes.name}}</td>
        <td>{{progammes.states.length}}</td>
        <td>{{progammes.programmes.length}}</td>
-
      </tr>
    </tbody>
  </table>
@@ -22,6 +21,7 @@
 .donor-programmes {
   table  {
     border-collapse: collapse;
+
     width: 100%;
     * {
       text-align: left;
@@ -42,7 +42,28 @@
       font-size: 12px;
     }
 
+    tr {
+        border:2px solid transparent;
+    }
+
+    tr:hover td{
+
+      border-top:2px solid #50b9ff;
+      border-bottom:2px solid #50b9ff;
+      &:first-of-type{
+       border-left:2px solid #50b9ff;
+      }
+      &:last-of-type {
+        border-right:2px solid #50b9ff;
+      }
+    }
+
+
+
     thead {
+       border-spacing: 4px;
+
+
       th{
         border-bottom: 2px solid #eee;
       }
