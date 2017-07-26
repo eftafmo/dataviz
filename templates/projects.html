@@ -4,8 +4,10 @@
 {% endblock %}
 
 {% block main %}
+
+<h1 class="page-title">Our projects</h1>
+
 <div class="lg-column">
-  <h1 class="page-title">Our projects</h1>
 
   <div class="grant-dataviz" id="financial-mechanisms">
     <h2>Projects by financial mechanism</h2>
@@ -15,14 +17,16 @@
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
-    <h2>Projects by priority sector</h2>
+    <h2>Projects by sector</h2>
     <sectors
         :initial="dataset"
     ></sectors>
   </div>
+
 </div>
 
 <div class="lg-column">
+
   <div class="grant-dataviz" id="funding-map">
     <h2>Projects map</h2>
     <xmap
@@ -37,14 +41,17 @@
         :initial="dataset"
     ></beneficiaries>
   </div>
+
 </div>
+
 {% endblock %}
 
 {% block aside %}
+
 <sidebar>
-  <overview
+  <xsummary
       :initial="dataset"
-  ></overview>
+  ></xsummary>
 
   <tabs cache-lifetime="">
     <tab name="News">
@@ -54,13 +61,14 @@
       ></news>
     </tab>
     <tab name="Projects">
-      <programmes
+      <projects
           class="sidebar-content"
           :initial="dataset"
-      ></programmes>
+      ></projects>
     </tab>
   </tabs>
 </sidebar>
+
 {% endblock %}
 
 {% block finally %}

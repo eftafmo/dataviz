@@ -16,8 +16,10 @@
 <style lang="less">
   .viz-select {
     position: absolute;
-    top: 57px;
-    left: -4px;
+    top: -4rem;
+    @media (min-width: 1400px) {
+      top: -6.4rem;
+    }
     right: 0;
     border-color: #fff;
     background: #fff;
@@ -30,10 +32,20 @@
       color: black;
     }
 
-    @media (max-width: 600px){
-      top: 8px;
+    @media (max-width: 950px){
+    position: relative;
+    float: initial;
+    top: 0;
+    right: initial;
+    display: block;
+    margin-bottom: 1rem;
+    margin-top:-1rem;
+    }
+  }
+
+  .dropdown {
+    @media (max-width: 950px) {
       width: 100%;
-      right: 4px;
     }
   }
 

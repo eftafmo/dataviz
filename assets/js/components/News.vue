@@ -55,15 +55,22 @@ export default Vue.extend({
 
   computed: {
     data() {
-    const dataset = this.filter(this.dataset);
-    const out = [];
+    const dataset = this.filtered;
+    let out = [];
+    let unique = new Set();
+
     for (let d of dataset) {
       for (let news in d.news){
         out.push(d.news[news])
       }
     }
+    // remove duplicates
+    out.forEach(e => unique.add(JSON.stringify(e)));
+    out = Array.from(unique).map(e => JSON.parse(e));
     out.sort((a,b) => d3.descending(a.created,b.created));
+
     return out;
+
     },
   },
 

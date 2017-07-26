@@ -7,6 +7,9 @@
   position: sticky;
   top: 0;
 }
+button#reset-filters {
+  color: inherit;
+}
 .global-filters-inner {
   display: flex;
   align-items: center;

@@ -7,6 +7,7 @@
     "test": "tests"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "d3": "^4.7.4",
     "d3-queue": "^3.0.5",
     "d3-sankey": "^0.4.2",
@@ -18,6 +19,7 @@
     "normalize.css": "^7.0.0",
     "select2": "^4.0.3",
     "topojson-client": "^3.0.0",
+    "url-polyfill": "^1.0.6",
     "vue": "^2.2.6",
     "vue-tabs-component": "^1.1.0"
   },

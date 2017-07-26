@@ -4,7 +4,96 @@
 {% endblock %}
 
 {% block main %}
+
+<h1 class="page-title">Our Partners</h1>
+
+<div class="lg-column">
+
+  <div class="grant-dataviz" id="financial-mechanisms">
+    <h2>Financial mechanisms</h2>
+    <mechanisms
+        :initial="dataset"
+    ></mechanisms>
+  </div>
+
+  <div class="grant-dataviz" id="priority-sectors">
+    <h2>Donor partner programmes by priority sector</h2>
+    <sectors
+        :initial="dataset"
+    ></sectors>
+  </div>
+
+  <div class="grant-dataviz" id="donor-programme-partners">
+    <h2>Donor programme partners</h2>
+    <programme-partners
+        :initial="dataset"
+    ></programme-partners>
+  </div>
+
+
+  <div class="grant-dataviz" id="donor-project-partners">
+    <h2>Donor project partners</h2>
+    <project-partners
+        :initial="dataset"
+    ></project-partners>
+  </div>
+
+</div>
+
+<div class="lg-column">
+
+  <div class="grant-dataviz" id="network-map">
+    <h2>Network map</h2>
+    <xmap
+        :initial="dataset"
+    ></xmap>
+  </div>
+
+  <div class="grant-dataviz" id="donor-states">
+    <h2>Organizations by donor state</h2>
+    <donors
+        :initial="dataset"
+    ></donors>
+  </div>
+
+ <div class="grant-dataviz" id="beneficiary-states">
+    <h2>Organizations with donor partner by beneficiary state</h2>
+    <beneficiaries
+        :initial="dataset"
+    ></beneficiaries>
+  </div>
+
+</div>
+
+
+
+
 {% endblock %}
 
 {% block aside %}
+
+<sidebar>
+  <tabs cache-lifetime="">
+    <tab name="Results">
+    </tab>
+    <tab name="News">
+      <news
+          class="sidebar-content"
+          :initial="dataset"
+      ></news>
+    </tab>
+  </tabs>
+</sidebar>
+
+{% endblock %}
+
+{% block finally %}
+<script>
+new root.Partners({
+  el: '#content',
+  data: {
+    datasource: "{% url "api:partners" %}"
+  },
+});
+</script>
 {% endblock %}

@@ -1,10 +1,10 @@
 <script>
 import Beneficiaries from './Beneficiaries';
-import ProjectsMixin from './mixins/Projects';
+import PartnersMixin from './mixins/Partners';
 
 
 export default Beneficiaries.extend({
-  mixins: [ProjectsMixin],
+  mixins: [PartnersMixin],
 
   methods: {
     tooltipTemplate(d) {

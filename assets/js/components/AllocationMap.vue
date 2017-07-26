@@ -14,7 +14,18 @@ export default BaseMap.extend({
 
   methods: {
     tooltipTemplate(d) {
-      if (d.id.length == 2)
+      const allocation = d.allocation || 0;
+
+      if (d.id.length == 2) {
+        let extra = "";
+        if(allocation) {
+          extra = `
+            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+          `;
+        }
+
         return `
           <div class="title-container">
             <svg>
@@ -22,23 +33,28 @@ export default BaseMap.extend({
             </svg>
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
-          ${ this.currency(d.total || 0) }
+          <ul>
+            <li>${ this.currency(d.allocation || 0) }</li>
+            ${ extra }
+          </ul>
         `;
-      else
+      } else {
         return `
           <div class="title-container">
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
-          ${ this.currency(d.allocation || 0) }
+          ${ this.currency(allocation) }
           <small>(Temporary)<small>
         `;
+      }
     },
 
-    renderData() {
-      const t = this.getTransition();
-      const beneficiarydata = d3.values(this.beneficiarydata);
+    renderData(t) {
+      if (t === undefined) t = this.getTransition();
+      const dataset = d3.values(this.data);
+
       const beneficiaries = this.chart.selectAll('.states > g.beneficiary')
-                                .data(beneficiarydata, (d) => d.id );
+                                .data(dataset, (d) => d.id );
 
       beneficiaries
         .classed("zero", false)
@@ -52,9 +68,8 @@ export default BaseMap.extend({
         .each(function() {
           // make that value 0 too. totally mean.
           Object.assign(d3.select(this).datum(), {
-            allocation: {},
+            allocation: 0,
             sectors: [],
-            total: 0,
           });
         })
         .select("path")

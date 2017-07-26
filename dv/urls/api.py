@@ -12,7 +12,7 @@ urlpatterns = [
     #     name='sector-allocation'),
     # url(r'^beneficiaries.csv', views.beneficiary_allocation,
     #     name='beneficiary-allocation'),
-    url(r'^overview.json', views.overview, name='overview'),
+    url(r'^overview.json', views.overview, name='index'),
     url(r'^grants.json', views.grants, name='grants'),
     url(r'^projects.json', views.projects, name='projects'),
     url(r'^partners.json', views.partners, name='partners'),

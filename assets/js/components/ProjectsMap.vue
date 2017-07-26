@@ -48,9 +48,8 @@ export default BaseMap.extend({
   },
 
   computed: {
-    numberWidth() {
-      // compute the length of an average number character
-      // as it will appear for project counts
+    textDimensions() {
+      // compute the dimensions of an average number character
       if (!this.isReady) return 0;
 
       // respect where the text will appear so css applies properly
@@ -61,18 +60,29 @@ export default BaseMap.extend({
                        .attr("visibility", "hidden")
                        .text("1234567890");
 
-      const bbox = txt.node().getBBox(),
-            txtwidth = (bbox.width / 10 + bbox.height) / 2;
+      const bounds = txt.node().getBBox();
       fakeB.remove();
 
-      // return one character's width with some safety extra
-      return txtwidth;
+      return {width: bounds.width / 10, height: bounds.height};
     },
   },
 
   methods: {
     tooltipTemplate(d) {
-      if (d.id.length == 2)
+      const allocation = d.allocation || 0;
+      const num_projects = this.get_project_count(d);
+
+      if (d.id.length == 2) {
+        let extra = "";
+        if (num_projects) {
+          extra = `
+            <li>${ this.currency(d.allocation || 0) }</li>
+            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+          `;
+        }
+
         return `
           <div class="title-container">
           <svg>
@@ -81,30 +91,25 @@ export default BaseMap.extend({
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
           <ul>
-            <li>${ this.number(this.get_project_count(d)) } projects</li>
-            <li>${ this.currency(d.total || 0) } gross allocation</li>
+            <li>${ this.number(num_projects) } ` + this.singularize(`projects`, num_projects) + `</li>
+            ${ extra }
           </ul>
         `;
-      else
+      } else {
         return `
           <div class="title-container">
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
           <ul>
-            <li>${ this.number(this.get_project_count(d)) } projects</li>
-            <li>${ this.currency(d.allocation || 0) } gross allocation</li>
+            <li>${ num_projects } ` + this.singularize(`projects`, num_projects) + `</li>
+            <li>TODO: number of sectors, programme areas, programmes</li>
           </ul>
-          <small>(Temporary)<small>
         `;
+      }
     },
 
     get_project_count(d) {
-      // the project count is split among fms (which is probably useless)
-      return (
-        typeof d.project_count === 'number' ?
-          d.project_count :
-          d3.sum(d3.values(d.project_count)) || 0
-      );
+      return d.project_count || 0;
     },
 
     _mkProjectCircles(sel, k) {
@@ -135,8 +140,8 @@ export default BaseMap.extend({
 
     renderData(t) {
       if (t === undefined) t = this.getTransition();
+      const dataset = d3.values(this.data);
 
-      const beneficiarydata = d3.values(this.beneficiarydata);
       let beneficiaries = this.chart.selectAll('.states > g.beneficiary');
 
       // do an initial render of the circles,
@@ -145,7 +150,7 @@ export default BaseMap.extend({
                    .call(this._mkProjectCircles)
 
       // only now bind the data
-      beneficiaries = beneficiaries.data(beneficiarydata, (d) => d.id );
+      beneficiaries = beneficiaries.data(dataset, (d) => d.id );
 
       const projects = beneficiaries
         .filter( (d) => d.id !== this.filters.beneficiary )
@@ -183,10 +188,13 @@ export default BaseMap.extend({
           const count = this.get_project_count(d);
           // return enough for the the text to fit, plus spacing
           // for another half a character, but not if zero
+          let len;
           return (
-            count == 0 ?
-            this.numberWidth / 3 :
-            (count.toString().length + 1/2) * this.numberWidth / 2
+            count == 0 ? this.textDimensions.width / 3 : (
+              (len = count.toString().length) == 1 ?
+              this.textDimensions.height :
+              (len + 1/2) * this.textDimensions.width
+            ) / 2 * 1.3 // a lil' bit of extra
           );
         } );
 

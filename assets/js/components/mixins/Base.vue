@@ -32,6 +32,29 @@ export default {
     return {
       filters: FILTERS,
 
+      // what the dataset can be filtered on.
+      // default to filters applicable to all scenarios.
+      filter_by: [
+        "fm", "beneficiary",
+        "sector", "area",
+      ],
+
+      // aggregation columns.
+      aggregate_by: [],
+      // default to columns common to all scenarios.
+      aggregate_on: [
+        'allocation',
+        {source: 'beneficiary', destination: 'beneficiaries',
+         type: String, filter_by: 'is_not_ta'},
+        {source: 'sector', destination: 'sectors',
+         type: String, filter_by: 'is_not_ta'},
+        {source: 'area', destination: 'areas',
+         type: String, filter_by: 'is_not_ta'},
+        // TODO: Partners doesn't have "programmes". Fix.
+        {source: 'programmes',
+         type: Object, filter_by: 'is_not_ta'},
+      ],
+
       // this is only used internally. we can't come up with a nicer name,
       // because properties beginning with underscore aren't reactive
       dataset__: null,
@@ -83,9 +106,17 @@ export default {
       },
     },
 
+    filtered() {
+      return this.filter(this.dataset, this.filter_by);
+    },
+
+    aggregated() {
+      return this.aggregate(this.filtered, this.aggregate_by, this.aggregate_on);
+    },
+
     data() {
       // convenience property, should be overriden by each component
-      return this.dataset;
+      return this.filtered;
     },
 
     hasData() {
@@ -129,8 +160,6 @@ export default {
       return filterfuncs;
     },
 
-    // TODO: change this to take the list of excluded filters instead.
-    // that's how every component uses it anyway.
     filter(data, filters) {
       const filterfuncs = this._mkfilterfuncs(filters);
       if (!filterfuncs) return data;
@@ -144,12 +173,20 @@ export default {
 
       return data.filter(filterfunc);
     },
+    //this works only for strings that gain an 's' at the end for plural
+    singularize(str, value) {
+      let lastchar = str.substring(str.length-1, str.length);
+      if (value == 1 && lastchar == 's')
+        str = str.substring(0, str.length-1);
+      return str
+    },
 
-    aggregate(data, by, on, flatten=true) {
+    aggregate(data, by, on, flatten=false) {
       /*
          by: array of columns names to aggregate by,
          on: array of columns names to aggregate on,
-         flatten: whether to return the data as an array or the raw tree.
+         flatten: whether to return the data as an array.
+                  defaults to false (returns the raw tree).
 
          a column spec can be either a string or an object of the form
          {
@@ -224,14 +261,14 @@ export default {
 
           let current = row[dstcol];
 
-          if (filter_by && !item[filter_by]) {
-            continue;
-          }
-
           if (type === Number) {
             // numbers are added together
             if (current === undefined)
               current = row[dstcol] = 0;
+
+            if (filter_by && !item[filter_by]) {
+              continue;
+            }
 
             row[dstcol] = current + value;
           }
@@ -239,6 +276,10 @@ export default {
             // strings, arrays items and object keys are consolidated into sets
             if (current === undefined)
               current = row[dstcol] = d3.set();
+
+            if (filter_by && !item[filter_by]) {
+              continue;
+            }
 
             if (type === String) {
               current.add(value);

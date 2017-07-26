@@ -1,15 +1,18 @@
 <template>
 <div class="map-viz">
+  <div v-if="rendered" class="dropdown">
+    <dropdown filter="beneficiary" title="No filter selected" :items="data"></dropdown>
+  </div>
   <chart-container :width="width" :height="height" :class="{ rendering: !rendered }">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <defs>
-      <pattern id="multi-fm" width="50" height="50" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-        <rect x="0" y="0" width="50" height="25"
+      <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
+        <rect x="0" y="0" width="50" height="6"
               class="norway-grants"
               :fill="fmcolour('norway-grants')"
               :stroke="fmcolour('norway-grants')"
         />
-        <rect x="0" y="25" width="50" height="25"
+        <rect x="0" y="6" width="50" height="5"
               class="eea-grants"
               :fill="fmcolour('eea-grants')"
               :stroke="fmcolour('eea-grants')"
@@ -41,21 +44,13 @@
     </g>
   </svg>
 </chart-container>
-  <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="Select a country" :items="beneficiarydata"></dropdown>
-  </div>
   <div class="legend">
     <ul class="legend-items">
       <li>
-          <span v-if="!this.filters['fm']" class="square" :style="{background: fmcolour('eea-grants')}">
-            <span class="triangle" :style="{borderTopColor: fmcolour('norway-grants')}"></span>
-          </span>
-          <!-- special handling because filters[fm] can't be used for in fmcolour -->
-          <span  v-if="this.filters['fm']" >
-            <span v-if="this.filters['fm']=='EEA Grants'" class="square" :style="{background: fmcolour('eea-grants')}"> </span>
-            <span v-if="this.filters['fm']=='Norway Grants'" class="square" :style="{background: fmcolour('norway-grants')}"> </span>
-          </span>
-          Donor states
+        <svg class="square" v-if="rendered" height="20" width="20">
+          <rect height="20" width="20" fill="url(#multi-fm)"/>
+        </svg>
+        Donor states
       </li>
       <li>
         <span class="square"></span>
@@ -75,6 +70,8 @@
   @beneficiary: #ddd;
   @hovered: #9dccec;
   @donor_inactive: #85adcb;
+
+  position: relative;
   // - strokes
   .with-boundary {
     stroke: #7f9fc8;
@@ -193,17 +190,6 @@
         margin-right: 1rem;
         position: relative;
       }
-      .triangle {
-        width: 0;
-        height: 0;
-        border-left: 14px solid transparent;
-        border-right: 14px solid transparent;
-        border-top: 14px solid;
-        top: -2.1px;
-        position: absolute;
-        transform: rotate(135deg);
-        left: -9.1px;
-      }
   }
 }
 </style>
@@ -254,6 +240,8 @@ export default Vue.extend({
 
   data() {
     return {
+      filter_by: ["fm", "sector", "area"],
+
       width: 800,
       height: 800,
 
@@ -263,7 +251,7 @@ export default Vue.extend({
       region_colour_default: "#fff",
       beneficiary_colour_default: '#ddd',
       beneficiary_colour_hovered: '#9dccec',
-      beneficiary_colour_zero: '#fff',
+      beneficiary_colour_zero: '#eee',
     };
   },
 
@@ -290,6 +278,29 @@ export default Vue.extend({
     path() {
       return d3.geoPath().projection(this.projection);
     },
+
+    data() {
+      const aggregated = this.aggregate(
+        this.filtered,
+        [
+          { source: "beneficiary", destination: "id" },
+        ],
+        [
+          "allocation",
+          "project_count",
+          {source: 'sector', destination: 'sectors', type:String, filter_by: 'is_not_ta'},
+          {source: 'area', destination: 'areas', type:String, filter_by: 'is_not_ta'},
+          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
+        ],
+        true
+      );
+
+      for (const item of aggregated) {
+        item.name = this.BENEFICIARIES[item.id].name;
+      }
+
+      return aggregated;
+    },
   },
 
   created() {
@@ -302,11 +313,8 @@ export default Vue.extend({
     let root = "";
     if (this.datasource) {
       const host = this.datasource.replace(/^(https?:)?\/\/([^\/]+)\/.*$/, '$2')
-      console.log(this.datasource, host)
       root = location.protocol +'//' + host;
     }
-
-    console.log(root)
 
     this.queue.defer( (callback) => {
       d3.json(root + LAYERS, (error, data) => {
@@ -365,6 +373,8 @@ export default Vue.extend({
       this.renderStates();
 
       this.renderData();
+
+      if (this.filters.beneficiary) this.zoomTo(this.filters.beneficiary);
 
       this.rendered = true;
     },
@@ -688,8 +698,7 @@ export default Vue.extend({
     },
 
     computeRegionData(regiondataset) {
-      const _filters = d3.keys(this.filters).filter( (f) => f != 'beneficiary' );
-      const dataset = this.filter(regiondataset, _filters);
+      const dataset = this.filter(regiondataset, this.filter_by);
 
       const aggregated = this.aggregate(
         dataset,
@@ -709,7 +718,7 @@ export default Vue.extend({
       throw new Error("Not implemented");
     },
 
-    handleFilterBeneficiary(val, old) {
+    zoomTo(state, old) {
       const $this = this,
             chart = this.chart,
             t = this.getTransition();
@@ -717,10 +726,10 @@ export default Vue.extend({
       let transformer = d3.zoomIdentity,
           k = 1, x, y;
 
-      if (val) {
+      if (state) {
         const spacing = .1 * Math.min($this.width, $this.height);
 
-        const bounds = $this.geodetails[val].bounds,
+        const bounds = $this.geodetails[state].bounds,
               x1 = bounds[0][0],
               x2 = bounds[1][0],
 
@@ -760,8 +769,8 @@ export default Vue.extend({
                              .transition(t)
                              .attr("opacity", 1);
 
-                       if (val)
-                         this.chart.select('.states > g.beneficiary.' + val)
+                       if (state)
+                         this.chart.select('.states > g.beneficiary.' + state)
                              .transition(t)
                              .attr("opacity", 0);
 
@@ -771,6 +780,10 @@ export default Vue.extend({
       chart
         .transition(t)
         .call(zoom.transform, transformer);
+    },
+
+    handleFilterBeneficiary(val, old) {
+      this.zoomTo(val, old);
     },
 
     handleFilterFm(val, old) {

@@ -2,44 +2,46 @@
 import * as d3 from 'd3';
 
 import Sectors from './Sectors';
-import ProjectsMixin from './mixins/Projects';
+import PartnersMixin from './mixins/Partners';
 
 
 export default Sectors.extend({
-  mixins: [ProjectsMixin],
+  mixins: [PartnersMixin],
 
   methods: {
-    display(item) {
-      const count = item.depth == 2 ? item.data.project_count :
-                    d3.sum(item.children, x => x.data.project_count);
+    value(d) {
+      return d.partnership_programmes === undefined ?
+             0 : d.partnership_programmes.size();
+    },
 
-      return this.number(count) + "\u00a0" +
-             this.singularize("projects", count);
+    display(item) {
+      return this.number(item.value) + "\u00a0" +
+             this.singularize("programmes", item.value);
     },
 
     tooltipTemplate(d) {
       // TODO: such horribleness. sad face.
+
       let thing = "programme area",
-          bss = d.data.beneficiaries,
-          prgs = d.data.programmes;
+          dss = d.data.donor_states,
+          bss = d.data.beneficiaries;
 
       if(d.depth == 1) {
         thing = "sector";
+        dss = d3.set()
         bss = d3.set();
-        prgs = d3.set();
 
         for (const c of d.children) {
+          if (c.data.donor_states)
+            for (const ds of c.data.donor_states.values())
+              dss.add(ds);
           if (c.data.beneficiaries)
             for (const bs of c.data.beneficiaries.values())
               bss.add(bs);
-          if (c.data.programmes)
-            for (const prg of c.data.programmes.values())
-              prgs.add(prg);
         }
       }
 
       const num_bs = bss.size();
-      const num_prg = prgs.size();
 
       return `
         <div class="title-container">
@@ -47,9 +49,8 @@ export default Sectors.extend({
         </div>
         <ul>
           <li>${ this.display(d) }</li>
-          <li>${ this.currency(d.value) } gross allocation</li>
+          <li>Donors: ${dss.values().join(", ")}</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
-          <li>${num_prg}  `+  this.singularize(`programmes`, num_prg) + `</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>
       `;

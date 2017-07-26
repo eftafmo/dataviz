@@ -14,7 +14,10 @@
       ]"
       @click="toggleFm(fm, $event.target)"
   >
-    <slot name="fm-content" :fm="fm">{{ fm.name }}</slot>
+    <slot name="fm-content" :fm="fm">
+      <span class="fill" :style="{backgroundColor: fm.colour}"></span>
+      {{ fm.name }}
+    </slot>
   </li>
 </ul>
 </template>
@@ -23,6 +26,15 @@
 <style lang="less">
 .legend {
   .fm {
+    list-style-type: none;
+    margin-right: 2rem;
+
+    span.fill {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+    }
+
     cursor: pointer;
     &.zero {
       cursor: not-allowed;

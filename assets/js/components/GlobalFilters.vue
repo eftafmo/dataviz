@@ -1,5 +1,5 @@
 <template>
-    <div :remove="removeLastFilter()" class="global-filters" :class="{active: hasFilters}">
+    <div :remove="removeLastFilter()" class="global-filters" :class="{active: hasFilters()}">
     <transition name="bounce">
       <div v-if="hasFilters" class="container">
         <div class="global-filters-inner">
@@ -18,7 +18,7 @@
                 </li>
               </transition-group>
             </ul>
-            <button @click="resetFilters" class="no-btn muted" id="reset-filters">
+            <button @click="resetFilters" class="no-btn" id="reset-filters">
               Reset filters <span class="icon icon-close"></span>
             </button>
         </div>
@@ -127,6 +127,7 @@
 </style>
 
 
+
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
@@ -144,13 +145,13 @@ export default Vue.extend({
    },
 
   beforeCreate() {
+    const $this = this
     this.format_pa = function(programme_area) {
       return _programme_areas[programme_area]['short_name'];
     };
     this.format_bs = function(country_code) {
       return COUNTRIES[country_code]['name'];
     }
-
     this.FILTER_SETTINGS = {
       fm: {name:'FM'},
       beneficiary: {name: 'BS', formatter: this.format_bs},
@@ -160,20 +161,13 @@ export default Vue.extend({
       DPP: {name: 'Programme partner', truncate: 60},
       dpp: {name: 'Project partner', truncate: 60},
     }
+    window.onload = function(){
+      $this.hasFilters()
+    }
+
   },
 
   computed : {
-    hasFilters() {
-      let component_parent = document.getElementById('global-filters');
-      for (const filter in FILTERS) {
-        if (FILTERS[filter]) {
-          component_parent.classList.add('visible') ;
-          return true;
-        }
-      }
-      component_parent.classList.remove('visible') ;
-      return false;
-    },
     data() {
       const filters = {}
       for (const key in FILTERS) {
@@ -201,6 +195,18 @@ export default Vue.extend({
     removeFilter(e){
       const remove_el = e.target.getAttribute('filter')
       FILTERS[remove_el] = null;
+    },
+
+    hasFilters() {
+      let component_parent = document.getElementById('global-filters');
+      for (const filter in FILTERS) {
+        if (FILTERS[filter]) {
+          component_parent.classList.add('visible') ;
+          return true;
+        }
+      }
+      component_parent.classList.remove('visible') ;
+      return false;
     },
 
     removeLastFilter() {

@@ -29,12 +29,6 @@
       </div>
     </div>
 
-    <fm-legend :fms="FMS" class="legend clearfix">
-      <template slot="fm-content" scope="x">
-        <span :style="{backgroundColor: x.fm.colour}"></span>
-        {{ x.fm.name }}
-      </template>
-    </fm-legend>
   </chart-container>
 </div>
 </template>
@@ -283,6 +277,8 @@ export default Vue.extend({
 
   data() {
     return {
+      filter_by: ["fm", "beneficiary"],
+
       width: 500,
 
       padding: Math.PI / 2, // padding between main groups, in radians
@@ -395,10 +391,6 @@ export default Vue.extend({
       return xchord()
         .padding(this.padding)
         .itemPadding(this.itemPadding);
-    },
-
-    filtered() {
-      return this.filter(this.dataset);
     },
 
     aggregated() {
@@ -557,7 +549,7 @@ export default Vue.extend({
           .append("g")
           .attr("class", "text")
           .attr("transform", (d) => txtTransform(d, opts.direction) )
-          .attr("opacity", 1)
+          .attr("opacity", (d) => d.value == 0 ? 0 : 1 )
           .call(itemText, type);
       };
 
