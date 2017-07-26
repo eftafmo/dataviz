@@ -19,6 +19,10 @@
 
 <style lang="less">
 .donor-programmes {
+  width: 100%;
+  @media(max-width: 800px){
+    overflow: auto;
+  }
   table  {
     border-collapse: collapse;
 
@@ -57,8 +61,6 @@
         border-right:2px solid #50b9ff;
       }
     }
-
-
 
     thead {
        border-spacing: 4px;
