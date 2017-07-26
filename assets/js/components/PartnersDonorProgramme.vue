@@ -1,0 +1,154 @@
+<template>
+<div class="donor-programmes">
+ <table v-for="items in data">
+   <thead>
+     <th>{{items.donor_state}} organizations</th>
+     <th>countries ({{items.countries.length}})</th>
+     <th>programmes ({{items.programmes.length}})</th>
+   </thead>
+   <tbody>
+     <tr v-for="progammes in items.donor_programme_partners">
+       <td>{{progammes.name}}</td>
+       <td>{{progammes.states.length}}</td>
+       <td>{{progammes.programmes.length}}</td>
+
+     </tr>
+   </tbody>
+ </table>
+</div>
+</template>
+
+<style lang="less">
+.donor-programmes {
+  table  {
+    border-collapse: collapse;
+    width: 100%;
+    * {
+      text-align: left;
+    }
+    thead th,
+    tbody td {
+      width: 21%;
+      text-align: right;
+      padding: 5px;
+    }
+    th {
+      color: #333;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    td {
+      color: #666;
+      font-size: 12px;
+    }
+
+    thead {
+      th{
+        border-bottom: 2px solid #eee;
+      }
+    }
+
+    thead th:first-of-type,
+    tbody tr td:first-of-type {
+      width: 58%;
+      text-align: left;
+    }
+
+
+  }
+
+
+
+
+}
+</style>
+
+<script>
+
+import Vue from 'vue';
+import * as d3 from 'd3';
+import BaseMixin from './mixins/Base';
+import {FILTERS} from '../globals.js'
+
+export default Vue.extend({
+  mixins: [
+    BaseMixin,
+  ],
+
+  data(){
+    return {
+      item: Object,
+    }
+  },
+
+  computed: {
+    data() {
+      const dataset = this.filtered;
+      const donor_states = [];
+      let donors = {}
+      let donors_map = new Map();
+      let programmes = [];
+
+      for (let d of dataset) {
+        if(donor_states.indexOf(d.donor_state) === -1){
+          donor_states.push(d.donor_state);
+        }
+        if(Object.keys(d.donor_programme_partners).length != 0)
+        programmes.push(d.donor_programme_partners)
+        for (let p in d.donor_programme_partners) {
+                    let temp = donors_map.get(d.donor_programme_partners[p].name)
+                    if(temp == undefined) {
+                      temp = donors_map.set(d.donor_programme_partners[p].name, d.donor_state)
+                    }
+        }
+      }
+
+      for (let d in donor_states) {
+       donors[d] = {
+          donor_state : donor_states[d],
+          donor_programme_partners :[],
+          countries : [],
+          programmes: []
+        }
+      }
+
+      donors_map.forEach(function(value,key){
+        for (let d in donors) {
+          if(donors[d].donor_state == value) {
+            donors[d].donor_programme_partners.push({name: key, states:[], programmes: []})
+          }
+        }
+      })
+
+      for (let a of programmes) {
+        for (let b in a ) {
+          for (let c in donors){
+            for (let d in donors[c].donor_programme_partners) {
+              if (a[b].name == donors[c].donor_programme_partners[d].name){
+                for(let e of a[b].states){
+                  if(donors[c].donor_programme_partners[d].states.indexOf(e) === -1){
+                    donors[c].donor_programme_partners[d].states.push(e)
+                    if(donors[c].countries.indexOf(e)===-1)
+                       donors[c].countries.push(e);
+                }
+                for(let e of a[b].programmes){
+                  if(donors[c].donor_programme_partners[d].programmes.indexOf(e) === -1){
+                     donors[c].donor_programme_partners[d].programmes.push(e)
+                       if(donors[c].programmes.indexOf(e)===-1)
+                       donors[c].programmes.push(e);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return donors
+    },
+  },
+
+});
+
+</script>

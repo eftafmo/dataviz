@@ -24,4 +24,6 @@ export {default as Programmes} from './Programmes';
 export {default as Sidebar} from './Sidebar';
 export {default as News} from './News';
 
-export {default as Projects} from './Projects'
+export {default as Projects} from './Projects';
+
+export {default as DonnorProgramme } from './PartnersDonorProgramme';
