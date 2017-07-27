@@ -18,6 +18,8 @@ class EeaFacetedSearchForm(FacetedSearchForm):
         CallingView = _import_calling_view(view_name)
 
         data = dict(kwargs.get('data', initial))
+        # This is set by the view class initial, and not part of the form vars anymore
+        data['kind'] = initial.pop('kind', "Programme")
         self.facets = {}
         for facet_name in CallingView.facet_fields:
             self.facets[facet_name] = data.get(facet_name, [])

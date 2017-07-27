@@ -29,7 +29,7 @@
         </nav>
 {% endwith %}
 
-        <form action="/search/" class="header-search">
+        <form action="{% url 'frontend:search_programme' %}" class="header-search">
           <input type="search" placeholder="Search" name="q">
           <button type="submit" title="Search" name="page" value="1">
             <span class="icon icon-search"></span>

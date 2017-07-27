@@ -79,9 +79,10 @@
 
     {% if is_paginated %}
     <div class="search-results-footer">
+      {# TODO: fix pagination style #}
       <div class="pagination">
         <button
-          class="pagination-next"
+          class="pagination-previous"
           {% if page_obj.has_previous %}
             name="page"
             value="{{ page_obj.previous_page_number }}"
@@ -90,10 +91,11 @@
           {% else %}
             disabled="disabled"
           {% endif %}
-        >Next</button>
+        >Previous</button>
 
         <div class="pagination-pages">
           {% for page_num in paginator.page_range %}
+            {% if page_num >= page_obj.number|add:"-2" and page_num <= page_obj.number|add:"2" or page_num == 1 or page_num == paginator.num_pages %}
             <button
               name="page"
               value="{{ page_num }}"
@@ -104,11 +106,12 @@
                 disabled="disabled"
               {% endif %}
             >{{ page_num }}</button>
+            {% endif %}
           {% endfor %}
         </div>
 
         <button
-          class="pagination-previous"
+          class="pagination-next"
           {% if page_obj.has_next %}
             name="page"
             value="{{ page_obj.next_page_number }}"
@@ -117,7 +120,7 @@
           {% else %}
             disabled="disabled"
           {% endif %}
-        >Previous</button>
+        >Next</button>
 
       </div>
     </div>
@@ -427,6 +430,7 @@
         if (selected.length) {
           var action_url = '/search/' + selected.val().toLowerCase() + '/';
           $("#main-search-form").attr("action", action_url);
+          $("#main-search-form").submit();
         }
       });
 
@@ -453,6 +457,10 @@
       $("#org-type-category-facet").select2();
       $("#org-type-facet").select2();
       $("#role-facet").select2();
+
+      $("div.input-box").change(function() {
+        $("#main-search-form").submit();
+      })
     });
   </script>
 {% endblock %}

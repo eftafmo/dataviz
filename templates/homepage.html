@@ -19,7 +19,7 @@
     </nav>
 
     <div class="homepage-search-wrapper">
-      <form class="homepage-search" action="/search/">
+      <form class="homepage-search" action="{% url 'frontend:search_programme' %}">
         <input type="search" name="q" placeholder="Programmes, Projects, Organizations, etc.">
         <button type="submit" name="page" value="1">Search</button>
       </form>
