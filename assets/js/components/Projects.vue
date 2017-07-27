@@ -10,6 +10,8 @@
   </template>
 </programmes>
 </template>
+
+
 <style lang="less">
 .projects {
   .programme-item {
@@ -22,18 +24,21 @@
     font-weight: 400;
   }
 }
-
 </style>
+
+
 <script>
 import Vue from 'vue';
 
-import BaseMixin from './mixins/Base';
+import ComponentMixin from './mixins/Component';
 import Programmes from './Programmes';
 import Projects from './includes/Projects'
 
 
 export default Vue.extend({
-  mixins: [BaseMixin],
+  mixins: [
+    ComponentMixin,
+  ],
   components: {
     programmes: Programmes,
     projects: Projects,

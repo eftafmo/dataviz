@@ -90,6 +90,7 @@
 </div>
 </template>
 
+
 <style lang="less">
 .sectors-viz {
   // defs
@@ -306,6 +307,7 @@
   }
 </style>
 
+
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
@@ -313,7 +315,6 @@ import debounce from 'lodash.debounce';
 import merge from 'lodash.merge';
 import {colour2gray, slugify} from 'js/lib/util';
 
-import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithSectors from './mixins/WithSectors';
 import WithTooltipMixin from './mixins/WithTooltip';
@@ -321,7 +322,7 @@ import WithTooltipMixin from './mixins/WithTooltip';
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, ChartMixin,
+    ChartMixin,
     WithSectors,
     WithTooltipMixin,
   ],
@@ -929,5 +930,4 @@ export default Vue.extend({
     },
   },
 });
-
 </script>

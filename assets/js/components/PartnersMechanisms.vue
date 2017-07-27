@@ -24,12 +24,13 @@
 }
 </style>
 
+
 <script>
 import Vue from 'vue';
 
 import BaseMechanisms from './Mechanisms';
 import PartnersMixin from './mixins/Partners';
-import BaseMixin from './mixins/Base';
+import ComponentMixin from './mixins/Component.vue';
 import FMLegendComponent from './includes/FMLegend';
 
 
@@ -79,7 +80,7 @@ const Mechanisms = BaseMechanisms.extend({
 
 export default Vue.extend({
   mixins: [
-    BaseMixin,
+    ComponentMixin,
   ],
 
   components: {

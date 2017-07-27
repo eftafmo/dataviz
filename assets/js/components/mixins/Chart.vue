@@ -1,10 +1,15 @@
 <script>
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
+
+import Component from './Component';
+
 import Dropdown from '../includes/DropdownFilter';
 import ChartContainer from '../includes/ChartContainer';
 
 export default {
+  extends: Component,
+
   components: {
     'dropdown': Dropdown,
     'chart-container': ChartContainer,

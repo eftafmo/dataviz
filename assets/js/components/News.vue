@@ -45,12 +45,12 @@
 
 import Vue from 'vue';
 import * as d3 from 'd3';
-import BaseMixin from './mixins/Base';
+import ComponentMixin from './mixins/Component';
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin
+    ComponentMixin,
   ],
 
   computed: {

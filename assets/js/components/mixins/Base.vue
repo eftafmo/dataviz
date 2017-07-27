@@ -1,15 +1,7 @@
-<style lang="less">
-@duration: .5s;
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity @duration;
-}
-
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>
-
+<!--
+     this is the base for both regular components and root components.
+     derived components must set up a "props" property, either as prop or data.
+ -->
 
 <script>
 import * as d3 from 'd3';
@@ -24,7 +16,6 @@ export default {
   },
 
   props: {
-    datasource: String, // TODO: required?
     initial: [Object, Array],
   },
 
@@ -346,17 +337,8 @@ export default {
 
       d3.json(this.datasource, (error, ds) => {
         if (error) throw error;
-        this.dataset = this.processDataset(ds);
+        this.dataset = ds;
       });
-    },
-
-    processDataset(ds) {
-      /*
-       * preliminary processing of initial data.
-       * override it as needed.
-       */
-
-      return ds;
     },
 
     /*

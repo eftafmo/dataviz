@@ -263,7 +263,6 @@ import * as d3 from 'd3';
 import xchord from 'js/lib/x-chord';
 import {slugify} from 'js/lib/util';
 
-import BaseMixin from './mixins/Base';
 import ChartMixin from './mixins/Chart';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
@@ -271,7 +270,7 @@ import WithCountriesMixin from './mixins/WithCountries';
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, ChartMixin,
+    ChartMixin,
     WithFMsMixin, WithCountriesMixin
   ],
 

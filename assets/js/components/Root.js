@@ -18,6 +18,12 @@ function getURL(obj) {
 export default Vue.extend({
   mixins: [BaseMixin],
 
+  data() {
+    return {
+      datasource: null,
+    };
+  },
+
   beforeCreate() {
     // set filters from querystring.
     // do it before filters get bound, to avoid triggering handlers.

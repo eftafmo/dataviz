@@ -25,6 +25,7 @@
 </ul>
 </template>
 
+
 <style lang="less">
 .programmes{
   li {
@@ -134,13 +135,14 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 
-import BaseMixin from './mixins/Base';
+import ComponentMixin from './mixins/Component';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 
 
 export default Vue.extend({
   mixins: [
-    BaseMixin, WithCountriesMixin,
+    ComponentMixin,
+    WithCountriesMixin,
   ],
 
 

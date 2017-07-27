@@ -9,6 +9,7 @@
     </div>
 </template>
 
+
 <style lang="less">
 .sidebar-header {
   position: relative;
@@ -33,16 +34,16 @@
   top: 1rem;
   width: calc(~"100% - 2rem");
 }
-
 </style>
+
 
 <script>
   import Vue from 'vue';
-  import BaseMixin from './mixins/Base';
+  import ComponentMixin from './mixins/Component';
 
 export default Vue.extend({
   mixins: [
-    BaseMixin
+    ComponentMixin,
   ],
 
   data() {

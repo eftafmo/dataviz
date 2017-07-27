@@ -21,6 +21,7 @@
     </ul>
 </template>
 
+
 <style lang="less">
 .results {
   li {
@@ -56,17 +57,19 @@
 }
 </style>
 
-<script>
 
+<script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import BaseMixin from './mixins/Base';
+import ComponentMixin from './mixins/Component';
 import WithSectorsMixin from './mixins/WithSectors';
 import {FILTERS} from '../globals.js'
 
+
 export default Vue.extend({
   mixins: [
-    BaseMixin, WithSectorsMixin,
+    ComponentMixin,
+    WithSectorsMixin,
   ],
 
 
@@ -133,5 +136,4 @@ export default Vue.extend({
   },
 
 });
-
 </script>
