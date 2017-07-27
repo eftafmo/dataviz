@@ -290,6 +290,21 @@
 
         <div class="input-group">
           <div class="input-box input-block">
+            <label for="project-theme-facet">Project Theme</label>
+            <select multiple name="theme_ss" id="project-theme-facet" form="main-search-form">
+              {% for o in facets.fields.theme_ss %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.theme_ss %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-box input-block">
             <label for="geotarget-facet">Project Geotarget</label>
             <select multiple name="geotarget" id="geotarget-facet" form="main-search-form">
               {% for o in form.facets.geotarget %}
@@ -298,7 +313,6 @@
             </select>
           </div>
         </div>
-{#      TODO: add theme#}
 
       {% endif %}
 
@@ -457,6 +471,7 @@
       // project
       $("#project-programme-name-facet").select2();
       $("#project-status-facet").select2();
+      $("#project-theme-facet").select2();
       $("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget'))
 
       // organisation

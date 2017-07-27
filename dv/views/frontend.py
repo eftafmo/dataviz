@@ -82,6 +82,7 @@ class ProjectFacetedSearchView(FacetedSearchView):
         'programme_name',
         'project_status',
         'geotarget',
+        'theme_ss',
     ]
     initial = {
         'kind': ['Project'],

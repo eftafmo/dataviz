@@ -131,6 +131,8 @@
     
     <field name="geotarget_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
     
+    <field name="theme_ss" type="string" indexed="true" stored="true" multiValued="true" />
+    
     <uniqueKey>id</uniqueKey>
 
     <!--

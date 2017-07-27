@@ -87,6 +87,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     project_status = indexes.FacetCharField(model_attr='status')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
     geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
+    theme_ss = indexes.FacetMultiValueField(model_attr='themes__name')
 
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
