@@ -241,8 +241,6 @@ export default Vue.extend({
 
   data() {
     return {
-      filter_by: ["fm", "sector", "area"],
-
       nuts_level: 1, // default nuts level
       draw_nuts_levels: [1, 2, 3],
 
@@ -284,20 +282,7 @@ export default Vue.extend({
     },
 
     data() {
-      const aggregated = this.aggregate(
-        this.filtered,
-        [
-          { source: "beneficiary", destination: "id" },
-        ],
-        [
-          "allocation",
-          "project_count",
-          {source: 'sector', destination: 'sectors', type:String, filter_by: 'is_not_ta'},
-          {source: 'area', destination: 'areas', type:String, filter_by: 'is_not_ta'},
-          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
-        ],
-        true
-      );
+      const aggregated = this.aggregated;
 
       for (const item of aggregated) {
         item.name = this.BENEFICIARIES[item.id].name;
@@ -308,6 +293,22 @@ export default Vue.extend({
   },
 
   created() {
+    // don't filter / aggregate by beneficiary, group by it
+    // (TODO: this smells like a pattern already)
+    let idx;
+
+    idx = this.filter_by.indexOf("beneficiary");
+    if (idx !== -1)
+      this.filter_by.splice(idx, 1);
+
+    this.aggregate_by.push(
+        { source: "beneficiary", destination: "id" }
+    );
+
+    idx = this.aggregate_on.findIndex(x => x.source == "beneficiary");
+    if (idx !== -1) this.aggregate_on.splice(idx, 1);
+
+
     // this needs to fetch some extra-data
 
     // TODO: would be nice if the host was provided by some constant,
@@ -729,20 +730,20 @@ export default Vue.extend({
     },
 
     computeRegionData(regiondataset) {
-      const dataset = this.filter(regiondataset, this.filter_by);
+      // default aggregate_on has filter_by: is_not_ta. need to clear it.
+      // TODO: invert that logic, make it exclude: is_ta
+      const aggregate_on = [];
 
-      const aggregated = this.aggregate(
-        dataset,
-        ['id'],
-        [
-          'allocation',
-          'project_count',
-          {source: 'sector', destination: 'sectors', type: String, filter_by: 'is_not_ta'},
-        ],
-        true
-      );
+      for (let col of this.aggregate_on) {
+        if (typeof col == "object") {
+          col = Object.assign({}, col);
+          delete col.filter_by;
+        }
+        aggregate_on.push(col);
+      }
 
-      return aggregated;
+      const filtered = this.filter(regiondataset, this.filter_by);
+      return this.aggregate(filtered, ['id'], aggregate_on, true);
     },
 
     _renderRegionData(state, regiondata, t) {

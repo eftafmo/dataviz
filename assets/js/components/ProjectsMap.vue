@@ -173,17 +173,19 @@ export default BaseMap.extend({
       const allocation = d.allocation || 0;
       const num_projects = this.get_project_count(d);
 
-      if (d.id.length == 2) {
-        let extra = "";
-        if (num_projects) {
-          extra = `
-            <li>${ this.currency(d.allocation || 0) }</li>
-            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
-            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
-          `;
-        }
+      let details = `
+        <li>${ this.number(num_projects) } ` + this.singularize(`projects`, num_projects) + `</li>
+      `;
+      if (num_projects) {
+        details += `
+          <li>${ this.currency(d.allocation || 0) }</li>
+          <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+          <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+          <li>${d.programmes.size() ? d.programmes.size() + " " + this.singularize(`programmes`, d.programmes.size()) : "TODO: programme count"}</li>
+        `;
+      }
 
+      if (d.id.length == 2) {
         return `
           <div class="title-container">
           <svg>
@@ -192,8 +194,7 @@ export default BaseMap.extend({
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
           <ul>
-            <li>${ this.number(num_projects) } ` + this.singularize(`projects`, num_projects) + `</li>
-            ${ extra }
+            ${ details }
           </ul>
         `;
       } else {
@@ -202,8 +203,7 @@ export default BaseMap.extend({
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
           <ul>
-            <li>${ num_projects } ` + this.singularize(`projects`, num_projects) + `</li>
-            <li>TODO: number of sectors, programme areas, programmes</li>
+            ${ details }
           </ul>
         `;
       }

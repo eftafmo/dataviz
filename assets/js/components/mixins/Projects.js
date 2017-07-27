@@ -5,7 +5,10 @@ export default {
   },
 
   created() {
-    // append projects to aggregation columns
+    // append projects & programmes to aggregation columns
     this.aggregate_on.push('project_count');
+    this.aggregate_on.push(
+      {source: "programmes", destination: "programmes", type: Object, filter_by: "is_not_ta"}
+    );
   },
 };
