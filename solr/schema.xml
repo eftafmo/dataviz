@@ -123,6 +123,8 @@
     
     <field name="url" type="string" indexed="false" stored="true" multiValued="false" />
     
+    <field name="summary" type="string" indexed="false" stored="true" multiValued="false" />
+    
     <field name="project_status" type="string" indexed="true" stored="true" multiValued="false" />
     
     <field name="geotarget" type="string" indexed="true" stored="true" multiValued="false" />

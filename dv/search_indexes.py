@@ -30,6 +30,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 
     # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
+    summary = indexes.CharField(model_attr='summary', indexed=False)
     name = indexes.CharField(model_attr='name', indexed=False)
 
     def get_model(self):
