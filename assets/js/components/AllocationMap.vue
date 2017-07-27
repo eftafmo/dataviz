@@ -8,6 +8,9 @@ import BaseMap from './BaseMap';
 export default BaseMap.extend({
   data() {
     return {
+      nuts_level: 3,
+      draw_nuts_levels: [3],
+
       default_region_colour: interpolateYlGn(0),
     };
   },
@@ -93,7 +96,8 @@ export default BaseMap.extend({
                   .domain([min, max])
                   .range([.1, 1]);
 
-      const regions = this.chart.select('g.regions > g.state.' + state)
+      const regions = this.chart
+                          .select(`g.regions > g.state.${state} > g.layer`)
                           .selectAll('g')
                           .data(regiondata, (d) => d.id );
 

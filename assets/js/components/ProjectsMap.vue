@@ -1,8 +1,11 @@
 <style lang="less">
 .map-viz {
+  // defs
+  @duration: .5s;
+
   .chart {
     .states > .beneficiary,
-    .regions > .state > g {
+    .regions > .state > g.layer > g {
       & > g {
         pointer-events: none;
 
@@ -23,6 +26,71 @@
 
       &:hover > g circle {
         fill-opacity: .7;
+      }
+    }
+  }
+
+  .nuts-selector {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 7px 10px;
+    background-color: rgba(249, 249, 249, .7);
+
+    border: 1px solid #bbc;
+    border-radius: 2px;
+
+    opacity: 0;
+    transition: opacity @duration;
+
+    &.visible {
+      //display: block;
+      opacity: .5;
+    }
+
+    &:hover {
+      opacity: 1;
+      transition: none;
+      background-color: rgba(255, 255, 255, .9);
+      border-color: #aab;
+    }
+
+    white-space: nowrap;
+
+    * {
+      vertical-align: middle;
+    }
+
+    label {
+      display: block;
+      float: left;
+    }
+
+    div {
+      float: right;
+      margin-left: 1em;
+
+      input {
+        background: none;
+        display: block;
+        width: 6rem;
+      }
+
+      label {
+        float: left;
+        display: block;
+        width: 20%;
+        cursor: pointer;
+
+        &:nth-of-type(2) {
+          text-align: center;
+          margin: 0 20%;
+        }
+        &:last-of-type {
+          text-align: right;
+          float: right;
+        }
       }
     }
   }
@@ -67,6 +135,39 @@ export default BaseMap.extend({
     },
   },
 
+  mounted() {
+    // create the nuts selector. TODO: move in vue.
+    const $this = this;
+
+    const nutser = d3.select(this.$el.querySelector("svg").parentNode)
+                     .append("div")
+                     .attr("class", "nuts-selector");
+
+    nutser.append("label")
+          .text("show NUTS level");
+
+    const container = nutser.append("div");
+
+    const slider = container.append("input")
+                            .attr("type", "range")
+                            .attr("min", 1)
+                            .attr("max", 3)
+                            .attr("step", 1)
+                            .attr("value", this.nuts_level)
+                            .on("change", function() {
+                              $this.nuts_level = this.value;
+                            });
+
+    container.selectAll("label").data([1, 2, 3]).enter()
+             .append("label")
+             .text(d => d)
+             .on("click", function(d) {
+               if (slider.property("value") != d)
+                 slider.property("value", d)
+                       .dispatch("change");
+             });
+  },
+
   methods: {
     tooltipTemplate(d) {
       const allocation = d.allocation || 0;
@@ -106,6 +207,11 @@ export default BaseMap.extend({
           </ul>
         `;
       }
+    },
+
+    render() {
+      this.$super.render();
+      if (this.filters.beneficiary) this.showNutsSelector();
     },
 
     get_project_count(d) {
@@ -225,16 +331,89 @@ export default BaseMap.extend({
         .attr("opacity", 1);
     },
 
+    _mkLevelData(regiondata) {
+      // re-aggregate the data to compute per-level stuff
+      const leveldata = {};
+      this.draw_nuts_levels.forEach(x => leveldata[x] = {});
+
+      for (const row of regiondata) {
+        const root = row.id.substring(0, 2),
+              code = row.id.substr(2),
+              maxlevel = code.length;
+
+        for (let lvl = 1; lvl <= maxlevel; lvl++) {
+          const nuts = root + code.substring(0, lvl);
+
+          let item = leveldata[lvl][nuts];
+          if (item === undefined) {
+            item = leveldata[lvl][nuts] = {};
+
+            for (const k in row) {
+              // can't simply Object.assign, because of sets
+              const v = row[k];
+
+              if (v instanceof d3.set)
+                item[k] = d3.set(v.values());
+              else
+                item[k] = v;
+
+              // overwrite id
+              item.id = nuts;
+            }
+          } else {
+            for (const k in row) {
+              const v = row[k];
+
+              if (typeof v == 'string')
+                continue;
+              else if (typeof v == 'number')
+                item[k] += v;
+              else if (v instanceof d3.set)
+                v.each(x => item[k].add(x));
+              else
+                console.error("Unhandled key / value", k, v);
+            }
+          }
+        }
+      }
+
+      // flatten
+      const out = [];
+      for (const lvl in leveldata) {
+        const regions = leveldata[lvl],
+              row = {
+                level: lvl,
+                regions: [],
+              };
+
+        out.push(row);
+
+        for (const r in regions) {
+          row.regions.push(regions[r]);
+        }
+      }
+
+      return out;
+    },
+
     _renderRegionData(state, regiondata, t) {
       if (t === undefined) t = this.getTransition();
 
-      // repeat hacky pre-draw-circle and post-bind-data, meh
-      let regions = this.chart.selectAll(`.regions > .state.${state} > g`);
+      const dataset = this._mkLevelData(regiondata);
+
+      let regions = this.chart
+        .select(`.regions > .state.${state}`)
+        .selectAll("g.layer")
+        .data(dataset, d => d.level)
+        .selectAll("g.region");
 
       regions.filter( (d) => (d.type == "Feature" ) )
              .call(this._mkProjectCircles, this.zoomLevel);
 
-      regions = regions.data(regiondata, (d) => d.id );
+      regions = regions.data(
+          d => d.regions,
+          d => d.id
+        );
 
       regions.select("g")
         .call(this._updateProjects, t);
@@ -242,7 +421,28 @@ export default BaseMap.extend({
       regions.exit().merge(regions.filter( (d) => d.project_count == 0 ))
         .select("g")
         .transition(t)
-        .attr("opacity", 0);
+//        .attr("opacity", 0);
+    },
+
+    _displayNutsSelector(yes) {
+      const selector = d3.select(this.$el).select(".nuts-selector");
+      selector.style("display", yes ? "block" : null)
+      setTimeout(() => selector.classed("visible", yes));
+    },
+
+    showNutsSelector() {
+      this._displayNutsSelector(true);
+    },
+
+    hideNutsSelector() {
+      this._displayNutsSelector(false);
+    },
+
+    handleFilterBeneficiary(val, old) {
+      this.$super.handleFilterBeneficiary(val, old);
+
+      if (val) this.showNutsSelector();
+      else this.hideNutsSelector();
     },
   },
 });
