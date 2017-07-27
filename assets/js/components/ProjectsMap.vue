@@ -419,9 +419,13 @@ export default BaseMap.extend({
         .call(this._updateProjects, t);
 
       regions.exit().merge(regions.filter( (d) => d.project_count == 0 ))
-        .select("g")
+        .select("g") // circle
+        // hack to "set" the data to 0 (for the tooltip anyway)
+        .each(d => d.project_count = 0)
+        .call(this._updateProjects, t)
+
         .transition(t)
-//        .attr("opacity", 0);
+        .attr("opacity", 0);
     },
 
     _displayNutsSelector(yes) {
