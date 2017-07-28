@@ -87,7 +87,11 @@
     
     <field name="programme_name" type="string" indexed="true" stored="true" multiValued="true" />
     
+    <field name="programme_name_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
+    
     <field name="project_name" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="project_name_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
     
     <field name="programme_area_ss" type="string" indexed="true" stored="true" multiValued="true" />
     
@@ -105,19 +109,25 @@
     
     <field name="nuts" type="string" indexed="true" stored="true" multiValued="false" />
     
+    <field name="nuts_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
+    
     <field name="role_ss" type="string" indexed="true" stored="true" multiValued="true" />
     
     <field name="name" type="string" indexed="false" stored="true" multiValued="false" />
     
     <field name="outcome_ss" type="string" indexed="true" stored="true" multiValued="true" />
     
-    <field name="programme_status" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="outcome_ss_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="programme_status" type="string" indexed="true" stored="true" multiValued="true" />
     
     <field name="url" type="string" indexed="false" stored="true" multiValued="false" />
     
     <field name="project_status" type="string" indexed="true" stored="true" multiValued="false" />
     
     <field name="geotarget" type="string" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="geotarget_auto" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
     
     <uniqueKey>id</uniqueKey>
 

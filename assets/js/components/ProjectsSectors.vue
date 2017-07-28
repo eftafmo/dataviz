@@ -1,4 +1,6 @@
 <script>
+import * as d3 from 'd3';
+
 import Sectors from './Sectors';
 import ProjectsMixin from './mixins/Projects';
 
@@ -7,25 +9,45 @@ export default Sectors.extend({
   mixins: [ProjectsMixin],
 
   methods: {
-    value(item) {
-      return this.number(item.data.project_count) + "\u202f" + // narrow nbsp
-             "projects";
-      //"\u00a0" nbsp
+    display(item) {
+      const count = item.depth == 2 ? item.data.project_count :
+                    d3.sum(item.children, x => x.data.project_count);
+
+      return this.number(count) + "\u00a0" +
+             this.singularize("projects", count);
     },
 
     tooltipTemplate(d) {
       // TODO: such horribleness. sad face.
-      const thing = d.depth == 1 ? "sector" : "programme area";
-      const num_bs = Object.keys(d.data.beneficiaries).length;
-      const num_prg = Object.keys(d.data.programmes).length;
+      let thing = "programme area",
+          bss = d.data.beneficiaries,
+          prgs = d.data.programmes;
+
+      if(d.depth == 1) {
+        thing = "sector";
+        bss = d3.set();
+        prgs = d3.set();
+
+        for (const c of d.children) {
+          if (c.data.beneficiaries)
+            for (const bs of c.data.beneficiaries.values())
+              bss.add(bs);
+          if (c.data.programmes)
+            for (const prg of c.data.programmes.values())
+              prgs.add(prg);
+        }
+      }
+
+      const num_bs = bss.size();
+      const num_prg = prgs.size();
 
       return `
         <div class="title-container">
           <span>${ d.data.name }</span>
         </div>
         <ul>
-          <li>${ this.number(d.data.project_count) } projects</li>
-          <li>${ this.currency(d.value) }</li>
+          <li>${ this.display(d) }</li>
+          <li>${ this.currency(d.value) } gross allocation</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
           <li>${num_prg}  `+  this.singularize(`programmes`, num_prg) + `</li>
         </ul>

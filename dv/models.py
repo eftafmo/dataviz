@@ -237,7 +237,7 @@ class Programme(_MainModel):
         IMPLEMENTATION = 'implementation'
 
         class Labels:
-            APPROVED = _('Approved'),
+            APPROVED = _('Approved')
             IMPLEMENTATION = _('Implementation')
 
     @classmethod

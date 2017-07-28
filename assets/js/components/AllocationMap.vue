@@ -8,13 +8,27 @@ import BaseMap from './BaseMap';
 export default BaseMap.extend({
   data() {
     return {
+      nuts_level: 3,
+      draw_nuts_levels: [3],
+
       default_region_colour: interpolateYlGn(0),
     };
   },
 
   methods: {
     tooltipTemplate(d) {
-      if (d.id.length == 2)
+      const allocation = d.allocation || 0;
+
+      if (d.id.length == 2) {
+        let extra = "";
+        if(allocation) {
+          extra = `
+            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+          `;
+        }
+
         return `
           <div class="title-container">
             <svg>
@@ -24,25 +38,26 @@ export default BaseMap.extend({
           </div>
           <ul>
             <li>${ this.currency(d.allocation || 0) }</li>
-            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
-            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+            ${ extra }
           </ul>
         `;
-      else
+      } else {
         return `
           <div class="title-container">
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
-          ${ this.currency(d.allocation || 0) }
+          ${ this.currency(allocation) }
           <small>(Temporary)<small>
         `;
+      }
     },
 
-    renderData() {
-      const t = this.getTransition();
+    renderData(t) {
+      if (t === undefined) t = this.getTransition();
+      const dataset = d3.values(this.data);
+
       const beneficiaries = this.chart.selectAll('.states > g.beneficiary')
-                                .data(this.data, (d) => d.id );
+                                .data(dataset, (d) => d.id );
 
       beneficiaries
         .classed("zero", false)
@@ -81,7 +96,8 @@ export default BaseMap.extend({
                   .domain([min, max])
                   .range([.1, 1]);
 
-      const regions = this.chart.select('g.regions > g.state.' + state)
+      const regions = this.chart
+                          .select(`g.regions > g.state.${state} > g.layer`)
                           .selectAll('g')
                           .data(regiondata, (d) => d.id );
 

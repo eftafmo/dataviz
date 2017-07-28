@@ -1,7 +1,7 @@
 <template>
 <div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <div v-if="rendered" class="dropdown">
-    <dropdown filter="sector" title="Select a sector" :items="filtered_dataset"></dropdown>
+    <dropdown filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
   </div>
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
@@ -39,7 +39,7 @@
           <span
               v-show="filters.sector != sector.data.id"
               :key="`v-${getLabelID(sector)}`">
-            {{ value(sector) }}
+            {{ display(sector) }}
           </span>
           <span
               v-if="isSelectedSector(sector)"
@@ -78,7 +78,7 @@
                   {{ area.data.name }}
                 </span>
                 <span :key="`v-${getLabelID(area)}`">
-                  {{ value(area) }}
+                  {{ display(area) }}
                 </span>
               </a>
             </li>
@@ -346,83 +346,48 @@ export default Vue.extend({
   },
 
   created() {
-    // don't filter by sector / area
-    // don't filter by fm
-    const sidx = this.filter_by.indexOf("sector"),
-          aidx = this.filter_by.indexOf("area");
+    const cols = ["sector", "area"];
 
-    if (sidx !== -1)
-      this.filter_by.splice(sidx, 1);
-    if (aidx !== -1)
-      this.filter_by.splice(aidx, 1);
+    for (const col of cols) {
+      // don't filter by sector / area
+      const fid = this.filter_by.indexOf(col);
+      if (fid !== -1) this.filter_by.splice(fid, 1);
+
+      // but group by them
+      this.aggregate_by.push(col);
+
+      // (and don't aggregate them)
+      const aid = this.aggregate_on.findIndex(x => x.source == col);
+      if (aid !== -1) this.aggregate_on.splice(aid, 1);
+    }
   },
 
   computed: {
     filtered_sectors() {
-      const aggregated = this.aggregate(
-        this.filtered,
-        ['sector', 'area', 'fm'],
-        [
-          'allocation',
-          //'bilateral_allocation',
-          'project_count',
-          //'project_count_positive',
-          //'project_count_ended',
-          //{source: 'sector', destination: 'sectors', type: String},
-          {source: 'beneficiary', destination: 'beneficiaries', type:String, filter_by: 'is_not_ta'},
-          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
-        ],
-        false
-      );
+      const aggregated = this.aggregated;
 
       const out = {}
       for (const sname in aggregated) {
-        const areas = aggregated[sname],
-              sid = slugify(sname);
+        const sid = slugify(sname),
+              areas = aggregated[sname];
 
-        let sector = out[sid];
-        if (sector === undefined)
-          sector = out[sid] = {
-            id: sid,
-            name: sname,
-            children: {},
-            project_count: 0,
-            beneficiaries: {},
-            programmes: {},
-            total: 0,
-          };
+        const sector = out[sid] = {
+          id: sid,
+          name: sname,
+          children: {},
+        };
 
         for (const aname in areas) {
-          const fms = areas[aname],
-                aid = slugify(aname)
+          const aid = slugify(aname),
+                area = sector.children[aid] = areas[aname];
 
-          let area = sector.children[aid];
-          if (area === undefined)
-            area = sector.children[aid] = {
-              id: aid,
-              name: aname,
-              // TODO: do we actually need this split by fm?
-              allocation: {},
-              // TODO: so... keep the project count per fm, or total?
-              project_count: 0,
-              beneficiaries: {},
-              programmes: {},
-              total: 0,
-            };
+          Object.assign(area, {
+            id: aid,
+            name: aname,
+          });
 
-          for (const fmname in fms) {
-            const fm = fms[fmname];
-
-            area.allocation[fmname] = fm.allocation;
-            area.total += fm.allocation;
-            area.project_count += fm.project_count;
-            Object.assign(area.beneficiaries, fm.beneficiaries);
-            Object.assign(area.programmes, fm.programmes);
-            sector.total += fm.allocation;
-            sector.project_count += fm.project_count;
-            Object.assign(sector.beneficiaries, fm.beneficiaries);
-            Object.assign(sector.programmes, fm.programmes);
-          }
+          delete area.sector;
+          delete area.area;
         }
       }
 
@@ -452,7 +417,6 @@ export default Vue.extend({
             sector = sectortree[sid] = {
               id: sid,
               name: s,
-              children: {},
               colour: '#555',
             };
 
@@ -465,7 +429,6 @@ export default Vue.extend({
             area = children[aid] = {
               id: aid,
               name: a,
-              allocation: {},
             };
         }
 
@@ -485,11 +448,10 @@ export default Vue.extend({
           }
         }
       }
-      // done pre-generation
+      // done pre-generation ¤
 
       // we need to deep-copy the tree and merge it with the actual data
       const sectors = merge({}, sectortree, this.filtered_sectors);
-
 
       // finally, using d3's hierarchy makes working with trees easy
       const tree = d3.hierarchy(
@@ -507,17 +469,14 @@ export default Vue.extend({
       };
 
       // tell the hierarchy object how to calculate sums
-      tree.sum( (d) => {
-        // only last level has allocation
-        if (!d.allocation) return 0;
+      tree.sum(d => {
+        // only leaf nodes have value data
+        if (d.children !== undefined) return 0;
         // filter out disabled items
         if (!isEnabled(d)) return 0;
 
-        return d3.sum(
-          d3.entries(d.allocation),
-          (item) => item.value
-        );
-      } );
+        return this.value(d);
+      });
 
       return tree;
     },
@@ -552,10 +511,16 @@ export default Vue.extend({
   },
 
   methods: {
-    value(item) {
-      // the value displayed in legend
+    // the value used in pie-chart calculations
+    value(d) {
+      return d.allocation;
+    },
+
+    // the value displayed for legend items
+    display(item) {
       return this.currency(item.value);
     },
+
 
     areasBeforeEnter(el) {
       // get height from a clone, it's safer
@@ -661,16 +626,34 @@ export default Vue.extend({
 
     tooltipTemplate(d) {
       // TODO: such horribleness.
-      const thing = d.depth == 1 ? "sector" : "programme area";
-      const num_bs = Object.keys(d.data.beneficiaries).length;
-      const num_prg = Object.keys(d.data.programmes).length;
+      let thing = "programme area",
+          bss = d.data.beneficiaries,
+          prgs = d.data.programmes;
+
+      if(d.depth == 1) {
+        thing = "sector";
+        bss = d3.set();
+        prgs = d3.set();
+
+        for (const c of d.children) {
+          if (c.data.beneficiaries)
+            for (const bs of c.data.beneficiaries.values())
+              bss.add(bs);
+          if (c.data.programmes)
+            for (const prg of c.data.programmes.values())
+              prgs.add(prg);
+        }
+      }
+
+      const num_bs = bss.size();
+      const num_prg = prgs.size();
 
       return `
         <div class="title-container">
           <span>${ d.data.name }</span>
         </div>
         <ul>
-          <li>${ this.currency(d.value) }</li>
+          <li>${ this.display(d) }</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
           <li>${num_prg}  `+  this.singularize(`programmes`, num_prg) + `</li>
         </ul>

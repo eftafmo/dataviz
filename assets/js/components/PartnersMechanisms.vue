@@ -61,8 +61,11 @@ const Mechanisms = BaseMechanisms.extend({
           <span class="name">${d.name}</span>
         </div>
         <ul>
-          <li>Donor states: ${d.donor_states.values().join(", ")}</li>
+          <li>${d.partnership_programmes.size()} partner programmes</li>
+<!--
+          <li>Donors: ${d.donor_states.values().join(", ")}</li>
           <li>${this.currency(d.allocation)} gross allocation</li>
+-->
           <li>${d.beneficiaries.size()} `+  this.singularize(`beneficiary states`, d.beneficiaries.size()) + `</li>
           <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
           <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>

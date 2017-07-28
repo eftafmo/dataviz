@@ -1,8 +1,11 @@
 <style lang="less">
 .map-viz {
+  // defs
+  @duration: .5s;
+
   .chart {
     .states > .beneficiary,
-    .regions > .state > g {
+    .regions > .state > g.layer > g {
       & > g {
         pointer-events: none;
 
@@ -23,6 +26,71 @@
 
       &:hover > g circle {
         fill-opacity: .7;
+      }
+    }
+  }
+
+  .nuts-selector {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 7px 10px;
+    background-color: rgba(249, 249, 249, .7);
+
+    border: 1px solid #bbc;
+    border-radius: 2px;
+
+    opacity: 0;
+    transition: opacity @duration;
+
+    &.visible {
+      //display: block;
+      opacity: .5;
+    }
+
+    &:hover {
+      opacity: 1;
+      transition: none;
+      background-color: rgba(255, 255, 255, .9);
+      border-color: #aab;
+    }
+
+    white-space: nowrap;
+
+    * {
+      vertical-align: middle;
+    }
+
+    label {
+      display: block;
+      float: left;
+    }
+
+    div {
+      float: right;
+      margin-left: 1em;
+
+      input {
+        background: none;
+        display: block;
+        width: 6rem;
+      }
+
+      label {
+        float: left;
+        display: block;
+        width: 20%;
+        cursor: pointer;
+
+        &:nth-of-type(2) {
+          text-align: center;
+          margin: 0 20%;
+        }
+        &:last-of-type {
+          text-align: right;
+          float: right;
+        }
       }
     }
   }
@@ -48,9 +116,8 @@ export default BaseMap.extend({
   },
 
   computed: {
-    numberWidth() {
-      // compute the length of an average number character
-      // as it will appear for project counts
+    textDimensions() {
+      // compute the dimensions of an average number character
       if (!this.isReady) return 0;
 
       // respect where the text will appear so css applies properly
@@ -61,20 +128,64 @@ export default BaseMap.extend({
                        .attr("visibility", "hidden")
                        .text("1234567890");
 
-      const bbox = txt.node().getBBox(),
-            txtwidth = (bbox.width / 10 + bbox.height) / 2;
+      const bounds = txt.node().getBBox();
       fakeB.remove();
 
-      // return one character's width with some safety extra
-      return txtwidth;
+      return {width: bounds.width / 10, height: bounds.height};
     },
+  },
+
+  mounted() {
+    // create the nuts selector. TODO: move in vue.
+    const $this = this;
+
+    const nutser = d3.select(this.$el.querySelector("svg").parentNode)
+                     .append("div")
+                     .attr("class", "nuts-selector");
+
+    nutser.append("label")
+          .text("show NUTS level");
+
+    const container = nutser.append("div");
+
+    const slider = container.append("input")
+                            .attr("type", "range")
+                            .attr("min", 1)
+                            .attr("max", 3)
+                            .attr("step", 1)
+                            .attr("value", this.nuts_level)
+                            .on("change", function() {
+                              $this.nuts_level = this.value;
+                            });
+
+    container.selectAll("label").data([1, 2, 3]).enter()
+             .append("label")
+             .text(d => d)
+             .on("click", function(d) {
+               if (slider.property("value") != d)
+                 slider.property("value", d)
+                       .dispatch("change");
+             });
   },
 
   methods: {
     tooltipTemplate(d) {
-      const num_projects = this.number(this.get_project_count(d));
+      const allocation = d.allocation || 0;
+      const num_projects = this.get_project_count(d);
 
-      if (d.id.length == 2)
+      let details = `
+        <li>${ this.number(num_projects) } ` + this.singularize(`projects`, num_projects) + `</li>
+      `;
+      if (num_projects) {
+        details += `
+          <li>${ this.currency(d.allocation || 0) }</li>
+          <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
+          <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+          <li>${d.programmes.size() ? d.programmes.size() + " " + this.singularize(`programmes`, d.programmes.size()) : "TODO: programme count"}</li>
+        `;
+      }
+
+      if (d.id.length == 2) {
         return `
           <div class="title-container">
           <svg>
@@ -83,32 +194,28 @@ export default BaseMap.extend({
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
           </div>
           <ul>
-            <li>${ num_projects } ` + this.singularize(`projects`, num_projects) + `</li>
-            <li>${ this.currency(d.allocation || 0) }</li>
-            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
-            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+            ${ details }
           </ul>
         `;
-      else
+      } else {
         return `
           <div class="title-container">
             <span class="name">${ this.region_names[d.id] } (${d.id})</span>
           </div>
           <ul>
-            <li>${ num_projects } ` + this.singularize(`projects`, num_projects) + `</li>
-            <li>TODO: number of sectors, programme areas, programmes</li>
+            ${ details }
           </ul>
         `;
+      }
+    },
+
+    render() {
+      this.$super.render();
+      if (this.filters.beneficiary) this.showNutsSelector();
     },
 
     get_project_count(d) {
-      // the project count is split among fms (which is probably useless)
-      return (
-        typeof d.project_count === 'number' ?
-          d.project_count :
-          d3.sum(d3.values(d.project_count)) || 0
-      );
+      return d.project_count || 0;
     },
 
     _mkProjectCircles(sel, k) {
@@ -139,6 +246,7 @@ export default BaseMap.extend({
 
     renderData(t) {
       if (t === undefined) t = this.getTransition();
+      const dataset = d3.values(this.data);
 
       let beneficiaries = this.chart.selectAll('.states > g.beneficiary');
 
@@ -148,7 +256,7 @@ export default BaseMap.extend({
                    .call(this._mkProjectCircles)
 
       // only now bind the data
-      beneficiaries = beneficiaries.data(this.data, (d) => d.id );
+      beneficiaries = beneficiaries.data(dataset, (d) => d.id );
 
       const projects = beneficiaries
         .filter( (d) => d.id !== this.filters.beneficiary )
@@ -186,10 +294,13 @@ export default BaseMap.extend({
           const count = this.get_project_count(d);
           // return enough for the the text to fit, plus spacing
           // for another half a character, but not if zero
+          let len;
           return (
-            count == 0 ?
-            this.numberWidth / 3 :
-            (count.toString().length + 1/2) * this.numberWidth / 2
+            count == 0 ? this.textDimensions.width / 3 : (
+              (len = count.toString().length) == 1 ?
+              this.textDimensions.height :
+              (len + 1/2) * this.textDimensions.width
+            ) / 2 * 1.3 // a lil' bit of extra
           );
         } );
 
@@ -220,24 +331,122 @@ export default BaseMap.extend({
         .attr("opacity", 1);
     },
 
+    _mkLevelData(regiondata) {
+      // re-aggregate the data to compute per-level stuff
+      const leveldata = {};
+      this.draw_nuts_levels.forEach(x => leveldata[x] = {});
+
+      for (const row of regiondata) {
+        const root = row.id.substring(0, 2),
+              code = row.id.substr(2),
+              maxlevel = code.length;
+
+        for (let lvl = 1; lvl <= maxlevel; lvl++) {
+          const nuts = root + code.substring(0, lvl);
+
+          let item = leveldata[lvl][nuts];
+          if (item === undefined) {
+            item = leveldata[lvl][nuts] = {};
+
+            for (const k in row) {
+              // can't simply Object.assign, because of sets
+              const v = row[k];
+
+              if (v instanceof d3.set)
+                item[k] = d3.set(v.values());
+              else
+                item[k] = v;
+
+              // overwrite id
+              item.id = nuts;
+            }
+          } else {
+            for (const k in row) {
+              const v = row[k];
+
+              if (typeof v == 'string')
+                continue;
+              else if (typeof v == 'number')
+                item[k] += v;
+              else if (v instanceof d3.set)
+                v.each(x => item[k].add(x));
+              else
+                console.error("Unhandled key / value", k, v);
+            }
+          }
+        }
+      }
+
+      // flatten
+      const out = [];
+      for (const lvl in leveldata) {
+        const regions = leveldata[lvl],
+              row = {
+                level: lvl,
+                regions: [],
+              };
+
+        out.push(row);
+
+        for (const r in regions) {
+          row.regions.push(regions[r]);
+        }
+      }
+
+      return out;
+    },
+
     _renderRegionData(state, regiondata, t) {
       if (t === undefined) t = this.getTransition();
 
-      // repeat hacky pre-draw-circle and post-bind-data, meh
-      let regions = this.chart.selectAll(`.regions > .state.${state} > g`);
+      const dataset = this._mkLevelData(regiondata);
+
+      let regions = this.chart
+        .select(`.regions > .state.${state}`)
+        .selectAll("g.layer")
+        .data(dataset, d => d.level)
+        .selectAll("g.region");
 
       regions.filter( (d) => (d.type == "Feature" ) )
              .call(this._mkProjectCircles, this.zoomLevel);
 
-      regions = regions.data(regiondata, (d) => d.id );
+      regions = regions.data(
+          d => d.regions,
+          d => d.id
+        );
 
       regions.select("g")
         .call(this._updateProjects, t);
 
       regions.exit().merge(regions.filter( (d) => d.project_count == 0 ))
-        .select("g")
+        .select("g") // circle
+        // hack to "set" the data to 0 (for the tooltip anyway)
+        .each(d => d.project_count = 0)
+        .call(this._updateProjects, t)
+
         .transition(t)
         .attr("opacity", 0);
+    },
+
+    _displayNutsSelector(yes) {
+      const selector = d3.select(this.$el).select(".nuts-selector");
+      selector.style("display", yes ? "block" : null)
+      setTimeout(() => selector.classed("visible", yes));
+    },
+
+    showNutsSelector() {
+      this._displayNutsSelector(true);
+    },
+
+    hideNutsSelector() {
+      this._displayNutsSelector(false);
+    },
+
+    handleFilterBeneficiary(val, old) {
+      this.$super.handleFilterBeneficiary(val, old);
+
+      if (val) this.showNutsSelector();
+      else this.hideNutsSelector();
     },
   },
 });

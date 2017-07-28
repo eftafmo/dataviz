@@ -13,10 +13,10 @@
             </span>
             <button type="submit" class="btn btn-primary" name="page" value="1">Search</button>
           </div>
-        <div class="search-tabs">
+        <div class="search-tabs" id="search-tabs">
           <span class="muted">Search for:</span>
           <input type="radio" name="kind" id="programme-tab" value="Programme"
-                 {% if not form.facets.kind or form.facets.kind.0 == 'Programme' %}checked{% endif %}>
+                 {% if form.facets.kind.0 == 'Programme' %}checked{% endif %}>
           <label for="programme-tab">Programmes</label>
           <input type="radio" name="kind" id="project-tab" value="Project"
                  {% if form.facets.kind.0 == 'Project'%}checked{% endif %}>
@@ -135,17 +135,17 @@
     </div>
     <div class="sidebar-body">
 
-      <!--
       {% if page_obj.object_list %}
-      <div class="input-group">
-        <div class="input-box input-block">
-          <label for="funding-period-facet">Funding period</label>
-          <select name="" id="funding-period-facet">
-            <option value="">2009 - 2014</option>
-          </select>
+        <!--
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="funding-period-facet">Funding period</label>
+            <select name="" id="funding-period-facet">
+              <option value="">2009 - 2014</option>
+            </select>
+          </div>
         </div>
-      </div>
-      -->
+        -->
 
       {% if facets.fields.financial_mechanism_ss %}
       <div class="input-group">
@@ -153,9 +153,11 @@
           <label for="financial-mechanism-facet">Financial Mechanism</label>
           <select multiple name="financial_mechanism_ss" id="financial-mechanism-facet" form="main-search-form">
             {% for o in facets.fields.financial_mechanism_ss %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.financial_mechanism_ss %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -168,9 +170,11 @@
           <label for="state-facet">Beneficiary States</label>
           <select multiple name="state_name" id="state-facet" form="main-search-form">
             {% for o in facets.fields.state_name %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.state_name %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -183,9 +187,11 @@
           <label for="priority-sector-facet">Priority Sectors</label>
           <select multiple name="priority_sector_ss" id="priority-sector-facet" form="main-search-form">
             {% for o in facets.fields.priority_sector_ss %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.priority_sector_ss %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -198,32 +204,255 @@
           <label for="programme-area-facet">Programme Areas</label>
           <select multiple name="programme_area_ss" id="programme-area-facet" form="main-search-form">
             {% for o in facets.fields.programme_area_ss %}
+              {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_area_ss %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
       </div>
       {% endif %}
 
-      {% if facets.fields.outcome_ss %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="outcome-facet">Outcomes</label>
-          <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form">
-            {% for o in facets.fields.outcome_ss %}
-              <option value="{{ o.0 }}" {% if o.0 in form.facets.outcome_ss %}selected{% endif %}>
+          <label for="programme-status-facet">Programme Status</label>
+          <select multiple name="programme_status" id="programme-status-facet" form="main-search-form">
+            {% for o in facets.fields.programme_status %}
+              {% if o.1 %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_status %}selected{% endif %}>
                 {{ o.0 }} ({{ o.1 }})
               </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
       </div>
+
+      {% if form.facets.kind.0 == 'Programme' %}
+      <div class="input-group">
+        <div class="input-box input-block">
+          <label for="outcome-facet">Outcomes</label>
+          <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form">
+            {% for o in form.facets.outcome_ss %}
+              <option value="{{ o }}" selected>{{ o }}</option>
+            {% empty %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if form.facets.kind.0 == 'Project' %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="project-programme-name-facet">Programme</label>
+            <select multiple name="programme_name" id="project-programme-name-facet" form="main-search-form">
+              {% for o in facets.fields.programme_name %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_name %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="project-status-facet">Project Status</label>
+            <select multiple name="project_status" id="project-status-facet" form="main-search-form">
+              {% for o in facets.fields.project_status %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.project_status %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="geotarget-facet">Project Geotarget</label>
+            <select multiple name="geotarget" id="geotarget-facet" form="main-search-form">
+              {% for o in form.facets.geotarget %}
+                <option value="{{ o }}" selected>{{ o }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+{#      TODO: add theme#}
+
+      {% endif %}
+
+      {% if form.facets.kind.0 == 'Organisation' %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="organisation-programme-name-facet">Programme</label>
+            <select multiple name="programme_name" id="organisation-programme-name-facet" form="main-search-form">
+              {% for o in form.facets.programme_name %}
+                <option value="{{ o }}" selected>{{ o }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="organisation-project-name-facet">Project</label>
+            <select multiple name="project_name" id="organisation-project-name-facet" form="main-search-form">
+              {% for o in form.facets.project_name %}
+                <option value="{{ o }}" selected>{{ o }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+
+        {% if facets.fields.country %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="country-facet">Organisation Country</label>
+            <select multiple name="country" id="country-facet" form="main-search-form">
+              {% for o in facets.fields.country %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.country %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% endif %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="nuts-facet">Organisation NUTS</label>
+            <select multiple name="nuts" id="nuts-facet" form="main-search-form">
+              {% for o in form.facets.nuts %}
+                <option value="{{ o }}" selected>{{ o }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% if facets.fields.org_type_category %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="org-type-category-facet">Organisation Type Category</label>
+            <select multiple name="org_type_category" id="org-type-category-facet" form="main-search-form">
+              {% for o in facets.fields.org_type_category %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.org_type_category %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% endif %}
+        {% if facets.fields.org_type %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="org-type-facet">Organisation Type</label>
+            <select multiple name="org_type" id="org-type-facet" form="main-search-form">
+              {% for o in facets.fields.org_type %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.org_type %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% endif %}
+        {% if facets.fields.role_ss %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="role-facet">Organisation Role</label>
+            <select multiple name="role_ss" id="role-facet" form="main-search-form">
+              {% for o in facets.fields.role_ss %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.role_ss %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% endif %}
+
       {% endif %}
 
       {% endif %}
 
     </div>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      function select2AjaxFactory(kind, facet) {
+        return {
+          ajax: {
+            url: function(params) {
+              var u = '/api/search_' + kind + '_typeahead/?';
+              return u + $("#main-search-form").serialize()
+            },
+            data: function(params) {
+              return {
+                auto_name: facet,
+                auto_value: params.term,
+              }
+            },
+            processResults: function(response, params) {
+              return {
+                results: response.results,
+              }
+            },
+            delay: 300,
+          },
+          minimumInputLength: 2,
+        }
+      };
+      $("#search-tabs").change(function() {
+        var selected = $(this).find("input:checked");
+        if (selected.length) {
+          var action_url = '/search/' + selected.val().toLowerCase() + '/';
+          $("#main-search-form").attr("action", action_url);
+        }
+      });
+
+      // common
+      $("#financial-mechanism-facet").select2();
+      $("#state-facet").select2();
+      $("#priority-sector-facet").select2();
+      $("#programme-area-facet").select2();
+      $("#programme-status-facet").select2();
+
+      // programme
+      $("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss'));
+
+      // project
+      $("#project-programme-name-facet").select2();
+      $("#project-status-facet").select2();
+      $("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget'))
+
+      // organisation
+      $("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name'));
+      $("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name'));
+      $("#country-facet").select2();
+      $("#nuts-facet").select2(select2AjaxFactory('organisation', 'nuts'));
+      $("#org-type-category-facet").select2();
+      $("#org-type-facet").select2();
+      $("#role-facet").select2();
+    });
+  </script>
 {% endblock %}

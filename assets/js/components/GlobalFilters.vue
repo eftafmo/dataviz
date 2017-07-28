@@ -18,7 +18,7 @@
                 </li>
               </transition-group>
             </ul>
-            <button @click="resetFilters" class="no-btn muted" id="reset-filters">
+            <button @click="resetFilters" class="no-btn" id="reset-filters">
               Reset filters <span class="icon icon-close"></span>
             </button>
         </div>
