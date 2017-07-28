@@ -89,8 +89,7 @@
 
     {% if is_paginated %}
     <div class="search-results-footer">
-      {# TODO: fix pagination style #}
-      <div class="pagination">
+      <div class="pagination clearfix">
         <button
           class="btn btn-default pagination-previous"
           {% if page_obj.has_previous %}

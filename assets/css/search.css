@@ -28,12 +28,14 @@
 }
 @media (max-width: 768px) {
   .search-form {
-    display: flex;
+    display: block;
   }
-  .search-form .input-box {
-    flex-grow: 2;
+
+  .search-form .input-box input {
+    width: auto;
   }
   .search-form button {
+    margin-left: -4px;
   }
 }
 @media (min-width: 769px) {
