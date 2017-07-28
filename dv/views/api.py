@@ -619,6 +619,45 @@ def beneficiary_detail(request, beneficiary):
     return JsonResponse(out)
 
 
+
+def projects_beneficiary_detail(request, beneficiary):
+    # TODO: this copy-paste is evil. must ... fix ...
+    try:
+        state = State.objects.get_by_natural_key(beneficiary)
+    except State.DoesNotExist:
+        return JsonResponse({
+            'error': "Beneficiary state '%s' does not exist." % beneficiary
+        }, status=404)
+
+    # Note: if project's PA stops going through Outcome, update below
+    fields = {
+        'id': F('nuts'),
+        'area': F('outcome__programme_area__name'),
+        'sector': F('outcome__programme_area__priority_sector__name'),
+        'fm': F('outcome__programme_area__priority_sector__type__grant_name'),
+    }
+    data = (
+        Project.objects.filter(state=state)
+        .exclude(allocation=0)
+        .filter(nuts__length__gt=2)
+        .exclude(nuts__endswith="Z")
+        .annotate(**fields)
+        .values(*fields.keys())
+        .annotate(
+            allocation=Sum('allocation'),
+            project_count=Count('code'),
+        )
+    )
+
+    out = list(data)
+
+    for row in out:
+        # strip away some of that crazy precision
+        row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+
+    return JsonResponse(out)
+
+
 class ProjectList(ListAPIView):
     serializer_class = ProjectSerializer
 

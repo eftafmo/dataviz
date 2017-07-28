@@ -43,6 +43,7 @@
 
     </g>
   </svg>
+  <div class="layer"></div>
 </chart-container>
   <div class="legend">
     <ul class="legend-items">
@@ -144,7 +145,7 @@
     }
 
     .regions {
-      cursor: pointer;
+      //cursor: pointer;
       // regions get their fill inline
 
       path {
@@ -240,7 +241,8 @@ export default Vue.extend({
 
   data() {
     return {
-      filter_by: ["fm", "sector", "area"],
+      nuts_level: 1, // default nuts level
+      draw_nuts_levels: [1, 2, 3],
 
       width: 800,
       height: 800,
@@ -280,20 +282,7 @@ export default Vue.extend({
     },
 
     data() {
-      const aggregated = this.aggregate(
-        this.filtered,
-        [
-          { source: "beneficiary", destination: "id" },
-        ],
-        [
-          "allocation",
-          "project_count",
-          {source: 'sector', destination: 'sectors', type:String, filter_by: 'is_not_ta'},
-          {source: 'area', destination: 'areas', type:String, filter_by: 'is_not_ta'},
-          {source: 'programmes', destination: 'programmes', type: Object, filter_by: 'is_not_ta'},
-        ],
-        true
-      );
+      const aggregated = this.aggregated;
 
       for (const item of aggregated) {
         item.name = this.BENEFICIARIES[item.id].name;
@@ -304,6 +293,22 @@ export default Vue.extend({
   },
 
   created() {
+    // don't filter / aggregate by beneficiary, group by it
+    // (TODO: this smells like a pattern already)
+    let idx;
+
+    idx = this.filter_by.indexOf("beneficiary");
+    if (idx !== -1)
+      this.filter_by.splice(idx, 1);
+
+    this.aggregate_by.push(
+        { source: "beneficiary", destination: "id" }
+    );
+
+    idx = this.aggregate_on.findIndex(x => x.source == "beneficiary");
+    if (idx !== -1) this.aggregate_on.splice(idx, 1);
+
+
     // this needs to fetch some extra-data
 
     // TODO: would be nice if the host was provided by some constant,
@@ -329,6 +334,8 @@ export default Vue.extend({
         if (error) throw error;
         this.regions = data;
         this.renderStates();
+        // WARNING: TODO: FIXME! this can cause a timing issue
+        // when the cache is not populated
         setTimeout(this._populateCache, 1);
       });
       callback(null);
@@ -340,17 +347,23 @@ export default Vue.extend({
       // cache the nuts3-level geojson data, because extracting it
       // from topojson is an expensive operation
       const data = this.regions,
-            layer = 'nuts3',
-            cache = this._region_borders;
+            cache = this._region_borders,
+            levels = this.draw_nuts_levels;
 
       const countries = Object.keys(this.COUNTRIES);
-      countries.forEach( (c) => cache[c] = [] );
+      countries.forEach(c => {
+        const ccache = cache[c] = {};
+        levels.forEach(l => ccache[l] = []);
+      });
 
-      const features = topojson.feature(data, data.objects[layer]).features;
-      for (const f of features) {
-        const c = f.id.substr(0,2);
-        if (countries.indexOf(c) == -1) continue;
-        cache[c].push(f);
+      for (const level of levels) {
+        const features = topojson.feature(data, data.objects["nuts" + level])
+                                 .features;
+        for (const f of features) {
+          const c = f.id.substr(0,2);
+          if (countries.indexOf(c) == -1) continue;
+          cache[c][level].push(f);
+        }
       }
     },
 
@@ -599,7 +612,7 @@ export default Vue.extend({
     },
 
     renderRegions(t) {
-      // renders NUTS-lvl3 regions for the selected country
+      // renders regions for the selected country, for the given NUTS levels
       const $this = this;
       const state = this.filters.beneficiary;
 
@@ -617,15 +630,30 @@ export default Vue.extend({
         .attr('class', (d) => "state " + d )
         .attr('opacity', 0);
 
-      const regions = centered
+      // actual region rendering part //
+
+      const levels = centered.selectAll("g.layer")
+        .data(
+          this.draw_nuts_levels.map(x => ({level: x})),
+          d => d.level
+        )
+        .enter()
+        .append("g")
+        .attr("class", d => "layer level" + d.level)
+        .style("display", null)
+        .attr("opacity", 0);
+
+      // TODO: make sure _region_borders is really populated
+      const regions = levels
         .selectAll('g')
         .data(
-          state ? this._region_borders[state] : [],
-          (d) => d.id
+          d => this._region_borders[state][d.level],
+          d => d.id
         );
 
       regions.enter()
-        .append('g')
+        .append("g")
+        .attr("class", d => "region " + d.id)
         .each( (d) => {
           this.cacheGeoDetails(d);
           // remember the region name
@@ -640,6 +668,10 @@ export default Vue.extend({
         .append('path')
         .attr('d', this.path)
         .attr('fill', this.region_colour_default);
+
+      // end actual region rendering part //
+      // but make sure it's visible
+      this.displayNutsLevel(this.nuts_level, true, t);
 
       containers.merge(centered)
         .style('display', null)
@@ -698,20 +730,20 @@ export default Vue.extend({
     },
 
     computeRegionData(regiondataset) {
-      const dataset = this.filter(regiondataset, this.filter_by);
+      // default aggregate_on has filter_by: is_not_ta. need to clear it.
+      // TODO: invert that logic, make it exclude: is_ta
+      const aggregate_on = [];
 
-      const aggregated = this.aggregate(
-        dataset,
-        ['id'],
-        [
-          'allocation',
-          'project_count',
-          {source: 'sector', destination: 'sectors', type: String, filter_by: 'is_not_ta'},
-        ],
-        true
-      );
+      for (let col of this.aggregate_on) {
+        if (typeof col == "object") {
+          col = Object.assign({}, col);
+          delete col.filter_by;
+        }
+        aggregate_on.push(col);
+      }
 
-      return aggregated;
+      const filtered = this.filter(regiondataset, this.filter_by);
+      return this.aggregate(filtered, ['id'], aggregate_on, true);
     },
 
     _renderRegionData(state, regiondata, t) {
@@ -763,7 +795,7 @@ export default Vue.extend({
                        this.updateStyle();
                      })
                      .on("start", () => {
-                       // fade out / in state layer and show regions
+                       // fade in old state layer / out new state layer
                        if (old)
                          this.chart.select('.states > g.beneficiary.' + old)
                              .transition(t)
@@ -832,10 +864,33 @@ export default Vue.extend({
       this.renderData(t);
       this.renderRegionData(t);
     },
+
+    displayNutsLevel(lvl, yes, t) {
+      if (t === undefined) t = this.getTransition();
+
+      const containers = this.chart
+        .select(".regions").selectAll("g.state > g.layer.level" + lvl)
+        .style("display", null)
+        .classed('transitioning', true)
+        .transition(t)
+        .attr('opacity', Number(yes))
+        .on('end', function() {
+          d3.select(this)
+            .style("display", yes ? null : "none")
+            .classed('transitioning', false);
+        });
+    },
   },
 
   watch: {
     svgWidth: "updateStyle",
+
+    nuts_level(lvl, old) {
+      const t = this.getTransition();
+
+      if (old) this.displayNutsLevel(old, false, t);
+      this.displayNutsLevel(lvl, true, t);
+    },
   },
 });
 </script>

@@ -75,8 +75,7 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        include: path.resolve(asset_dir, 'js'),
-        exclude: /(node_modules|__tests__)/,
+        exclude: /(node_modules\/(?!(vue-super))|__tests__)/,
         loader: bubleLoader
       },
       {
