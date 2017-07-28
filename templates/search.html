@@ -40,7 +40,7 @@
         {{ paginator.count }} results found
       </span>
       <span class="search-results-options">
-        <select name="paginate_by" id="" class="subtle-select" form="main-search-form">
+        <select name="paginate_by" id="" class="subtle-select main-auto-submit" form="main-search-form">
           {% for page_size in page_sizes %}
             <option
               value="{{ page_size }}"
@@ -171,7 +171,7 @@
       <div class="input-group">
         <div class="input-box input-block">
           <label for="financial-mechanism-facet">Financial Mechanism</label>
-          <select multiple name="financial_mechanism_ss" id="financial-mechanism-facet" form="main-search-form">
+          <select multiple name="financial_mechanism_ss" id="financial-mechanism-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.financial_mechanism_ss %}
               {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.financial_mechanism_ss %}selected{% endif %}>
@@ -188,7 +188,7 @@
       <div class="input-group">
         <div class="input-box input-block">
           <label for="state-facet">Beneficiary States</label>
-          <select multiple name="state_name" id="state-facet" form="main-search-form">
+          <select multiple name="state_name" id="state-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.state_name %}
               {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.state_name %}selected{% endif %}>
@@ -205,7 +205,7 @@
       <div class="input-group">
         <div class="input-box input-block">
           <label for="priority-sector-facet">Priority Sectors</label>
-          <select multiple name="priority_sector_ss" id="priority-sector-facet" form="main-search-form">
+          <select multiple name="priority_sector_ss" id="priority-sector-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.priority_sector_ss %}
               {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.priority_sector_ss %}selected{% endif %}>
@@ -222,7 +222,7 @@
       <div class="input-group">
         <div class="input-box input-block">
           <label for="programme-area-facet">Programme Areas</label>
-          <select multiple name="programme_area_ss" id="programme-area-facet" form="main-search-form">
+          <select multiple name="programme_area_ss" id="programme-area-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.programme_area_ss %}
               {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_area_ss %}selected{% endif %}>
@@ -238,7 +238,7 @@
       <div class="input-group">
         <div class="input-box input-block">
           <label for="programme-status-facet">Programme Status</label>
-          <select multiple name="programme_status" id="programme-status-facet" form="main-search-form">
+          <select multiple name="programme_status" id="programme-status-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.programme_status %}
               {% if o.1 %}
               <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_status %}selected{% endif %}>
@@ -254,7 +254,7 @@
       <div class="input-group">
         <div class="input-box input-block">
           <label for="outcome-facet">Outcomes</label>
-          <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form">
+          <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form" class="main-auto-submit">
             {% for o in form.facets.outcome_ss %}
               <option value="{{ o }}" selected>{{ o }}</option>
             {% empty %}
@@ -268,7 +268,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="project-programme-name-facet">Programme</label>
-            <select multiple name="programme_name" id="project-programme-name-facet" form="main-search-form">
+            <select multiple name="programme_name" id="project-programme-name-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.programme_name %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_name %}selected{% endif %}>
@@ -283,7 +283,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="project-status-facet">Project Status</label>
-            <select multiple name="project_status" id="project-status-facet" form="main-search-form">
+            <select multiple name="project_status" id="project-status-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.project_status %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.project_status %}selected{% endif %}>
@@ -298,7 +298,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="project-theme-facet">Project Theme</label>
-            <select multiple name="theme_ss" id="project-theme-facet" form="main-search-form">
+            <select multiple name="theme_ss" id="project-theme-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.theme_ss %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.theme_ss %}selected{% endif %}>
@@ -313,7 +313,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="geotarget-facet">Project Geotarget</label>
-            <select multiple name="geotarget" id="geotarget-facet" form="main-search-form">
+            <select multiple name="geotarget" id="geotarget-facet" form="main-search-form" class="main-auto-submit">
               {% for o in form.facets.geotarget %}
                 <option value="{{ o }}" selected>{{ o }}</option>
               {% endfor %}
@@ -327,7 +327,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="organisation-programme-name-facet">Programme</label>
-            <select multiple name="programme_name" id="organisation-programme-name-facet" form="main-search-form">
+            <select multiple name="programme_name" id="organisation-programme-name-facet" form="main-search-form" class="main-auto-submit">
               {% for o in form.facets.programme_name %}
                 <option value="{{ o }}" selected>{{ o }}</option>
               {% endfor %}
@@ -338,7 +338,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="organisation-project-status-facet">Project Status</label>
-            <select multiple name="project_status" id="organisation-project-status-facet" form="main-search-form">
+            <select multiple name="project_status" id="organisation-project-status-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.project_status %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.project_status %}selected{% endif %}>
@@ -353,7 +353,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="organisation-project-name-facet">Project</label>
-            <select multiple name="project_name" id="organisation-project-name-facet" form="main-search-form">
+            <select multiple name="project_name" id="organisation-project-name-facet" form="main-search-form" class="main-auto-submit">
               {% for o in form.facets.project_name %}
                 <option value="{{ o }}" selected>{{ o }}</option>
               {% endfor %}
@@ -365,7 +365,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="country-facet">Organisation Country</label>
-            <select multiple name="country" id="country-facet" form="main-search-form">
+            <select multiple name="country" id="country-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.country %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.country %}selected{% endif %}>
@@ -380,7 +380,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="nuts-facet">Organisation NUTS</label>
-            <select multiple name="nuts" id="nuts-facet" form="main-search-form">
+            <select multiple name="nuts" id="nuts-facet" form="main-search-form" class="main-auto-submit">
               {% for o in form.facets.nuts %}
                 <option value="{{ o }}" selected>{{ o }}</option>
               {% endfor %}
@@ -391,7 +391,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="org-type-category-facet">Organisation Type Category</label>
-            <select multiple name="org_type_category" id="org-type-category-facet" form="main-search-form">
+            <select multiple name="org_type_category" id="org-type-category-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.org_type_category %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.org_type_category %}selected{% endif %}>
@@ -407,7 +407,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="org-type-facet">Organisation Type</label>
-            <select multiple name="org_type" id="org-type-facet" form="main-search-form">
+            <select multiple name="org_type" id="org-type-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.org_type %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.org_type %}selected{% endif %}>
@@ -423,7 +423,7 @@
         <div class="input-group">
           <div class="input-box input-block">
             <label for="role-facet">Organisation Role</label>
-            <select multiple name="role_ss" id="role-facet" form="main-search-form">
+            <select multiple name="role_ss" id="role-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.role_ss %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.role_ss %}selected{% endif %}>
@@ -505,7 +505,7 @@
       $("#org-type-facet").select2();
       $("#role-facet").select2();
 
-      $("div.input-box").change(function() {
+      $(".main-auto-submit").change(function() {
         $("#main-search-form").submit();
       })
     });
