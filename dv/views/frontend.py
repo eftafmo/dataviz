@@ -60,10 +60,14 @@ class FacetedSearchView(BaseFacetedSearchView):
         self.queryset = form.search()
         return super().form_invalid(form)
 
-    # def get_context_data(self, *args, **kwargs):
-    #     objls = kwargs.pop('object_list', self.queryset)
-    #     ctx = super().get_context_data(object_list=objls, **kwargs)
-    #     return ctx
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get('paginate_by', self.paginate_by)
+
+    def get_context_data(self, *args, **kwargs):
+        objls = kwargs.pop('object_list', self.queryset)
+        ctx = super().get_context_data(object_list=objls, **kwargs)
+        ctx['page_sizes'] = [10, 25, 50, 100]
+        return ctx
 
 
 class ProgrammeFacetedSearchView(FacetedSearchView):

@@ -40,8 +40,15 @@
         {{ paginator.count }} results found
       </span>
       <span class="search-results-options">
-        <select name="" id="" class="subtle-select">
-          <option value="">10 results per page</option>
+        <select name="paginate_by" id="" class="subtle-select" form="main-search-form">
+          {% for page_size in page_sizes %}
+            <option
+              value="{{ page_size }}"
+              {% if page_size == paginator.per_page %}selected{% endif %}
+            >
+              {{ page_size }} results per page
+            </option>
+          {% endfor %}
         </select>
          |
         <select name="" id="" class="subtle-select">
