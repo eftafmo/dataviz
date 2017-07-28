@@ -55,9 +55,6 @@
           <option value="">Sorted by Country A-Z</option>
         </select>
       </span>
-      <button type="button" class="btn btn-default" id="toggle-sidebar-filters">
-        Filter results
-      </button>
     </div>
 
     <ul class="no-list">
@@ -150,8 +147,7 @@
   <div id="sidebar-filters" class="sidebar sidebar-filters">
     <div class="sidebar-header">
       <h3 class="sidebar-title">Search filters</h3>
-      <button class="no-btn small muted" type="reset">Reset</button>
-{#      <button class="no-btn small muted" id="toggle-sidebar-filters-close" type="button">Close</button>#}
+      <button id="main-reset" class="no-btn small muted" type="reset" form="main-search-form">Reset</button>
     </div>
     <div class="sidebar-body">
 
@@ -479,34 +475,40 @@
         }
       });
 
+      var all_select2 = [];
       // common
-      $("#financial-mechanism-facet").select2();
-      $("#state-facet").select2();
-      $("#priority-sector-facet").select2();
-      $("#programme-area-facet").select2();
-      $("#programme-status-facet").select2();
+      all_select2.push($("#financial-mechanism-facet").select2());
+      all_select2.push($("#state-facet").select2());
+      all_select2.push($("#priority-sector-facet").select2());
+      all_select2.push($("#programme-area-facet").select2());
+      all_select2.push($("#programme-status-facet").select2());
 
       // programme
-      $("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss'));
+      all_select2.push($("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss')));
 
       // project
-      $("#project-status-facet").select2();
-      $("#project-programme-name-facet").select2();
-      $("#project-theme-facet").select2();
-      $("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget'))
+      all_select2.push($("#project-status-facet").select2());
+      all_select2.push($("#project-programme-name-facet").select2());
+      all_select2.push($("#project-theme-facet").select2());
+      all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget')))
 
       // organisation
-      $("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name'));
-      $("#organisation-project-status-facet").select2();
-      $("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name'));
-      $("#country-facet").select2();
-      $("#nuts-facet").select2(select2AjaxFactory('organisation', 'nuts'));
-      $("#org-type-category-facet").select2();
-      $("#org-type-facet").select2();
-      $("#role-facet").select2();
+      all_select2.push($("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name')));
+      all_select2.push($("#organisation-project-status-facet").select2());
+      all_select2.push($("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name')));
+      all_select2.push($("#country-facet").select2());
+      all_select2.push($("#nuts-facet").select2(select2AjaxFactory('organisation', 'nuts')));
+      all_select2.push($("#org-type-category-facet").select2());
+      all_select2.push($("#org-type-facet").select2());
+      all_select2.push($("#role-facet").select2());
 
       $(".main-auto-submit").change(function() {
         $("#main-search-form").submit();
+      })
+      $("#main-reset").click(function () {
+        all_select2.forEach(function(e) {
+          e.val(null).trigger("change");
+        })
       })
     });
   </script>
