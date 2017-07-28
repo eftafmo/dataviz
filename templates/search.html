@@ -330,6 +330,21 @@
 
         <div class="input-group">
           <div class="input-box input-block">
+            <label for="organisation-project-status-facet">Project Status</label>
+            <select multiple name="project_status" id="organisation-project-status-facet" form="main-search-form">
+              {% for o in facets.fields.project_status %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.project_status %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-box input-block">
             <label for="organisation-project-name-facet">Project</label>
             <select multiple name="project_name" id="organisation-project-name-facet" form="main-search-form">
               {% for o in form.facets.project_name %}
@@ -338,7 +353,6 @@
             </select>
           </div>
         </div>
-
 
         {% if facets.fields.country %}
         <div class="input-group">
@@ -469,13 +483,14 @@
       $("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss'));
 
       // project
-      $("#project-programme-name-facet").select2();
       $("#project-status-facet").select2();
+      $("#project-programme-name-facet").select2();
       $("#project-theme-facet").select2();
       $("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget'))
 
       // organisation
       $("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name'));
+      $("#organisation-project-status-facet").select2();
       $("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name'));
       $("#country-facet").select2();
       $("#nuts-facet").select2(select2AjaxFactory('organisation', 'nuts'));

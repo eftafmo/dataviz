@@ -79,12 +79,12 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     programme_area_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__name')
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__priority_sector__name')
     programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
-    programme_status = indexes.FacetCharField(model_attr='programme__status')
+    programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
 
     kind = indexes.FacetCharField()
 
     # specific facets
-    project_status = indexes.FacetCharField(model_attr='status')
+    project_status = indexes.FacetMultiValueField(model_attr='status')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
     geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
     theme_ss = indexes.FacetMultiValueField(model_attr='themes__name')
@@ -123,8 +123,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     # This will upgrade the previous definitions from CharField to MultiValue
     # make sure you rebuild_index from zero when adding such "upgrade" here
     state_name = indexes.FacetMultiValueField()
-    # TODO fix this - we need both programme and project status on Organisation
-    # programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
+    programme_status = indexes.FacetMultiValueField()
     financial_mechanism_ss = indexes.FacetMultiValueField()
     programme_name = indexes.FacetMultiValueField()
     programme_name_auto = indexes.EdgeNgramField()
@@ -139,6 +138,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
 
     # specific facets
     # haystack handles null apparently
+    project_status = indexes.FacetMultiValueField()
     org_type_category = indexes.FacetCharField(model_attr='orgtype__category')
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
@@ -183,8 +183,21 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'programme__state__name', flat=True).distinct())
         return list(result)
 
+    # we don't union here because we have two different fields on each Organisation
+    # one telling us the programme statuses related to it and another the project statuses
     def prepare_programme_status(self, obj):
-        pass
+        return list(obj.roles.filter(
+            is_programme=True, programme__isnull=False
+        ).distinct().values_list(
+            'programme__status', flat=True
+        ))
+
+    def prepare_project_status(self, obj):
+        return list(obj.roles.filter(
+            is_programme=False, project__isnull=False
+        ).distinct().values_list(
+            'project__status', flat=True
+        ))
 
     def prepare_programme_area_ss(self, obj):
         result = set()

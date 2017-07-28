@@ -94,7 +94,9 @@ class ProjectFacetedSearchView(FacetedSearchView):
 class OrganisationFacetedSearchView(FacetedSearchView):
     facet_fields = FacetedSearchView.facet_fields + [
         'programme_name',
+        'programme_status',
         'project_name',
+        'project_status',
         'country',
         'nuts',
         'org_type_category',
