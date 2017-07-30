@@ -76,13 +76,7 @@
       width: 58%;
       text-align: left;
     }
-
-
   }
-
-
-
-
 }
 </style>
 
@@ -113,9 +107,17 @@ export default Vue.extend({
       let programmes = [];
 
       for (let d of dataset) {
+
         if(donor_states.indexOf(d.donor_state) === -1){
           donor_states.push(d.donor_state);
+          donors[donor_states.indexOf(d.donor_state)] = {
+          donor_state : d.donor_state,
+          donor_programme_partners :[],
+          countries : [],
+          programmes: []
+         }
         }
+
         if(Object.keys(d.donor_programme_partners).length != 0)
         programmes.push(d.donor_programme_partners)
         for (let p in d.donor_programme_partners) {
@@ -123,18 +125,6 @@ export default Vue.extend({
                     if(temp == undefined) {
                       temp = donors_map.set(p , d.donor_state)
                     }
-        }
-      }
-
-
-      console.log(donors_map)
-
-      for (let d in donor_states) {
-       donors[d] = {
-          donor_state : donor_states[d],
-          donor_programme_partners :[],
-          countries : [],
-          programmes: []
         }
       }
 
