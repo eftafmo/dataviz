@@ -104,7 +104,6 @@ export default Vue.extend({
       const donor_states = [];
       let donors = {}
       let donors_map = new Set();
-      let programmes = [];
 
       for (let d of dataset) {
 
@@ -118,8 +117,6 @@ export default Vue.extend({
           }
         }
 
-        if (Object.keys(d.donor_programme_partners).length != 0)
-          programmes.push(d.donor_programme_partners)
         for (let p in d.donor_programme_partners) {
           let temp = donors_map.has(p)
           if (temp == false) {
