@@ -103,61 +103,45 @@ export default Vue.extend({
       const dataset = this.filtered;
       const donor_states = [];
       let donors = {}
-      let donors_map = new Map();
+      let donors_map = new Set();
       let programmes = [];
 
       for (let d of dataset) {
 
-        if(donor_states.indexOf(d.donor_state) === -1){
+        if (donor_states.indexOf(d.donor_state) === -1) {
           donor_states.push(d.donor_state);
           donors[donor_states.indexOf(d.donor_state)] = {
-          donor_state : d.donor_state,
-          donor_programme_partners :[],
-          countries : [],
-          programmes: []
-         }
-        }
-
-        if(Object.keys(d.donor_programme_partners).length != 0)
-        programmes.push(d.donor_programme_partners)
-        for (let p in d.donor_programme_partners) {
-                    let temp = donors_map.get(d.donor_programme_partners[p].name)
-                    if(temp == undefined) {
-                      temp = donors_map.set(p , d.donor_state)
-                    }
-        }
-      }
-
-      donors_map.forEach(function(value,key){
-        for (let d in donors) {
-          if(donors[d].donor_state == value) {
-            donors[d].donor_programme_partners.push({id: key, name: null, states:[], programmes: []})
+            donor_state: d.donor_state,
+            donor_programme_partners: [],
+            countries: [],
+            programmes: []
           }
         }
-      })
 
-
-      for (let a of programmes) {
-        for (let b in a ) {
-          for (let c in donors){
-            for (let d in donors[c].donor_programme_partners) {
-              if (b == donors[c].donor_programme_partners[d].id){
-                donors[c].donor_programme_partners[d].name = a[b].name
-                for(let e of a[b].states){
-                  if(donors[c].donor_programme_partners[d].states.indexOf(e) === -1){
-                    donors[c].donor_programme_partners[d].states.push(e)
-                    if(donors[c].countries.indexOf(e)===-1)
-                       donors[c].countries.push(e);
-                }
-                for(let e of a[b].programmes){
-                  if(donors[c].donor_programme_partners[d].programmes.indexOf(e) === -1){
-                     donors[c].donor_programme_partners[d].programmes.push(e)
-                       if(donors[c].programmes.indexOf(e)===-1)
-                       donors[c].programmes.push(e);
-                    }
-                  }
-                }
-              }
+        if (Object.keys(d.donor_programme_partners).length != 0)
+          programmes.push(d.donor_programme_partners)
+        for (let p in d.donor_programme_partners) {
+          let temp = donors_map.has(p)
+          if (temp == false) {
+            donors_map.add(p)
+            donors_map[p] = d.donor_programme_partners[p]
+            donors_map[p].donor_state = d.donor_state
+          } else {
+            for (let x of d.donor_programme_partners[p].programmes) {
+              if (donors_map[p].programmes.indexOf(x) === -1)
+                donors_map[p].programmes.push(x)
+              if (donors[donor_states.indexOf(d.donor_state)].programmes.indexOf(x) === -1)
+                donors[donor_states.indexOf(d.donor_state)].programmes.push(x)
+            }
+            for (let x of d.donor_programme_partners[p].states) {
+              if (donors_map[p].states.indexOf(x) === -1)
+                donors_map[p].states.push(x)
+              if (donors[donor_states.indexOf(d.donor_state)].countries.indexOf(x) === -1)
+                donors[donor_states.indexOf(d.donor_state)].countries.push(x)
+            }
+            if (donors_map[p].donor_state == donors[donor_states.indexOf(d.donor_state)].donor_state) {
+              if (donors[donor_states.indexOf(d.donor_state)].donor_programme_partners.indexOf(donors_map[p]) === -1)
+                donors[donor_states.indexOf(d.donor_state)].donor_programme_partners.push(donors_map[p]);
             }
           }
         }
