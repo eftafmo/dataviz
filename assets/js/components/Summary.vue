@@ -3,7 +3,7 @@
       <transition name="fade">
         <div class="allocation" :key="changed">
           <strong>{{ currency(data.allocation) }}</strong>
-          <small>{{ currency(data.bilateral_allocation) }} for bilateral relations</small>
+          <small>{{ currency(data.bilateral_allocation) }} for bilateral fund</small>
         </div>
       </transition>
     </div>
