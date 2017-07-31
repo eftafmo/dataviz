@@ -51,7 +51,7 @@
         <svg class="square" v-if="rendered" height="20" width="20">
           <rect height="20" width="20" fill="url(#multi-fm)"/>
         </svg>
-        Donor states
+        Donor state(s)
       </li>
       <li>
         <span class="square"></span>
