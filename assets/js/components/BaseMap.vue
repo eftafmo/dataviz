@@ -73,6 +73,9 @@
   @hovered: #9dccec;
   @donor_inactive: #85adcb;
 
+  .chart-container svg {
+    box-shadow: 0px 0px 2px #aaa;
+  }
   position: relative;
   // - strokes
   .with-boundary {
