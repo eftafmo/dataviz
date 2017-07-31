@@ -38,14 +38,9 @@
 
 
 <script>
-  import Vue from 'vue';
-  import ComponentMixin from './mixins/Component';
+import Component from './Component';
 
-export default Vue.extend({
-  mixins: [
-    ComponentMixin,
-  ],
-
+export default Component.extend({
   data() {
     return {
       transitioned: false,

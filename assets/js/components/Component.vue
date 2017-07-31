@@ -15,11 +15,9 @@
 import Base from './Base';
 
 
-export default {
-  extends: Base,
-
+export default Base.extend({
   props: {
     datasource: String,
   },
-};
+});
 </script>

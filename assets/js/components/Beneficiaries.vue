@@ -125,19 +125,18 @@
 
 
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
 import {slugify} from 'js/lib/util';
 
-import ChartMixin from './mixins/Chart';
+import Chart from './Chart';
+
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
-export default Vue.extend({
+export default Chart.extend({
   mixins: [
-    ChartMixin,
     WithFMsMixin, WithCountriesMixin,
     WithTooltipMixin,
   ],

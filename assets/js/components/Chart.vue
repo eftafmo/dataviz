@@ -4,12 +4,11 @@ import debounce from 'lodash.debounce';
 
 import Component from './Component';
 
-import Dropdown from '../includes/DropdownFilter';
-import ChartContainer from '../includes/ChartContainer';
+import Dropdown from './includes/DropdownFilter';
+import ChartContainer from './includes/ChartContainer';
 
-export default {
-  extends: Component,
 
+export default Component.extend({
   components: {
     'dropdown': Dropdown,
     'chart-container': ChartContainer,
@@ -100,5 +99,5 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.computeDimensions);
   },
-};
+});
 </script>

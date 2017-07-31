@@ -93,18 +93,17 @@
 
 
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
 import {colour2gray, slugify} from 'js/lib/util';
 
-import ChartMixin from './mixins/Chart';
+import Chart from './Chart';
+
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
-export default Vue.extend({
+export default Chart.extend({
   mixins: [
-    ChartMixin,
     WithFMsMixin,
     WithTooltipMixin,
   ],
@@ -265,5 +264,4 @@ export default Vue.extend({
     },
   },
 });
-
 </script>

@@ -14,6 +14,7 @@
     </ul>
 </template>
 
+
 <style lang="less">
 .news {
   li {
@@ -41,18 +42,14 @@
 }
 </style>
 
+
 <script>
-
-import Vue from 'vue';
 import * as d3 from 'd3';
-import ComponentMixin from './mixins/Component';
+
+import Component from './Component';
 
 
-export default Vue.extend({
-  mixins: [
-    ComponentMixin,
-  ],
-
+export default Component.extend({
   computed: {
     data() {
     const dataset = this.filtered;
@@ -75,22 +72,19 @@ export default Vue.extend({
   },
 
   methods: {
-  formatDate(timestamp){
-    const date = new Date(timestamp);
-    let nav_lang;
+    formatDate(timestamp){
+      const date = new Date(timestamp);
+      let nav_lang;
 
-    if (navigator.languages)
+      if (navigator.languages)
         nav_lang = navigator.languages[0];
-    else
+      else
         nav_lang = "en"
 
-    var options = { day: 'numeric', month: 'long', year: 'numeric' };
-    var new_date = date.toLocaleDateString(nav_lang,options);
-    return new_date
-  }
-}
-
-
+      var options = { day: 'numeric', month: 'long', year: 'numeric' };
+      var new_date = date.toLocaleDateString(nav_lang,options);
+      return new_date
+    },
+  },
 });
-
 </script>

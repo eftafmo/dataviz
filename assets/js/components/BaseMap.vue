@@ -62,6 +62,7 @@
 </div>
 </template>
 
+
 <style lang="less">
 .map-viz {
   // defs
@@ -195,13 +196,14 @@
 }
 </style>
 
+
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import {slugify} from 'js/lib/util'
 
-import ChartMixin from './mixins/Chart';
+import Chart from './Chart';
+
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
@@ -212,9 +214,8 @@ const LAYERS = "/assets/data/layers.topojson";
 const NUTS = "/assets/data/nuts2006.topojson";
 
 
-export default Vue.extend({
+export default Chart.extend({
   mixins: [
-    ChartMixin,
     WithFMsMixin, WithCountriesMixin,
     WithTooltipMixin,
   ],

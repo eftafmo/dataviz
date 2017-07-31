@@ -1,6 +1,6 @@
-import Vue from 'vue';
 import debounce from 'lodash.debounce';
-import BaseMixin from './mixins/Base';
+
+import Base from './Base';
 import {FILTERS} from '../globals';
 
 
@@ -15,9 +15,7 @@ function getURL(obj) {
 }
 
 
-export default Vue.extend({
-  mixins: [BaseMixin],
-
+export default Base.extend({
   data() {
     return {
       datasource: null,

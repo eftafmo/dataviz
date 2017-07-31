@@ -4,12 +4,13 @@
  -->
 
 <script>
+import Vue from 'vue';
 import * as d3 from 'd3';
-import {FILTERS, Q} from '../../globals.js'
+import {FILTERS, Q} from '../globals.js'
 import {colour2gray} from 'js/lib/util';
 
 
-export default {
+export default Vue.extend({
   beforeCreate() {
     // adding the queue here since it needs not be observable
     this.queue = Q;
@@ -384,5 +385,5 @@ export default {
       },
     },
   },
-};
+});
 </script>

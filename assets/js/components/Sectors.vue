@@ -309,20 +309,18 @@
 
 
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
 import merge from 'lodash.merge';
 import {colour2gray, slugify} from 'js/lib/util';
 
-import ChartMixin from './mixins/Chart';
+import Chart from './Chart';
 import WithSectors from './mixins/WithSectors';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
-export default Vue.extend({
+export default Chart.extend({
   mixins: [
-    ChartMixin,
     WithSectors,
     WithTooltipMixin,
   ],

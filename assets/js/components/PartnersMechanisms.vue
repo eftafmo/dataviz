@@ -26,11 +26,10 @@
 
 
 <script>
-import Vue from 'vue';
-
+import Component from './Component';
 import BaseMechanisms from './Mechanisms';
+
 import PartnersMixin from './mixins/Partners';
-import ComponentMixin from './mixins/Component.vue';
 import FMLegendComponent from './includes/FMLegend';
 
 
@@ -78,11 +77,7 @@ const Mechanisms = BaseMechanisms.extend({
 });
 
 
-export default Vue.extend({
-  mixins: [
-    ComponentMixin,
-  ],
-
+export default Component.extend({
   components: {
     fms: Mechanisms,
     'fm-legend': FMLegendComponent,

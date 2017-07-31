@@ -131,30 +131,27 @@
 }
 </style>
 
+
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
 
-import ComponentMixin from './mixins/Component';
+import Component from './Component';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
 
 
-export default Vue.extend({
+export default Component.extend({
   mixins: [
-    ComponentMixin,
     WithCountriesMixin,
   ],
 
-
- updated() {
-  //TODO: this can be done a lot better
+  updated() {
+    //TODO: this can be done a lot better
     if (window.matchMedia("(max-width: 800px)").matches) {
-        const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]');
-        if (!parent_nav) return;
-        parent_nav.innerHTML = 'Programmes ('+this.data.projectcount+')'
+      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]');
+      if (!parent_nav) return;
+      parent_nav.innerHTML = 'Programmes ('+this.data.projectcount+')'
     }
   },
-
 
   computed: {
 
@@ -251,5 +248,4 @@ export default Vue.extend({
     },
   },
 });
-
 </script>

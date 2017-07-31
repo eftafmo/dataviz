@@ -59,16 +59,16 @@
 
 
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
-import ComponentMixin from './mixins/Component';
+
+import Component from './Component';
+
 import WithSectorsMixin from './mixins/WithSectors';
 import {FILTERS} from '../globals.js'
 
 
-export default Vue.extend({
+export default Component.extend({
   mixins: [
-    ComponentMixin,
     WithSectorsMixin,
   ],
 

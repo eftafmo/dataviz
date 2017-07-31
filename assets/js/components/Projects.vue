@@ -28,17 +28,13 @@
 
 
 <script>
-import Vue from 'vue';
+import Component from './Component';
 
-import ComponentMixin from './mixins/Component';
 import Programmes from './Programmes';
 import Projects from './includes/Projects'
 
 
-export default Vue.extend({
-  mixins: [
-    ComponentMixin,
-  ],
+export default Component.extend({
   components: {
     programmes: Programmes,
     projects: Projects,
