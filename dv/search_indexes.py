@@ -36,6 +36,9 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Programme
 
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter(is_tap=False)
+
     def prepare_kind(self, obj):
         return 'Programme'
 
