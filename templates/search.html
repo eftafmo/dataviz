@@ -100,11 +100,11 @@
           {% else %}
             disabled="disabled"
           {% endif %}
-        >Previous</button>
+        > < </button>
 
         <div class="pagination-pages">
           {% for page_num in paginator.page_range %}
-            {% if page_num >= page_obj.number|add:"-2" and page_num <= page_obj.number|add:"2" or page_num == 1 or page_num == paginator.num_pages %}
+            {% if page_num >= page_obj.number|add:"-1" and page_num <= page_obj.number|add:"1" or page_num == 1 or page_num == paginator.num_pages %}
             <button
               name="page"
               class="btn btn-default"
@@ -130,7 +130,7 @@
           {% else %}
             disabled="disabled"
           {% endif %}
-        >Next</button>
+        > > </button>
 
       </div>
     </div>
