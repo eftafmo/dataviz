@@ -64,19 +64,114 @@
               <span>{{ res.name }}</span>
             {% endif %}
           </h4>
-          <span class="country">
-            <img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
-                 alt="flag"
-                 height="20px"
-            > {{ res.state_name.0 }}
-          </span>
-          <p class="description">
+         <p class="description">
+
           {% if form.facets.kind.0 == 'Programme' %}
-            {{ res.summary|truncatechars_html:500 }}
+
+            <div>
+              <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
+                alt="{{ res.state_name.0 }} flag"
+                height="20px">&nbsp;{{ res.state_name.0 }}</span> |
+              <span>{{ res.programme_status.0 }}</span>
+            </div>
+            <div>
+              <span>{{ res.financial_mechanism_ss.0 }}</span> |
+              <span>PS: {{ res.priority_sector_ss.0 }}</span> |
+              <span>
+                PA:
+                {% for pa in res.programme_area_ss %}
+                  <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </span>
+            </div>
+            <div>
+              <span>
+                Outcomes:
+                {% for outcome in res.outcome_ss %}
+                  <span>{{ outcome }}</span>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </span>
+            </div>
+            <div><p>{{ res.summary|truncatechars_html:500 }}</p></div>
+
           {% elif form.facets.kind.0 == 'Project' %}
-            {# nothing to show, name is already dispalyed #}
+
+            <div>
+              <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
+                alt="{{ res.state_name.0 }} flag"
+                height="20px">&nbsp;{{ res.state_name.0 }}</span> |
+              <span>{{ res.project_status.0 }}</span>
+            </div>
+            <div>
+              <span>{{ res.financial_mechanism_ss.0 }}</span> |
+              <span>PS: {{ res.priority_sector_ss.0 }}</span> |
+              <span>PA: {{ res.programme_area_ss.0 }}</span>
+            </div>
+            <div>
+              <span>Programme: {{ res.programme_name.0 }}</span>
+            </div>
+            <div>
+              <span>Outcome: {{ res.project_outcome }}</span>
+            </div>
+            <div>
+              <span>
+                Themes:
+                {% for th in res.theme_ss %}
+                  <span>{{ th }}</span>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </span>
+            </div>
+
           {% elif form.facets.kind.0 == 'Organisation' %}
-            {# nothing to show, name is already dispalyed #}
+
+            <div>
+              <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
+                alt="{{ res.state_name.0 }} flag"
+                height="20px">&nbsp;{{ res.state_name.0 }}</span> |
+              <span>{{ res.org_type_category }}</span> |
+              <span>{{ res.org_type }}</span>
+            </div>
+
+            <div>
+              <span>{{ res.financial_mechanism_ss.0 }}</span> |
+              <span>PS: {{ res.priority_sector_ss.0 }}</span> |
+              <span>
+                PA:
+                {% for pa in res.programme_area_ss %}
+                  <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </span>
+            </div>
+
+            <div>
+              <span>
+                Role:
+                {% for role in res.role_ss %}
+                  <span>{{ role }}</span>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </span>
+            </div>
+
+            <div>
+            {% if res.programme_name %}
+              Programmes:
+              <ul>
+              {% for pr in res.programme_name %}
+                <li>{{ pr }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% if res.project_name %}
+              Projects:
+              <ul>
+              {% for pr in res.project_name %}
+                <li>{{ pr }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+            </div>
+
           {% else %}
             {{ res.text }}
           {% endif %}

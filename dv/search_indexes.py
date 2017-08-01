@@ -98,6 +98,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     name = indexes.CharField(model_attr='name', indexed=False)
+    project_outcome = indexes.CharField(model_attr='outcome__name', indexed=False)
 
     def get_model(self):
         return Project
