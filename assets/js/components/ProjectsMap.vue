@@ -46,8 +46,8 @@ export default BaseMap.extend({
   data() {
     return {
       // need to set these so pointer events work in IE
-      //beneficiary_colour_default: "#fff",
-      //region_colour_default: "#fff",
+      beneficiary_colour_default: "#fff",
+      region_colour_default: "#fff",
     };
   },
 

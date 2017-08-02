@@ -351,6 +351,7 @@ export default Chart.extend({
     },
 
     handleFilterBeneficiary(newid, oldid) {
+      const $this = this;
       const t = this.getTransition();
 
       if (newid) {
@@ -383,8 +384,8 @@ export default Chart.extend({
                 .style("display", "none")
                 .classed("transitioning", false)
                 // also reset regions to default colour
-                .select("path")
-                .attr("fill", this.region_colour_default);
+                .selectAll("path")
+                .attr("fill", $this.region_colour_default);
             });
       }
 
