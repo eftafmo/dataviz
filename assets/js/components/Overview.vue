@@ -403,15 +403,6 @@ export default Chart.extend({
       );
     },
 
-    // TODO: actually, these should come from the mixins
-    // (and the constants should be arrays, and the objects pre-computed)
-    FM_ARRAY() {
-      return d3.values(this.FMS);
-    },
-    BENEFICIARY_ARRAY() {
-      return d3.values(this.BENEFICIARIES);
-    },
-
     data() {
       const matrix = [],
             dataset = this.aggregate(

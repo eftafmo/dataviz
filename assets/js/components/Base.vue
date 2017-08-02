@@ -310,23 +310,9 @@ export default Vue.extend({
       return out;
     },
 
-    _main() {
-      this.beforeMain();
-      this.main();
-    },
-    beforeMain() {
-      /*
-       * some components will want to run initialisation code
-       * when data becomes available, but before main.
-       * this is the place to do it.
-       */
-      return;
-    },
-
     main() {
       /*
-       * main entry point.
-       * implementations need to make sure this only gets called on ready
+       * main entry point, only called on ready
        */
 
       // no need to throw, some components could be Vue-only
@@ -369,7 +355,7 @@ export default Vue.extend({
     },
   },
   watch: {
-    'isReady': '_main',
+    'isReady': 'main',
 
     // make sure every key exists from the start
     'filters.fm': 'handleFilterFm',

@@ -1,8 +1,5 @@
 <style lang="less">
 .map-viz {
-  // defs
-  @duration: .5s;
-
   .chart {
     .states > .beneficiary,
     .regions > .state > g.layer > g {
@@ -29,71 +26,6 @@
       }
     }
   }
-
-  .nuts-selector {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 7px 10px;
-    background-color: rgba(249, 249, 249, .7);
-
-    border: 1px solid #bbc;
-    border-radius: 2px;
-
-    opacity: 0;
-    transition: opacity @duration;
-
-    &.visible {
-      //display: block;
-      opacity: .5;
-    }
-
-    &:hover {
-      opacity: 1;
-      transition: none;
-      background-color: rgba(255, 255, 255, .9);
-      border-color: #aab;
-    }
-
-    white-space: nowrap;
-
-    * {
-      vertical-align: middle;
-    }
-
-    label {
-      display: block;
-      float: left;
-    }
-
-    div {
-      float: right;
-      margin-left: 1em;
-
-      input {
-        background: none;
-        display: block;
-        width: 6rem;
-      }
-
-      label {
-        float: left;
-        display: block;
-        width: 20%;
-        cursor: pointer;
-
-        &:nth-of-type(2) {
-          text-align: center;
-          margin: 0 20%;
-        }
-        &:last-of-type {
-          text-align: right;
-          float: right;
-        }
-      }
-    }
-  }
 }
 </style>
 
@@ -111,7 +43,9 @@ export default BaseMap.extend({
 
   data() {
     return {
-      beneficiary_colour_default: '#fff',
+      // need to set these so pointer events work in IE
+      //beneficiary_colour_default: "#fff",
+      //region_colour_default: "#fff",
     };
   },
 
@@ -133,39 +67,6 @@ export default BaseMap.extend({
 
       return {width: bounds.width / 10, height: bounds.height};
     },
-  },
-
-  mounted() {
-    // create the nuts selector. TODO: move in vue.
-    const $this = this;
-
-    const nutser = d3.select(this.$el.querySelector("svg").parentNode)
-                     .append("div")
-                     .attr("class", "nuts-selector");
-
-    nutser.append("label")
-          .text("show NUTS level");
-
-    const container = nutser.append("div");
-
-    const slider = container.append("input")
-                            .attr("type", "range")
-                            .attr("min", 1)
-                            .attr("max", 3)
-                            .attr("step", 1)
-                            .attr("value", this.nuts_level)
-                            .on("change", function() {
-                              $this.nuts_level = this.value;
-                            });
-
-    container.selectAll("label").data([1, 2, 3]).enter()
-             .append("label")
-             .text(d => d)
-             .on("click", function(d) {
-               if (slider.property("value") != d)
-                 slider.property("value", d)
-                       .dispatch("change");
-             });
   },
 
   methods: {
@@ -200,18 +101,13 @@ export default BaseMap.extend({
       } else {
         return `
           <div class="title-container">
-            <span class="name">${ this.region_names[d.id] } (${d.id})</span>
+            <span class="name">${ this.map.geodetails[d.id].name } (${d.id})</span>
           </div>
           <ul>
             ${ details }
           </ul>
         `;
       }
-    },
-
-    render() {
-      this.$super.render();
-      if (this.filters.beneficiary) this.showNutsSelector();
     },
 
     get_project_count(d) {
@@ -223,8 +119,8 @@ export default BaseMap.extend({
                            .attr("opacity", 1);
 
       const _c = (d) => ({
-        x: this.geodetails[d.id].centroid[0],
-        y: this.geodetails[d.id].centroid[1]
+        x: this.map.geodetails[d.id].centroid.x,
+        y: this.map.geodetails[d.id].centroid.y,
       });
 
       container
@@ -396,7 +292,7 @@ export default BaseMap.extend({
       return out;
     },
 
-    _renderRegionData(state, regiondata, t) {
+    renderRegionData(state, regiondata, t) {
       if (t === undefined) t = this.getTransition();
 
       const dataset = this._mkLevelData(regiondata);
@@ -408,7 +304,8 @@ export default BaseMap.extend({
         .selectAll("g.region");
 
       regions.filter( (d) => (d.type == "Feature" ) )
-             .call(this._mkProjectCircles, this.zoomLevel);
+             .call(this._mkProjectCircles,
+                   this.map.geodetails[state].transform.k);
 
       regions = regions.data(
           d => d.regions,
@@ -426,27 +323,6 @@ export default BaseMap.extend({
 
         .transition(t)
         .attr("opacity", 0);
-    },
-
-    _displayNutsSelector(yes) {
-      const selector = d3.select(this.$el).select(".nuts-selector");
-      selector.style("display", yes ? "block" : null)
-      setTimeout(() => selector.classed("visible", yes));
-    },
-
-    showNutsSelector() {
-      this._displayNutsSelector(true);
-    },
-
-    hideNutsSelector() {
-      this._displayNutsSelector(false);
-    },
-
-    handleFilterBeneficiary(val, old) {
-      this.$super.handleFilterBeneficiary(val, old);
-
-      if (val) this.showNutsSelector();
-      else this.hideNutsSelector();
     },
   },
 });

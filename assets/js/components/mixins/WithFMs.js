@@ -11,6 +11,13 @@ export default {
     'fm-legend': FMLegendComponent,
   },
 
+  computed: {
+    // TODO: make the constants arrays, and the objects pre-computed
+    FM_ARRAY() {
+      return d3.values(this.FMS);
+    },
+  },
+
   methods: {
     fmcolour(fmid) {
       return FMS[fmid].colour;

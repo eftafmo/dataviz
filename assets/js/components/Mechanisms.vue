@@ -202,8 +202,6 @@ export default Chart.extend({
       const $this = this,
             chart = this.chart;
 
-      // special trick to animate this on first render too
-      this.rendered = true;
       const t = this.getTransition();
 
       // we always use width 100, because viewBox and preserveAspectRatio=none

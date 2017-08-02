@@ -11,7 +11,11 @@ export default BaseMap.extend({
       nuts_level: 3,
       draw_nuts_levels: [3],
 
-      default_region_colour: interpolateYlGn(0),
+      beneficiary_colour_default: "#ddd",
+      beneficiary_colour_hovered: "#9dccec",
+      beneficiary_colour_zero: "#eee",
+
+      region_colour_default: interpolateYlGn(0),
     };
   },
 
@@ -44,7 +48,7 @@ export default BaseMap.extend({
       } else {
         return `
           <div class="title-container">
-            <span class="name">${ this.region_names[d.id] } (${d.id})</span>
+            <span class="name">${ this.map.geodetails[d.id].name } (${d.id})</span>
           </div>
           ${ this.currency(allocation) }
           <small>(Temporary)<small>
@@ -82,7 +86,7 @@ export default BaseMap.extend({
       // and TODO: disable filtering for 0 / missing items
     },
 
-    _renderRegionData(state, regiondata, t) {
+    renderRegionData(state, regiondata, t) {
       if (t === undefined) t = this.getTransition();
 
       const values = regiondata.map( (x) => x.allocation ),
