@@ -326,6 +326,16 @@ export default BaseMap.extend({
         .transition(t)
         .attr("opacity", 0);
     },
+
+    handleFilterBeneficiary(newid, oldid) {
+      this.$super.handleFilterBeneficiary(newid, oldid);
+
+      // hide the big circles, they're distractive
+      const t = this.getTransition();
+      this.chart.selectAll('g.states > g.beneficiary > g')
+        .transition(t)
+        .attr("opacity", Number(!newid));
+    },
   },
 });
 </script>

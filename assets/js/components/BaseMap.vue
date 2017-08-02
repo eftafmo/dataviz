@@ -411,6 +411,9 @@ export default Chart.extend({
 
       // and ...
       this.doRenderRegionData(t);
+
+      // and also, because
+      this.tip.hide()
     },
 
     handleFilterFm(val, old) {
