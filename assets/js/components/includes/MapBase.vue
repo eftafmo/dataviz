@@ -50,7 +50,8 @@
 </template>
 
 <style lang="less">
-.map-viz {
+// this is to be included only by the Map mixin, which uses this selector
+.viz.map {
   // defs
   // - fills
   @water: #cbe9f6;
@@ -629,12 +630,12 @@ export default Vue.extend({
             graticule_stroke = this.graticule_stroke * scaleFactor;
 
       return `
-        .map-viz .chart .terrain path,
-        .map-viz .chart .states path,
-        .map-viz .chart .regions path {
+        .viz.map .chart .terrain path,
+        .viz.map .chart .states path,
+        .viz.map .chart .regions path {
           stroke-width: ${terrain_stroke};
         }
-        .map-viz .chart .base .graticule {
+        .viz.map .chart .base .graticule {
           stroke-width: ${graticule_stroke};
         }
       `;

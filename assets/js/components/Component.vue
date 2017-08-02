@@ -12,12 +12,33 @@
 
 
 <script>
+import Vue from 'vue';
 import Base from './Base';
 
 
 export default Base.extend({
+  // set this on a derived component to build a "type tree".
+  // useful for component class names.
+  type: "viz",
+
   props: {
     datasource: String,
   },
+
+  computed: {
+    classNames() {
+      return this.$options.type;
+    },
+  },
 });
+
+
+// concatenate the type values
+Vue.config.optionMergeStrategies.type = function (previous, current) {
+  if (!previous) return current
+  if (!current) return previous
+
+  return previous + " " + current
+}
+
 </script>

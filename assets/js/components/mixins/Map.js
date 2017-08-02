@@ -12,6 +12,8 @@ import MapBase from '../includes/MapBase';
 
 
 export default {
+  type: "map",
+
   components: {
     "map-base": MapBase,
   },

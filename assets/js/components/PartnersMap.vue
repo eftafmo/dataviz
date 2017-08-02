@@ -1,5 +1,5 @@
 <template>
-<div class="map-viz partnerships" :class="{ rendering: !rendered }">
+<div :class="[$options.type, { rendering: !rendered }]">
 
   <map-base
       ref="base"
@@ -13,7 +13,7 @@
 
 
 <style lang="less">
-.map-viz.partnerships {
+.viz.map.partnerships {
 
 }
 </style>
@@ -28,6 +28,8 @@ import MapMixin from './mixins/Map';
 
 
 export default Chart.extend({
+  type: "partnerships",
+
   mixins: [
     MapMixin,
   ],

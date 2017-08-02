@@ -6,6 +6,8 @@ import BaseMap from './BaseMap';
 
 
 export default BaseMap.extend({
+  type: "grants",
+
   data() {
     return {
       nuts_level: 3,

@@ -1,5 +1,5 @@
 <template>
-<div class="map-viz allocation" :class="{ rendering: !rendered }">
+<div :class="[$options.type, { rendering: !rendered }]">
 
   <div v-if="hasData" class="dropdown">
     <dropdown filter="beneficiary" title="No filter selected" :items="data"></dropdown>
@@ -42,7 +42,7 @@
 
 
 <style lang="less">
-.map-viz.allocation {
+.viz.map.allocation {
   @beneficiary: #ddd;
 
   .hovered {
@@ -130,6 +130,8 @@ import NutsSelector from './includes/NutsSelector';
 
 
 export default Chart.extend({
+  type: "allocation",
+
   mixins: [
     MapMixin,
     WithCountriesMixin,

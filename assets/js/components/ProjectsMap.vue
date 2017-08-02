@@ -1,5 +1,5 @@
 <style lang="less">
-.map-viz {
+.viz.map.projects {
   .chart {
     .states > .beneficiary,
     .regions > .state > g.layer > g {
@@ -37,6 +37,8 @@ import ProjectsMixin from './mixins/Projects';
 
 
 export default BaseMap.extend({
+  type: "projects",
+
   mixins: [
     ProjectsMixin,
   ],
