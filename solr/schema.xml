@@ -133,6 +133,8 @@
     
     <field name="theme_ss" type="string" indexed="true" stored="true" multiValued="true" />
     
+    <field name="project_outcome" type="string" indexed="false" stored="true" multiValued="false" />
+    
     <uniqueKey>id</uniqueKey>
 
     <!--
