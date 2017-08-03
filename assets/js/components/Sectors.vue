@@ -1,5 +1,5 @@
 <template>
-<div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div class="sectors-viz clearfix" :style="{minHeight: legend_height + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <h2>{{title}}</h2>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <chart-container :width="width" :height="height">
@@ -13,7 +13,7 @@
   </svg>
   </transition>
 </chart-container>
-  <div class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
+  <div class="legend" v-if="hasData" :style="{minHeight: legend_height + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
         tag="ul"
@@ -332,7 +332,8 @@ export default Chart.extend({
 
       // percentage of mid-donut void
       inner_radius: .65,
-      title: 'Allocation by sector'
+      title: 'Allocation by sector',
+      legend_height: this.svgWidth,
     };
   },
 
@@ -517,6 +518,12 @@ export default Chart.extend({
     // the value displayed for legend items
     display(item) {
       return this.currency(item.value);
+    },
+
+    legendHeight() {
+      const $this = this;
+      let current_height = this.$el.querySelector('.legend').clientHeight;
+      return d3.max([current_height, this.svgWidth])
     },
 
 
@@ -841,6 +848,7 @@ export default Chart.extend({
     },
 
     click(d) {
+      this.legend_height = this.legendHeight()
       const func = d.depth == 1 ? this.toggleSector : this.toggleArea;
       func(d, this);
     },
