@@ -36,6 +36,12 @@ import FMLegendComponent from './includes/FMLegend';
 const Mechanisms = BaseMechanisms.extend({
   mixins: [PartnersMixin],
 
+  data() {
+    return {
+      title: 'Financial mechanisms'
+    };
+  },
+
   computed: {
     aggregated() {
       // allocation amounts are multiplied by the number of donors,

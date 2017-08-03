@@ -122,7 +122,14 @@ a.muted:hover {
   text-align: left;
   font-weight: 400;
   color: rgb(0, 117, 188);
-  margin-top: 1rem;
+  margin-top: 0;
+  margin-bottom: 4rem;
+  display: inline-block;
+}
+@media (max-width: 950px){
+  .grant-dataviz h2 {
+    margin-bottom: .5rem;
+  }
 }
 
 h2 {

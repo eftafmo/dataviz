@@ -1,8 +1,7 @@
 <template>
 <div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
-  <div v-if="rendered" class="dropdown">
-    <dropdown filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
-  </div>
+  <h2>{{title}}</h2>
+  <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
@@ -101,9 +100,6 @@
   @inactive_opacity: .7;
 
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   @media(min-width: 1027px) and (max-width: 1400px) {
     display: block;
   }
@@ -116,7 +112,8 @@
     width: 40%;
     height: auto;
     display: block;
-    margin-right: 3rem;
+    margin-right: auto;
+    margin-left: auto;
     min-width: 200px;
 
     @media (min-width: 1000px) and (max-width: 1400px) {
@@ -125,7 +122,8 @@
 
     @media (min-width:1400px), (max-width:700px) {
        width: 50%;
-       margin-right: 0;
+       margin-right: auto;
+       margin-left: auto;
     }
   }
 
@@ -334,6 +332,7 @@ export default Chart.extend({
 
       // percentage of mid-donut void
       inner_radius: .65,
+      title: 'Allocation by sector'
     };
   },
 

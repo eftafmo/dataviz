@@ -48,6 +48,7 @@ export default BaseMap.extend({
       // need to set these so pointer events work in IE
       beneficiary_colour_default: "#fff",
       region_colour_default: "#fff",
+      title: 'Projects Map'
     };
   },
 

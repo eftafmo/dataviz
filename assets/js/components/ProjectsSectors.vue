@@ -8,6 +8,12 @@ import ProjectsMixin from './mixins/Projects';
 export default Sectors.extend({
   mixins: [ProjectsMixin],
 
+  data(){
+    return {
+      title: 'Projects by sector'
+    }
+  },
+
   methods: {
     display(item) {
       const count = item.depth == 2 ? item.data.project_count :

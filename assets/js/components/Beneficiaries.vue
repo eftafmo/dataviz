@@ -1,8 +1,7 @@
 <template>
 <div class="beneficiaries-viz">
-   <div v-if="rendered" class="dropdown">
-    <dropdown filter="beneficiary" title="No filter selected" :items="nonzero"></dropdown>
-  </div>
+   <h2>{{title}}</h2>
+    <dropdown v-if="rendered" filter="beneficiary" title="No filter selected" :items="nonzero"></dropdown>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="FMS" class="clearfix">
     </fm-legend>
@@ -169,6 +168,7 @@ export default Chart.extend({
         flagHeight: 1.4,
         flagPadding: .4,
       },
+      title: 'Funding across beneficiary states'
     };
   },
 

@@ -1,6 +1,6 @@
 <template>
 <div :class="[$options.type, { rendering: !rendered }]">
-
+  <h2>{{title}}</h2>
   <map-base
       ref="base"
       v-on:rendered="baseRendered"
@@ -36,6 +36,7 @@ export default Chart.extend({
 
   data() {
     return {
+      title: 'Network map'
     };
   },
 

@@ -1,10 +1,7 @@
 <template>
 <div :class="[$options.type, { rendering: !rendered }]">
-
-  <div v-if="hasData" class="dropdown">
-    <dropdown filter="beneficiary" title="No filter selected" :items="data"></dropdown>
-  </div>
-
+  <h2>{{title}}</h2>
+  <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
   <map-base
       ref="base"
       v-on:rendered="baseRendered"
@@ -160,6 +157,7 @@ export default Chart.extend({
 
       draw_nuts_levels: [1, 2, 3],
       nuts_level: 3, // the startling nuts level
+      title: 'Funding map'
     };
   },
 

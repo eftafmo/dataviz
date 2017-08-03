@@ -6,6 +6,12 @@ import PartnersMixin from './mixins/Partners';
 export default Beneficiaries.extend({
   mixins: [PartnersMixin],
 
+  data() {
+    return {
+      title: 'Organizations with donor partner by beneficiary'
+    }
+  },
+
   methods: {
     tooltipTemplate(d) {
       // TODO: oh my, the copy-paste. it hurts.

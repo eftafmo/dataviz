@@ -10,14 +10,13 @@
 <div class="lg-column">
 
   <div class="grant-dataviz" id="financial-mechanisms">
-    <h2>Funding by financial mechanism</h2>
     <mechanisms
         :initial="dataset"
-    ></mechanisms>
+    >
+    </mechanisms>
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
-    <h2>Allocation by sector</h2>
     <sectors
         :initial="dataset"
     ></sectors>
@@ -29,7 +28,6 @@
 <div class="lg-column">
 
   <div class="grant-dataviz" id="funding-map">
-    <h2>Funding map</h2>
     <xmap
         :initial="dataset"
         details-datasource="{% url "api:beneficiary-detail" "XX" %}"
@@ -37,7 +35,6 @@
   </div>
 
   <div class="grant-dataviz" id="beneficiary-states">
-    <h2>Funding across beneficiary states</h2>
     <beneficiaries
         :initial="dataset"
     ></beneficiaries>

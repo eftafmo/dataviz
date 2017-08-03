@@ -8,6 +8,13 @@ import PartnersMixin from './mixins/Partners';
 export default Sectors.extend({
   mixins: [PartnersMixin],
 
+  data(){
+    return {
+      title: 'Donor partner programmes by priority sector'
+    }
+  },
+
+
   methods: {
     value(d) {
       return d.partnership_programmes === undefined ?

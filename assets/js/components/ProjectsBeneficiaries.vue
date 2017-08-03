@@ -6,6 +6,12 @@ import ProjectsMixin from './mixins/Projects';
 export default Beneficiaries.extend({
   mixins: [ProjectsMixin],
 
+  data() {
+    return {
+      title: 'Projects across beneficiary states'
+    }
+  },
+
   methods: {
     tooltipTemplate(d) {
       // TODO: oh my, the copy-paste. it hurts.

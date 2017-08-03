@@ -6,6 +6,12 @@ import ProjectsMixin from './mixins/Projects';
 export default Mechanisms.extend({
   mixins: [ProjectsMixin],
 
+  data() {
+    return {
+      title: 'Projects by financial mechanism'
+    };
+  },
+
   methods: {
     tooltipTemplate(d) {
       // TODO: this is silly. turn this into a component.

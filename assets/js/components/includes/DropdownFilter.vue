@@ -1,5 +1,5 @@
 <template>
-  <select class="viz-select" @change="setFilter">
+  <select class="viz-select clearfix" @change="setFilter">
     <option value="">
       {{ title }}
     </option>
@@ -15,12 +15,7 @@
 
 <style lang="less">
   .viz-select {
-    position: absolute;
-    top: -4rem;
-    @media (min-width: 1400px) {
-      top: -6.4rem;
-    }
-    right: 0;
+    float: right;
     border-color: #fff;
     background: #fff;
     color: #aaa;
@@ -33,13 +28,9 @@
     }
 
     @media (max-width: 950px){
-    position: relative;
-    float: initial;
-    top: 0;
-    right: initial;
-    display: block;
-    margin-bottom: 1rem;
-    margin-top:-1rem;
+      float: initial;
+      margin-bottom: 4rem;
+      display: block;
     }
   }
 
