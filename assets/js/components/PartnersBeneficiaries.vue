@@ -12,6 +12,16 @@ export default Beneficiaries.extend({
     }
   },
 
+  updated() {
+    let dropdown = this.$el.querySelector('.viz-select');
+    let title = this.$el.querySelector('h2')
+    if(!dropdown) return;
+    dropdown.style.cssFloat = 'initial'
+    dropdown.style.marginBottom = '4rem'
+    title.style.marginBottom = '1rem'
+  },
+
+
   methods: {
     tooltipTemplate(d) {
       // TODO: oh my, the copy-paste. it hurts.

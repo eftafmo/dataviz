@@ -10,10 +10,18 @@ export default Sectors.extend({
 
   data(){
     return {
-      title: 'Donor partner programmes by priority sector'
+      title: 'Donor partner programmes by priority sector',
     }
   },
 
+  updated() {
+    let dropdown = this.$el.querySelector('.viz-select');
+    let title = this.$el.querySelector('h2')
+    if(!dropdown) return;
+    dropdown.style.cssFloat = 'initial'
+    dropdown.style.marginBottom = '4rem'
+    title.style.marginBottom = '1rem'
+  },
 
   methods: {
     value(d) {
@@ -28,7 +36,6 @@ export default Sectors.extend({
 
     tooltipTemplate(d) {
       // TODO: such horribleness. sad face.
-
       let thing = "programme area",
           dss = d.data.donor_states,
           bss = d.data.beneficiaries;
