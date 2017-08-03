@@ -3,6 +3,8 @@
  * using webpack's svg-sprite-loader.
  */
 
+import * as d3 from 'd3';
+
 import _COUNTRIES from 'js/constants/countries.json5';
 
 export const COUNTRIES = {};
@@ -36,9 +38,6 @@ const req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/
 for (const code in COUNTRIES) {
   req(`./${get_flag_name(code)}.png`);
 }
-
-
-import * as d3 from 'd3';
 
 
 function get_longest_name(obj) {
