@@ -13,7 +13,7 @@
   </svg>
   </transition>
 </chart-container>
-  <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: legend_height + 'px'}">
+  <div ref="legend" class="legend" v-if="hasData" :style="{height: legend_height + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
         tag="ul"
@@ -156,6 +156,7 @@
     display: block;
     height: auto;
     position: relative;
+    overflow: hidden;
     @media (min-width:1400px), (max-width:1025px) {
       width: 100%;
       margin-top: 1rem;
