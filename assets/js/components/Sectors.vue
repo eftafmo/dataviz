@@ -13,7 +13,7 @@
   </svg>
   </transition>
 </chart-container>
-  <div class="legend" v-if="hasData" :style="{minHeight: legend_height + 'px'}">
+  <div @mouseover="hoverLegend()" ref="legend" class="legend" v-if="hasData" :style="{minHeight: legend_height + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
         tag="ul"
@@ -334,6 +334,7 @@ export default Chart.extend({
       inner_radius: .65,
       title: 'Allocation by sector',
       legend_height: this.svgWidth,
+      hover_legend_height: null,
     };
   },
 
@@ -522,8 +523,13 @@ export default Chart.extend({
 
     legendHeight() {
       const $this = this;
-      let current_height = this.$el.querySelector('.legend').clientHeight;
-      return d3.max([current_height, this.svgWidth])
+      let current_height = this.$refs.legend.clientHeight;
+      return Math.max(current_height, $this.hover_legend_height)
+    },
+
+    hoverLegend() {
+       let current_height = this.$refs.legend.clientHeight;
+       this.hover_legend_height = current_height;
     },
 
 
@@ -848,7 +854,6 @@ export default Chart.extend({
     },
 
     click(d) {
-      this.legend_height = this.legendHeight()
       const func = d.depth == 1 ? this.toggleSector : this.toggleArea;
       func(d, this);
     },
@@ -925,6 +930,7 @@ export default Chart.extend({
       // TODO: share a transition instance between these.
       this.render();
       this.renderAreasStuff();
+      this.legend_height = this.legendHeight()
     },
 
     handleFilterArea(val) {
