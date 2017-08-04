@@ -71,3 +71,10 @@ export const Projects = Viz.extend({
     projects: components.Projects,
   },
 });
+
+export const Search = Root.extend({
+  name: "Search",
+  components: {
+    sidebar: components.Sidebar,
+  },
+});

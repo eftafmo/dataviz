@@ -34,6 +34,7 @@ export default Vue.extend({
       isMobileExpanded: false,
     }
   },
+
   watch: {
     onMobile (matches) {
         if (matches) {
@@ -44,7 +45,7 @@ export default Vue.extend({
         }
   },
 },
-  updated () {
+  created () {
     // Add a media query listener handle mobile events
     var mq = window.matchMedia ('(max-width: 768px)');
     var self = this;
