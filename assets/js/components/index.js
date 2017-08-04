@@ -22,7 +22,6 @@ export {default as ProjectsSummary} from './ProjectsSummary';
 export {default as GlobalFilters} from './GlobalFilters';
 export {default as Results} from './Results';
 export {default as Programmes} from './Programmes';
-export {default as Sidebar} from './Sidebar';
 export {default as News} from './News';
 
 export {default as Projects} from './Projects'
