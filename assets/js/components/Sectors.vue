@@ -398,7 +398,6 @@ export default Chart.extend({
     },
 
     data() {
-      const $this = this;
       // TODO: generate this on the server instead ¤
       let sectortree = this._sectortree;
       if (sectortree === null) {
