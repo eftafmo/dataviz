@@ -1,5 +1,5 @@
 <template>
-<div class="sectors-viz clearfix" :style="{minHeight: legend_height + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <h2>{{title}}</h2>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <chart-container :width="width" :height="height">
@@ -13,7 +13,7 @@
   </svg>
   </transition>
 </chart-container>
-  <div ref="legend" class="legend" v-if="hasData" :style="{height: legend_height + 'px'}">
+  <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
         tag="ul"
@@ -156,7 +156,6 @@
     display: block;
     height: auto;
     position: relative;
-    overflow: hidden;
     @media (min-width:1400px), (max-width:1025px) {
       width: 100%;
       margin-top: 1rem;
@@ -334,7 +333,6 @@ export default Chart.extend({
       // percentage of mid-donut void
       inner_radius: .65,
       title: 'Allocation by sector',
-      legend_height: this.svgWidth,
     };
   },
 
@@ -908,9 +906,6 @@ export default Chart.extend({
     },
 
     handleFilterSector(val, old) {
-      const $this = this;
-      //old legend height
-      let prev_height = this.$refs.legend.clientHeight;
       // remember this soon-to-be previous sector.
       // (it will be removed from the queue during handling of areas §)
       if (val) this._prevsector.push(val);
@@ -921,9 +916,6 @@ export default Chart.extend({
       // TODO: share a transition instance between these.
       this.render();
       this.renderAreasStuff();
-      //new legend height
-      let current_height = this.$refs.legend.clientHeight;
-      this.legend_height = Math.max(prev_height, current_height)
     },
 
     handleFilterArea(val) {
