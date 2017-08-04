@@ -3,6 +3,7 @@ import bleach
 import re
 from django.db import models
 from enumfields import EnumField, Enum
+from ckeditor.fields import RichTextField
 from django.utils.translation import ugettext_lazy as _
 from dv.lib.models import ImportableModelMixin
 from dv.lib import utils
@@ -743,3 +744,14 @@ class News(models.Model):
 
     class Meta:
         ordering = ('-created',)
+
+
+class StaticContent(models.Model):
+
+    name = models.CharField(
+        max_length=64, null=False, blank=False, unique=True)
+
+    body = RichTextField(null=False, blank=False)
+
+    def __str__(self):
+        return self.name

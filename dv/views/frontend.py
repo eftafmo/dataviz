@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from webpack_loader import utils as webpack
 from dv.lib import utils
+from dv.models import StaticContent
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 
@@ -33,6 +34,11 @@ def projects(request):
 
 # def search(request):
 #     return render(request, 'search.html')
+
+def disclaimer(request):
+    content = StaticContent.objects.filter(name='Disclaimer')
+    context = dict(body=content[0].body if content else None)
+    return render(request, 'disclaimer.html', context)
 
 def sandbox(request):
     return render(request, 'sandbox.html')

@@ -1,4 +1,5 @@
 bleach>=2,<=3
+django-ckeditor==5.0.3
 Django>=1.11,<1.12
 Jinja2>=2.9.6,<2.10
 pyexcel>=0.4.2,<0.5

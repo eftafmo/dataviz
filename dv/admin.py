@@ -12,4 +12,7 @@ _models = [m for m in locals().values()
            and issubclass(m, models.Model)
            and not (m._meta.abstract or m._meta.proxy)]
 for model in _models:
-    admin.site.register(model)
+    try:
+        admin.site.register(model)
+    except admin.sites.AlreadyRegistered:
+        pass

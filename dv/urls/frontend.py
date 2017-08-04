@@ -9,6 +9,8 @@ urlpatterns = [
     url(r'^partners/$', views.partners, name='partners'),
     url(r'^projects/$', views.projects, name='projects'),
 
+    url(r'^disclaimer/$', views.disclaimer, name='disclaimer'),
+
     url(r'^search/$', views.FacetedSearchView.as_view(), name='search'),
     url(r'^search/programme/$', views.ProgrammeFacetedSearchView.as_view(), name='search_programme'),
     url(r'^search/project/$', views.ProjectFacetedSearchView.as_view(), name='search_project'),

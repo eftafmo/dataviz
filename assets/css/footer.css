@@ -10,3 +10,26 @@
 .footer a {
   color: black;
 }
+
+.modal-popup {
+  position: fixed;
+  padding: 1rem 5rem;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px #888;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  overflow-y: auto;
+  z-index: 201;
+}
+
+.close-btn {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  font-size: 2rem;
+  color: #898989;
+}

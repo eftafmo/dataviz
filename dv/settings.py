@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'webpack_loader',
     'dv',
+    'ckeditor',
 ]
 
 if not DEBUG:
@@ -142,6 +143,24 @@ STATICFILES_DIRS = (
     # include webpack output
     (os.path.join(BUILD_DIR, 'webpack-bundles')),
 )
+
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar_bdr': [
+            ['Format', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'Undo', 'Redo', 'RemoveFormat'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Flash', 'Table', 'Smiley', 'SpecialChar', 'HorizontalRule'],
+            ['TextColor', 'BGColor'],
+            ['Maximize', 'ShowBlocks', '-', 'Source'],
+        ],
+        'toolbar': 'bdr',
+        'width': '100%',
+    },
+}
+
 
 WEBPACK_LOADER = {
     'DEFAULT': {
