@@ -13,7 +13,7 @@
   </svg>
   </transition>
 </chart-container>
-  <div @mouseover="hoverLegend()" ref="legend" class="legend" v-if="hasData" :style="{minHeight: legend_height + 'px'}">
+  <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: legend_height + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
         tag="ul"
@@ -334,7 +334,6 @@ export default Chart.extend({
       inner_radius: .65,
       title: 'Allocation by sector',
       legend_height: this.svgWidth,
-      hover_legend_height: null,
     };
   },
 
@@ -520,18 +519,6 @@ export default Chart.extend({
     display(item) {
       return this.currency(item.value);
     },
-
-    legendHeight() {
-      const $this = this;
-      let current_height = this.$refs.legend.clientHeight;
-      return Math.max(current_height, $this.hover_legend_height)
-    },
-
-    hoverLegend() {
-       let current_height = this.$refs.legend.clientHeight;
-       this.hover_legend_height = current_height;
-    },
-
 
     areasBeforeEnter(el) {
       // get height from a clone, it's safer
@@ -920,6 +907,9 @@ export default Chart.extend({
     },
 
     handleFilterSector(val, old) {
+      const $this = this;
+      //old legend height
+      let prev_height = this.$refs.legend.clientHeight;
       // remember this soon-to-be previous sector.
       // (it will be removed from the queue during handling of areas §)
       if (val) this._prevsector.push(val);
@@ -930,7 +920,9 @@ export default Chart.extend({
       // TODO: share a transition instance between these.
       this.render();
       this.renderAreasStuff();
-      this.legend_height = this.legendHeight()
+      //new legend height
+      let current_height = this.$refs.legend.clientHeight;
+      this.legend_height = Math.max(prev_height, current_height)
     },
 
     handleFilterArea(val) {
