@@ -13,7 +13,7 @@
   </svg>
   </transition>
 </chart-container>
-  <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: svgWidth + 'px'}">
+  <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: minHeight + 'px'}">
     <!-- much repetition here, but not worth doing a recursive component -->
     <transition-group
         tag="ul"
@@ -333,6 +333,7 @@ export default Chart.extend({
       // percentage of mid-donut void
       inner_radius: .65,
       title: 'Allocation by sector',
+      minHeight: null,
     };
   },
 
@@ -397,6 +398,7 @@ export default Chart.extend({
     },
 
     data() {
+      const $this = this;
       // TODO: generate this on the server instead ¤
       let sectortree = this._sectortree;
       if (sectortree === null) {
@@ -472,10 +474,8 @@ export default Chart.extend({
         if (d.children !== undefined) return 0;
         // filter out disabled items
         if (!isEnabled(d)) return 0;
-
         return this.value(d);
       });
-
       return tree;
     },
 
@@ -924,6 +924,29 @@ export default Chart.extend({
       // this only needs to gray out sibling areas.
       this.renderAreasStuff();
     },
+
+    calcHeight() {
+      const $this=this;
+      const legend = this.$refs.legend;
+      if(!legend) return;
+      let prevHeight = legend.clientHeight;
+      this.minHeight = Math.max($this.minHeight, prevHeight)
+    },
   },
+
+  watch: {
+   'filters': {
+        deep: true,
+        handler() {
+          this.calcHeight();
+        },
+    },
+    'svgWidth':  {
+      handler() {
+          this.minHeight = 0;
+        },
+      }
+  }
+
 });
 </script>
