@@ -1,21 +1,6 @@
-<template>
+q<template>
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
-    <defs>
-      <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
-        <rect x="0" y="0" width="50" height="6"
-              class="norway-grants"
-              :fill="fmcolour('norway-grants')"
-              :stroke="fmcolour('norway-grants')"
-        />
-        <rect x="0" y="6" width="50" height="5"
-              class="eea-grants"
-              :fill="fmcolour('eea-grants')"
-              :stroke="fmcolour('eea-grants')"
-        />
-      </pattern>
-    </defs>
-
     <g class="chart">
 
       <g class="base">
@@ -168,7 +153,6 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 
 import ChartMixin from '../mixins/Chart';
-import WithFMsMixin from '../mixins/WithFMs';
 import WithCountriesMixin from '../mixins/WithCountries';
 
 import ChartContainer from './ChartContainer';
@@ -197,7 +181,7 @@ function _mk_topo_funcs(data) {
 export default Vue.extend({
   mixins: [
     ChartMixin,
-    WithFMsMixin, WithCountriesMixin,
+    WithCountriesMixin,
   ],
 
   props: {
@@ -219,6 +203,15 @@ export default Vue.extend({
     default_nuts_levels: {
       type: Array,
       default: () => [3],
+    },
+
+    donor_colour: {
+      type: String,
+      default: '#fff',
+    },
+
+    norway_colour: {
+      type: String,
     },
 
     beneficiary_colour: {
@@ -261,6 +254,11 @@ export default Vue.extend({
 
     rendered() {
       return this.base_rendered && (!this.render_states || this.states_rendered);
+    },
+
+    donor_colour_no() {
+      return this.norway_colour !== undefined ?
+             this.norway_colour : this.donor_colour;
     },
 
     projection() {
@@ -492,9 +490,9 @@ export default Vue.extend({
             return this.beneficiary_colour;
 
           if (d.id == "NO")
-            return "url(#multi-fm)";
+            return this.donor_colour_no;
 
-          return this.fmcolour("eea-grants");
+          return this.donor_colour;
         })
         // while at this, cache the centroids and bounding box,
         // because the geo-data will get wiped during data manipulation
