@@ -1,6 +1,12 @@
 export default {
+  type: "partners",
+
   data() {
     return {
+      colours: {
+        programmes: '#30b729',
+        projects: '#fea500',
+      },
     };
   },
 

@@ -82,6 +82,12 @@
     box-shadow: 0px 0px 2px #aaa;
   }
 
+
+
+//@import './nightmap.less';
+
+
+
   .chart {
     .base {
       .sphere {
@@ -149,6 +155,11 @@
     }
   }
 }
+
+
+
+body, header {background-color: #111 !important;}
+
 </style>
 
 <script>
@@ -200,6 +211,11 @@ export default Vue.extend({
       default: true,
     },
 
+    zoomable: {
+      type: Boolean,
+      default: true,
+    },
+
     default_nuts_levels: {
       type: Array,
       default: () => [3],
@@ -208,6 +224,9 @@ export default Vue.extend({
     beneficiary_colour: {
       type: String,
       default: '#fff',
+
+//default: null
+
     },
 
     region_colour: {
@@ -300,7 +319,7 @@ export default Vue.extend({
     this.stylesheet = document.createElement("style");
     this.$el.appendChild(this.stylesheet);
 
-    //this.updateStyle(); // this is already triggered by the watched svgWidth
+    //this.updateStyle(); // this is already triggered by the watched chartWidth
 
     this.$nextTick(this.render);
   },
@@ -326,6 +345,7 @@ export default Vue.extend({
             cy = (y1 + y2) / 2;
 
       this.geodetails[d.id] = {
+
         name: d.properties.name,
 
         width: dx,
@@ -340,13 +360,10 @@ export default Vue.extend({
           x: centroid[0],
           y: centroid[1],
         },
-
-        // any reason to keep this around?
-        //bounds: path.bounds(d),
       };
 
-      // since we're at this, let's calculate the zoom transform data too,
-      // because why not
+      if (!this.zoomable) return;
+      // since we're at this, let's calculate the zoom transform data too
       const w = this.width,
             h = this.height,
 
@@ -510,7 +527,7 @@ export default Vue.extend({
       }
 
       // we can delete the state data at this point, save a little memory
-      delete this.geo_data.regions.objects.nuts0;
+      //delete this.geo_data.regions.objects.nuts0;
 
       this.states_rendered = true;
     },
@@ -621,7 +638,7 @@ export default Vue.extend({
 
     getScaleFactor() {
       // don't make this computed, it changes too fast
-      return this.width / this.svgWidth / this.current_zoom;
+      return this.width / this.chartWidth / this.current_zoom;
     },
 
     mkStyle() {
@@ -643,7 +660,7 @@ export default Vue.extend({
   },
 
   watch: {
-    svgWidth: "updateStyle",
+    chartWidth: "updateStyle",
 
     rendered: {
       immediate: true,

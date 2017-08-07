@@ -203,7 +203,7 @@ export default Chart.extend({
     },
 
     width() {
-      return this.svgWidth;
+      return this.chartWidth;
     },
 
     itemsHeight() {
@@ -610,7 +610,7 @@ export default Chart.extend({
   },
 
   watch: {
-    svgWidth: "changedDimension",
+    chartWidth: "changedDimension",
     fontSize: "changedDimension",
   },
 });

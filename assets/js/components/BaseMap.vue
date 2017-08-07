@@ -3,8 +3,8 @@
   <h2>{{title}}</h2>
   <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
   <map-base
-      ref="base"
-      v-on:rendered="baseRendered"
+      ref="map"
+      v-on:rendered="mapRendered"
       :origin="origin"
       :default_nuts_levels="draw_nuts_levels"
       :beneficiary_colour="beneficiary_colour_default"
@@ -324,8 +324,7 @@ export default Chart.extend({
           if (over) {
             sel.raise();
             $this.tip.show.call(this, d, i);
-          }
-          else {
+          } else {
             $this.tip.hide.call(this, d, i);
           }
 
@@ -464,7 +463,7 @@ export default Chart.extend({
   },
 
   watch: {
-    base_rendered() {
+    map_rendered() {
       this.chart.select("g.states").selectAll("g.beneficiary")
           .call(this.registerEvents);
     },

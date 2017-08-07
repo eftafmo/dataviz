@@ -62,6 +62,9 @@ export default {
 
   computed: {
     // TODO: make the constants arrays, and the objects pre-computed
+    COUNTRY_ARRAY() {
+      return d3.values(this.COUNTRIES);
+    },
     BENEFICIARY_ARRAY() {
       return d3.values(this.BENEFICIARIES);
     },

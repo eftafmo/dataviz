@@ -66,7 +66,7 @@ export default Vue.extend({
       },
 
       // helper for transitions
-      changed: false,
+      changed: 0,
     };
   },
 
@@ -367,7 +367,7 @@ export default Vue.extend({
     'filters': {
       deep: true,
       handler() {
-        this.changed = !this.changed;
+        this.changed = Number(!this.changed);
       },
     },
   },

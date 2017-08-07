@@ -1,5 +1,5 @@
 <template>
-<div class="sectors-viz clearfix" :style="{minHeight: svgWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div class="sectors-viz clearfix" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <h2>{{title}}</h2>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <chart-container :width="width" :height="height">
@@ -940,7 +940,7 @@ export default Chart.extend({
           this.calcHeight();
         },
     },
-    'svgWidth':  {
+    'chartWidth':  {
       handler() {
           this.minHeight = 0;
         },
