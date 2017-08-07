@@ -21,6 +21,7 @@
       :origin="origin"
       :render_states="true"
       :render_regions="true"
+      :donor_colour="fmcolour('eea-grants')"
       :zoomable="false"
   >
 
@@ -77,8 +78,27 @@
     }
 
     g.region:hover path {
-      stroke: #000;
       stroke-opacity: 1;
+    }
+
+    .donor g.region {
+      //path {
+      //  stroke: #000;
+      //}
+
+      &:hover path {
+        stroke: #fff;
+      }
+    }
+
+    .beneficiary g.region {
+      //path {
+      //  stroke: #000;
+      //}
+
+      &:hover path {
+        stroke: #000;
+      }
     }
   }
 
@@ -139,6 +159,7 @@ import Chart from './Chart';
 
 import PartnersMixin from './mixins/Partners';
 import MapMixin from './mixins/Map';
+import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
 
 //
@@ -150,7 +171,7 @@ export default Chart.extend({
   mixins: [
     PartnersMixin,
     MapMixin,
-    WithCountriesMixin,
+    WithFMsMixin, WithCountriesMixin,
   ],
 
   props: {

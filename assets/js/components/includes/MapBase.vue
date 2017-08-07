@@ -545,7 +545,7 @@ export default Vue.extend({
             mentered = main
               .enter()
               .append('g')
-              .attr('class', "state " + state)
+              .attr("class", `state ${this.COUNTRIES[state].type} ${state}`)
               // start with these invisible
               .style("display", "none")
               .attr("opacity", 0);
