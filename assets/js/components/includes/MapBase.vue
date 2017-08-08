@@ -67,12 +67,6 @@ q<template>
     box-shadow: 0px 0px 2px #aaa;
   }
 
-
-
-//@import './nightmap.less';
-
-
-
   .chart {
     .base {
       .sphere {
@@ -214,9 +208,6 @@ export default Vue.extend({
     beneficiary_colour: {
       type: String,
       default: '#fff',
-
-//default: null
-
     },
 
     region_colour: {

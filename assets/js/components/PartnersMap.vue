@@ -25,40 +25,20 @@
       :zoomable="false"
   >
 
-    <transition name="fade" appear>
-      <transition-group :key="changed"
-                        name="fade"
-                        tag="div"
-                        ref="container"
-                        class="charts"
-                        :class="{'with-current': region}"
-      >
+    <transition-group name="fade"
+                      tag="div"
+                      ref="container"
+                      class="charts"
+    >
+      <div v-for="layer in layers"
+           v-show="visible_layers.indexOf(layer) != -1"
+           :key="layer"
+           class="layer"
+           :class="layer"
+      ></div>
+    </transition-group>
 
-        <canvas v-for="layer in layers"
-                v-show="visible_layers.indexOf(layer) != -1"
-                :key="layer"
-                :class="layer"
-                :width="chartWidth" :height="chartHeight"
-        ></canvas>
-
-      </transition-group>
-    </transition>
-
-    <transition name="fade-fast" appear>
-      <div v-if="region"
-           :key="region"
-           ref="current"
-           class="current"
-      >
-        <!-- render only the visible layer(s). supposedly people
-             won't click the checkbox while hovering... -->
-        <canvas v-for="layer in visible_layers"
-                :class="layer"
-                :width="chartWidth" :height="chartHeight"
-        ></canvas>
-
-      </div>
-    </transition>
+    <div ref="current" class="current"></div>
 
   </map-base>
 
@@ -102,8 +82,10 @@
     }
   }
 
+
+
   .charts, .current {
-    &, canvas {
+    &, * {
       position: absolute;
       left: 0;
       top: 0;
@@ -116,36 +98,26 @@
 
     canvas {
       display: block;
+      opacity: 0;
+      transition: opacity @short_duration;
 
-      // put the programmes on top, they're too faint
-      &.programmes {
-        z-index: 11;
+      &.current {
+        opacity: 1;
       }
-      &.projects {
-        z-index: 10;
+
+      &.previous {
+        opacity: 0;
       }
     }
   }
+
 
   .charts {
     transition: opacity @short_duration;
-    &.with-current {
+    opacity: 1;
+
+    &.with-region {
       opacity: .3;
-    }
-    // ^^ that breaks .fade-* durations
-    &.fade-enter-active, .fade-leave-active {
-      transition: opacity @duration;
-    }
-  }
-
-  .current {
-.fade-fast-enter-active {
-  transition: opacity 2s;
-}
-
-
-    .fade-fast-enter {
-      opacity: .9,
     }
   }
 }
@@ -154,6 +126,7 @@
 
 <script>
 import * as d3 from 'd3';
+import debounce from 'lodash.debounce';
 
 import Chart from './Chart';
 
@@ -186,7 +159,7 @@ export default Chart.extend({
       visible_layers: this.layers,
       region: null,
 
-      chart_opacity: .4,
+      chart_opacity: .6,
       region_opacity: .8,
 
       title: 'Network map'
@@ -195,24 +168,33 @@ export default Chart.extend({
 
   computed: {
     chart_colours() {
-      return this.getColours(this.chart_opacity);
+      return this.getColours(this.chart_opacity, .5);
     },
 
     region_colours() {
-      return this.getColours(this.region_opacity);
+      return this.getColours(this.region_opacity, .75);
     },
 
     scale() {
-      return {
-        x: this.chartWidth / this.width,
-        y: this.chartHeight / this.height,
-      };
+      return this.chartWidth / this.width;
     },
 
     data() {
 //return stuff
       return {}
     },
+  },
+
+  created() {
+    // set up the canvas cache
+    const ccache = {}
+    for (const l of this.layers) {
+      ccache[l] = {}
+    }
+    this._ccache = ccache
+
+    this.renderCurrentRegion = debounce(this.renderCurrentRegion,
+                                        this.renderWait.min)
   },
 
   methods: {
@@ -224,17 +206,16 @@ export default Chart.extend({
       return c.$el ? c.$el : c;
     },
 
-    getColours(opacity) {
-      // massage the colours a bit
+    getColours(opacity, pmod) {
+      // projects modifier, because there's too many project lines
+      // TODO: should alter the opacity based on line density instead
+      if (!pmod) pmod = 1;
+
       const cs = {};
       for (const c in this.colours) {
         cs[c] = d3.color(this.colours[c]);
-        cs[c].opacity = opacity;
+        cs[c].opacity = c != "projects" ? opacity : opacity * pmod;
       }
-
-      // there's too many project lines
-      // TODO: could alter the opacity based on density
-      cs["projects"].opacity -= .1;
 
       return cs;
     },
@@ -248,37 +229,97 @@ export default Chart.extend({
         if (row.source === id || row.target === id)
           out.push(row);
       }
+
       return out;
     },
 
-    renderChart() {
+    renderChart(redraw) {
       const $this = this,
             container = this.getContainer("container");
 
-      // vue takes care of the canvas creation
-      d3.select(container).selectAll("canvas")
-        .each(function() {
-          const type = this.className,
-                data = $this.data[type],
-                colour = $this.chart_colours[type];
+      // ideally we'd remove these onTransitionEnd, but ... ....
+      d3.select(container).selectAll(".layer > canvas.previous")
+        .remove()
+
+      const prev = d3.select(container).selectAll(".layer > canvas:not(.previous)")
+      if (redraw)
+        prev.remove();
+      else
+        prev.attr("class", "previous");
+
+      const charts = d3.select(container).selectAll(".layer")
+        .data(this.layers) // we count on index order for match
+        .append("canvas")
+        .datum(d => d)
+        .attr("width", this.chartWidth)
+        .attr("height", this.chartHeight)
+        .each(function(d) {
+          const data = $this.data[d],
+                colour = $this.chart_colours[d]
 
           $this.renderLayer(this, data, colour)
         })
+
+      // fade in unless it's the initial render or a redraw
+      // (and let css handle the transitions)
+      if (!this.rendered || this.redraw)
+        charts.attr("class", "current")
+      else
+        this.$nextTick(function(){ charts.attr("class", "current") })
     },
 
     renderCurrentRegion(r) {
-      const $this = this,
-            container = this.getContainer("current");
+      d3.select(this.getContainer("container"))
+        .classed("with-region", r)
 
-      // vue takes care of the canvas creation
-      d3.select(container).selectAll("canvas")
-        .each(function() {
-          const type = this.className,
-                data = $this.getRegionData(type, r),
-                colour = $this.region_colours[type];
+      const container = this.getContainer("current")
 
-          $this.renderLayer(this, data, colour)
-        })
+      d3.select(container).selectAll("canvas.previous")
+        .remove()
+
+      d3.select(container).selectAll("canvas:not(.previous)")
+        .attr("class", "previous")
+
+      if(!r) return;
+
+      const canvases = []
+      // don't bother rendering non-visible stuff
+      for (const type of this.visible_layers) {
+        // cache the canvas.
+        // TODO: disabled for now. check memory usage.
+        // it's seems surprisingly small in chrome, very high in firefox
+        // (for ~450 canvases (data for ~400 regions))
+        //let canvas = this._ccache[type][r];
+
+        //if (canvas === undefined) {
+          const data = this.getRegionData(type, r)
+
+          // skip no-data
+          if(!data.length) continue
+
+          //canvas = this._ccache[type][r] = document.createElement("canvas")
+          const canvas = document.createElement("canvas")
+
+          canvas.setAttribute("width", this.chartWidth)
+          canvas.setAttribute("height", this.chartHeight)
+
+          const colour = this.region_colours[type]
+
+          this.renderLayer(canvas, data, colour)
+        //}
+
+        canvases.push(canvas)
+      }
+
+      for (const c of canvases) {
+        if (c.parentNode) {
+          // if it's already bound to the parent it was pending cleanup
+          c.className = "current"
+          continue
+        }
+        container.appendChild(c)
+        this.$nextTick(function(){ c.className = "current" })
+      }
     },
 
     renderLayer(canvas, data, colour) {
@@ -306,7 +347,8 @@ export default Chart.extend({
 
       //ctx.fillStyle = colour;
       ctx.strokeStyle = colour;
-      ctx.lineWidth = 1;
+      // make the line 1px wide, but scale down if necessary
+      ctx.lineWidth = k > 1 ? 1 : Math.min(1, k * 2);
 
       ctx.beginPath();
 
@@ -323,11 +365,11 @@ export default Chart.extend({
         const p0 = o0.centroid,
               p1 = o1.centroid,
 
-              x0 = p0.x * k.x,
-              y0 = p0.y * k.y,
+              x0 = p0.x * k,
+              y0 = p0.y * k,
 
-              x1 = p1.x * k.x,
-              y1 = p1.y * k.y,
+              x1 = p1.x * k,
+              y1 = p1.y * k,
 
               // approximate the arc of a circle with radius equal to the distance
               // between p0 and p1, using a quadratic curve (a single control point)
@@ -391,8 +433,7 @@ export default Chart.extend({
             //$this.tip.hide.call(this, d, i)
           }
 
-          // let vue trigger the drawing
-          $this.region = over ? d.id : null;
+          $this.renderCurrentRegion(over ? d.id : null);
         }
       }
 
@@ -426,17 +467,13 @@ export default Chart.extend({
 
     chartWidth() {
       // re-render on resize. but don't hijack the initial render.
-      if (this.rendered) this.render();
-    },
+      if (!this.rendered) return
 
-    region(r) {
-      if (!r) return;
-      // the canvases don't exist yet at this point
-      this.$nextTick(() => this.renderCurrentRegion(r));
+      this.renderChart(true)
+      for (const l in this._ccache) {
+        this._ccache[l] = {}
+      }
     },
-
-    //
   },
-
 });
 </script>
