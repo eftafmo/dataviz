@@ -65,3 +65,15 @@ button#reset-filters {
     /*display: none;*/
   }
 }
+
+
+#global-filters {
+  position: sticky;
+  top: 0;
+  min-height: 35px;
+  overflow-x: hidden;
+}
+
+#global-filters.visible {
+  z-index: 1;
+}
