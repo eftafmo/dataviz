@@ -142,9 +142,6 @@ q<template>
 }
 
 
-
-body, header {background-color: #111 !important;}
-
 </style>
 
 <script>
