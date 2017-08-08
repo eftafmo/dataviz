@@ -32,8 +32,9 @@ DEBUG = bool(os.environ.get('DEBUG'))
 # Application definition
 
 INSTALLED_APPS = [
-    'material',
-    'material.admin',
+    # The django-material theme breaks ck editor.
+    # 'material',
+    # 'material.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

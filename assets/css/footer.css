@@ -13,7 +13,7 @@
 
 .modal-popup {
   position: fixed;
-  padding: 1rem 5rem;
+  padding: 3rem 0.5rem 1rem 2rem;
   background: white;
   border-radius: 5px;
   box-shadow: 0px 0px 4px #888;
@@ -22,8 +22,12 @@
   transform: translate(-50%, -50%);
   width: 80%;
   height: 80%;
-  overflow-y: auto;
   z-index: 201;
+}
+
+.modal-popup .content {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .close-btn {
