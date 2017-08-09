@@ -143,18 +143,6 @@ h2 {
 }
 
 
-#global-filters {
-  position: sticky;
-  top: 0;
-  min-height: 30px;
-  overflow-x: hidden;
-}
-
-#global-filters.visible {
-  z-index: 1;
-}
-
-
 .clearfix:after {
   visibility: hidden;
   display: block;

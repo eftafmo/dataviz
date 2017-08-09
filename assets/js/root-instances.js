@@ -24,14 +24,7 @@ export const Index = Base.extend({
 });
 
 
-const Viz = Base.extend({
-  components: {
-    sidebar: components.Sidebar,
-  },
-});
-
-
-export const Grants = Viz.extend({
+export const Grants = Base.extend({
   name: "Grants",
 
   components: {
@@ -45,7 +38,7 @@ export const Grants = Viz.extend({
   },
 });
 
-export const Partners = Viz.extend({
+export const Partners = Base.extend({
   name: "Partners",
 
   components: {
@@ -57,7 +50,7 @@ export const Partners = Viz.extend({
   },
 });
 
-export const Projects = Viz.extend({
+export const Projects = Base.extend({
   name: "Projects",
 
   components: {
@@ -70,4 +63,8 @@ export const Projects = Viz.extend({
     news: components.News,
     projects: components.Projects,
   },
+});
+
+export const Search = Base.extend({
+  name: "Search",
 });

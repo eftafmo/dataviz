@@ -4,6 +4,8 @@ import ProjectsMixin from './mixins/Projects';
 
 
 export default Beneficiaries.extend({
+  type: 'projects',
+
   mixins: [ProjectsMixin],
 
   data() {

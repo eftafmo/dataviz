@@ -6,6 +6,7 @@ import ProjectsMixin from './mixins/Projects';
 
 
 export default Sectors.extend({
+  type: "projects",
   mixins: [ProjectsMixin],
 
   data(){

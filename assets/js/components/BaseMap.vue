@@ -2,11 +2,31 @@
 <div :class="[$options.type, { rendering: !rendered }]">
   <h2>{{title}}</h2>
   <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
+
+  <svg>
+    <defs>
+      <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
+        <rect x="0" y="0" width="50" height="6"
+              class="norway-grants"
+              :fill="fmcolour('norway-grants')"
+              :stroke="fmcolour('norway-grants')"
+        />
+        <rect x="0" y="6" width="50" height="5"
+              class="eea-grants"
+              :fill="fmcolour('eea-grants')"
+              :stroke="fmcolour('eea-grants')"
+        />
+      </pattern>
+    </defs>
+  </svg>
+
   <map-base
-      ref="base"
-      v-on:rendered="baseRendered"
+      ref="map"
+      v-on:rendered="mapRendered"
       :origin="origin"
       :default_nuts_levels="draw_nuts_levels"
+      :donor_colour="fmcolour('eea-grants')"
+      norway_colour="url(#multi-fm)"
       :beneficiary_colour="beneficiary_colour_default"
       :region_colour="region_colour_default"
   >
@@ -121,6 +141,7 @@ import Chart from './Chart';
 
 import MapMixin from './mixins/Map';
 import WithCountriesMixin from './mixins/WithCountries';
+import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 import NutsSelector from './includes/NutsSelector';
@@ -131,7 +152,7 @@ export default Chart.extend({
 
   mixins: [
     MapMixin,
-    WithCountriesMixin,
+    WithCountriesMixin, WithFMsMixin,
     WithTooltipMixin,
   ],
 
@@ -323,8 +344,7 @@ export default Chart.extend({
           if (over) {
             sel.raise();
             $this.tip.show.call(this, d, i);
-          }
-          else {
+          } else {
             $this.tip.hide.call(this, d, i);
           }
 
@@ -442,7 +462,7 @@ export default Chart.extend({
         .attr("fill", colourfuncEEA);
 
       // Norway uses a pattern fill
-      d3.select(this.$el).select("svg > defs > pattern").selectAll("rect")
+      d3.select(this.$el).select("svg > defs > pattern#multi-fm").selectAll("rect")
         .datum(function() { return this.getAttribute("class"); })
         .transition(t)
         .attr("fill", colourfuncNO)
@@ -463,7 +483,7 @@ export default Chart.extend({
   },
 
   watch: {
-    base_rendered() {
+    map_rendered() {
       this.chart.select("g.states").selectAll("g.beneficiary")
           .call(this.registerEvents);
     },

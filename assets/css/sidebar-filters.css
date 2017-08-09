@@ -9,7 +9,7 @@
   .sidebar-filters {
     width: 320px;
     top: 10px;
-    max-height: 80%;
+    max-height: 80vh;
     overflow-y: auto;
   }
 }
@@ -35,7 +35,10 @@
 }
 
 .sidebar-filters .sidebar-body {
-  padding: .5rem 2rem;
+  padding-right: 2rem;
+  padding-left: 1rem;
+  height: 100%;
+  overflow: auto;
 }
 
 .sidebar-filters .sidebar-body .input-group {
@@ -48,4 +51,8 @@
 
 .sidebar-filters .sidebar-body label {
   color: #898989;
+}
+
+.select2-container {
+  width: 100%!important;
 }

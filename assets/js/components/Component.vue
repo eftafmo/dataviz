@@ -1,5 +1,6 @@
 <style lang="less">
 @duration: .5s;
+@short_duration: .2s;
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity @duration;
@@ -8,6 +9,15 @@
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+.fade-fast-enter-active, .fade-fast-leave-active {
+  transition: opacity @duration;
+}
+
+.fade-fast-enter, .fade-fast-leave-to {
+  opacity: 0;
+}
+
 </style>
 
 

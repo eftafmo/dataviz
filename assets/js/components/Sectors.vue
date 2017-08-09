@@ -1,97 +1,99 @@
 <template>
-<div class="sectors-viz clearfix" :style="{minHeight: legend_height + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div :class="$options.type" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <h2>{{title}}</h2>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
-<chart-container :width="width" :height="height">
-  <svg :viewBox="`0 0 ${width} ${height}`">
-    <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
-    </g>
-  </svg>
-  <transition appear>
-  <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
-    <use :xlink:href="`#${get_image(filters.sector)}`" />
-  </svg>
-  </transition>
-</chart-container>
-  <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: legend_height + 'px'}">
-    <!-- much repetition here, but not worth doing a recursive component -->
-    <transition-group
-        tag="ul"
-        class="sectors"
-        name="item"
-    >
-      <li
-          v-for="sector in data.children"
-          v-if="sector.value"
-          :key="getLabelID(sector)"
-          :id="getLabelID(sector)"
-          :class="{selected: isSelectedSector(sector)}"
+<div class="chart-wrapper">
+  <chart-container :width="width" :height="height">
+    <svg :viewBox="`0 0 ${width} ${height}`">
+      <g class="chart" :transform="`translate(${margin + radius},${margin + radius})`">
+      </g>
+    </svg>
+    <transition appear>
+    <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
+      <use :xlink:href="`#${get_image(filters.sector)}`" />
+    </svg>
+    </transition>
+  </chart-container>
+    <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: minHeight + 'px'}">
+      <!-- much repetition here, but not worth doing a recursive component -->
+      <transition-group
+          tag="ul"
+          class="sectors"
+          name="item"
       >
-        <a @click="click(sector)"
-           @mouseenter="isSelectedSector(sector) ? null : highlight(sector)"
-           @mouseleave="isSelectedSector(sector) ? null : unhighlight(sector)"
+        <li
+            v-for="sector in data.children"
+            v-if="sector.value"
+            :key="getLabelID(sector)"
+            :id="getLabelID(sector)"
+            :class="{selected: isSelectedSector(sector)}"
         >
-          <span :style="{background: sector.data.colour}"></span>
-          <span>
-            {{ sector.data.name }}
-          </span>
-          <span
-              v-show="filters.sector != sector.data.id"
-              :key="`v-${getLabelID(sector)}`">
-            {{ display(sector) }}
-          </span>
-          <span
-              v-if="isSelectedSector(sector)"
-              class="icon icon-close"
-          />
-        </a>
-
-        <transition
-            v-on:before-enter="areasBeforeEnter"
-            v-on:before-leave="areasBeforeLeave"
-            v-on:after-enter="areasReset"
-            v-on:after-leave="areasReset"
-            v-on:enter-cancelled="areasCancelled"
-            v-on:leave-cancelled="areasCancelled"
-            name="areas"
-        >
-          <transition-group
-              v-show="isSelectedSector(sector)"
-              tag="ul"
-              class="areas"
-              name="item"
+          <a @click="click(sector)"
+             @mouseenter="isSelectedSector(sector) ? null : highlight(sector)"
+             @mouseleave="isSelectedSector(sector) ? null : unhighlight(sector)"
           >
-            <li
-                v-for="area in sector.children"
-                v-if="area.value"
-                :key="getLabelID(area)"
-                :id="getLabelID(area)"
-                :class="{ inactive: !isActiveArea(area) }"
+            <span :style="{background: sector.data.colour}"></span>
+            <span>
+              {{ sector.data.name }}
+            </span>
+            <span
+                v-show="filters.sector != sector.data.id"
+                :key="`v-${getLabelID(sector)}`">
+              {{ display(sector) }}
+            </span>
+            <span
+                v-if="isSelectedSector(sector)"
+                class="icon icon-close"
+            />
+          </a>
+
+          <transition
+              v-on:before-enter="areasBeforeEnter"
+              v-on:before-leave="areasBeforeLeave"
+              v-on:after-enter="areasReset"
+              v-on:after-leave="areasReset"
+              v-on:enter-cancelled="areasCancelled"
+              v-on:leave-cancelled="areasCancelled"
+              name="areas"
+          >
+            <transition-group
+                v-show="isSelectedSector(sector)"
+                tag="ul"
+                class="areas"
+                name="item"
             >
-              <a @click="click(area)"
-                 @mouseenter="highlight(area)"
-                 @mouseleave="unhighlight(area)"
+              <li
+                  v-for="area in sector.children"
+                  v-if="area.value"
+                  :key="getLabelID(area)"
+                  :id="getLabelID(area)"
+                  :class="{ inactive: !isActiveArea(area) }"
               >
-                <span :style="{background: area.data.colour}"></span>
-                <span>
-                  {{ area.data.name }}
-                </span>
-                <span :key="`v-${getLabelID(area)}`">
-                  {{ display(area) }}
-                </span>
-              </a>
-            </li>
-          </transition-group>
-        </transition>
-      </li>
-    </transition-group>
-  </div>
+                <a @click="click(area)"
+                   @mouseenter="highlight(area)"
+                   @mouseleave="unhighlight(area)"
+                >
+                  <span :style="{background: area.data.colour}"></span>
+                  <span>
+                    {{ area.data.name }}
+                  </span>
+                  <span :key="`v-${getLabelID(area)}`">
+                    {{ display(area) }}
+                  </span>
+                </a>
+              </li>
+            </transition-group>
+          </transition>
+        </li>
+      </transition-group>
+    </div>
+</div>
 </div>
 </template>
 
 
 <style lang="less">
-.sectors-viz {
+.viz.sectors {
   // defs
   @text-colour: #444;
   // these need to be synced with js
@@ -100,12 +102,29 @@
   @inactive_opacity: .7;
 
   position: relative;
-  @media(min-width: 1027px) and (max-width: 1400px) {
+  @media(min-width: 1000px) and (max-width: 1400px) {
     display: block;
+    .chart-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .chart-wrapper {
+    clear: right;
   }
 
   svg {
     width: 100%;
+  }
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+  .viz-select {
+    margin-bottom: 3rem;
   }
 
   .chart-container {
@@ -318,6 +337,8 @@ import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Chart.extend({
+  type: "sectors",
+
   mixins: [
     WithSectors,
     WithTooltipMixin,
@@ -333,7 +354,7 @@ export default Chart.extend({
       // percentage of mid-donut void
       inner_radius: .65,
       title: 'Allocation by sector',
-      legend_height: this.svgWidth,
+      minHeight: null,
     };
   },
 
@@ -473,10 +494,8 @@ export default Chart.extend({
         if (d.children !== undefined) return 0;
         // filter out disabled items
         if (!isEnabled(d)) return 0;
-
         return this.value(d);
       });
-
       return tree;
     },
 
@@ -907,9 +926,6 @@ export default Chart.extend({
     },
 
     handleFilterSector(val, old) {
-      const $this = this;
-      //old legend height
-      let prev_height = this.$refs.legend.clientHeight;
       // remember this soon-to-be previous sector.
       // (it will be removed from the queue during handling of areas §)
       if (val) this._prevsector.push(val);
@@ -920,9 +936,6 @@ export default Chart.extend({
       // TODO: share a transition instance between these.
       this.render();
       this.renderAreasStuff();
-      //new legend height
-      let current_height = this.$refs.legend.clientHeight;
-      this.legend_height = Math.max(prev_height, current_height)
     },
 
     handleFilterArea(val) {
@@ -931,6 +944,29 @@ export default Chart.extend({
       // this only needs to gray out sibling areas.
       this.renderAreasStuff();
     },
+
+    calcHeight() {
+      const $this=this;
+      const legend = this.$refs.legend;
+      if(!legend) return;
+      let prevHeight = legend.clientHeight;
+      this.minHeight = Math.max($this.minHeight, prevHeight)
+    },
   },
+
+  watch: {
+   'filters': {
+        deep: true,
+        handler() {
+          this.calcHeight();
+        },
+    },
+    'chartWidth':  {
+      handler() {
+          this.minHeight = 0;
+        },
+      }
+  }
+
 });
 </script>

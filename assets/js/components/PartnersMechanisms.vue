@@ -8,7 +8,7 @@
 
 
 <style lang="less">
-.fms-viz.partners {
+.fms.viz.partners {
   .legend {
     .fm {
       border: none;

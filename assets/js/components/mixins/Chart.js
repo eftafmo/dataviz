@@ -15,7 +15,8 @@ export default {
       // these are to be recomputed on any layout changes.
       // setting them explicitly to null, so things fail with a bang
       // if initialised too early
-      svgWidth: null,
+      chartWidth: null,
+      chartHeight: null,
       fontSize: null,
 
       // timings for debouncing render functions (in milliseconds)
@@ -51,7 +52,11 @@ export default {
 
   methods: {
     computeDimensions(event) {
-      this.svgWidth = this.svg.getBoundingClientRect().width;
+      const bounds = this.svg.getBoundingClientRect();
+
+      this.chartWidth = bounds.width;
+      this.chartHeight = bounds.height;
+
       this.fontSize = parseFloat(getComputedStyle(this.svg).fontSize);
     },
 

@@ -236,6 +236,7 @@
 
 {% block aside %}
   <div id="sidebar-filters" class="sidebar sidebar-filters">
+  <sidebar>
     <div class="sidebar-header">
       <h3 class="sidebar-title">Search filters</h3>
       <button id="main-reset" class="no-btn small muted" type="reset" form="main-search-form">Reset</button>
@@ -528,6 +529,7 @@
       {% endif %}
 
     </div>
+  </sidebar>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -601,6 +603,14 @@
           e.val(null).trigger("change");
         })
       })
+    });
+  </script>
+{% endblock %}
+
+{% block finally %}
+  <script>
+    new root.Search({
+    el: '#sidebar-filters',
     });
   </script>
 {% endblock %}

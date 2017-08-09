@@ -2,8 +2,8 @@
   // ATTENTION: map-base must be used like this:
 
   <map-base
-      ref="base"
-      v-on:rendered="baseRendered"
+      ref="map"
+      v-on:rendered="mapRendered"
   >
 
  */
@@ -31,31 +31,31 @@ export default {
       width: 0,
       height: 0,
 
-      base_rendered: false,
+      map_rendered: false,
     };
   },
 
   mounted() {
-    const map = this.map = this.$refs.base;
+    const map = this.map = this.$refs.map;
     this.width = map.width;
     this.height = map.height;
   },
 
   computed: {
     rendered() {
-      return this.base_rendered && this.chart_rendered;
+      return this.map_rendered && this.chart_rendered;
     },
 
     isReady() {
       return !!(this.hasData
                && this.$el
-               && this.base_rendered);
+               && this.map_rendered);
     },
   },
 
   methods: {
-    baseRendered() {
-      this.base_rendered = true;
+    mapRendered() {
+      this.map_rendered = true;
     },
 
     stateEnter(d) {
