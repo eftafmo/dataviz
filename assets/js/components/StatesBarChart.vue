@@ -1,5 +1,5 @@
 <template>
-<div class="beneficiaries-viz">
+<div :class="$options.type">
    <h2>{{title}}</h2>
     <dropdown v-if="rendered" filter="beneficiary" title="No filter selected" :items="nonzero"></dropdown>
   <div v-if="hasData" class="legend">
@@ -46,7 +46,7 @@
 // defs
 @beneficiary_highlight: #e6e6e6;
 
-.beneficiaries-viz {
+.viz.beneficiaries {
   position: relative;
 
   @media (min-width:1400px){
@@ -135,6 +135,8 @@ import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Chart.extend({
+  type: "beneficiaries",
+
   mixins: [
     WithFMsMixin, WithCountriesMixin,
     WithTooltipMixin,
