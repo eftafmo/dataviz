@@ -1,7 +1,7 @@
 <template>
-<div :class="$options.type">
-   <h2>{{title}}</h2>
-    <dropdown v-if="rendered" filter="beneficiary" title="No filter selected" :items="nonzero"></dropdown>
+<div :class="[$options.type, { rendering: !rendered }]">
+  <h2>{{title}}</h2>
+  <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
   <div v-if="hasData" class="legend">
     <fm-legend :fms="FMS" class="clearfix">
     </fm-legend>
@@ -34,7 +34,7 @@
       </filter>
     </defs>
     <g :transform="`translate(${legendWidth},0)`">
-      <g class="beneficiaries" />
+      <g class="states" />
       <line class="domain" />
     </g>
   </svg>
@@ -44,9 +44,9 @@
 
 <style lang="less">
 // defs
-@beneficiary_highlight: #e6e6e6;
+@state_highlight: #e6e6e6;
 
-.viz.beneficiaries {
+.viz.states {
   position: relative;
 
   @media (min-width:1400px){
@@ -89,7 +89,7 @@
 
     // NOTE: if you change the structure of this, you must also change
     // how legendWidth() is computed
-    .beneficiaries .beneficiary {
+    .states .state {
       cursor: pointer;
       pointer-events: all;
 
@@ -103,8 +103,8 @@
       }
 
       &:hover {
-        .fms rect.bg {
-          fill: @beneficiary_highlight;
+        .divs rect.bg {
+          fill: @state_highlight;
         }
       }
 
@@ -129,16 +129,15 @@ import {slugify} from 'js/lib/util';
 
 import Chart from './Chart';
 
-import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Chart.extend({
-  type: "beneficiaries",
+  type: "states",
 
   mixins: [
-    WithFMsMixin, WithCountriesMixin,
+    WithCountriesMixin,
     WithTooltipMixin,
   ],
 
@@ -159,7 +158,8 @@ export default Chart.extend({
 
   data() {
     return {
-      filter_by: ["fm", "sector", "area"],
+      state_type: undefined, // children must define this (beneficiary / donor)
+      div_type: undefined, // and this. division type (fm / ...?)
 
       label_colour: "#333",
       layout: {
@@ -170,8 +170,28 @@ export default Chart.extend({
         flagHeight: 1.4,
         flagPadding: .4,
       },
-      title: 'Funding across beneficiary states'
     };
+  },
+
+  created() {
+    // group by and don't filter / aggregate by beneficiary / donor
+    const groupcol = this.state_type;
+
+    let idx;
+
+    idx = this.filter_by.indexOf(groupcol);
+    if (idx !== -1)
+      this.filter_by.splice(idx, 1);
+
+    this.aggregate_by.push(
+        { source: groupcol, destination: "id" }
+    );
+
+    idx = this.aggregate_on.findIndex(x => x.source == groupcol);
+    if (idx !== -1) this.aggregate_on.splice(idx, 1);
+
+    // also group by div type
+    this.aggregate_by.push(this.div_type)
   },
 
   computed: {
@@ -228,17 +248,21 @@ export default Chart.extend({
       return this._height;
     },
 
+    longestText() {
+      return this.longestCountry
+    },
+
     legendWidth() {
       // compute the length of the largest text item in the "legend"
       if (!this.isReady) return 0;
 
-      // this has to respect the structure of a beneficiary <g>
-      const fakeB = this.chart.select(".beneficiaries").append("g").attr("class", "beneficiary");
-      const txt = fakeB.append("g").attr("class", "label").append("text").attr("visibility", "hidden");
+      // this has to respect the structure of a state <g>
+      const fakeS = this.chart.select(".states").append("g").attr("class", "state");
+      const txt = fakeS.append("g").attr("class", "label").append("text").attr("visibility", "hidden");
 
-      txt.text(this.longestBeneficiary);
+      txt.text(this.longestText);
       const txtwidth = txt.node().getBBox().width;
-      fakeB.remove();
+      fakeS.remove();
 
       // add a tiny bit of leeway, because custom font might not load so fast
       return txtwidth * 1.1 + this.flagBoundingWidth;
@@ -256,22 +280,13 @@ export default Chart.extend({
     },
 
     data() {
-      const aggregated = this.aggregate(
-        this.filtered,
-        ['beneficiary', 'fm'],
-        [
-          'allocation',
-          'project_count',
-          //{source: 'sector', destination: 'sectors', type: String},
-        ],
-        false
-      );
+      const aggregated = this.aggregated;
 
       const out = [];
       // we'll use this to preserve order, and as a basis for each bar item
       const fms = d3.values(this.FMS);
 
-      for (const bid in this.BENEFICIARIES) {
+      for (const bid in this.STATES) {
         const data = aggregated[bid] || {};
 
         const item = {
@@ -280,7 +295,7 @@ export default Chart.extend({
           //sectors: d3.set(),
         };
 
-        Object.assign(item, this.BENEFICIARIES[bid]);
+        Object.assign(item, this.STATES[bid]);
 
         let oldend = 0; // used for series data
         for (const fm of fms) {
@@ -320,7 +335,7 @@ export default Chart.extend({
       return matrix.map( (x) => x.join(" ") ).join("\n");
     },
 
-    renderBeneficiaryData(context) {
+    renderStateData(context) {
       // this could receive both a selection and a transition
       const selection = context.selection ? context.selection() : context,
             t = context == selection ? this.getTransition() : context;
@@ -332,18 +347,19 @@ export default Chart.extend({
         .attr("height", this.barHeight + this.barPadding * 2);
 
       // the real deal
-      const fms = selection.selectAll("g.fm")
-                           .data( (b) => b.data, (d) => d.id );
+      const divs = selection.selectAll("g.div")
+                            .data( (b) => b.data, (d) => d.id );
 
-      fms.enter() // ENTER-only
+      divs.enter() // ENTER-only
         .append("g")
-        .attr("class", (d) => "fm " + d.id )
+        .attr("class", (d) => "div " + d.id )
         .attr("fill", (d) => (
-          this.filters.beneficiary === null || this.filters.beneficiary == d.beneficiary ?
+          this.filters[this.state_type] === null ||
+          this.filters[this.state_type] == d[this.state_type] ?
           d.colour : this.inactivecolour(d.colour)
         ) )
         // adding a stroke as well prevents what looks like a sub-pixel gap
-        // between fms. but needs to be done for background too, so, TODO
+        // between divs. but needs to be done for background too, so, TODO
         //.attr("stroke", (d) => d.colour )
         .append("rect")
         .attr("y", this.barPadding)
@@ -351,39 +367,17 @@ export default Chart.extend({
         .attr("x", (d) => this.x(d.d[0]) )
         .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]) );
 
-      fms.select("rect") // UPDATE
+      divs.select("rect") // UPDATE
         .transition(t)
         .attr("x", (d) => this.x(d.d[0]) )
         .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]) );
-    },
-
-    tooltipTemplate(d) {
-      // TODO: this is getting beyond silly.
-      const data = d.data
-                    .filter( (x) => x.allocation != 0 );
-      const datatxt = data
-        .map( (x) => `
-            <li>${ x.name } : ${ this.currency(x.allocation) }</li>
-        ` )
-        .join("");
-
-      return `
-        <div class="title-container">
-        <svg>
-          <use xlink:href="#${this.get_flag_name(d.id)}" />
-        </svg>
-          <span class="name">${d.name}</span>
-        </div>
-        <ul> ${ datatxt } </ul>
-        <span class="action">Click to filter by beneficiary state</span>
-      `;
     },
 
     createTooltip() {
       const $this = this;
       // add tooltip
       let tip = d3.tip()
-          .attr('class', 'd3-tip benef')
+          .attr('class', 'd3-tip state')
           .html(this.tooltipTemplate)
           .direction('n')
           .offset(function(d) {
@@ -418,29 +412,29 @@ export default Chart.extend({
       // most important thing first: animate the line!
       chart.select("line.domain")
         .transition(t)
-      // the line height needs to depend on the data length for the FM filtering
+      // the line height needs to depend on the data length for the div filtering
         .attr("y2", this.itemsHeight);
 
       /*
        * main stuff
        */
-      const beneficiaries = chart.select(".beneficiaries")
-            .selectAll("g.beneficiary")
+      const states = chart.select(".states")
+            .selectAll("g.state")
             .data(data, (d) => d.id );
 
-      const bentered = beneficiaries.enter().append("g")
-        .attr("class", (d) => "beneficiary " + d.id)
+      const sentered = states.enter().append("g")
+        .attr("class", (d) => "state " + d.id)
         .attr("opacity", 0)
         .attr("transform", `translate(0,${this.height})`);
 
-      const bboth = beneficiaries.merge(bentered);
+      const sboth = states.merge(sentered);
 
-      bboth.filter( (d) => d.total != 0 ) // entered items can also be 0-ed
+      sboth.filter( (d) => d.total != 0 ) // entered items can also be 0-ed
         .transition(t)
         .attr("opacity", 1)
         .attr("transform", (d, i) => `translate(0,${this.y(d, i)})`);
 
-      bboth.filter( (d) => d.total == 0 ) /* exit substitute */
+      sboth.filter( (d) => d.total == 0 ) /* exit substitute */
         .transition(t)
         .attr("opacity", 0)
         // translate items out of the viewport.
@@ -450,7 +444,7 @@ export default Chart.extend({
       /*
        * render the row labels
        */
-      const country = bentered.append("g")
+      const country = sentered.append("g")
               .attr("class", "label")
               .attr("transform", `translate(-${this.flagBoundingWidth},0)`);
 
@@ -476,40 +470,40 @@ export default Chart.extend({
         .attr("height", this.flagHeight)
 
       /*
-       * render fm data
+       * render div data
        */
-      const fms = bentered.append("g") // we're still in ENTER here,
-            .attr("class", "fms")
+      const divs = sentered.append("g") // we're still in ENTER here,
+            .attr("class", "divs")
 
       // while here, draw a full-width rectangle used for mouse-over effects.
-      // this will look like a border around the fms
-      const bg = fms.append("rect").attr("class", "bg"); // continued in renderBeneficiaryData
+      // this will look like a border around the divs
+      const bg = divs.append("rect").attr("class", "bg"); // continued in renderStateData
 
       // we want to run the item rendering both in ENTER and UPDATE
-      fms.merge(beneficiaries.select("g.fms"))
+      divs.merge(states.select("g.divs"))
         .transition(t_)
-        .call(this.renderBeneficiaryData);
+        .call(this.renderStateData);
 
       /*
        * set the active / inactive colours if necessary
-       * (after the fms were drawn)
+       * (after the divs were drawn)
        */
-      bentered
+      sentered
         .call(this.renderActive);
 
       /*
        * and finally, events
        */
-      bentered
+      sentered
         .on("click", function (d) {
-          $this.toggleBeneficiary(d, this);
+          $this.clickFunc(d, this);
         })
         // tooltip events
         .on('mouseenter', this.tip.show)
         .on('mouseleave', this.tip.hide);
     },
 
-    renderActive(beneficiaries) {
+    renderActive(states) {
       const $this = this;
 
       const _activate = (context, yes) => {
@@ -572,8 +566,8 @@ export default Chart.extend({
             };
           });
 
-        // the fm bars
-        selection.select("g.fms").selectAll(".fm")
+        // the div bars
+        selection.select("g.divs").selectAll(".div")
           .transition(t)
           .attr("fill", (d) => yes ? d.colour : this.inactivecolour(d.colour))
       };
@@ -581,23 +575,25 @@ export default Chart.extend({
       const activate = (selection) => _activate(selection, true),
             deactivate = (selection) => _activate(selection, false);
 
-      const val = this.filters.beneficiary;
+      const val = this.filters[this.state_type];
 
-      beneficiaries.filter(
+      states.filter(
         (d) => val === null || d.id == val
       ).call(activate);
 
-      beneficiaries.filter(
+      states.filter(
         (d) => val !== null && d.id != val
       ).call(deactivate);
     },
 
-    handleFilterBeneficiary() {
-      // gray out sibling beneficiaries (or activate them all)
-      const beneficiaries = this.chart
-                                .select("g.beneficiaries")
-                                .selectAll("g.beneficiary");
-      beneficiaries
+    handleStateFilter() {
+      // call this when filtered by beneficiary / donor
+      // gray out sibling states (or activate them all)
+      const states = this.chart
+                         .select("g.states")
+                         .selectAll("g.state");
+
+      states
         .transition(this.getTransition())
         .call(this.renderActive);
     },

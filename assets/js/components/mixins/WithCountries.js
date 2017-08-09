@@ -56,6 +56,7 @@ export default {
   data() {
     return {
       longestCountry: get_longest_name(this.COUNTRIES),
+      longestDonor: get_longest_name(this.DONORS),
       longestBeneficiary: get_longest_name(this.BENEFICIARIES),
     };
   },
