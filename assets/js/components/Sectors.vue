@@ -1,5 +1,5 @@
 <template>
-<div :class="[$options.type, { rendering: !rendered }]" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div :class="$options.type" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <h2>{{title}}</h2>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <div class="chart-wrapper">
