@@ -143,6 +143,7 @@ import MapMixin from './mixins/Map';
 import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
+import WithNUTSMixin from './mixins/WithNUTS';
 
 import NutsSelector from './includes/NutsSelector';
 
@@ -154,6 +155,7 @@ export default Chart.extend({
     MapMixin,
     WithCountriesMixin, WithFMsMixin,
     WithTooltipMixin,
+    WithNUTSMixin,
   ],
 
   components: {
