@@ -55,26 +55,26 @@
 
     <ul class="no-list">
       {% for res in page_obj.object_list %}
-      <li>
+      <li class="results-list">
         <div class="search-result search-result-programme">
-          <h4 class="title">
+          <h3 class="title">
             {% if res.url %}
               <a href="{{ res.url }}">{{ res.name }}</a>
             {% else %}
               <span>{{ res.name }}</span>
             {% endif %}
-          </h4>
+          </h3>
          <p class="description">
 
           {% if form.facets.kind.0 == 'Programme' %}
 
-            <div>
+            <div class="country_status">
               <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
                 alt="{{ res.state_name.0 }} flag"
                 height="20px">&nbsp;{{ res.state_name.0 }}</span> |
               <span>{{ res.programme_status.0 }}</span>
             </div>
-            <div>
+            <p>
               <span>{{ res.financial_mechanism_ss.0 }}</span> |
               <span>PS: {{ res.priority_sector_ss.0 }}</span> |
               <span>
@@ -83,48 +83,48 @@
                   <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
               </span>
-            </div>
-            <div>
+            </p>
+            <p>
               <span>
                 Outcomes:
                 {% for outcome in res.outcome_ss %}
                   <span>{{ outcome }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
               </span>
-            </div>
-            <div><p>{{ res.summary|truncatechars_html:500 }}</p></div>
+            </p>
+            <p>{{ res.summary|truncatechars_html:500 }}</p>
 
           {% elif form.facets.kind.0 == 'Project' %}
 
-            <div>
+            <div class="country_status">
               <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
                 alt="{{ res.state_name.0 }} flag"
                 height="20px">&nbsp;{{ res.state_name.0 }}</span> |
               <span>{{ res.project_status.0 }}</span>
             </div>
-            <div>
+            <p>
               <span>{{ res.financial_mechanism_ss.0 }}</span> |
               <span>PS: {{ res.priority_sector_ss.0 }}</span> |
               <span>PA: {{ res.programme_area_ss.0 }}</span>
-            </div>
-            <div>
+            </p>
+            <p>
               <span>Programme: {{ res.programme_name.0 }}</span>
-            </div>
-            <div>
+            </p>
+            <p>
               <span>Outcome: {{ res.project_outcome }}</span>
-            </div>
-            <div>
+            </p>
+            <p>
               <span>
                 Themes:
                 {% for th in res.theme_ss %}
                   <span>{{ th }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
               </span>
-            </div>
+            </p>
 
           {% elif form.facets.kind.0 == 'Organisation' %}
 
-            <div>
+            <div class="country_status">
               <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
                 alt="{{ res.state_name.0 }} flag"
                 height="20px">&nbsp;{{ res.state_name.0 }}</span> |
@@ -132,7 +132,7 @@
               <span>{{ res.org_type }}</span>
             </div>
 
-            <div>
+            <p>
               <span>{{ res.financial_mechanism_ss.0 }}</span> |
               <span>PS: {{ res.priority_sector_ss.0 }}</span> |
               <span>
@@ -141,16 +141,16 @@
                   <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
               </span>
-            </div>
+            </p>
 
-            <div>
+            <p>
               <span>
                 Role:
                 {% for role in res.role_ss %}
                   <span>{{ role }}</span>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
               </span>
-            </div>
+            </p>
 
             <div>
             {% if res.programme_name %}

@@ -142,9 +142,7 @@
 .search-result {
   margin: 2rem 0;
 }
-.search-result .country {
-  font-size: smaller;
-}
+
 .search-result .country img {
   vertical-align: middle;
   border: 1px solid grey;
@@ -156,4 +154,24 @@
 .search-result .description {
   margin: 0;
   font-size: smaller;
+}
+
+.country_status {
+  margin: 1rem 0;
+  color: black;
+}
+
+.results-list {
+  margin-top: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+
+.results-list:last-of-type {
+  border-bottom: none;
+}
+
+.results-list p {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
 }
