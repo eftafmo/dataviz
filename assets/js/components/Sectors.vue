@@ -1,5 +1,5 @@
 <template>
-<div class="sectors-viz clearfix" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div :class="[$options.type, { rendering: !rendered }]" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <h2>{{title}}</h2>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <div class="chart-wrapper">
@@ -93,7 +93,7 @@
 
 
 <style lang="less">
-.sectors-viz {
+.viz.sectors {
   // defs
   @text-colour: #444;
   // these need to be synced with js
@@ -337,6 +337,8 @@ import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Chart.extend({
+  type: "sectors",
+
   mixins: [
     WithSectors,
     WithTooltipMixin,
