@@ -2,9 +2,9 @@
 <div v-if="hasData" class="donor-programmes">
  <table v-for="items in data">
    <thead>
-     <th>{{items.donor}} organizations</th>
-     <th>countries ({{items.countries.length}})</th>
-     <th>programmes ({{items.programmes.length}})</th>
+     <th>{{get_country_alt_name(items.donor)}} organizations</th>
+     <th>Countries ({{items.countries.length}})</th>
+     <th>Programmes ({{items.programmes.length}})</th>
    </thead>
    <tbody>
      <tr v-for="progammes in items.donor_programme_partners">
@@ -85,10 +85,14 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import BaseMixin from './Base';
+import PartnersMixin from './mixins/Partners';
+import CountriesMixin from './mixins/WithCountries';
 
 export default Vue.extend({
   mixins: [
     BaseMixin,
+    PartnersMixin,
+    CountriesMixin,
   ],
 
   data(){
@@ -99,9 +103,10 @@ export default Vue.extend({
 
   computed: {
     data() {
+      const $this = this;
       const dataset = this.filtered;
       const donor_states = [];
-      let donors = {}
+      let donors = []
       let donors_map = new Set();
 
       for (let d of dataset) {
@@ -142,6 +147,10 @@ export default Vue.extend({
           }
         }
       }
+      donors.sort((a,b) => d3.ascending(
+          $this.get_sort_order(a.donor),
+          $this.get_sort_order(b.donor)
+      ));
 
       return donors
     },

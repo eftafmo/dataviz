@@ -3,18 +3,26 @@
     IS: {
       id: "IS",
       name: "Iceland",
+      alt_name: "Icelandic",
+      sort_order: 1,
     },
     LI: {
       id: "LI",
       name: "Liechtenstein",
+      alt_name: "Liechtenstein",
+      sort_order: 2,
     },
     NO: {
       id: "NO",
       name: "Norway",
+      alt_name: "Norwegian",
+      sort_order: 3,
     },
     Intl: {
       id: "Intl",
       name: "International",
+      alt_name: "International",
+      sort_order: 4,
     },
   },
   beneficiaries: {
