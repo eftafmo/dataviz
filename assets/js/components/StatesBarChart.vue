@@ -2,10 +2,14 @@
 <div :class="[$options.type, { rendering: !rendered }]">
   <h2>{{title}}</h2>
   <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
+
+<!--
   <div v-if="hasData" class="legend">
     <fm-legend :fms="FMS" class="clearfix">
     </fm-legend>
   </div>
+-->
+
   <svg width="100%" :height="height + 'px'" class="chart">
     <defs>
       <filter id="drop-shadow">
@@ -159,7 +163,7 @@ export default Chart.extend({
   data() {
     return {
       state_type: undefined, // children must define this (beneficiary / donor)
-      div_type: undefined, // and this. division type (fm / ...?)
+      //div_types: undefined, // required, an array of dictionaries with {id, colour}
 
       label_colour: "#333",
       layout: {
@@ -189,9 +193,6 @@ export default Chart.extend({
 
     idx = this.aggregate_on.findIndex(x => x.source == groupcol);
     if (idx !== -1) this.aggregate_on.splice(idx, 1);
-
-    // also group by div type
-    this.aggregate_by.push(this.div_type)
   },
 
   computed: {
@@ -280,46 +281,46 @@ export default Chart.extend({
     },
 
     data() {
+      if (!this.hasData) return [];
+
       const aggregated = this.aggregated;
 
       const out = [];
       // we'll use this to preserve order, and as a basis for each bar item
-      const fms = d3.values(this.FMS);
 
-      for (const bid in this.STATES) {
-        const data = aggregated[bid] || {};
+      for (const sid in this.STATES) {
+        const state = this.STATES[sid],
+              data = aggregated[sid] || {};
 
-        const item = {
-          data: [],
-          total: 0,
-          //sectors: d3.set(),
-        };
-
-        Object.assign(item, this.STATES[bid]);
-
-        let oldend = 0; // used for series data
-        for (const fm of fms) {
-          const values = data[fm.name] || {
-            beneficiary: bid,
-            allocation: 0,
-            project_count: 0,
+        // merge in state data
+        const item = Object.assign(
+          {
+            data: [],
+            total: 0,
           },
-                allocation = values.allocation,
-                project_count = values.project_count;
+          state,
+          data
+        )
 
-          item.total += allocation;
+        // build series data
+        let oldend = 0;
+        for (const type of this.div_types) {
+          const current = this.valuefunc(item, type.id),
+                newend = oldend + current;
 
-          delete values.fm;
-          Object.assign(values, fm);
+          item.total += current;
+          item.data.push(Object.assign(
+            {
+              value: current,
+              d: [oldend, newend],
+            },
+            type
+          ))
 
-          const newend = oldend + allocation;
-          // the series data. naming is hard.
-          values.d = [oldend, newend];
-          oldend = newend;
-
-          item.data.push(values);
+          oldend = newend
         }
-        out.push(item);
+
+        out.push(item)
       }
 
       return out;
@@ -328,11 +329,35 @@ export default Chart.extend({
     nonzero() {
       return this.data.filter( (d) => d.total != 0 );
     },
+
+    total() {
+      return this.data.reduce((total, item) => total + item.total, 0)
+    },
+
+    totals() {
+      // like above, but grouped by type
+      return this.data.reduce(
+        (totals, item) => {
+          for (const type of item.data) {
+            const id = type.id,
+                  value = type.value;
+
+            let total = totals[id] || 0
+            totals[id] = total + value
+          }
+          return totals
+        }, {})
+    },
   },
 
   methods: {
     matrix2value(matrix) {
       return matrix.map( (x) => x.join(" ") ).join("\n");
+    },
+
+    valuefunc(item, type) {
+      // given an item and the division id, return the value for series data
+      throw new Error("Not implemented")
     },
 
     renderStateData(context) {

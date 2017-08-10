@@ -1,47 +1,50 @@
 <script>
+import * as d3 from 'd3';
+
 import StatesBarChart from './StatesBarChart';
 
+import BeneficiariesMixin from './mixins/BeneficiariesBarChart';
 import WithFMsMixin from './mixins/WithFMs';
 
 
 export default StatesBarChart.extend({
-  type: "beneficiaries",
-
   mixins: [
+    BeneficiariesMixin,
     WithFMsMixin,
   ],
 
   data() {
     return {
-      state_type: "beneficiary",
-      div_type: "fm",
-
       title: 'Funding across beneficiary states',
     }
   },
 
+  created() {
+    // aggregate by fms, but only at the final level
+    this.aggregate_by.push(
+      {source: "fm", "destination": "fms", }//final: true}
+    )
+  },
+
   computed: {
-    STATES() {
-      return this.BENEFICIARIES
+    div_types() {
+      return d3.values(this.FMS);
     },
-
-    longestText() {
-      return this.longestBeneficiary
-    },
-
-    clickFunc() {
-      return this.toggleBeneficiary
-    }
   },
 
   methods: {
+    valuefunc(item, fm) {
+      fm = this.FMS[fm].name
+      return item[fm] ? item[fm].allocation : 0
+    },
+
     tooltipTemplate(d) {
       // TODO: this is getting beyond silly.
       const data = d.data
-                    .filter( (x) => x.allocation != 0 );
+                    .filter( (x) => x.value != 0 );
       const datatxt = data
         .map( (x) => `
-            <li>${ x.name } : ${ this.currency(x.allocation) }</li>
+            <li>${ x.name } : ${ this.currency(x.value) }</li>
         ` )
         .join("");
 
@@ -52,13 +55,9 @@ export default StatesBarChart.extend({
         </svg>
           <span class="name">${d.name}</span>
         </div>
-        <ul> ${ datatxt } </ul>
+        <ul>${ datatxt }</ul>
         <span class="action">Click to filter by beneficiary state</span>
       `;
-    },
-
-    handleFilterBeneficiary() {
-      this.handleStateFilter()
     },
   },
 });

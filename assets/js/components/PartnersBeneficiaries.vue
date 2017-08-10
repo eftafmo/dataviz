@@ -1,15 +1,67 @@
 <script>
-import Beneficiaries from './Beneficiaries';
+import StatesBarChart from './StatesBarChart';
+
 import PartnersMixin from './mixins/Partners';
+import BeneficiariesMixin from './mixins/BeneficiariesBarChart';
 
 
-export default Beneficiaries.extend({
-  mixins: [PartnersMixin],
+export default StatesBarChart.extend({
+  mixins: [
+    PartnersMixin,
+    BeneficiariesMixin,
+  ],
 
   data() {
     return {
-      title: 'Organizations with donor partner by beneficiary'
+      title: 'Organizations with donor partner by beneficiary state'
     }
+  },
+
+  created() {
+    for (const col of [
+      {source: "programme_operators",
+       destination: this.types.programmes.column,
+       type: Object},
+      {source: "project_promoters",
+       destination: this.types.projects.column,
+       type: Object},
+    ])
+      this.aggregate_on.push(col)
+  },
+
+  computed: {
+    div_types() {
+      const base = {
+        programmes: {
+          name: "Programme organisations",
+          column: "programme_orgs",
+        },
+
+        projects: {
+          name: "Project organisations",
+          column: "project_orgs",
+        },
+      }
+
+      const types = []
+
+      for (const k in base) {
+        types.push(Object.assign({
+          id: k,
+          colour: this.colours[k],
+        }, base[k]))
+      }
+
+      return types
+    },
+    types() {
+      // the same thing, but as a dict
+      const out = {}
+      for (const type of this.div_types) {
+        out[type.id] = type
+      }
+      return out
+    },
   },
 
   updated() {
@@ -21,15 +73,18 @@ export default Beneficiaries.extend({
     title.style.marginBottom = '1rem'
   },
 
-
   methods: {
+    valuefunc(item, type) {
+      const orgs = item[this.types[type].column] // this is a set
+      return orgs ? orgs.size() : 0
+    },
+
     tooltipTemplate(d) {
-      // TODO: oh my, the copy-paste. it hurts.
       const data = d.data
                     .filter( (x) => x.value != 0 );
       const datatxt = data
         .map( (x) => `
-            <ul>${ x.name } : ${ this.number(x.project_count) } projects</ul>
+            <ul>${ this.number(x.value) } ${ x.name }</ul>
         ` )
         .join("");
 

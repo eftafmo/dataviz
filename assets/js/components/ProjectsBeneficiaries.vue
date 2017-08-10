@@ -21,7 +21,7 @@ export default Beneficiaries.extend({
                     .filter( (x) => x.value != 0 );
       const datatxt = data
         .map( (x) => `
-            <ul>${ x.name } : ${ this.number(x.project_count) } projects</ul>
+            <ul>${ x.name } : ${ this.number(d[x.name].project_count) } projects</ul>
         ` )
         .join("");
 

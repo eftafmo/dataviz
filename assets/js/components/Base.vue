@@ -175,33 +175,60 @@ export default Vue.extend({
 
     aggregate(data, by, on, flatten=false) {
       /*
-         by: array of columns names to aggregate by,
-         on: array of columns names to aggregate on,
+         by: array of column specs to aggregate by,
+         on: array of column specs to aggregate on,
          flatten: whether to return the data as an array.
                   defaults to false (returns the raw tree).
 
-         a column spec can be either a string or an object of the form
+         a column spec can be either a string (the column name),
+         or an object of the form:
          {
            source: 'input_column_name',
            destination: 'output_column_name',
+           type: ObjectType, // defaults to Number
          }
-         `columns` also take a `type` property, which defaults to Number
-           and a `filter_by` property, which expects boolean values (false and undefined rows are excluded)
+
+         `by` can also take
+          - a `final` property, which specifies that the aggregation
+            should be done at the leaf level instead.
+            only one such column may exist.
+
+         `on` can also take
+          - a `filter_by` property, which expects boolean values
+            (false and undefined rows are excluded).
        */
 
       const bycols = {};
+      let finalbycol;
       for (const col of by) {
-        let src, dst;
+        let src, dst,
+            final = false;
         if (typeof col == 'string') {
           src = dst = col;
         } else {
           src = col.source;
           dst = col.destination;
+          final = col.final;
 
           if (dst === undefined) dst = src;
         }
 
-        bycols[src] = dst;
+        if (!src)
+          throw new Error(
+            "`by` column source not provided: " +
+            JSON.stringify(col)
+          )
+
+        if (final) {
+          if (finalbycol)
+            throw new Error("Multiple final `by` columns")
+          finalbycol = {
+            source: src,
+            destination: dst,
+          }
+        } else {
+          bycols[src] = dst;
+        }
       }
       const _bycols = Object.keys(bycols);
 
@@ -220,6 +247,12 @@ export default Vue.extend({
           if (dst === undefined) dst = src;
           if (type === undefined) type = Number;
         }
+
+        if (!src)
+          throw new Error(
+            "`on` column source not provided: " +
+            JSON.stringify(col)
+          )
 
         oncols[src] = {destination: dst, type: type, filter_by: filter_by};
       };
