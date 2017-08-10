@@ -1,6 +1,8 @@
 <template>
 <div :class="[$options.type, { rendering: !rendered }]">
-  <h2>{{title}}</h2>
+  <slot name="title">
+    <h2>{{ title }}</h2>
+  </slot>
   <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
 
 <!--
@@ -193,6 +195,9 @@ export default Chart.extend({
 
     idx = this.aggregate_on.findIndex(x => x.source == groupcol);
     if (idx !== -1) this.aggregate_on.splice(idx, 1);
+
+    // remember the current height
+    this._height = 0;
   },
 
   computed: {
@@ -244,8 +249,7 @@ export default Chart.extend({
     height() {
       // only resize the chart if there's not enough drawing room
       // (prevents the footer from dancing around during filtering)
-      this._height = this._height ? Math.max(this._height, this.itemsHeight) :
-                                    this.itemsHeight;
+      this._height = Math.max(this._height, this.itemsHeight)
       return this._height;
     },
 
