@@ -16,6 +16,8 @@ export {default as Beneficiaries} from './Beneficiaries';
 export {default as PartnersBeneficiaries} from './PartnersBeneficiaries';
 export {default as ProjectsBeneficiaries} from './ProjectsBeneficiaries';
 
+export {default as PartnersDonors} from './PartnersDonors';
+
 export {default as Summary} from './Summary';
 export {default as ProjectsSummary} from './ProjectsSummary';
 

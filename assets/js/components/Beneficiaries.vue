@@ -3,13 +3,13 @@ import * as d3 from 'd3';
 
 import StatesBarChart from './StatesBarChart';
 
-import BeneficiariesMixin from './mixins/BeneficiariesBarChart';
+import BeneficiariesBarChartMixin from './mixins/BeneficiariesBarChart';
 import WithFMsMixin from './mixins/WithFMs';
 
 
 export default StatesBarChart.extend({
   mixins: [
-    BeneficiariesMixin,
+    BeneficiariesBarChartMixin,
     WithFMsMixin,
   ],
 
