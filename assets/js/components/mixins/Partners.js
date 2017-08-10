@@ -11,7 +11,7 @@ export default {
   },
 
   created() {
-    this.filter_by.push('donor_state');
+    this.filter_by.push('donor');
 
     for (const col of this.aggregate_on) {
       // remove the filtering
@@ -20,7 +20,7 @@ export default {
     }
 
     for (const colspec of [
-      {source: 'donor_state', destination: 'donor_states', type: String},
+      {source: 'donor', destination: 'donors', type: String},
       {source: 'partnership_programmes', type: Object},
     ]) {
       this.aggregate_on.push(colspec);

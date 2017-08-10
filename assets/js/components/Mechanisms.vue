@@ -173,7 +173,7 @@ export default Chart.extend({
           <span class="name">${d.name}</span>
         </div>
         <div class="subtitle-container">
-          <span class="donor-states">${d.donors}</span>
+          <span class="donor-states">${d.donor_list}</span>
         </div>
         <ul>
           <li>${this.currency(d.allocation)}</li>

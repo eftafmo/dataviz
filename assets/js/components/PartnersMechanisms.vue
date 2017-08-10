@@ -53,7 +53,7 @@ const Mechanisms = BaseMechanisms.extend({
       for (const k in aggregated) {
         const item = aggregated[k];
         // TODO: division by zero ever possible?
-        item.allocation = item.allocation / item.donor_states.size();
+        item.allocation = item.allocation / item.donors.size();
       }
 
       return aggregated;
@@ -69,7 +69,7 @@ const Mechanisms = BaseMechanisms.extend({
         <ul>
           <li>${d.partnership_programmes.size()} partner programmes</li>
 <!--
-          <li>Donors: ${d.donor_states.values().join(", ")}</li>
+          <li>Donors: ${d.donors.values().join(", ")}</li>
           <li>${this.currency(d.allocation)} gross allocation</li>
 -->
           <li>${d.beneficiaries.size()} `+  this.singularize(`beneficiary states`, d.beneficiaries.size()) + `</li>

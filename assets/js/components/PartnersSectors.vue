@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 
 import Sectors from './Sectors';
 import PartnersMixin from './mixins/Partners';
+import {COUNTRIES} from './mixins/WithCountries';
 
 
 export default Sectors.extend({
@@ -37,7 +38,7 @@ export default Sectors.extend({
     tooltipTemplate(d) {
       // TODO: such horribleness. sad face.
       let thing = "programme area",
-          dss = d.data.donor_states,
+          dss = d.data.donors,
           bss = d.data.beneficiaries;
 
       if(d.depth == 1) {
@@ -46,8 +47,8 @@ export default Sectors.extend({
         bss = d3.set();
 
         for (const c of d.children) {
-          if (c.data.donor_states)
-            for (const ds of c.data.donor_states.values())
+          if (c.data.donors)
+            for (const ds of c.data.donors.values())
               dss.add(ds);
           if (c.data.beneficiaries)
             for (const bs of c.data.beneficiaries.values())
@@ -63,7 +64,7 @@ export default Sectors.extend({
         </div>
         <ul>
           <li>${ this.display(d) }</li>
-          <li>Donors: ${dss.values().join(", ")}</li>
+          <li>Donors: ${dss.values().map(x => COUNTRIES[x].name).join(", ")}</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>

@@ -386,6 +386,10 @@ export default Vue.extend({
       const type = "area";
       this.handleFilter(type, val, old);
     },
+    handleFilterDonor(val, old) {
+      const type = "donor";
+      this.handleFilter(type, val, old);
+    },
   },
   watch: {
     'isReady': 'main',
@@ -395,6 +399,7 @@ export default Vue.extend({
     'filters.beneficiary': 'handleFilterBeneficiary',
     'filters.sector': 'handleFilterSector',
     'filters.area': 'handleFilterArea',
+    'filters.donor': 'handleFilterDonor',
 
     // this one is used only for vue transitions
     'filters': {

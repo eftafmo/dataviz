@@ -149,15 +149,15 @@ export default Vue.extend({
     this.format_pa = function(programme_area) {
       return _programme_areas[programme_area]['short_name'];
     };
-    this.format_bs = function(country_code) {
+    this.get_country = function(country_code) {
       return COUNTRIES[country_code]['name'];
     }
     this.FILTER_SETTINGS = {
       fm: {name:'FM'},
-      beneficiary: {name: 'BS', formatter: this.format_bs},
+      beneficiary: {name: 'BS', formatter: this.get_country},
       sector: {name: 'PS', truncate: 20},
       area: {name:'PA', formatter: this.format_pa},
-      donor: {name: 'DS'},
+      donor: {name: 'DS', formatter: this.get_country},
       DPP: {name: 'Programme partner', truncate: 60},
       dpp: {name: 'Project partner', truncate: 60},
     }

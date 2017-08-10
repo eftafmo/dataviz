@@ -12,6 +12,10 @@
       id: "NO",
       name: "Norway",
     },
+    Intl: {
+      id: "Intl",
+      name: "International",
+    },
   },
   beneficiaries: {
     BG: {

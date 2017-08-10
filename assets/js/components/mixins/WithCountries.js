@@ -87,6 +87,13 @@ export default {
                                  null : b.id;
     },
 
+    toggleDonor(d, etarget) {
+      if (d.total == 0) return;
+
+      this.filters.donor = this.filters.donor == d.id ?
+                           null : d.id;
+    },
+
     get_flag_name(c) { return get_flag_name(c) },
     get_country_name(c) { return get_country_name(c)},
   },
