@@ -481,7 +481,7 @@ def partners(request):
                 'sector': a.programme_area.priority_sector.name,
                 'area': a.programme_area.name,
                 'beneficiary': a.state.code,
-                'donor_state': donor_state,
+                'donor': donor_state,
                 'allocation': a.gross_allocation,
                 'dpp_project_count': dpp_project_count.get(key, 0),
                 'dpp_programmes': dpp_programmes.get(key, {}),
