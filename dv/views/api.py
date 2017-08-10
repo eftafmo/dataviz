@@ -289,10 +289,10 @@ def partners(request):
 
     # Because everything else is International
     DONOR_STATES = {
-        'Iceland': 'Iceland',
-        'Liechtenstein': 'Liechtenstein',
-        'Norway': 'Norway',
-        'International': 'International',
+        'Iceland': 'IS',
+        'Liechtenstein': 'LI',
+        'Norway': 'NO',
+        'International': 'Intl',
     }
 
     # Even if allocations are duplicated for each donor state, FM chart looks the same
@@ -342,9 +342,7 @@ def partners(request):
     programme_donors = defaultdict(list)
     for item in programme_donors_raw:
         programme_donors[item['programme_id']].append(
-            DONOR_STATES.get(
-                item['organisation__country'], 'International'
-            )
+            DONOR_STATES.get(item['organisation__country'], 'Intl')
         )
 
     # Get Donor *Programme* Partners by PA and BS (via programmes)
@@ -374,8 +372,7 @@ def partners(request):
     )
     for item in DPP_raw:
         donor_state = DONOR_STATES.get(
-            item['programme__organisation_roles__organisation__country'],
-            'International'
+            item['programme__organisation_roles__organisation__country'], 'Intl'
         )
         key = item['outcome__programme_area__code'] + item['state__code'] + donor_state
         org_id = item['programme__organisation_roles__organisation_id']
@@ -424,10 +421,7 @@ def partners(request):
         defaultdict(lambda: defaultdict(dict)),
     )
     for item in project_counts_raw:
-        donor_state = DONOR_STATES.get(
-            item['organisation__country'],
-            'International'
-        )
+        donor_state = DONOR_STATES.get(item['organisation__country'], 'Intl')
         key = item['project__programme_area_id'] + item['project__state_id'] + donor_state
         if item['organisation_role_id'] == 'PJDPP':
             # Donor project partners
@@ -473,7 +467,7 @@ def partners(request):
 
     out = []
     for a in allocations:
-        for donor_state in DONOR_STATES:
+        for donor_state in DONOR_STATES.values():
             key = a.programme_area.code + a.state_id + donor_state
             out.append({
                 # TODO: switch these to ids(?)
