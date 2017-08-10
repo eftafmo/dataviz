@@ -1,5 +1,5 @@
 <template>
-<div class="donor-programmes">
+<div v-if="hasData" class="donor-programmes">
  <table v-for="items in data">
    <thead>
      <th>{{items.donor}} organizations</th>
