@@ -2,7 +2,7 @@
 <div class="donor-programmes">
  <table v-for="items in data">
    <thead>
-     <th>{{items.donor_state}} organizations</th>
+     <th>{{items.donor}} organizations</th>
      <th>countries ({{items.countries.length}})</th>
      <th>programmes ({{items.programmes.length}})</th>
    </thead>
@@ -84,8 +84,7 @@
 
 import Vue from 'vue';
 import * as d3 from 'd3';
-import BaseMixin from './mixins/Base';
-import {FILTERS} from '../globals.js'
+import BaseMixin from './Base';
 
 export default Vue.extend({
   mixins: [
@@ -100,17 +99,17 @@ export default Vue.extend({
 
   computed: {
     data() {
-      const dataset = this.filtered;
+      const dataset = this.dataset;
       const donor_states = [];
       let donors = {}
       let donors_map = new Set();
 
       for (let d of dataset) {
 
-        if (donor_states.indexOf(d.donor_state) === -1) {
-          donor_states.push(d.donor_state);
-          donors[donor_states.indexOf(d.donor_state)] = {
-            donor_state: d.donor_state,
+        if (donor_states.indexOf(d.donor) === -1) {
+          donor_states.push(d.donor);
+          donors[donor_states.indexOf(d.donor)] = {
+            donor: d.donor,
             donor_programme_partners: [],
             countries: [],
             programmes: []
@@ -122,23 +121,23 @@ export default Vue.extend({
           if (temp == false) {
             donors_map.add(p)
             donors_map[p] = d.donor_programme_partners[p]
-            donors_map[p].donor_state = d.donor_state
+            donors_map[p].donor = d.donor
           } else {
             for (let x of d.donor_programme_partners[p].programmes) {
               if (donors_map[p].programmes.indexOf(x) === -1)
                 donors_map[p].programmes.push(x)
-              if (donors[donor_states.indexOf(d.donor_state)].programmes.indexOf(x) === -1)
-                donors[donor_states.indexOf(d.donor_state)].programmes.push(x)
+              if (donors[donor_states.indexOf(d.donor)].programmes.indexOf(x) === -1)
+                donors[donor_states.indexOf(d.donor)].programmes.push(x)
             }
             for (let x of d.donor_programme_partners[p].states) {
               if (donors_map[p].states.indexOf(x) === -1)
                 donors_map[p].states.push(x)
-              if (donors[donor_states.indexOf(d.donor_state)].countries.indexOf(x) === -1)
-                donors[donor_states.indexOf(d.donor_state)].countries.push(x)
+              if (donors[donor_states.indexOf(d.donor)].countries.indexOf(x) === -1)
+                donors[donor_states.indexOf(d.donor)].countries.push(x)
             }
-            if (donors_map[p].donor_state == donors[donor_states.indexOf(d.donor_state)].donor_state) {
-              if (donors[donor_states.indexOf(d.donor_state)].donor_programme_partners.indexOf(donors_map[p]) === -1)
-                donors[donor_states.indexOf(d.donor_state)].donor_programme_partners.push(donors_map[p]);
+            if (donors_map[p].donor == donors[donor_states.indexOf(d.donor)].donor) {
+              if (donors[donor_states.indexOf(d.donor)].donor_programme_partners.indexOf(donors_map[p]) === -1)
+                donors[donor_states.indexOf(d.donor)].donor_programme_partners.push(donors_map[p]);
             }
           }
         }
