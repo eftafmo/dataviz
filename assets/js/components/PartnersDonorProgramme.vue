@@ -99,7 +99,7 @@ export default Vue.extend({
 
   computed: {
     data() {
-      const dataset = this.dataset;
+      const dataset = this.filtered;
       const donor_states = [];
       let donors = {}
       let donors_map = new Set();
