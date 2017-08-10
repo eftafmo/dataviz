@@ -3,6 +3,7 @@
 require("../css/main.css");
 
 require("../js/header.js");
+require("../js/footer.js");
 
 // register polyfills
 import './lib/polyfills';
