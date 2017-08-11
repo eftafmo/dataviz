@@ -214,8 +214,9 @@ export default Vue.extend({
       window.addEventListener("keyup", function(e){
         if (e.keyCode == 27) {
           if($this.$el.querySelector('.list-filters')){
-          let last_filter = $this.$el.querySelector('.list-filters .filter-item:last-child').getAttribute('filter');
-          FILTERS[last_filter] = null
+          let last_filter = $this.$el.querySelector('.list-filters .filter-item:last-child');
+          if (!last_filter) return;
+          FILTERS[last_filter.getAttribute('filter')] = null
           }
         }
       })
