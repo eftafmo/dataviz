@@ -84,7 +84,7 @@ export default {
           <span class="name">${d.name}</span>
         </div>
         <ul> ${ datatxt } </ul>
-        <span class="action">Click to filter by beneficiary state</span>`;
+        <span class="action">Click to filter by ${ this.state_type } state</span>`;
     },
   },
 };

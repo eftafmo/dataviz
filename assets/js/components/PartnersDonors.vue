@@ -32,6 +32,15 @@ export default StatesBarChart.extend({
     }
   },
 
+  created() {
+    // need to re-remove donors from filters, because it's re-added
+    // by PartnersMixin. silly.
+    const col = "donor"
+    const idx = this.filter_by.indexOf(col)
+    if (idx !== -1)
+      this.filter_by.splice(idx, 1)
+  },
+
   computed: {
     STATES() {
       return this.DONORS
