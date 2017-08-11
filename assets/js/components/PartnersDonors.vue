@@ -20,11 +20,11 @@ export default StatesBarChart.extend({
       columns: {
         programmes: {
           source: "donor_programme_partners",
-          label: "Donor programme partners",
+          name: "Donor programme partners",
         },
         projects: {
           source: "donor_project_partners",
-          label: "Donor project partners",
+          name: "Donor project partners",
         },
       },
 

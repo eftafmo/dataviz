@@ -1,8 +1,24 @@
 // for use with StatesBarChart components
 import * as d3 from 'd3';
 
+import Legend from '../includes/Legend';
+
+
+const CustomLegend = Legend.extend({
+  props: {
+    what: {
+      type: String,
+      default: "organisations",
+    },
+  },
+})
+
 
 export default {
+  components: {
+    "chart-legend": CustomLegend,
+  },
+
   created() {
     for (const k in this.columns) {
       const col = this.columns[k]
@@ -16,24 +32,24 @@ export default {
   computed: {
     types() {
       const types = {}
-      
+
       for (const k in this.columns) {
         const col = this.columns[k]
-        
+
         types[k] = Object.assign({
           id: k,
           colour: this.colours[k],
         }, col)
       }
-      
+
       return types
     },
-    
+
     div_types() {
       return d3.values(this.types)
     },
   },
-  
+
   methods: {
     valuefunc(item, type) {
       const orgs = item[this.types[type].source] // this is a set
@@ -45,7 +61,7 @@ export default {
                     .filter( (x) => x.value != 0 );
       const datatxt = data
         .map( (x) => `
-            <ul>${ this.number(x.value) } ${ x.label }</ul>
+            <ul>${ this.number(x.value) } ${ x.name }</ul>
         ` )
         .join("");
 

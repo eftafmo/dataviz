@@ -18,11 +18,11 @@ export default StatesBarChart.extend({
       columns: {
         programmes: {
           source: "programme_operators",
-          label: "Programme operators",
+          name: "Programme operators",
         },
         projects: {
           source: "project_promoters",
-          label: "Project promoters",
+          name: "Project promoters",
         },
       },
 

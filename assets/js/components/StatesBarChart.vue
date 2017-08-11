@@ -12,6 +12,11 @@
   </div>
 -->
 
+  <chart-legend
+      class="inline"
+      :items="legend_items"
+  ></chart-legend>
+
   <svg width="100%" :height="height + 'px'" class="chart">
     <defs>
       <filter id="drop-shadow">
@@ -138,6 +143,8 @@ import Chart from './Chart';
 import WithCountriesMixin, {get_flag_name} from './mixins/WithCountries';
 import WithTooltipMixin from './mixins/WithTooltip';
 
+import Legend from './includes/Legend';
+
 
 export default Chart.extend({
   type: "states",
@@ -146,6 +153,10 @@ export default Chart.extend({
     WithCountriesMixin,
     WithTooltipMixin,
   ],
+
+  components: {
+    "chart-legend": Legend,
+  },
 
   beforeCreate() {
     this.grayscaleMatrix = [
@@ -351,6 +362,18 @@ export default Chart.extend({
           }
           return totals
         }, {})
+    },
+
+    legend_items() {
+      // just the totals merged into the types
+      const out = {}
+      for (const t in this.types) {
+        out[t] = Object.assign({
+          value: this.totals[t],
+        }, this.types[t])
+      }
+      // return an array though
+      return d3.values(out)
     },
   },
 
