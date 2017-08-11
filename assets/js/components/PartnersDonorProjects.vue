@@ -15,7 +15,7 @@
        <td>{{item.organizations.length}}</td>
        <td>{{item.countries.size()}}</td>
        <td>{{item.programmes.size()}}</td>
-       <td>{{item.projects}}</td>
+       <td>{{item.projects.size()}}</td>
      </tr>
    </tbody>
  </table>
@@ -118,7 +118,7 @@ export default Vue.extend({
             donor: d.donor,
             countries: d3.set(),
             programmes: d3.set(),
-            projects: 0,
+            projects: d3.set(),
             organizations: {},
           }
         }
@@ -128,7 +128,7 @@ export default Vue.extend({
             org = item.organizations[org_id] = {
               countries: d3.set(),
               programmes: d3.set(),
-              projects: 0,
+              projects: d3.set(),
               name: d.donor_project_partners[org_id]
             }
           }
@@ -140,8 +140,10 @@ export default Vue.extend({
             item.programmes.add(prg);
             org.programmes.add(prg);
           }
-          org.projects += d.dpp_project_count;
-          item.projects += d.dpp_project_count;
+          for (let prj in d.dpp_projects) {
+            item.projects.add(prj);
+            org.projects.add(prj);
+          }
         }
       }
       const donors = [];

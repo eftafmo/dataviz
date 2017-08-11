@@ -411,8 +411,8 @@ def partners(request):
         organisation_role_id__in=['PJDPP', 'PJPT']
     ).distinct()
 
-    dpp_project_count, dpp_programmes, dpp_states = (
-        defaultdict(int),
+    dpp_projects, dpp_programmes, dpp_states = (
+        defaultdict(dict),
         defaultdict(dict),
         defaultdict(dict),
     )
@@ -425,7 +425,7 @@ def partners(request):
         key = item['project__programme_area_id'] + item['project__state_id'] + donor_state
         if item['organisation_role_id'] == 'PJDPP':
             # Donor project partners
-            dpp_project_count[key] += 1
+            dpp_projects[key][item['project_id']] = item['project_id']
             dpp_programmes[key][item['programme_id']] = item['programme_id']
             dpp_states[key][item['project__state_id']] = item['project__state_id']
             dpp_orgs[key][item['organisation_id']] = item['organisation__name']
@@ -477,7 +477,7 @@ def partners(request):
                 'beneficiary': a.state.code,
                 'donor': donor_state,
                 'allocation': a.gross_allocation,
-                'dpp_project_count': dpp_project_count.get(key, 0),
+                'dpp_projects': dpp_projects.get(key, {}),
                 'dpp_programmes': dpp_programmes.get(key, {}),
                 'dpp_states': dpp_states.get(key, {}),
                 'news': news.get(key, []),
