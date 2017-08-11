@@ -10,9 +10,14 @@
 <style lang="less">
 .fms.viz.partners {
   .legend {
+    .fms{
+      text-align: left;
+    }
     .fm {
       border: none;
-
+      padding-right: 0;
+      margin-right: 0;
+      min-width: initial;
       span.fill {
         vertical-align: middle;
         width: 1.4em;

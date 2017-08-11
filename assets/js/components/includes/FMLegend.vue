@@ -27,7 +27,9 @@
 .legend {
   .fm {
     list-style-type: none;
-    margin-right: 2rem;
+    @media(min-width: 800px){
+      margin-right: 2rem;
+    }
 
     span.fill {
       display: inline-block;
