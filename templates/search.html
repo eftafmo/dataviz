@@ -75,18 +75,20 @@
               <span>{{ res.programme_status.0 }}</span>
             </div>
             <p>
-              <span>{{ res.financial_mechanism_ss.0 }}</span> |
-              <span>PS: {{ res.priority_sector_ss.0 }}</span> |
-              <span>
-                PA:
+              <div>
+                <b>FM:</b> {{ res.financial_mechanism_ss.0 }}
+              </div>
+              <div><b>PS:</b> {{ res.priority_sector_ss.0 }}</div>
+              <div>
+               <b>PA:</b>
                 {% for pa in res.programme_area_ss %}
                   <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
-              </span>
+              </div>
             </p>
             <p>
               <span>
-                Outcomes:
+                <b>Outcomes:</b>
                 {% for outcome in res.outcome_ss %}
                   <span>{{ outcome }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
@@ -103,19 +105,19 @@
               <span>{{ res.project_status.0 }}</span>
             </div>
             <p>
-              <span>{{ res.financial_mechanism_ss.0 }}</span> |
-              <span>PS: {{ res.priority_sector_ss.0 }}</span> |
-              <span>PA: {{ res.programme_area_ss.0 }}</span>
+              <div><b>FM:</b> {{ res.financial_mechanism_ss.0 }}</div>
+              <div><b>PS:</b> {{ res.priority_sector_ss.0 }}</div>
+              <div><b>PA:</b> {{ res.programme_area_ss.0 }}</div>
             </p>
             <p>
-              <span>Programme: {{ res.programme_name.0 }}</span>
+              <span><b>Programme:</b> {{ res.programme_name.0 }}</span>
             </p>
             <p>
-              <span>Outcome: {{ res.project_outcome }}</span>
+              <span><b>Outcome:</b> {{ res.project_outcome }}</span>
             </p>
             <p>
               <span>
-                Themes:
+                <b>Themes:</b>
                 {% for th in res.theme_ss %}
                   <span>{{ th }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
@@ -133,10 +135,10 @@
             </div>
 
             <p>
-              <span>{{ res.financial_mechanism_ss.0 }}</span> |
-              <span>PS: {{ res.priority_sector_ss.0 }}</span> |
+              <div><b>FM:</b> {{ res.financial_mechanism_ss.0 }}</div>
+              <div><b>PS:</b> {{ res.priority_sector_ss.0 }}</div>
               <span>
-                PA:
+                <b>PA:</b>
                 {% for pa in res.programme_area_ss %}
                   <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
                 {% endfor %}
@@ -145,28 +147,28 @@
 
             <p>
               <span>
-                Role:
+                <b>Role:</b>
                 {% for role in res.role_ss %}
                   <span>{{ role }}</span>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
               </span>
             </p>
 
-            <div>
+            <div class="search_listing">
             {% if res.programme_name %}
-              Programmes:
+              <b>Programmes:</b>
               <ul>
               {% for pr in res.programme_name %}
-                <li>{{ pr }}</li>
+                <li><span>{{ pr }}</span></li>
               {% endfor %}
               </ul>
             {% endif %}
 
             {% if res.project_name %}
-              Projects:
+              <b>Projects:</b>
               <ul>
               {% for pr in res.project_name %}
-                <li>{{ pr }}</li>
+                <li><span>{{ pr }}</span></li>
               {% endfor %}
               </ul>
             {% endif %}

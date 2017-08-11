@@ -175,3 +175,12 @@
   margin-top: .5rem;
   margin-bottom: .5rem;
 }
+
+
+.search_listing li{
+    list-style-type: square;
+    color: #56bafc;
+}
+.search_listing span {
+  color: #444;
+}
