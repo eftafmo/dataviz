@@ -185,15 +185,20 @@
   color: #444;
 }
 
-.search.sidebar::-webkit-scrollbar-track {
+.sidebar-body::-webkit-scrollbar-track {
   background-color: #fff;
 }
 
-.search.sidebar::-webkit-scrollbar {
+.sidebar-body::-webkit-scrollbar {
   width: 5px;
   background-color: #eee;
 }
 
-.search.sidebar::-webkit-scrollbar-thumb {
+.sidebar-body::-webkit-scrollbar-thumb {
   background-color: #50B9FF;
+}
+
+
+.sidebar-body{
+  max-height: calc(80vh - 93px);
 }
