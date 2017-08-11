@@ -295,7 +295,7 @@ export default Chart.extend({
           const data = this.getRegionData(type, r)
 
           // skip no-data
-          if(!data.length) continue
+          if(!data || !data.length) continue
 
           //canvas = this._ccache[type][r] = document.createElement("canvas")
           const canvas = document.createElement("canvas")
