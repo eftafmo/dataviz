@@ -35,7 +35,7 @@ export default StatesBarChart.extend({
     let title = this.$el.querySelector('h2')
     if(!dropdown) return;
     dropdown.style.cssFloat = 'initial'
-    dropdown.style.marginBottom = '4rem'
+    dropdown.style.marginBottom = '2rem'
     title.style.marginBottom = '1rem'
   },
 });
