@@ -1,5 +1,6 @@
 <template>
 <div class="donor-projects">
+ <h2>{{title}}</h2>
  <table>
    <thead>
      <th>Donor state</th>
@@ -101,13 +102,12 @@ export default Vue.extend({
 
   data(){
     return {
-      item: Object,
+      title: "Donor project partners",
     }
   },
 
   computed: {
     data() {
-
     },
   },
 

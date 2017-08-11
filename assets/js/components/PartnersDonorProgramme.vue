@@ -1,5 +1,6 @@
 <template>
 <div v-if="hasData" class="donor-programmes">
+ <h2>{{title}}</h2>
  <table v-for="item in data">
    <thead>
      <th>{{get_country_alt_name(item.donor)}} organizations</th>
@@ -97,7 +98,7 @@ export default Vue.extend({
 
   data(){
     return {
-      item: Object,
+      title: "Donor programme partners",
     }
   },
 
@@ -109,7 +110,7 @@ export default Vue.extend({
 
       for (let d of dataset) {
         let item = out[d.donor];
-        if (item === undefined) {
+        if (item === undefined && Object.keys(d.donor_programme_partners).length > 0 ) {
           item = out[d.donor] = {
             donor: d.donor,
             countries: d3.set(),
@@ -137,7 +138,6 @@ export default Vue.extend({
           }
         }
       }
-
       const donors = [];
       for (let donor in out) {
         // convert main dict to array
