@@ -163,7 +163,6 @@ export default Vue.extend({
           $this.get_sort_order(a.donor),
           $this.get_sort_order(b.donor)
       ));
-      console.log(donors);
       return donors
     },
   },
