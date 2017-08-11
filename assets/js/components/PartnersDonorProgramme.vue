@@ -1,16 +1,16 @@
 <template>
 <div v-if="hasData" class="donor-programmes">
- <table v-for="items in data">
+ <table v-for="item in data">
    <thead>
-     <th>{{get_country_alt_name(items.donor)}} organizations</th>
-     <th>Countries ({{items.countries.length}})</th>
-     <th>Programmes ({{items.programmes.length}})</th>
+     <th>{{get_country_alt_name(item.donor)}} organizations</th>
+     <th>Countries ({{item.countries.size()}})</th>
+     <th>Programmes ({{item.programmes.size()}})</th>
    </thead>
    <tbody>
-     <tr v-for="progammes in items.donor_programme_partners">
-       <td>{{progammes.name}}</td>
-       <td>{{progammes.states.length}}</td>
-       <td>{{progammes.programmes.length}}</td>
+     <tr v-for="org in item.organizations">
+       <td>{{org.name}}</td>
+       <td>{{org.countries.size()}}</td>
+       <td>{{org.programmes.size()}}</td>
      </tr>
    </tbody>
  </table>
@@ -105,53 +105,55 @@ export default Vue.extend({
     data() {
       const $this = this;
       const dataset = this.filtered;
-      const donor_states = [];
-      let donors = []
-      let donors_map = new Set();
+      const out = {}
 
       for (let d of dataset) {
-
-        if (donor_states.indexOf(d.donor) === -1) {
-          donor_states.push(d.donor);
-          donors[donor_states.indexOf(d.donor)] = {
+        let item = out[d.donor];
+        if (item === undefined) {
+          item = out[d.donor] = {
             donor: d.donor,
-            donor_programme_partners: [],
-            countries: [],
-            programmes: []
+            countries: d3.set(),
+            programmes: d3.set(),
+            organizations: {},
           }
         }
+        for (let org_id in d.donor_programme_partners) {
+          let org = item.organizations[org_id]
+          const org_data = d.donor_programme_partners[org_id]
+          if (org == undefined) {
+            org = item.organizations[org_id] = {
+              countries: d3.set(),
+              programmes: d3.set(),
+              name: org_data.name
+            }
+          }
+          for (let state of org_data.states) {
+            item.countries.add(state);
+            org.countries.add(state);
+          }
+          for (let prg of org_data.programmes) {
+            item.programmes.add(prg);
+            org.programmes.add(prg);
+          }
+        }
+      }
 
-        for (let p in d.donor_programme_partners) {
-          let temp = donors_map.has(p)
-          if (temp == false) {
-            donors_map.add(p)
-            donors_map[p] = d.donor_programme_partners[p]
-            donors_map[p].donor = d.donor
-          } else {
-            for (let x of d.donor_programme_partners[p].programmes) {
-              if (donors_map[p].programmes.indexOf(x) === -1)
-                donors_map[p].programmes.push(x)
-              if (donors[donor_states.indexOf(d.donor)].programmes.indexOf(x) === -1)
-                donors[donor_states.indexOf(d.donor)].programmes.push(x)
-            }
-            for (let x of d.donor_programme_partners[p].states) {
-              if (donors_map[p].states.indexOf(x) === -1)
-                donors_map[p].states.push(x)
-              if (donors[donor_states.indexOf(d.donor)].countries.indexOf(x) === -1)
-                donors[donor_states.indexOf(d.donor)].countries.push(x)
-            }
-            if (donors_map[p].donor == donors[donor_states.indexOf(d.donor)].donor) {
-              if (donors[donor_states.indexOf(d.donor)].donor_programme_partners.indexOf(donors_map[p]) === -1)
-                donors[donor_states.indexOf(d.donor)].donor_programme_partners.push(donors_map[p]);
-            }
-          }
+      const donors = [];
+      for (let donor in out) {
+        // convert main dict to array
+        const orgs = []
+        for (let org_id in out[donor].organizations) {
+          // convert organisations dict to array and sort
+          orgs.push(out[donor].organizations[org_id]);
         }
+        out[donor].organizations = orgs;
+        orgs.sort((a,b) => d3.ascending(a.name, b.name));
+        donors.push(out[donor]);
       }
       donors.sort((a,b) => d3.ascending(
           $this.get_sort_order(a.donor),
           $this.get_sort_order(b.donor)
       ));
-
       return donors
     },
   },
