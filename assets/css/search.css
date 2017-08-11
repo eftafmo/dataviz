@@ -184,3 +184,16 @@
 .search_listing span {
   color: #444;
 }
+
+.search.sidebar::-webkit-scrollbar-track {
+  background-color: #fff;
+}
+
+.search.sidebar::-webkit-scrollbar {
+  width: 5px;
+  background-color: #eee;
+}
+
+.search.sidebar::-webkit-scrollbar-thumb {
+  background-color: #50B9FF;
+}
