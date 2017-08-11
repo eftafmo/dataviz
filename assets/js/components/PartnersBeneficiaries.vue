@@ -3,7 +3,7 @@ import StatesBarChart from './StatesBarChart';
 
 import PartnersMixin from './mixins/Partners';
 import BeneficiariesBarChartMixin from './mixins/BeneficiariesBarChart';
-import PartnersBarChartMixin from './mixins/PartnersBarChart.js';
+import PartnersBarChartMixin from './mixins/PartnersBarChart';
 
 
 export default StatesBarChart.extend({

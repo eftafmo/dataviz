@@ -1,4 +1,15 @@
-// for use with StatesBarChart components
+<!-- for use with StatesBarChart components -->
+
+<style lang="less">
+.viz.partners.states .legend {
+  .value {
+    color: #c41230;
+  }
+}
+</style>
+
+
+<script>
 import * as d3 from 'd3';
 
 import Legend from '../includes/Legend';
@@ -77,3 +88,4 @@ export default {
     },
   },
 };
+</script>
