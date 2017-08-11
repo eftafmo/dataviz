@@ -1,5 +1,5 @@
 <template>
-<div class="donor-projects">
+<div v-if="hasData" class="donor-projects">
  <h2>{{title}}</h2>
  <table>
    <thead>
@@ -10,12 +10,12 @@
      <th>Projects</th>
    </thead>
    <tbody>
-     <tr>
-       <td>Iceland</td>
-       <td>10</td>
-       <td>10</td>
-       <td>10</td>
-       <td>55</td>
+     <tr v-for="item in data">
+       <td>{{get_country_alt_name(item.donor)}}</td>
+       <td>{{item.organizations.length}}</td>
+       <td>{{item.countries.size()}}</td>
+       <td>{{item.programmes.size()}}</td>
+       <td>{{item.projects}}</td>
      </tr>
    </tbody>
  </table>
@@ -108,6 +108,61 @@ export default Vue.extend({
 
   computed: {
     data() {
+      const dataset = this.filtered;
+      const out = {}
+
+      for (let d of dataset) {
+        let item = out[d.donor];
+        if (item === undefined && Object.keys(d.donor_project_partners).length > 0 ) {
+          item = out[d.donor] = {
+            donor: d.donor,
+            countries: d3.set(),
+            programmes: d3.set(),
+            projects: 0,
+            organizations: {},
+          }
+        }
+        for (let org_id in d.donor_project_partners) {
+          let org = item.organizations[org_id]
+          if (org == undefined) {
+            org = item.organizations[org_id] = {
+              countries: d3.set(),
+              programmes: d3.set(),
+              projects: 0,
+              name: d.donor_project_partners[org_id]
+            }
+          }
+          for (let state in d.dpp_states) {
+            item.countries.add(state);
+            org.countries.add(state);
+          }
+          for (let prg in d.dpp_programmes) {
+            item.programmes.add(prg);
+            org.programmes.add(prg);
+          }
+          org.projects += d.dpp_project_count;
+          item.projects += d.dpp_project_count;
+        }
+      }
+      const donors = [];
+      for (let donor in out) {
+        // convert main dict to array
+        const orgs = []
+        for (let org_id in out[donor].organizations) {
+          // convert organisations dict to array and sort
+          orgs.push(out[donor].organizations[org_id]);
+        }
+        out[donor].organizations = orgs;
+        orgs.sort((a,b) => d3.ascending(a.name, b.name));
+        donors.push(out[donor]);
+      }
+      const $this = this;
+      donors.sort((a,b) => d3.ascending(
+          $this.get_sort_order(a.donor),
+          $this.get_sort_order(b.donor)
+      ));
+      console.log(donors);
+      return donors
     },
   },
 

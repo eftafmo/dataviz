@@ -46,10 +46,10 @@ export const Partners = Base.extend({
     sectors: components.PartnersSectors,
     xmap: components.PartnersMap,
     donors: components.PartnersDonors,
-    project_partners: components.ProjectPartners,
     beneficiaries: components.PartnersBeneficiaries,
     news: components.News,
-    programme_partners: components.DonnorProgramme,
+    programme_partners: components.PartnersDonorProgrammes,
+    project_partners: components.PartnersDonorProjects,
   },
 });
 

@@ -104,7 +104,6 @@ export default Vue.extend({
 
   computed: {
     data() {
-      const $this = this;
       const dataset = this.filtered;
       const out = {}
 
@@ -150,6 +149,7 @@ export default Vue.extend({
         orgs.sort((a,b) => d3.ascending(a.name, b.name));
         donors.push(out[donor]);
       }
+      const $this = this;
       donors.sort((a,b) => d3.ascending(
           $this.get_sort_order(a.donor),
           $this.get_sort_order(b.donor)
