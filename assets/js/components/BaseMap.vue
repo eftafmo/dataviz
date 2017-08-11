@@ -3,7 +3,7 @@
   <h2>{{title}}</h2>
   <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
 
-  <svg>
+  <svg class="defs">
     <defs>
       <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
         <rect x="0" y="0" width="50" height="6"
@@ -98,6 +98,14 @@
     }
   }
 
+  svg.defs {
+    height: 0;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
   .nuts-selector {
     position: absolute;
     top: 10px;
