@@ -30,3 +30,4 @@ export {default as Projects} from './Projects';
 
 export {default as PartnersDonorProgrammes } from './PartnersDonorProgrammes';
 export {default as PartnersDonorProjects } from './PartnersDonorProjects';
+export {default as PartnersSummary } from './PartnersSummary';
