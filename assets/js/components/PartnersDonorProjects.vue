@@ -9,13 +9,20 @@
      <th>Programmes</th>
      <th>Projects</th>
    </thead>
-   <tbody>
-     <tr v-for="item in data">
+   <tbody v-for="item in data">
+     <tr @click="show_items($event)" class="section_header">
        <td>{{get_country_alt_name(item.donor)}}</td>
        <td>{{item.organizations.length}}</td>
        <td>{{item.countries.size()}}</td>
        <td>{{item.programmes.size()}}</td>
        <td>{{item.projects.size()}}</td>
+     </tr>
+     <tr class="section_item hidden" v-for="organizations in item.organizations">
+      <td>{{organizations.name}}</td>
+      <td>  </td>
+      <td>{{organizations.countries.size()}}</td>
+      <td>{{organizations.programmes.size()}}</td>
+      <td>{{organizations.projects.size()}}</td>
      </tr>
    </tbody>
  </table>
@@ -65,6 +72,16 @@
       &:last-of-type {
         border-right:2px solid #50b9ff;
       }
+    }
+
+    .section_item.hidden {
+      display: none;
+    }
+
+    .section_header {
+      font-weight: bold;
+      cursor: pointer;
+      color: black;
     }
 
     thead {
@@ -165,6 +182,16 @@ export default Vue.extend({
       ));
       return donors
     },
+  },
+
+  methods: {
+    show_items(e){
+      let targets = e.target.parentNode.parentNode.querySelectorAll('.section_item');
+      for (let target in targets){
+        if(targets[target].classList)
+        targets[target].classList.toggle('hidden')
+      }
+    }
   },
 
 });
