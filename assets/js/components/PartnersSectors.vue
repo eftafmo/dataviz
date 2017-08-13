@@ -11,7 +11,7 @@ export default Sectors.extend({
 
   data(){
     return {
-      title: 'Donor partner programmes by priority sector',
+      title: 'Donor partner programmes by sector',
     }
   },
 
