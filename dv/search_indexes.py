@@ -79,8 +79,8 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     state_name = indexes.FacetMultiValueField(model_attr='state__name')
     financial_mechanism_ss = indexes.FacetMultiValueField()
-    programme_area_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__name')
-    priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme__programme_areas__priority_sector__name')
+    programme_area_ss = indexes.FacetMultiValueField(model_attr='programme_area__name')
+    priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_area__priority_sector__name')
     programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
     programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
 
