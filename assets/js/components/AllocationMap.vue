@@ -50,7 +50,7 @@ export default BaseMap.extend({
       } else {
         return `
           <div class="title-container">
-            <span class="name">${ this.map.geodetails[d.id].name } (${d.id})</span>
+            <span class="name">${ this.get_nuts_label(d.id) } (${d.id})</span>
           </div>
           ${ this.currency(allocation) }
           <small>(Temporary)<small>
