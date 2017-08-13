@@ -1,6 +1,6 @@
 <template>
 <div class="nuts-selector">
-  <label>show NUTS level</label>
+  <label>NUTS level</label>
   <div>
     <input type="range"
            :min="min" :max="max" :step="step"
