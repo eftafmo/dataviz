@@ -52,22 +52,21 @@ import Component from './Component';
 export default Component.extend({
   computed: {
     data() {
-    const dataset = this.filtered;
-    let out = [];
-    let unique = new Set();
-
-    for (let d of dataset) {
-      for (let news in d.news){
-        out.push(d.news[news])
+      const dataset = this.filtered;
+      const unique = {};
+      // use dict to remove duplicates
+      for (const d of dataset) {
+        for (const news of d.news){
+          unique[news.link] = news;
+        }
       }
-    }
-    // remove duplicates
-    out.forEach(e => unique.add(JSON.stringify(e)));
-    out = Array.from(unique).map(e => JSON.parse(e));
-    out.sort((a,b) => d3.descending(a.created,b.created));
-
-    return out;
-
+      const out = [];
+      for (const link in unique) {
+        out.push(unique[link]);
+      }
+      // sort by date
+      out.sort((a,b) => d3.descending(a.created,b.created));
+      return out;
     },
   },
 
