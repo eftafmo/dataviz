@@ -58,10 +58,11 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_financial_mechanism_ss(self, obj):
         pa = obj.programme_areas.all()
+        # TODO: get via PA > PS > FM instead of Allocation
         return list(Allocation.objects.filter(
             programme_area__in=pa
         ).values_list(
-            'financial_mechanism__name', flat=True
+            'financial_mechanism__grant_name', flat=True
         ).distinct())
 
     def prepare_outcome_ss(self, obj):
@@ -78,7 +79,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     state_name = indexes.FacetMultiValueField(model_attr='state__name')
-    financial_mechanism_ss = indexes.FacetMultiValueField()
+    financial_mechanism_ss = indexes.FacetMultiValueField(model_attr='financial_mechanism__grant_name')
     programme_area_ss = indexes.FacetMultiValueField(model_attr='programme_area__name')
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_area__priority_sector__name')
     programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
@@ -107,18 +108,13 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return 'Project'
 
     def prepare_financial_mechanism_ss(self, obj):
-        return list(obj.programme_area.allocation_set.values_list(
-            'financial_mechanism__name',
-            flat=True,
-        ).distinct())
+        return [obj.financial_mechanism.grant_name]
 
     def prepare_programme_area_ss(self, obj):
-        return list(obj.programme.programme_areas.values_list(
-            'name', flat=True).distinct())
+        return [obj.programme_area.name]
 
     def prepare_priority_sector_ss(self, obj):
-        return list(obj.programme.programme_areas.values_list(
-            'priority_sector__name', flat=True).distinct())
+        return [obj.programme_area.priority_sector.name]
 
 
 class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
@@ -164,13 +160,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         result = result.union(obj.roles.filter(
             is_programme=False, project__isnull=False
         ).values_list(
-            'project__programme_area__allocation__financial_mechanism__name',
+            'project__programme_area__allocation__financial_mechanism__grant_name',
             flat=True,
         ).distinct())
         result = result.union(obj.roles.filter(
             is_programme=True, programme__isnull=False
         ).values_list(
-            'programme__programme_areas__allocation__financial_mechanism__name',
+            'programme__programme_areas__allocation__financial_mechanism__grant_name',
             flat=True,
         ).distinct())
         return list(result)
