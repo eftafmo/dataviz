@@ -63,8 +63,8 @@ export default Sectors.extend({
           <span>${ d.data.name }</span>
         </div>
         <ul>
+          <li>Donor states: ${dss.values().map(x => COUNTRIES[x].name).join(", ")}</li>
           <li>${ this.display(d) }</li>
-          <li>Donors: ${dss.values().map(x => COUNTRIES[x].name).join(", ")}</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>

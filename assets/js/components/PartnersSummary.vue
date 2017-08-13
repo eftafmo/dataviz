@@ -2,8 +2,8 @@
     <div v-if="hasData" class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="changed">
-          <strong>{{ data.DPP.size() }} donor programme partners</strong>
-          <small> {{ data.dpp.size() }} donor project partners</small>
+          <strong>{{ data.DPP.size() }} donor programme {{ singularize('partners', data.DPP.size()) }}</strong>
+          <small> {{ data.dpp.size() }} donor project {{ singularize('partners', data.dpp.size()) }}</small>
         </div>
       </transition>
     </div>

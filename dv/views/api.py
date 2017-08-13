@@ -395,7 +395,7 @@ def partners(request):
             programme_operators[key][org_id] = org_name
 
     # Statistics for donor *project* partners
-    project_counts_raw = Organisation_OrganisationRole.objects.all().select_related(
+    projects_raw = Organisation_OrganisationRole.objects.all().select_related(
         'organisation',
         'project',
     ).values(
@@ -406,6 +406,10 @@ def partners(request):
         'programme_id',
         'project__state_id',
         'project__programme_area_id',
+        'project__is_dpp',
+        'project__has_ended',
+        'project__is_continued_coop',
+        'project__is_improved_knowledge',
         'organisation_role_id',
     ).filter(
         organisation_role_id__in=['PJDPP', 'PJPT']
@@ -420,12 +424,17 @@ def partners(request):
         defaultdict(lambda: defaultdict(dict)),
         defaultdict(lambda: defaultdict(dict)),
     )
-    for item in project_counts_raw:
+    for item in projects_raw:
         donor_state = DONOR_STATES.get(item['organisation__country'], 'Intl')
         key = item['project__programme_area_id'] + item['project__state_id'] + donor_state
         if item['organisation_role_id'] == 'PJDPP':
             # Donor project partners
-            dpp_projects[key][item['project_id']] = item['project_id']
+            dpp_projects[key][item['project_id']] = {
+                'is_dpp': item['project__is_dpp'],
+                'has_ended': item['project__has_ended'],
+                'continued_coop': item['project__is_continued_coop'],
+                'improved_knowledge': item['project__is_improved_knowledge'],
+            }
             dpp_programmes[key][item['programme_id']] = item['programme_id']
             dpp_states[key][item['project__state_id']] = item['project__state_id']
             dpp_orgs[key][item['organisation_id']] = item['organisation__name']

@@ -51,6 +51,7 @@ export const Partners = Base.extend({
     programme_partners: components.PartnersDonorProgrammes,
     project_partners: components.PartnersDonorProjects,
     xsummary: components.PartnersSummary,
+    results: components.PartnersResults,
   },
 });
 
