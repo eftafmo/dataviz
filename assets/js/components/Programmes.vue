@@ -46,6 +46,9 @@
     display: none;
   }
 
+  .flag {
+    filter: url(#drop-shadow);
+  }
   .active .programme-sublist-wrapper     {
     display: block;
   }
