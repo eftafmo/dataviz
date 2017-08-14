@@ -67,18 +67,19 @@
     }
 
     tr {
-        border:2px solid transparent;
+        border:1px solid transparent;
+        cursor: pointer;
     }
 
     tr.section_item:hover td{
 
-      border-top:2px solid #50b9ff;
-      border-bottom:2px solid #50b9ff;
+      border-top:1px solid #50b9ff;
+      border-bottom:1px solid #50b9ff;
       &:first-of-type{
-       border-left:2px solid #50b9ff;
+       border-left:1px solid #50b9ff;
       }
       &:last-of-type {
-        border-right:2px solid #50b9ff;
+        border-right:1px solid #50b9ff;
       }
     }
 
