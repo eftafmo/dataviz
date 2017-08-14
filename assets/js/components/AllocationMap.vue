@@ -50,10 +50,11 @@ export default BaseMap.extend({
       } else {
         return `
           <div class="title-container">
+            <svg>
+              <use xlink:href="#${this.get_flag_name(d.id)}" />
+            </svg>
             <span class="name">${ this.get_nuts_label(d.id) } (${d.id})</span>
           </div>
-          ${ this.currency(allocation) }
-          <small>(Temporary)<small>
         `;
       }
     },

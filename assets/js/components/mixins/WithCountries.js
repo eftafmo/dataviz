@@ -19,6 +19,10 @@ for (const code in BENEFICIARIES) {
 }
 
 export function get_flag_name(code) {
+  if ( code.length > 2 && code != 'Intl') {
+    // because Intl is a country and has a flag
+    code = code.substring(0, 2);
+  }
   const country = COUNTRIES[code];
   if (!country) throw "Country not found: " + code;
   const flag = country.name.toLowerCase().replace(/ /g, '');
