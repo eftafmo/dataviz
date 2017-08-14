@@ -1,17 +1,25 @@
 <template>
 <div v-if="hasData" class="donor-programmes">
  <h2>{{title}}</h2>
- <table v-for="item in data">
-   <thead @click="show_items($event)" class="section_header">
-     <th>{{get_country_alt_name(item.donor)}} organisations</th>
-     <th>Countries ({{item.countries.size()}})</th>
-     <th>Programmes ({{item.programmes.size()}})</th>
+ <table>
+   <thead>
+     <th>Donor state</th>
+     <th>Organisations</th>
+     <th>Countries</th>
+     <th>Programmes</th>
    </thead>
-   <tbody class="section_item hidden" v-for="organizations in item.organizations">
-     <tr v-for="org in item.organizations">
-       <td>{{org.name}}</td>
-       <td>{{org.countries.size()}}</td>
-       <td>{{org.programmes.size()}}</td>
+   <tbody v-for="item in data">
+     <tr @click="show_items($event)" class="section_header">
+       <td>{{get_country_name(item.donor)}}</td>
+       <td>{{item.organizations.length}}</td>
+       <td>{{item.countries.size()}}</td>
+       <td>{{item.programmes.size()}}</td>
+     </tr>
+     <tr class="section_item hidden" v-for="organizations in item.organizations">
+      <td colspan="2">{{organizations.name}}</td>
+      <!-- <td>  </td> -->
+      <td>{{organizations.countries.size()}}</td>
+      <td>{{organizations.programmes.size()}}</td>
      </tr>
    </tbody>
  </table>
@@ -51,20 +59,6 @@
       color: #333;
       font-size: 13px;
       white-space: nowrap;
-      position: relative;
-      cursor: pointer;
-      &:first-of-type {
-        padding-left: 13px!important;
-        &:before {
-        content: "\25BA";
-        margin-right: .5rem;
-        transition: all 300ms;
-        font-size: 1.1rem;
-        position: absolute;
-        left: 0;
-        top: 6px;
-        }
-      }
     }
     td {
       color: #666;
@@ -75,7 +69,7 @@
         border:2px solid transparent;
     }
 
-    tr:hover td{
+    tr.section_item:hover td{
 
       border-top:2px solid #50b9ff;
       border-bottom:2px solid #50b9ff;
@@ -84,6 +78,39 @@
       }
       &:last-of-type {
         border-right:2px solid #50b9ff;
+      }
+    }
+
+    .section_item.hidden {
+      display: none;
+    }
+
+    .active {
+      td{
+        &:before{
+          transform:rotate(90deg)
+        }
+      }
+    }
+
+    .section_header {
+      font-weight: bold;
+      cursor: pointer;
+      color: black;
+      td{
+        position: relative;
+        &:first-of-type {
+          padding-left: 13px!important;
+          &:before {
+          content: "\25BA";
+          margin-right: .5rem;
+          transition: all 300ms;
+          font-size: 1.1rem;
+          position: absolute;
+          left: 0;
+          top: 6px;
+          }
+        }
       }
     }
 

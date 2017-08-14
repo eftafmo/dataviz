@@ -63,7 +63,7 @@
         border:2px solid transparent;
     }
 
-    tr:hover td{
+    tr.section_item:hover td{
 
       border-top:2px solid #50b9ff;
       border-bottom:2px solid #50b9ff;
