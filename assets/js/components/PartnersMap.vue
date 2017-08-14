@@ -135,9 +135,8 @@ import MapMixin from './mixins/Map';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
 
-//
-//import stuff from './partners-stuff.json';
-//
+// TODO: clear this obviously-very-temporary-thing :)
+import stuff from '../../data/partners-stuff.json';
 
 
 export default Chart.extend({
@@ -180,7 +179,7 @@ export default Chart.extend({
     },
 
     data() {
-//return stuff
+return stuff
       return {}
     },
   },
