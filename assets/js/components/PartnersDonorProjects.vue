@@ -4,7 +4,7 @@
  <table>
    <thead>
      <th>Donor state</th>
-     <th>Organizations</th>
+     <th>Organisations</th>
      <th>Countries</th>
      <th>Programmes</th>
      <th>Projects</th>

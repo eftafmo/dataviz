@@ -26,7 +26,7 @@ export default StatesBarChart.extend({
         },
       },
 
-      title: 'Organizations with donor partner by beneficiary state'
+      title: 'Organisations with donor partner by beneficiary state'
     }
   },
 

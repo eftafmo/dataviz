@@ -28,7 +28,7 @@ export default StatesBarChart.extend({
         },
       },
 
-      title: 'Organizations by donor state'
+      title: 'Organisations by donor state'
     }
   },
 

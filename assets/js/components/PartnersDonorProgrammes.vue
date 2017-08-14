@@ -3,7 +3,7 @@
  <h2>{{title}}</h2>
  <table v-for="item in data">
    <thead>
-     <th>{{get_country_alt_name(item.donor)}} organizations</th>
+     <th>{{get_country_alt_name(item.donor)}} organisations</th>
      <th>Countries ({{item.countries.size()}})</th>
      <th>Programmes ({{item.programmes.size()}})</th>
    </thead>
