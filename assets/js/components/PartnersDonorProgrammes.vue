@@ -2,12 +2,12 @@
 <div v-if="hasData" class="donor-programmes">
  <h2>{{title}}</h2>
  <table v-for="item in data">
-   <thead>
+   <thead @click="show_items($event)" class="section_header">
      <th>{{get_country_alt_name(item.donor)}} organisations</th>
      <th>Countries ({{item.countries.size()}})</th>
      <th>Programmes ({{item.programmes.size()}})</th>
    </thead>
-   <tbody>
+   <tbody class="section_item hidden" v-for="organizations in item.organizations">
      <tr v-for="org in item.organizations">
        <td>{{org.name}}</td>
        <td>{{org.countries.size()}}</td>
@@ -24,9 +24,19 @@
   @media(max-width: 800px){
     overflow: auto;
   }
+  .hidden {
+    display: none;
+  }
+  .active {
+    th:first-of-type:before {
+      transform: rotate(90deg);
+    }
+  }
+
   table  {
     border-collapse: collapse;
-
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
     width: 100%;
     * {
       text-align: left;
@@ -41,6 +51,20 @@
       color: #333;
       font-size: 13px;
       white-space: nowrap;
+      position: relative;
+      cursor: pointer;
+      &:first-of-type {
+        padding-left: 13px!important;
+        &:before {
+        content: "\25BA";
+        margin-right: .5rem;
+        transition: all 300ms;
+        font-size: 1.1rem;
+        position: absolute;
+        left: 0;
+        top: 6px;
+        }
+      }
     }
     td {
       color: #666;
@@ -68,7 +92,8 @@
 
 
       th{
-        border-bottom: 2px solid #eee;
+        //TODO: Make this work
+        // border-bottom: 2px solid #eee;
       }
     }
 
@@ -156,6 +181,16 @@ export default Vue.extend({
       ));
       return donors
     },
+  },
+
+  methods: {
+    show_items(e){
+      let target = e.target.parentNode.parentNode;
+      target.classList.toggle('active')
+      let dest = target.querySelector('.section_item');
+      if(dest.classList)
+        dest.classList.toggle('hidden')
+    }
   },
 
 });

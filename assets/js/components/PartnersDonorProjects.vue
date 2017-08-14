@@ -79,10 +79,34 @@
       display: none;
     }
 
+    .active {
+      td{
+        &:before{
+          transform:rotate(90deg)
+        }
+      }
+    }
+
+
     .section_header {
       font-weight: bold;
       cursor: pointer;
       color: black;
+      td{
+        position: relative;
+        &:first-of-type {
+          padding-left: 13px!important;
+          &:before {
+          content: "\25BA";
+          margin-right: .5rem;
+          transition: all 300ms;
+          font-size: 1.1rem;
+          position: absolute;
+          left: 0;
+          top: 6px;
+          }
+        }
+      }
     }
 
     thead {
@@ -187,10 +211,12 @@ export default Vue.extend({
 
   methods: {
     show_items(e){
-      let targets = e.target.parentNode.parentNode.querySelectorAll('.section_item');
-      for (let target in targets){
-        if(targets[target].classList)
-        targets[target].classList.toggle('hidden')
+      let target = e.target.parentNode.parentNode
+      target.classList.toggle('active')
+      let dest = target.querySelectorAll('.section_item');
+      for (let t in dest){
+        if(dest[t].classList)
+        dest[t].classList.toggle('hidden')
       }
     }
   },
