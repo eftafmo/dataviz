@@ -11,15 +11,15 @@
    </thead>
    <tbody v-for="item in data">
      <tr @click="show_items($event)" class="section_header">
-       <td>{{get_country_alt_name(item.donor)}}</td>
+       <td>{{get_country_name(item.donor)}}</td>
        <td>{{item.organizations.length}}</td>
        <td>{{item.countries.size()}}</td>
        <td>{{item.programmes.size()}}</td>
        <td>{{item.projects.size()}}</td>
      </tr>
      <tr class="section_item hidden" v-for="organizations in item.organizations">
-      <td>{{organizations.name}}</td>
-      <td>  </td>
+      <td colspan="2">{{organizations.name}}</td>
+      <!-- <td>  </td> -->
       <td>{{organizations.countries.size()}}</td>
       <td>{{organizations.programmes.size()}}</td>
       <td>{{organizations.projects.size()}}</td>
@@ -47,7 +47,7 @@
       width: 21%;
       text-align: right;
       padding: 5px;
-      max-width: 178px;
+      max-width: 214px;
     }
     th {
       color: #333;
