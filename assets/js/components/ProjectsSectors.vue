@@ -15,6 +15,13 @@ export default Sectors.extend({
     }
   },
 
+  computed: {
+    filtered() {
+      // exclude technical assistance sectors from project
+      return this.filter(this.dataset, this.filter_by).filter(x => !x.is_ta);
+    },
+  },
+
   methods: {
     display(item) {
       const count = item.depth == 2 ? item.data.project_count :
