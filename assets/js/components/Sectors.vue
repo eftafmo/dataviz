@@ -240,7 +240,7 @@
 
           // not using :hover here because it's handled by the script
           &.hovered {
-            border-color: #9ae;
+            border-color: #50b9ff;
           }
 
           * {

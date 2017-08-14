@@ -311,20 +311,8 @@ export default Chart.extend({
     },
 
     computeRegionData(regiondataset) {
-      // default aggregate_on has filter_by: is_not_ta. need to clear it.
-      // TODO: invert that logic, make it exclude: is_ta
-      const aggregate_on = [];
-
-      for (let col of this.aggregate_on) {
-        if (typeof col == "object") {
-          col = Object.assign({}, col);
-          delete col.filter_by;
-        }
-        aggregate_on.push(col);
-      }
-
       const filtered = this.filter(regiondataset, this.filter_by);
-      return this.aggregate(filtered, ['id'], aggregate_on, true);
+      return this.aggregate(filtered, ['id'], this.aggregate_on, true);
     },
 
     showNutsLevel(lvl, yes, t) {

@@ -286,7 +286,6 @@ export default Vue.extend({
     this.current_zoom = 1;
 
     // aaand we can start fetching data already
-
     d3.json(this.origin + this.LAYERS_URL, (error, data) => {
       if (error) throw error;
       this.geo_data.layers = data;

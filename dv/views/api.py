@@ -134,7 +134,7 @@ def grants(request):
             'sector': a.programme_area.priority_sector.name,
             'area': a.programme_area.name,
             'beneficiary': a.state.code,
-            'is_not_ta': a.programme_area.is_not_ta,
+            'is_ta': not a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
 
             'bilateral_allocation': sum(p.allocation
@@ -252,7 +252,7 @@ def projects(request):
             'sector': a.programme_area.priority_sector.name,
             'area': a.programme_area.name,
             'beneficiary': a.state.code,
-            'is_not_ta': a.programme_area.is_not_ta,
+            'is_ta': not a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
             'project_count': project_count.get(key, 0),
             'project_count_ended': project_count_ended.get(key, 0),

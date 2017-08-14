@@ -13,12 +13,7 @@ export default {
   created() {
     this.filter_by.push('donor');
 
-    for (const col of this.aggregate_on) {
-      // remove the filtering
-      if (typeof col == "object")
-        delete col.filter_by;
-    }
-
+    // not sure if this is needed
     for (const colspec of [
       {source: 'donor', destination: 'donors', type: String},
       {source: 'partnership_programmes', type: Object},

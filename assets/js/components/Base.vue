@@ -37,14 +37,13 @@ export default Vue.extend({
       aggregate_on: [
         'allocation',
         {source: 'beneficiary', destination: 'beneficiaries',
-         type: String, filter_by: 'is_not_ta'},
+         type: String, exclude: 'is_ta'},
         {source: 'sector', destination: 'sectors',
-         type: String, filter_by: 'is_not_ta'},
+         type: String, exclude: 'is_ta'},
         {source: 'area', destination: 'areas',
-         type: String, filter_by: 'is_not_ta'},
-        // TODO: Partners doesn't have "programmes". Fix.
+         type: String, exclude: 'is_ta'},
         {source: 'programmes',
-         type: Object, filter_by: 'is_not_ta'},
+         type: Object},
       ],
 
       // this is only used internally. we can't come up with a nicer name,
@@ -194,8 +193,8 @@ export default Vue.extend({
             only one such column may exist.
 
          `on` can also take
-          - a `filter_by` property, which expects boolean values
-            (false and undefined rows are excluded).
+          - an `exclude` property, which expects boolean values
+            (rows are excluded when `exclude` property is true).
        */
 
       const bycols = {};
@@ -234,7 +233,7 @@ export default Vue.extend({
 
       const oncols = {};
       for (const col of on) {
-        let src, dst, type, filter_by;
+        let src, dst, type, exclude;
         if (typeof col == 'string') {
           src = dst = col;
           type = Number;
@@ -242,7 +241,7 @@ export default Vue.extend({
           src = col.source;
           dst = col.destination;
           type = col.type;
-          filter_by = col.filter_by;
+          exclude = col.exclude;
 
           if (dst === undefined) dst = src;
           if (type === undefined) type = Number;
@@ -254,7 +253,7 @@ export default Vue.extend({
             JSON.stringify(col)
           )
 
-        oncols[src] = {destination: dst, type: type, filter_by: filter_by};
+        oncols[src] = {destination: dst, type: type, exclude: exclude};
       };
 
       // each aggreggation level is a sub-dictionary,
@@ -281,7 +280,7 @@ export default Vue.extend({
           const _col = oncols[srccol],
                 dstcol = _col.destination,
                 type = _col.type,
-                filter_by = _col.filter_by,
+                exclude = _col.exclude,
                 value = type == Number ? Number(item[srccol]) : item[srccol];
 
           let current = row[dstcol];
@@ -291,7 +290,7 @@ export default Vue.extend({
             if (current === undefined)
               current = row[dstcol] = 0;
 
-            if (filter_by && !item[filter_by]) {
+            if (exclude && item[exclude]) {
               continue;
             }
 
@@ -302,7 +301,7 @@ export default Vue.extend({
             if (current === undefined)
               current = row[dstcol] = d3.set();
 
-            if (filter_by && !item[filter_by]) {
+            if (exclude && item[exclude]) {
               continue;
             }
 
