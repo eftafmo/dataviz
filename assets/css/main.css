@@ -92,11 +92,9 @@ a.muted:hover {
     margin: 1rem;
   }
   .section h2:after {
-    content: ' ▼';
-    display: inline-block;
-    line-height: 1;
-    margin-left: 6px;
-    border-radius: 4px;
+    content: ">";
+    transform:rotate(90deg);
+    float: right;
   }
 
 }
