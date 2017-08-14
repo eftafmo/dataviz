@@ -47,6 +47,7 @@
       width: 21%;
       text-align: right;
       padding: 5px;
+      max-width: 178px;
     }
     th {
       color: #333;
