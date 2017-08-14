@@ -57,12 +57,13 @@
     }
     th {
       color: #333;
-      font-size: 13px;
+      font-size: 14px;
       white-space: nowrap;
+      font-weight: normal;
     }
     td {
       color: #666;
-      font-size: 12px;
+      font-size: 13px;
     }
 
     tr {
@@ -212,11 +213,13 @@ export default Vue.extend({
 
   methods: {
     show_items(e){
-      let target = e.target.parentNode.parentNode;
+      let target = e.target.parentNode.parentNode
       target.classList.toggle('active')
-      let dest = target.querySelector('.section_item');
-      if(dest.classList)
-        dest.classList.toggle('hidden')
+      let dest = target.querySelectorAll('.section_item');
+      for (let t in dest){
+        if(dest[t].classList)
+        dest[t].classList.toggle('hidden')
+      }
     }
   },
 

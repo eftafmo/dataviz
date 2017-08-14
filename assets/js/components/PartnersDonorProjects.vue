@@ -51,12 +51,13 @@
     }
     th {
       color: #333;
-      font-size: 13px;
+      font-size: 14px;
+      font-weight: normal;
       white-space: nowrap;
     }
     td {
       color: #666;
-      font-size: 12px;
+      font-size: 13px;
     }
 
     tr {
