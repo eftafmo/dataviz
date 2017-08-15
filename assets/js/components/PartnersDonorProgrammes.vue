@@ -15,11 +15,15 @@
        <td>{{item.countries.size()}}</td>
        <td>{{item.programmes.size()}}</td>
      </tr>
-     <tr class="section_item hidden" v-for="organizations in item.organizations">
-      <td colspan="2">{{organizations.name}}</td>
+     <tr
+      class="section_item hidden"
+      v-for="organization in item.organizations"
+      @click="toggleDPP($event, organization.name)"
+     >
+      <td colspan="2">{{organization.name}}</td>
       <!-- <td>  </td> -->
-      <td>{{organizations.countries.size()}}</td>
-      <td>{{organizations.programmes.size()}}</td>
+      <td>{{organization.countries.size()}}</td>
+      <td>{{organization.programmes.size()}}</td>
      </tr>
    </tbody>
  </table>
@@ -156,6 +160,15 @@ export default Vue.extend({
     }
   },
 
+  created() {
+    // need to re-remove dpp from filters, because it's re-added
+    // by PartnersMixin. silly.
+    const col = "DPP"
+    const idx = this.filter_by.indexOf(col)
+    if (idx !== -1)
+      this.filter_by.splice(idx, 1)
+  },
+
   computed: {
     data() {
       const dataset = this.filtered;
@@ -207,6 +220,14 @@ export default Vue.extend({
   },
 
   methods: {
+    handleFilterDPP() {
+      // TODO
+    },
+
+    toggleDPP(e, organisation) {
+      this.filters.DPP = this.filters.DPP == organisation ? null : organisation;
+    },
+
     show_items(e){
       let target = e.target.parentNode.parentNode
       target.classList.toggle('active')

@@ -32,3 +32,4 @@ export {default as PartnersDonorProgrammes } from './PartnersDonorProgrammes';
 export {default as PartnersDonorProjects } from './PartnersDonorProjects';
 export {default as PartnersSummary } from './PartnersSummary';
 export {default as PartnersResults} from './PartnersResults';
+export {default as PartnerNews} from './PartnerNews';

@@ -400,6 +400,10 @@ export default Vue.extend({
       const type = "donor";
       this.handleFilter(type, val, old);
     },
+    handleFilterDPP(val, old) {
+      const type = "DPP";
+      this.handleFilter(type, val, old);
+    },
   },
   watch: {
     'isReady': 'main',
@@ -410,6 +414,7 @@ export default Vue.extend({
     'filters.sector': 'handleFilterSector',
     'filters.area': 'handleFilterArea',
     'filters.donor': 'handleFilterDonor',
+    'filters.DPP': 'handleFilterDPP',
 
     // this one is used only for vue transitions
     'filters': {

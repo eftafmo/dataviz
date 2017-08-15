@@ -12,6 +12,7 @@ export default {
 
   created() {
     this.filter_by.push('donor');
+    this.filter_by.push('DPP');
 
     // not sure if this is needed
     this.aggregate_on.push({source: 'donor', destination: 'donors', type: String});

@@ -5,6 +5,7 @@ export const FILTERS = {
   sector: null,
   area: null,
   donor: null,
+  DPP: null,
 };
 
 import {queue as _q} from 'd3-queue';

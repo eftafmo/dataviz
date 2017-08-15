@@ -47,7 +47,7 @@ export const Partners = Base.extend({
     xmap: components.PartnersMap,
     donors: components.PartnersDonors,
     beneficiaries: components.PartnersBeneficiaries,
-    news: components.News,
+    news: components.PartnerNews,
     programme_partners: components.PartnersDonorProgrammes,
     project_partners: components.PartnersDonorProjects,
     xsummary: components.PartnersSummary,
