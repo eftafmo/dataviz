@@ -23,8 +23,8 @@ export default Summary.extend({
         this.filtered,
         [],
         [
-          {source: "donor_programme_partners", destination: "DPP", type: Object},
-          {source: "donor_project_partners", destination: "dpp", type: Object}
+          {source: "DPP", destination: "DPP", type: String},
+          {source: "PJDPP", destination: "dpp", type: Object}
         ],
         false
       );

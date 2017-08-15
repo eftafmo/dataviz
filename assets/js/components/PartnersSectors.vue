@@ -26,8 +26,17 @@ export default Sectors.extend({
 
   methods: {
     value(d) {
-      return d.partnership_programmes === undefined ?
-             0 : d.partnership_programmes.size();
+      if ( d.programmes ) {
+        return d.programmes.size();
+      } else {
+        const programmes = d3.set();
+        for (const area in d) {
+          for (const prg in area.programmes) {
+            programmes.add(prg);
+          }
+        }
+        return programmes.size();
+      }
     },
 
     display(item) {

@@ -19,12 +19,14 @@ export default StatesBarChart.extend({
 
       columns: {
         programmes: {
-          source: "donor_programme_partners",
+          source: "DPP",
           name: "Donor programme partners",
+          type: String,
         },
         projects: {
-          source: "donor_project_partners",
+          source: "PJDPP",
           name: "Donor project partners",
+          type: Object,
         },
       },
 

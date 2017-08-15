@@ -287,6 +287,7 @@ export default Vue.extend({
                 exclude_empty = _col.exclude_empty,
                 value = type == Number ? Number(item[srccol]) : item[srccol];
 
+          if (value == undefined) continue;
           let current = row[dstcol];
 
           if (type === Number) {

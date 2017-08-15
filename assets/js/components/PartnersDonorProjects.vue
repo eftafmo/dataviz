@@ -156,8 +156,10 @@ export default Vue.extend({
       const out = {}
 
       for (let d of dataset) {
+        // only count rows having donor project partners
+        if (Object.keys(d.PJDPP).length == 0) continue;
         let item = out[d.donor];
-        if (item === undefined && Object.keys(d.donor_project_partners).length > 0 ) {
+        if (item === undefined ) {
           item = out[d.donor] = {
             donor: d.donor,
             countries: d3.set(),
@@ -166,30 +168,29 @@ export default Vue.extend({
             organizations: {},
           }
         }
-        for (let org_id in d.donor_project_partners) {
-          let org = item.organizations[org_id]
+        item.countries.add(d.beneficiary);
+        item.programmes.add(d.programme);
+        for (const prj_code in d.projects) {
+          item.projects.add(prj_code)
+        }
+        for (let org_id in d.PJDPP) {
+          let org = item.organizations[org_id];
           if (org == undefined) {
             org = item.organizations[org_id] = {
               countries: d3.set(),
               programmes: d3.set(),
               projects: d3.set(),
-              name: d.donor_project_partners[org_id]
+              name: d.PJDPP[org_id]
             }
           }
-          for (let state in d.dpp_states) {
-            item.countries.add(state);
-            org.countries.add(state);
-          }
-          for (let prg in d.dpp_programmes) {
-            item.programmes.add(prg);
-            org.programmes.add(prg);
-          }
-          for (let prj in d.dpp_projects) {
-            item.projects.add(prj);
-            org.projects.add(prj);
+          org.countries.add(d.beneficiary);
+          org.programmes.add(d.programme);
+          for (const prj_code in d.projects) {
+            org.projects.add(prj_code)
           }
         }
       }
+
       const donors = [];
       for (let donor in out) {
         // convert main dict to array

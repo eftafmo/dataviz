@@ -17,12 +17,14 @@ export default StatesBarChart.extend({
     return {
       columns: {
         programmes: {
-          source: "programme_operators",
+          source: "PO",
           name: "Programme operators",
+          type: Object,
         },
         projects: {
-          source: "project_promoters",
+          source: "PJPT",
           name: "Project promoters",
+          type: Object,
         },
       },
 

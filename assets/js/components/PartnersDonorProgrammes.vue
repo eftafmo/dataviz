@@ -162,8 +162,10 @@ export default Vue.extend({
       const out = {}
 
       for (let d of dataset) {
+        // only count rows having donor programme partners
+        if (!d.DPP) continue;
         let item = out[d.donor];
-        if (item === undefined && Object.keys(d.donor_programme_partners).length > 0 ) {
+        if (item === undefined ) {
           item = out[d.donor] = {
             donor: d.donor,
             countries: d3.set(),
@@ -171,36 +173,28 @@ export default Vue.extend({
             organizations: {},
           }
         }
-        for (let org_id in d.donor_programme_partners) {
-          let org = item.organizations[org_id]
-          const org_data = d.donor_programme_partners[org_id]
-          if (org == undefined) {
-            org = item.organizations[org_id] = {
+        item.countries.add(d.beneficiary);
+        item.programmes.add(d.programme);
+        if (item.organizations[d.DPP] == undefined) {
+          item.organizations[d.DPP] = {
+              name: d.DPP,
               countries: d3.set(),
-              programmes: d3.set(),
-              name: org_data.name
-            }
-          }
-          for (let state of org_data.states) {
-            item.countries.add(state);
-            org.countries.add(state);
-          }
-          for (let prg of org_data.programmes) {
-            item.programmes.add(prg);
-            org.programmes.add(prg);
+              programmes: d3.set()
           }
         }
+        item.organizations[d.DPP].countries.add(d.beneficiary);
+        item.organizations[d.DPP].programmes.add(d.programme);
       }
+
       const donors = [];
       for (let donor in out) {
-        // convert main dict to array
+        // convert organisations dict to array and sort
         const orgs = []
-        for (let org_id in out[donor].organizations) {
-          // convert organisations dict to array and sort
-          orgs.push(out[donor].organizations[org_id]);
+        const partners = Object.keys(out[donor].organizations).sort()
+        for (let partner of partners) {
+          orgs.push(out[donor].organizations[partner])
         }
         out[donor].organizations = orgs;
-        orgs.sort((a,b) => d3.ascending(a.name, b.name));
         donors.push(out[donor]);
       }
       const $this = this;

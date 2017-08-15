@@ -65,14 +65,12 @@ export default Component.extend({
       };
 
       for (const d of dataset) {
-        for (let org_id in d.donor_programme_partners) {
-          for (let prg of d.donor_programme_partners[org_id].programmes) {
-            aggregated.DPP_programmes.add(prg);
-          }
+        if (d.DPP) {
+          aggregated.DPP_programmes.add(d.programme);
         }
-        for (let prj in d.dpp_projects) {
+        for (let prj in d.projects) {
           aggregated.dpp_projects.add(prj);
-          const prj_data = d.dpp_projects[prj];
+          const prj_data = d.projects[prj];
           if (prj_data.has_ended) {
             aggregated.dpp_projects_ended.add(prj);
           }

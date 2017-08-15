@@ -32,11 +32,7 @@ export default {
 
   created() {
     for (const k in this.columns) {
-      const col = this.columns[k]
-
-      this.aggregate_on.push(Object.assign({
-        type: Object,
-      }, col))
+      this.aggregate_on.push(this.columns[k])
     }
   },
 
