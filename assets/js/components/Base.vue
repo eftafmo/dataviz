@@ -195,6 +195,8 @@ export default Vue.extend({
          `on` can also take
           - an `exclude` property, which expects boolean values
             (rows are excluded when `exclude` property is true).
+          - an `exclude_empty` property, which expects object values
+            (rows are excluded when `exclude` property is empty array or object)
        */
 
       const bycols = {};
@@ -233,7 +235,7 @@ export default Vue.extend({
 
       const oncols = {};
       for (const col of on) {
-        let src, dst, type, exclude;
+        let src, dst, type, exclude, exclude_empty;
         if (typeof col == 'string') {
           src = dst = col;
           type = Number;
@@ -241,11 +243,12 @@ export default Vue.extend({
           src = col.source;
           dst = col.destination;
           type = col.type;
-          exclude = col.exclude;
 
           if (dst === undefined) dst = src;
           if (type === undefined) type = Number;
         }
+        exclude = col.exclude;
+        exclude_empty = col.exclude_empty;
 
         if (!src)
           throw new Error(
@@ -253,7 +256,7 @@ export default Vue.extend({
             JSON.stringify(col)
           )
 
-        oncols[src] = {destination: dst, type: type, exclude: exclude};
+        oncols[src] = {destination: dst, type: type, exclude: exclude, exclude_empty: exclude_empty};
       };
 
       // each aggreggation level is a sub-dictionary,
@@ -281,6 +284,7 @@ export default Vue.extend({
                 dstcol = _col.destination,
                 type = _col.type,
                 exclude = _col.exclude,
+                exclude_empty = _col.exclude_empty,
                 value = type == Number ? Number(item[srccol]) : item[srccol];
 
           let current = row[dstcol];
@@ -293,6 +297,9 @@ export default Vue.extend({
             if (exclude && item[exclude]) {
               continue;
             }
+            if (exclude_empty && typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0) {
+              continue;
+            }
 
             row[dstcol] = current + value;
           }
@@ -302,6 +309,9 @@ export default Vue.extend({
               current = row[dstcol] = d3.set();
 
             if (exclude && item[exclude]) {
+              continue;
+            }
+            if (exclude_empty && typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0) {
               continue;
             }
 

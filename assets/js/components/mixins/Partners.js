@@ -14,7 +14,8 @@ export default {
     this.filter_by.push('donor');
 
     // not sure if this is needed
-    this.aggregate_on.push({source: 'donor', destination: 'donors', type: String});
+    this.aggregate_on.push({source: 'donor', destination: 'donors', type: String, exclude_empty: 'partnership_programmes'});
+    // TODO: should sort list of donors after aggregation
     this.aggregate_on.push({source: 'partnership_programmes', type: Object});
   },
 };
