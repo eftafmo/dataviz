@@ -1074,28 +1074,28 @@
     "model": "dv.nuts",
     "pk": "CY",
     "fields": {
-      "label": "ΚΥΠΡΟΣ / KIBRIS"
+      "label": "ΚΥΠΡΟΣ (KYPROS)"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "CY0",
     "fields": {
-      "label": "ΚΥΠΡΟΣ / KIBRIS"
+      "label": "ΚΥΠΡΟΣ (Kypros)"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "CY00",
     "fields": {
-      "label": "Κύπρος / Kıbrıs"
+      "label": "Κύπρος (Kypros)"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "CY000",
     "fields": {
-      "label": "Κύπρος / Kıbrıs"
+      "label": "Κύπρος (Kypros)"
     }
   },
   {
