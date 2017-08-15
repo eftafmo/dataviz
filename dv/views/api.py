@@ -486,6 +486,7 @@ def partners(request):
                 'beneficiary': a.state.code,
                 'donor': donor_state,
                 'allocation': a.gross_allocation,
+                'is_ta': not a.programme_area.is_not_ta,
                 'dpp_projects': dpp_projects.get(key, {}),
                 'dpp_programmes': dpp_programmes.get(key, {}),
                 'dpp_states': dpp_states.get(key, {}),
