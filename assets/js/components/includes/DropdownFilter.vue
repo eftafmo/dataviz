@@ -70,8 +70,8 @@ export default Vue.extend({
     },
 
     getFilterName(item){
-      //special case for beneficiary filter
-      if(this.filter == 'beneficiary'){
+      // special case for country filters
+      if (this.filter == 'beneficiary' || this.filter == 'donor'){
         return item.id
       }
       else {
