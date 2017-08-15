@@ -31,8 +31,8 @@ export default Sectors.extend({
     },
 
     display(item) {
-      return this.number(item.value) + "\u00a0" +
-             this.singularize("programmes", item.value);
+      // customer has requested not to show the programme count in the legend
+      return "";
     },
 
     tooltipTemplate(d) {
@@ -57,14 +57,20 @@ export default Sectors.extend({
       }
 
       const num_bs = bss.size();
+      // sort donor states
+      const ds_sorted = dss.values().sort(
+        (a,b) => d3.ascending(COUNTRIES[a].sort_order, COUNTRIES[b].sort_order)
+      ).map(
+        code => COUNTRIES[code].name
+      ).join(", ");
 
       return `
         <div class="title-container">
           <span>${ d.data.name }</span>
         </div>
         <ul>
-          <li>Donor states: ${dss.values().map(x => COUNTRIES[x].name).join(", ")}</li>
-          <li>${ this.display(d) }</li>
+          <li>Donor states: ${ds_sorted}</li>
+          <li>${d.value}\u00a0` + this.singularize("programmes", d.value) + `</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>

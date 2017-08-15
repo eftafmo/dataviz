@@ -15,7 +15,7 @@ export default {
 
     // not sure if this is needed
     this.aggregate_on.push({source: 'donor', destination: 'donors', type: String, exclude_empty: 'partnership_programmes'});
-    // TODO: should sort list of donors after aggregation
+    // don't forget to sort list of donors after aggregation
     this.aggregate_on.push({source: 'partnership_programmes', type: Object});
   },
 };
