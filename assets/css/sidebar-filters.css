@@ -53,6 +53,8 @@
   color: #898989;
 }
 
-.select2-container {
-  width: 100%!important;
+@media(max-width: 768px){
+  .select2-container {
+    width: 100%!important;
+  }
 }

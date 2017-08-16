@@ -22,6 +22,9 @@
 }
 
 /* Search form */
+.search-form .input-group{
+  position: relative;
+}
 .search-form .input-box input {
   width: 100%;
   border-color: transparent;
@@ -202,4 +205,10 @@
 
 .sidebar-body{
   max-height: calc(80vh - 93px);
+}
+
+@media(max-width: 768px){
+  .sidebar-body {
+    max-height: 80%;
+  }
 }
