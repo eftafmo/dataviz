@@ -235,8 +235,7 @@ export default Chart.extend({
       for (const item of aggregated) {
         item.name = this.BENEFICIARIES[item.id].name;
       }
-
-      return aggregated;
+      return aggregated.sort((a, b) => d3.ascending(a.name, b.name));
     },
   },
 
