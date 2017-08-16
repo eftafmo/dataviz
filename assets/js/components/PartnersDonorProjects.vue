@@ -62,19 +62,19 @@
 
     tr {
         border:1px solid transparent;
-        cursor: pointer;
     }
 
     tr.section_item:hover td{
 
-      border-top:1px solid #50b9ff;
-      border-bottom:1px solid #50b9ff;
-      &:first-of-type{
-       border-left:1px solid #50b9ff;
-      }
-      &:last-of-type {
-        border-right:1px solid #50b9ff;
-      }
+      cursor: default;
+      //border-top:1px solid #50b9ff;
+      //border-bottom:1px solid #50b9ff;
+      //&:first-of-type{
+       //border-left:1px solid #50b9ff;
+      //}
+      //&:last-of-type {
+        //border-right:1px solid #50b9ff;
+      //}
     }
 
     .section_item.hidden {
