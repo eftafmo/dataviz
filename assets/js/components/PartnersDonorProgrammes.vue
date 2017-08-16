@@ -16,12 +16,13 @@
        <td>{{item.programmes.size()}}</td>
      </tr>
      <tr
-      class="section_item hidden"
+      class="section_item"
+      hidden="true"
       v-for="organization in item.organizations"
+      :class="{active_filter : filters.DPP == organization.name}"
       @click="toggleDPP($event, organization.name)"
      >
       <td colspan="2">{{organization.name}}</td>
-      <!-- <td>  </td> -->
       <td>{{organization.countries.size()}}</td>
       <td>{{organization.programmes.size()}}</td>
      </tr>
@@ -36,13 +37,20 @@
   @media(max-width: 800px){
     overflow: auto;
   }
-  .hidden {
-    display: none;
+
+  [hidden="false"] {
+    display: table-row;
   }
+
   .active {
     th:first-of-type:before {
       transform: rotate(90deg);
     }
+  }
+
+  .active_filter {
+    background: #eee;
+    display: table-row;
   }
 
   table  {
@@ -220,8 +228,8 @@ export default Vue.extend({
   },
 
   methods: {
-    handleFilterDPP() {
-      // TODO
+    handleFilterDPP(organisation) {
+      this.filters.DPP == organisation ? false : true
     },
 
     toggleDPP(e, organisation) {
@@ -233,8 +241,15 @@ export default Vue.extend({
       target.classList.toggle('active')
       let dest = target.querySelectorAll('.section_item');
       for (let t in dest){
-        if(dest[t].classList)
-        dest[t].classList.toggle('hidden')
+        try {
+          if(dest[t].getAttribute('hidden') == 'hidden')
+            dest[t].setAttribute('hidden','false')
+          else
+            dest[t].setAttribute('hidden','hidden')
+        }
+        catch (e) {
+          return null;
+        }
       }
     }
   },
