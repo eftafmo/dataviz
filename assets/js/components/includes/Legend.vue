@@ -45,7 +45,7 @@
       }
 
       sup.value {
-        //
+        font-weight: bold;
       }
     }
 
