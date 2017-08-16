@@ -232,8 +232,7 @@ export default Chart.extend({
       for (const item of aggregated) {
         item.name = this.BENEFICIARIES[item.id].name;
       }
-
-      return aggregated;
+      return aggregated.sort((a, b) => d3.ascending(a.name, b.name));
     },
   },
 
@@ -254,6 +253,8 @@ export default Chart.extend({
     },
 
     stateEnter(d, i, group) {
+      // disable map zoom and tooltips on donor states #291
+      if (this.isDonor(d)) { return };
       const this_ = group[i];
 
       d3.select(this_).raise();
@@ -261,12 +262,16 @@ export default Chart.extend({
     },
 
     stateLeave(d, i, group) {
+      // disable map zoom and tooltips on donor states #291
+      if (this.isDonor(d)) { return };
       const this_ = group[i];
 
       this.tip.hide(this_, d, i, group);
     },
 
     stateClick(d, i, group) {
+      // disable map zoom and tooltips on donor states #291
+      if (this.isDonor(d)) { return };
       const this_ = group[i];
 
       this.toggleBeneficiary(d, this_);
