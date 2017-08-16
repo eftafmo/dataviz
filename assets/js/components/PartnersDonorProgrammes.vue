@@ -56,7 +56,6 @@
 
   .active_filter {
     background: #eee;
-    display: table-row;
   }
 
   .viz-select {
