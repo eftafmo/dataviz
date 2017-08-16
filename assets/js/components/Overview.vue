@@ -475,9 +475,9 @@ export default Chart.extend({
 
       function mktweener(tweenfunc, coordsfunc) {
         return function(d) {
-	  const interpolate = d3.interpolate(
-	    this._prev, coordsfunc(d)
-	  );
+          const interpolate = d3.interpolate(
+            this._prev, coordsfunc(d)
+          );
           this._prev = interpolate(0);
 
           return function(x) {
@@ -570,7 +570,7 @@ export default Chart.extend({
         sel
           .filter( (d, i) => opts.items[i].id == "eea-grants" )
           .selectAll("text").data(
-            d3.values(this.DONORS).map( (x) => x.name )
+            ["Iceland", "Liechtenstein", "Norway"]
           )
           .enter()
           .append("text")
