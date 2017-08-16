@@ -180,7 +180,7 @@ export default Vue.extend({
               countries: d3.set(),
               programmes: d3.set(),
               projects: d3.set(),
-              name: d.PJDPP[org_id]
+              name: d.PJDPP[org_id]['name']
             }
           }
           org.countries.add(d.beneficiary);

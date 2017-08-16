@@ -396,24 +396,37 @@ def partners(request):
         name=F('organisation__name'),
         country=F('organisation__country'),
         role=F('organisation_role_id'),
+        nuts=F('organisation__nuts'),
     ).values(
         'country',
         'org_id',
         'name',
         'programme_id',
         'role',
+        'nuts',
     ).filter(
         organisation_role_id__in=['DPP', 'PO']
-    ).distinct()
+    ).order_by('organisation_role_id').distinct()
+    # Order by - for filtering out PO when no DPP is present
 
     donor_programme_partners = defaultdict(dict)
+    donor_programmes = set()
+    # Donor programmes = only those having a DPP
     for pp in PP_raw:
-        if pp['role'] == 'PO':
-            partnership_programmes[pp['programme_id']]['PO'][pp['org_id']] = pp['name']
-        else:
+        prg_code = pp['programme_id']
+        if pp['role'] == 'DPP':
             donor = DONOR_STATES.get(pp['country'], 'Intl')
-            key = pp['programme_id'] + donor
-            donor_programme_partners[key][pp['org_id']] = pp['name']
+            key = prg_code + donor
+            donor_programme_partners[key][pp['org_id']] = {
+                'name': pp['name'],
+                'nuts': pp['nuts'],
+            }
+            donor_programmes.add(prg_code)
+        elif prg_code in donor_programmes:
+            partnership_programmes[prg_code]['PO'][pp['org_id']] = {
+                'name': pp['name'],
+                'nuts': pp['nuts'],
+            }
 
     # Get project partners (dpp and project promoters)
     pp_raw = Organisation_OrganisationRole.objects.all().select_related(
@@ -425,6 +438,7 @@ def partners(request):
         'organisation__country',
         'organisation_id',
         'organisation__name',
+        'organisation__nuts',
         'project_id',
         'programme_id',
         'project__state_id',
@@ -436,20 +450,28 @@ def partners(request):
         'organisation_role_id',
     ).filter(
         organisation_role_id__in=['PJDPP', 'PJPT']
-    ).distinct()
+    ).order_by('organisation_role_id').distinct()
+    # Order by - for filtering out project promoters when no PJDPP is present
 
     projects, project_promoters, donor_project_partners = (
         defaultdict(dict), defaultdict(dict), defaultdict(dict)
     )
+    donor_projects = set()
 
     # There are very special cases like BG04-0016, when project promoters vary by donor
 
     for pp in pp_raw:
         # Projects have only one BS and one PA, so keep them separated
+        prj_code = pp['project_id']
         if pp['organisation_role_id'] == 'PJPT':
-            # Project promoters are stored by project
-            project_promoters[pp['project_id']][pp['organisation_id']] = pp['organisation__name']
+            # Project promoters are stored by project, only for projects with dpp
+            if (prj_code in donor_projects):
+                project_promoters[prj_code][pp['organisation_id']] = {
+                    'name': pp['organisation__name'],
+                    'nuts': pp['organisation__nuts'],
+                }
         elif pp['organisation_role_id'] == 'PJDPP':
+            donor_projects.add(prj_code)
             # Donor project partner
             donor = DONOR_STATES.get(pp['organisation__country'], 'Intl')
             key = (
@@ -458,9 +480,12 @@ def partners(request):
                 pp['project__state_id'] +
                 donor
             )
-            donor_project_partners[key][pp['organisation_id']] = pp['organisation__name']
+            donor_project_partners[key][pp['organisation_id']] = {
+                'name': pp['organisation__name'],
+                'nuts': pp['organisation__nuts'],
+            }
             # projects with dpp are stored for bilateral indicators
-            projects[key][pp['project_id']] = {
+            projects[key][prj_code] = {
                 'is_dpp': pp['project__is_dpp'],
                 'has_ended': pp['project__has_ended'],
                 'continued_coop': pp['project__is_continued_coop'],
@@ -523,10 +548,11 @@ def partners(request):
                     }
                     if donor_programme_partners[prg + donor]:
                         # This project has DPP, duplicate it for each partner from the current donor
-                        for DPP_code, DPP_name in donor_programme_partners[prg + donor].items():
+                        for DPP_code, DPP_data in donor_programme_partners[prg + donor].items():
                             copy = dict(row)
                             # Assumption: name of DPP are unique
-                            copy['DPP'] = DPP_name
+                            copy['DPP'] = DPP_data['name']
+                            copy['DPP_nuts'] = DPP_data['nuts']
                             out.append(copy)
                     else:
                         # Still need to add rows without DPP
