@@ -3,16 +3,17 @@
   <h2>{{title}}</h2>
 
   <div class="selector">
-    <p>Show:
+    Show:
       <label>
-        <input type="checkbox" value="programmes" v-model="visible_layers">
+        <input type="checkbox" value="programmes" id="programmes" v-model="visible_layers">
+        <label for="programmes"></label>
         Donor programme partners
       </label>
       <label>
-        <input type="checkbox" value="projects" v-model="visible_layers">
+        <input type="checkbox" value="projects" id="projects" v-model="visible_layers">
+        <label for="projects"></label>
         Donor project partners
       </label>
-    </p>
   </div>
 
   <map-base
@@ -82,7 +83,56 @@
     }
   }
 
+  .selector {
+    margin-bottom: 1rem;
+    display: flex;
+    @media(max-width: 800px){
+      display: block;
+    }
+     > label {
+        display: inline-flex;
+        @media(max-width:800px){
+          display: flex;
+        }
+        margin-left: 1rem;
+      }
+  }
 
+  input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+  input[type=checkbox] + label:before {
+    display: inline-block;
+  }
+
+  input[type=checkbox] + label {
+    display: inline-block;
+    border: solid #ddd;
+    height: 19px;
+    width: 19px;
+    margin-right: .4rem;
+    margin-top: -2px;
+    position: relative;
+  }
+
+  input[type=checkbox] + label:before {
+   content: "" "";
+   font-size: 2.5rem;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%,-50%);
+  }
+  input[type=checkbox]:checked + label:before { content: "✔"; } /* checked icon */
+  #programmes {
+    + label:before {
+      color: rgb(48,183,41);
+    }
+  }
+
+  #projects {
+    + label:before {
+      color: rgb(254,165,0);
+    }
+  }
 
   .charts, .current {
     &, * {
@@ -255,7 +305,7 @@ return stuff
         .each(function(d) {
           const data = $this.data[d],
                 colour = $this.chart_colours[d]
-
+                console.log(colour)
           $this.renderLayer(this, data, colour)
         })
 
