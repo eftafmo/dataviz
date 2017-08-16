@@ -38,6 +38,11 @@
     overflow: auto;
   }
 
+  //fallback for ie
+  [hidden="hidden"] {
+    display: none;
+  }
+
   [hidden="false"] {
     display: table-row;
   }
