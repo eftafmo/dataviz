@@ -1,6 +1,7 @@
 <template>
 <div v-if="hasData" class="donor-programmes">
  <h2>{{title}}</h2>
+ <dropdown v-if="isReady" filter="DPP" title="No filter selected" :items="dropdown_items"></dropdown>
  <table>
    <thead>
      <th>Donor state</th>
@@ -56,6 +57,11 @@
   .active_filter {
     background: #eee;
     display: table-row;
+  }
+
+  .viz-select {
+    float: initial;
+    margin-bottom: 2rem;
   }
 
   table  {
@@ -159,6 +165,7 @@ import * as d3 from 'd3';
 import BaseMixin from './Base';
 import PartnersMixin from './mixins/Partners';
 import CountriesMixin from './mixins/WithCountries';
+import Dropdown from './includes/DropdownFilter';
 
 export default Vue.extend({
   mixins: [
@@ -166,6 +173,10 @@ export default Vue.extend({
     PartnersMixin,
     CountriesMixin,
   ],
+
+  components: {
+    'dropdown': Dropdown,
+  },
 
   data(){
     return {
@@ -229,6 +240,18 @@ export default Vue.extend({
           $this.get_sort_order(b.donor)
       ));
       return donors
+    },
+
+    dropdown_items(){
+    let organizations = {};
+      for (let items of this.data){
+        for(let org of items.organizations){
+           let item = organizations[org.name] = {
+            name: org.name
+          }
+        }
+      }
+      return organizations
     },
   },
 
