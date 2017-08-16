@@ -21,9 +21,3 @@ require("expose-loader?$dataviz!./components/index");
 import Vue from 'vue';
 import VueSuper from 'vue-super';
 Vue.use(VueSuper);
-
-//keep homepage layout as a one column layout
-if(document.querySelector('.homepage_content_wrapper')) {
-  let main = document.querySelector('.homepage_content_wrapper').parentNode;
-  main.style.display = 'block'
-}
