@@ -34,10 +34,6 @@
         opacity: 0.5;
       }
 
-      &.selected {
-        text-shadow: 0 0 1px #999;
-      }
-
       transition: all .5s ease;
 
       span.fill {
