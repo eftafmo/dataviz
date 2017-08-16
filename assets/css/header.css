@@ -35,6 +35,12 @@
   display: block;
 }
 
+@media (max-width: 768px){
+  .header-logo a {
+    margin-top: 5px;
+  }
+}
+
 .header-logo img {
   width: 100%;
 }
