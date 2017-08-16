@@ -51,12 +51,15 @@
         <span class="square"></span>
         Beneficiary states
       </li>
+      <li v-if="filters.beneficiary && $options.type == 'viz map allocation grants'">
+      <span class="square amount"></span>
+        Region (amount)
+      </li>
     </ul>
   </div>
 
 </div>
 </template>
-
 
 <style lang="less">
 .viz.map.allocation {
@@ -135,6 +138,14 @@
       display: inline-block;
       margin-right: 1rem;
       position: relative;
+      &.amount {
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fcf5c4+0,fcf5c4+25,278b33+60,036121+100 */
+        background: #fcf5c4; /* Old browsers */
+        background: -moz-linear-gradient(left, #fcf5c4 0%, #fcf5c4 25%, #278b33 60%, #036121 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(left, #fcf5c4 0%,#fcf5c4 25%,#278b33 60%,#036121 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to right, #fcf5c4 0%,#fcf5c4 25%,#278b33 60%,#036121 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcf5c4', endColorstr='#036121',GradientType=1 ); /* IE6-9 */
+      }
     }
   }
 }
