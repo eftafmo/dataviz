@@ -305,7 +305,6 @@ return stuff
         .each(function(d) {
           const data = $this.data[d],
                 colour = $this.chart_colours[d]
-                console.log(colour)
           $this.renderLayer(this, data, colour)
         })
 
