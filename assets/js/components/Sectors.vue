@@ -946,11 +946,15 @@ export default Chart.extend({
     },
 
     calcHeight() {
-      const $this=this;
-      const legend = this.$refs.legend;
-      if(!legend) return;
-      let prevHeight = legend.clientHeight;
-      this.minHeight = Math.max($this.minHeight, prevHeight)
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        const $this=this;
+        const legend = this.$refs.legend;
+        if(!legend) return;
+        let prevHeight = legend.clientHeight;
+        this.minHeight = Math.max($this.minHeight, prevHeight)
+      }
+      else
+        return
     },
   },
 
