@@ -26,9 +26,12 @@ export default Base.extend({
     // set filters from querystring.
     // do it before filters get bound, to avoid triggering handlers.
     const params = getURL(window.location).searchParams;
-
+    const page = getURL(window.location).pathname
     for (const name in FILTERS) {
       FILTERS[name] = params.get(name) || null;
+      if(page != '/partners/'){
+        FILTERS['DPP'] = FILTERS['donor'] = null
+      }
     }
   },
 
