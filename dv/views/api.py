@@ -457,6 +457,7 @@ def partners(request):
         defaultdict(dict), defaultdict(dict), defaultdict(dict)
     )
     donor_projects = set()
+    project_nuts = {}
 
     # There are very special cases like BG04-0016, when project promoters vary by donor
 
@@ -470,6 +471,7 @@ def partners(request):
                     'name': pp['organisation__name'],
                     'nuts': pp['organisation__nuts'],
                 }
+                project_nuts[prj_code]['dst'].append(pp['organisation__nuts'])
         elif pp['organisation_role_id'] == 'PJDPP':
             donor_projects.add(prj_code)
             # Donor project partner
@@ -485,12 +487,18 @@ def partners(request):
                 'nuts': pp['organisation__nuts'],
             }
             # projects with dpp are stored for bilateral indicators
-            projects[key][prj_code] = {
-                'is_dpp': pp['project__is_dpp'],
-                'has_ended': pp['project__has_ended'],
-                'continued_coop': pp['project__is_continued_coop'],
-                'improved_knowledge': pp['project__is_improved_knowledge'],
-            }
+            if prj_code not in projects[key]:
+                projects[key][prj_code] = {
+                    'is_dpp': pp['project__is_dpp'],
+                    'has_ended': pp['project__has_ended'],
+                    'continued_coop': pp['project__is_continued_coop'],
+                    'improved_knowledge': pp['project__is_improved_knowledge'],
+                }
+                project_nuts[prj_code] = {
+                    'src': [],
+                    'dst': [],
+                }
+            project_nuts[prj_code]['src'].append(pp['organisation__nuts'])
 
     # Bilateral news, they are always related to programmes, not projects
     news_raw = ProgrammeOutcome.objects.all(
@@ -529,9 +537,16 @@ def partners(request):
                     if (len(item['beneficiaries']) > 1 or len(item['areas']) > 1):
                         allocation = allocations[key]
                     prj_promoters = {}
+                    nuts_connections = {}
                     for prj_code in projects[key_donor]:
                         for key, value in project_promoters[prj_code].items():
                             prj_promoters[key] = value
+                        for src in project_nuts[prj_code]['src']:
+                            for dst in project_nuts[prj_code]['dst']:
+                                nuts_connections[src + dst] = {
+                                    'src': src,
+                                    'dst': dst,
+                                }
                     row = {
                         'fm': pa_data['fm'],
                         'sector': pa_data['sector'],
@@ -541,6 +556,7 @@ def partners(request):
                         'allocation': float(allocation),
                         'programme': prg,
                         'projects': projects[key_donor],
+                        'prj_nuts': list(nuts_connections.values()),
                         'PO': item['PO'],
                         'PJDPP': donor_project_partners[key_donor],
                         'PJPT': prj_promoters,

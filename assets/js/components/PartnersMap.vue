@@ -124,13 +124,13 @@
   input[type=checkbox]:checked + label:before { content: "✔"; } /* checked icon */
   #programmes {
     + label:before {
-      color: rgb(48,183,41);
+      color: #089900;
     }
   }
 
   #projects {
     + label:before {
-      color: rgb(254,165,0);
+      color: #CC8500;
     }
   }
 
@@ -229,8 +229,29 @@ export default Chart.extend({
     },
 
     data() {
-return stuff
-      return {}
+      const out = {
+        programmes: {},
+        projects: {},
+      }
+      const dataset = this.filtered;
+      for (const d of dataset) {
+        for (const po_code in d.PO) {
+          out.programmes[d.DPP_nuts+d.PO[po_code].nuts] = {
+            'source': d.DPP_nuts,
+            'target': d.PO[po_code].nuts,
+          };
+        }
+        for (const prj_nuts of d.prj_nuts) {
+          out.projects[prj_nuts.src+prj_nuts.dst] = {
+            'source': prj_nuts.src,
+            'target': prj_nuts.dst,
+          }
+        }
+      }
+      // initially stored as dict to remove duplicates, now convert to array
+      out.programmes = d3.values(out.programmes);
+      out.projects = d3.values(out.projects);
+      return out
     },
   },
 

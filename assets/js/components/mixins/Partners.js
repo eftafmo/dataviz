@@ -4,8 +4,8 @@ export default {
   data() {
     return {
       colours: {
-        programmes: '#30b729',
-        projects: '#fea500',
+        programmes: '#089900',
+        projects: '#CC8500',
       },
     };
   },
