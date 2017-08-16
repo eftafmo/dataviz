@@ -49,8 +49,7 @@ module.exports = {
   devtool: DEBUG ? "inline-source-map" : false,
   entry: {
     scripts: [
-      path.resolve(asset_dir, "js/main.js"),
-      path.resolve(asset_dir, "css/embed.css"),
+      path.resolve(asset_dir, "js/main.js")
     ],
     styles: [
       path.resolve(asset_dir, 'css/main.css')
