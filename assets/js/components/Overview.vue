@@ -408,6 +408,8 @@ export default Chart.extend({
             dataset = this.aggregate(
               this.filtered, ['fm', 'beneficiary'], ['allocation'], false
             );
+      // hack to ensure a minimum allocation and avoid overlaps. Temporary?
+      const min_amount = 0.01 * this.aggregated.allocation;
 
       // base the dataset on the constant list of FMs and beneficiaries,
       // to ensure 0-valued items exist regardless of filtering
@@ -425,7 +427,7 @@ export default Chart.extend({
 
         for (const bnf of this.BENEFICIARY_ARRAY) {
           const bnfdata = fmdata[bnf.id];
-          allocations.push(bnfdata !== undefined ? bnfdata.allocation : 0);
+          allocations.push(bnfdata !== undefined ? Math.max(min_amount, bnfdata.allocation) : 0);
         }
       }
 
