@@ -542,6 +542,8 @@ def partners(request):
                         for key, value in project_promoters[prj_code].items():
                             prj_promoters[key] = value
                         for src in project_nuts[prj_code]['src']:
+                            if not src.startswith(donor):
+                                continue
                             for dst in project_nuts[prj_code]['dst']:
                                 nuts_connections[src + dst] = {
                                     'src': src,
