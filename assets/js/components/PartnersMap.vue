@@ -185,9 +185,6 @@ import MapMixin from './mixins/Map';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
 
-// TODO: clear this obviously-very-temporary-thing :)
-import stuff from '../../data/partners-stuff.json';
-
 
 export default Chart.extend({
   mixins: [
