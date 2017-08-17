@@ -1,12 +1,30 @@
 <script>
+import {formatNumber} from 'js/lib/util';
+
 import Beneficiaries from './Beneficiaries';
 import ProjectsMixin from './mixins/Projects';
+
+import Legend from './includes/Legend';
+
+
+const CustomLegend = Legend.extend({
+  props: {
+    formatFunc: {
+      type: Function,
+      default: v => formatNumber(v) + " projects",
+    },
+  },
+})
 
 
 export default Beneficiaries.extend({
   type: 'projects',
 
   mixins: [ProjectsMixin],
+
+  components: {
+    "chart-legend": CustomLegend,
+  },
 
   data() {
     return {
@@ -15,6 +33,10 @@ export default Beneficiaries.extend({
   },
 
   methods: {
+    totalvaluefunc(v) {
+      return v ? v.project_count : 0
+    },
+
     tooltipTemplate(d) {
       // TODO: oh my, the copy-paste. it hurts.
       const data = d.data

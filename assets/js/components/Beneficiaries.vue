@@ -1,10 +1,31 @@
+<style lang="less">
+.viz.partners.states .legend {
+  .value {
+    color: #c41230;
+  }
+}
+</style>
+
+
 <script>
 import * as d3 from 'd3';
+import {formatCurrency} from 'js/lib/util';
 
 import StatesBarChart from './StatesBarChart';
+import Legend from './includes/Legend';
 
 import BeneficiariesBarChartMixin from './mixins/BeneficiariesBarChart';
 import WithFMsMixin from './mixins/WithFMs';
+
+
+const CustomLegend = Legend.extend({
+  props: {
+    formatFunc: {
+      type: Function,
+      default: formatCurrency,
+    },
+  },
+})
 
 
 export default StatesBarChart.extend({
@@ -13,6 +34,10 @@ export default StatesBarChart.extend({
     WithFMsMixin,
   ],
 
+  components: {
+    "chart-legend": CustomLegend,
+  },
+
   data() {
     return {
       title: 'Funding across beneficiary states',
@@ -20,22 +45,68 @@ export default StatesBarChart.extend({
   },
 
   created() {
-    // aggregate by fms, but only at the final level
+    // aggregate by fms
     this.aggregate_by.push(
-      {source: "fm", "destination": "fms", }//final: true}
+      {source: "fm", "destination": "fms", }
     )
+
+    // don't filter by fm, because we need the total counts regardless
+    // of filtering
+    const fid = this.filter_by.indexOf("fm")
+    if (fid !== -1) this.filter_by.splice(fid, 1)
   },
 
   computed: {
+    legendClickFunc() {
+      return this.toggleFm;
+    },
+
+    types() {
+      const out = {}
+
+      for (const fmid in this.FMS) {
+        const fm = this.FMS[fmid]
+        out[fmid] = Object.assign({
+          selected: this.isSelectedFm(fm),
+          disabled: this.isDisabledFm(fm),
+        }, fm)
+      }
+
+      return out
+    },
+
     div_types() {
       return d3.values(this.FMS);
+    },
+
+    totals() {
+      // we want to preserve the total even for disabled fms
+      return this.data.reduce(
+        (totals, item) => {
+          for (const fmid in this.FMS) {
+            const fm = this.FMS[fmid],
+                  value = this.totalvaluefunc(item[fm.name]);
+
+            let total = totals[fmid] || 0
+            totals[fmid] = total + value
+          }
+
+          return totals
+        }, {})
     },
   },
 
   methods: {
+    _valuefunc(v) {
+      // a slight detour for the logic below
+      return v ? v.allocation : 0
+    },
     valuefunc(item, fm) {
-      fm = this.FMS[fm].name
-      return item[fm] ? item[fm].allocation : 0
+      fm = this.FMS[fm]
+      return this.isDisabledFm(fm) ? 0 : this._valuefunc(item[fm.name])
+    },
+    totalvaluefunc(v) {
+      return this._valuefunc(v)
     },
 
     tooltipTemplate(d) {

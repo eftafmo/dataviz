@@ -1,18 +1,21 @@
 <template>
-<div class="legend">
+<div class="legend" :class="{ 'no-total': !what }">
   <p class="what" v-if="what">{{ total }} {{ what }}</p>
 
   <ul :class="{active: clickFunc}">
     <li
         v-for="item in items"
         @click="clickFunc && clickFunc(item, $event.target)"
-        :class="{disabled: item.disabled, zero: item.value == 0}"
-
+        :class="{
+                  selected: item.selected,
+                  disabled: item.disabled,
+                  zero: item.value == 0,
+                }"
     >
       <slot name="item" :item="item">
         <span class="fill" :style="{backgroundColor: item.colour}"></span>
         {{ item.name }}
-        <sup v-if="item.value !== undefined" class="value">{{ item.value }}</sup>
+        <sup v-if="showValues && item.value !== undefined" class="value">{{ formatFunc(item.value) }}</sup>
       </slot>
     </li>
   </ul>
@@ -32,6 +35,10 @@
       &.disabled, &.zero {
         filter: grayscale(100%);
         opacity: 0.5;
+      }
+
+      &.selected {
+        text-shadow: 0 0 1px #999;
       }
 
       transition: all .5s ease;
@@ -60,6 +67,10 @@
   }
 
   &.inline {
+    &.no-total {
+      padding-left: 2em;
+    }
+
     ul {
       display: inline-block;
       padding: 0;
@@ -89,6 +100,16 @@ export default Vue.extend({
     clickFunc: {
       // if provided, the legend is clickable
       type: Function,
+    },
+
+    formatFunc: {
+      type: Function,
+      default: x => x,
+    },
+
+    showValues: {
+      type: Boolean,
+      default: true,
     },
 
     what: {

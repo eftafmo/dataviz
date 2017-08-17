@@ -33,3 +33,18 @@ export function slugify(text) {
 export function truncate(text, max) {
   return text.substr(0,max-1) + (text.length>max?'\u2026':'');
 }
+
+const _locale = {
+  // see https://github.com/d3/d3-format/blob/master/locale/
+  // TODO: derive and extend the browser locale?
+  // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
+  "decimal": ",", // that's the european way
+  "thousands": "\u00a0", // nbsp
+  "grouping": [3],
+  "currency": ["€", ""],
+  "percent": "%",
+}
+export const formatCurrency = d3.formatLocale(_locale)
+                                .format("$,d") // currency, separators, int
+export const formatNumber   = d3.formatLocale(_locale)
+                                .format(",d")

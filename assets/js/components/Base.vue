@@ -7,7 +7,7 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import {FILTERS, Q} from '../globals.js'
-import {colour2gray} from 'js/lib/util';
+import {colour2gray, formatCurrency, formatNumber} from 'js/lib/util';
 
 
 export default Vue.extend({
@@ -53,17 +53,6 @@ export default Vue.extend({
       // opacity of filtered-out items
       inactive_opacity: .7,
 
-      locale: {
-        // see https://github.com/d3/d3-format/blob/master/locale/
-        // TODO: derive and extend the browser locale?
-        // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
-        "decimal": ",", // that's the european way
-        "thousands": "\u00A0", // nbsp
-        "grouping": [3],
-        "currency": ["€", ""],
-        "percent": "%",
-      },
-
       // helper for transitions
       changed: 0,
     };
@@ -71,14 +60,10 @@ export default Vue.extend({
 
   computed: {
     currency() {
-      // show currency. thousand separators. decimal int.
-      const format = "$,d";
-
-      return d3.formatLocale(this.locale).format(format);
+      return formatCurrency
     },
     number() {
-      const format = ",d";
-      return d3.formatLocale(this.locale).format(format);
+      return formatNumber
     },
 
     inactivecolour() {

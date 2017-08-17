@@ -5,16 +5,10 @@
   </slot>
   <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
 
-<!--
-  <div v-if="hasData" class="legend">
-    <fm-legend :fms="FMS" class="clearfix">
-    </fm-legend>
-  </div>
--->
-
   <chart-legend
       class="inline"
       :items="legend_items"
+      :click-func="legendClickFunc"
   ></chart-legend>
 
   <svg width="100%" :height="height + 'px'" class="chart">
@@ -212,6 +206,10 @@ export default Chart.extend({
   },
 
   computed: {
+    legendClickFunc() {
+      return null;
+    },
+
     // turn all dimensions to px, and round them 'cause things get messy otherwise
     itemHeight() { return Math.round(this.fontSize * this.layout.itemHeight); },
     itemPadding() { return Math.round(this.fontSize * this.layout.itemPadding); },
