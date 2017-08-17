@@ -695,12 +695,11 @@ def projects_beneficiary_detail(request, beneficiary):
             'error': "Beneficiary state '%s' does not exist." % beneficiary
         }, status=404)
 
-    # Note: if project's PA stops going through Outcome, update below
     fields = {
         'id': F('nuts'),
-        'area': F('outcome__programme_area__name'),
-        'sector': F('outcome__programme_area__priority_sector__name'),
-        'fm': F('outcome__programme_area__priority_sector__type__grant_name'),
+        'area': F('programme_area__name'),
+        'sector': F('programme_area__priority_sector__name'),
+        'fm': F('programme_area__priority_sector__type__grant_name'),
     }
     data = (
         Project.objects.filter(state=state)
