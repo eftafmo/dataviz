@@ -33,6 +33,8 @@ export default Base.extend({
   // useful for component class names.
   type: "viz",
 
+  isDataviz: true,
+
   mixins: [ComponentMixin],
 
   props: {
@@ -44,17 +46,26 @@ export default Base.extend({
       return this.$options.type;
     },
 
-    embed_url() {
-      const root = this.$root
+    master_component() {
       // it may be that this behaves like a primary component,
       // but is shallowly included into another.
-      // we want the one that is first-level.
-      let component = this
-      while (component.$parent !== root)
-        component = component.$parent
+      // we want to find the lowest-level ancestor that is a viz.
+      const root = this.$root
+      let component = this,
+          _current = this;
 
-      const scenario = root.$options.name.toLowerCase(),
-            tag = component.$vnode.componentOptions.tag,
+      while (_current.$parent !== root) {
+        _current = _current.$parent
+
+        if (_current.$options.isDataviz) component = _current
+      }
+
+      return component
+    },
+
+    embed_url() {
+      const scenario = this.$root.$options.name.toLowerCase(),
+            tag = this.master_component.$vnode.componentOptions.tag,
             // hardcoding the base URL, because, oh well...
             path = `/embed/${ scenario }/${ tag }.js`;
 
