@@ -12,6 +12,7 @@ export default {
     currency() {
       return util.formatCurrency
     },
+
     number() {
       return util.formatNumber
     },
@@ -20,6 +21,14 @@ export default {
       return (
         (c) => util.colour2gray(c, this.inactive_opacity)
       )
+    },
+
+    singularize() {
+      return util.singularize
+    },
+
+    pluralize() {
+      return util.pluralize
     },
   },
 }

@@ -48,3 +48,26 @@ export const formatCurrency = d3.formatLocale(_locale)
                                 .format("$,d") // currency, separators, int
 export const formatNumber   = d3.formatLocale(_locale)
                                 .format(",d")
+
+export function singularize(str, value) {
+  // this works only for supposed plural strings ending in "s" or "ies"
+  if (value != 1) return str
+
+  let ending = str.substr(-3)
+  if (ending == "ies")
+    return str.substr(0, str.length - 3) + "y"
+
+  ending = str.substr(-1)
+  if (ending == "s")
+    return str.substr(0, str.length - 1)
+
+  return str
+}
+
+export function pluralize(str, value, suffix) {
+  if (value == 1) return str
+
+  if (suffix == undefined) suffix = "s"
+
+  return str + suffix
+}

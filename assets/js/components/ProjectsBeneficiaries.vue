@@ -18,7 +18,7 @@ export default Beneficiaries.extend({
 
   computed: {
     legendFormatFunc() {
-      return v => this.number(v) + " projects"
+      return v => this.number(v) + " " + this.pluralize("project", v)
     },
   },
 

@@ -132,13 +132,6 @@ export default Vue.extend({
 
       return data.filter(filterfunc);
     },
-    //this works only for strings that gain an 's' at the end for plural
-    singularize(str, value) {
-      let lastchar = str.substring(str.length-1, str.length);
-      if (value == 1 && lastchar == 's')
-        str = str.substring(0, str.length-1);
-      return str
-    },
 
     aggregate(data, by, on, flatten=false) {
       /*
