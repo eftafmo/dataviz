@@ -5,17 +5,17 @@
   </slot>
   <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
 
+<!--
+  <div v-if="hasData" class="legend">
+    <fm-legend :fms="FMS" class="clearfix">
+    </fm-legend>
+  </div>
+-->
+
   <chart-legend
-     v-if="$options.type == 'viz states partners beneficiaries'"
       class="inline"
       :items="legend_items"
   ></chart-legend>
-
-  <!-- for some reason $options.type != 'viz states partners beneficiaries' wont work -->
-  <div v-if="$options.type == 'viz states beneficiaries' || $options.type == 'viz states beneficiaries projects'" class="legend">
-    <fm-legend  v-if="hasData" :fms="FMS" class="clearfix">
-    </fm-legend>
-  </div>
 
   <svg width="100%" :height="height + 'px'" class="chart">
     <defs>
