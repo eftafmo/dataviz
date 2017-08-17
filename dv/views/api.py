@@ -595,12 +595,12 @@ def beneficiary_detail(request, beneficiary):
             'error': "Beneficiary state '%s' does not exist." % beneficiary
         }, status=404)
 
-    # Note: if project's PA stops going through Outcome, update below
     fields = {
         'id': F('nuts'),
-        'area': F('outcome__programme_area__name'),
-        'sector': F('outcome__programme_area__priority_sector__name'),
-        'fm': F('outcome__programme_area__priority_sector__type__grant_name'),
+        'area': F('programme_area__name'),
+        'sector': F('programme_area__priority_sector__name'),
+        'fm': F('programme_area__priority_sector__type__grant_name'),
+        'programme_id': F('programme_id'),
     }
     data = (
         Project.objects.filter(state=state)
@@ -625,7 +625,7 @@ def beneficiary_detail(request, beneficiary):
     nuts3s = tuple(
         NUTS.objects
         .filter(code__startswith=beneficiary, code__length=5)
-        .exclude(code__endswith="Z") # skip extra-regio
+        .exclude(code__endswith="Z")  # skip extra-regio
         .order_by('code')
         .values_list('code', flat=True)
     )
@@ -633,31 +633,27 @@ def beneficiary_detail(request, beneficiary):
     dataset = defaultdict(lambda: {
         'allocation': 0,
         'project_count': 0,
+        'programmes': {},
     })
-    fkeys = tuple(fields.keys())
-    codeidx = fkeys.index('id')
-    #_verify1 = Decimal('0');
 
     for a in data:
-        allocation = a.pop('allocation')
-        project_count = a.pop('project_count')
-        #_verify1 += allocation
-
         code = a['id']
-        if len(code) > 2 and code.endswith('Z'): # extra-regio
+        if len(code) > 2 and code.endswith('Z'):  # extra-regio
             code = code[:2]
 
-        # use fields' keys to ensure predictable order
-        key = tuple(a[k] for k in fkeys)
+        key = a['id'] + a['area'] + a['sector'] + a['fm']
         if len(code) == 5:
             row = dataset[key]
-            row['allocation'] += allocation
-            row['project_count'] += project_count
+            row['id'] = a['id']
+            row['area'] = a['area']
+            row['sector'] = a['sector']
+            row['fm'] = a['fm']
+            row['allocation'] += a['allocation']
+            row['project_count'] += a['project_count']
+            row['programmes'][a['programme_id']] = a['programme_id']
             continue
 
-        # else split allocation among children,
-        # and add project count to all children
-        # TODO: or ignore it entirely. customer input needed.
+        # else split allocation among children, and add project count to all children
         children = (nuts3s if len(code) == 2
                     else [n for n in nuts3s if n.startswith(code)])
 
@@ -665,29 +661,27 @@ def beneficiary_detail(request, beneficiary):
             # TODO: this is an error. log it, etc.
             continue
 
-        allocation = allocation / len(children)
+        allocation = a['allocation'] / len(children)
 
         for nuts in children:
-            childkey = key[:codeidx] + (nuts, ) + key[codeidx+1:]
+            childkey = nuts + a['area'] + a['sector'] + a['fm']
             row = dataset[childkey]
+            row['id'] = nuts
+            row['area'] = a['area']
+            row['sector'] = a['sector']
+            row['fm'] = a['fm']
             row['allocation'] += allocation
+            row['programmes'][a['programme_id']] = a['programme_id']
             # TODO: do we want to enable this?
-            #row['project_count'] += project_count
+            # row['project_count'] += a['project_count']
 
     out = []
-    #_verify2 = Decimal('0');
 
     for key, row in dataset.items():
-        item = dict(zip(fkeys, key))
-        #_verify2 += allocation
-
         # strip away some of that crazy precision
         row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+        out.append(row)
 
-        item.update(row)
-        out.append(item)
-
-    #print(_verify1, _verify2)
     return JsonResponse(out)
 
 

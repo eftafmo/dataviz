@@ -24,39 +24,31 @@ export default BaseMap.extend({
   methods: {
     tooltipTemplate(d) {
       const allocation = d.allocation || 0;
-
+      let region_name;
+      let extra = "";
       if (d.id.length == 2) {
-        let extra = "";
-        if(allocation) {
-          extra = `
+        region_name = this.COUNTRIES[d.id].name;
+        extra = `
+            <li>${ this.currency(d.allocation || 0) }</li>
+            `
+      } else {
+        region_name = this.get_nuts_label(d.id) + '(' + d.id + ')';
+      }
+
+      return `
+          <div class="title-container">
+            <svg>
+              <use xlink:href="#${this.get_flag_name(d.id)}" />
+            </svg>
+            <span class="name">${ region_name }</span>
+          </div>
+          <ul>
+            ${ extra }
             <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
             <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
             <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
-          `;
-        }
-
-        return `
-          <div class="title-container">
-            <svg>
-              <use xlink:href="#${this.get_flag_name(d.id)}" />
-            </svg>
-            <span class="name">${ this.COUNTRIES[d.id].name }</span>
-          </div>
-          <ul>
-            <li>${ this.currency(d.allocation || 0) }</li>
-            ${ extra }
           </ul>
-        `;
-      } else {
-        return `
-          <div class="title-container">
-            <svg>
-              <use xlink:href="#${this.get_flag_name(d.id)}" />
-            </svg>
-            <span class="name">${ this.get_nuts_label(d.id) } (${d.id})</span>
-          </div>
-        `;
-      }
+      `;
     },
 
     renderData(t) {
