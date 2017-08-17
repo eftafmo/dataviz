@@ -588,6 +588,10 @@ def partners(request):
 
 
 def beneficiary_detail(request, beneficiary):
+    return project_nuts(beneficiary, True)
+
+
+def project_nuts(beneficiary, force_nuts3):
     """
     Returns NUTS3-level allocations for the given state.
     """
@@ -645,7 +649,7 @@ def beneficiary_detail(request, beneficiary):
             code = code[:2]
 
         key = a['id'] + a['area'] + a['sector'] + a['fm']
-        if len(code) == 5:
+        if not force_nuts3 or len(code) == 5:
             row = dataset[key]
             row['id'] = a['id']
             row['area'] = a['area']
@@ -675,8 +679,7 @@ def beneficiary_detail(request, beneficiary):
             row['fm'] = a['fm']
             row['allocation'] += allocation
             row['programmes'][a['programme_id']] = a['programme_id']
-            # TODO: do we want to enable this?
-            # row['project_count'] += a['project_count']
+            row['project_count'] += a['project_count']
 
     out = []
 
@@ -688,8 +691,9 @@ def beneficiary_detail(request, beneficiary):
     return JsonResponse(out)
 
 
-
 def projects_beneficiary_detail(request, beneficiary):
+    return project_nuts(beneficiary, False)
+
     # TODO: this copy-paste is evil. must ... fix ...
     try:
         state = State.objects.get_by_natural_key(beneficiary)
