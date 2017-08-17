@@ -571,8 +571,9 @@ def partners(request):
                             copy['DPP_nuts'] = DPP_data['nuts']
                             out.append(copy)
                     else:
-                        # Still need to add rows without DPP
-                        out.append(row)
+                        # Still need to add rows without DPP if they have project partners
+                        if row['PJDPP']:
+                          out.append(row)
 
     """
     # use for testing with django-debug-toolbar:
