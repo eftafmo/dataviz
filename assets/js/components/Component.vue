@@ -56,7 +56,7 @@ export default Base.extend({
       const scenario = root.$options.name.toLowerCase(),
             tag = component.$vnode.componentOptions.tag,
             // hardcoding the base URL, because, oh well...
-            path = `/embed/${scenario}/${tag}.js`;
+            path = `/embed/${ scenario }/${ tag }.js`;
 
       const url = new URL(path, window.location.href)
 
@@ -66,7 +66,13 @@ export default Base.extend({
         url.searchParams.set(f, v)
       }
 
-      return url.href
+      return url.href.substr(url.protocol.length)
+    },
+
+    embed_markup() {
+      return '<' + 'script ' +
+             `src="${ this.embed_url }"` +
+             ' async></' + 'script>'
     },
   },
 })
