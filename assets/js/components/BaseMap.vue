@@ -186,7 +186,7 @@ export default Chart.extend({
 
   data() {
     return {
-      donor_colour_inactive: "#85adcb",
+      donor_colour_inactive: "#fff",
 
       beneficiary_colour_default: "none",
       beneficiary_colour_hovered: null,
@@ -447,12 +447,10 @@ export default Chart.extend({
 
     handleFilterFm(val, old) {
       const t = this.getTransition();
-
       /*
        * part 0: re-render data-dependent stuff
        */
       this.renderData(t);
-
       /*
        * part 1: change the donor colours
        */
@@ -468,7 +466,7 @@ export default Chart.extend({
                            () => this.fmcolour(slugify(val)); // awful §
 
       this.chart.select('.states').selectAll('path')
-        .filter( (d) => this.isDonor(d.id) && d.id != "NO" )
+        .filter( (d) => this.isDonor(d) && d.id != "NO" )
         .transition(t)
         .attr("fill", colourfuncEEA);
 
@@ -478,6 +476,14 @@ export default Chart.extend({
         .transition(t)
         .attr("fill", colourfuncNO)
         .attr("stroke", colourfuncNO);
+
+
+      d3.select(this.$el).select("svg > defs > pattern#eea-grants").selectAll("rect")
+        .datum(function() { return this.getAttribute("class"); })
+        .transition(t)
+        .attr("fill", '#fff')
+        .attr("stroke", colourfuncNO);
+
 
       /*
        * part 2: change the region data
