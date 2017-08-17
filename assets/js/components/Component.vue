@@ -43,6 +43,31 @@ export default Base.extend({
     classNames() {
       return this.$options.type;
     },
+
+    embed_url() {
+      const root = this.$root
+      // it may be that this behaves like a primary component,
+      // but is shallowly included into another.
+      // we want the one that is first-level.
+      let component = this
+      while (component.$parent !== root)
+        component = component.$parent
+
+      const scenario = root.$options.name.toLowerCase(),
+            tag = component.$vnode.componentOptions.tag,
+            // hardcoding the base URL, because, oh well...
+            path = `/embed/${scenario}/${tag}.js`;
+
+      const url = new URL(path, window.location.href)
+
+      for (const f in this.filters) {
+        const v = this.filters[f]
+        if (!v) continue
+        url.searchParams.set(f, v)
+      }
+
+      return url.href
+    },
   },
 })
 
