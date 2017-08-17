@@ -22,14 +22,18 @@
 
 
 <script>
-import Vue from 'vue';
-import Base from './Base';
+import Vue from 'vue'
+import Base from './Base'
+
+import ComponentMixin from './mixins/Component.js'
 
 
 export default Base.extend({
   // set this on a derived component to build a "type tree".
   // useful for component class names.
   type: "viz",
+
+  mixins: [ComponentMixin],
 
   props: {
     datasource: String,
@@ -40,7 +44,7 @@ export default Base.extend({
       return this.$options.type;
     },
   },
-});
+})
 
 
 // concatenate the type values
@@ -50,5 +54,4 @@ Vue.config.optionMergeStrategies.type = function (previous, current) {
 
   return previous + " " + current
 }
-
 </script>

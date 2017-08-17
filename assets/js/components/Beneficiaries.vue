@@ -9,23 +9,11 @@
 
 <script>
 import * as d3 from 'd3';
-import {formatCurrency} from 'js/lib/util';
 
 import StatesBarChart from './StatesBarChart';
-import Legend from './includes/Legend';
 
 import BeneficiariesBarChartMixin from './mixins/BeneficiariesBarChart';
 import WithFMsMixin from './mixins/WithFMs';
-
-
-const CustomLegend = Legend.extend({
-  props: {
-    formatFunc: {
-      type: Function,
-      default: formatCurrency,
-    },
-  },
-})
 
 
 export default StatesBarChart.extend({
@@ -33,10 +21,6 @@ export default StatesBarChart.extend({
     BeneficiariesBarChartMixin,
     WithFMsMixin,
   ],
-
-  components: {
-    "chart-legend": CustomLegend,
-  },
 
   data() {
     return {
@@ -58,7 +42,11 @@ export default StatesBarChart.extend({
 
   computed: {
     legendClickFunc() {
-      return this.toggleFm;
+      return this.toggleFm
+    },
+
+    legendFormatFunc() {
+      return this.currency
     },
 
     types() {

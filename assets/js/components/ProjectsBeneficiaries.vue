@@ -1,20 +1,8 @@
 <script>
-import {formatNumber} from 'js/lib/util';
-
 import Beneficiaries from './Beneficiaries';
 import ProjectsMixin from './mixins/Projects';
 
 import Legend from './includes/Legend';
-
-
-const CustomLegend = Legend.extend({
-  props: {
-    formatFunc: {
-      type: Function,
-      default: v => formatNumber(v) + " projects",
-    },
-  },
-})
 
 
 export default Beneficiaries.extend({
@@ -22,14 +10,16 @@ export default Beneficiaries.extend({
 
   mixins: [ProjectsMixin],
 
-  components: {
-    "chart-legend": CustomLegend,
-  },
-
   data() {
     return {
       title: 'Projects across beneficiary states'
     }
+  },
+
+  computed: {
+    legendFormatFunc() {
+      return v => this.number(v) + " projects"
+    },
   },
 
   methods: {

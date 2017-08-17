@@ -9,6 +9,7 @@
       class="inline"
       :items="legend_items"
       :click-func="legendClickFunc"
+      :format-func="legendFormatFunc"
   ></chart-legend>
 
   <svg width="100%" :height="height + 'px'" class="chart">
@@ -207,6 +208,10 @@ export default Chart.extend({
 
   computed: {
     legendClickFunc() {
+      return null;
+    },
+
+    legendFormatFunc() {
       return null;
     },
 

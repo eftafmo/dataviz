@@ -7,7 +7,6 @@
 import Vue from 'vue';
 import * as d3 from 'd3';
 import {FILTERS, Q} from '../globals.js'
-import {colour2gray, formatCurrency, formatNumber} from 'js/lib/util';
 
 
 export default Vue.extend({
@@ -50,28 +49,12 @@ export default Vue.extend({
       // because properties beginning with underscore aren't reactive
       dataset__: null,
 
-      // opacity of filtered-out items
-      inactive_opacity: .7,
-
       // helper for transitions
       changed: 0,
     };
   },
 
   computed: {
-    currency() {
-      return formatCurrency
-    },
-    number() {
-      return formatNumber
-    },
-
-    inactivecolour() {
-      return (
-        (c) => colour2gray(c, this.inactive_opacity)
-      );
-    },
-
     dataset: {
       // make dataset a settable computed
       get() {

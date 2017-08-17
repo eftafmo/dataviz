@@ -15,7 +15,7 @@
       <slot name="item" :item="item">
         <span class="fill" :style="{backgroundColor: item.colour}"></span>
         {{ item.name }}
-        <sup v-if="showValues && item.value !== undefined" class="value">{{ formatFunc(item.value) }}</sup>
+        <sup v-if="showValues && item.value !== undefined" class="value">{{ format(item.value) }}</sup>
       </slot>
     </li>
   </ul>
@@ -89,8 +89,12 @@
 <script>
 import Vue from 'vue';
 
+import ComponentMixin from '../mixins/Component.js'
+
 
 export default Vue.extend({
+  mixins: [ComponentMixin],
+
   props: {
     items: {
       type: Array,
@@ -104,7 +108,6 @@ export default Vue.extend({
 
     formatFunc: {
       type: Function,
-      default: x => x,
     },
 
     showValues: {
@@ -124,5 +127,11 @@ export default Vue.extend({
       return this.items.reduce( (x, item) => x + item.value, 0)
     },
   },
-});
+
+  methods: {
+    format(v) {
+      return this.formatFunc ? this.formatFunc(v) : this.number(v)
+    },
+  },
+})
 </script>
