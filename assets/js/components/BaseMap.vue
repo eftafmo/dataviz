@@ -477,14 +477,6 @@ export default Chart.extend({
         .attr("fill", colourfuncNO)
         .attr("stroke", colourfuncNO);
 
-
-      d3.select(this.$el).select("svg > defs > pattern#eea-grants").selectAll("rect")
-        .datum(function() { return this.getAttribute("class"); })
-        .transition(t)
-        .attr("fill", '#fff')
-        .attr("stroke", colourfuncNO);
-
-
       /*
        * part 2: change the region data
        */
