@@ -161,14 +161,13 @@
 
 import Vue from 'vue';
 import * as d3 from 'd3';
-import BaseMixin from './Base';
+import Component from './Component';
 import PartnersMixin from './mixins/Partners';
 import CountriesMixin from './mixins/WithCountries';
 import Dropdown from './includes/DropdownFilter';
 
-export default Vue.extend({
+export default Component.extend({
   mixins: [
-    BaseMixin,
     PartnersMixin,
     CountriesMixin,
   ],
