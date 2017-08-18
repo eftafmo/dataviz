@@ -12,8 +12,7 @@
   <div class="grant-dataviz" id="financial-mechanisms">
     <mechanisms
         :initial="dataset"
-    >
-    </mechanisms>
+    ></mechanisms>
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
@@ -30,7 +29,7 @@
   <div class="grant-dataviz" id="funding-map">
     <xmap
         :initial="dataset"
-        details-datasource="{% url "api:beneficiary-detail" "XX" %}"
+        details-datasource="{% url "api:grants-beneficiary-detail" "XX" %}"
     ></xmap>
   </div>
 

@@ -16,11 +16,11 @@ urlpatterns = [
     url(r'^grants.json', views.grants, name='grants'),
     url(r'^projects.json', views.projects, name='projects'),
     url(r'^partners.json', views.partners, name='partners'),
-    url(r'^beneficiaries/(?P<beneficiary>[A-Z]{2}).json',
+    url(r'^grants/(?P<beneficiary>[A-Z]{2}).json',
         views.beneficiary_detail,
-        name='beneficiary-detail'),
+        name='grants-beneficiary-detail'),
 
-    url(r'^projects-beneficiaries/(?P<beneficiary>[A-Z]{2}).json',
+    url(r'^projects/(?P<beneficiary>[A-Z]{2}).json',
         views.projects_beneficiary_detail,
         name='projects-beneficiary-detail'),
 
