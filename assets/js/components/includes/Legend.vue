@@ -1,5 +1,5 @@
 <template>
-<div class="legend" :class="{ 'no-total': !what }">
+<div class="chart-legend" :class="{ 'no-total': !what }">
   <p class="what" v-if="what">{{ total }} {{ what }}</p>
 
   <ul :class="{active: clickFunc}">
@@ -24,7 +24,7 @@
 
 
 <style lang="less">
-.viz .legend {
+.viz .chart-legend {
   margin-bottom: .5em;
 
   ul {

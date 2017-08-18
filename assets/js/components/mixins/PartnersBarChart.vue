@@ -1,7 +1,7 @@
 <!-- for use with StatesBarChart components -->
 
 <style lang="less">
-.viz.partners.states .legend {
+.viz.partners.states .chart-legend {
   .value {
     color: #c41230;
   }
