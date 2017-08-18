@@ -247,6 +247,8 @@ class EmbedComponent(TemplateView):
             'cssfiles': [geturl(f) for f in cssfiles],
             'object': obj,
             'props': props,
+            'opts': { k: v
+                      for k, v in self.request.GET.items() },
             'embedurl': self.request.build_absolute_uri(),
             'randomness': utils.mkrandstr(),
         })

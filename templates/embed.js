@@ -61,6 +61,10 @@ Usage:
       new {{ object|replace('components.', '$dataviz.') }}({
         el: '#{{ elid }}',
         propsData: {
+          embedded: true,
+  {% if opts %}
+          opts: @@opts@@,
+  {% endif %}
   {% for prop, value in props.items() %}
           {{ prop }}: '{{ value }}'
           {%- if not loop.last %},{% endif -%}
@@ -81,6 +85,7 @@ Usage:
     |replace(' ','')
     |replace('function_', 'function _')
     |replace('new$', 'new $')
+    |replace('@@opts@@', opts)
   }}";
   s.parentNode.insertBefore({{ x }}, s);
 })();

@@ -27,6 +27,8 @@ import Base from './Base'
 
 import ComponentMixin from './mixins/Component.js'
 
+import {FILTERS} from '../globals';
+
 
 export default Base.extend({
   // set this on a derived component to build a "type tree".
@@ -39,6 +41,14 @@ export default Base.extend({
 
   props: {
     datasource: String,
+    embedded: {
+      type: Boolean,
+      default: false,
+    },
+    opts: {
+      type: Object,
+      default: () => {},
+    },
   },
 
   computed: {
@@ -85,6 +95,19 @@ export default Base.extend({
              `src="${ this.embed_url }"` +
              ' async></' + 'script>'
     },
+  },
+
+  beforeCreate() {
+    // set filter values from opts.
+    // do it before filters get bound, to avoid triggering handlers.
+    const opts = this.$options.propsData.opts
+
+    for (const k in opts) {
+      if (FILTERS[k] !== undefined) {
+        FILTERS[k] = opts[k]
+        delete opts[k]
+      }
+    }
   },
 })
 
