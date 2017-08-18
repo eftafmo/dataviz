@@ -230,13 +230,23 @@ class EmbedComponent(TemplateView):
                 url = '//' + self.request.get_host() + url
             return url
 
+        props = {
+            'datasource': self.request.build_absolute_uri(
+                reverse("api:" + scenario)
+            ),
+        }
+
+        # this is ugly, nasty and not nice
+        if scenario in ("grants", "projects"):
+            props['detailsDatasource'] = self.request.build_absolute_uri(
+                reverse("api:%s-beneficiary-detail" % scenario, args=("XX",))
+            )
+
         context.update({
             'jsfiles': [geturl(f) for f in jsfiles],
             'cssfiles': [geturl(f) for f in cssfiles],
             'object': obj,
-            'datasource': self.request.build_absolute_uri(
-                reverse("api:" + scenario)
-            ),
+            'props': props,
             'embedurl': self.request.build_absolute_uri(),
             'randomness': utils.mkrandstr(),
         })

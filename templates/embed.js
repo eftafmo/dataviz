@@ -61,7 +61,10 @@ Usage:
       new {{ object|replace('components.', '$dataviz.') }}({
         el: '#{{ elid }}',
         propsData: {
-          datasource: '{{ datasource }}'
+  {% for prop, value in props.items() %}
+          {{ prop }}: '{{ value }}'
+          {%- if not loop.last %},{% endif -%}
+  {% endfor %}
         }
       });
     };
