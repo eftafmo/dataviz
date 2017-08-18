@@ -16,6 +16,7 @@ export default {
 
     // not sure if this is needed
     this.aggregate_on.push({source: 'donor', destination: 'donors', type: String});
-    this.aggregate_on.push({source: 'programme', destination: 'programmes', type: String});
+    //this.aggregate_on.push({source: 'programme', destination: 'programmes', type: String});
+    this.aggregate_on.push({source: 'programmes', destination: 'programmes', type: Object});
   },
 };

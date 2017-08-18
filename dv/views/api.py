@@ -313,6 +313,8 @@ def partners(request):
         'programme__organisation_roles',
     ).annotate(
         code=F('programme__code'),
+        name=F('programme__name'),
+        url=F('programme__url'),
         pa_code=F('outcome__programme_area__code'),
         pa_name=F('outcome__programme_area__name'),
         sector=F('outcome__programme_area__priority_sector__name'),
@@ -321,6 +323,8 @@ def partners(request):
         allocation_norway=F('programme__allocation_norway'),
     ).values(
         'code',
+        'name',
+        'url',
         'pa_code',
         'pa_name',
         'sector',
@@ -339,6 +343,8 @@ def partners(request):
     for p in partnership_programmes_raw:
         if p['code'] not in partnership_programmes:
             partnership_programmes[p['code']] = {
+                'name': p['name'],
+                'url': p['url'],
                 'areas': {},
                 'beneficiaries': set(),
                 'donors': set(),
@@ -565,6 +571,12 @@ def partners(request):
                         'donor': donor,
                         'allocation': float(allocation),
                         'programme': prg,
+                        'programmes': {
+                            prg: {
+                                'name': item['name'],
+                                'url': item['url'],
+                            }
+                        },
                         'projects': projects[key_donor],
                         'prj_nuts': list(nuts_connections.values()),
                         'PO': item['PO'],
