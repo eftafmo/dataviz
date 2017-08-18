@@ -1,5 +1,5 @@
 <template>
-    <ul class="results" v-if="hasData">
+    <ul class="results">
        <li v-for="item in data" class="partner-result clearfix">
           <div class="partner-result-achievement"> {{ item.achievement }}{{ item.unit }}</div>
           <div class="partner-result"> {{ item.indicator }} </div>
@@ -55,6 +55,8 @@ export default Component.extend({
 
   computed: {
     data() {
+      if (!this.hasData) return []
+
       const dataset = this.filtered;
       const aggregated = {
         DPP_programmes: d3.set(),
@@ -99,7 +101,7 @@ export default Component.extend({
       const num_dpp = aggregated.dpp_projects.size();
       if (num_dpp > 0) {
         results.push(
-          { 
+          {
             achievement: num_dpp,
             indicator: this.singularize("projects", num_dpp) + " with donor project partners"
           }

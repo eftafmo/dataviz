@@ -1,5 +1,5 @@
 <template>
-    <ul class="news" v-if="hasData">
+    <ul class="news">
       <li v-for="news in data">
         <div class="content-item news_content">
         <a :href="`${news.link}`" target="_blank">
@@ -52,6 +52,8 @@ import Component from './Component';
 export default Component.extend({
   computed: {
     data() {
+      if (!this.hasData) return []
+
       const dataset = this.filtered;
       const unique = {};
       // use dict to remove duplicates

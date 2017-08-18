@@ -1,5 +1,5 @@
 <template>
-<ul class="programmes" v-if="hasData">
+<ul class="programmes">
   <li v-for="beneficiary in data.beneficiaries">
     <div class="content-item programmes_content">
       <div class="body">
@@ -159,6 +159,8 @@ export default Component.extend({
   computed: {
 
     data() {
+      if (!this.hasData) return []
+
       const dataset = this.filtered;
       const beneficiaries = {};
       let totalcount = 0;

@@ -1,9 +1,9 @@
 <template>
-    <div v-if="hasData" class="sidebar-header">
+    <div v-show="hasData" class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="changed">
-          <strong>{{ data.DPP.size() }} donor programme {{ singularize('partners', data.DPP.size()) }}</strong>
-          <small> {{ data.dpp.size() }} donor project {{ singularize('partners', data.dpp.size()) }}</small>
+          <strong>{{ data.DPP_count }} donor programme {{ singularize('partners', data.DPP_count) }}</strong>
+          <small> {{ data.dpp_count }} donor project {{ singularize('partners', data.dpp_count) }}</small>
         </div>
       </transition>
     </div>
@@ -19,6 +19,8 @@ export default Summary.extend({
 
   computed: {
     data() {
+      if (!this.hasData) return {}
+
       const out = this.aggregate(
         this.filtered,
         [],
@@ -28,6 +30,12 @@ export default Summary.extend({
         ],
         false
       );
+
+      // we'll compute these here,
+      // so we don't have to use v-if in the template
+      out.DPP_count = out.DPP.size()
+      out.dpp_count = out.dpp.size()
+
       return out;
     },
   },

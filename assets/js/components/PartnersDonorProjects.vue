@@ -1,5 +1,5 @@
 <template>
-<div v-if="hasData" class="donor-projects">
+<div class="donor-projects">
  <slot name="title" v-if="!this.embedded"></slot>
  <table>
    <thead>
@@ -150,6 +150,8 @@ export default Component.extend({
 
   computed: {
     data() {
+      if (!this.hasData) return []
+
       const dataset = this.filtered;
       const out = {}
 

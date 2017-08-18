@@ -1,5 +1,5 @@
 <template>
-<div v-if="hasData" class="donor-programmes">
+<div class="donor-programmes">
  <slot name="title" v-if="!this.embedded"></slot>
  <dropdown v-if="isReady" filter="DPP" title="No filter selected" :items="dropdown_items"></dropdown>
  <table>
@@ -192,6 +192,8 @@ export default Component.extend({
 
   computed: {
     data() {
+      if (!this.hasData) return []
+
       const dataset = this.filtered;
       const out = {}
 

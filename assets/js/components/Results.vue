@@ -1,5 +1,5 @@
 <template>
-    <ul class="results" v-if="hasData">
+    <ul class="results">
      <div v-for="items in data">
       <li v-for="(sectors, outcome) in items">
         <div class="content-item results_content">
@@ -86,6 +86,8 @@ export default Component.extend({
 
   computed: {
     data() {
+      if (!this.hasData) return []
+
       const dataset = this.filtered;
       const results = {};
 

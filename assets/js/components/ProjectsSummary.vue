@@ -1,5 +1,5 @@
 <template>
-    <div  v-if="hasData" class="sidebar-header">
+    <div v-show="hasData" class="sidebar-header">
       <transition name="fade">
         <div class="allocation" :key="changed">
           <strong>{{ number(data.project_count) }} projects</strong>
@@ -23,6 +23,8 @@ export default Summary.extend({
 
   computed: {
     data() {
+      if (!this.hasData) return {}
+
       const out = this.aggregate(
         this.filtered,
         [],
