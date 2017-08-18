@@ -64,7 +64,6 @@ export const Projects = Base.extend({
     xmap: components.ProjectsMap,
     beneficiaries: components.ProjectsBeneficiaries,
     xsummary: components.ProjectsSummary,
-    programmes: components.Programmes,
     news: components.News,
     projects: components.Projects,
   },
