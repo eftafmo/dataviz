@@ -58,6 +58,7 @@ export default Component.extend({
       const dataset = this.filtered;
       const aggregated = {
         DPP_programmes: d3.set(),
+        dpp_programmes: d3.set(),
         dpp_projects: d3.set(),
         dpp_projects_ended: d3.set(),
         dpp_projects_coop: d3.set(),
@@ -67,6 +68,9 @@ export default Component.extend({
       for (const d of dataset) {
         if (d.DPP) {
           aggregated.DPP_programmes.add(d.programme);
+        }
+        if (d.PJDPP) {
+          aggregated.dpp_programmes.add(d.programme);
         }
         for (let prj in d.projects) {
           aggregated.dpp_projects.add(prj);
@@ -89,6 +93,15 @@ export default Component.extend({
           {
             achievement: num_DPP,
             indicator: this.singularize("programmes", num_DPP) + " with donor programme partners"
+          }
+        );
+      }
+      const num_prg_dpp = aggregated.dpp_programmes.size();
+      if (num_prg_dpp > 0) {
+        results.push(
+          {
+            achievement: num_prg_dpp,
+            indicator: this.singularize("programmes", num_prg_dpp) + " with donor project partners"
           }
         );
       }
