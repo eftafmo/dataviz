@@ -480,21 +480,9 @@ export default Chart.extend({
         (d) => d3.values(d.children)
       );
 
-      // filtering by sectors / areas makes items "disabled".
-      const isEnabled = (d) => {
-        if (this.filters.sector === null) return true;
-        if (d.allocation === undefined) return this._isSelectedSector(d.name);
-        return this._isSelectedSector(d.parentname);
-      };
-
       // tell the hierarchy object how to calculate sums
-      tree.sum(d => {
-        // only leaf nodes have value data
-        if (d.children !== undefined) return 0;
-        // filter out disabled items
-        if (!isEnabled(d)) return 0;
-        return this.value(d);
-      });
+      tree.sum(this.valuefunc)
+
       return tree;
     },
 
@@ -528,9 +516,39 @@ export default Chart.extend({
   },
 
   methods: {
+    isRoot(d) {
+      // the root node of the data tree
+      return d.id === undefined
+    },
+
+    isRogue(d) {
+      // some crazy sector coming from how the sector list is pre-built
+      return d.children === undefined && d.parentname === undefined
+    },
+
+    isSector(d) {
+      return d.children !== undefined
+    },
+
+    // filtering by sectors / areas makes items "disabled".
+    isEnabled(d) {
+      if (this.filters.sector === null)
+        return true
+      if (this.isSector(d))
+        return this._isSelectedSector(d.name)
+      return this._isSelectedSector(d.parentname)
+    },
+
     // the value used in pie-chart calculations
-    value(d) {
-      return d.allocation;
+    valuefunc(d) {
+      // only leaf nodes have value data
+      if (this.isRoot(d) || this.isRogue(d) || this.isSector(d))
+        return 0
+
+      // filter out disabled items
+      if (!this.isEnabled(d)) return 0
+
+      return d.allocation
     },
 
     // the value displayed for legend items

@@ -25,18 +25,29 @@ export default Sectors.extend({
   },
 
   methods: {
-    value(d) {
-      if ( d.programmes ) {
-        return d.programmes.size();
-      } else {
-        const programmes = d3.set();
-        for (const area in d) {
-          for (const prg in area.programmes) {
-            programmes.add(prg);
-          }
+    valuefunc(d) {
+      if (this.isRoot(d) || this.isRogue(d))
+        return 0
+
+      if (!this.isEnabled(d)) return 0
+
+      if (this.isSector(d)) {
+        // get rid of the doubly-counted programmes
+        const all = d3.set()
+        let sum = 0
+
+        for (const aid in d.children) {
+          const prgs = d.children[aid].programmes
+          if (prgs === undefined) continue
+
+          prgs.each( x => all.add(x) )
+          sum += prgs.size()
         }
-        return programmes.size();
+
+        return all.size() - sum
       }
+
+      return d.programmes.size()
     },
 
     display(item) {
