@@ -68,7 +68,7 @@ export default {
                     .filter( (x) => x.value != 0 );
       const datatxt = data
         .map( (x) => `
-            <ul>${ this.number(x.value) } ${ x.name }</ul>
+            <li>${ this.number(x.value) } ${ this.singularize(x.name, x.value) }</li>
         ` )
         .join("");
 
