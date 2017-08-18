@@ -1,6 +1,6 @@
 <template>
 <div v-if="hasData" class="donor-projects">
- <h2>{{title}}</h2>
+ <slot name="title" v-if="!this.embedded"></slot>
  <table>
    <thead>
      <th>Donor state</th>
@@ -146,7 +146,6 @@ export default Vue.extend({
 
   data(){
     return {
-      title: "Donor project partners",
     }
   },
 

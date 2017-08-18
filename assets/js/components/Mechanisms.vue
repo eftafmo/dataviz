@@ -1,6 +1,6 @@
 <template>
 <div :class="$options.type">
-  <h2>{{title}}</h2>
+  <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="rendered" filter="fm" title="No filter selected" :items="nonzero"></dropdown>
   <svg viewBox="0 0 100 10"  preserveAspectRatio="none">
     <g class="chart"></g>
@@ -130,7 +130,6 @@ export default Chart.extend({
       ],
 
       inactive_opacity: .7,
-      title: 'Funding by financial mechanism'
     };
   },
 

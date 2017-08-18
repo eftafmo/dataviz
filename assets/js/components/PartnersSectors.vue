@@ -11,16 +11,16 @@ export default Sectors.extend({
 
   data(){
     return {
-      title: 'Donor partner programmes by sector',
     }
   },
 
   updated() {
     let dropdown = this.$el.querySelector('.viz-select');
-    let title = this.$el.querySelector('h2')
     if(!dropdown) return;
     dropdown.style.cssFloat = 'initial'
     dropdown.style.marginBottom = '4rem'
+    let title = this.$el.querySelector('h2')
+    if(!title) return;
     title.style.marginBottom = '1rem'
   },
 

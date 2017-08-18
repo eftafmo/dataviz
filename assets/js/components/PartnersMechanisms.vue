@@ -1,5 +1,6 @@
 <template>
 <fms :datasource="datasource" :initial="initial" class="partners">
+  <template slot="title"><slot name="title"></slot></template>
   <template slot="legend" scope="x">
     <fm-legend :fms="x.data"></fm-legend>
   </template>
@@ -42,7 +43,6 @@ const Mechanisms = BaseMechanisms.extend({
 
   data() {
     return {
-      title: 'Financial mechanisms'
     };
   },
 

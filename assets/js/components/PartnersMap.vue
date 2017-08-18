@@ -1,6 +1,6 @@
 <template>
 <div :class="[$options.type, { rendering: !rendered }]">
-  <h2>{{title}}</h2>
+  <slot name="title" v-if="!this.embedded"></slot>
 
   <div class="selector">
     Show:
@@ -205,10 +205,8 @@ export default Chart.extend({
       visible_layers: this.layers,
       region: null,
 
-      chart_opacity: .6,
+      chart_opacity: 1.0,
       region_opacity: .8,
-
-      title: 'Network map'
     };
   },
 

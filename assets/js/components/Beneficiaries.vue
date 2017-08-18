@@ -24,7 +24,6 @@ export default StatesBarChart.extend({
 
   data() {
     return {
-      title: 'Funding across beneficiary states',
     }
   },
 

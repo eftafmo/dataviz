@@ -12,7 +12,6 @@ export default Beneficiaries.extend({
 
   data() {
     return {
-      title: 'Projects across beneficiary states'
     }
   },
 

@@ -10,27 +10,31 @@
 <div class="lg-column">
 
   <div class="grant-dataviz" id="financial-mechanisms">
-    <mechanisms
-        :initial="dataset"
-    ></mechanisms>
+    <mechanisms :initial="dataset">
+      <h2 slot="title">Financial mechanisms</h2>
+    </mechanisms>
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
-    <sectors
-        :initial="dataset"
-    ></sectors>
+    <sectors :initial="dataset">
+      <h2 slot="title">Donor partner programmes by sector</h2>
+    </sectors>
   </div>
 
   <div class="grant-dataviz" id="donor-programme-partners">
     <programme_partners
         :initial="dataset"
-    ></programme_partners>
+    >
+      <h2 slot="title">Donor programme partners</h2>
+    </programme_partners>
   </div>
 
   <div class="grant-dataviz" id="donor-project-partners">
     <project_partners
         :initial="dataset"
-    ></project_partners>
+    >
+      <h2 slot="title">Donor project partners</h2>
+    </project_partners>
   </div>
 
 </div>
@@ -41,19 +45,25 @@
   <div class="grant-dataviz" id="network-map">
     <xmap
         :initial="dataset"
-    ></xmap>
+    >
+      <h2 slot="title">Network map</h2>
+    </xmap>
   </div>
 
   <div class="grant-dataviz" id="donor-states">
     <donors
         :initial="dataset"
-    ></donors>
+    >
+      <h2 slot="title">Organisations by donor state</h2>
+    </donors>
   </div>
 
  <div class="grant-dataviz" id="beneficiary-states">
     <beneficiaries
         :initial="dataset"
-    ></beneficiaries>
+    >
+      <h2 slot="title">Organisations with donor partner by beneficiary state</h2>
+    </beneficiaries>
   </div>
 
 </div>

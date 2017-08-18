@@ -1,6 +1,6 @@
 <template>
 <div :class="[$options.type, { rendering: !rendered }]">
-  <h2>{{title}}</h2>
+  <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
 
   <svg class="defs">
@@ -196,7 +196,6 @@ export default Chart.extend({
 
       draw_nuts_levels: [1, 2, 3],
       nuts_level: 3, // the startling nuts level
-      title: 'Funding map'
     };
   },
 

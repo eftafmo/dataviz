@@ -10,9 +10,7 @@ export default Sectors.extend({
   mixins: [ProjectsMixin],
 
   data(){
-    return {
-      title: 'Projects by sector'
-    }
+    return {}
   },
 
   computed: {

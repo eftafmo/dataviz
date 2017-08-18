@@ -11,14 +11,18 @@
 
   <div class="grant-dataviz" id="financial-mechanisms">
     <mechanisms
-        :initial="dataset"
-    ></mechanisms>
+      :initial="dataset"
+    >
+      <h2 slot="title">Projects by financial mechanism</h2>
+    </mechanisms>
   </div>
 
   <div class="grant-dataviz" id="priority-sectors">
     <sectors
-        :initial="dataset"
-    ></sectors>
+      :initial="dataset"
+    >
+      <h2 slot="title">Projects by sector</h2>
+    </sectors>
   </div>
 
 </div>
@@ -30,13 +34,17 @@
     <xmap
         :initial="dataset"
         details-datasource="{% url "api:projects-beneficiary-detail" "XX" %}"
-    ></xmap>
+    >
+      <h2 slot="title">Projects map</h2>
+    </xmap>
   </div>
 
   <div class="grant-dataviz" id="beneficiary-states">
     <beneficiaries
         :initial="dataset"
-    ></beneficiaries>
+    >
+      <h2 slot="title">Projects across beneficiary states</h2>
+    </beneficiaries>
   </div>
 
 </div>

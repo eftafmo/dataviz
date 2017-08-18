@@ -10,7 +10,6 @@ export default Mechanisms.extend({
 
   data() {
     return {
-      title: 'Projects by financial mechanism'
     };
   },
 

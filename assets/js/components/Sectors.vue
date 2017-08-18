@@ -1,6 +1,6 @@
 <template>
 <div :class="$options.type" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
-  <h2>{{title}}</h2>
+  <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <div class="chart-wrapper">
   <chart-container :width="width" :height="height">
@@ -353,7 +353,6 @@ export default Chart.extend({
 
       // percentage of mid-donut void
       inner_radius: .65,
-      title: 'Allocation by sector',
       minHeight: null,
     };
   },

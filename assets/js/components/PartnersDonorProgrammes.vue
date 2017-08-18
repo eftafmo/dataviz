@@ -1,6 +1,6 @@
 <template>
 <div v-if="hasData" class="donor-programmes">
- <h2>{{title}}</h2>
+ <slot name="title" v-if="!this.embedded"></slot>
  <dropdown v-if="isReady" filter="DPP" title="No filter selected" :items="dropdown_items"></dropdown>
  <table>
    <thead>
@@ -179,7 +179,6 @@ export default Vue.extend({
 
   data(){
     return {
-      title: "Donor programme partners",
     }
   },
 

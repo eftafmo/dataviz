@@ -1,8 +1,6 @@
 <template>
 <div :class="[$options.type, { rendering: !rendered }]">
-  <slot name="title">
-    <h2>{{ title }}</h2>
-  </slot>
+  <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
 
   <chart-legend
