@@ -26,20 +26,22 @@
       :zoomable="false"
   >
 
-    <transition-group name="fade"
-                      tag="div"
-                      ref="container"
-                      class="charts"
-    >
-      <div v-for="layer in layers"
-           v-show="visible_layers.indexOf(layer) != -1"
-           :key="layer"
-           class="layer"
-           :class="layer"
-      ></div>
-    </transition-group>
+    <template slot="after-map">
+      <transition-group name="fade"
+                        tag="div"
+                        ref="container"
+                        class="charts"
+      >
+        <div v-for="layer in layers"
+             v-show="visible_layers.indexOf(layer) != -1"
+             :key="layer"
+             class="layer"
+             :class="layer"
+        ></div>
+      </transition-group>
 
-    <div ref="current" class="current"></div>
+      <div ref="current" class="current"></div>
+    </template>
 
   </map-base>
 

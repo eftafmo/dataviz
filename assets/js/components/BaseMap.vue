@@ -30,13 +30,17 @@
       :beneficiary_colour="beneficiary_colour_default"
       :region_colour="region_colour_default"
   >
-    <transition appear name="fade">
-      <nuts-selector
-          v-if="show_nuts_selector"
-          :levels="draw_nuts_levels"
-          v-model="nuts_level"
-      ></nuts-selector>
-    </transition>
+
+    <template slot="after-map">
+      <transition appear name="fade">
+        <nuts-selector
+            v-if="show_nuts_selector"
+            :levels="draw_nuts_levels"
+            v-model="nuts_level"
+        ></nuts-selector>
+      </transition>
+    </template>
+
   </map-base>
 
   <div class="legend" v-if="rendered">

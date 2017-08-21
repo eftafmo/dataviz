@@ -1,4 +1,4 @@
-q<template>
+<template>
 <chart-container :width="width" :height="height">
   <svg :viewBox="`0 0 ${width} ${height}`">
     <g class="chart">
@@ -27,9 +27,12 @@ q<template>
       </g>
 
     </g>
+
+    <slot></slot>
+
   </svg>
 
-  <slot></slot>
+  <slot name="after-map"></slot>
 
 </chart-container>
 </template>
