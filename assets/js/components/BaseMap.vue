@@ -255,31 +255,6 @@ export default Chart.extend({
        this.chart.call(this.tip)
     },
 
-    stateEnter(d, i, group) {
-      // disable map zoom and tooltips on donor states #291
-      if (this.isDonor(d)) { return };
-      const this_ = group[i];
-
-      d3.select(this_).raise();
-      this.tip.show.call(this_, d, i, group);
-    },
-
-    stateLeave(d, i, group) {
-      // disable map zoom and tooltips on donor states #291
-      if (this.isDonor(d)) { return };
-      const this_ = group[i];
-
-      this.tip.hide(this_, d, i, group);
-    },
-
-    stateClick(d, i, group) {
-      // disable map zoom and tooltips on donor states #291
-      if (this.isDonor(d)) { return };
-      const this_ = group[i];
-
-      this.toggleBeneficiary(d, this_);
-    },
-
     render(initial) {
       // this initial stuff copy-pasted
       if (initial) this.chart_rendered = false;

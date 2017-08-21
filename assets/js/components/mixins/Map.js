@@ -57,17 +57,5 @@ export default {
     mapRendered() {
       this.map_rendered = true;
     },
-
-    stateEnter(d) {
-      return;
-    },
-
-    stateLeave(d) {
-      return;
-    },
-
-    stateClick(d) {
-      return;
-    },
   },
 };

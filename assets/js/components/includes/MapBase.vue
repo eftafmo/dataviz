@@ -469,9 +469,12 @@ export default Vue.extend({
         .append("g")
         .attr("class", d => `${this.COUNTRIES[d.id].type} ${d.id}` )
         .attr("opacity", 1)
-        .on("mouseenter", this.$parent.stateEnter)
-        .on("mouseleave", this.$parent.stateLeave)
-        .on("click", this.$parent.stateClick)
+
+        /*
+        .on("mouseenter", () => this.$emit("enter", ...arguments))
+        .on("mouseleave", () => this.$emit("leave", ...arguments))
+        .on("click", () => this.$emit("click", ...arguments))
+        */
 
         .append("path")
         .attr("d", path)
