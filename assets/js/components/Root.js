@@ -1,6 +1,9 @@
 import debounce from 'lodash.debounce';
 
 import Base from './Base';
+
+import Embeddor from './includes/Embeddor'
+
 import {FILTERS} from '../globals';
 
 
@@ -16,9 +19,14 @@ function getURL(obj) {
 
 
 export default Base.extend({
+  components: {
+    embeddor: Embeddor,
+  },
+
   data() {
     return {
       datasource: null,
+      vizcomponents: [],
     };
   },
 
@@ -36,9 +44,30 @@ export default Base.extend({
   },
 
   created() {
+
     // don't rely on the backend to serve updated anchors
     this.updateAnchors();
   },
+
+  mounted() {
+    const vizcomps = []
+    // recurse through all children to find those that are dataviz
+    let parent = this
+
+    const recurse = (current) => {
+      for (const comp of current.$children) {
+        if (comp.$options.isDataviz)
+          vizcomps.push(comp) // end of the road
+        else
+          recurse(comp) // not end of the road
+      }
+    }
+
+    recurse(this)
+
+    this.vizcomponents = vizcomps
+  },
+
 
   methods: {
     updateAnchors() {

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "clipboard": "^1.7.1",
     "d3": "^4.7.4",
     "d3-queue": "^3.0.5",
     "d3-sankey": "^0.4.2",
@@ -17,6 +18,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.0",
     "normalize.css": "^7.0.0",
+    "popper.js": "^1.12.3",
     "select2": "^4.0.3",
     "topojson-client": "^3.0.0",
     "url-polyfill": "^1.0.6",

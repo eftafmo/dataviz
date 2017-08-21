@@ -1,6 +1,12 @@
 {% extends "_layout.html" %}
 
 
+{% block content %}
+{{ block.super }}
+<embeddor :components="vizcomponents"></embeddor>
+{% endblock %}
+
+
 {% block main %}
   <div class="homepage_content_wrapper">
     <overview
