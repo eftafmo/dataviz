@@ -96,15 +96,6 @@ export default Component.extend({
           }
         );
       }
-      const num_prg_dpp = aggregated.dpp_programmes.size();
-      if (num_prg_dpp > 0) {
-        results.push(
-          {
-            achievement: num_prg_dpp,
-            indicator: this.singularize("programmes", num_prg_dpp) + " with donor project partners"
-          }
-        );
-      }
       const num_dpp = aggregated.dpp_projects.size();
       if (num_dpp > 0) {
         results.push(
@@ -113,6 +104,15 @@ export default Component.extend({
             indicator: this.singularize("projects", num_dpp) + " with donor project partners"
           }
         )
+      }
+      const num_prg_dpp = aggregated.dpp_programmes.size();
+      if (num_prg_dpp > 0) {
+        results.push(
+          {
+            achievement: num_prg_dpp,
+            indicator: this.singularize("programmes", num_prg_dpp) + " with donor project partners"
+          }
+        );
       }
       const num_prj_ended = aggregated.dpp_projects_ended.size();
       if (num_prj_ended) {
