@@ -207,7 +207,6 @@ export default Chart.extend({
     if(this.rendered){
       const $this = this;
       let filtered = []
-      this.renderData();
 
       for (let filter of this.filtered) {
         if(filtered.indexOf(filter.fm) == -1)
@@ -448,11 +447,7 @@ export default Chart.extend({
     handleStatesColors(val, old) {
       const t = this.getTransition();
       /*
-       * part 0: re-render data-dependent stuff
-       */
-      this.renderData(t);
-      /*
-       * part 1: change the donor colours
+       * change the donor colours
        */
 
       // TODO: find a better way to deal with this. hardcoding is meh. §
@@ -477,11 +472,6 @@ export default Chart.extend({
         .attr("fill", colourfuncNO)
         .attr("stroke", colourfuncNO);
 
-      /*
-       * part 2: change the region data
-       */
-
-      this.doRenderRegionData(t);
     },
 
     handleFilter(type, val, old) {
