@@ -20,6 +20,7 @@
     background: #fff;
     color: #aaa;
     font-family: inherit;
+    max-width: 100%;
     &:focus {
       outline: none;
     }
