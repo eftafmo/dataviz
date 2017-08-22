@@ -203,6 +203,26 @@ export default Chart.extend({
     };
   },
 
+  updated() {
+    if(this.rendered){
+      const $this = this;
+      let filtered = []
+      this.renderData();
+      if (this.filters.beneficiary)
+        this.handleFilterBeneficiary(this.filters.beneficiary);
+
+      for (let filter of this.filtered) {
+        if(filtered.indexOf(filter.fm) == -1)
+          filtered.push(filter.fm)
+      }
+      if(filtered.length == 1) {
+        this.handleFilterFm(filtered[0], null)
+      }
+      else
+        this.handleFilterFm(null, $this.filters.fm)
+    }
+  },
+
   created() {
     // don't filter / aggregate by beneficiary, group by it
     // (TODO: this smells like a pattern already)
@@ -465,20 +485,8 @@ export default Chart.extend({
 
     handleFilter(type, val, old) {
       const t = this.getTransition();
-      let filtered=[];
-      const $this = this;
       this.renderData(t);
       this.doRenderRegionData(t);
-
-      for (let filter of this.filtered) {
-        if(filtered.indexOf(filter.fm) == -1)
-          filtered.push(filter.fm)
-      }
-      if(filtered.length == 1) {
-        this.handleFilterFm(filtered[0], null)
-      }
-      else
-        this.handleFilterFm(null, $this.filters.fm)
     },
   },
 
