@@ -75,6 +75,8 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_outcome_ss(self, obj):
         return list(ProgrammeOutcome.objects.filter(
             programme=obj,
+        ).exclude(
+            outcome__fixed_budget_line=True,
         ).values_list(
             'outcome__name', flat=True
         ).distinct())
