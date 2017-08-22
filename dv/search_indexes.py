@@ -48,7 +48,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return [obj.state.name]
 
     def prepare_programme_name(self, obj):
-        return [obj.name]
+        return ['{}: {}'.format(obj.code, obj.name)]
 
     def prepare_programme_area_ss(self, obj):
         return list(obj.programme_areas.values_list(
@@ -117,6 +117,9 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_priority_sector_ss(self, obj):
         return [obj.programme_area.priority_sector.name]
+
+    def prepare_programme_name(self, obj):
+        return ['{}: {}'.format(obj.programme.code, obj.programme.name)]
 
 
 class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
@@ -226,11 +229,16 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return list(result)
 
     def prepare_programme_name(self, obj):
-        return list(obj.roles.filter(
+        programmes = obj.roles.filter(
             is_programme=True, programme__isnull=False
-        ).values_list(
-            'programme__name', flat=True
-        ).distinct())
+        ).values(
+            'programme__code',
+            'programme__name',
+        ).distinct()
+        result = []
+        for prg in programmes:
+            result.append('{}: {}'.format(prg['programme__code'], prg['programme__name']))
+        return result
 
     def prepare_programme_name_auto(self, obj):
         return ' '.join(self.prepare_programme_name(obj))
