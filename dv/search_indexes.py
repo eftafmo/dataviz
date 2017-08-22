@@ -45,7 +45,12 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return 'Programme'
 
     def prepare_state_name(self, obj):
-        return [obj.state.name]
+        # Get this from ProgrammeOutcome, because of IN22
+        return list(ProgrammeOutcome.objects.filter(
+            programme__code=obj.code,
+        ).values_list(
+            'state__name', flat=True
+        ).distinct())
 
     def prepare_programme_name(self, obj):
         return ['{}: {}'.format(obj.code, obj.name)]
@@ -182,10 +187,11 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             is_programme=False, project__isnull=False
         ).values_list(
             'project__state__name', flat=True).distinct())
+
         result = result.union(obj.roles.filter(
             is_programme=True, programme__isnull=False
         ).values_list(
-            'programme__state__name', flat=True).distinct())
+            'programme__outcomes__state__name', flat=True).distinct())
         return list(result)
 
     # we don't union here because we have two different fields on each Organisation

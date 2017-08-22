@@ -400,7 +400,8 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
         },
     ]
 
-    programme = models.ForeignKey(Programme, null=True)  # because "Reserve FM2004-09"
+    # programme can be null, e.g. "Reserve FM2004-09"
+    programme = models.ForeignKey(Programme, null=True, related_name='outcomes')
     outcome = models.ForeignKey(Outcome, related_name='programmes')
     state = models.ForeignKey(State)
 
