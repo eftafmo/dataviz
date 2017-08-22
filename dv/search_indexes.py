@@ -1,4 +1,6 @@
 from haystack import indexes
+from haystack import exceptions
+
 from dv.models import (
     Allocation,
     Organisation,
@@ -244,4 +246,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return ' '.join(self.prepare_project_name(obj))
 
     def prepare_role_ss(self, obj):
-        return list(obj.role.all().values_list('role', flat=True).distinct())
+        # skip Donor States
+        roles = list(
+            obj.role.exclude(
+                code='DS',
+            ).values_list(
+                'role', flat=True
+            ).distinct())
+        if len(roles) == 0:
+            raise exceptions.SkipDocument
+        return roles
