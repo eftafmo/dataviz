@@ -423,6 +423,7 @@ export default Chart.extend({
       this.tip.hide()
     },
 
+
     handleFilterFm(val, old) {
       const t = this.getTransition();
       /*
@@ -464,8 +465,20 @@ export default Chart.extend({
 
     handleFilter(type, val, old) {
       const t = this.getTransition();
+      let filtered=[];
+      const $this = this;
       this.renderData(t);
       this.doRenderRegionData(t);
+
+      for (let filter of this.filtered) {
+        if(filtered.indexOf(filter.fm) == -1)
+          filtered.push(filter.fm)
+      }
+      if(filtered.length == 1) {
+        this.handleFilterFm(filtered[0], null)
+      }
+      else
+        this.handleFilterFm(null, $this.filters.fm)
     },
   },
 
