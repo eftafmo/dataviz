@@ -1,6 +1,11 @@
 <style lang="less">
 .viz.map.projects {
   .chart {
+    .regions {
+      path {
+        stroke-width: 0.3;
+      }
+    }
     .states > .beneficiary,
     .regions > .state > g.layer > g {
       & > g {
