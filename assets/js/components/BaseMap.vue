@@ -208,18 +208,19 @@ export default Chart.extend({
       const $this = this;
       let filtered = []
       this.renderData();
-      if (this.filters.beneficiary)
-        this.handleFilterBeneficiary(this.filters.beneficiary);
 
       for (let filter of this.filtered) {
         if(filtered.indexOf(filter.fm) == -1)
           filtered.push(filter.fm)
+        if(filtered.length == 2) {
+          break;
+        }
       }
       if(filtered.length == 1) {
-        this.handleFilterFm(filtered[0], null)
+        this.handleStatesColors(filtered[0], null)
       }
       else
-        this.handleFilterFm(null, $this.filters.fm)
+        this.handleStatesColors(null, $this.filters.fm)
     }
   },
 
@@ -444,7 +445,7 @@ export default Chart.extend({
     },
 
 
-    handleFilterFm(val, old) {
+    handleStatesColors(val, old) {
       const t = this.getTransition();
       /*
        * part 0: re-render data-dependent stuff
