@@ -22,6 +22,31 @@
     height: calc(100% - 8rem);
     width: calc(100% - 2rem);
   }
+
+  /*Iphone 5 stuff*/
+  .tabs-component {
+    height: calc(100% - 70px);
+  }
+
+  .tabs-component-panels {
+    height: calc(100% - 37px);
+  }
+
+  .tabs-component-panel {
+    max-height: 100%;
+    overflow: auto;
+  }
+
+  .sidebar-conent {
+    max-height: initial;
+    overflow: auto;
+  }
+
+  .sidebar-content > div {
+    max-height: 100%;
+    overflow: auto;
+  }
+
 }
 @media (min-width: 769px) {
   .sidebar {
