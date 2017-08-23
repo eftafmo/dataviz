@@ -413,6 +413,14 @@ export default Chart.extend({
 
       //ctx.fillStyle = colour;
       ctx.strokeStyle = colour;
+
+      // for WebKit/Blink -based browsers  
+      try{
+        ctx.setStrokeColor(colour);        
+      }
+      catch(e) {
+      }
+
       // make the line 1px wide, but scale down if necessary
       ctx.lineWidth = k > 1 ? 1 : Math.min(1, k * 2);
 
