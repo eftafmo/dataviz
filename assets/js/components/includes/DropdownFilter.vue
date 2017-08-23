@@ -19,6 +19,7 @@
     border-color: #fff;
     background: #fff;
     color: #aaa;
+    -webkit-appearance: none;
     font-family: inherit;
     max-width: 100%;
     &:focus {
