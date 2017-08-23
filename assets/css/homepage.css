@@ -99,3 +99,9 @@
   font-size: 3rem;
   font-weight: bold;
 }
+
+@media (max-width: 760px){
+  .homepage-section {
+    border-top: none!important;
+  }
+}
