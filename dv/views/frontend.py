@@ -1,5 +1,7 @@
 import os.path
 import re
+from collections import defaultdict
+
 from django.conf import settings
 from django.http import Http404, JsonResponse
 from django.shortcuts import render
@@ -8,7 +10,10 @@ from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from webpack_loader import utils as webpack
 from dv.lib import utils
-from dv.models import StaticContent
+from dv.models import (
+    StaticContent,
+    ProgrammeArea,
+)
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 
@@ -85,6 +90,22 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'ProgrammeFacetedSearchView'
     }
+
+    def get_context_data(self, *args, **kwargs):
+        objls = kwargs.pop('object_list', self.queryset)
+        ctx = super().get_context_data(object_list=objls, **kwargs)
+        # Add more utilities
+        areas_dict = dict(ProgrammeArea.objects.all().values_list(
+            'name',
+            'priority_sector__name',
+        ))
+        # Group programme areas by sector
+        for obj in ctx['object_list']:
+            areas_by_sector = defaultdict(list)
+            for area in obj.programme_area_ss:
+                areas_by_sector[areas_dict[area]].append(area)
+            obj.areas_by_sector = areas_by_sector
+        return ctx
 
 
 class ProjectFacetedSearchView(FacetedSearchView):

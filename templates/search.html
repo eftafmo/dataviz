@@ -1,5 +1,9 @@
 {% extends "_layout-sidebar.html" %}
 
+{% load l10n %}
+{% load tags %}
+{% load humanize %}
+
 {% block top %}
   <div class="search-top">
     <div class="container">
@@ -69,32 +73,57 @@
           {% if form.facets.kind.0 == 'Programme' %}
 
             <div class="country_status">
-              <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
-                alt="{{ res.state_name.0 }} flag"
-                height="20px">&nbsp;{{ res.state_name.0 }}</span> |
-              <span>{{ res.programme_status.0 }}</span>
-            </div>
-            <p>
-              <div>
-                <b>FM:</b> {{ res.financial_mechanism_ss.0 }}
-              </div>
-              <div><b>PS:</b> {{ res.priority_sector_ss.0 }}</div>
-              <div>
-               <b>PA:</b>
-                {% for pa in res.programme_area_ss %}
-                  <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
-                {% endfor %}
-              </div>
-            </p>
-            <p>
-              <span>
-                <b>Outcomes:</b>
-                {% for outcome in res.outcome_ss %}
-                  <span>{{ outcome }}</span>{% if not forloop.last %},{% endif %}
-                {% endfor %}
+              <span class="country">
+              {% for state in res.state_name|sort %}
+                <img src="/assets/imgs/flag-{{ state|lower|cut:" " }}.png"
+                  alt="{{ state }} flag"
+                  height="20px">
+                <span>{{ state }}</span>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
               </span>
-            </p>
-            <p class="truncate">{{ res.summary }}</p>
+              {% if res.state_name|length == 1 %} | {% else %}<br><b>Status: </b>{% endif %}
+              <span title="Programme status">{{ res.programme_status.0 }}</span>
+            </div>
+            
+              <div>
+                <b>Funded by: </b>
+                {% for fm in res.financial_mechanism_ss %}
+                  <span>{{ fm }}<span>{% if not forloop.last %} and {% endif %}
+                {% endfor %}
+              </div>
+              {% with res.priority_sector_ss|length as num_sectors %}
+                {% if num_sectors == 1 %}
+                  <div><b>Sector:</b> <span>{{ res.priority_sector_ss.0 }}<span></div>
+                  {% with res.programme_area_ss|length as num_areas %}
+                  <div><b>Programme area{{ num_areas|pluralize }}:</b>
+                    {% for pa in res.programme_area_ss %}
+                      <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                  </div>
+                  {% endwith %}
+                {% else %}
+                  <div class="search_listing"><b>Sectors | Programme area(s):</b><ul>
+                    {% for ps in res.priority_sector_ss %}
+                      <li><span title="Sector: {{ ps }}">{{ ps }}</span>
+                        {% with res.areas_by_sector|keyvalue:ps as areas %}
+                        <ul>
+                        {% for pa in areas %}
+                          <li>
+                          <span title="Programme area: {{ pa }}">{{ pa }}</span>
+                          </li>
+                        {% endfor %}
+                        {% endwith %}
+                        </ul>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  </div>
+                {% endif %}
+
+              {% endwith %}
+              <div><b>Grant: </b> {{ res.grant | floatformat:0 | currency }}</div>
+              <div><b>Case number: </b> {{ res.code }}</div>
+            
 
           {% elif form.facets.kind.0 == 'Project' %}
 

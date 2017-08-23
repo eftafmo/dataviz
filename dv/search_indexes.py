@@ -34,6 +34,8 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     summary = indexes.CharField(model_attr='summary', indexed=False)
     name = indexes.CharField(model_attr='name', indexed=False)
+    code = indexes.FacetCharField(model_attr='code')
+    grant = indexes.DecimalField()
 
     def get_model(self):
         return Programme
@@ -83,6 +85,9 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_outcome_ss_auto(self, obj):
         return ' '.join(self.prepare_outcome_ss(obj))
+
+    def prepare_grant(self, obj):
+        return obj.allocation_eea + obj.allocation_norway
 
 
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
