@@ -85,6 +85,7 @@
 
         &.zero {
           cursor: not-allowed;
+          pointer-events: none;
         }
 
         &:not(.zero):hover path {

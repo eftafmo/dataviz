@@ -10,7 +10,7 @@
       :class="[
         fm.id,
         getFilterClassFm(fm),
-        { zero: fm.value == 0 },
+        { zero: fm.allocation == 0 },
       ]"
       @click="toggleFm(fm, $event.target)"
   >
@@ -40,11 +40,12 @@
     cursor: pointer;
     &.zero {
       cursor: not-allowed;
+      pointer-events: none;
     }
 
     &.disabled, &.zero {
       filter: grayscale(100%);
-      opacity: 0.5;
+      opacity: 0.3;
     }
 
     transition: all .5s ease;
