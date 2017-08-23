@@ -47,7 +47,7 @@
   }
 
   .flag {
-    filter: url(#drop-shadow);
+    box-shadow: 0px 0px 2px #757575;
   }
   .active .programme-sublist-wrapper     {
     display: block;
