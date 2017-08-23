@@ -20,6 +20,7 @@
     overflow: hidden;
     position: relative;
     height: 100%;
+    position: fixed;
 }
 </style>
 
