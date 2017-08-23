@@ -158,6 +158,14 @@ h2 {
       position: sticky;
   }
 }
+/*iphone stuff*/
+@media (max-width: 760px){
+  input {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+  }
+}
 
 .clearfix:after {
   visibility: hidden;
