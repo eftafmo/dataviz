@@ -268,7 +268,7 @@ if (!Array.prototype.findIndex) {
             rebuild();
             return;
         }
-        
+
         if (win.pageYOffset != scroll.top) {
             updateScrollPos();
             recalcAllPos();
@@ -468,7 +468,7 @@ if (!Array.prototype.findIndex) {
             },
             nodeOffset = getElementOffset(node),
             parentOffset = getElementOffset(parentNode),
-            
+
             parent = {
                 node: parentNode,
                 css: {
@@ -584,11 +584,11 @@ if (!Array.prototype.findIndex) {
         if (!initialized) return;
 
         deinitAll();
-        
+
         for (var i = watchArray.length - 1; i >= 0; i--) {
             watchArray[i] = getElementParams(watchArray[i].node);
         }
-        
+
         initAll();
     }
 
@@ -606,7 +606,7 @@ if (!Array.prototype.findIndex) {
 
     function stop() {
         pause();
-        deinitAll(); 
+        deinitAll();
     }
 
     function kill() {
@@ -677,4 +677,12 @@ var stickyElements = document.getElementsByClassName('sticky');
 
 for (var i = stickyElements.length - 1; i >= 0; i--) {
     Stickyfill.add(stickyElements[i]);
+}
+
+
+var FastClick = require('fastclick');
+if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
 }
