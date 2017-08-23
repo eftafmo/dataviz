@@ -9,7 +9,7 @@
   .sidebar-filters {
     width: 320px;
     top: 10px;
-    max-height: 80vh;
+    max-height: calc(100vh -30rem);
     overflow-y: auto;
   }
 }
@@ -37,7 +37,7 @@
 .sidebar-filters .sidebar-body {
   padding-right: 2rem;
   padding-left: 1rem;
-  height: 100%;
+  height: calc(100% - 91px);
   overflow: auto;
 }
 
