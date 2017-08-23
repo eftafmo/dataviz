@@ -140,6 +140,24 @@ h2 {
   }
 }
 
+@media (min-width: 764px) {
+  .sticky {
+      position: -webkit-sticky;
+      position: sticky;
+  }
+}
+
+#global-filters.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+@media (max-width: 764px) {
+  .header.sticky {
+      position: -webkit-sticky;
+      position: sticky;
+  }
+}
 
 .clearfix:after {
   visibility: hidden;
