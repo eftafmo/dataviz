@@ -91,4 +91,14 @@
       name: "Spain",
     },
   },
+  partners: {
+    BE: {
+      id: "BE",
+      name: "Belgium",
+    },
+    FR: {
+      id: "FR",
+      name: "France",
+    },
+  },
 }

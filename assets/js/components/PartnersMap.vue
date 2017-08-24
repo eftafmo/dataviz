@@ -57,31 +57,25 @@
   .chart .regions {
     path {
       stroke-opacity: .5;
-      pointer-events: visible;
+      pointer-events: all;
     }
 
-    g.region:hover path {
-      stroke-opacity: 1;
-    }
-
-    .donor g.region {
-      //path {
-      //  stroke: #000;
-      //}
-
-      &:hover path {
+    path.donor  {
+      &:hover {
         stroke: #fff;
+        stroke-opacity: 1;
       }
     }
 
-    .beneficiary g.region {
-      //path {
-      //  stroke: #000;
-      //}
-
-      &:hover path {
+    path.beneficiary {
+      &:hover {
         stroke: #000;
+        stroke-opacity: 1;
       }
+    }
+
+    path.partner {
+      opacity: 0;
     }
   }
 

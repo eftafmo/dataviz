@@ -10,12 +10,19 @@ import _COUNTRIES from 'js/constants/countries.json5';
 export const COUNTRIES = {};
 export const DONORS = _COUNTRIES.donors;
 export const BENEFICIARIES = _COUNTRIES.beneficiaries;
+export const PARTNERS = _COUNTRIES.partners;
 
-for (const code in DONORS) {
-  COUNTRIES[code] = Object.assign({type: "donor"}, DONORS[code]);
+const _types = {
+  donor: DONORS,
+  beneficiary: BENEFICIARIES,
+  partner: PARTNERS
 }
-for (const code in BENEFICIARIES) {
-  COUNTRIES[code] = Object.assign({type: "beneficiary"}, BENEFICIARIES[code]);
+for (const t in _types) {
+  const source = _types[t]
+
+  for (const code in source) {
+    COUNTRIES[code] = Object.assign({type: t}, source[code])
+  }
 }
 
 
