@@ -43,7 +43,7 @@
             </span>
             <span
                 v-if="isSelectedSector(sector)"
-                class="icon icon-close"
+                class="fa fa-close"
             />
           </a>
 
@@ -217,15 +217,17 @@
           }
 
           &:hover {
-            span.icon-close {
+            span.fa-close {
               color: #000;
               font-weight: bold;
+              -webkit-text-stroke: 2px #fff;
             }
           }
         }
 
-        &.selected span.icon-close {
+        &.selected span.fa-close {
           font-size: 120%;
+          -webkit-text-stroke: 2px #fff;
         }
 
         a {

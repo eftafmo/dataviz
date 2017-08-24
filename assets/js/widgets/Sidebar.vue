@@ -4,7 +4,7 @@
                   title="Close results"
                 v-if="isMobileExpanded"
                 v-on:click="mobileCollapse">
-          <span class="icon icon-close"></span>
+          <span class="fa fa-close"></span>
   </button>
     <slot></slot>
   </div>
@@ -14,6 +14,10 @@
 .sidebar {
   #close-sidebar {
     z-index: 1;
+  }
+
+  .fa-close {
+    -webkit-text-stroke: 2px #fff;
   }
 }
 .sidebar-open {

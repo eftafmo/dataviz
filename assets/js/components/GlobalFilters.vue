@@ -19,7 +19,7 @@
               </transition-group>
             </ul>
             <button @click="resetFilters" class="no-btn" id="reset-filters">
-              Reset filters <span class="icon icon-close"></span>
+              Reset filters <span class="fa fa-close"></span>
             </button>
         </div>
       </div>
@@ -75,9 +75,10 @@
 .filter-item {
   display: inline-block;
     &:after {
-      content: "\E900";
-      font-family: 'eeag-icons' !important;
+      content: "\f00d";
+      font-family: 'FontAwesome' !important;
       vertical-align: middle;
+       -webkit-text-stroke: 1px #3D90F3;
   }
  @media(max-width: 800px){
   display: block;

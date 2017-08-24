@@ -5,7 +5,7 @@
      @mouseleave="popperLeave"
 >
   <div class="x-container">
-    <span class="icon icon-menu" @click="toggleExpanded"></span>
+    <span class="fa fa-share-alt" @click="toggleExpanded"></span>
     <div class="content" v-show="expanded">
       <p><small>Paste the following into your markup where you want the embedded component to appear</small></p>
       <p>
@@ -32,7 +32,7 @@
     position: relative;
   }
 
-  .icon-menu {
+  .fa {
     cursor: pointer;
   }
 
