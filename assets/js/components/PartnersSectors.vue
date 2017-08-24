@@ -43,11 +43,14 @@ export default Sectors.extend({
           prgs.each( x => all.add(x) )
           sum += prgs.size()
         }
-
         return all.size() - sum
       }
-
-      return d.programmes.size()
+      try{
+        return d.programmes.size()
+      }
+      catch(e){
+        console.log(e)
+      }
     },
 
     display(item) {
