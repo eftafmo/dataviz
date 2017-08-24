@@ -8,8 +8,11 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 import {FILTERS, Q} from '../globals.js'
 
+import BaseMixin from './mixins/Base'
 
 export default Vue.extend({
+  mixins: [BaseMixin],
+
   beforeCreate() {
     // adding the queue here since it needs not be observable
     this.queue = Q;
@@ -85,7 +88,7 @@ export default Vue.extend({
     },
     isReady() {
       return !!(this.hasData
-                && this.$el);
+                && this.is_mounted);
     },
   },
 
@@ -93,9 +96,6 @@ export default Vue.extend({
     // fetch data only if no initial data provided,
     // and there is an external datasource
     if (!this.hasData && this.datasource) this.fetchData();
-  },
-
-  mounted() {
   },
 
   methods: {

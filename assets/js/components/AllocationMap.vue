@@ -18,7 +18,7 @@ export default BaseMap.extend({
       beneficiary_colour_zero: "#eee",
 
       region_colour_default: interpolateYlGn(0),
-    };
+    }
   },
 
   methods: {
@@ -29,11 +29,14 @@ export default BaseMap.extend({
       if (d.id.length == 2) {
         region_name = this.COUNTRIES[d.id].name;
         extra = `
-            <li>${ this.currency(d.allocation || 0) }</li>
+            <li>${ this.currency(allocation) }</li>
             `
       } else {
         region_name = this.get_nuts_label(d.id) + '(' + d.id + ')';
       }
+
+      // get a set's amount
+      const get_amount = s => (s === undefined) ? 0 : s.size()
 
       return `
           <div class="title-container">
@@ -44,9 +47,9 @@ export default BaseMap.extend({
           </div>
           <ul>
             ${ extra }
-            <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-            <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
-            <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+            <li>${ get_amount(d.sectors) } `+  this.singularize(`sectors`, get_amount(d.sectors)) + `</li>
+            <li>${ get_amount(d.areas) } `+  this.singularize(`programme areas`, get_amount(d.areas)) + `</li>
+            <li>${ get_amount(d.programmes) }  `+  this.singularize(`programmes`, get_amount(d.programmes) ) + `</li>
           </ul>
       `;
     },
@@ -55,28 +58,25 @@ export default BaseMap.extend({
       if (t === undefined) t = this.getTransition();
       const dataset = d3.values(this.data);
 
-      const beneficiaries = this.chart.selectAll('.states > g.beneficiary')
+      const beneficiaries = this.chart.selectAll('.regions > .level0 > path.beneficiary')
                                 .data(dataset, (d) => d.id );
 
       beneficiaries
         .classed("zero", false)
-        .select("path")
         .transition(t)
-        .attr("fill", this.beneficiary_colour_default);
+        .attr("fill", this.beneficiary_colour_default)
 
       beneficiaries
         .exit()
         .classed("zero", true)
-        .each(function() {
-          // make that value 0 too. totally mean.
-          Object.assign(d3.select(this).datum(), {
+        .each(function(d) {
+          // reset data in a nice, hardcoded way
+          Object.assign(d, {
             allocation: 0,
-            sectors: [],
-          });
+          })
         })
-        .select("path")
         .transition(t)
-        .attr("fill", this.beneficiary_colour_zero);
+        .attr("fill", this.beneficiary_colour_zero)
 
       // and TODO: disable filtering for 0 / missing items
     },
@@ -96,8 +96,7 @@ export default BaseMap.extend({
                   .range([.1, 1]);
 
       const regions = this.chart
-                          .select(`g.regions > g.state.${state} > g.layer`)
-                          .selectAll('g')
+                          .selectAll(`g.regions > g.${state} > path`)
                           .data(regiondata, (d) => d.id );
 
       // protect against data that has unknown NUTS codes
@@ -110,13 +109,13 @@ export default BaseMap.extend({
           _badregions.map( (d) => d.id ).join(", ")
         );
 
-      regions.select("path")
+      regions
         .transition(t)
-        .attr("fill", (d) => interpolateYlGn(x(d.allocation)) );
+        .attr("fill", d => interpolateYlGn(x(d.allocation)) )
 
-      regions.exit().select("path")
-             .transition(t)
-             .attr("fill", interpolateYlGn(0));
+      regions.exit()
+        .transition(t)
+        .attr("fill", interpolateYlGn(0))
       // TODO: and reset data to 0 ?
     },
   },

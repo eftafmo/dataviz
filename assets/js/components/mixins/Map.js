@@ -3,7 +3,7 @@
 
   <map-base
       ref="map"
-      v-on:rendered="mapRendered"
+      v-on:rendered="handleMapRendered"
   >
 
  */
@@ -48,14 +48,14 @@ export default {
 
     isReady() {
       return !!(this.hasData
-               && this.$el
-               && this.map_rendered);
+               && this.is_mounted
+               && this.map_rendered)
     },
   },
 
   methods: {
-    mapRendered() {
-      this.map_rendered = true;
+    handleMapRendered() {
+      this.map_rendered = true
     },
   },
 };

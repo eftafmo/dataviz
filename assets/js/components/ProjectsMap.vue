@@ -29,6 +29,7 @@
 }
 </style>
 
+
 <script>
 import * as d3 from 'd3';
 
@@ -48,6 +49,8 @@ export default BaseMap.extend({
       // need to set these so pointer events work in IE
       beneficiary_colour_default: "#fff",
       region_colour_default: "#fff",
+
+      all_nuts_levels: [0, 2, 3],
     };
   },
 
@@ -298,6 +301,9 @@ export default BaseMap.extend({
     },
 
     renderRegionData(state, regiondata, t) {
+
+return
+
       if (t === undefined) t = this.getTransition();
 
       const dataset = this._mkLevelData(regiondata);

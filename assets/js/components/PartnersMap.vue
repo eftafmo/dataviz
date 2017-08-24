@@ -18,11 +18,11 @@
 
   <map-base
       ref="map"
-      v-on:rendered="mapRendered"
+      @rendered="handleMapRendered"
+      @regions-rendered="registerEvents"
       :origin="origin"
-      :render_states="true"
-      :render_regions="true"
-      :donor_colour="fmcolour('eea-grants')"
+      :all_levels="[3]"
+      :fillfunc="fillfunc"
       :zoomable="false"
   >
 
@@ -265,6 +265,14 @@ export default Chart.extend({
   },
 
   methods: {
+    fillfunc(d) {
+      const id = d.id,
+            country = id.substr(0, 2),
+            type = this.COUNTRIES[country].type;
+
+      return type == "donor" ? this.fmcolour("eea-grants") : "#fff"
+    },
+
     getContainer(ref) {
       const c = this.$refs[ref];
 
@@ -513,7 +521,6 @@ export default Chart.extend({
 
       selection.on("mouseenter", doMouse(true))
       selection.on("mouseleave", doMouse(false))
-
     },
 
     handleFilter() {
@@ -522,23 +529,6 @@ export default Chart.extend({
   },
 
   watch: {
-    map_rendered() {
-      // TODO: this is convoluted, inefficient, belongs under MapBase,
-      // and depends on render_states being true.
-      // and needs to hang onto nuts0. (see MapBase.renderStates() at the end)
-      // must ... fix ... :)
-      for (const state of this.COUNTRY_ARRAY) {
-        const regions = this.map.renderRegions(state.id);
-        const layers = d3.selectAll(regions._parents);
-        const container = d3.select(layers.node().parentNode)
-        for (const sel of [regions, layers, container])
-          sel.style("display", null)
-             .attr("opacity", 1);
-
-        regions.call(this.registerEvents)
-      }
-    },
-
     chartWidth() {
       // re-render on resize. but don't hijack the initial render.
       if (!this.rendered) return

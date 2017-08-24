@@ -3,7 +3,7 @@
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
 
-  <svg class="defs">
+  <svg class="defs" ref="defs">
     <defs>
       <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
         <rect x="0" y="0" width="50" height="6"
@@ -22,24 +22,15 @@
 
   <map-base
       ref="map"
-      v-on:rendered="mapRendered"
+      @rendered="handleMapRendered"
+      @regions-rendered="registerEvents"
       :origin="origin"
-      :default_nuts_levels="draw_nuts_levels"
-      :donor_colour="fmcolour('eea-grants')"
-      norway_colour="url(#multi-fm)"
-      :beneficiary_colour="beneficiary_colour_default"
-      :region_colour="region_colour_default"
+      :initial_regions="initial_regions"
+      :all_states="all_states"
+      :all_levels="all_nuts_levels"
+      :fillfunc="fillfunc"
+      :opacityfunc="opacityfunc"
   >
-
-    <template slot="after-map">
-      <transition appear name="fade">
-        <nuts-selector
-            v-if="show_nuts_selector"
-            :levels="draw_nuts_levels"
-            v-model="nuts_level"
-        ></nuts-selector>
-      </transition>
-    </template>
 
   </map-base>
 
@@ -69,38 +60,29 @@
 .viz.map.allocation {
   @beneficiary: #ddd;
 
-  .hovered {
-    stroke: #005494;
-  }
-
   .chart {
     .transitioning {
       pointer-events: none;
     }
 
-    .states {
-      .beneficiary {
-        cursor: pointer;
-        pointer-events: visible; // noIE<=10
+    .regions {
+      .beneficiary:not(.zero) {
+        &:hover {
+          stroke: #000;
+        }
+      }
+      .level0 .beneficiary{
+        &:not(.zero) {
+          cursor: pointer;
+
+          &:hover {
+            stroke: #005494;
+          }
+        }
 
         &.zero {
           cursor: not-allowed;
-          pointer-events: none;
-        }
-
-        &:not(.zero):hover path {
-          .hovered;
-        }
-      }
-    }
-
-    .regions {
-      pointer-events: visible;
-
-      path {
-        &:hover {
-          //.hovered;
-          stroke: black;
+          //pointer-events: none;
         }
       }
     }
@@ -113,11 +95,6 @@
     top: 0;
     left: 0;
     opacity: 0;
-  }
-  .nuts-selector {
-    position: absolute;
-    top: 10px;
-    right: 10px;
   }
 
   .legend {
@@ -166,8 +143,6 @@ import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 import WithNUTSMixin from './mixins/WithNUTS';
 
-import NutsSelector from './includes/NutsSelector';
-
 
 export default Chart.extend({
   type: "allocation",
@@ -178,10 +153,6 @@ export default Chart.extend({
     WithTooltipMixin,
     WithNUTSMixin,
   ],
-
-  components: {
-    "nuts-selector": NutsSelector,
-  },
 
   props: {
     // this is a "template" with the string 'XX' meant to be replaced
@@ -199,28 +170,16 @@ export default Chart.extend({
 
       region_colour_default: "none",
 
-      draw_nuts_levels: [1, 2, 3],
-      nuts_level: 3, // the startling nuts level
-    };
-  },
+      zoomed_nuts_level: 3,
 
-  updated() {
-    if(this.rendered){
-      const $this = this;
-      let filtered = []
-
-      for (let filter of this.filtered) {
-        if(filtered.indexOf(filter.fm) == -1)
-          filtered.push(filter.fm)
-        if(filtered.length == 2) {
-          break;
-        }
-      }
-      if(filtered.length == 1) {
-        this.handleStatesColors(filtered[0], null)
-      }
-      else
-        this.handleStatesColors(null, $this.filters.fm)
+      all_nuts_levels: [0, 3],
+      // restrict rendering to donors and beneficiaries
+      all_states: Object.keys(this.COUNTRIES).filter(
+        id => (
+          ["donor", "beneficiary"].indexOf(this.COUNTRIES[id].type) !== -1 &&
+          id != "Intl" // let's not forget about that :)
+        )
+      ),
     }
   },
 
@@ -240,14 +199,39 @@ export default Chart.extend({
     idx = this.aggregate_on.findIndex(x => x.source == "beneficiary");
     if (idx !== -1) this.aggregate_on.splice(idx, 1);
 
+    // aggreggate on fm, we'll need that for donor colours
+    this.aggregate_on.push(
+      { source: "fm", destination: "fms", type: String }
+    )
+
     // cache for region-level data
     this._region_data = {};
+
+    // we'll need this for custom logic
+    this.is_single_country = !!(this.embedded && this.filters.beneficiary)
+
+    // this one's used to keep zooming code away from handleFilterBeneficiary
+    this._prev_beneficiary = null
   },
 
   computed: {
-    show_nuts_selector() {
-      return !!(this.draw_nuts_levels.length > 1 &&
-                this.filters.beneficiary);
+    initial_regions() {
+      if (this.is_single_country)
+        return [{
+          states: this.filters.beneficiary,
+          levels: [0, this.zoomed_nuts_level],
+        }]
+
+      // otherwise, we always want level0 stuff, even when ready-zoomed
+      const initials = [ { levels: 0 } ]
+
+      if (this.filters.beneficiary)
+        initials.push({
+          states: this.filters.beneficiary,
+          levels: this.zoomed_nuts_level,
+        })
+
+      return initials
     },
 
     data() {
@@ -276,13 +260,42 @@ export default Chart.extend({
        this.chart.call(this.tip)
     },
 
+    fillfunc(d) {
+      const id = d.id,
+            level = id.length - 2,
+            country = id.substr(0, 2),
+            type = this.COUNTRIES[country].type;
+
+      if (type == "donor") {
+        if (country == "NO")
+          return "url(#multi-fm)"
+
+        if (this.filters.fm == "Norway Grants")
+          return this.donor_colour_inactive
+
+        return this.fmcolour("eea-grants")
+      }
+
+      if (level == 0)
+        return this.beneficiary_colour_default
+
+      return this.region_colour_default
+    },
+
+    opacityfunc(parentid) {
+      return parentid == "" ? 1 : 0
+    },
+
     render(initial) {
-      // this initial stuff copy-pasted
+      // this "initial" stuff copy-pasted
       if (initial) this.chart_rendered = false;
 
-      this.renderData();
-      if (this.filters.beneficiary)
-        this.handleFilterBeneficiary(this.filters.beneficiary);
+      const t = this.getTransition()
+
+      this.renderData(t)
+      this.renderDonorColours(t)
+      this.doRenderRegionData(t)
+      this.doZoom(t)
 
       this.chart_rendered = true;
     },
@@ -297,24 +310,28 @@ export default Chart.extend({
 
     doRenderRegionData(t) {
       const state = this.filters.beneficiary;
-
-      // this could be called by another filter.
       // bail out if no beneficiary selected.
       if (state === null) return;
 
       let dataset = this._region_data[state];
 
       if (dataset === undefined) {
-        // reset the transition, data might arrive too late to use it.
+        // data might arrive too late to use the transition,
+        // so prepare to reset it if necessary
+        let t_expired = false
+        // TODO: handle the case when t.duration() == 0
+        // to avoid the initial transition when pre-filtered
+        t.on("end", () => t_expired = true)
         // TODO: run a throbber / suggest data loading somehow?
-        t = undefined;
 
         // fetch the data, fill the cache, render
         const url = this.detailsDatasource.replace('XX', state);
 
         d3.json(url, (error, data) => {
           if (error) throw error;
+
           dataset = this._region_data[state] = data;
+          if(t_expired) t = undefined
           this.renderRegionData(state, this.computeRegionData(dataset), t);
         } );
       } else {
@@ -327,21 +344,56 @@ export default Chart.extend({
       return this.aggregate(filtered, ['id'], this.aggregate_on, true);
     },
 
-    showNutsLevel(lvl, yes, t) {
-      if (t === undefined) t = this.getTransition();
+    renderDonorColours(t) {
+      let with_eea = false,
+          with_no = false;
 
-      // we could bother to not transition invisible stuff... but... oh well
-      const containers = this.chart
-        .select(".regions").selectAll("g.state > g.layer.level" + lvl)
-        .style("display", null)
-        .classed("transitioning", true)
+      const eea = this.FMS["eea-grants"].name,
+            no = this.FMS["norway-grants"].name;
+
+      const fmfilter = this.filters.fm
+
+      if (fmfilter == eea)
+        with_eea = true
+
+      else if (fmfilter == no)
+        with_no = true
+
+      else {
+        // the dataset is the source of truth
+        for (const row of this.data) {
+          if (row.fms.has(eea))
+            with_eea = true
+
+          if (row.fms.has(no))
+            with_no = true
+
+          if (with_eea && with_no) break
+        }
+      }
+
+      // EEA donors are either coloured or inactive
+      this.chart.select(".regions .level0").selectAll("path.donor")
+        .filter(d => d.id != "NO")
         .transition(t)
-        .attr("opacity", Number(yes))
-        .on("end", function() {
-          d3.select(this)
-            .style("display", yes ? null : "none")
-            .classed("transitioning", false);
-        });
+        .attr("fill",
+              with_eea ? this.fmcolour("eea-grants") :
+                         this.donor_colour_inactive
+        )
+
+      // Norway donors are handled via the pattern fill
+      const colourfuncNO = id => {
+        if (with_eea && with_no) return this.fmcolour(id)
+
+        if (with_eea) return this.fmcolour("eea-grants")
+        if (with_no) return this.fmcolour("norway-grants")
+      }
+
+      d3.select(this.$refs.defs).selectAll("pattern#multi-fm rect")
+        .datum(function() { return this.getAttribute("class") })
+        .transition(t)
+        .attr("fill", colourfuncNO)
+        .attr("stroke", colourfuncNO)
     },
 
     registerEvents(selection) {
@@ -349,10 +401,19 @@ export default Chart.extend({
 
       const doMouse = (over) => {
         return function(d, i) {
-          const sel = d3.select(this);
+          // disable mouseover events while transitioning
+          if ($this.transitioning) return
+
+          const self = d3.select(this);
+
+          // disable also when zeroed
+          if (self.classed("zero")) return
 
           if (over) {
-            sel.raise();
+            self.raise()
+            // we also need to raise the parent container
+            d3.select(this.parentNode).raise()
+
             $this.tip.show.call(this, d, i);
           } else {
             $this.tip.hide.call(this, d, i);
@@ -362,139 +423,103 @@ export default Chart.extend({
               d.id.length == 2 &&
               d.allocation != 0
           )
-            sel.select("path")
-               .transition($this.getTransition($this.short_duration))
-               .attr("fill", over ? $this.beneficiary_colour_hovered :
-                                    $this.beneficiary_colour_default);
+            self
+            .transition($this.getTransition($this.short_duration))
+            .attr("fill", over ? $this.beneficiary_colour_hovered :
+                                 $this.beneficiary_colour_default)
         }
       };
 
       selection
-        .on("click", function (d) {
-          if (d.id.length == 2)
-            $this.toggleBeneficiary(d, this);
+        // only beneficiaries have events
+        .filter(d => d.id.length != 2 || this.COUNTRIES[d.id].type === "beneficiary")
+        .on("click", function(d) {
+          if (d3.select(this).classed("zero")) return
+
+          if (d.id.length == 2) {
+            $this.toggleBeneficiary(d)
+          }
         })
         .on("mouseenter", doMouse(true))
-        .on("mouseleave", doMouse(false));
+        .on("mouseleave", doMouse(false))
     },
 
-    handleFilterBeneficiary(newid, oldid) {
-      const $this = this;
-      const t = this.getTransition();
+    doZoom(t) {
+      const newid = this.filters.beneficiary,
+            oldid = this._prev_beneficiary;
 
-      if (newid) {
-        const regions = this.map.renderRegions(newid);
-        // map.renderRegions() only returns the newly rendered selection
-        if (regions) {
-          this.registerEvents(regions);
+      if (newid == oldid) return
 
-          // enable the current nuts layer. cheat a bit, because
-          // the layers are this selection's parents
-          d3.selectAll(regions._parents)
-            .filter(d => d.level == this.nuts_level)
-            .style("display", null)
-            .attr("opacity", 1);
-        }
+      const $this = this
+
+      const _showregions = (id, yes) => {
+        const regions = this.chart.selectAll(
+            `.regions > .${id}.level${this.zoomed_nuts_level}`
+          )
+          //.raise()
+          .classed("transitioning", true)
+          .style("display", null)
+          .transition(t)
+          .attr("opacity", Number(yes))
+          .on("end", function() {
+            const s = d3.select(this)
+              .classed("transitioning", false)
+
+            if (!yes) s
+              .style("display", "none")
+              // also reset regions to default colour
+              .selectAll("path")
+              .attr("fill", $this.region_colour_default)
+          })
       }
 
-      // fade in old state layer / out old regions layer
+      const _showstate = (id, yes) => {
+        const state = this.chart.select(".regions > .level0")
+          //.lower()
+          .selectAll(`.${id}`) // must selectAll, or else data goes poof
+          .style("display", null)
+          .transition(t)
+          .attr("opacity", Number(yes))
+
+          .on("start", function() {
+            $this.transitioning = true
+          })
+          .on("end", function() {
+            $this.transitioning = false
+            if (!yes)
+              d3.select(this).style("display", "none")
+          })
+          .on("interrupt", function(d) {
+            // watch out for the impossible "double interrupt":
+            // a previous country was supposed to be faded back in,
+            // but that got interrupted too
+            // (that's a real fast triple click in at least 2 different places)
+            if (oldid && oldid != d.id && !yes) {
+              $this.chart.select(".regions > .level0").selectAll(`.${oldid}`)
+                .attr("opacity", 1)
+            }
+          })
+      }
+
+      if (newid) {
+        _showregions(newid, true)
+        _showstate(newid, false)
+      }
+
       if (oldid) {
-        this.chart.select('.states > g.beneficiary.' + oldid)
-            .transition(t)
-            .attr("opacity", 1);
-
-        this.chart.select('.regions > g.state.' + oldid)
-            .classed("transitioning", true)
-            .transition(t)
-            .attr("opacity", 0)
-            .on("end", function() {
-              d3.select(this)
-                .style("display", "none")
-                .classed("transitioning", false)
-                // also reset regions to default colour
-                .selectAll("path")
-                .attr("fill", $this.region_colour_default);
-            });
+        _showregions(oldid, false)
+        _showstate(oldid, true)
       }
 
-      // fade out new state layer / in new regions layer
-      if (newid) {
-        this.chart.select('.states > g.beneficiary.' + newid)
-            .transition(t)
-            .attr("opacity", 0);
+      this.map.zoomTo(newid, t)
+      this._prev_beneficiary = newid
+    },
 
-        this.chart.select('.regions > g.state.' + newid)
-            .classed("transitioning", true)
-            .style("display", null)
-            .transition(t)
-            .attr("opacity", 1)
-            .on("end", function() {
-              d3.select(this)
-                .classed("transitioning", false);
-            });
-      }
-
-      // zoom to the new thing (or out of the old)
-      this.map.zoomTo(newid, t);
-
-      // and ...
-      this.doRenderRegionData(t);
-
-      // and also, because
+    handleFilterBeneficiary(v) {
+      if (v) this.map.renderRegions(v, this.zoomed_nuts_level)
       this.tip.hide()
-    },
-
-
-    handleStatesColors(val, old) {
-      const t = this.getTransition();
-      /*
-       * change the donor colours
-       */
-
-      // TODO: find a better way to deal with this. hardcoding is meh. §
-      // (use ids everywhere)?
-      const colourfuncEEA = () => val != "Norway Grants" ?
-                                  this.fmcolour("eea-grants") :
-                                  this.donor_colour_inactive;
-
-      const colourfuncNO = val === null ?
-                           (d) => this.fmcolour(d) :
-                           () => this.fmcolour(slugify(val)); // awful §
-
-      this.chart.select('.states').selectAll('path')
-        .filter( (d) => this.isDonor(d) && d.id != "NO" )
-        .transition(t)
-        .attr("fill", colourfuncEEA);
-
-      // Norway uses a pattern fill
-      d3.select(this.$el).select("svg > defs > pattern#multi-fm").selectAll("rect")
-        .datum(function() { return this.getAttribute("class"); })
-        .transition(t)
-        .attr("fill", colourfuncNO)
-        .attr("stroke", colourfuncNO);
-
-    },
-
-    handleFilter(type, val, old) {
-      const t = this.getTransition();
-      this.renderData(t);
-      this.doRenderRegionData(t);
+      this.render()
     },
   },
-
-  watch: {
-    map_rendered() {
-      this.chart.select("g.states").selectAll("g.beneficiary")
-          .call(this.registerEvents);
-    },
-
-    nuts_level(lvl, old) {
-      const t = this.getTransition();
-
-      this.showNutsLevel(old, false, t);
-      this.showNutsLevel(lvl, true, t);
-    },
-  },
-
 });
 </script>

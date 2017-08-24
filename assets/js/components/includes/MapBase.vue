@@ -19,8 +19,7 @@
         <g class="frames" />
       </g>
 
-      <g class="states" />
-      <g class="regions" />
+      <g class="regions"></g>
 
       <g class="top"> <!-- we need to draw the frames twice, for fill and stroke -->
         <g class="frames" />
@@ -116,28 +115,17 @@
       }
     }
 
-    .states {
+    .regions {
       .beneficiary {
-        path {
-          .with-boundary;
-        }
+        .with-boundary;
       }
 
       .donor {
         stroke: @donor_stroke;
       }
     }
-
-    .regions {
-      // regions get their fill inline
-
-      path {
-        .with-boundary;
-      }
-    }
   }
 }
-
 
 </style>
 
@@ -146,8 +134,9 @@ import Vue from 'vue';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 
+import BaseMixin from '../mixins/Base'
 import ChartMixin from '../mixins/Chart';
-import WithCountriesMixin from '../mixins/WithCountries';
+import {COUNTRIES, default as WithCountriesMixin} from '../mixins/WithCountries';
 
 import ChartContainer from './ChartContainer';
 
@@ -174,7 +163,7 @@ function _mk_topo_funcs(data) {
 
 export default Vue.extend({
   mixins: [
-    ChartMixin,
+    BaseMixin, ChartMixin,
     WithCountriesMixin,
   ],
 
@@ -184,46 +173,49 @@ export default Vue.extend({
       default: "",
     },
 
-    render_states: {
-      type: Boolean,
-      default: true,
+    // a combination of states / levels that should be rendered by default.
+    // must be an array of {states, levels} objects.
+    // a missing key will cause all_states / all_levels to get rendered
+    initial_regions: {
+      type: Array,
+      default: () => [{}],
+    },
+
+    // all states used by this. set it to discard unused data.
+    all_states: {
+      type: Array,
+      default: () => Object.keys(COUNTRIES).filter(x => x != "Intl"),
+    },
+
+    // all nuts levels used by this. set it to discard unused data.
+    all_levels: {
+      type: Array,
+      default: () => [0, 1, 2, 3],
+    },
+
+    fillfunc: {
+      type: Function,
+      default: () => null
+    },
+
+    opacityfunc: {
+      type: Function,
+      default: () => null
     },
 
     zoomable: {
       type: Boolean,
       default: true,
     },
-
-    default_nuts_levels: {
-      type: Array,
-      default: () => [3],
-    },
-
-    donor_colour: {
-      type: String,
-      default: '#fff',
-    },
-
-    norway_colour: {
-      type: String,
-    },
-
-    beneficiary_colour: {
-      type: String,
-      default: '#fff',
-    },
-
-    region_colour: {
-      type: String,
-      default: "none",
-    },
   },
 
   data() {
     return {
+      base_loaded: false,
+      regions_loaded: false,
+
       base_rendered: false,
-      states_rendered: false,
-      regions_rendered: {},
+      regions_rendered: false,
 
       width: 800,
       height: 800,
@@ -244,7 +236,15 @@ export default Vue.extend({
     },
 
     rendered() {
-      return this.base_rendered && (!this.render_states || this.states_rendered);
+      return this.base_rendered && this.regions_rendered
+    },
+
+    can_render_base() {
+      return this.base_loaded && this.is_mounted
+    },
+
+    can_render_regions() {
+      return this.regions_loaded && this.is_mounted
     },
 
     donor_colour_no() {
@@ -278,27 +278,51 @@ export default Vue.extend({
 
   created() {
     // initialise here things that we don't want obeserved:
-    // cache for computed geofeature-related data
+    // - cache for computed geofeature-related data
     this.geodetails = {};
-    // placeholders for fetched topojson data
-    this.geo_data = {
+    // - placeholders for fetched topojson data
+    this.geodata = {
       layers: null,
       regions: null,
     };
-    // this will be updated real-time, don't make it observable
+    // - remember what got rendered
+    this._rendered_regions = []
+    // - this will be updated real-time, don't make it observable
     this.current_zoom = 1;
+
+    // trigger base & initial region rendering.
+    // these will only run once, when the watched things go false -> true.
+    const _base_unwatch = this.$watch("can_render_base", v => {
+      this.renderBase()
+      _base_unwatch()
+    })
+
+    const _regions_unwatch = this.$watch("can_render_regions", v => {
+      for (const x of this.initial_regions) {
+        this.renderRegions(x.states, x.levels)
+      }
+      _regions_unwatch()
+    })
 
     // aaand we can start fetching data already
     d3.json(this.LAYERS_URL, (error, data) => {
       if (error) throw error;
-      this.geo_data.layers = data;
-      this.renderBase();
+      this.geodata.layers = data;
+      this.base_loaded = true
     });
 
     d3.json(this.REGIONS_URL, (error, data) => {
       if (error) throw error;
-      this.geo_data.regions = data;
-      this.renderStates();
+
+      // discard unused level data
+      Object.keys(data.objects).filter(
+        x => this.all_levels.indexOf(Number(x.substr(-1))) === -1
+      ).forEach(
+        x => delete data.objects[x]
+      )
+
+      this.geodata.regions = data
+      this.regions_loaded = true
     });
   },
 
@@ -308,8 +332,6 @@ export default Vue.extend({
     this.$el.appendChild(this.stylesheet);
 
     //this.updateStyle(); // this is already triggered by the watched chartWidth
-
-    this.$nextTick(this.render);
   },
 
   methods: {
@@ -370,16 +392,13 @@ export default Vue.extend({
       };
     },
 
-    render() {
-      this.renderBase();
-      this.renderStates();
-    },
-
     renderBase() {
-      // bail out if no data, or not mounted, or already rendered
-      if (!this.geo_data.layers || !this.$el || this.base_rendered) return;
+      if (!this.can_render_base) {
+        console.error("This should never happen, really")
+        return
+      }
 
-      const topo = _mk_topo_funcs(this.geo_data.layers);
+      const topo = _mk_topo_funcs(this.geodata.layers);
 
       const base = this.chart.select('.base'),
             terrain = this.chart.select('.terrain'),
@@ -440,56 +459,16 @@ export default Vue.extend({
       }
 
       // we can delete the base layers at this point, save some memory
-      delete this.geo_data.layers;
+      delete this.geodata.layers;
 
-      this.base_rendered = true;
+      this.base_rendered = true
+      this.$emit("base-rendered")
     },
 
-    renderStates() {
-      // bail out if no data, or not mounted, or already rendered
-      // also, well, if we shouldn't render.
-      if (!this.render_states ||
-          !this.geo_data.regions || !this.$el || this.states_rendered) return;
-
+    xrenderStates() {
       const scale_LI = 5,
             frame_padding_LI = 1.7;
 
-      const topo = _mk_topo_funcs(this.geo_data.regions);
-
-      const path = this.path;
-
-      const state_data = topo.features("nuts0").filter(
-        // beneficiaries and donors
-        d => this.COUNTRIES[d.id] !== undefined
-      );
-
-      const states = this.chart.select('.states').selectAll('g')
-        .data(state_data)
-        .enter()
-        .append("g")
-        .attr("class", d => `${this.COUNTRIES[d.id].type} ${d.id}` )
-        .attr("opacity", 1)
-
-        /*
-        .on("mouseenter", () => this.$emit("enter", ...arguments))
-        .on("mouseleave", () => this.$emit("leave", ...arguments))
-        .on("click", () => this.$emit("click", ...arguments))
-        */
-
-        .append("path")
-        .attr("d", path)
-        .attr("fill", d => {
-          if (this.isBeneficiary(d))
-            return this.beneficiary_colour;
-
-          if (d.id == "NO")
-            return this.donor_colour_no;
-
-          return this.donor_colour;
-        })
-        // while at this, cache the centroids and bounding box,
-        // because the geo-data will get wiped during data manipulation
-        .each(this.cacheGeoDetails);
 
       // magnify Liechtenstein
       const _li = this.geodetails["LI"];
@@ -516,75 +495,156 @@ export default Vue.extend({
                 scale_LI * frame_padding_LI
                );
       }
-
-      // we can delete the state data at this point, save a little memory
-      //delete this.geo_data.regions.objects.nuts0;
-
-      this.states_rendered = true;
     },
 
-    renderRegions(state, levels) {
-      // bail out if already rendered (or no data, or not mounted?)
-      // TODO: do we want to remember rendering per nuts level?
-      if (this.regions_rendered[state]) // || !this.geo_data.regions || !this.$el || ])
-        return;
+    _cleanupGeoData(what) {
+      const geodata = this.geodata.regions
 
-      if (levels === undefined) levels = this.default_nuts_levels;
+      for (const lvl in what) {
+        const idxs = what[lvl],
+              obj = "nuts" + lvl,
+              collection = geodata.objects[obj],
+              geometries = collection.geometries;
 
-      // using both enter and update selections, in case we decide
-      // to render per nuts level
-      const main = this.chart.select('.regions').selectAll('g.state.' + state)
-              .data([state]),
-            mentered = main
-              .enter()
-              .append('g')
-              .attr("class", `state ${this.COUNTRIES[state].type} ${state}`)
-              // start with these invisible
-              .style("display", "none")
-              .attr("opacity", 0);
+        for (let i = idxs.length; i--; ) {
+          geometries.splice(idxs[i], 1)
+        }
 
-      const layers = main.merge(mentered).selectAll("g.layer")
-        .data(levels.map(x => ({ level: x }) ))
-        .enter()
-        .append("g")
-        .attr("class", d => "layer level" + d.level)
-        // start with these invisible too
-        .style("display", "none")
-        .attr("opacity", 0);
-
-      const getRegionData = d => {
-        // filter the topojson data for the current state.
-        const level = d.level,
-              data = this.geo_data.regions;
-        // we're gonna create a new objects collection, so filtering
-        // is done before computing the feature set
-        const source = data.objects["nuts" + level],
-              objects = {
-                type: source.type,
-                geometries: source.geometries.filter(
-                  x => x.id.substr(0, 2) == state
-                )
-              };
-
-        return topojson.feature(data, objects).features;
+        if (geometries.length) return
+        // else this goes out
+        delete geodata.objects[obj]
       }
 
-      const regions = layers.selectAll("g")
-        .data(getRegionData)
-        .enter()
+      // can we clean everything then?
+      for (const _ in geodata.objects) return
+      // yes we can
+      delete this.geodata.regions
+    },
+
+    renderRegions(states, levels) {
+      if (!this.can_render_regions) {
+        console.error("This should never happen either")
+        return
+      }
+
+      if (typeof states === "string") states = [states]
+      else if (!states || states.length === 0) states = this.all_states
+      if (typeof levels === "number") levels = [levels]
+      else if (!levels || levels.length === 0) levels = this.all_levels
+
+      // skip everything already rendered
+      // (the simpleton version: look only at the arguments)
+      const _args = states.join("-") + "/" + levels.join("-")
+      if(this._rendered_regions.indexOf(_args) !== -1)
+        return
+      else
+        this._rendered_regions.push(_args)
+
+      // filter and classify the topojson data.
+      // we're gonna flatten everything (place all layers at the same level),
+      // and group data by its parent region
+
+      function _getRoot(id) {
+        return id.substr(0, 2)
+      }
+
+      function _getParent(id) {
+        return id.length == 2 ? "" : id.substr(0, id.length - 1)
+      }
+
+      function _getChildrenLevel(id) {
+        return id == "" ? 0 : id.length - 2 + 1
+      }
+
+      const collection = {}
+
+      const _gcs = {} // garbage-collect this stuff
+      for (const level of levels) {
+        const source = this.geodata.regions.objects["nuts" + level]
+        if (source === undefined) // this got fully garbage-collected
+          continue
+        const _gc = _gcs[level] = []
+
+        // we could simply filter, but since we're iterating anyway,
+        // let's clean up unneeded data
+        source.geometries.forEach( (g, i) => { // we use the index for gc
+          const state = g.id.substr(0, 2)
+          if (states.indexOf(state) === -1) {
+            // clean up stuff that's never gonna be needed
+            if (states === this.all_states || this.all_states.indexOf(state) === -1)
+              _gc.push(i)
+
+            return
+          }
+          // always cleanup what gets rendered
+          _gc.push(i)
+
+          const parent = _getParent(g.id)
+          let geoms = collection[parent]
+          if (geoms === undefined) geoms = collection[parent] = []
+
+          geoms.push(g)
+        })
+      }
+
+      const containers = this.chart.select(".regions").selectAll("g")
+        .data(Object.keys(collection), d => d)
+
+      const centered = containers.enter()
         .append("g")
-        .attr("class", d => "region " + d.id)
-        // don't forget to cache the stuff
-        .each(this.cacheGeoDetails);
+        .attr("class", d => {
+          const cls = []
+          if(d) {
+            const r = _getRoot(d)
+            cls.push(r)
+            if (d != r) cls.push(d)
+          }
+          cls.push("level" + _getChildrenLevel(d))
+          return cls.join(" ")
+        })
+        .attr("opacity", this.opacityfunc)
 
-      regions
+      const regions = containers.merge(centered).selectAll("path")
+        .data(
+          x => {
+            const geodata = this.geodata.regions
+            // this has to be a geometry collection
+            const objects = {
+              type: "GeometryCollection",
+              geometries: collection[x],
+            }
+            return topojson.feature(geodata, objects).features
+          },
+          d => d.id
+        )
+        .enter()
         .append("path")
+        .attr("class", d => `${this.COUNTRIES[d.id.substr(0, 2)].type} ${d.id}`)
         .attr("d", this.path)
-        .attr("fill", this.region_colour);
+        .attr("fill", this.fillfunc)
+        // some hardcoding, because level-0 paths get opacity transitions
+        .attr("opacity", d => d.id.length == 2 ? 1 : null)
 
-      this.regions_rendered[state] = true;
+        /*
+        .on("mouseenter", () => this.$emit("enter", ...arguments))
+        .on("mouseleave", () => this.$emit("leave", ...arguments))
+        .on("click", () => this.$emit("click", ...arguments))
+        */
 
-      return regions;
+        // don't forget to cache the stuff
+        .each(this.cacheGeoDetails)
+        // finally, clear the geo-data, we don't need it
+        .each(function(d) {
+          d3.select(this).datum({
+            id: d.id,
+            name: d.properties.name,
+          })
+        })
+
+      this._cleanupGeoData(_gcs)
+
+      this.regions_rendered = true
+      if (!regions.empty()) this.$emit("regions-rendered", regions)
     },
 
     zoomTo(id, eventfuncs, t) {

@@ -18,6 +18,7 @@ for (const code in BENEFICIARIES) {
   COUNTRIES[code] = Object.assign({type: "beneficiary"}, BENEFICIARIES[code]);
 }
 
+
 export function get_flag_name(code) {
   if ( code.length > 2 && code != 'Intl') {
     // because Intl is a country and has a flag
