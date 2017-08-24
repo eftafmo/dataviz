@@ -41,7 +41,7 @@
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
-        {{ paginator.count }} results found
+        {{ paginator.count }} result{{ paginator.count|pluralize}} found
       </span>
       <span class="search-results-options">
         <select name="paginate_by" id="" class="subtle-select main-auto-submit" form="main-search-form">
@@ -155,51 +155,25 @@
           {% elif form.facets.kind.0 == 'Organisation' %}
 
             <div class="country_status">
-              <span class="country"><img src="/assets/imgs/flag-{{ res.state_name.0|lower|cut:" " }}.png"
-                alt="{{ res.state_name.0 }} flag"
-                height="20px">&nbsp;{{ res.state_name.0 }}</span> |
+              <span class="country">
+              {% if res.country in states_with_flags %}
+              <img src="/assets/imgs/flag-{{ res.country|lower|cut:" " }}.png"
+                alt="{{ res.country }} flag"
+                height="20px">&nbsp;{% endif %}{{ res.country }}</span> |
               <span>{{ res.org_type_category }}</span> |
               <span>{{ res.org_type }}</span>
             </div>
 
-            <p>
-              <div><b>FM:</b> {{ res.financial_mechanism_ss.0 }}</div>
-              <div><b>PS:</b> {{ res.priority_sector_ss.0 }}</div>
-              <span>
-                <b>PA:</b>
-                {% for pa in res.programme_area_ss %}
-                  <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
-                {% endfor %}
-              </span>
-            </p>
-
-            <p>
-              <span>
-                <b>Role:</b>
-                {% for role in res.role_ss %}
-                  <span>{{ role }}</span>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </span>
-            </p>
 
             <div class="search_listing">
-            {% if res.programme_name %}
-              <b>Programmes:</b>
-              <ul>
-              {% for pr in res.programme_name %}
-                <li><span>{{ pr }}</span></li>
+              {% for role, plist in res.prep_roles.items %}
+                <span>{{ role }} for:</span>
+                <ul>
+                  {% for p in plist %}
+                  <li><span>{{ p }}</span></li>
+                  {% endfor %}
+                </ul>
               {% endfor %}
-              </ul>
-            {% endif %}
-
-            {% if res.project_name %}
-              <b>Projects:</b>
-              <ul>
-              {% for pr in res.project_name %}
-                <li><span>{{ pr }}</span></li>
-              {% endfor %}
-              </ul>
-            {% endif %}
             </div>
 
           {% else %}

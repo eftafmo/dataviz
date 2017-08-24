@@ -13,6 +13,7 @@ from dv.lib import utils
 from dv.models import (
     StaticContent,
     ProgrammeArea,
+    State,
 )
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
@@ -92,8 +93,7 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
     }
 
     def get_context_data(self, *args, **kwargs):
-        objls = kwargs.pop('object_list', self.queryset)
-        ctx = super().get_context_data(object_list=objls, **kwargs)
+        ctx = super().get_context_data(*args, **kwargs)
         # Add more utilities
         areas_dict = dict(ProgrammeArea.objects.all().values_list(
             'name',
@@ -139,6 +139,33 @@ class OrganisationFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'OrganisationFacetedSearchView'
     }
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        # Add donor and beneficiary states - need to check if show flag
+        states = list(State.objects.exclude(
+            code='IN',
+        ).values_list(
+            'name',
+            flat=True,
+        ))
+        states.extend(['Lichtenstein', 'Norway', 'Iceland'])
+        ctx['states_with_flags'] = states
+
+        # Group programmes and projects by organisation roles
+        for res in ctx['object_list']:
+            d = defaultdict(list)
+            org_roles = res.object.roles.all()
+            for org_role in org_roles:
+                role_name = org_role.organisation_role.role
+                prg_or_prj = org_role.programme
+                if org_role.project:
+                    prg_or_prj = org_role.project
+                d[role_name].append('{} - {}'.format(prg_or_prj.code, prg_or_prj.name))
+            for role, plist in d.items():
+                d[role] = sorted(plist)
+            res.prep_roles = dict(d)
+        return ctx
 
 
 class _TypeaheadFacetedSearchView(object):
