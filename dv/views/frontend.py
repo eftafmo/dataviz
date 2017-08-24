@@ -109,7 +109,7 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
 
 
 class ProjectFacetedSearchView(FacetedSearchView):
-    facet_fields = FacetedSearchView.facet_fields + [
+    facet_fields = ProgrammeFacetedSearchView.facet_fields + [
         'programme_name',
         'project_status',
         'geotarget',

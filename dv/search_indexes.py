@@ -98,6 +98,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_area__priority_sector__name')
     programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
     programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
+    outcome_ss = indexes.FacetMultiValueField(model_attr='outcome__name')
 
     kind = indexes.FacetCharField()
 
@@ -113,7 +114,6 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     name = indexes.CharField(model_attr='name', indexed=False)
-    project_outcome = indexes.CharField(model_attr='outcome__name', indexed=False)
 
     def get_model(self):
         return Project
@@ -132,6 +132,9 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_programme_name(self, obj):
         return ['{}: {}'.format(obj.programme.code, obj.programme.name)]
+
+    def prepare_outcome_ss(self, obj):
+        return [obj.outcome.name]
 
 
 class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):

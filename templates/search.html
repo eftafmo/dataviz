@@ -367,14 +367,17 @@
         </div>
       </div>
 
-      {% if form.facets.kind.0 == 'Programme' %}
+      {% if form.facets.kind.0 == 'Programme' or form.facets.kind.0 == 'Project' %}
       <div class="input-group">
         <div class="input-box input-block">
           <label for="outcome-facet">Outcomes</label>
           <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form" class="main-auto-submit">
-            {% for o in form.facets.outcome_ss %}
-              <option value="{{ o }}" selected>{{ o }}</option>
-            {% empty %}
+            {% for o in facets.fields.outcome_ss %}
+              {% if o.1 %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.outcome_ss %}selected{% endif %}>
+                {{ o.0 }} ({{ o.1 }})
+              </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
@@ -605,7 +608,8 @@
       all_select2.push($("#programme-status-facet").select2());
 
       // programme
-      all_select2.push($("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss')));
+      // all_select2.push($("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss')));
+      all_select2.push($("#outcome-facet").select2());
 
       // project
       all_select2.push($("#project-status-facet").select2());
