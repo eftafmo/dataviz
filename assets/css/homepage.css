@@ -100,8 +100,45 @@
   font-weight: bold;
 }
 
-@media (max-width: 760px){
+.small-screen{
+  display: none;
+}
+@media(max-width: 760px){
+  .section {
+    padding: 0;
+  }
+
+  .small-screen {
+    display: block;
+    font-size: 1.2rem;
+  }
+
   .homepage-section {
     border-top: none!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+
   }
+
+  .section h2 {
+    margin: 1rem;
+    font-size: 2rem;
+  }
+
+   .homepage-search-wrapper ::-webkit-input-placeholder { /* WebKit browsers */
+        color: transparent;
+    }
+
+  .homepage-nav {
+    margin-bottom: 1rem;
+  }
+
+  .homepage-search-wrapper {
+    border-top: none;
+    box-shadow: none;
+    padding: 0;
+    margin-top:.5rem;
+  }
+
 }
+

@@ -84,20 +84,6 @@ a.muted:hover {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
-@media(max-width: 321px){
-  .section {
-    padding: 0;
-  }
-  .section h2 {
-    margin: 1rem;
-  }
-  .section h2:after {
-    content: ">";
-    transform:rotate(90deg);
-    float: right;
-  }
-
-}
 
 .section-header {
   margin-bottom: 2rem;
