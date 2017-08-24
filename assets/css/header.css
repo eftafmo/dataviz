@@ -74,6 +74,7 @@
     border-top: 1px solid #ddd;
     text-align: right;
     opacity: 0;
+    box-shadow: -1px 2px 3px #8c8b8b;
     transition: opacity .3s ease-in-out, -webkit-transform .3s ease-in-out;
   }
 
@@ -90,12 +91,10 @@
   }
   .header-menu a {
     display: block;
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
     line-height: 2;
     color: inherit;
+    font-size: 4rem;
+    text-align: center;
   }
   .header-menu a:hover {
     text-decoration: none;
