@@ -126,13 +126,13 @@
   input[type=checkbox]:checked + label:before { content: "✔"; } /* checked icon */
   #programmes {
     + label:before {
-      color: #089900;
+      color: rgb(8,153,0);
     }
   }
 
   #projects {
     + label:before {
-      color: #CC8500;
+      color: rgb(204,133,0);
     }
   }
 
@@ -414,9 +414,9 @@ export default Chart.extend({
       //ctx.fillStyle = colour;
       ctx.strokeStyle = colour;
 
-      // for WebKit/Blink -based browsers  
+      // for WebKit/Blink -based browsers
       try{
-        ctx.setStrokeColor(colour);        
+        ctx.setStrokeColor(colour);
       }
       catch(e) {
       }
