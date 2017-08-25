@@ -36,6 +36,9 @@
 
 <style lang="less">
 .overview-viz {
+  @media(min-width: 800px){
+    margin-top: -6rem;
+  }
   .chart {
     .fms > g.item, .beneficiaries > g.item {
       cursor: pointer;

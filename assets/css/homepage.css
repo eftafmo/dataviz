@@ -1,7 +1,7 @@
 /* nav */
 
 .homepage-nav {
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .homepage-nav {
@@ -98,11 +98,18 @@
 .homepage-subtitle {
   font-size: 3rem;
   font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .small-screen{
   display: none;
 }
+
+.homepage-section {
+  padding: 0;
+}
+
 @media(max-width: 760px){
   .section {
     padding: 0;
