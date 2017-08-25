@@ -103,6 +103,7 @@ export default Vue.extend({
 
  data() {
     return {
+      filters: FILTERS,
       posts: [],
       errors: [],
       }
@@ -154,6 +155,17 @@ export default Vue.extend({
       }
     }
 
+  },
+
+  watch: {
+    'filters': {
+      deep: true,
+      handler() {
+        this.posts = [];
+        let target = this.$el.querySelector('.programme-item-header')
+        target.classList.remove('active')
+      },
+    },
   },
 
 });
