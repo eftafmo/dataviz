@@ -248,7 +248,8 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_programme_name(self, obj):
         programmes = obj.roles.filter(
-            is_programme=True, programme__isnull=False
+            programme__isnull=False,
+            programme__is_tap=0,
         ).values(
             'programme__code',
             'programme__name',
