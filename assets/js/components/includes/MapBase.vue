@@ -45,12 +45,26 @@
   @terrain: #fff;
   @donor_inactive: #85adcb;
 
+  // - stroke widths. these are all overriden dynamically,
+  //   but left here for reference
+  @terrain_stroke_width: 0.7;
+  @region_stroke_width: 0.4;
+  @graticule_stroke_width: 0.2;
+
   // - strokes
   .with-boundary {
     stroke: #7f9fc8;
-    // commented out this one because it's being set dynamically
-    //stroke-width: 0.5;
     stroke-linejoin: round;
+  }
+
+  .with-terrain-boundary {
+    .with-boundary;
+    //stroke-width: @terrain_stroke_width;
+  }
+
+  .with-region-boundary {
+    .with-boundary;
+    //stroke-width: @region_stroke_width;
   }
 
   @donor_stroke: #111;
@@ -77,8 +91,7 @@
       }
       .graticule {
         stroke: #333;
-        // commented out this because it's being set dynamically
-        //stroke-width: .2;
+        //stroke-width: @graticule_stroke_width;
         stroke-opacity: .5;
         fill: none;
       }
@@ -105,7 +118,7 @@
     }
 
     .terrain {
-      .with-boundary;
+      .with-terrain-boundary;
 
       .coastline {
         fill: none;
@@ -116,8 +129,10 @@
     }
 
     .regions {
-      .beneficiary {
-        .with-boundary;
+      .with-region-boundary;
+
+      &.level0 {
+        .with-terrain-boundary;
       }
 
       .donor {
@@ -222,8 +237,9 @@ export default Vue.extend({
 
       zoom_padding: .1,
 
-      terrain_stroke: 0.5,
-      graticule_stroke: 0.2,
+      terrain_stroke_width: 0.6,
+      region_stroke_width: 0.2,
+      graticule_stroke_width: 0.2,
     };
   },
 
@@ -696,20 +712,35 @@ export default Vue.extend({
 
     getScaleFactor() {
       // don't make this computed, it changes too fast
-      return this.width / this.chartWidth / this.current_zoom;
+      const k = this.chartWidth / this.width * this.current_zoom
+
+      // for some reason strokes are really puny when zoomed in,
+      // so let's fix this a bit.
+      // { y = a x + b; x = 1 => y = 1; x = 20 => y = 2 }
+      const modificator = this.current_zoom * 1 / 21 + 20 / 21
+
+      return k / modificator
     },
 
     mkStyle() {
-      const scaleFactor = this.getScaleFactor(),
-            terrain_stroke = this.terrain_stroke * scaleFactor,
-            graticule_stroke = this.graticule_stroke * scaleFactor;
+      const k = this.getScaleFactor(),
+            terrain_stroke = this.terrain_stroke_width / k,
+            region_stroke = this.region_stroke_width / k,
+            graticule_stroke = this.graticule_stroke_width / k;
 
       return `
-        .viz.map .chart .terrain path,
-        .viz.map .chart .states path,
-        .viz.map .chart .regions path {
+        .viz.map .chart .terrain {
           stroke-width: ${terrain_stroke};
         }
+
+        .viz.map .chart .regions {
+          stroke-width: ${region_stroke};
+        }
+
+        .viz.map .chart .regions .level0 {
+          stroke-width: ${terrain_stroke};
+        }
+
         .viz.map .chart .base .graticule {
           stroke-width: ${graticule_stroke};
         }
