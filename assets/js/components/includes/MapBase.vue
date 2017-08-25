@@ -237,7 +237,7 @@ export default Vue.extend({
 
       zoom_padding: .1,
 
-      terrain_stroke_width: 0.6,
+      terrain_stroke_width: 0.8,
       region_stroke_width: 0.2,
       graticule_stroke_width: 0.2,
     };
