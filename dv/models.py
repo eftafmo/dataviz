@@ -709,7 +709,7 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
 
     # programme and project are denormalised to include BS
     programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles')
-    project = models.ForeignKey(Project, null=True)
+    project = models.ForeignKey(Project, null=True, related_name='organisation_roles')
     is_programme = models.NullBooleanField(default=None)
     is_implementing_partner = models.NullBooleanField()
 

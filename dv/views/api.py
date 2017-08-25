@@ -4,12 +4,11 @@ from collections import defaultdict
 from decimal import Decimal
 from rest_framework.generics import ListAPIView
 from django.http import HttpResponseNotAllowed
-from django.db.models import CharField
+from django.db.models import CharField, Q
 from django.db.models.expressions import F
 from django.db.models.aggregates import Count, Sum
 from django.db.models.functions import Length
 
-from django.utils.text import slugify
 from dv.lib.http import JsonResponse
 from dv.models import (
     Allocation,
@@ -24,6 +23,17 @@ from dv.serializers import (
 
 
 CharField.register_lookup(Length, 'length')
+
+# Everything else is International
+EEA_DONOR_STATES = {
+    'Iceland': 'IS',
+    'Liechtenstein': 'LI',
+    'Norway': 'NO',
+}
+
+DONOR_STATES = dict(**EEA_DONOR_STATES, International='Intl')
+
+DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
 
 
 def overview(request):
@@ -289,14 +299,6 @@ def partners(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed()
 
-    # Because everything else is International
-    DONOR_STATES = {
-        'Iceland': 'IS',
-        'Liechtenstein': 'LI',
-        'Norway': 'NO',
-        'International': 'Intl',
-    }
-
     def nuts_in_state(nuts, state_id):
         if state_id == 'Intl':
             return not re.match('IS|LI|NO', nuts)
@@ -313,6 +315,8 @@ def partners(request):
         'programme__organisation_roles',
     ).annotate(
         code=F('programme__code'),
+        name=F('programme__name'),
+        url=F('programme__url'),
         pa_code=F('outcome__programme_area__code'),
         pa_name=F('outcome__programme_area__name'),
         sector=F('outcome__programme_area__priority_sector__name'),
@@ -321,6 +325,8 @@ def partners(request):
         allocation_norway=F('programme__allocation_norway'),
     ).values(
         'code',
+        'name',
+        'url',
         'pa_code',
         'pa_name',
         'sector',
@@ -339,6 +345,8 @@ def partners(request):
     for p in partnership_programmes_raw:
         if p['code'] not in partnership_programmes:
             partnership_programmes[p['code']] = {
+                'name': p['name'],
+                'url': p['url'],
                 'areas': {},
                 'beneficiaries': set(),
                 'donors': set(),
@@ -565,6 +573,12 @@ def partners(request):
                         'donor': donor,
                         'allocation': float(allocation),
                         'programme': prg,
+                        'programmes': {
+                            prg: {
+                                'name': item['name'],
+                                'url': item['url'],
+                            }
+                        },
                         'projects': projects[key_donor],
                         'prj_nuts': list(nuts_connections.values()),
                         'PO': item['PO'],
@@ -749,4 +763,18 @@ class ProjectList(ListAPIView):
         beneficiary = self.request.query_params.get('beneficiary', None)
         if beneficiary is not None:
             queryset = queryset.filter(state_id=beneficiary)
+        is_dpp = self.request.query_params.get('is_dpp', None)
+        if is_dpp:
+            queryset = queryset.filter(is_dpp=True)
+        donor = self.request.query_params.get('donor', None)
+        if is_dpp and donor:
+            donor_name = DONOR_STATES_REVERSED.get(donor)
+
+            q = Q(organisation_roles__organisation_role_id='PJDPP')
+            if donor_name:
+                q = q & Q(organisation_roles__organisation__country=donor_name)
+            else:
+                q = q & ~Q(organisation_roles__organisation__country__in=EEA_DONOR_STATES.keys())
+                # Django ORM generates an unnecessary complicated query here
+            queryset = queryset.filter(q)
         return queryset.order_by('code')
