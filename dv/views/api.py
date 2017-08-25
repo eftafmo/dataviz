@@ -1,3 +1,5 @@
+import re
+
 from collections import defaultdict
 from decimal import Decimal
 from rest_framework.generics import ListAPIView
@@ -295,6 +297,12 @@ def partners(request):
         'International': 'Intl',
     }
 
+    def nuts_in_state(nuts, state_id):
+        if state_id == 'Intl':
+            return not re.match('IS|LI|NO', nuts)
+        else:
+            return nuts.startswith(state_id)
+
     # List of programmes having DPP or dpp
     # Everything else will be grouped by these
     partnership_programmes_raw = ProgrammeOutcome.objects.all().select_related(
@@ -542,7 +550,7 @@ def partners(request):
                         for key, value in project_promoters[prj_code].items():
                             prj_promoters[key] = value
                         for src in project_nuts[prj_code]['src']:
-                            if not src.startswith(donor):
+                            if not nuts_in_state(src, donor):
                                 continue
                             for dst in project_nuts[prj_code]['dst']:
                                 nuts_connections[src + dst] = {
