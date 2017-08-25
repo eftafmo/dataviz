@@ -33,8 +33,8 @@ export default Summary.extend({
 
       // we'll compute these here,
       // so we don't have to use v-if in the template
-      out.DPP_count = out.DPP.size()
-      out.dpp_count = out.dpp.size()
+      out.DPP_count = out.DPP?out.DPP.size():0
+      out.dpp_count = out.dpp?out.dpp.size():0
 
       return out;
     },
