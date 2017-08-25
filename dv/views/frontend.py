@@ -149,7 +149,8 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             'name',
             flat=True,
         ))
-        states.extend(['Lichtenstein', 'Norway', 'Iceland'])
+        #states.extend(['Liechtenstein', 'Norway', 'Iceland'])
+        states.extend(utils.EEA_DONOR_STATES.keys())
         ctx['states_with_flags'] = states
 
         # Group programmes and projects by organisation roles

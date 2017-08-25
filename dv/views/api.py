@@ -20,20 +20,13 @@ from dv.models import (
 from dv.serializers import (
     ProjectSerializer,
 )
-
+from dv.lib.utils import (
+    EEA_DONOR_STATES,
+    DONOR_STATES,
+    DONOR_STATES_REVERSED,
+)
 
 CharField.register_lookup(Length, 'length')
-
-# Everything else is International
-EEA_DONOR_STATES = {
-    'Iceland': 'IS',
-    'Liechtenstein': 'LI',
-    'Norway': 'NO',
-}
-
-DONOR_STATES = dict(**EEA_DONOR_STATES, International='Intl')
-
-DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
 
 
 def overview(request):

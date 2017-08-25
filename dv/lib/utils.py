@@ -5,6 +5,17 @@ from binascii import crc32
 from collections import Iterable
 from django.utils.baseconv import base62
 
+# Everything else is International
+EEA_DONOR_STATES = {
+    'Iceland': 'IS',
+    'Liechtenstein': 'LI',
+    'Norway': 'NO',
+}
+
+DONOR_STATES = dict(**EEA_DONOR_STATES, International='Intl')
+
+DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
+
 
 def camel_case_to__(txt):
     """
