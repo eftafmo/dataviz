@@ -1,4 +1,5 @@
 import 'url-polyfill';
+import 'form-association-polyfill'
 
 if (!Object.assign) {
   Object.defineProperty(Object, 'assign', {
