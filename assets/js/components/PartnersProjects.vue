@@ -6,7 +6,7 @@
         :sector="x.programme.sector"
         :id="x.programme.programme_code"
         :name="x.programme.programme_name"
-        :extra="`is_dpp=True`"
+        extra="is_dpp=True"
     ></projects>
   </template>
 </programmes>
