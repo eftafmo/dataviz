@@ -411,8 +411,12 @@
           <div class="input-box input-block">
             <label for="organisation-programme-name-facet">Programme</label>
             <select multiple name="programme_name" id="organisation-programme-name-facet" form="main-search-form" class="main-auto-submit">
-              {% for o in form.facets.programme_name %}
-                <option value="{{ o }}" selected>{{ o }}</option>
+              {% for o in facets.fields.programme_name %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_name %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -581,7 +585,8 @@
       all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget')))
 
       // organisation
-      all_select2.push($("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name')));
+      //all_select2.push($("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name')));
+      all_select2.push($("#organisation-programme-name-facet").select2());
       all_select2.push($("#organisation-project-status-facet").select2());
       all_select2.push($("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name')));
       all_select2.push($("#country-facet").select2());
