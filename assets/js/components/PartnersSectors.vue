@@ -45,12 +45,10 @@ export default Sectors.extend({
         }
         return all.size() - sum
       }
-      try{
-        return d.programmes.size()
-      }
-      catch(e){
-        console.log(e)
-      }
+
+      // is this a rogue area?
+      if (d.programmes === undefined) return 0
+      return d.programmes.size()
     },
 
     display(item) {

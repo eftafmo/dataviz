@@ -524,7 +524,9 @@ export default Chart.extend({
     },
 
     isRogue(d) {
-      // some crazy sector coming from how the sector list is pre-built
+      // regue sector without values, due to how the sector list is pre-built
+      // note that there are rogue areas too, but we can only tell those apart
+      // in local code
       return d.children === undefined && d.parentname === undefined
     },
 
