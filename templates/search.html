@@ -133,23 +133,12 @@
               <span>{{ res.project_status.0 }}</span>
             </div>
             <p>
-              <div><b>FM:</b> {{ res.financial_mechanism_ss.0 }}</div>
-              <div><b>PS:</b> {{ res.priority_sector_ss.0 }}</div>
-              <div><b>PA:</b> {{ res.programme_area_ss.0 }}</div>
-            </p>
-            <p>
-              <span><b>Programme:</b> {{ res.programme_name.0 }}</span>
-            </p>
-            <p>
-              <span><b>Outcome:</b> {{ res.project_outcome }}</span>
-            </p>
-            <p>
-              <span>
-                <b>Themes:</b>
-                {% for th in res.theme_ss %}
-                  <span>{{ th }}</span>{% if not forloop.last %},{% endif %}
-                {% endfor %}
-              </span>
+              <div><b>Programme:</b> {{ res.programme_name.0 }}</div>
+              <div><b>Funded by :</b> {{ res.financial_mechanism_ss.0 }}</div>
+              <div><b>Sector:</b> {{ res.priority_sector_ss.0 }}</div>
+              <ul class="search_listing"><li><span>{{ res.programme_area_ss.0 }}</span></li></ul>
+              <div><b>Grant:</b> {{ res.grant | floatformat:0 | currency }}</div>
+              <div><b>Case number:</b> {{ res.code }}</div>
             </p>
 
           {% elif form.facets.kind.0 == 'Organisation' %}

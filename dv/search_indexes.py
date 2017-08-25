@@ -114,6 +114,8 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     name = indexes.CharField(model_attr='name', indexed=False)
+    code = indexes.FacetCharField(model_attr='code')
+    grant = indexes.DecimalField(model_attr='allocation')
 
     def get_model(self):
         return Project
