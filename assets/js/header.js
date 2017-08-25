@@ -17,10 +17,7 @@ window.Header = (function() {
     }
   }();
 
-  var menus = {
-    'search': el.querySelector('.header-search'),
-    'menu': el.querySelector('.header-menu')
-  };
+  var menus = el.querySelector('.header-inner')
 
   var active;
 
@@ -29,7 +26,7 @@ window.Header = (function() {
   }
 
   var open = function(targetName) {
-    var target = menus[targetName];
+    var target = menus;
 
     close();
 
@@ -38,15 +35,12 @@ window.Header = (function() {
 
     target.classList.add('is-open');
     backdrop.show();
-
-    if (targetName === 'search')
-      target.querySelector('input').focus();
+    target.querySelector('input').focus();
   };
 
   var close = function() {
     if (active) {
-      var target = menus[active];
-
+      var target = menus;
       document.body.classList.remove(_bodyClass(active));
       target.classList.remove('is-open');
 
