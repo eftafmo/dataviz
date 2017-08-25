@@ -98,7 +98,6 @@ export default Vue.extend({
     country: String,
     sector: String,
     name: String,
-    donor: String,
     extra: String
   },
 
