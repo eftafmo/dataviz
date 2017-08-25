@@ -227,15 +227,22 @@ export default Chart.extend({
       const dataset = this.filtered;
       for (const d of dataset) {
         for (const po_code in d.PO) {
-          out.programmes[d.DPP_nuts+d.PO[po_code].nuts] = {
-            'source': d.DPP_nuts,
-            'target': d.PO[po_code].nuts,
-          };
+          if (d.DPP_nuts) {
+            // we can have rows with PO but not DPP (only projects)
+            out.programmes[d.DPP_nuts+d.PO[po_code].nuts] = {
+              'source': d.DPP_nuts,
+              'target': d.PO[po_code].nuts,
+            };
+          }
         }
         for (const prj_nuts of d.prj_nuts) {
-          out.projects[prj_nuts.src+prj_nuts.dst] = {
-            'source': prj_nuts.src,
-            'target': prj_nuts.dst,
+          if (prj_nuts.dst) {
+            // many project partners don't have nuts. let them be
+            // we do want to see donor project partners with no nuts, though
+            out.projects[prj_nuts.src+prj_nuts.dst] = {
+              'source': prj_nuts.src,
+              'target': prj_nuts.dst,
+            }
           }
         }
       }
@@ -295,8 +302,9 @@ export default Chart.extend({
 
       const out = [];
       for (const row of data) {
-        if (row.source === id || row.target === id)
+        if (row.source === id || row.target === id) {
           out.push(row);
+        }
       }
 
       return out;
