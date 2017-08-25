@@ -465,36 +465,36 @@ export default Vue.extend({
       this.$emit("base-rendered")
     },
 
-    xrenderStates() {
-      const scale_LI = 5,
-            frame_padding_LI = 1.7;
+    setupLI(sel) {
+      // Liechtenstein needs a bit of magnification
+      const scale = 5,
+            frame_padding = 1.7;
 
+      const geo = this.geodetails[sel.datum().id];
 
-      // magnify Liechtenstein
-      const _li = this.geodetails["LI"];
-
-      states.filter(d => d.id == "LI")
+      sel
         .attr("vector-effect","non-scaling-stroke")
         .attr("transform", (d) => {
-          const scale = scale_LI,
-                // though incorrect, centroid looks better than center
-                center = _li.centroid,
+          // though incorrect, centroid looks better than center
+          const center = geo.centroid,
                 tx = -center.x * (scale - 1),
                 ty = -center.y * (scale - 1);
-          return `translate(${tx},${ty}) scale(${scale})`;
-        });
+          return `translate(${tx},${ty}) scale(${scale})`
+        })
 
-      // and give it a frame too. two actually.
-      for (const layer of [".middle", ".top"]) {
-        this.chart.select(layer).select(".frames")
-          .append("circle")
-          .attr("cx", _li.center.x)
-          .attr("cy", _li.center.y)
-          .attr("r",
-                Math.max(_li.width, _li.height) / 2 *
-                scale_LI * frame_padding_LI
-               );
-      }
+      // and give it a frame too, or two
+      if (this._li_setup) return
+
+      d3.selectAll(".middle, .top").select(".frames")
+        .append("circle")
+        .attr("cx", geo.center.x)
+        .attr("cy", geo.center.y)
+        .attr("r",
+              Math.max(geo.width, geo.height) / 2 *
+              scale * frame_padding
+        )
+
+      this._li_setup = true
     },
 
     _cleanupGeoData(what) {
@@ -539,6 +539,8 @@ export default Vue.extend({
         return
       else
         this._rendered_regions.push(_args)
+
+      const $this = this
 
       // filter and classify the topojson data.
       // we're gonna flatten everything (place all layers at the same level),
@@ -631,11 +633,16 @@ export default Vue.extend({
         .on("click", () => this.$emit("click", ...arguments))
         */
 
-        // don't forget to cache the stuff
-        .each(this.cacheGeoDetails)
-        // finally, clear the geo-data, we don't need it
         .each(function(d) {
-          d3.select(this).datum({
+          // don't forget to cache the stuff
+          $this.cacheGeoDetails(d)
+
+          const sel = d3.select(this)
+          // handle liechtenstein if needed
+          if (d.id.substr(0, 2) == "LI") $this.setupLI(sel)
+
+          // and clear the geo-data, we don't need it
+          sel.datum({
             id: d.id,
             name: d.properties.name,
           })
