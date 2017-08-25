@@ -774,8 +774,7 @@ class ProjectList(ListAPIView):
             if donor_name:
                 q = q & Q(organisation_roles__organisation__country=donor_name)
             else:
-                for key in EEA_DONOR_STATES:
-                    q = q & ~Q(organisation_roles__organisation__country=key)
+                q = q & ~Q(organisation_roles__organisation__country__in=EEA_DONOR_STATES.keys())
                 # Django ORM generates an unnecessary complicated query here
             queryset = queryset.filter(q)
         return queryset.order_by('code')
