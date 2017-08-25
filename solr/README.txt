@@ -23,3 +23,6 @@ $ ./manage.py rebuild_index
 
 $ ./manage.py build_solr_schema
 
+
+TODO: add <str name="facet.limit">10000</str> in solrconfig.xml
+TODO: update solrconfig.xml.patch (how?)
