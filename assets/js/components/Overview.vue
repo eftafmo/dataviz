@@ -37,7 +37,7 @@
 <style lang="less">
 .overview-viz {
   @media(min-width: 800px){
-    margin-top: -6rem;
+    margin-top: -5rem;
   }
   .chart {
     .fms > g.item, .beneficiaries > g.item {
