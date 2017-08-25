@@ -6,6 +6,7 @@
         :sector="x.programme.sector"
         :id="x.programme.programme_code"
         :name="x.programme.programme_name"
+        :extra="`is_dpp=True`"
     ></projects>
   </template>
 </programmes>
@@ -30,7 +31,7 @@
 <script>
 import Component from './Component';
 
-import PartnersProgrammes from './PartnersProgrammes';
+import PartnersProgrammes from './includes/PartnersProgrammes';
 import Projects from './includes/Projects'
 
 

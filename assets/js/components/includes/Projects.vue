@@ -89,6 +89,7 @@
 <script>
 import Vue from 'vue';
 import axios from 'axios';
+import {FILTERS} from '../../globals.js';
 
 export default Vue.extend({
 
@@ -96,7 +97,9 @@ export default Vue.extend({
     id: String,
     country: String,
     sector: String,
-    name: String
+    name: String,
+    donor: String,
+    extra: String
   },
 
  data() {
@@ -114,7 +117,14 @@ export default Vue.extend({
       target.classList.toggle('active')
 
       if(this.posts.length == 0){
-        axios.get(`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`)
+        let url=`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`
+        if (FILTERS['donor']) {
+          url = url + '&donor=' + FILTERS['donor'];
+        }
+        if (this.extra) {
+          url = url + '&' + this.extra;
+        }
+        axios.get(url)
           .then(response => {
             this.posts = response.data
             if(target.classList.contains('spinning'))

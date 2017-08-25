@@ -34,4 +34,3 @@ export {default as PartnersSummary } from './PartnersSummary';
 export {default as PartnersResults} from './PartnersResults';
 export {default as PartnerNews} from './PartnerNews';
 export {default as PartnersProjects} from './PartnersProjects';
-export {default as PartnersProgrammes} from './PartnersProgrammes';

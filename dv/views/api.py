@@ -4,12 +4,11 @@ from collections import defaultdict
 from decimal import Decimal
 from rest_framework.generics import ListAPIView
 from django.http import HttpResponseNotAllowed
-from django.db.models import CharField
+from django.db.models import CharField, Q
 from django.db.models.expressions import F
 from django.db.models.aggregates import Count, Sum
 from django.db.models.functions import Length
 
-from django.utils.text import slugify
 from dv.lib.http import JsonResponse
 from dv.models import (
     Allocation,
@@ -24,6 +23,17 @@ from dv.serializers import (
 
 
 CharField.register_lookup(Length, 'length')
+
+# Everything else is International
+EEA_DONOR_STATES = {
+    'Iceland': 'IS',
+    'Liechtenstein': 'LI',
+    'Norway': 'NO',
+}
+
+DONOR_STATES = dict(**EEA_DONOR_STATES, International='Intl')
+
+DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
 
 
 def overview(request):
@@ -288,14 +298,6 @@ def projects(request):
 def partners(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed()
-
-    # Because everything else is International
-    DONOR_STATES = {
-        'Iceland': 'IS',
-        'Liechtenstein': 'LI',
-        'Norway': 'NO',
-        'International': 'Intl',
-    }
 
     def nuts_in_state(nuts, state_id):
         if state_id == 'Intl':
@@ -761,4 +763,19 @@ class ProjectList(ListAPIView):
         beneficiary = self.request.query_params.get('beneficiary', None)
         if beneficiary is not None:
             queryset = queryset.filter(state_id=beneficiary)
+        is_dpp = self.request.query_params.get('is_dpp', None)
+        if is_dpp:
+            queryset = queryset.filter(is_dpp=True)
+        donor = self.request.query_params.get('donor', None)
+        if is_dpp and donor:
+            donor_name = DONOR_STATES_REVERSED.get(donor)
+
+            q = Q(organisation_roles__organisation_role_id='PJDPP')
+            if donor_name:
+                q = q & Q(organisation_roles__organisation__country=donor_name)
+            else:
+                for key in EEA_DONOR_STATES:
+                    q = q & ~Q(organisation_roles__organisation__country=key)
+                # Django ORM generates an unnecessary complicated query here
+            queryset = queryset.filter(q)
         return queryset.order_by('code')

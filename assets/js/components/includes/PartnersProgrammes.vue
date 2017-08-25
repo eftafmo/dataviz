@@ -1,7 +1,7 @@
 
 <script>
-import Programmes from './Programmes';
-import PartnersMixin from './mixins/Partners';
+import Programmes from '../Programmes';
+import PartnersMixin from '../mixins/Partners';
 
 
 export default Programmes.extend({
