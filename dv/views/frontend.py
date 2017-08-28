@@ -61,7 +61,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         'programme_area_ss',
         'priority_sector_ss',
         'financial_mechanism_ss',
-        'programme_status',
+        'programme_name',
         'kind',
     ]
     template_name = 'search.html'
@@ -84,6 +84,7 @@ class FacetedSearchView(BaseFacetedSearchView):
 
 class ProgrammeFacetedSearchView(FacetedSearchView):
     facet_fields = FacetedSearchView.facet_fields + [
+        'programme_status',
         'outcome_ss',
     ]
     initial = {
@@ -110,7 +111,6 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
 
 class ProjectFacetedSearchView(FacetedSearchView):
     facet_fields = ProgrammeFacetedSearchView.facet_fields + [
-        'programme_name',
         'project_status',
         'geotarget',
         'theme_ss',
@@ -124,12 +124,9 @@ class ProjectFacetedSearchView(FacetedSearchView):
 
 class OrganisationFacetedSearchView(FacetedSearchView):
     facet_fields = FacetedSearchView.facet_fields + [
-        'programme_name',
-        'programme_status',
         'project_name',
-        'project_status',
         'country',
-        'nuts',
+        'geotarget',
         'org_type_category',
         'org_type',
         'role_ss',

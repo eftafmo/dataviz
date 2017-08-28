@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.humanize',
+    'django_countries',
     'haystack',
     'rest_framework',
     'webpack_loader',

@@ -1,5 +1,6 @@
 from haystack import indexes
 from haystack import exceptions
+from django_countries import countries
 
 from dv.models import (
     Allocation,
@@ -9,6 +10,8 @@ from dv.models import (
     Project,
     State,
 )
+
+STATES = dict(countries)
 
 
 class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
@@ -105,7 +108,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # specific facets
     project_status = indexes.FacetMultiValueField(model_attr='status')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
-    geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
+    # geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
     theme_ss = indexes.FacetMultiValueField(model_attr='themes__name')
 
     # specific fields
@@ -138,6 +141,12 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_outcome_ss(self, obj):
         return [obj.outcome.name]
 
+    def prepare_geotarget(self, obj):
+        if len(obj.nuts) > 2:
+            return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
+        else:
+            return ['{}: {}'.format(obj.nuts, obj.geotarget)]
+
 
 class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
@@ -164,8 +173,9 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     org_type_category = indexes.FacetCharField(model_attr='orgtype__category')
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
-    nuts = indexes.FacetCharField(model_attr='nuts')
-    nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
+    # nuts = indexes.FacetCharField(model_attr='nuts')
+    geotarget = indexes.FacetCharField(model_attr='geotarget')
+    # nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
     role_ss = indexes.FacetMultiValueField()
 
     # extra data; avoid db hit
@@ -283,3 +293,9 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         if len(roles) == 0:
             raise exceptions.SkipDocument
         return roles
+
+    def prepare_geotarget(self, obj):
+        if len(obj.nuts) > 2:
+            return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
+        else:
+            return ['{}: {}'.format(obj.nuts, obj.geotarget)]

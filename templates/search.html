@@ -41,7 +41,7 @@
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
-        {{ paginator.count }} result{{ paginator.count|pluralize}} found
+        {{ paginator.count }} {{form.facets.kind.0|lower}}{{ paginator.count|pluralize}} found
       </span>
       <span class="search-results-options">
         <select name="paginate_by" id="" class="subtle-select main-auto-submit" form="main-search-form">
@@ -250,7 +250,7 @@
       {% if facets.fields.financial_mechanism_ss %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="financial-mechanism-facet">Financial Mechanism</label>
+          <label for="financial-mechanism-facet">Financial mechanism</label>
           <select multiple name="financial_mechanism_ss" id="financial-mechanism-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.financial_mechanism_ss %}
               {% if o.1 %}
@@ -267,7 +267,7 @@
       {% if facets.fields.state_name %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="state-facet">Beneficiary States</label>
+          <label for="state-facet">Beneficiary state</label>
           <select multiple name="state_name" id="state-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.state_name %}
               {% if o.1 %}
@@ -284,7 +284,7 @@
       {% if facets.fields.priority_sector_ss %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="priority-sector-facet">Priority Sectors</label>
+          <label for="priority-sector-facet">Sector</label>
           <select multiple name="priority_sector_ss" id="priority-sector-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.priority_sector_ss %}
               {% if o.1 %}
@@ -301,7 +301,7 @@
       {% if facets.fields.programme_area_ss %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="programme-area-facet">Programme Areas</label>
+          <label for="programme-area-facet">Programme area</label>
           <select multiple name="programme_area_ss" id="programme-area-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.programme_area_ss %}
               {% if o.1 %}
@@ -313,11 +313,28 @@
           </select>
         </div>
       </div>
-      {% endif %}
 
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="programme-status-facet">Programme Status</label>
+          <label for="programme-name-facet">Programme</label>
+          <select multiple name="programme_name" id="programme-name-facet" form="main-search-form" class="main-auto-submit">
+            {% for o in facets.fields.programme_name %}
+              {% if o.1 %}
+              <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_name %}selected{% endif %}>
+                {{ o.0 }} ({{ o.1 }})
+              </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if form.facets.kind.0 == 'Programme' or form.facets.kind.0 == 'Project' %}
+
+      <div class="input-group">
+        <div class="input-box input-block">
+          <label for="programme-status-facet">Programme status</label>
           <select multiple name="programme_status" id="programme-status-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.programme_status %}
               {% if o.1 %}
@@ -330,10 +347,9 @@
         </div>
       </div>
 
-      {% if form.facets.kind.0 == 'Programme' or form.facets.kind.0 == 'Project' %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="outcome-facet">Outcomes</label>
+          <label for="outcome-facet">Outcome</label>
           <select multiple name="outcome_ss" id="outcome-facet" form="main-search-form" class="main-auto-submit">
             {% for o in facets.fields.outcome_ss %}
               {% if o.1 %}
@@ -345,27 +361,13 @@
           </select>
         </div>
       </div>
+
       {% endif %}
 
       {% if form.facets.kind.0 == 'Project' %}
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="project-programme-name-facet">Programme</label>
-            <select multiple name="programme_name" id="project-programme-name-facet" form="main-search-form" class="main-auto-submit">
-              {% for o in facets.fields.programme_name %}
-                {% if o.1 %}
-                <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_name %}selected{% endif %}>
-                  {{ o.0 }} ({{ o.1 }})
-                </option>
-                {% endif %}
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-box input-block">
-            <label for="project-status-facet">Project Status</label>
+            <label for="project-status-facet">Project status</label>
             <select multiple name="project_status" id="project-status-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.project_status %}
                 {% if o.1 %}
@@ -380,7 +382,7 @@
 
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="project-theme-facet">Project Theme</label>
+            <label for="project-theme-facet">Project theme</label>
             <select multiple name="theme_ss" id="project-theme-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.theme_ss %}
                 {% if o.1 %}
@@ -395,10 +397,14 @@
 
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="geotarget-facet">Project Geotarget</label>
+            <label for="geotarget-facet">Project region or city</label>
             <select multiple name="geotarget" id="geotarget-facet" form="main-search-form" class="main-auto-submit">
-              {% for o in form.facets.geotarget %}
-                <option value="{{ o }}" selected>{{ o }}</option>
+              {% for o in facets.fields.geotarget %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.geotarget %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -407,35 +413,6 @@
       {% endif %}
 
       {% if form.facets.kind.0 == 'Organisation' %}
-        <div class="input-group">
-          <div class="input-box input-block">
-            <label for="organisation-programme-name-facet">Programme</label>
-            <select multiple name="programme_name" id="organisation-programme-name-facet" form="main-search-form" class="main-auto-submit">
-              {% for o in facets.fields.programme_name %}
-                {% if o.1 %}
-                <option value="{{ o.0 }}" {% if o.0 in form.facets.programme_name %}selected{% endif %}>
-                  {{ o.0 }} ({{ o.1 }})
-                </option>
-                {% endif %}
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-box input-block">
-            <label for="organisation-project-status-facet">Project Status</label>
-            <select multiple name="project_status" id="organisation-project-status-facet" form="main-search-form" class="main-auto-submit">
-              {% for o in facets.fields.project_status %}
-                {% if o.1 %}
-                <option value="{{ o.0 }}" {% if o.0 in form.facets.project_status %}selected{% endif %}>
-                  {{ o.0 }} ({{ o.1 }})
-                </option>
-                {% endif %}
-              {% endfor %}
-            </select>
-          </div>
-        </div>
 
         <div class="input-group">
           <div class="input-box input-block">
@@ -451,7 +428,7 @@
         {% if facets.fields.country %}
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="country-facet">Organisation Country</label>
+            <label for="country-facet">Country</label>
             <select multiple name="country" id="country-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.country %}
                 {% if o.1 %}
@@ -464,20 +441,26 @@
           </div>
         </div>
         {% endif %}
+
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="nuts-facet">Organisation NUTS</label>
-            <select multiple name="nuts" id="nuts-facet" form="main-search-form" class="main-auto-submit">
-              {% for o in form.facets.nuts %}
-                <option value="{{ o }}" selected>{{ o }}</option>
+            <label for="geotarget-facet">Target region or city</label>
+            <select multiple name="geotarget" id="geotarget-facet" form="main-search-form" class="main-auto-submit">
+              {% for o in facets.fields.geotarget %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.geotarget %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
         </div>
+
         {% if facets.fields.org_type_category %}
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="org-type-category-facet">Organisation Type Category</label>
+            <label for="org-type-category-facet">Organisation type category</label>
             <select multiple name="org_type_category" id="org-type-category-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.org_type_category %}
                 {% if o.1 %}
@@ -490,10 +473,11 @@
           </div>
         </div>
         {% endif %}
+
         {% if facets.fields.org_type %}
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="org-type-facet">Organisation Type</label>
+            <label for="org-type-facet">Organisation type</label>
             <select multiple name="org_type" id="org-type-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.org_type %}
                 {% if o.1 %}
@@ -506,10 +490,11 @@
           </div>
         </div>
         {% endif %}
+
         {% if facets.fields.role_ss %}
         <div class="input-group">
           <div class="input-box input-block">
-            <label for="role-facet">Organisation Role</label>
+            <label for="role-facet">Organisation role</label>
             <select multiple name="role_ss" id="role-facet" form="main-search-form" class="main-auto-submit">
               {% for o in facets.fields.role_ss %}
                 {% if o.1 %}
@@ -572,6 +557,7 @@
       all_select2.push($("#state-facet").select2());
       all_select2.push($("#priority-sector-facet").select2());
       all_select2.push($("#programme-area-facet").select2());
+      all_select2.push($("#programme-name-facet").select2());
       all_select2.push($("#programme-status-facet").select2());
 
       // programme
@@ -582,14 +568,15 @@
       all_select2.push($("#project-status-facet").select2());
       all_select2.push($("#project-programme-name-facet").select2());
       all_select2.push($("#project-theme-facet").select2());
-      all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget')))
+      //all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget')))
+      all_select2.push($("#geotarget-facet").select2());
 
       // organisation
       //all_select2.push($("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name')));
-      all_select2.push($("#organisation-programme-name-facet").select2());
       all_select2.push($("#organisation-project-status-facet").select2());
       all_select2.push($("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name')));
       all_select2.push($("#country-facet").select2());
+      all_select2.push($("#city-facet").select2());
       all_select2.push($("#nuts-facet").select2(select2AjaxFactory('organisation', 'nuts')));
       all_select2.push($("#org-type-category-facet").select2());
       all_select2.push($("#org-type-facet").select2());

@@ -11,7 +11,8 @@ urlpatterns = [
 
     url(r'^disclaimer/$', views.disclaimer, name='disclaimer'),
 
-    url(r'^search/$', views.FacetedSearchView.as_view(), name='search'),
+    # url(r'^search/$', views.FacetedSearchView.as_view(), name='search'),
+    url(r'^search/$', views.ProgrammeFacetedSearchView.as_view(), name='search'),
     url(r'^search/programme/$', views.ProgrammeFacetedSearchView.as_view(), name='search_programme'),
     url(r'^search/project/$', views.ProjectFacetedSearchView.as_view(), name='search_project'),
     url(r'^search/organisation/$', views.OrganisationFacetedSearchView.as_view(), name='search_organisation'),

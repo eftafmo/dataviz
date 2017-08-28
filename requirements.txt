@@ -12,3 +12,4 @@ pysolr==3.6.0
 django-haystack>=2.7.dev0,<2.8
 djangorestframework>=3.6.3,<3.7
 pysolr==3.6.0
+django-countries>=4.6,<4.7
