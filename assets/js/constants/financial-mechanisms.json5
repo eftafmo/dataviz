@@ -2,7 +2,7 @@
   "eea-grants": {
     id: "eea-grants",
     name: "EEA Grants",
-    donor_list: "Iceland, Liechtenstein, Norway",
+    donor_list: "Iceland 3.03%, Liechtenstein 1.12%, Norway 95.85%",
     colour: "rgb(0, 117, 188)",
   },
   "norway-grants": {
