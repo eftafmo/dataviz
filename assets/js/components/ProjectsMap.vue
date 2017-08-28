@@ -18,6 +18,16 @@
   }
 
   .chart {
+    .regions {
+      &:not(.zero) {
+        cursor: pointer;
+      }
+
+      &.zero {
+        cursor: not-allowed;
+      }
+    }
+
     .projects > g > g {
       pointer-events: none;
 
@@ -28,7 +38,7 @@
       }
 
       &.hovered circle {
-        fill-opacity: .7;
+        fill-opacity: 1;
       }
     }
   }
@@ -89,7 +99,7 @@ const RegionDetails = {
 
   data() {
     return {
-      root_label: "National level projects",
+      root_label: "National-level projects",
     }
   },
 
@@ -210,7 +220,7 @@ export default BaseMap.extend({
       `;
       if (num_projects) {
         details += `
-          <li>${ this.currency(d.allocation || 0) }</li>
+          <li>${ this.currency(allocation) }</li>
           <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
           <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
           <li>${(d.programmes && d.programmes.size()) ? d.programmes.size() + " " + this.singularize(`programmes`, d.programmes.size()) : "TODO: programme count"}</li>
@@ -248,6 +258,31 @@ export default BaseMap.extend({
       return d.project_count || 0;
     },
 
+    _domouse(over, d, i, group) {
+      const id = d.id,
+            level = id.length - 2
+
+      // the real data is not here
+      // (but don't bother finding it on mouseout)
+      if (over) {
+        if (level == 0)
+          d = this.aggregated[id]
+        else
+          d = this.region_data[id]
+      }
+
+      const self = this.$super._domouse(over, d, i, group)
+
+      if (!self) return
+
+      const _selector = level != 0 ? "." + id.substr(0, 2) : "",
+            selector = `${_selector}.level${level} > g.region.${id}`
+
+      const bubble = this.projects.select(selector)
+      if (over) bubble.raise()
+      bubble.classed("hovered", over)
+    },
+
     getBubbles(parentid) {
       const main = !parentid
       if (main) parentid = ""
@@ -283,6 +318,7 @@ export default BaseMap.extend({
                                .attr("class", d => `region ${d.id}`)
                                .attr("opacity", 0)
                                .property("_value", 0)
+
       if (!main) {
         const k = 1 / this.map.geodetails[parentid].transform.k
 
@@ -501,7 +537,9 @@ export default BaseMap.extend({
         _aggregate(id, row)
       }
 
-      return out;
+      this.region_data = out
+
+      return out
     },
 
     handleFilterBeneficiary(newid, oldid) {
@@ -512,6 +550,10 @@ export default BaseMap.extend({
       this.chart.selectAll('g.states > g.beneficiary > g')
         .transition(t)
         .attr("opacity", Number(!newid));
+    },
+
+    handleFilterRegion(newid, oldid) {
+      console.log(newid, oldid)
     },
   },
 });

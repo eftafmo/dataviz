@@ -211,7 +211,8 @@ export default Chart.extend({
     )
 
     // cache for region-level data
-    this._region_data = {};
+    this._region_data = {} // raw
+    this.region_data = {} // aggregated
 
     // we'll need this for custom logic
     this.is_single_country = !!(this.embedded && this.filters.beneficiary)
@@ -346,8 +347,8 @@ export default Chart.extend({
     },
 
     computeRegionData(regiondataset) {
-      const filtered = this.filter(regiondataset, this.filter_by);
-      return this.aggregate(filtered, ['id'], this.aggregate_on, true);
+      const filtered = this.filter(regiondataset, this.filter_by)
+      return this.aggregate(filtered, ['id'], this.aggregate_on, true)
     },
 
     renderDonorColours(t) {
