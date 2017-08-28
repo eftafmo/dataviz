@@ -13,11 +13,11 @@ export default BaseMap.extend({
       nuts_level: 3,
       draw_nuts_levels: [3],
 
-      beneficiary_colour_default: "#ddd",
+      beneficiary_colour: "#ddd",
       beneficiary_colour_hovered: "#9dccec",
       beneficiary_colour_zero: "#eee",
 
-      region_colour_default: interpolateYlGn(0),
+      region_colour: interpolateYlGn(0),
     }
   },
 
@@ -54,6 +54,21 @@ export default BaseMap.extend({
       `;
     },
 
+    _domouse(over, d, i, group) {
+      const self = this.$super._domouse(over, d, i, group)
+
+      if (!self) return
+
+      if (this.beneficiary_colour_hovered &&
+          d.id.length == 2 &&
+          d.allocation != 0
+      )
+        self
+          .transition(this.getTransition(this.short_duration))
+          .attr("fill", over ? this.beneficiary_colour_hovered :
+                               this.beneficiary_colour)
+    },
+
     renderData(t) {
       if (t === undefined) t = this.getTransition();
       const dataset = d3.values(this.data);
@@ -64,7 +79,7 @@ export default BaseMap.extend({
       beneficiaries
         .classed("zero", false)
         .transition(t)
-        .attr("fill", this.beneficiary_colour_default)
+        .attr("fill", this.beneficiary_colour)
 
       beneficiaries
         .exit()

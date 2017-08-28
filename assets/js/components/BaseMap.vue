@@ -170,11 +170,8 @@ export default Chart.extend({
     return {
       donor_colour_inactive: "#fff",
 
-      beneficiary_colour_default: "none",
-      beneficiary_colour_hovered: null,
-      beneficiary_colour_zero: "none",
-
-      region_colour_default: "none",
+      beneficiary_colour: "none",
+      region_colour: "none",
 
       zoomed_nuts_level: 3,
 
@@ -188,6 +185,7 @@ export default Chart.extend({
       ),
 
       current_region: null,
+      hovered_region: null,
     }
   },
 
@@ -285,9 +283,9 @@ export default Chart.extend({
       }
 
       if (level == 0)
-        return this.beneficiary_colour_default
+        return this.beneficiary_colour
 
-      return this.region_colour_default
+      return this.region_colour
     },
 
     opacityfunc(parentid) {
@@ -404,52 +402,55 @@ export default Chart.extend({
         .attr("stroke", colourfuncNO)
     },
 
+    _domouse(over, d, i, group) {
+      // disable mouseover events while transitioning
+      if (this.transitioning) return
+
+      const self = d3.select(group[i])
+
+      // also disable when zeroed
+      if (self.classed("zero")) return
+
+      if (over) {
+        self.raise()
+        // we also need to raise the parent container
+        d3.select(this.parentNode).raise()
+
+        this.tip.show.call(self.node(), d, i)
+        this.hovered_region = d
+      } else {
+        this.tip.hide.call(self.node(), d, i)
+        this.hovered_region = null
+      }
+
+      return self
+    },
+
+    mouseenterfunc(d, i, group) {
+      return this._domouse(true, d, i, group)
+    },
+
+    mouseleavefunc(d, i, group) {
+      return this._domouse(false, d, i, group)
+    },
+
+    clickfunc(d, i, group) {
+      const self = d3.select(group[i])
+
+      if (self.classed("zero")) return
+
+      if (d.id.length == 2) this.toggleBeneficiary(d)
+
+      return self
+    },
+
     registerEvents(selection) {
-      const $this = this;
-
-      const doMouse = (over) => {
-        return function(d, i) {
-          // disable mouseover events while transitioning
-          if ($this.transitioning) return
-
-          const self = d3.select(this);
-
-          // disable also when zeroed
-          if (self.classed("zero")) return
-
-          if (over) {
-            self.raise()
-            // we also need to raise the parent container
-            d3.select(this.parentNode).raise()
-
-            $this.tip.show.call(this, d, i);
-          } else {
-            $this.tip.hide.call(this, d, i);
-          }
-
-          if ($this.beneficiary_colour_hovered &&
-              d.id.length == 2 &&
-              d.allocation != 0
-          )
-            self
-            .transition($this.getTransition($this.short_duration))
-            .attr("fill", over ? $this.beneficiary_colour_hovered :
-                                 $this.beneficiary_colour_default)
-        }
-      };
-
       selection
         // only beneficiaries have events
         .filter(d => d.id.length != 2 || this.COUNTRIES[d.id].type === "beneficiary")
-        .on("click", function(d) {
-          if (d3.select(this).classed("zero")) return
-
-          if (d.id.length == 2) {
-            $this.toggleBeneficiary(d)
-          }
-        })
-        .on("mouseenter", doMouse(true))
-        .on("mouseleave", doMouse(false))
+        .on("click", this.clickfunc)
+        .on("mouseenter", this.mouseenterfunc)
+        .on("mouseleave", this.mouseleavefunc)
     },
 
     doZoom(t) {
@@ -477,7 +478,7 @@ export default Chart.extend({
               .style("display", "none")
               // also reset regions to default colour
               .selectAll("path")
-              .attr("fill", $this.region_colour_default)
+              .attr("fill", $this.region_colour)
           })
       }
 
