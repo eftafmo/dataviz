@@ -113,6 +113,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
 
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
+    summary = indexes.CharField(model_attr='summary', indexed=False)
 
     # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
@@ -173,6 +174,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     org_type_category = indexes.FacetCharField(model_attr='orgtype__category')
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
+    city = indexes.FacetCharField(model_attr='city')
     # nuts = indexes.FacetCharField(model_attr='nuts')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
     # nuts_auto = indexes.EdgeNgramField(model_attr='nuts')

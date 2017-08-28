@@ -126,6 +126,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
     facet_fields = FacetedSearchView.facet_fields + [
         'project_name',
         'country',
+        'city',
         'geotarget',
         'org_type_category',
         'org_type',
@@ -156,6 +157,8 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             org_roles = res.object.roles.all()
             for org_role in org_roles:
                 role_name = org_role.organisation_role.role
+                if org_role.programme.is_tap:
+                    continue
                 prg_or_prj = org_role.programme
                 if org_role.project:
                     prg_or_prj = org_role.project

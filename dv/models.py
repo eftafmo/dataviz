@@ -233,6 +233,7 @@ class Programme(_MainModel):
     ]
 
     __post_bleach_comments_re = re.compile(r'&lt;!--.*--&gt;')
+
     class STATUS(Enum):
         APPROVED = 'approved'
         IMPLEMENTATION = 'implementation'
@@ -443,10 +444,10 @@ class Project(_MainModel):
                 'is_improved_knowledge': 'ResultImprovedKnowledge',
                 'is_continued_coop': 'ResultContinuedCooperation',
                 'is_published': 'IsPublished',
+                'summary': 'PlannedSummary',
 
                 # TODO: leftovers
                 #'Predefined',
-                #'PlannedSummary',
                 #'ActualSummary',
                 #'IsSmallGrantScheme',
                 #'IsPredefined',
@@ -455,6 +456,8 @@ class Project(_MainModel):
             }
         },
     ]
+
+    __post_bleach_comments_re = re.compile(r'&lt;!--.*--&gt;')
 
     class STATUS(Enum):
         IN_PROGRESS = 'in progress'
@@ -467,6 +470,16 @@ class Project(_MainModel):
             COMPLETED = _('Completed')
             TERMINATED = _('Terminated')
             NON_COMPLETED = _('Non Completed')
+
+    @classmethod
+    def from_data(cls, data, src_idx):
+        """ Mutates its data! """
+        mapping = cls.IMPORT_SOURCES[src_idx]['map']
+        data[mapping['summary']] = bleach.clean(
+            data[mapping['summary']], strip=True, strip_comments=True)
+        data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
+
+        return super().from_data(data, src_idx)
 
     state = models.ForeignKey(State)
     programme = models.ForeignKey(Programme)
@@ -492,6 +505,7 @@ class Project(_MainModel):
     is_improved_knowledge = models.BooleanField()
     is_continued_coop = models.BooleanField()
     is_published = models.BooleanField()
+    summary = models.TextField()
 
 
 class ProjectTheme(_BaseModel):
@@ -638,6 +652,7 @@ class Organisation(_BaseModel):
                 'orgtype': ('name', 'OrganisationType'),
                 'nuts': 'NUTSCode',
                 'country': 'Country',
+                'city': 'City',
                 'geotarget': 'GeographicalTarget',
 
                 # leftovers
@@ -658,6 +673,7 @@ class Organisation(_BaseModel):
     orgtype = models.ForeignKey(OrganisationType, null=True)
     # the countries can be different from member states; that's why we don't use FK
     country = models.CharField(max_length=64)
+    city = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
     geotarget = models.CharField(max_length=256)
     nuts = models.CharField(max_length=5)

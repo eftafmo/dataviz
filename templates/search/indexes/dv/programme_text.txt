@@ -1,3 +1,8 @@
+{{ object.code }}
+{% for area in object.programme_areas.all %}
+{{ area.name }}
+{{ area.priority_sector.name }}
+{% endfor %}
 {{ object.summary }}
 {{ object.name }}
 {{ object.state.name }}

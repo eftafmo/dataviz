@@ -442,6 +442,23 @@
         </div>
         {% endif %}
 
+        {% if facets.fields.city %}
+        <div class="input-group">
+          <div class="input-box input-block">
+            <label for="city-facet">City</label>
+            <select multiple name="city" id="city-facet" form="main-search-form" class="main-auto-submit">
+              {% for o in facets.fields.city %}
+                {% if o.1 %}
+                <option value="{{ o.0 }}" {% if o.0 in form.facets.city %}selected{% endif %}>
+                  {{ o.0 }} ({{ o.1 }})
+                </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% endif %}
+
         <div class="input-group">
           <div class="input-box input-block">
             <label for="geotarget-facet">Target region or city</label>

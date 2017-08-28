@@ -6,3 +6,4 @@
         {{ org_role.project.state.name }}
     {% endif %}
 {% endfor %}
+{{ object.country }}
