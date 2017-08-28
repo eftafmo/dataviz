@@ -31,7 +31,9 @@
       :fillfunc="fillfunc"
       :opacityfunc="opacityfunc"
   >
-
+    <region-details
+        :region="current_region"
+    ></region-details>
   </map-base>
 
   <div class="legend" v-if="rendered">
@@ -154,6 +156,10 @@ export default Chart.extend({
     WithNUTSMixin,
   ],
 
+  components: {
+    regionDetails: { render(c) { return c() } },
+  },
+
   props: {
     // this is a "template" with the string 'XX' meant to be replaced
     // with the country code
@@ -180,6 +186,8 @@ export default Chart.extend({
           id != "Intl" // let's not forget about that :)
         )
       ),
+
+      current_region: null,
     }
   },
 
