@@ -30,7 +30,6 @@ import MapBase from './includes/MapBase'
 
 import WithRegionsMixin from './mixins/WithRegions'
 
-
 // jumping through hoops because of vue's lack of template inheritance.
 // don't forget to add this to the template.
 const PijamaDefs = {

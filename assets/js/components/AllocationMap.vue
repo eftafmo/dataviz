@@ -53,7 +53,7 @@
       </li>
     </ul>
   </div>
-
+  <mobile_tooltip  v-on:destroyTooltip="mobileData=null" v-if="rendered && mobileData && filters.beneficiary" :data="mobileData"></mobile_tooltip>
 </div>
 </template>
 
@@ -170,7 +170,7 @@ import BaseMap from './BaseMap'
 import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
-
+import MobileTooltip from './includes/MobileTooltip'
 
 export default BaseMap.extend({
   type: "allocation",
@@ -182,12 +182,14 @@ export default BaseMap.extend({
 
   components: {
     regionDetails: { render(c) { return c() } },
+    mobile_tooltip: MobileTooltip,
   },
 
   props: {
     // this is a "template" with the string 'XX' meant to be replaced
     // with the country code
     detailsDatasource: String,
+    mobileData: null,
   },
 
   data() {
@@ -420,6 +422,7 @@ export default BaseMap.extend({
 
         this.tip.show.call(self.node(), d, i)
         this.hovered_region = d
+        this.mobileData = d
       } else {
         this.tip.hide.call(self.node(), d, i)
         this.hovered_region = null
@@ -558,7 +561,13 @@ export default BaseMap.extend({
       if (!v) this.current_region_data = null
       this.tip.hide()
       this.render()
+      this.mobileData = this.hovered_region
     },
+
+    handleFilter(){
+      this.render();
+      this.mobileData = null;
+    }
   },
 });
 </script>
