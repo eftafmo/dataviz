@@ -590,7 +590,9 @@ def partners(request):
                     else:
                         # Still need to add rows without DPP if they have project partners
                         if row['PJDPP']:
-                          out.append(row)
+                            if 'PO' in row:
+                                del row['PO']  # Apparently we only need PO's for DPP programmes
+                            out.append(row)
 
     """
     # use for testing with django-debug-toolbar:

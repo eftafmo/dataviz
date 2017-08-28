@@ -259,7 +259,10 @@ export default Vue.extend({
             if (exclude && item[exclude]) {
               continue;
             }
-            if (exclude_empty && typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0) {
+            if (exclude_empty && (
+                item[exclude_empty] === undefined ||
+                typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0
+            )) {
               continue;
             }
 
@@ -273,7 +276,10 @@ export default Vue.extend({
             if (exclude && item[exclude]) {
               continue;
             }
-            if (exclude_empty && typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0) {
+            if (exclude_empty && (
+                item[exclude_empty] === undefined ||
+                typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0
+            )) {
               continue;
             }
 
