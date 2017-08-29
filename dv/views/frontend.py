@@ -97,12 +97,22 @@ class FacetedSearchView(BaseFacetedSearchView):
     # sort by -order because there are some duplicated names and we need the first occurrence only
     AREAS_SORT = dict([(x['name'].lower(), x['order']) for x in AREAS_LIST])
     SECTORS_SORT = dict([(x['priority_sector__name'].lower(), x['order']) for x in AREAS_LIST])
+    ORG_ROLE_SORT = {
+        'national focal point': 0,
+        'programme operator': 1,
+        'donor programme partner': 2,
+        'project promoter': 3,
+        'donor project partner': 4,
+        'programme partner': 5,
+        'project partner': 6,
+    }
 
     REORDER_FACETS = {
         'programme_status': PRG_STATUS_SORT,
         'project_status': PRJ_STATUS_SORT,
         'programme_area_ss': AREAS_SORT,
         'priority_sector_ss': SECTORS_SORT,
+        'role_ss': ORG_ROLE_SORT,
     }
 
     def reorder_facets(self, facets):
@@ -202,6 +212,10 @@ class OrganisationFacetedSearchView(FacetedSearchView):
         # Group programmes and projects by organisation roles
         for res in ctx['object_list']:
             d = defaultdict(list)
+            if not res.object:
+                # inconsistent index, obj deleted from db but present in Solr
+                logger.warn('Inconsistent object in index: %s' % (res.id,))
+                continue
             org_roles = res.object.roles.all()
             for org_role in org_roles:
                 role_name = org_role.organisation_role.role

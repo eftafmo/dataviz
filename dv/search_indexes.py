@@ -298,6 +298,12 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return roles
 
     def prepare_geotarget(self, obj):
+        # obj.nuts and obj.geotarget can be empty string
+        if not obj.nuts:
+            if obj.geotarget:
+                return [obj.geotarget]
+            else:
+                return None
         if len(obj.nuts) > 2:
             return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
         else:
