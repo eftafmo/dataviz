@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
+from haystack.generic_views import FacetedSearchMixin as BaseFacetedSearchMixin
 from webpack_loader import utils as webpack
 from dv.lib import utils
 from dv.models import (
@@ -75,11 +76,58 @@ class FacetedSearchView(BaseFacetedSearchView):
     def get_paginate_by(self, queryset):
         return self.request.GET.get('paginate_by', self.paginate_by)
 
+    PRG_STATUS_SORT = {
+        'implementation': 0,
+        'closed': 1,
+        'approved': 2,
+        'withdrawn': 3,
+        'returned to po': 4,
+    }
+    PRJ_STATUS_SORT = {
+        'in progress': 0,
+        'completed': 1,
+        'non completed': 2,
+        'terminated': 3,
+    }
+    AREAS_LIST = ProgrammeArea.objects.order_by(
+        '-order'
+    ).values(
+        'name', 'priority_sector__name', 'order'
+    )
+    # sort by -order because there are some duplicated names and we need the first occurrence only
+    AREAS_SORT = dict([(x['name'].lower(), x['order']) for x in AREAS_LIST])
+    SECTORS_SORT = dict([(x['priority_sector__name'].lower(), x['order']) for x in AREAS_LIST])
+
+    REORDER_FACETS = {
+        'programme_status': PRG_STATUS_SORT,
+        'project_status': PRJ_STATUS_SORT,
+        'programme_area_ss': AREAS_SORT,
+        'priority_sector_ss': SECTORS_SORT,
+    }
+
+    def reorder_facets(self, facets):
+        for facet, order in self.REORDER_FACETS.items():
+            if facet in facets:
+                facets[facet] = sorted(
+                    facets[facet],
+                    key=lambda x: order.get(x[0].lower(), 99)
+                )
+
     def get_context_data(self, *args, **kwargs):
         objls = kwargs.pop('object_list', self.queryset)
         ctx = super().get_context_data(object_list=objls, **kwargs)
         ctx['page_sizes'] = [10, 25, 50, 100]
+
+        # Custom sorting of some facets, refs #326
+        self.reorder_facets(ctx.get('facets', {}).get('fields', {}))
+
         return ctx
+
+    def get_queryset(self):
+        qs = super(BaseFacetedSearchMixin, self).get_queryset()
+        for field in self.facet_fields:
+            qs = qs.facet(field, limit=10000, sort='index')
+        return qs
 
 
 class ProgrammeFacetedSearchView(FacetedSearchView):
