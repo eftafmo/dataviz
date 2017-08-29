@@ -35,7 +35,7 @@ window.Header = (function() {
 
     target.classList.add('is-open');
     backdrop.show();
-    target.querySelector('input').focus();
+    //target.querySelector('input').focus();
   };
 
   var close = function() {
