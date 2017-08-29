@@ -648,6 +648,7 @@ class Organisation(_BaseModel):
             'map': {
                 'id': 'IdOrganisation',
                 'name': 'Organisation',
+                'domestic_name': 'OrganisationDomesticName',
                 'ptype': 'IsProgrammeOrProjectOrg',
                 'orgtype': ('name', 'OrganisationType'),
                 'nuts': 'NUTSCode',
@@ -675,6 +676,7 @@ class Organisation(_BaseModel):
     country = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
+    domestic_name = models.CharField(max_length=256, null=True)
     geotarget = models.CharField(max_length=256)
     nuts = models.CharField(max_length=5)
 
@@ -696,7 +698,6 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
                 'programme': 'ProgrammeCode',
                 'project': 'ProjectCode',
                 'is_programme': 'IsProgrammeOrProjectOrg',
-                'is_implementing_partner': 'IsImplementingPartner',
             }
         },
     ]
@@ -727,7 +728,6 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
     programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles')
     project = models.ForeignKey(Project, null=True, related_name='organisation_roles')
     is_programme = models.NullBooleanField(default=None)
-    is_implementing_partner = models.NullBooleanField()
 
     class Meta(_BaseModel.Meta):
         unique_together = (

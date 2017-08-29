@@ -7,3 +7,4 @@
     {% endif %}
 {% endfor %}
 {{ object.country }}
+{{ object.domestic_name }}

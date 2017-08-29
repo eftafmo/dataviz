@@ -176,12 +176,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.FacetCharField(model_attr='country')
     city = indexes.FacetCharField(model_attr='city')
     # nuts = indexes.FacetCharField(model_attr='nuts')
-    geotarget = indexes.FacetCharField(model_attr='geotarget')
+    geotarget = indexes.FacetCharField(model_attr='geotarget', null=True)
     # nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
     role_ss = indexes.FacetMultiValueField()
 
     # extra data; avoid db hit
     name = indexes.CharField(model_attr='name', indexed=False)
+    domestic_name = indexes.CharField(model_attr='domestic_name', indexed=False, null=True)
 
     def get_model(self):
         return Organisation
