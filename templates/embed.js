@@ -23,7 +23,7 @@ Usage:
 
 {% for f in cssfiles -%}
   {% set c = 'c%d' % (loop.index0) %}
-  var {{ c }} = document.createElement("style");
+  var {{ c }} = document.createElement("link");
   {{ c }}.rel = "stylesheet";
   {{ c }}.type = "text/css";
   {{ c }}.href = "{{ f }}";
