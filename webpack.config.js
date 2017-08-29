@@ -94,6 +94,10 @@ module.exports = {
               use: "css-loader",
               fallback: "vue-style-loader",
             }),
+            less: cssExtractor.extract({
+              use: "css-loader!less-loader",
+              fallback: "vue-style-loader",
+            }),
           }),
         },
       },
