@@ -161,7 +161,7 @@
     transition: all 100ms ease-out;
   }
   .is-open .header-search{
-    top: 327px;
+    top: 270px;
     opacity: 1;
     display: flex;
     justify-content: center;
