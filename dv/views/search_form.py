@@ -38,7 +38,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
                     query += ' OR '
                 query += '"{}"'.format(sqs.query.clean(value))
             if query:
-                sqs = sqs.narrow('{}:{}'.format(facet_name, query))
+                sqs = sqs.narrow('{}:({})'.format(facet_name, query))
 
         return sqs
 
