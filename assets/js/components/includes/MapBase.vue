@@ -240,6 +240,8 @@ export default Vue.extend({
       terrain_stroke_width: 0.8,
       region_stroke_width: 0.2,
       graticule_stroke_width: 0.2,
+
+      LI_zoom_factor: 5,
     };
   },
 
@@ -483,13 +485,12 @@ export default Vue.extend({
 
     setupLI(sel) {
       // Liechtenstein needs a bit of magnification
-      const scale = 5,
+      const scale = this.LI_zoom_factor,
             frame_padding = 1.7;
 
       const geo = this.geodetails[sel.datum().id];
 
       sel
-        .attr("vector-effect","non-scaling-stroke")
         .attr("transform", (d) => {
           // though incorrect, centroid looks better than center
           const center = geo.centroid,
@@ -726,7 +727,9 @@ export default Vue.extend({
       const k = this.getScaleFactor(),
             terrain_stroke = this.terrain_stroke_width / k,
             region_stroke = this.region_stroke_width / k,
-            graticule_stroke = this.graticule_stroke_width / k;
+            graticule_stroke = this.graticule_stroke_width / k,
+
+            LI_stroke = terrain_stroke / this.LI_zoom_factor;
 
       return `
         .viz.map .chart .terrain {
@@ -739,6 +742,9 @@ export default Vue.extend({
 
         .viz.map .chart .regions .level0 {
           stroke-width: ${terrain_stroke};
+        }
+        .viz.map .chart .regions .LI {
+          stroke-width: ${LI_stroke};
         }
 
         .viz.map .chart .base .graticule {
