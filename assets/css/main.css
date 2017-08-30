@@ -144,11 +144,12 @@ h2 {
       position: sticky;
   }
 }
+
 /*iphone stuff*/
 @media (max-width: 760px){
   input {
-    -webkit-appearance: none;
-    -webkit-border-radius: 0;
+    -webkit-appearance: none!important;
+    -webkit-border-radius: 0!important;
     border-radius: 0;
   }
 }
