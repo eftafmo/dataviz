@@ -35,10 +35,13 @@
 
 
 <style lang="less">
-.overview-viz {
+.dataviz-eea-grants .overview-viz {
   @media(min-width: 800px){
     margin-top: -5rem;
   }
+}
+
+.overview-viz {
   .chart {
     .fms > g.item, .beneficiaries > g.item {
       cursor: pointer;
