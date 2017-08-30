@@ -758,6 +758,14 @@ class ProjectList(ListAPIView):
         beneficiary = self.request.query_params.get('beneficiary', None)
         if beneficiary is not None:
             queryset = queryset.filter(state_id=beneficiary)
+        programme_area_name = self.request.query_params.get('area', None)
+        if programme_area_name:
+            queryset = queryset.filter(programme_area__name=programme_area_name)
+        else:
+            # Don't add sector name if programme area is present
+            sector_name = self.request.query_params.get('sector', None)
+            if sector_name:
+                queryset = queryset.filter(programme_area__priority_sector__name=sector_name)
         is_dpp = self.request.query_params.get('is_dpp', None)
         if is_dpp:
             queryset = queryset.filter(is_dpp=True)
@@ -772,4 +780,4 @@ class ProjectList(ListAPIView):
                 q = q & ~Q(organisation_roles__organisation__country__in=EEA_DONOR_STATES.keys())
                 # Django ORM generates an unnecessary complicated query here
             queryset = queryset.filter(q)
-        return queryset.order_by('code')
+        return queryset.order_by('code').distinct()

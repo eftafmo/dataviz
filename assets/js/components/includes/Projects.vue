@@ -121,6 +121,12 @@ export default Vue.extend({
         if (FILTERS['donor']) {
           url = url + '&donor=' + FILTERS['donor'];
         }
+        if (FILTERS['sector']) {
+          url = url + '&sector=' + FILTERS['sector'];
+        }
+        if (FILTERS['area']) {
+          url = url + '&area=' + FILTERS['area'];
+        }
         if (this.extra) {
           url = url + '&' + this.extra;
         }
