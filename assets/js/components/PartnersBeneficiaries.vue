@@ -68,8 +68,8 @@ export default StatesBarChart.extend({
       }
       if ( num_PJPT ) {
         datatxt +=  `<li>${num_PJPT} project ` +
-          this.singularize('promoters', num_PJPT) + ` working with ${num_prj_dpp} donor ` +
-          this.singularize('partners', num_prj_dpp) + ` in ${num_prj_dpp} ` +
+          this.singularize('promoters', num_PJPT) + ` working with ${num_dpp} donor ` +
+          this.singularize('partners', num_dpp) + ` in ${num_prj_dpp} ` +
           this.singularize('projects', num_prj_dpp);
       }
       return `
