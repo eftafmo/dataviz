@@ -22,7 +22,7 @@
       <!-- <td>  </td> -->
       <td>{{organizations.countries.size()}}</td>
       <td>{{organizations.programmes.size()}}</td>
-      <td>{{organizations.projects.size()}}</td>
+      <td>{{organizations.projects}}</td>
      </tr>
    </tbody>
  </table>
@@ -179,15 +179,13 @@ export default Component.extend({
             org = item.organizations[org_id] = {
               countries: d3.set(),
               programmes: d3.set(),
-              projects: d3.set(),
+              projects: 0,
               name: d.PJDPP[org_id]['name']
             }
           }
           org.countries.add(d.beneficiary);
           org.programmes.add(d.programme);
-          for (const prj_code in d.projects) {
-            org.projects.add(prj_code)
-          }
+          org.projects += d.PJDPP[org_id]['prj']
         }
       }
 
