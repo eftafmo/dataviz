@@ -78,13 +78,14 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         ).distinct())
 
     def prepare_outcome_ss(self, obj):
-        return list(ProgrammeOutcome.objects.filter(
+        outcomes = ProgrammeOutcome.objects.filter(
             programme=obj,
         ).exclude(
             outcome__fixed_budget_line=True,
         ).values_list(
             'outcome__name', flat=True
-        ).distinct())
+        ).distinct()
+        return [o.strip() for o in outcomes]
 
     def prepare_outcome_ss_auto(self, obj):
         return ' '.join(self.prepare_outcome_ss(obj))
@@ -140,7 +141,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return ['{}: {}'.format(obj.programme.code, obj.programme.name)]
 
     def prepare_outcome_ss(self, obj):
-        return [obj.outcome.name]
+        return [obj.outcome.name.strip()]
 
     def prepare_geotarget(self, obj):
         if len(obj.nuts) > 2:
