@@ -35,7 +35,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
             query = ''
             for value in facet_values:
                 if query:
-                    query += ' OR '
+                    query += ' AND '
                 query += '"{}"'.format(sqs.query.clean(value))
             if query:
                 sqs = sqs.narrow('{}:({})'.format(facet_name, query))
