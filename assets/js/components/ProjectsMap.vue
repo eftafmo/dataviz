@@ -207,8 +207,9 @@ export default BaseMap.extend({
     },
 
     tooltipTemplate(d) {
-      const allocation = d.allocation || 0;
-      const num_projects = this.getprojectcount(d)
+      const level = this.getNutsLevel(d.id)
+      const allocation = d.allocation || 0,
+            num_projects = this.getprojectcount(d)
 
       let details = `
         <li>${ this.number(num_projects) } ` + this.singularize(`projects`, num_projects) + `</li>
@@ -222,7 +223,7 @@ export default BaseMap.extend({
         `;
       }
 
-      if (d.id.length == 2) {
+      if (level === 0) {
         return `
           <div class="title-container">
             <svg>
@@ -233,8 +234,11 @@ export default BaseMap.extend({
           <ul>
             ${ details }
           </ul>
+          <span class="action">Click to filter by beneficiary state</span>
         `;
       } else {
+        const action = level == 3 ? "Click to filter news by region"
+                                  : `Click to display NUTS${level} regions`
         return `
           <div class="title-container">
             <svg>
@@ -245,6 +249,7 @@ export default BaseMap.extend({
           <ul>
             ${ details }
           </ul>
+          <span class="action">${ action }</span>
         `;
       }
     },

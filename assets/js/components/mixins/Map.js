@@ -54,6 +54,10 @@ export default {
   },
 
   methods: {
+    getNutsLevel(id) {
+      return id.length - 2
+    },
+
     handleMapRendered() {
       this.map_rendered = true
     },
