@@ -32,7 +32,7 @@
       :opacityfunc="opacityfunc"
   >
     <region-details
-        :region="current_region"
+        :region="current_region_data"
     ></region-details>
   </map-base>
 
@@ -185,6 +185,7 @@ export default Chart.extend({
       ),
 
       current_region: null,
+      current_region_data: null,
       hovered_region: null,
     }
   },
@@ -217,8 +218,9 @@ export default Chart.extend({
     // we'll need this for custom logic
     this.is_single_country = !!(this.embedded && this.filters.beneficiary)
 
-    // this one's used to keep zooming code away from handleFilterBeneficiary
-    this._prev_beneficiary = null
+    // these ones are used to unify beneficiary / region handling
+    this.current_region = this.filters.beneficiary
+    this._prev_region = null
   },
 
   computed: {
@@ -311,14 +313,15 @@ export default Chart.extend({
       throw new Error("Not implemented");
     },
 
-    renderRegionData(state, regiondata, t) {
+    renderRegionData(region, regiondata, t) {
       throw new Error("Not implemented");
     },
 
     doRenderRegionData(t) {
-      const state = this.filters.beneficiary;
-      // bail out if no beneficiary selected.
-      if (state === null) return;
+      const region = this.current_region
+      if (region === null) return
+
+      const state = region.substr(0, 2)
 
       let dataset = this._region_data[state];
 
@@ -339,10 +342,10 @@ export default Chart.extend({
 
           dataset = this._region_data[state] = data;
           if(t_expired) t = undefined
-          this.renderRegionData(state, this.computeRegionData(dataset), t);
+          this.renderRegionData(region, this.computeRegionData(dataset), t)
         } );
       } else {
-        this.renderRegionData(state, this.computeRegionData(dataset), t);
+        this.renderRegionData(region, this.computeRegionData(dataset), t)
       }
     },
 
@@ -455,16 +458,19 @@ export default Chart.extend({
     },
 
     doZoom(t) {
-      const newid = this.filters.beneficiary,
-            oldid = this._prev_beneficiary;
+      const newid = this.current_region,
+            oldid = this._prev_region;
 
       if (newid == oldid) return
 
       const $this = this
 
-      const _showregions = (id, yes) => {
-        const regions = this.chart.selectAll(
-            `.regions > .${id}.level${this.zoomed_nuts_level}`
+      const _showchildren = (id, yes) => {
+        const level = id.length == 2 ? this.zoomed_nuts_level
+                                     : id.length - 2 + 1
+
+        const parent = this.chart.selectAll(
+            `.regions > .${id}.level${level}`
           )
           //.raise()
           .classed("transitioning", true)
@@ -483,8 +489,10 @@ export default Chart.extend({
           })
       }
 
-      const _showstate = (id, yes) => {
-        const state = this.chart.select(".regions > .level0")
+      const _showregion = (id, yes) => {
+        const level = id.length == 2 ? 0 : id.length - 2
+
+        const region = this.chart.select(`.regions > .level${level}`)
           //.lower()
           .selectAll(`.${id}`) // must selectAll, or else data goes poof
           .style("display", null)
@@ -512,20 +520,23 @@ export default Chart.extend({
       }
 
       if (newid) {
-        _showregions(newid, true)
-        _showstate(newid, false)
+        _showchildren(newid, true)
+        _showregion(newid, false)
       }
 
       if (oldid) {
-        _showregions(oldid, false)
-        _showstate(oldid, true)
+        // hide old region unless it's an ancestor
+        if (!newid || oldid != newid.substr(0, oldid.length))
+          _showchildren(oldid, false)
+        _showregion(oldid, true)
       }
 
       this.map.zoomTo(newid, t)
-      this._prev_beneficiary = newid
+      this._prev_region = newid
     },
 
     handleFilterBeneficiary(v) {
+      this.current_region = v
       if (v) this.map.renderRegions(v, this.zoomed_nuts_level)
       this.tip.hide()
       this.render()

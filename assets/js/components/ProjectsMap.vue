@@ -106,14 +106,14 @@ const RegionDetails = {
   computed: {
     label() {
       return this.region.id.length == 2 ? this.root_label
-                                        : this.get_nuts_label(this.region)
+                                        : this.self.get_nuts_label(this.region.id)
     },
 
     box() {
       let label = this.label // unly used for calculations
 
       // unless the region's name is smaller than the root_label
-      if (this.region.id.length !== 2 && label.length < this.root_label)
+      if (this.region.id.length !== 2 && label.length < this.root_label.length)
         label = this.root_label
 
       return {
@@ -161,12 +161,7 @@ export default BaseMap.extend({
       zoomed_nuts_level: 2,
 
       all_nuts_levels: [0, 2, 3],
-
-      region_details_props: {
-        current_region: null,
-        parent: this,
-      },
-    };
+    }
   },
 
   computed: {
@@ -283,13 +278,22 @@ export default BaseMap.extend({
       bubble.classed("hovered", over)
     },
 
+    clickfunc(d, i, group) {
+      const self = this.$super.clickfunc(d, i, group)
+
+      if (!self) return
+
+      if (d.id.length != 2)
+        this.localfilters.region = d.id
+    },
+
     getBubbles(parentid) {
       const main = !parentid
       if (main) parentid = ""
 
       const level = main ? 0
                          : parentid.length == 2 ? 2 // we skip level1
-                                                : parentid.length - 2
+                                                : parentid.length - 2 + 1
 
       const _selector = main ? "" : "." + parentid,
             selector = `g${_selector}.level${level}`
@@ -420,6 +424,7 @@ export default BaseMap.extend({
       if (t === undefined) t = this.getTransition()
 
       const parent = this.getBubbles(parentid)
+
       const regions = parent.selectAll("g.region")
         .data(dataset, d => d.id)
 
@@ -464,7 +469,7 @@ export default BaseMap.extend({
       const dataset = d3.values(aggregated)
       this._renderRegionData(region, dataset, t)
 
-      this.current_region = aggregated[region]
+      this.current_region_data = aggregated[region]
     },
 
     _mkLevelData(parentid, data) {
@@ -552,8 +557,15 @@ export default BaseMap.extend({
         .attr("opacity", Number(!newid));
     },
 
-    handleFilterRegion(newid, oldid) {
-      console.log(newid, oldid)
+    handleFilterRegion(v) {
+      if (v) this.map.renderRegions(v, v.length - 2 + 1)
+      this.tip.hide()
+
+      // don't zoom when level 3
+      if (v && v.length == 5) return
+
+      this.current_region = v
+      this.render()
     },
   },
 });

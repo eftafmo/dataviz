@@ -353,6 +353,11 @@ export default Vue.extend({
   },
 
   methods: {
+    getZoomPadding(id) {
+      // double the zoom padding for lower levels
+      return this.zoom_padding * (id.length == 2 ? 1 : 2)
+    },
+
     cacheGeoDetails(d) {
       const path = this.path;
 
@@ -395,7 +400,7 @@ export default Vue.extend({
       const w = this.width,
             h = this.height,
 
-            spacing = Math.min(w, h) * this.zoom_padding,
+            spacing = Math.min(w, h) * this.getZoomPadding(d.id),
 
             k = Math.min((w - spacing) / dx,
                          (h - spacing) / dy),
@@ -538,20 +543,20 @@ export default Vue.extend({
       delete this.geodata.regions
     },
 
-    renderRegions(states, levels) {
+    renderRegions(regions, levels) {
       if (!this.can_render_regions) {
         console.error("This should never happen either")
         return
       }
 
-      if (typeof states === "string") states = [states]
-      else if (!states || states.length === 0) states = this.all_states
+      if (typeof regions === "string") regions = [regions]
+      else if (!regions || regions.length === 0) regions = this.all_states
       if (typeof levels === "number") levels = [levels]
       else if (!levels || levels.length === 0) levels = this.all_levels
 
       // skip everything already rendered
       // (the simpleton version: look only at the arguments)
-      const _args = states.join("-") + "/" + levels.join("-")
+      const _args = regions.join("-") + "/" + levels.join("-")
       if(this._rendered_regions.indexOf(_args) !== -1)
         return
       else
@@ -588,13 +593,16 @@ export default Vue.extend({
         // let's clean up unneeded data
         source.geometries.forEach( (g, i) => { // we use the index for gc
           const state = g.id.substr(0, 2)
-          if (states.indexOf(state) === -1) {
+          if (regions.map(x => x.substr(0, 2)).indexOf(state) === -1) {
             // clean up stuff that's never gonna be needed
-            if (states === this.all_states || this.all_states.indexOf(state) === -1)
+            if (regions === this.all_states || this.all_states.indexOf(state) === -1)
               _gc.push(i)
 
             return
           }
+
+          if (regions.find(r => g.id.substr(0, r.length) == r) === undefined) return
+
           // always cleanup what gets rendered
           _gc.push(i)
 
@@ -623,7 +631,7 @@ export default Vue.extend({
         })
         .attr("opacity", this.opacityfunc)
 
-      const regions = containers.merge(centered).selectAll("path")
+      const shapes = containers.merge(centered).selectAll("path")
         .data(
           x => {
             const geodata = this.geodata.regions
@@ -668,7 +676,7 @@ export default Vue.extend({
       this._cleanupGeoData(_gcs)
 
       this.regions_rendered = true
-      if (!regions.empty()) this.$emit("regions-rendered", regions)
+      if (!shapes.empty()) this.$emit("regions-rendered", shapes)
     },
 
     zoomTo(id, eventfuncs, t) {

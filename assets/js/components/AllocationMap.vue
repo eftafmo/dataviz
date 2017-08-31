@@ -96,7 +96,7 @@ export default BaseMap.extend({
       // and TODO: disable filtering for 0 / missing items
     },
 
-    renderRegionData(state, regiondata, t) {
+    renderRegionData(region, regiondata, t) {
       if (t === undefined) t = this.getTransition();
 
       const values = regiondata.map( (x) => x.allocation ),
@@ -111,7 +111,7 @@ export default BaseMap.extend({
                   .range([.1, 1]);
 
       const regions = this.chart
-                          .selectAll(`g.regions > g.${state} > path`)
+                          .selectAll(`g.regions > g.${region} > path`)
                           .data(regiondata, (d) => d.id );
 
       // protect against data that has unknown NUTS codes
