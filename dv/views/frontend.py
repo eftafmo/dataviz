@@ -332,7 +332,8 @@ class EmbedComponent(TemplateView):
         except KeyError:
             raise Http404
 
-        jsfiles = webpack.get_files('scripts', 'js')
+        
+        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js') 
         cssfiles = webpack.get_files('styles', 'css')
 
         def geturl(f):

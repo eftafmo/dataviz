@@ -70,7 +70,10 @@
         </div>
       </div>
   </footer>
-  {% render_bundle 'scripts' 'js' %}
+  {% render_bundle 'common' 'js' %}
+  {% render_bundle 'site' 'js' %}
+  {% render_bundle 'dataviz' 'js' %}
+  
 {% block finally %}
 {% endblock %}
 </body>
