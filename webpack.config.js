@@ -48,12 +48,19 @@ module.exports = {
   context: __dirname,
   devtool: DEBUG ? "inline-source-map" : false,
   entry: {
-    scripts: [
-      path.resolve(asset_dir, "js/main.js")
+    
+    site: [
+          path.resolve(asset_dir, "js/site.js")
     ],
+
+    dataviz: [
+        path.resolve(asset_dir, "js/dataviz.js")
+    ],
+    
     styles: [
       path.resolve(asset_dir, 'css/main.css')
     ]
+   
   },
   output: {
     path: output_dir,
@@ -151,6 +158,9 @@ module.exports = {
       //   verbose: true,
       //   exclude: ['webpack-stats.json']
       // }),
+	  new webpack.optimize.CommonsChunkPlugin({
+		name: 'common'
+	  }),
       new webpack.NoEmitOnErrorsPlugin(),
       new BundleTracker({path: build_dir, filename: "webpack-stats.json"}),
       /*
