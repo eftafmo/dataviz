@@ -56,7 +56,7 @@
     text-align: right;
 
     &:before {
-      content:'~';
+      content:'- ';
     }
   }
 
