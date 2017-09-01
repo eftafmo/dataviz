@@ -1,0 +1,6 @@
+.git
+sandbox
+node_modules
+provisioning
+solr
+*.log
