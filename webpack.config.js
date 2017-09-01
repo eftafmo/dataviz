@@ -158,9 +158,9 @@ module.exports = {
       //   verbose: true,
       //   exclude: ['webpack-stats.json']
       // }),
-	  new webpack.optimize.CommonsChunkPlugin({
-		name: 'common'
-	  }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'common'
+      }),
       new webpack.NoEmitOnErrorsPlugin(),
       new BundleTracker({path: build_dir, filename: "webpack-stats.json"}),
       /*
