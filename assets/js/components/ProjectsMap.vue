@@ -207,6 +207,10 @@ export default BaseMap.extend({
     },
 
     tooltipTemplate(d) {
+      // TODO: FIXME: temporarily disable mouseover for regions without data
+      // (that is, when zoomed to level 3, siblings of the parent region)
+      if (d === undefined) return
+
       const level = this.getNutsLevel(d.id)
       const allocation = d.allocation || 0,
             num_projects = this.getprojectcount(d)
@@ -474,10 +478,15 @@ export default BaseMap.extend({
       const dataset = d3.values(aggregated)
       this._renderRegionData(region, dataset, t)
 
-      this.current_region_data = aggregated[region]
+
+console.log(this.current_region)
+      this.region_data = aggregated
     },
 
     _mkLevelData(parentid, data) {
+
+console.log(data)
+
       // re-aggregate the data to compute per-level stuff
       const out = {}
       const plen = parentid.length
@@ -563,13 +572,12 @@ export default BaseMap.extend({
     },
 
     handleFilterRegion(v) {
-      if (v) this.map.renderRegions(v, v.length - 2 + 1)
+      const level = v && this.getNutsLevel(v)
+      if (level != 3) this.current_region = v
+      if (v) this.map.renderRegions(v, level + 1)
       this.tip.hide()
-
       // don't zoom when level 3
-      if (v && v.length == 5) return
-
-      this.current_region = v
+      if (v && level == 3) return
       this.render()
     },
   },

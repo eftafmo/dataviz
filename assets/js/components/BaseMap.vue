@@ -185,8 +185,9 @@ export default Chart.extend({
       ),
 
       current_region: null,
-      current_region_data: null,
       hovered_region: null,
+
+      region_data: null, // the aggregated region data
     }
   },
 
@@ -211,9 +212,8 @@ export default Chart.extend({
       { source: "fm", destination: "fms", type: String }
     )
 
-    // cache for region-level data
+    // cache for raw region-level data
     this._region_data = {} // raw
-    this.region_data = {} // aggregated
 
     // we'll need this for custom logic
     this.is_single_country = !!(this.embedded && this.filters.beneficiary)
@@ -241,6 +241,11 @@ export default Chart.extend({
         })
 
       return initials
+    },
+
+    current_region_data() {
+      return this.region_data && this.current_region
+             && this.region_data[this.current_region]
     },
 
     data() {

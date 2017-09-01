@@ -19,7 +19,7 @@ export default {
   },
 
   methods: {
-    handleFilterRegion() {
+    handleFilterRegion(val, old) {
       const type = "region"
       this.handleFilter(type, val, old)
     },
