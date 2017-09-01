@@ -26,7 +26,7 @@ if [ -z "$1" ]; then
   init &&
   wait_solr &&
   exec gunicorn dv.wsgi:application \
-         --name gemet \
+         --name eeag \
          --bind 0.0.0.0:8000 \
          --workers $NUM_WORKERS \
          --access-logfile - \

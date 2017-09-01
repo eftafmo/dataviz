@@ -31,18 +31,21 @@ COPY ./docker/entrypoint.sh /bin/
 
 ADD requirements.txt \
     ./docker/requirements-docker.txt \
+    package.json \
     $APP_HOME/
 
 WORKDIR $APP_HOME
+
+RUN npm install
+ENV NODE_ENV=production
+
 RUN pip install -r requirements-docker.txt
 
 ADD . $APP_HOME
 COPY ./docker/localsettings.py $APP_HOME/dv/
+RUN npm run build
 
 RUN touch ~/.bashrc
 
-RUN npm install
-ENV NODE_ENV=production
-RUN npm run build
 
 ENTRYPOINT ["entrypoint.sh"]
