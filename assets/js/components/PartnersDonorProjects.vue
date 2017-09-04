@@ -30,7 +30,7 @@
 </template>
 
 <style lang="less">
-.donor-projects {
+.dataviz .donor-projects {
   width: 100%;
   @media(max-width: 800px){
     overflow: auto;

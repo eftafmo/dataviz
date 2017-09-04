@@ -41,7 +41,7 @@
   }
 }
 
-.overview-viz {
+.dataviz .overview-viz {
   .chart {
     .fms > g.item, .beneficiaries > g.item {
       cursor: pointer;

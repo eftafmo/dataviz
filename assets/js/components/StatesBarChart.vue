@@ -50,7 +50,7 @@
 // defs
 @state_highlight: #e6e6e6;
 
-.viz.states {
+.dataviz .viz.states {
   position: relative;
 
   @media (min-width:1400px){

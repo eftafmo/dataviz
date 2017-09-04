@@ -59,7 +59,7 @@
 </template>
 
 <style lang="less">
-.viz.map.allocation {
+.dataviz .viz.map.allocation {
   @beneficiary: #ddd;
 
   .chart {

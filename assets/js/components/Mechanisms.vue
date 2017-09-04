@@ -20,7 +20,7 @@
 
 
 <style lang="less">
-.viz.fms {
+.dataviz .viz.fms {
   position: relative;
 
   svg {

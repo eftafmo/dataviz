@@ -93,7 +93,7 @@
 
 
 <style lang="less">
-.viz.sectors {
+.dataviz .viz.sectors {
   // defs
   @text-colour: #444;
   // these need to be synced with js
