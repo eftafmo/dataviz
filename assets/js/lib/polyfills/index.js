@@ -681,9 +681,3 @@ for (var i = stickyElements.length - 1; i >= 0; i--) {
 }
 
 
-var FastClick = require('fastclick');
-if ('addEventListener' in document) {
-    document.addEventListener('DOMContentLoaded', function() {
-        FastClick.attach(document.body);
-    }, false);
-}
