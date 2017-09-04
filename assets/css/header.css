@@ -66,14 +66,14 @@
   .header-menu {
     display: none;
     position: absolute;
-    top: 100%;
     left: 0;
     right: 0;
+    top: -500%;
     background: #fff;
     padding: 1.5rem;
     border-top: 1px solid #ddd;
     text-align: right;
-    opacity: 0;
+    // opacity: 0;
     box-shadow: -1px 2px 3px #8c8b8b;
     transition: opacity .3s ease-in-out, -webkit-transform .3s ease-in-out;
   }
@@ -81,6 +81,8 @@
   .is-open .header-menu{
       display: block;
       opacity: 1;
+    top: 100%;
+      
       animation: anim .3s ease-in-out
   }
 
