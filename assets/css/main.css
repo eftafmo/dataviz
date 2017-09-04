@@ -1,4 +1,3 @@
-@import '~normalize.css';
 
 @import url('font-awesome.css');
 @import url('open-sans-fonts.css');
@@ -28,7 +27,6 @@
 
 body {
   margin: 0;
-  font-family: 'Arial', 'Open sans', sans-serif;
   font-size: 1.5rem;
   line-height: 1.3334;
   background-color: #fff;
