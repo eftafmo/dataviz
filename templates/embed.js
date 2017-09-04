@@ -47,6 +47,7 @@ Usage:
 
   var el = document.createElement("div");
   el.id = "{{ elid }}";
+  el.classList.add('dataviz');
   s.parentNode.insertBefore(el, s);
 
 {% set inlinescript -%}
