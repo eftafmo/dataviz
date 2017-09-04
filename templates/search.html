@@ -87,12 +87,12 @@
             <div>
               <b>Funded by: </b>
               {% for fm in res.financial_mechanism_ss %}
-                <span>{{ fm }}<span>{% if not forloop.last %} and {% endif %}
+                <span>{{ fm }}</span>{% if not forloop.last %} and {% endif %}
               {% endfor %}
             </div>
             {% with res.priority_sector_ss|length as num_sectors %}
               {% if num_sectors == 1 %}
-                <div><b>Sector:</b> <span>{{ res.priority_sector_ss.0 }}<span></div>
+                <div><b>Sector:</b> <span>{{ res.priority_sector_ss.0 }}</span></div>
                 {% with res.programme_area_ss|length as num_areas %}
                 <div><b>Programme area{{ num_areas|pluralize }}:</b>
                   {% for pa in res.programme_area_ss %}
@@ -167,7 +167,6 @@
           {% else %}
             {{ res.text }}
           {% endif %}
-          </p>
         </div>
       </li>
       {% endfor %}
