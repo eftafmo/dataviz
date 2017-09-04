@@ -35,13 +35,17 @@
 
 
 <style lang="less">
-.dataviz .overview-viz {
+.embed_dataviz .overview-viz {
   @media(min-width: 800px){
-    margin-top: -5rem;
+    margin-top: 1rem!important;
   }
 }
 
 .dataviz .overview-viz {
+  @media(min-width: 800px){
+    margin-top: -5rem;
+  }
+
   .chart {
     .fms > g.item, .beneficiaries > g.item {
       cursor: pointer;
