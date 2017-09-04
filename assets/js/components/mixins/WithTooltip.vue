@@ -1,7 +1,7 @@
 <style lang="less">
 
-.d3-tip {
-
+.dataviz .d3-tip {
+  font-family: inherit;
  li {
   list-style-type: none;
  }
