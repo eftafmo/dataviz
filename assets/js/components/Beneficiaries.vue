@@ -1,12 +1,3 @@
-<style lang="less">
-.viz.partners.states .chart-legend {
-  .value {
-    color: #c41230;
-  }
-}
-</style>
-
-
 <script>
 import * as d3 from 'd3';
 

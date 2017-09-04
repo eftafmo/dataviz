@@ -49,6 +49,7 @@
 
       sup.value {
         font-weight: bold;
+        color: #868686;
       }
     }
 
