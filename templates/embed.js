@@ -45,9 +45,12 @@ Usage:
     return;
   }
 
+  var parent = document.createElement('div');
+  parent.classList.add('dataviz');
+
   var el = document.createElement("div");
+  parent.appendChild(el);
   el.id = "{{ elid }}";
-  el.classList.add('dataviz');
   s.parentNode.insertBefore(el, s);
 
 {% set inlinescript -%}
