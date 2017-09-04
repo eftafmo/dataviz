@@ -1,4 +1,4 @@
-.dataviz-eea-grants .container {
+.dataviz .container {
   max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
@@ -6,7 +6,7 @@
   padding-right: 1.5rem;
 }
 @media (min-width: 769px) {
-  .dataviz-eea-grants .container {
+  .dataviz .container {
     padding-left: 3rem;
     padding-right: 3rem;
   }
@@ -56,7 +56,7 @@
     float: right;
   }
 
-  .dataviz-eea-grants .container {
+  .dataviz .container {
     max-width: 1380px;
   }
 

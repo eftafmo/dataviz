@@ -35,7 +35,7 @@
 
 
 <style lang="less">
-.dataviz-eea-grants .overview-viz {
+.dataviz .overview-viz {
   @media(min-width: 800px){
     margin-top: -5rem;
   }
