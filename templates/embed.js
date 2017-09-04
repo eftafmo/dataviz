@@ -49,9 +49,9 @@ Usage:
   parent.classList.add('dataviz');
 
   var el = document.createElement("div");
-  parent.appendChild(el);
   el.id = "{{ elid }}";
-  s.parentNode.insertBefore(el, s);
+  parent.appendChild(el)
+  s.parentNode.insertBefore(parent, s);
 
 {% set inlinescript -%}
   {#- careful: only apostrophes here, and double quotes below -#}
