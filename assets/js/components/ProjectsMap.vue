@@ -50,11 +50,22 @@
       opacity: .75;
     }
 
+    .reset-container {
+      cursor: pointer;
+      fill: transparent;
+    }
+
     .bubble;
 
     text.label {
       font-weight: 400;
       text-anchor: start;
+      fill: #000;
+    }
+    text.reset-button{
+        font-weight: 400;
+        cursor: pointer;
+      text-anchor: end;
       fill: #000;
     }
   }
@@ -94,7 +105,22 @@ const RegionDetails = {
             :x="getradius(' ' + getprojectcount(region))"
             dy=".33em"
       >{{ label }}</text>
+      <text class="reset-button"
+        :x="box.x + box.width + 50"
+        dy=".33em"
+         width="50"
+        :height="box.height"
+      >reset</text>
+       <rect class="reset-container"
+        :x="box.x + box.width"
+        :y="box.y"
+        width="60"
+        :height="box.height"
+        @click="resetMap()"
+      />
+  
     </g>
+
   `,
 
   data() {
@@ -137,7 +163,11 @@ const RegionDetails = {
   methods: {
     getprojectcount(d) { return this.self.getprojectcount(d) },
     getradius(txt) { return this.self.getradius(txt) },
+    resetMap(){
+      this.self.handleFilterBeneficiary(null, null);
+    },
   },
+
 }
 
 
@@ -288,13 +318,19 @@ export default BaseMap.extend({
     },
 
     clickfunc(d, i, group) {
+      const $this = this;
       const self = this.$super.clickfunc(d, i, group)
 
       if (!self) return
 
       if (d.id.length != 2)
         this.localfilters.region = d.id
+
+
+     
+
     },
+
 
     getBubbles(parentid) {
       const main = !parentid
@@ -479,13 +515,13 @@ export default BaseMap.extend({
       this._renderRegionData(region, dataset, t)
 
 
-console.log(this.current_region)
+// console.log(this.current_region)
       this.region_data = aggregated
     },
 
     _mkLevelData(parentid, data) {
 
-console.log(data)
+// console.log(data)
 
       // re-aggregate the data to compute per-level stuff
       const out = {}
