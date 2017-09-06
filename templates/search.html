@@ -685,7 +685,8 @@
     $visible_checkboxes = $('.visible-checkboxes');
     $hidden_checkboxes = $('.hidden-checkboxes');
 
-    $('.visible-checkboxes label').on('click',function(){
+    $('.visible-checkboxes label').on('click',function(e){
+      e.preventDefault()
       $target = $hidden_checkboxes.find("input#"+$(this).attr('for')+"");
       console.log($target)
       $target.prop('checked', true);
@@ -693,9 +694,6 @@
       $("#main-search-form").attr("action", action_url);
        $("#main-search-form").submit();
     })
-
-
-
 
     });
   </script>
