@@ -1,44 +1,37 @@
 <template>
-    <ul class="results">
-       <li v-for="item in data" class="partner-result clearfix">
-          <div class="partner-result-achievement"> {{ item.achievement }}{{ item.unit }}</div>
-          <div class="partner-result"> {{ item.indicator }} </div>
-       </li>
-    </ul>
+    <div class="results">
+       <dl v-for="item in data" class="partner-result clearfix">
+          <dt class="partner-result-achievement">{{ item.achievement }}{{ item.unit }}</dt>
+          <dd class="partner-result">{{ item.indicator }} </dd>
+       </dl>
+    </div>
 </template>
 
 
 <style lang="less">
 .results {
-  li {
-    list-style-type: none;
+  dl dt {
+      float: left;
+      font-weight: bold;
+      margin-right: 10px;
+      padding: 5px;
+      width: 60px;
+      text-align: center;
+      box-shadow: 0px 0px 2px #aaa;
+      border: 1px solid #50b9ff;
+      background: #50b9ff;
+      color: white;
+      font-size: 2rem;
   }
-
-  ul {
-    padding-left: 0;
+   
+  dl dd {
+    margin:2px 0; 
+    font-size: 1.4rem;
   }
 
   small {
     color: #898989;
   }
-
-  .partner-result {
-    margin-bottom: .5rem;
-    padding-left: .5rem;
-  }
-
-  .partner-result-achievement {
-    display: inline;
-    font-size: 2rem;
-    color: black;
-  }
-
-  .partner-result {
-    display: inline;
-    font-size: 1.4rem;
-
-  }
-
 }
 </style>
 
