@@ -239,7 +239,13 @@ export default BaseMap.extend({
     tooltipTemplate(d) {
       // TODO: FIXME: temporarily disable mouseover for regions without data
       // (that is, when zoomed to level 3, siblings of the parent region)
-      if (d === undefined) return
+     let tip_element =  document.querySelector('.d3-tip.map')
+      if (d === undefined) {
+        tip_element.style.display = 'none'
+        return
+      }
+      else 
+        tip_element.style.display = 'initial'
 
       const level = this.getNutsLevel(d.id)
       const allocation = d.allocation || 0,
