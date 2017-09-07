@@ -63,10 +63,11 @@
       fill: #000;
     }
     text.reset-button{
-        font-weight: 400;
-        cursor: pointer;
+      font-weight: 400;
+      cursor: pointer;
       text-anchor: end;
-      fill: #000;
+      fill: #c41130;
+      font-size: 4rem;
     }
   }
 }
@@ -106,15 +107,15 @@ const RegionDetails = {
             dy=".33em"
       >{{ label }}</text>
       <text class="reset-button"
-        :x="box.x + box.width + 50"
-        dy=".33em"
+        :x="box.x + box.width + 40"
+        dy=".38em"
          width="50"
         :height="box.height"
-      >reset</text>
+      >✖</text>
        <rect class="reset-container"
         :x="box.x + box.width"
         :y="box.y"
-        width="60"
+        width="50"
         :height="box.height"
         @click="resetMap()"
       />
