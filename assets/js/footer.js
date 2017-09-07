@@ -39,7 +39,7 @@ window.Footer = (function() {
     el.className = 'modal-popup';
     el.innerHTML = `
       <button type="button" title="Close popup" class="no-btn close-btn">
-        <span class="fa fa-close"></span>
+        <span class="icon icon-cross"></span>
       </button>
       <div class="content">${content.innerHTML}</div>
     `;

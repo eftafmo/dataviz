@@ -1,7 +1,7 @@
 <template>
   <span class="tag">
     <slot></slot>
-    <span class="fa fa-close" v-if="dismissable" v-on:click="dismiss"></span>
+    <span class="icon icon-close" v-if="dismissable" v-on:click="dismiss"></span>
   </span>
 </template>
 
@@ -13,7 +13,7 @@
     color: #000;
     vertical-align: middle;
   }
-  .tag .fa {
+  .tag .icon {
     opacity: .6;
   }
 </style>

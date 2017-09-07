@@ -5,7 +5,7 @@
      @mouseleave="popperLeave"
 >
   <div class="x-container">
-    <span class="fa fa-share-alt" @click="toggleExpanded"></span>
+    <span class="icon icon-embed" @click="toggleExpanded"></span>
     <div class="content" v-show="expanded">
       <p><small>Paste the following into your markup where you want the embedded component to appear</small></p>
       <p>
@@ -32,8 +32,10 @@
     position: relative;
   }
 
-  .fa {
+  .icon {
     cursor: pointer;
+    font-weight: bold;
+    font-size: 1.5rem;
   }
 
   .content {
