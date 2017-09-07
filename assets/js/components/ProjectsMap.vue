@@ -164,7 +164,7 @@ const RegionDetails = {
     getprojectcount(d) { return this.self.getprojectcount(d) },
     getradius(txt) { return this.self.getradius(txt) },
     resetMap(){
-      this.self.handleFilterBeneficiary(null, null);
+      this.self.filters.beneficiary = null
     },
   },
 
@@ -352,7 +352,8 @@ export default BaseMap.extend({
         .data()
 
       const _classes = [`level${level}`]
-      if (!main) _classes.push(parentid.substr(0, 2))
+      if (!main) _classes.push(parentid)
+
 
       const parent = this.projects
         .append("g")
@@ -475,7 +476,6 @@ export default BaseMap.extend({
 
       const changed = this._oldparentid !== undefined &&
                       this._oldparentid != parentid
-
       // if changed don't transition bubble content,
       regions.call(this.updateProjects,
                    changed ? this.getTransition(0) : t)
@@ -488,7 +488,8 @@ export default BaseMap.extend({
           .attr("opacity", 1)
 
         // (and out the old)
-        this.getBubbles(this._oldparentid)
+       const old_bubbles = this.getBubbles(this._oldparentid)
+        old_bubbles
           .classed("transitioning", true)
           .transition(t)
           .attr("opacity", 0)

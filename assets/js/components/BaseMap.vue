@@ -470,9 +470,13 @@ export default Chart.extend({
 
       const $this = this
 
-      const _showchildren = (id, yes) => {
-        const level = id.length == 2 ? this.zoomed_nuts_level
+      const _showchildren = (id, yes, level) => {
+        if(level == undefined){ 
+           level = id.length == 2 ? this.zoomed_nuts_level
                                      : id.length - 2 + 1
+        }
+        // console.log(`showchildren--${id}-${level}-${yes}`)
+
 
         const parent = this.chart.selectAll(
             `.regions > .${id}.level${level}`
@@ -492,10 +496,26 @@ export default Chart.extend({
               .selectAll("path")
               .attr("fill", $this.region_colour)
           })
+          
+          if(oldid){
+            if(id.length == 4 && level == 3 && yes == false && (newid == null || newid.substring(0,2) != oldid.substring(0,2))) {
+                // console.log("children")
+                _showchildren(id.substring(0, 2), false, 2)
+            }
+          }
+
       }
 
-      const _showregion = (id, yes) => {
-        const level = id.length == 2 ? 0 : id.length - 2
+      const _showregion = (id, yes, level) => {
+        if(level == undefined){ 
+           level = id.length == 2 ? 0 : id.length - 2
+        }
+        
+        // console.log(`showregion--${id}-${level}-${yes}`)
+        // console.log(`--------------------`)
+        // console.log(`--------------------`)
+
+
 
         const region = this.chart.select(`.regions > .level${level}`)
           //.lower()
@@ -522,6 +542,14 @@ export default Chart.extend({
                 .attr("opacity", 1)
             }
           })
+
+          if(oldid){
+            if(id.length == 4 && level == 2 && yes == true && (newid == null || newid.substring(0,2) != oldid.substring(0,2))) {
+              // console.log("region")
+                _showregion(id.substring(0, 2), true, 0)
+            }
+          }
+
       }
 
       if (newid) {
