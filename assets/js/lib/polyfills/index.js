@@ -1,5 +1,6 @@
 import 'url-polyfill';
 import 'form-association-polyfill'
+require('es6-promise').polyfill();
 
 if (!Object.assign) {
   Object.defineProperty(Object, 'assign', {
