@@ -34,6 +34,14 @@
     <region-details
         :region="current_region_data"
     ></region-details>
+
+    <transition appear name="fade" slot="after-map">
+      <div class="toolbox" v-if="current_region">
+        <a title="zoom out"
+           @click="zoomOut()"
+        ><span class="icon-cross"></span></a>
+      </div>
+    </transition>
   </map-base>
 
   <div class="legend" v-if="rendered">
@@ -97,6 +105,33 @@
     top: 0;
     left: 0;
     opacity: 0;
+  }
+
+  .toolbox {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+
+    font-weight: bold;
+
+    * {
+      display: block;
+    }
+
+    a {
+      cursor: pointer;
+      padding: .4em;
+      color: #666;
+      background-color: rgba(238, 238, 238, .7);
+      text-decoration: none;
+      opacity: .7;
+
+      &:hover {
+        color: #3d90f3;
+        background-color: #eee;
+        opacity: 1;
+      }
+    }
   }
 
   .legend {
@@ -263,6 +298,10 @@ export default Chart.extend({
       if (level == this.zoomed_nuts_level)
         return id.substr(0, 2)
       return id.substr(0, id.length - 1)
+    },
+
+    zoomOut() {
+      this.filters.beneficiary = null
     },
 
     tooltipTemplate() {

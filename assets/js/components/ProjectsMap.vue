@@ -64,7 +64,6 @@
     }
     text.reset-button{
       font-weight: 400;
-      cursor: pointer;
       text-anchor: end;
       fill: #c41130;
       font-size: 4rem;
@@ -106,20 +105,6 @@ const RegionDetails = {
             :x="getradius(' ' + getprojectcount(region))"
             dy=".33em"
       >{{ label }}</text>
-      <text class="reset-button"
-        :x="box.x + box.width + 40"
-        dy=".38em"
-         width="50"
-        :height="box.height"
-      >✖</text>
-       <rect class="reset-container"
-        :x="box.x + box.width"
-        :y="box.y"
-        width="50"
-        :height="box.height"
-        @click="zoomOut()"
-      />
-
     </g>
 
   `,
@@ -164,19 +149,6 @@ const RegionDetails = {
   methods: {
     getprojectcount(d) { return this.self.getprojectcount(d) },
     getradius(txt) { return this.self.getradius(txt) },
-
-    zoomOut() {
-      const self = this.self
-      const current = self.localfilters.region
-
-      if (!current) {
-        // no region selected, unset the country
-        self.filters.beneficiary = null
-      } else {
-        // reset to country level
-        self.localfilters.region = null
-      }
-    },
   },
 }
 
@@ -244,6 +216,18 @@ export default BaseMap.extend({
         this.textDimensions.width * (len + 1/2)
       ) / 2 * 1.3 // divided by 2 because radius, and multiplied
       // because a lil' bit of hardcoded extra
+    },
+
+    zoomOut() {
+      const current = this.localfilters.region
+
+      if (!current) {
+        // no region selected, unset the country
+        this.filters.beneficiary = null
+      } else {
+        // reset to country level
+        this.localfilters.region = null
+      }
     },
 
     tooltipTemplate(d) {
