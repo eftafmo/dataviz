@@ -187,7 +187,7 @@ export default Chart.extend({
       current_region: null,
       hovered_region: null,
 
-      region_data: null, // the aggregated region data
+      current_region_data: null,
     }
   },
 
@@ -241,11 +241,6 @@ export default Chart.extend({
         })
 
       return initials
-    },
-
-    current_region_data() {
-      return this.region_data && this.current_region
-             && this.region_data[this.current_region]
     },
 
     data() {
@@ -586,6 +581,7 @@ export default Chart.extend({
     handleFilterBeneficiary(v) {
       this.current_region = v
       if (v) this.map.renderRegions(v, this.zoomed_nuts_level)
+      if (!v) this.current_region_data = null
       this.tip.hide()
       this.render()
     },

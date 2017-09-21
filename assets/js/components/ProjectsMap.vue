@@ -178,7 +178,6 @@ const RegionDetails = {
       }
     },
   },
-
 }
 
 
@@ -313,23 +312,15 @@ export default BaseMap.extend({
       const id = d.id,
             level = id.length - 2
 
-      // the real data is not here
-      // (but don't bother finding it on mouseout)
-      if (over) {
-        if (level == 0)
-          d = this.aggregated[id]
-        else
-          d = this.region_data[id]
-      }
-
-      const self = this.$super._domouse(over, d, i, group)
-
-      if (!self) return
-
       const _selector = level != 0 ? "." + id.substr(0, 2) : "",
             selector = `${_selector}.level${level} > g.region.${id}`
 
       const bubble = this.projects.select(selector)
+
+      // the real data is only attached to the bubbles
+      const self = this.$super._domouse(over, bubble.datum(), i, group)
+      if (!self) return
+
       if (over) bubble.raise()
       bubble.classed("hovered", over)
     },
@@ -411,7 +402,7 @@ export default BaseMap.extend({
       const $this = this
 
       // it's easier to use a fake transition
-      // (then mess with transition vs raw context below)
+      // (than mess with transition vs raw context below)
       if (t === undefined) t = this.getTransition(0)
 
       // since the bubbles always exist, we must simulate enter vs update
@@ -543,7 +534,8 @@ export default BaseMap.extend({
       this._renderRegionData(region, dataset, t)
 
       // keep the current region data around, it's used for "the parent bubble"
-      if (region == this.current_region) this.region_data = aggregated
+      if (region == this.current_region)
+        this.current_region_data = aggregated[region]
     },
 
     _mkLevelData(parentid, data) {
@@ -616,8 +608,6 @@ export default BaseMap.extend({
 
         _aggregate(id, row)
       }
-
-      this.region_data = out
 
       return out
     },
