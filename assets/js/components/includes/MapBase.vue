@@ -568,10 +568,6 @@ export default Vue.extend({
       // we're gonna flatten everything (place all layers at the same level),
       // and group data by its parent region
 
-      function _getRoot(id) {
-        return id.substr(0, 2)
-      }
-
       function _getParent(id) {
         return id.length == 2 ? "" : id.substr(0, id.length - 1)
       }
@@ -621,10 +617,11 @@ export default Vue.extend({
         .append("g")
         .attr("class", d => {
           const cls = []
-          if(d) {
-            const r = _getRoot(d)
+          // add the entire region tree as class names
+          let r = d
+          while (r) {
             cls.push(r)
-            if (d != r) cls.push(d)
+            r = _getParent(r)
           }
           cls.push("level" + _getChildrenLevel(d))
           return cls.join(" ")

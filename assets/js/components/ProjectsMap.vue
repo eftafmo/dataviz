@@ -14,14 +14,14 @@
       font-weight: 600;
       text-anchor: middle;
       fill: #fff;
+
+      user-select: none;
     }
   }
 
   .chart {
-    .regions {
-      &:not(.zero) {
-        cursor: pointer;
-      }
+    .regions .beneficiary {
+      cursor: pointer;
 
       &.zero {
         cursor: not-allowed;
@@ -117,9 +117,9 @@ const RegionDetails = {
         :y="box.y"
         width="50"
         :height="box.height"
-        @click="resetMap()"
+        @click="zoomOut()"
       />
-  
+
     </g>
 
   `,
@@ -164,8 +164,18 @@ const RegionDetails = {
   methods: {
     getprojectcount(d) { return this.self.getprojectcount(d) },
     getradius(txt) { return this.self.getradius(txt) },
-    resetMap(){
-      this.self.filters.beneficiary = null
+
+    zoomOut() {
+      const self = this.self
+      const current = self.localfilters.region
+
+      if (!current) {
+        // no region selected, unset the country
+        self.filters.beneficiary = null
+      } else {
+        // reset to country level
+        self.localfilters.region = null
+      }
     },
   },
 
@@ -245,10 +255,10 @@ export default BaseMap.extend({
         tip_element.style.display = 'none'
         return
       }
-      else 
+      else
         tip_element.style.display = 'initial'
 
-      const level = this.getNutsLevel(d.id)
+      const level = this.getRegionLevel(d.id)
       const allocation = d.allocation || 0,
             num_projects = this.getprojectcount(d)
 
@@ -332,16 +342,10 @@ export default BaseMap.extend({
 
       if (d.id.length != 2)
         this.localfilters.region = d.id
-
-
-     
-
     },
-
 
     getBubbles(parentid) {
       const main = !parentid
-      if (main) parentid = ""
 
       const level = main ? 0
                          : parentid.length == 2 ? 2 // we skip level1
@@ -359,8 +363,12 @@ export default BaseMap.extend({
         .data()
 
       const _classes = [`level${level}`]
-      if (!main) _classes.push(parentid)
-
+      // add all parent regions as class names
+      let r = parentid
+      while(r) {
+        _classes.push(r)
+        r = this.getParentRegion(r)
+      }
 
       const parent = this.projects
         .append("g")
@@ -401,6 +409,10 @@ export default BaseMap.extend({
 
     updateProjects(regions, t) {
       const $this = this
+
+      // it's easier to use a fake transition
+      // (then mess with transition vs raw context below)
+      if (t === undefined) t = this.getTransition(0)
 
       // since the bubbles always exist, we must simulate enter vs update
       const rupdate = regions.filter(function(d) {
@@ -471,6 +483,8 @@ export default BaseMap.extend({
       // finally,
       regions
         .property("_value", this.getprojectcount)
+      regions.exit()
+        .property("_value", 0)
     },
 
     _renderRegionData(parentid, dataset, t) {
@@ -481,56 +495,58 @@ export default BaseMap.extend({
       const regions = parent.selectAll("g.region")
         .data(dataset, d => d.id)
 
-      const changed = this._oldparentid !== undefined &&
-                      this._oldparentid != parentid
-      // if changed don't transition bubble content,
-      regions.call(this.updateProjects,
-                   changed ? this.getTransition(0) : t)
+      // we only go this far if this isn't the current region
+      // (we just want to bind data for the tooltip to work)
+      if (parentid !== this.current_region) return
 
-      if (changed) {
-        // but just fade in the main container
-        parent
-          .style("display", null)
-          .transition(t)
-          .attr("opacity", 1)
+      const changed = this._prev_region != parentid
 
-        // (and out the old)
-       const old_bubbles = this.getBubbles(this._oldparentid)
-        old_bubbles
-          .classed("transitioning", true)
-          .transition(t)
-          .attr("opacity", 0)
-          .on("end", function() {
-            d3.select(this)
-              .style("display", "none")
-              .classed("transitioning", false)
-          })
+      if (!changed) {
+        // if the region is unchanged then bubble content gets transitioned
+        regions.call(this.updateProjects, t)
+        // also make sure the bubbles are visible, because initial render
+        parent.attr("opacity", 1)
+        // and that's it
+        return
       }
-      else parent.attr("opacity", 1)
 
-      this._oldparentid = parentid
+      // otherwise, no transition here
+      regions.call(this.updateProjects)
+
+      // but fade in the main container
+      parent
+        .style("display", null)
+        .transition(t)
+        .attr("opacity", 1)
+
+      // and out the old
+      this.getBubbles(this._prev_region)
+        .classed("transitioning", true)
+        .transition(t)
+        .attr("opacity", 0)
+        .on("end", function() {
+          d3.select(this)
+            .style("display", "none")
+            .classed("transitioning", false)
+        })
     },
 
     renderData(t) {
       const dataset = d3.values(this.data)
-      this._renderRegionData("", dataset, t)
+      this._renderRegionData(null, dataset, t)
     },
 
     renderRegionData(region, regiondata, t) {
       const aggregated = this._mkLevelData(region, regiondata)
-
       const dataset = d3.values(aggregated)
+
       this._renderRegionData(region, dataset, t)
 
-
-// console.log(this.current_region)
-      this.region_data = aggregated
+      // keep the current region data around, it's used for "the parent bubble"
+      if (region == this.current_region) this.region_data = aggregated
     },
 
     _mkLevelData(parentid, data) {
-
-// console.log(data)
-
       // re-aggregate the data to compute per-level stuff
       const out = {}
       const plen = parentid.length
@@ -579,7 +595,7 @@ export default BaseMap.extend({
           // if level1 aggregate under level0 (because yeah that makes sense)
           // else aggregate under the first(ish)-level descendants
           id = row.id.substr(0, rlen == 3 ? 2 :
-                                            plen == 2 ? 4 : plen + 1)
+                                            plen == 2 ? 4  : plen + 1)
         }
 
         else if (rlen < plen) {
@@ -587,6 +603,7 @@ export default BaseMap.extend({
           if (parentid.substr(0, rlen) != parentid) continue
 
           // hardcoding again: level1s go under level0
+          // (TODO: use zoomed_nuts_level instead)
           id = rlen === 3 ? row.id.substr(0, 2) : row.id
         }
 
@@ -606,22 +623,26 @@ export default BaseMap.extend({
     },
 
     handleFilterBeneficiary(newid, oldid) {
-      this.$super.handleFilterBeneficiary(newid, oldid);
-
-      // hide the big circles, they're distractive
-      const t = this.getTransition();
-      this.chart.selectAll('g.states > g.beneficiary > g')
-        .transition(t)
-        .attr("opacity", Number(!newid));
+      this.$super.handleFilterBeneficiary(newid, oldid)
+      // unset the region filter
+      this.localfilters.region = null
     },
 
-    handleFilterRegion(v) {
-      const level = v && this.getNutsLevel(v)
-      if (level != 3) this.current_region = v
-      if (v) this.map.renderRegions(v, level + 1)
+    handleFilterRegion(v, old) {
+      // has this been triggered by a change in beneficiary?
+      const beneficiary = this.filters.beneficiary
+      if (!v && old && (!beneficiary || old.substr(0, 2) != beneficiary)) return
+
+      const level = v && this.getRegionLevel(v)
+
+      // at level 3 there's nothing to do
+      if (level == 3) return
+
+      // otherwise
       this.tip.hide()
-      // don't zoom when level 3
-      if (v && level == 3) return
+      if (v) this.map.renderRegions(v, level + 1)
+
+      this.current_region = v ? v : beneficiary
       this.render()
     },
   },

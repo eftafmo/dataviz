@@ -54,7 +54,8 @@ export default {
   },
 
   methods: {
-    getNutsLevel(id) {
+    getRegionLevel(id) {
+      if (!id) return null
       return id.length - 2
     },
 

@@ -215,8 +215,8 @@ export default Chart.extend({
     // cache for raw region-level data
     this._region_data = {} // raw
 
-    // we'll need this for custom logic
-    this.is_single_country = !!(this.embedded && this.filters.beneficiary)
+    // if it's a standalone country we'll need some custom logic
+    this.is_standalone = !!(this.embedded && this.filters.beneficiary)
 
     // these ones are used to unify beneficiary / region handling
     this.current_region = this.filters.beneficiary
@@ -225,7 +225,7 @@ export default Chart.extend({
 
   computed: {
     initial_regions() {
-      if (this.is_single_country)
+      if (this.is_standalone)
         return [{
           states: this.filters.beneficiary,
           levels: [0, this.zoomed_nuts_level],
@@ -259,6 +259,17 @@ export default Chart.extend({
   },
 
   methods: {
+    getParentRegion(id) {
+      if (!id) return
+
+      const level = this.getRegionLevel(id)
+      if (level == 0)
+        return null // for consistency with filter values
+      if (level == this.zoomed_nuts_level)
+        return id.substr(0, 2)
+      return id.substr(0, id.length - 1)
+    },
+
     tooltipTemplate() {
       throw new Error("Not implemented");
     },
@@ -300,18 +311,18 @@ export default Chart.extend({
       return parentid == "" ? 1 : 0
     },
 
-    render(initial) {
-      // this "initial" stuff copy-pasted
-      if (initial) this.chart_rendered = false;
-
+    renderChart() {
       const t = this.getTransition()
 
-      this.renderData(t)
       this.renderDonorColours(t)
-      this.doRenderRegionData(t)
       this.doZoom(t)
+      this.renderData(t)
+      this.doRenderRegionData(t) // leave this last in the chain, because...
 
-      this.chart_rendered = true;
+      // ... this should normally be updated at this point,
+      // but renderRegionData will be called async the first time,
+      // so doing it there
+      //this._prev_region = this.current_region
     },
 
     renderData(t) {
@@ -324,18 +335,33 @@ export default Chart.extend({
 
     doRenderRegionData(t) {
       const region = this.current_region
-      if (region === null) return
+      if (region === null) {
+        // nothing to do, but don't forget to reset the prev region
+        this._prev_region = this.current_region
+        return
+      }
 
       const state = region.substr(0, 2)
 
       let dataset = this._region_data[state];
 
+      const renderRegionData = (dataset, t) => {
+        // we want to "render" the data for all ancestors of the given region.
+        // (the local implementation will decide what rendering actually means)
+        let r = region
+        while(r) {
+          this.renderRegionData(r, this.computeRegionData(dataset), t)
+          r = this.getParentRegion(r)
+        }
+
+        this._prev_region = this.current_region
+      }
+
       if (dataset === undefined) {
         // data might arrive too late to use the transition,
         // so prepare to reset it if necessary
         let t_expired = false
-        // TODO: handle the case when t.duration() == 0
-        // to avoid the initial transition when pre-filtered
+        const t_duration = t.duration() // so we can replicate a similar transition
         t.on("end", () => t_expired = true)
         // TODO: run a throbber / suggest data loading somehow?
 
@@ -346,11 +372,11 @@ export default Chart.extend({
           if (error) throw error;
 
           dataset = this._region_data[state] = data;
-          if(t_expired) t = undefined
-          this.renderRegionData(region, this.computeRegionData(dataset), t)
+          if(t_expired) t = this.getTransition(t_duration)
+          renderRegionData(dataset, t)
         } );
       } else {
-        this.renderRegionData(region, this.computeRegionData(dataset), t)
+        renderRegionData(dataset, t)
       }
     },
 
@@ -470,17 +496,17 @@ export default Chart.extend({
 
       const $this = this
 
-      const _showchildren = (id, yes, level) => {
-        if(level == undefined){ 
-           level = id.length == 2 ? this.zoomed_nuts_level
-                                     : id.length - 2 + 1
+      const _showchildren = (id, yes) => {
+        // only select the exact region when showing,
+        // otherwise hide all descendant regions
+        let selector = `.regions > .${id}`
+        if (yes) {
+          const level = id.length == 2 ? this.zoomed_nuts_level
+                                       : id.length - 2 + 1
+          selector += `.level${level}`
         }
-        // console.log(`showchildren--${id}-${level}-${yes}`)
 
-
-        const parent = this.chart.selectAll(
-            `.regions > .${id}.level${level}`
-          )
+        const parent = this.chart.selectAll(selector)
           //.raise()
           .classed("transitioning", true)
           .style("display", null)
@@ -496,26 +522,10 @@ export default Chart.extend({
               .selectAll("path")
               .attr("fill", $this.region_colour)
           })
-          
-          if(oldid){
-            if(id.length == 4 && level == 3 && yes == false && (newid == null || newid.substring(0,2) != oldid.substring(0,2))) {
-                // console.log("children")
-                _showchildren(id.substring(0, 2), false, 2)
-            }
-          }
-
       }
 
-      const _showregion = (id, yes, level) => {
-        if(level == undefined){ 
-           level = id.length == 2 ? 0 : id.length - 2
-        }
-        
-        // console.log(`showregion--${id}-${level}-${yes}`)
-        // console.log(`--------------------`)
-        // console.log(`--------------------`)
-
-
+      const _showregion = (id, yes) => {
+        const level = id.length == 2 ? 0 : id.length - 2
 
         const region = this.chart.select(`.regions > .level${level}`)
           //.lower()
@@ -542,30 +552,35 @@ export default Chart.extend({
                 .attr("opacity", 1)
             }
           })
-
-          if(oldid){
-            if(id.length == 4 && level == 2 && yes == true && (newid == null || newid.substring(0,2) != oldid.substring(0,2))) {
-              // console.log("region")
-                _showregion(id.substring(0, 2), true, 0)
-            }
-          }
-
       }
 
       if (newid) {
-        _showchildren(newid, true)
+        // hide the selected region, show its children
         _showregion(newid, false)
+        _showchildren(newid, true)
       }
 
       if (oldid) {
-        // hide old region unless it's an ancestor
-        if (!newid || oldid != newid.substr(0, oldid.length))
-          _showchildren(oldid, false)
+        // show the old region
         _showregion(oldid, true)
+        // hide old region unless it's an ancestor
+        if (!newid || oldid != newid.substr(0, oldid.length)) {
+          // find the topmost ancestor of the previous region
+          // that isn't the new one or the new one's parent
+          const common = newid ? this.getParentRegion(newid) : newid
+          let prev = oldid
+
+          while (true) {
+            const p = this.getParentRegion(prev)
+            if (p == newid || p == common) break
+            else prev = p
+          }
+
+          _showchildren(prev, false)
+        }
       }
 
       this.map.zoomTo(newid, t)
-      this._prev_region = newid
     },
 
     handleFilterBeneficiary(v) {
