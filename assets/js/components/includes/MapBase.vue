@@ -79,8 +79,14 @@
   }
 
   // styles
-  .chart-container svg {
-    box-shadow: 0px 0px 2px #aaa;
+  .chart-container {
+    // don't let the map overflow the available height
+    // (this works only if the map is square)
+    max-width: 100vh;
+
+    svg {
+      box-shadow: 0px 0px 2px #aaa;
+    }
   }
 
   .chart {
