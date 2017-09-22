@@ -44,29 +44,30 @@
   }
 
   .current-region {
-    rect {
-      fill: #fff;
-      stroke: #000;
-      opacity: .75;
-    }
+    position: absolute;
+    left: 3em;
+    top: 1em;
 
-    .reset-container {
-      cursor: pointer;
-      fill: transparent;
-    }
+    width: ~"calc(100% - 4em)";
 
-    .bubble;
+    div {
+      position: absolute;
+      top: 0;
+      padding: .5em .7em .5em 1.5em;
+      background-color: rgba(238, 238, 238, .2);
+      color: black;
+      border: 1px solid rgba(0, 0, 0, .2);
+      border-radius: 2px;
 
-    text.label {
-      font-weight: 400;
-      text-anchor: start;
-      fill: #000;
-    }
-    text.reset-button{
-      font-weight: 400;
-      text-anchor: end;
-      fill: #c41130;
-      font-size: 4rem;
+      svg {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: none;
+
+        .bubble;
+      }
     }
   }
 }
@@ -84,71 +85,71 @@ let _PARENT_UID // this is a very ugly hack, but, cutting corners
 
 
 const RegionDetails = {
+  template: `<transition appear name="fade">
+    <div class="current-region" v-if="region">
+      <transition name="fade"><div :key="changed_region">
+        <transition name="fade"><svg :key="changed_count"
+             :width="radius * 2"
+             :height="radius * 2"
+             >
+          <g :transform="'translate(' + radius + ',' + radius + ')'">
+            <circle :r="radius" />
+            <text dy=".33em">{{ count }}</text>
+          </g>
+        </svg></transition>
+        <span>{{ label }}</span>
+      </div></transition>
+    </div>
+  </transition>`,
+
   props: {
     region: Object,
   },
 
-  template: `
-    <g v-if="region"
-       class="current-region"
-       transform="translate(50, 50)"
-    >
-      <rect
-        :x="box.x"
-        :y="box.y"
-        :width="box.width"
-        :height="box.height"
-      />
-      <circle :r="getradius(getprojectcount(region))" />
-      <text dy=".33em">{{ getprojectcount(region) }}</text>
-      <text class="label"
-            :x="getradius(' ' + getprojectcount(region))"
-            dy=".33em"
-      >{{ label }}</text>
-    </g>
-
-  `,
-
   data() {
     return {
       root_label: "National-level projects",
+      changed_region: 0,
+      changed_count: 0,
     }
+  },
+
+  created() {
+    let component = this
+
+    while (component._uid != _PARENT_UID) {
+      component = component.$parent
+    }
+    this.$self = component
   },
 
   computed: {
     label() {
       return this.region.id.length == 2 ? this.root_label
-                                        : this.self.get_nuts_label(this.region.id)
+                                        : this.$self.get_nuts_label(this.region.id)
     },
 
-    box() {
-      let label = this.label // unly used for calculations
-
-      // unless the region's name is smaller than the root_label
-      if (this.region.id.length !== 2 && label.length < this.root_label.length)
-        label = this.root_label
-
-      return {
-        x: -this.getradius("abcd"),
-        y: -this.getradius("abcd"),
-        width: this.getradius(label) * 2,
-        height: this.getradius("abcd") * 2,
-      }
+    count() {
+      return this.$self.getprojectcount(this.region)
     },
 
-    self() {
-      let component = this
-
-      while (component._uid != _PARENT_UID) {
-        component = component.$parent
-      }
-      return component
+    radius() {
+      return this.$self.getradius(this.count)
     },
   },
 
-  methods: {
-    getprojectcount(d) { return this.self.getprojectcount(d) },
-    getradius(txt) { return this.self.getradius(txt) },
+  watch: {
+    // (watching by property makes stuff get weird,
+    // so this is better. region is always swapped for a new object.)
+    region(a, b) {
+      if (!a || !b) return
+
+      if (a.id != b.id)
+        this.changed_region = Number(!this.changed_region)
+
+      if (a.project_count != b.project_count)
+        this.changed_count = Number(!this.changed_count)
+    },
   },
 }
 
@@ -519,7 +520,9 @@ export default BaseMap.extend({
 
       // keep the current region data around, it's used for "the parent bubble"
       if (region == this.current_region)
-        this.current_region_data = aggregated[region]
+        this.current_region_data = aggregated[region] || {
+          id: this.current_region,
+        }
     },
 
     _mkLevelData(parentid, data) {

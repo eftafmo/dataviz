@@ -31,17 +31,19 @@
       :fillfunc="fillfunc"
       :opacityfunc="opacityfunc"
   >
-    <region-details
-        :region="current_region_data"
-    ></region-details>
+    <template slot="after-map">
+      <region-details
+          :region="current_region_data"
+      ></region-details>
 
-    <transition appear name="fade" slot="after-map">
-      <div class="toolbox" v-if="current_region">
-        <a title="zoom out"
-           @click="zoomOut()"
-        ><span class="icon-cross"></span></a>
-      </div>
-    </transition>
+      <transition appear name="fade">
+        <div class="toolbox" v-if="current_region">
+          <a title="zoom out"
+             @click="zoomOut()"
+          ><span class="icon-cross"></span></a>
+        </div>
+      </transition>
+    </template>
   </map-base>
 
   <div class="legend" v-if="rendered">
