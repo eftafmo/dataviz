@@ -56,7 +56,6 @@ export default BaseMap.extend({
 
     _domouse(over, d, i, group) {
       const self = this.$super._domouse(over, d, i, group)
-
       if (!self) return
 
       if (this.beneficiary_colour_hovered &&

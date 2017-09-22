@@ -232,8 +232,6 @@ export default BaseMap.extend({
     },
 
     tooltipTemplate(d) {
-      // TODO: FIXME: temporarily disable mouseover for regions without data
-      // (that is, when zoomed to level 3, siblings of the parent region)
      let tip_element =  document.querySelector('.d3-tip.map')
       if (d === undefined) {
         tip_element.style.display = 'none'
@@ -294,6 +292,10 @@ export default BaseMap.extend({
     },
 
     _domouse(over, d, i, group) {
+      const self = this.$super._domouse(over, d, i, group)
+      if (!self) return
+
+      // (de)highlight the bubble
       const id = d.id,
             level = id.length - 2
 
@@ -302,12 +304,8 @@ export default BaseMap.extend({
 
       const bubble = this.projects.select(selector)
 
-      // the real data is only attached to the bubbles
-      const self = this.$super._domouse(over, bubble.datum(), i, group)
-      if (!self) return
-
-      if (over) bubble.raise()
       bubble.classed("hovered", over)
+      if (over) bubble.raise()
     },
 
     clickfunc(d, i, group) {
@@ -320,15 +318,25 @@ export default BaseMap.extend({
         this.localfilters.region = d.id
     },
 
+    _getChildrenLevel(region) {
+      if (!region) return 0
+
+      const lvl = region.length - 2
+      return lvl < this.zoomed_nuts_level ? this.zoomed_nuts_level : lvl + 1
+    },
+
+    _getRegionSelector(region) {
+      const level = this._getChildrenLevel(region)
+      const _selector = region ? "." + region : ""
+
+      return `g${_selector}.level${level}`
+    },
+
     getBubbles(parentid) {
       const main = !parentid
 
-      const level = main ? 0
-                         : parentid.length == 2 ? 2 // we skip level1
-                                                : parentid.length - 2 + 1
-
-      const _selector = main ? "" : "." + parentid,
-            selector = `g${_selector}.level${level}`
+      const level = this._getChildrenLevel(parentid),
+            selector = this._getRegionSelector(parentid)
 
       if (this._rendered_bubbles[parentid])
         return this.projects.select(selector)
@@ -470,6 +478,26 @@ export default BaseMap.extend({
 
       const regions = parent.selectAll("g.region")
         .data(dataset, d => d.id)
+
+      // bind the data to the map as well, because that's where
+      // the mouse events happen
+      const mapregions = this.chart.selectAll(
+          `.regions > ${this._getRegionSelector(parentid)} > path.beneficiary`
+        )
+        .data(dataset, d => d.id)
+        .classed("zero", false)
+
+      // reset the 0ed ones
+      mapregions.exit()
+        .classed("zero", true)
+        .each(function() {
+          const self = d3.select(this),
+                id = self.datum().id
+
+          self.datum({
+            id: id
+          })
+        })
 
       // we only go this far if this isn't the current region
       // (we just want to bind data for the tooltip to work)
