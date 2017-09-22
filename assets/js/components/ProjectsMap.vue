@@ -232,14 +232,6 @@ export default BaseMap.extend({
     },
 
     tooltipTemplate(d) {
-     let tip_element =  document.querySelector('.d3-tip.map')
-      if (d === undefined) {
-        tip_element.style.display = 'none'
-        return
-      }
-      else
-        tip_element.style.display = 'initial'
-
       const level = this.getRegionLevel(d.id)
       const allocation = d.allocation || 0,
             num_projects = this.getprojectcount(d)
