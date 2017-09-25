@@ -46,9 +46,13 @@
 
 <script>
 import Vue from 'vue';
-import {FILTERS} from '../../globals.js'
+
+import WithFiltersMixin from '../mixins/WithFilters'
 
 export default Vue.extend({
+  mixins: [
+    WithFiltersMixin,
+  ],
 
   props: {
     items: {
@@ -61,14 +65,14 @@ export default Vue.extend({
 
   computed : {
     current() {
-      return FILTERS[this.filter];
+      return this.filters[this.filter];
     },
   },
 
   methods: {
     setFilter(e) {
       const select = e.target;
-      FILTERS[this.filter] = select.value || null;
+      this.filters[this.filter] = select.value || null;
     },
 
     getFilterName(item){

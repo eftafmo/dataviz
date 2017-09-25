@@ -4,7 +4,8 @@ import Base from './Base';
 
 import Embeddor from './includes/Embeddor'
 
-import {FILTERS} from '../globals';
+// access filters directly before they get bound, to avoid triggering handlers
+import {FILTERS} from './mixins/WithFilters'
 
 
 function getURL(obj) {
@@ -32,7 +33,6 @@ export default Base.extend({
 
   beforeCreate() {
     // set filters from querystring.
-    // do it before filters get bound, to avoid triggering handlers.
     const params = getURL(window.location).searchParams;
     const page = getURL(window.location).pathname
     for (const name in FILTERS) {

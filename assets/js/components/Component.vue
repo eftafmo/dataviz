@@ -27,7 +27,7 @@ import Base from './Base'
 
 import ComponentMixin from './mixins/Component'
 
-import {FILTERS} from '../globals';
+import {FILTERS} from './mixins/WithFilters'
 
 
 export default Base.extend({

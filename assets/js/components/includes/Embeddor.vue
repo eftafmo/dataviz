@@ -63,7 +63,7 @@ import Vue from 'vue'
 import {default as Popper} from 'popper.js'
 import {default as Clipboard} from 'clipboard'
 
-import {FILTERS} from '../../globals';
+import {FILTERS} from '../mixins/WithFilters'
 
 
 export default Vue.extend({

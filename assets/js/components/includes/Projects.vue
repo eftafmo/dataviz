@@ -89,9 +89,13 @@
 <script>
 import Vue from 'vue';
 import axios from 'axios';
-import {FILTERS} from '../../globals.js';
+
+import WithFiltersMixin from '../mixins/WithFilters';
 
 export default Vue.extend({
+  mixins: [
+    WithFiltersMixin,
+  ],
 
   props: {
     id: String,
@@ -103,7 +107,6 @@ export default Vue.extend({
 
  data() {
     return {
-      filters: FILTERS,
       posts: [],
       errors: [],
       }
@@ -118,14 +121,14 @@ export default Vue.extend({
 
       if(this.posts.length == 0){
         let url=`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`
-        if (FILTERS['donor']) {
-          url = url + '&donor=' + FILTERS['donor'];
+        if (this.filters.donor) {
+          url = url + '&donor=' + this.filters.donor
         }
-        if (FILTERS['sector']) {
-          url = url + '&sector=' + FILTERS['sector'];
+        if (this.filters.sector) {
+          url = url + '&sector=' + this.filters.sector
         }
-        if (FILTERS['area']) {
-          url = url + '&area=' + FILTERS['area'];
+        if (this.filters.area) {
+          url = url + '&area=' + this.filters.area
         }
         if (this.extra) {
           url = url + '&' + this.extra;

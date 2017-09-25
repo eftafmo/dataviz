@@ -129,18 +129,17 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import {FILTERS} from '../globals.js'
 import {truncate} from 'js/lib/util';
 import _programme_areas from 'js/constants/programme-areas.json5';
 import {COUNTRIES} from './mixins/WithCountries';
 
-export default Vue.extend({
+import WithFiltersMixin from './mixins/WithFilters'
 
-  data: function () {
-    return {
-      items: FILTERS,
-     }
-   },
+
+export default Vue.extend({
+  mixins: [
+    WithFiltersMixin,
+  ],
 
   beforeCreate() {
     const $this = this
@@ -168,10 +167,10 @@ export default Vue.extend({
   computed : {
     data() {
       const filters = {}
-      for (const key in FILTERS) {
-        if (FILTERS[key]) {
+      for (const key in this.filters) {
+        if (this.filters[key]) {
           const settings = this.FILTER_SETTINGS[key];
-          let filter_value = FILTERS[key];
+          let filter_value = this.filters[key];
           if (settings['formatter']) {
             filter_value = settings['formatter'](filter_value);
           }
@@ -192,13 +191,13 @@ export default Vue.extend({
   methods: {
     removeFilter(e){
       const remove_el = e.target.getAttribute('filter')
-      FILTERS[remove_el] = null;
+      this.filters[remove_el] = null;
     },
 
     hasFilters() {
       let component_parent = document.getElementById('global-filters');
-      for (const filter in FILTERS) {
-        if (FILTERS[filter]) {
+      for (const filter in this.filters) {
+        if (this.filters[filter]) {
           component_parent.classList.add('visible') ;
           return true;
         }
@@ -214,20 +213,22 @@ export default Vue.extend({
           if($this.$el.querySelector('.list-filters')){
           let last_filter = $this.$el.querySelector('.list-filters .filter-item:last-child');
           if (!last_filter) return;
-          FILTERS[last_filter.getAttribute('filter')] = null
+          this.filters[last_filter.getAttribute('filter')] = null
           }
         }
       })
     },
 
     resetFilters(){
-      for (const filter in FILTERS) {
-        FILTERS[filter] = null
+      for (const filter in this.filters) {
+        this.filters[filter] = null
       }
     },
   },
 
-
+  handleFilter(type, val, old) {
+    console.log(type, val, old)
+  },
 });
 
 </script>

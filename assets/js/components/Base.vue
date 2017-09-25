@@ -6,17 +6,16 @@
 <script>
 import Vue from 'vue';
 import * as d3 from 'd3';
-import {FILTERS, Q} from '../globals.js'
 
 import BaseMixin from './mixins/Base'
+import WithFiltersMixin from './mixins/WithFilters'
+
 
 export default Vue.extend({
-  mixins: [BaseMixin],
-
-  beforeCreate() {
-    // adding the queue here since it needs not be observable
-    this.queue = Q;
-  },
+  mixins: [
+    BaseMixin,
+    WithFiltersMixin,
+  ],
 
   props: {
     initial: [Object, Array],
@@ -24,8 +23,6 @@ export default Vue.extend({
 
   data() {
     return {
-      filters: FILTERS,
-
       // what the dataset can be filtered on.
       // default to filters applicable to all scenarios.
       filter_by: [
@@ -337,52 +334,9 @@ export default Vue.extend({
         this.dataset = ds;
       });
     },
-
-    /*
-     * filter-related methods
-     */
-    handleFilter(type, val, old) {
-      // this should be handled by each component specifically
-      return
-      //throw "Unhandled filter: " + type;
-      //console.log(`» [${type}] filter:`, old,'→', val);
-    },
-    handleFilterFm(val, old) {
-      const type = "fm";
-      this.handleFilter(type, val, old);
-    },
-    handleFilterBeneficiary(val, old) {
-      const type = "beneficiary";
-      this.handleFilter(type, val, old);
-    },
-    handleFilterSector(val, old) {
-      const type = "sector";
-      this.handleFilter(type, val, old);
-    },
-    handleFilterArea(val, old) {
-      const type = "area";
-      this.handleFilter(type, val, old);
-    },
-    handleFilterDonor(val, old) {
-      const type = "donor";
-      this.handleFilter(type, val, old);
-    },
-    handleFilterDPP(val, old) {
-      const type = "DPP";
-      this.handleFilter(type, val, old);
-    },
   },
   watch: {
     'isReady': 'main',
-
-    // make sure every key exists from the start
-    'filters.fm': 'handleFilterFm',
-    'filters.beneficiary': 'handleFilterBeneficiary',
-    'filters.sector': 'handleFilterSector',
-    'filters.area': 'handleFilterArea',
-    'filters.donor': 'handleFilterDonor',
-    'filters.DPP': 'handleFilterDPP',
-
     // this one is used only for vue transitions
     'filters': {
       deep: true,

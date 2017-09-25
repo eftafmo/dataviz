@@ -64,7 +64,6 @@ import * as d3 from 'd3';
 import Component from './Component';
 
 import WithSectorsMixin from './mixins/WithSectors';
-import {FILTERS} from '../globals.js'
 
 
 export default Component.extend({
