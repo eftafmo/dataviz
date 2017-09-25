@@ -18,7 +18,7 @@
 
     <div v-if="hasData" class="info">
       <transition name="fade"><div class="heading" :key="changed">
-        <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
+        <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent in {{ period }} on</p>
       </div></transition>
       <div class="data-wrapper"><transition name="fade"><ul class="data" :key="changed">
         <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
