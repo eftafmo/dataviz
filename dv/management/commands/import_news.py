@@ -28,14 +28,15 @@ class Command(BaseCommand):
 
     def _save(self, item):
         try:
-            self.stdout.write('Importing post %s' % item['link'])
-            news, created = News.objects.get_or_create(link=item['link'])
+            link = item['link'].replace('http://', 'https://')
+            self.stdout.write('Importing post %s' % link)
+            news, created = News.objects.get_or_create(link=link)
             news.title = item['title']
             tz = timezone('Europe/Brussels')
             news.created = tz.localize(datetime.fromtimestamp(int(item['created'])))
             news.updated = tz.localize(datetime.fromtimestamp(int(item['updated'])))
             news.summary = item['summary']
-            news.image = item['image']
+            news.image = item['image'].replace('http://', 'https://')
             news.is_partnership = item['is_partnership'] == 'yes'
             if item['project_id']:
                 news.project_id = item['project_id'][0:9].upper().strip()
