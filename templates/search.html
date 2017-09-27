@@ -463,6 +463,11 @@
           <div class="input-box input-block">
             <label for="city-facet">City</label>
             <select multiple name="city" id="city-facet" form="main-search-form" class="main-auto-submit">
+            {% if facets.fields.city|length > 200 %}
+                {% for o in form.facets.city %}
+                  <option value="{{ o }}" selected>{{ o }}</option>
+                {% endfor %}
+            {% else %}
               {% for o in facets.fields.city %}
                 {% if o.1 %}
                 <option value="{{ o.0 }}" {% if o.0 in form.facets.city %}selected{% endif %}>
@@ -470,6 +475,7 @@
                 </option>
                 {% endif %}
               {% endfor %}
+            {% endif %}
             </select>
           </div>
         </div>
@@ -609,8 +615,11 @@
       all_select2.push($("#organisation-project-status-facet").select2());
       all_select2.push($("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name')));
       all_select2.push($("#country-facet").select2());
-      all_select2.push($("#city-facet").select2());
-      all_select2.push($("#nuts-facet").select2(select2AjaxFactory('organisation', 'nuts')));
+      {% if facets.fields.city|length > 200 %}
+        all_select2.push($("#city-facet").select2(select2AjaxFactory('organisation', 'city')));
+      {% else %}
+        all_select2.push($("#city-facet").select2());
+      {% endif %}
       all_select2.push($("#org-type-category-facet").select2());
       all_select2.push($("#org-type-facet").select2());
       all_select2.push($("#role-facet").select2());

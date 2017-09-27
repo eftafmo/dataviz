@@ -176,8 +176,10 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
     city = indexes.FacetCharField(model_attr='city')
+    city_auto = indexes.EdgeNgramField(model_attr='city')
     # nuts = indexes.FacetCharField(model_attr='nuts')
     geotarget = indexes.FacetCharField(model_attr='geotarget', null=True)
+    geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget', null=True)
     # nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
     role_ss = indexes.FacetMultiValueField()
 
@@ -309,3 +311,6 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
         else:
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
+
+    def prepare_geotarget_auto(self, obj):
+        return ' '.join(self.prepare_geotarget(obj))
