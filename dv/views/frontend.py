@@ -219,12 +219,13 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             org_roles = res.object.roles.all()
             for org_role in org_roles:
                 role_name = org_role.organisation_role.role
-                if org_role.programme.is_tap:
+                if org_role.programme and org_role.programme.is_tap:
                     continue
                 prg_or_prj = org_role.programme
                 if org_role.project:
                     prg_or_prj = org_role.project
-                d[role_name].append('{} - {}'.format(prg_or_prj.code, prg_or_prj.name))
+                if prg_or_prj:
+                    d[role_name].append('{} - {}'.format(prg_or_prj.code, prg_or_prj.name))
             for role, plist in d.items():
                 d[role] = sorted(plist)
             res.prep_roles = dict(d)
