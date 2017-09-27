@@ -107,6 +107,32 @@ class FacetedSearchView(BaseFacetedSearchView):
         'project partner': 6,
     }
 
+    # Donor states first (incl. France as International), then beneficiary states
+    COUNTRY_SORT_BOOST = {
+        'iceland': 0,
+        'liechtenstein': 0,
+        'norway': 0,
+
+        'france': 1,
+
+        'bulgaria': 2,
+        'cyprus': 2,
+        'czech republic': 2,
+        'estonia': 2,
+        'greece': 2,
+        'hungary': 2,
+        'latvia': 2,
+        'lithuania': 2,
+        'malta': 2,
+        'poland': 2,
+        'portugal': 2,
+        'romania': 2,
+        'slovakia': 2,
+        'slovenia': 2,
+        'spain': 2,
+        'croatia': 2,
+    }
+
     REORDER_FACETS = {
         'programme_status': PRG_STATUS_SORT,
         'project_status': PRJ_STATUS_SORT,
@@ -122,6 +148,12 @@ class FacetedSearchView(BaseFacetedSearchView):
                     facets[facet],
                     key=lambda x: order.get(x[0].lower(), 99)
                 )
+        # Special case for Country, refs #413
+        if 'country' in facets:
+            facets['country'] = sorted(
+                facets['country'],
+                key=lambda x: (self.COUNTRY_SORT_BOOST.get(x[0].lower(), 10) * 255 + ord(x[0][0]))
+            )
 
     def get_context_data(self, *args, **kwargs):
         objls = kwargs.pop('object_list', self.queryset)
