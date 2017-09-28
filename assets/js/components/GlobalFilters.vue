@@ -10,9 +10,8 @@
            <transition-group name="list">
               <li class="filter-item"
                    v-for="(item, key) in data"
-                   :data-filter="key"
                    v-if="item != null"
-                   @click="removeFilter"
+                   @click="removeFilter(key)"
                    :key="key">
                {{item.name}}: {{item.value}}
               </li>
@@ -142,7 +141,6 @@ export default Vue.extend({
   ],
 
   beforeCreate() {
-    const $this = this
     this.format_pa = function(programme_area) {
       return _programme_areas[programme_area]['short_name'];
     };
@@ -185,29 +183,26 @@ export default Vue.extend({
   },
 
   created() {
-    const self = this;
-    this.chronologicalFilters = [];
+    this.filters_stack = [];
 
-    this.makeChronologicalFiltersFromExisting();
+    this.initFiltersStack();
     this.handleEsc();
   },
 
   methods: {
-    makeChronologicalFiltersFromExisting() {
-      for(const i in this.filters) {
-        if(this.filters[i]) {
-          this.chronologicalFilters.push({type: i});
+    initFiltersStack() {
+      for(const type in this.filters) {
+        if(this.filters[type]) {
+          this.filters_stack.push(type);
         }
       }
     },
 
     handleEsc() {
-      let self = this;
-      window.addEventListener("keyup", function(e) {
-        if (e.keyCode == 27) {
-          self.removeLastFilter();
-        }
-      });
+      const self = this;
+      window.addEventListener("keyup", e => {
+          if(e.keyCode == 27) self.removeLastFilter();
+        });
     },
 
     hasFilters() {
@@ -226,43 +221,30 @@ export default Vue.extend({
       const remove_el = e.target.dataset.filter;
       this.filters[remove_el] = null;
     },
-    // chronologicalFilters holds the active filters ordered chronologically
+
+    // filters_stack holds the active filters ordered chronologically
     removeLastFilter() {
-      let removedFilter = this.chronologicalFilters[this.chronologicalFilters.length-1];
-      this.filters[removedFilter.type] = null;
+      if(this.filters_stack.length > 0) {
+        const lastFilter = this.filters_stack[this.filters_stack.length-1];
+        this.filters[lastFilter] = null;
+      }
     },
     
     resetFilters() {
       for (const filter in this.filters) {
         this.filters[filter] = null
       }
-      this.chronologicalFilters = [];
     },
+    
     // it is executed each time this.filters changes
     // it will keep track of all filters applied or removed, chronologically
     // if a previous same type filter is removed, then it will be removed from the list
     // but if it is changed after remove, the new one will be added as the most recent
     handleFilter(type, val, old) {
-      if(old) {
-        this.removeOneFilter(type);
-        if(val) {
-          this.chronologicalFilters.push({type});
-        }
-      } else {
-        if(val) {
-          this.chronologicalFilters.push({type});
-        }
-      }
+      const index = this.filters_stack.indexOf(type);
+      if (index !== -1) this.filters_stack.splice(index, 1);
+      if (val) this.filters_stack.push(type);
     },
-
-    removeOneFilter(filterType) {
-      const index = this.chronologicalFilters.findIndex(isMatchingType);
-      this.chronologicalFilters.splice(index, 1);
-
-      function isMatchingType(filter) {
-        return filter.type === filterType;
-      }
-    }
   },
 });
 
