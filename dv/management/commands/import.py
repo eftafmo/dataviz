@@ -1,20 +1,15 @@
-import io
 import logging
 import pickle
 import pyexcel
 import os.path
-import zipfile
 from functools import partial
 from itertools import cycle
-from urllib.parse import urlparse
-from urllib.request import urlopen
 
-from django.core.cache import cache
 from django.core.management.base import BaseCommand, CommandError
+from django.core.cache import cache
 from django.db import IntegrityError
 
 from dv.models import (
-    NUTS,
     State, PrioritySector, ProgrammeArea, Programme, Programme_ProgrammeArea,
     Outcome, ProgrammeOutcome, Project, ProjectTheme, Indicator, ProgrammeIndicator,
     OrganisationType, Organisation, OrganisationRole,
@@ -23,71 +18,87 @@ from dv.lib.utils import is_iter
 
 logger = logging.getLogger()
 
-NUTS_FILE = "http://ec.europa.eu/eurostat/ramon/documents/nuts/NUTS_2006.zip"
+EXCEL_FILES = (
+    'BeneficiaryState',
+    'BeneficiaryStatePrioritySector',
+    'Programme',
+    'ProgrammeOutcome',
+    'Project',
+    'ProjectThemes',
+    'ProgrammeIndicators',
+    'Organisation',
+    'OrganisationRoles',
+)
+
+MODELS = (
+    State,
+    FinancialMechanism,
+    PrioritySector,
+    ProgrammeArea,
+    Allocation,
+    Programme,
+    Programme_ProgrammeArea,
+    Outcome,
+    ProgrammeOutcome,
+    Project,
+    ProjectTheme,
+    Indicator,
+    ProgrammeIndicator,
+    OrganisationType,
+    Organisation,
+    OrganisationRole,
+    Organisation_OrganisationRole,
+)
 
 
 class Command(BaseCommand):
-    help = 'Import the file given as argument'
+    help = 'Import the files in the directory given as argument'
 
     def add_arguments(self, parser):
-        parser.add_argument('file',
-                            help="a spreadsheet file. xlsx is supported")
+        parser.add_argument('directory',
+                            help="a directory containing spreadsheet files. xlsx and "
+                                 "xls is are supported")
 
     def handle(self, *args, **options):
-        fname = options['file']
-        if not os.path.exists(fname):
-            raise CommandError('Cannot open file "%s".' % fname)
+        directory_path = options['directory']
+        if not os.path.exists(directory_path):
+            raise CommandError('Cannot open directory "%s".' % directory_path)
 
-        # TODO: use the cache dir here.
-        cname = fname + '.cache'
-        if os.path.exists(cname):
-            with open(cname, 'rb') as cached:
-                book = pickle.load(cached)
+        files = os.listdir(directory_path)
+        if not files:
+            raise CommandError('Directory %s is empty' % directory_path)
+
+        existing_books = [file.split('.')[0] for file in files]
+        for file in EXCEL_FILES:
+            if file not in existing_books:
+                raise CommandError('%s workbook is missing' % file)
+
+        sheets = dict()
+
+        cached_directory = (
+            directory_path if directory_path[-1] != '/' else directory_path[:-1]
+        ) + '.cache'
+        if os.path.exists(cached_directory):
+            for file in files:
+                file_path = os.path.join(cached_directory, file)
+                with open(file_path, 'rb') as cached:
+                    book = pickle.load(cached)
+                    sheets[file.split('.')[0]] = book['Sheet1']
         else:
-            book = pyexcel.get_book(file_name=fname)
-            with open(cname, 'wb') as cached:
-                pickle.dump(book, cached)
+            os.makedirs(cached_directory)
+            for file in files:
+                file_path = os.path.join(directory_path, file)
+                cached_file_path = os.path.join(cached_directory, file)
+                book = pyexcel.get_book(file_name=file_path)
+                sheets[file.split('.')[0]] = book['Sheet1']
+                with open(cached_file_path, 'wb') as cached:
+                    pickle.dump(book, cached)
 
-        # momentarily using the other file's directory for caching
-        fname = os.path.join(
-            os.path.dirname(fname),
-            os.path.basename(urlparse(NUTS_FILE).path)
-        )
-        cname = fname + '.cache'
-        if os.path.exists(cname):
-            with open(cname, 'rb') as cached:
-                nuts_book = pickle.load(cached)
-        else:
-            with urlopen(NUTS_FILE) as f:
-                with zipfile.ZipFile(io.BytesIO(f.read())) as z:
-                    zf = z.namelist()[0]
-                    nuts_book = pyexcel.get_book(file_content=z.open(zf).read(),
-                                                 file_type=zf.split('.')[-1])
-            with open(cname, 'wb') as cached:
-                pickle.dump(nuts_book, cached)
-
-        models = (
-            # NUTS,
-            State,
-            FinancialMechanism,
-            PrioritySector,
-            ProgrammeArea,
-            Allocation,
-            Programme,
-            Programme_ProgrammeArea,
-            Outcome,
-            ProgrammeOutcome,
-            Project,
-            ProjectTheme,
-            Indicator,
-            ProgrammeIndicator,
-            OrganisationType,
-            Organisation,
-            OrganisationRole,
-            Organisation_OrganisationRole,
-        )
+        for sheet in sheets.values():
+            sheet.name_columns_by_row(0)
 
         self.stderr.style_func = None
+
         def _write(*args, **kwargs):
             self.stderr.write(*args, **kwargs)
             self.stderr.flush()
@@ -95,32 +106,17 @@ class Command(BaseCommand):
         _back = chr(8)
         throbber = cycle(_back + c for c in r'\|/-')
 
-        # clean up the spreadbook
-        for sheet in book:
-            # because the real data only starts on the 3rd row
-            del sheet.row[1], sheet.row[0]
-            # we can now use the first row as the header
-            sheet.name_columns_by_row(0)
-
-        # column names for nuts
-        for sheet in nuts_book:
-            sheet.name_columns_by_row(0)
-
         def _convert_nulls(record):
             for k, v in record.items():
                 if v in ('NULL', 'None'):
                     record[k] = None
 
-        for model in models:
+        for model in MODELS:
             for idx, import_src in enumerate(model.IMPORT_SOURCES):
                 sheet_name = import_src['src']
-                mapping = import_src['map']
-                if model == NUTS:
-                    sheet = nuts_book[sheet_name]
-                else:
-                    sheet = book[sheet_name]
+                sheet = sheets[sheet_name]
 
-                _inline('importing "%s" into %s …  ' % (sheet.name, model._meta.label))
+                _inline('importing "%s" into %s …  ' % (sheet_name, model._meta.label))
 
                 count = 0
 

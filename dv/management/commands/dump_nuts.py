@@ -1,5 +1,4 @@
 import json
-import logging
 
 from django.utils.encoding import force_text
 from django.core.management.base import BaseCommand
