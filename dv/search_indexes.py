@@ -58,7 +58,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         ).distinct())
 
     def prepare_programme_name(self, obj):
-        return ['{}: {}'.format(obj.code, obj.name)]
+        return ['{}: {}'.format(obj.code, obj.name.strip())]
 
     def prepare_programme_area_ss(self, obj):
         return list(obj.programme_areas.values_list(
@@ -138,7 +138,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return [obj.programme_area.priority_sector.name]
 
     def prepare_programme_name(self, obj):
-        return ['{}: {}'.format(obj.programme.code, obj.programme.name)]
+        return ['{}: {}'.format(obj.programme.code, obj.programme.name.strip())]
 
     def prepare_outcome_ss(self, obj):
         return [obj.outcome.name.strip()]
@@ -272,7 +272,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         ).distinct()
         result = []
         for prg in programmes:
-            result.append('{}: {}'.format(prg['programme__code'], prg['programme__name']))
+            result.append('{}: {}'.format(prg['programme__code'], prg['programme__name'].strip()))
         return result
 
     def prepare_programme_name_auto(self, obj):
@@ -313,4 +313,5 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
 
     def prepare_geotarget_auto(self, obj):
-        return ' '.join(self.prepare_geotarget(obj))
+        geotargets = self.prepare_geotarget(obj)
+        return ' '.join(geotargets) if geotargets else None
