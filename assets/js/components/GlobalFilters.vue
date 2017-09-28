@@ -1,30 +1,29 @@
 <template>
-    <div :remove="removeLastFilter()" class="global-filters" :class="{active: hasFilters()}">
+  <div class="global-filters" :class="{active: hasFilters()}">
     <transition name="bounce">
       <div v-if="hasFilters" class="container">
         <div class="global-filters-inner">
-            <div class="filters-label">
-              Showing data for:
-            </div>
-            <ul class="list-filters">
-             <transition-group name="list">
-                <li class="filter-item"
-                     v-for="(item, key) in data"
-                     :filter="key"
-                     v-if="item != null"
-                     @click="removeFilter"
-                     :key="key">
-                 {{item.name}}: {{item.value}}
-                </li>
-              </transition-group>
-            </ul>
-            <button @click="resetFilters" class="no-btn" id="reset-filters">
-              Reset filters <span class="icon icon-cross"></span>
-            </button>
+          <div class="filters-label">
+            Showing data for:
+          </div>
+          <ul class="list-filters">
+           <transition-group name="list">
+              <li class="filter-item"
+                   v-for="(item, key) in data"
+                   v-if="item != null"
+                   @click="removeFilter(key)"
+                   :key="key">
+               {{item.name}}: {{item.value}}
+              </li>
+            </transition-group>
+          </ul>
+          <button @click="resetFilters" class="no-btn" id="reset-filters">
+            Reset filters <span class="icon icon-cross"></span>
+          </button>
         </div>
       </div>
     </transition>
-    </div>
+  </div>
 </template>
 
 
@@ -142,7 +141,6 @@ export default Vue.extend({
   ],
 
   beforeCreate() {
-    const $this = this
     this.format_pa = function(programme_area) {
       return _programme_areas[programme_area]['short_name'];
     };
@@ -158,13 +156,9 @@ export default Vue.extend({
       DPP: {name: 'Programme partner', truncate: 60},
       dpp: {name: 'Project partner', truncate: 60},
     }
-    window.onload = function(){
-      $this.hasFilters()
-    }
-
   },
 
-  computed : {
+  computed: {
     data() {
       const filters = {}
       for (const key in this.filters) {
@@ -183,15 +177,32 @@ export default Vue.extend({
           }
         }
       }
+
       return filters;
     },
   },
 
+  created() {
+    this.filters_stack = [];
+
+    this.initFiltersStack();
+    this.handleEsc();
+  },
 
   methods: {
-    removeFilter(e){
-      const remove_el = e.target.getAttribute('filter')
-      this.filters[remove_el] = null;
+    initFiltersStack() {
+      for(const type in this.filters) {
+        if(this.filters[type]) {
+          this.filters_stack.push(type);
+        }
+      }
+    },
+
+    handleEsc() {
+      const self = this;
+      window.addEventListener("keyup", e => {
+          if(e.keyCode == 27) self.removeLastFilter();
+        });
     },
 
     hasFilters() {
@@ -206,28 +217,34 @@ export default Vue.extend({
       return false;
     },
 
-    removeLastFilter() {
-      const $this=this;
-      window.addEventListener("keyup", function(e){
-        if (e.keyCode == 27) {
-          if($this.$el.querySelector('.list-filters')){
-          let last_filter = $this.$el.querySelector('.list-filters .filter-item:last-child');
-          if (!last_filter) return;
-          this.filters[last_filter.getAttribute('filter')] = null
-          }
-        }
-      })
+    removeFilter(e) {
+      const remove_el = e.target.dataset.filter;
+      this.filters[remove_el] = null;
     },
 
-    resetFilters(){
+    // filters_stack holds the active filters ordered chronologically
+    removeLastFilter() {
+      if(this.filters_stack.length > 0) {
+        const lastFilter = this.filters_stack[this.filters_stack.length-1];
+        this.filters[lastFilter] = null;
+      }
+    },
+    
+    resetFilters() {
       for (const filter in this.filters) {
         this.filters[filter] = null
       }
     },
-  },
-
-  handleFilter(type, val, old) {
-    console.log(type, val, old)
+    
+    // it is executed each time this.filters changes
+    // it will keep track of all filters applied or removed, chronologically
+    // if a previous same type filter is removed, then it will be removed from the list
+    // but if it is changed after remove, the new one will be added as the most recent
+    handleFilter(type, val, old) {
+      const index = this.filters_stack.indexOf(type);
+      if (index !== -1) this.filters_stack.splice(index, 1);
+      if (val) this.filters_stack.push(type);
+    },
   },
 });
 
