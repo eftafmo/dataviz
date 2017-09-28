@@ -255,12 +255,12 @@ export default Vue.extend({
       }
     },
 
-    removeOneFilter(type) {
-      for(var i=0; i<this.chronologicalFilters.length; i++) {
-        if(this.chronologicalFilters[i].type === type) {
-          this.chronologicalFilters.splice(i, 1);
-          break;
-        }
+    removeOneFilter(filterType) {
+      const index = this.chronologicalFilters.findIndex(isMatchingType);
+      this.chronologicalFilters.splice(index, 1);
+
+      function isMatchingType(filter) {
+        return filter.type === filterType;
       }
     }
   },
