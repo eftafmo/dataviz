@@ -144,7 +144,7 @@ export default Vue.extend({
   beforeCreate() {
     const $this = this
     this.format_pa = function(programme_area) {
-      // return _programme_areas[programme_area]['short_name'];
+      return _programme_areas[programme_area]['short_name'];
     };
     this.get_country = function(country_code) {
       return COUNTRIES[country_code]['name'];
@@ -188,12 +188,12 @@ export default Vue.extend({
     const self = this;
     this.chronologicalFilters = [];
 
-    this.makeChronologicalFiltersFromCache();
+    this.makeChronologicalFiltersFromExisting();
     this.handleEsc();
   },
 
   methods: {
-    makeChronologicalFiltersFromCache() {
+    makeChronologicalFiltersFromExisting() {
       for(var i in this.filters) {
         if(this.filters[i]) {
           this.chronologicalFilters.push({type: i, val: this.filters[i]});
@@ -244,7 +244,7 @@ export default Vue.extend({
     // but if it is changed after remove, the new one will be added as the most recent
     handleFilter(type, val, old) {
       if(old) {
-        this.removeFilterFromChronoList(type, val);
+        this.removeOneFilter(type, val);
         if(val) {
           this.chronologicalFilters.push({type, val});
         }
@@ -255,7 +255,7 @@ export default Vue.extend({
       }
     },
 
-    removeFilterFromChronoList(type, val) {
+    removeOneFilter(type, val) {
       for(var i=0; i<this.chronologicalFilters.length; i++) {
         if(this.chronologicalFilters[i].type === type) {
           this.chronologicalFilters.splice(i, 1);
