@@ -431,8 +431,8 @@ class EmbedComponent(TemplateView):
         except KeyError:
             raise Http404
 
-        
-        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js') 
+
+        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js')
         cssfiles = webpack.get_files('styles', 'css')
 
         def geturl(f):
@@ -448,7 +448,7 @@ class EmbedComponent(TemplateView):
         }
 
         # this is ugly, nasty and not nice
-        if scenario in ("grants", "projects"):
+        if scenario in ("grants", "projects") and component == "xmap":
             props['detailsDatasource'] = self.request.build_absolute_uri(
                 reverse("api:%s-beneficiary-detail" % scenario, args=("XX",))
             )
