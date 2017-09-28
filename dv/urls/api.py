@@ -1,4 +1,7 @@
+from django.conf import settings
 from django.conf.urls import url
+from django.views.decorators.cache import cache_page
+
 from dv.views import api as views
 from dv.views import frontend as front_views
 
@@ -6,22 +9,33 @@ from dv.views import frontend as front_views
 urlpatterns = [
     # TODO Add this back if you want to test api/grants.json without changing the UI.
     # TODO Remove them after the change
-    # url(r'^allocation.csv', views.beneficiaries_fm_gross_allocation,
+    # url(r'^allocation.csv',
+    #     views.beneficiaries_fm_gross_allocation,
     #     name='beneficiary-fm-allocation'),
-    # url(r'^sectors.json', views.sectors_areas_allocation,
+    # url(r'^sectors.json',
+    #     views.sectors_areas_allocation,
     #     name='sector-allocation'),
-    # url(r'^beneficiaries.csv', views.beneficiary_allocation,
+    # url(r'^beneficiaries.csv',
+    #     views.beneficiary_allocation,
     #     name='beneficiary-allocation'),
-    url(r'^overview.json', views.overview, name='index'),
-    url(r'^grants.json', views.grants, name='grants'),
-    url(r'^projects.json', views.projects, name='projects'),
-    url(r'^partners.json', views.partners, name='partners'),
-    url(r'^grants/(?P<beneficiary>[A-Z]{2}).json',
-        views.beneficiary_detail,
-        name='grants-beneficiary-detail'),
 
+    url(r'^overview.json',
+        cache_page(settings.API_CACHE_SECONDS)(views.overview),
+        name='index'),
+    url(r'^grants.json',
+        cache_page(settings.API_CACHE_SECONDS)(views.grants),
+        name='grants'),
+    url(r'^projects.json',
+        cache_page(settings.API_CACHE_SECONDS)(views.projects),
+        name='projects'),
+    url(r'^partners.json',
+        cache_page(settings.API_CACHE_SECONDS)(views.partners),
+        name='partners'),
+    url(r'^grants/(?P<beneficiary>[A-Z]{2}).json',
+        cache_page(settings.API_CACHE_SECONDS)(views.beneficiary_detail),
+        name='grants-beneficiary-detail'),
     url(r'^projects/(?P<beneficiary>[A-Z]{2}).json',
-        views.projects_beneficiary_detail,
+        cache_page(settings.API_CACHE_SECONDS)(views.projects_beneficiary_detail),
         name='projects-beneficiary-detail'),
 
     url(r'^projects/',
