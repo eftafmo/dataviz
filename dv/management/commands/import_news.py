@@ -2,6 +2,8 @@ import json
 
 from urllib.request import urlopen
 from datetime import datetime
+
+from django.core.cache import cache
 from pytz import timezone
 
 from django.core.management.base import BaseCommand
@@ -25,6 +27,8 @@ class Command(BaseCommand):
                 for item in data:
                     self._save(item)
                 page += 1
+        cache.clear()
+        print("Cache cleared")
 
     def _save(self, item):
         try:

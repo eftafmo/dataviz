@@ -8,6 +8,8 @@ from functools import partial
 from itertools import cycle
 from urllib.parse import urlparse
 from urllib.request import urlopen
+
+from django.core.cache import cache
 from django.core.management.base import BaseCommand, CommandError
 from django.db import IntegrityError
 
@@ -150,3 +152,6 @@ class Command(BaseCommand):
                         _save(obj)
 
                 _write(_back + "done: %d" % count, self.style.SUCCESS)
+
+        cache.clear()
+        _write(_back + "Cache cleared", self.style.SUCCESS)
