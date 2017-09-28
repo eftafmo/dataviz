@@ -194,9 +194,9 @@ export default Vue.extend({
 
   methods: {
     makeChronologicalFiltersFromExisting() {
-      for(var i in this.filters) {
+      for(const i in this.filters) {
         if(this.filters[i]) {
-          this.chronologicalFilters.push({type: i, val: this.filters[i]});
+          this.chronologicalFilters.push({type: i});
         }
       }
     },
@@ -244,21 +244,22 @@ export default Vue.extend({
     // but if it is changed after remove, the new one will be added as the most recent
     handleFilter(type, val, old) {
       if(old) {
-        this.removeOneFilter(type, val);
+        this.removeOneFilter(type);
         if(val) {
-          this.chronologicalFilters.push({type, val});
+          this.chronologicalFilters.push({type});
         }
       } else {
         if(val) {
-          this.chronologicalFilters.push({type, val});
+          this.chronologicalFilters.push({type});
         }
       }
     },
 
-    removeOneFilter(type, val) {
+    removeOneFilter(type) {
       for(var i=0; i<this.chronologicalFilters.length; i++) {
         if(this.chronologicalFilters[i].type === type) {
           this.chronologicalFilters.splice(i, 1);
+          break;
         }
       }
     }

@@ -776,7 +776,7 @@ export default Chart.extend({
               const c = d.data.colour;
               if (this.isActiveArea(d)) return c;
               return colour2gray(c, this.inactive_opacity);
-            })
+            } )
         }
       }
 
@@ -810,9 +810,9 @@ export default Chart.extend({
         // we can't use this._arc directly as it yields funky distortions,
         // so we need a custom interpolation. attrTween to the rescue
         .attrTween('d', function(d) {
-          const interpolate = d3.interpolate(
-            this._prev, $this._extract_coords(d)
-          );
+	  const interpolate = d3.interpolate(
+	    this._prev, $this._extract_coords(d)
+	  );
           this._prev = interpolate(0);
 
           return function(x) {
