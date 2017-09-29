@@ -118,7 +118,7 @@ export default Component.extend({
         }
       }
       deep_search = false;
-      // search for parent news if region new is less than 3, stop ar country code ex: "RO"
+      // search for parent news if region news are less than 3, stop ar country code ex: "RO"
       if(filtered_news.length <= 3 && region.length >= 2) {
         filtered_news = [...filtered_news, ...this.getNewsForRegion(all_news, region.substr(0, region.length-1, deep_search))];
       }
