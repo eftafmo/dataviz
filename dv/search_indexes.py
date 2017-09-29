@@ -357,7 +357,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.state.name]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_financial_mechanism_ss(self, obj):
         try:
@@ -365,7 +365,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.financial_mechanism.grant_name]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_programme_area_ss(self, obj):
         if obj.programmes.exists():
@@ -376,7 +376,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.programme_area.name]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_priority_sector_ss(self, obj):
         if obj.programmes.exists():
@@ -388,7 +388,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.programme_area.priority_sector.name]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_programme_name(self, obj):
         if obj.programmes.exists():
@@ -402,7 +402,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                                         obj.project.programme.name)]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_project_name(self, obj):
         try:
@@ -410,7 +410,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.name]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_programme_status(self, obj):
         if obj.programmes.exists():
@@ -420,7 +420,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.programme.status]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_outcome_ss(self, obj):
         try:
@@ -428,7 +428,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.outcome.name.strip()]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_project_status(self, obj):
         try:
@@ -436,7 +436,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.status]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_geotarget(self, obj):
         try:
@@ -448,7 +448,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                     return ['{}: {}'.format(obj.project.nuts, obj.project.geotarget)]
         except Project.DoesNotExist:
             pass
-        return []
+        return None
 
     def prepare_theme_ss(self, obj):
         try:
@@ -456,4 +456,4 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return list(obj.project.themes.values_list('name', flat=True).distinct())
         except Project.DoesNotExist:
             pass
-        return []
+        return None
