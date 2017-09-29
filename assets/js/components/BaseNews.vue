@@ -92,11 +92,13 @@ export default Component.extend({
       return news_for_nuts;
     },
     /**
+     * recursive function that returns news for a region
      * @param {Object} all_news
      * @param {string|null} region - will find news for region, for null, it will return all news
      * @param {boolean} deep_search - find news for included areas, only the first time, to avoid duplicating news
      * @returns {Object[]} filtered_news - news for specific region (nuts), ordered by relevance, looks for parent region news if
-     * news for region is less than 3
+     * news for region is less than 3 ex: for RO31, return RO31, RO311, RO312, if results are less than 3, return RO3, or RO, 
+     * it will not return from neighbor regions like RO32
      */
     getNewsForRegion(all_news, region, deep_search) {
       let filtered_news = [];
