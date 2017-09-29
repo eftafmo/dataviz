@@ -65,16 +65,7 @@ export default Component.extend({
         }
       }
 
-      const out = this.getNewsForNUTS(unique) || [];
-
-      // sometimes this.localfilters.region is null (for filtering by country or removing filters)
-      if(this.localfilters.region) {
-        // sort by relevance and date
-        out.sort(this.compareNewsRelevance);
-      } else {
-        // sort by date
-        out.sort((a,b) => d3.descending(a.created,b.created));
-      }
+      const out = this.getSortedNewsForNUTS(unique) || [];
 
       return out;
     },
@@ -85,9 +76,18 @@ export default Component.extend({
      * @param {Object} all_news
      * @returns {Object[]} news - news for specific region (nuts), ordered by relevance
      */
-    getNewsForNUTS(all_news) {
+    getSortedNewsForNUTS(all_news) {
       const deep_search = true;
       const news_for_nuts = this.getNewsForRegion(all_news, this.localfilters.region || "", deep_search);
+
+      // sometimes this.localfilters.region is null (for filtering by country or removing filters)
+      if(this.localfilters.region) {
+        // sort by relevance and date
+        news_for_nuts.sort(this.compareNewsRelevance);
+      } else {
+        // sort by date
+        news_for_nuts.sort((a,b) => d3.descending(a.created,b.created));
+      }
 
       return news_for_nuts;
     },
