@@ -238,7 +238,7 @@ export default {
   },
 
   created() {
-    if (!this.embedded) return
+    if (this.embedded) return
 
     // Add a media query listener handle mobile events
     var mq = window.matchMedia ('(max-width: 768px)');
@@ -249,7 +249,7 @@ export default {
 
   methods: {
     mobileExpand() {
-      if(!this.embedded) return
+      if(this.embedded) return
 
       if (!this.isMobileExpanded) {
         this.isMobileExpanded = true;
@@ -260,7 +260,7 @@ export default {
     },
 
     mobileCollapse(e) {
-      if(!this.embedded) return
+      if(this.embedded) return
 
       e = e || window.event;
       e.stopPropagation(); // event will trigger expand and cancel collapse
@@ -276,7 +276,7 @@ export default {
 
   watch: {
     onMobile (matches) {
-      if (!this.embedded) return
+      if (this.embedded) return
 
       if (matches) {
         this.$el.addEventListener('click', this.mobileExpand, false);
