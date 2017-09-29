@@ -36,7 +36,7 @@
   .aside {
     flex-shrink: 0;
     min-width: 240px;
-    /*width: 320px;*/
+    width: 320px;
   }
 }
 
