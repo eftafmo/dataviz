@@ -35,6 +35,7 @@ export const Grants = Base.extend({
     xsummary: components.Summary,
     programmes: components.Programmes,
     results: components.Results,
+    sidebar: components.GrantsSidebar,
   },
 });
 
@@ -53,6 +54,7 @@ export const Partners = Base.extend({
     xsummary: components.PartnersSummary,
     results: components.PartnersResults,
     projects: components.PartnersProjects,
+    sidebar: components.PartnersSidebar,
   },
 });
 
@@ -67,9 +69,6 @@ export const Projects = Base.extend({
     xsummary: components.ProjectsSummary,
     news: components.News,
     projects: components.Projects,
+    sidebar: components.ProjectsSidebar,
   },
-});
-
-export const Search = Base.extend({
-  name: "Search",
 });

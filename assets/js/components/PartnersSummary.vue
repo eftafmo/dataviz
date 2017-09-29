@@ -1,5 +1,5 @@
 <template>
-    <div v-show="hasData" class="sidebar-header">
+    <div :class="[$options.type, {embedded: embedded}]" v-show="hasData">
       <transition name="fade">
         <div class="allocation" :key="changed">
           <strong>{{ data.DPP_count }} donor programme {{ singularize('partners', data.DPP_count) }}</strong>

@@ -36,6 +36,10 @@
     color: #898989;
   }
 
+  .title {
+    color: #444;
+  }
+
   .indicator {
     border-left: 3px solid red;
     margin-bottom: .5rem;

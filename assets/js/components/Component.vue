@@ -55,12 +55,6 @@ export default Base.extend({
     },
   },
 
-  computed: {
-    classNames() {
-      return this.$options.type // + embedded ? " embedded" : ""
-    },
-  },
-
   beforeCreate() {
     // set filter values from opts.
     // do it before filters get bound, to avoid triggering handlers.
@@ -72,6 +66,17 @@ export default Base.extend({
         delete opts[k]
       }
     }
+  },
+
+  computed: {
+    classNames() {
+      if (!this.isReady) return []
+
+      const names = this.$options.type.split()
+      if (this.embedded) names.push("embedded")
+
+      return names
+    },
   },
 })
 
