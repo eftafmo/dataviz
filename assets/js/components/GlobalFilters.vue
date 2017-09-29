@@ -217,9 +217,8 @@ export default Vue.extend({
       return false;
     },
 
-    removeFilter(e) {
-      const remove_el = e.target.dataset.filter;
-      this.filters[remove_el] = null;
+    removeFilter(key) {
+      this.filters[key] = null;
     },
 
     // filters_stack holds the active filters ordered chronologically
