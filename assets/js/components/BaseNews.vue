@@ -46,6 +46,8 @@
 
 <script>
 import * as d3 from 'd3';
+import _ from 'lodash';
+
 
 import Component from './Component';
 
@@ -83,7 +85,7 @@ export default Component.extend({
       // sometimes this.localfilters.region is null (for filtering by country or removing filters)
       if(this.localfilters.region) {
         // sort by relevance and created date
-        news_for_nuts.sort(this.compareNewsRelevance);
+        _.orderBy(news_for_nuts, ["nuts", "created"], ["desc", "desc"])
       } else {
         // sort by created date
         news_for_nuts.sort((a,b) => d3.descending(a.created,b.created));
@@ -123,26 +125,6 @@ export default Component.extend({
         filtered_news = [...filtered_news, ...this.getNewsForRegion(all_news, region.substr(0, region.length-1, deep_search))];
       }
       return filtered_news;
-    },
-    /**
-     * will order descending by nuts value (ex: "RO121" > "RO12"), if nuts is equal, it will order by created date
-     * @param {Object} a
-     * @param {Object} b
-     * @returns {number} 1 or -1
-     */
-    compareNewsRelevance(a, b) {
-      if (a.nuts < b.nuts) {
-        return 1;
-      }
-      if (a.nuts > b.nuts) {
-        return -1;
-      } else if (a.nuts == b.nuts) {
-        if (a.created >= b.created) {
-          return -1;
-        } else {
-          return 1;
-        }
-      }
     },
     formatDate(timestamp){
       const date = new Date(timestamp);
