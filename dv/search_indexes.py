@@ -8,8 +8,7 @@ from dv.models import (
     Programme,
     ProgrammeOutcome,
     Project,
-    State,
-)
+    News)
 
 STATES = dict(countries)
 
@@ -315,3 +314,146 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_geotarget_auto(self, obj):
         geotargets = self.prepare_geotarget(obj)
         return ' '.join(geotargets) if geotargets else None
+
+
+class NewsIndex(indexes.SearchIndex, indexes.Indexable):
+    # common facets;
+    state_name = indexes.FacetMultiValueField()
+    financial_mechanism_ss = indexes.FacetMultiValueField()
+    programme_area_ss = indexes.FacetMultiValueField()
+    priority_sector_ss = indexes.FacetMultiValueField()
+    programme_name = indexes.FacetMultiValueField()
+    programme_status = indexes.FacetMultiValueField()
+    outcome_ss = indexes.FacetMultiValueField()
+
+    kind = indexes.FacetCharField()
+
+    # specific facets
+    project_name = indexes.FacetMultiValueField()
+    project_status = indexes.FacetMultiValueField()
+    geotarget = indexes.FacetCharField()
+    theme_ss = indexes.FacetMultiValueField()
+
+    # specific fields
+    text = indexes.CharField(document=True, use_template=True)
+    summary = indexes.CharField(model_attr='summary', indexed=False)
+
+    # extra data; avoid db hit
+    name = indexes.CharField(model_attr='title', indexed=False)
+    url = indexes.CharField(model_attr='link', indexed=False)
+    image = indexes.CharField(model_attr='image', indexed=False)
+
+    def get_model(self):
+        return News
+
+    def prepare_kind(self, obj):
+        return 'News'
+
+    def prepare_state_name(self, obj):
+        if obj.programmes.exists():
+            return list(obj.programmes.values_list('state__name', flat=True).distinct())
+        try:
+            if obj.project:
+                return [obj.project.state.name]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_financial_mechanism_ss(self, obj):
+        try:
+            if obj.project:
+                return [obj.project.financial_mechanism.grant_name]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_programme_area_ss(self, obj):
+        if obj.programmes.exists():
+            return list(obj.programmes.values_list('programme_areas__name',
+                                                   flat=True).distinct())
+        try:
+            if obj.project:
+                return [obj.project.programme_area.name]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_priority_sector_ss(self, obj):
+        if obj.programmes.exists():
+            return list(
+                obj.programmes.values_list('programme_areas__priority_sector__name',
+                                           flat=True).distinct())
+        try:
+            if obj.project:
+                return [obj.project.programme_area.priority_sector.name]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_programme_name(self, obj):
+        if obj.programmes.exists():
+            return list(map(
+                lambda obj: '{}: {}'.format(obj[0], obj[1]),
+                obj.programmes.values_list('code', 'name')
+            ))
+        try:
+            if obj.project:
+                return ['{}: {}'.format(obj.project.programme.code,
+                                        obj.project.programme.name)]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_project_name(self, obj):
+        try:
+            if obj.project:
+                return [obj.project.name]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_programme_status(self, obj):
+        if obj.programmes.exists():
+            return list(obj.programmes.values_list('status', flat=True).distinct())
+        try:
+            if obj.project:
+                return [obj.project.programme.status]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_outcome_ss(self, obj):
+        try:
+            if obj.project:
+                return [obj.project.outcome.name.strip()]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_project_status(self, obj):
+        try:
+            if obj.project:
+                return [obj.project.status]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_geotarget(self, obj):
+        try:
+            if obj.project:
+                if len(obj.project.nuts) > 2:
+                    return ['{}: {}, {}'.format(obj.project.nuts, obj.project.geotarget,
+                                                STATES[obj.project.nuts[:2]])]
+                else:
+                    return ['{}: {}'.format(obj.project.nuts, obj.project.geotarget)]
+        except Project.DoesNotExist:
+            pass
+        return []
+
+    def prepare_theme_ss(self, obj):
+        try:
+            if obj.project:
+                return list(obj.project.themes.values_list('name', flat=True).distinct())
+        except Project.DoesNotExist:
+            pass
+        return []
