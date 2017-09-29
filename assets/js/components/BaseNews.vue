@@ -67,6 +67,7 @@ export default Component.extend({
 
       const out = this.getNewsForNUTS(unique) || [];
 
+      // sometimes this.localfilters.region is null (for filtering by country or removing filters)
       if(this.localfilters.region) {
         // sort by relevance and date
         out.sort(this.compareNewsRelevance);
