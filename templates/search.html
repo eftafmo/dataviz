@@ -669,7 +669,7 @@
         })
     });
 
-    //Fixing ie form attribute issue 
+    //Fixing ie form attribute issue
     $visilbe_input = $('.visible-search-input')
     $hidden_input = $('.hidden-search-input');
 
@@ -710,8 +710,8 @@
 
 {% block finally %}
   <script>
-    new root.Search({
-    el: '#sidebar-filters',
+    new search.SearchRoot({
+      el: '#sidebar-filters',
     });
   </script>
 {% endblock %}
