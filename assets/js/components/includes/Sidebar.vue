@@ -105,7 +105,6 @@
     padding-left: 0;
     margin: 0;
     margin-bottom: 1rem;
-    max-height: ~"calc(100vh - 30rem)";
     overflow: auto;
   }
 
@@ -140,6 +139,10 @@
   }
 
   &:not(.embedded) {
+    .sidebar-content {
+      max-height: ~"calc(100vh - 30rem)";
+    }
+
     @media (max-width: 768px) {
       position: fixed;
       bottom: 1rem;
@@ -190,20 +193,20 @@
         max-height: 100%;
         overflow: auto;
       }
+    }
 
-      @media (min-width: 769px) {
-        position: sticky;
-        top: 40px;
-        overflow-x: hidden;
-        width: 320px;
+    @media (min-width: 769px) {
+      position: sticky;
+      top: 40px;
+      overflow-x: hidden;
+      width: 320px;
 
-        .tabs-component-tab .counter {
-          display: none;
-        }
+      .tabs-component-tab .counter {
+        display: none;
+      }
 
-        #close-sidebar {
-          display: none;
-        }
+      #close-sidebar {
+        display: none;
       }
     }
   }
