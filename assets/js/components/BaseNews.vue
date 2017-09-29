@@ -82,10 +82,10 @@ export default Component.extend({
 
       // sometimes this.localfilters.region is null (for filtering by country or removing filters)
       if(this.localfilters.region) {
-        // sort by relevance and date
+        // sort by relevance and created date
         news_for_nuts.sort(this.compareNewsRelevance);
       } else {
-        // sort by date
+        // sort by created date
         news_for_nuts.sort((a,b) => d3.descending(a.created,b.created));
       }
 
