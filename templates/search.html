@@ -43,7 +43,7 @@
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
-        {{ paginator.count }} {{form.facets.kind.0|lower}}{{ paginator.count|pluralize}} found
+        {{ paginator.count }} {{form.facets.kind.0|lower}}{% if form.facets.kind.0 != 'News' %}{{ paginator.count|pluralize}}{% endif %} found
       </span>
       <span class="search-results-options">
         <select name="paginate_by" id="" class="subtle-select main-auto-submit" form="main-search-form">
@@ -168,38 +168,47 @@
             </div>
 
           {% elif form.facets.kind.0 == 'News' %}
-            <div class="country_status">
-                <span class="country">
-                {% for state in res.state_name %}
-                  <img src="/assets/imgs/flag-{{ state|lower|cut:" " }}.png"
-                       alt="{{ state }} flag"
-                       height="20px">&nbsp;{{ state }}
-              {% endfor %}</span>
-            </div>
-            <p>
-              <div>
-                <b>Programme:</b>
-                <ul class="search_listing">
-                  {% for programme in res.programme_name %}
-                    <li><span>{{ programme }}</span></li>
-                  {% endfor %}
-                </ul>
+            <div style="column-count: 2">
+              <div class="country_status">
+                  <span class="country">
+                  {% for state in res.state_name %}
+                    <img src="/assets/imgs/flag-{{ state|lower|cut:" " }}.png"
+                         alt="{{ state }} flag"
+                         height="20px">&nbsp;{{ state }}
+                {% endfor %}</span>
               </div>
-              {% if res.project_name %}
-                <div><b>Project:</b> {{ res.project_name.0 }}</div>
-                <div><b>Project status:</b> {{ res.project_status.0 }}</div>
-                <div><b>Funded by :</b> {{ res.financial_mechanism_ss.0 }}</div>
-                <div><b>Sector:</b> {{ res.priority_sector_ss.0 }}</div>
-              {% endif %}
-              <div>
-                <b>Programme areas:</b>
-                <ul class="search_listing">
-                  {% for area in res.programme_area_ss %}
-                    <li><span>{{ area }}</span></li>
-                  {% endfor %}
-                </ul>
+              <img src="{{ res.image }}" style="column-span: 1">
+              <p>
+                <div>
+                  <b>Programme:</b>
+                  <ul class="search_listing">
+                    {% for programme in res.programme_name %}
+                      <li><span>{{ programme }}</span></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% if res.project_name %}
+                  <div><b>Project:</b> {{ res.project_name.0 }}</div>
+                  <div><b>Project status:</b> {{ res.project_status.0 }}</div>
+                  <div><b>Funded by :</b> {{ res.financial_mechanism_ss.0 }}</div>
+                  <div><b>Sector:</b>
+                    <ul class="search_listing">
+                      {% for sector in res.priority_sector_ss %}
+                      <li><span>{{ sector }}</span></li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+                <div>
+                  <b>Programme areas:</b>
+                  <ul class="search_listing">
+                    {% for area in res.programme_area_ss %}
+                      <li><span>{{ area }}</span></li>
+                    {% endfor %}
+                  </ul>
+              </div>
+              </p>
             </div>
-            </p>
           {% else %}
             {{ res.text }}
           {% endif %}
