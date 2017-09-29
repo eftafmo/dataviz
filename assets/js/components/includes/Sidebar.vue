@@ -105,7 +105,7 @@
     padding-left: 0;
     margin: 0;
     margin-bottom: 1rem;
-    max-height: calc(100vh - 30rem);
+    max-height: ~"calc(100vh - 30rem)";
     overflow: auto;
   }
 
@@ -153,8 +153,8 @@
       height: 10rem;
 
       &.is-expanded-on-mobile {
-        height: calc(100% - 8rem);
-        width: calc(100% - 2rem);
+        height: ~"calc(100% - 8rem)";
+        width: ~"calc(100% - 2rem)";
       }
 
       .tabs-component-tab {
@@ -169,11 +169,11 @@
 
       /*Iphone 5 stuff*/
       .tabs-component {
-        height: calc(100% - 70px);
+        height: ~"calc(100% - 70px)";
       }
 
       .tabs-component-panels {
-        height: calc(100% - 37px);
+        height: ~"calc(100% - 37px)";
       }
 
       .tabs-component-panel {
