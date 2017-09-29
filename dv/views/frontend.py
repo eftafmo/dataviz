@@ -65,6 +65,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         'programme_name',
         'kind',
     ]
+    order_field = None
     template_name = 'search.html'
     paginate_by = 10
     context_object_name = 'object_list'
@@ -234,7 +235,9 @@ class FacetedSearchView(BaseFacetedSearchView):
         # Override default Solr settings
         qs = super(BaseFacetedSearchMixin, self).get_queryset()
         for field in self.facet_fields:
-            qs = qs.facet(field, mincount=1, limit=10000, sort='index')
+            qs = qs.facet(field, mincount=1, limit=10000)
+        if self.order_field:
+            qs = qs.order_by(self.order_field)
         return qs
 
 
@@ -248,6 +251,7 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'ProgrammeFacetedSearchView'
     }
+    order_field = 'code'
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
@@ -276,6 +280,7 @@ class ProjectFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'ProjectFacetedSearchView'
     }
+    order_field = 'code'
 
 
 class OrganisationFacetedSearchView(FacetedSearchView):
@@ -431,8 +436,8 @@ class EmbedComponent(TemplateView):
         except KeyError:
             raise Http404
 
-        
-        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js') 
+
+        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js')
         cssfiles = webpack.get_files('styles', 'css')
 
         def geturl(f):
