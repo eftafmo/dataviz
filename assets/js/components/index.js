@@ -24,7 +24,8 @@ export {default as ProjectsSummary} from './ProjectsSummary';
 export {default as GlobalFilters} from './GlobalFilters';
 export {default as Results} from './Results';
 export {default as Programmes} from './Programmes';
-export {default as News} from './News';
+export {default as ProjectsNews} from './ProjectsNews';
+export {default as PartnersNews} from './PartnersNews';
 
 export {default as Projects} from './Projects';
 
@@ -32,5 +33,4 @@ export {default as PartnersDonorProgrammes } from './PartnersDonorProgrammes';
 export {default as PartnersDonorProjects } from './PartnersDonorProjects';
 export {default as PartnersSummary } from './PartnersSummary';
 export {default as PartnersResults} from './PartnersResults';
-export {default as PartnerNews} from './PartnerNews';
 export {default as PartnersProjects} from './PartnersProjects';

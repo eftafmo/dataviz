@@ -1,9 +1,9 @@
 <script>
 
-import BaseNews from './News';
+import PartnerNews from './BaseNews';
 import PartnersMixin from './mixins/Partners';
 
-export default BaseNews.extend({
+export default PartnerNews.extend({
 
   mixins: [
     PartnersMixin,
