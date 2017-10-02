@@ -6,7 +6,6 @@
           <div class="body clearfix">
             <img :src="`${news.image}`">
             <h4 class="title">{{news.title}}</h4>
-            <h4 class="title">{{news.nuts}}</h4>
             <small>{{formatDate(news.created)}}</small>
           </div>
         </a>
