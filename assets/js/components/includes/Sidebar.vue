@@ -36,6 +36,7 @@
     position: relative;
     padding-left: 0;
     margin: 0;
+    -js-display: flex;
     display: flex;
   }
   .sidebar-tab-menu::before {

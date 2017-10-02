@@ -47,7 +47,8 @@
 }
 @media (min-width: 769px) {
   .pagination {
-    display: flex;
+    -js-display: flex; 
+    display:flex;
     justify-content: space-between;
   }
   .pagination-next {

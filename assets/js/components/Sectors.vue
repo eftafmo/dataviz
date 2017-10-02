@@ -104,6 +104,12 @@
   position: relative;
   @media(min-width: 1000px) and (max-width: 1400px) {
     display: block;
+    .chart-container {
+      -js-display: flex;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   .chart-wrapper {

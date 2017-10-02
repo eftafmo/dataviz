@@ -18,6 +18,7 @@
 }
 @media (min-width: 769px) {
   .page-body-inner {
+    -js-display: flex;
     display: flex;
     align-items: stretch;
   }

@@ -120,6 +120,7 @@
   }
 
   .title-wrapper {
+    -js-display: flex;
     display: flex;
     cursor: pointer;
     align-items: center;
