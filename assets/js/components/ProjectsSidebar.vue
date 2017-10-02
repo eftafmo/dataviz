@@ -29,7 +29,7 @@
 import BaseSidebar from './BaseSidebar'
 
 import Summary from './ProjectsSummary'
-import News from './News'
+import News from './ProjectsNews'
 import Projects from './Projects'
 
 
