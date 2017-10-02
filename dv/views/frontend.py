@@ -1,6 +1,7 @@
 import os.path
 import re
 from collections import defaultdict
+from collections import OrderedDict
 
 from django.conf import settings
 from django.http import Http404, JsonResponse
@@ -323,10 +324,19 @@ class OrganisationFacetedSearchView(FacetedSearchView):
                 if org_role.project:
                     prg_or_prj = org_role.project
                 if prg_or_prj:
-                    d[role_name].append('{} - {}'.format(prg_or_prj.code, prg_or_prj.name))
+                    d[role_name].append({
+                        'name': '{} - {}'.format(prg_or_prj.code, prg_or_prj.name),
+                        'url': prg_or_prj.url,
+                    })
             for role, plist in d.items():
-                d[role] = sorted(plist)
-            res.prep_roles = dict(d)
+                # Sort programmes and projects
+                d[role] = sorted(plist, key=lambda p: p['name'])
+            # Sort by role name
+            res.prep_roles = OrderedDict(
+                sorted(
+                    d.items(), key=lambda item: self.ORG_ROLE_SORT.get(item[0], 99)
+                )
+            )
         return ctx
 
 
