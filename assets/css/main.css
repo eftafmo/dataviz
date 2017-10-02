@@ -100,8 +100,8 @@ a.muted:hover {
   font-weight: 400;
   color: rgb(0, 117, 188);
   margin-top: 0;
-  margin-bottom: 2rem;
-  display: inline-block;
+  margin-bottom: .5rem;
+  display: block;
 }
 @media (max-width: 950px){
   .grant-dataviz h2 {

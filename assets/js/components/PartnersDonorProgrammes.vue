@@ -58,10 +58,6 @@
     background: #eee;
   }
 
-  .viz-select {
-    float: initial;
-    margin-bottom: 2rem;
-  }
 
   table  {
     border-collapse: collapse;

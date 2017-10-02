@@ -124,10 +124,6 @@
     margin-bottom: 0;
   }
 
-  .viz-select {
-    margin-bottom: 3rem;
-  }
-
   .chart-container {
     width: 40%;
     height: auto;
