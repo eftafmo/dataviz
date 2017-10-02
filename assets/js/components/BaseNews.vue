@@ -108,7 +108,7 @@ export default Component.extend({
         const nuts = all_news[link].nuts;
         if(deep_search) {
           // if region is "RO12" it will include nuts like "RO12" and "RO121"
-          if(nuts.substr(0, region.length) === region || !region) {
+          if(nuts.substr(0, region.length) === region || region === "") {
             filtered_news.push(all_news[link]);
           }
         } else {
@@ -119,7 +119,7 @@ export default Component.extend({
         }
       }
       deep_search = false;
-      // search for parent news if region news are less than 3, stop ar country code ex: "RO"
+      // search for parent news if region news are less than 3, stop at country code ex: "RO"
       if(filtered_news.length <= 3 && region.length >= 2) {
         filtered_news = [...filtered_news, ...this.getNewsForRegion(all_news, region.substr(0, region.length-1, deep_search))];
       }
