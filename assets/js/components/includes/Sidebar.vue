@@ -266,6 +266,7 @@ export default {
       if(this.embedded) return
 
       e = e || window.event;
+      if(e)
       e.stopPropagation(); // event will trigger expand and cancel collapse
       if (this.isMobileExpanded) {
         this.isMobileExpanded = false;
