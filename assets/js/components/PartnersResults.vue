@@ -1,7 +1,7 @@
 <template>
     <div class="results">
        <dl v-for="item in data" class="partner-result clearfix">
-          <dt class="partner-result-achievement">{{ item.achievement }}{{ item.unit }}</dt>
+          <dt class="partner-result-achievement">{{ number(item.achievement) }}{{ item.unit }}</dt>
           <dd class="partner-result">{{ item.indicator }} </dd>
        </dl>
     </div>
@@ -11,22 +11,18 @@
 <style lang="less">
 .results {
   dl dt {
-      float: left;
       font-weight: bold;
-      margin-right: 10px;
-      padding: 5px;
-      width: 60px;
+      display: inline;
       text-align: center;
-      box-shadow: 0px 0px 2px #aaa;
-      border: 1px solid #50b9ff;
-      background: #50b9ff;
-      color: white;
-      font-size: 2rem;
+      border-left: 3px solid rgb(0, 117, 188);
+      padding-left: 1rem;
+      font-size: 1.6rem;
   }
    
   dl dd {
     margin:2px 0; 
     font-size: 1.4rem;
+    display: inline;
   }
 
   small {
@@ -41,7 +37,7 @@ import * as d3 from 'd3';
 
 import Component from './Component';
 import PartnersMixin from './mixins/Partners';
-
+import ComponentMixin from './mixins/Component.js'
 
 export default Component.extend({
   mixins: [PartnersMixin],
@@ -123,6 +119,12 @@ export default Component.extend({
         });
       }
       return results;
+    },
+  },
+
+  methods: {
+    format(v) {
+      return this.number(v)
     },
   },
 
