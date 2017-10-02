@@ -1,39 +1,64 @@
 <template>
-    <div v-show="hasData" class="sidebar-header">
-      <transition name="fade">
-        <div class="allocation" :key="changed">
-          <strong>{{ currency(data.allocation) }}</strong>
-          <small>{{ currency(data.bilateral_allocation / 0.925) }} for bilateral fund</small>
-        </div>
-      </transition>
-    </div>
+<div :class="classNames" v-show="hasData">
+    <transition name="fade">
+      <div class="allocation" :key="changed">
+        <strong>{{ currency(data.allocation) }}</strong>
+        <small>{{ currency(data.bilateral_allocation / 0.925) }} for bilateral fund</small>
+      </div>
+    </transition>
+  </div>
 </template>
 
 
 <style lang="less">
-.sidebar-header {
+.dataviz .viz.summary {
   position: relative;
-}
 
-.allocation {
-  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  height: 60px;
+
+  strong {
+    color: rgb(0, 117, 188);
+    font-size: larger;
+  }
+
+  small {
+    display: block;
+    color: #2FB82A;
+  }
+
+  .allocation {
+    width: 100%;
+
+    &.fade-enter-active {
+      position: absolute;
+      top: 1rem;
+      width: calc(~"100% - 2rem");
+    }
+
+    &.fade-leave-active {
+      position: absolute;
+      top: 1rem;
+      width: calc(~"100% - 2rem");
+    }
+  }
+
+  &:not(.embedded) {
+    @media (max-width: 768px) {
+      padding-bottom: 0;
+
+      small {
+        font-size: 1rem;
+      }
+    }
+  }
 }
 
 .sidebar-tab-content .active {
   display: block;
 }
 
-.allocation.fade-enter-active {
-  position: absolute;
-  top: 1rem;
-  width: calc(~"100% - 2rem");
-}
-
-.allocation.fade-leave-active {
-  position: absolute;
-  top: 1rem;
-  width: calc(~"100% - 2rem");
-}
 </style>
 
 
@@ -41,6 +66,8 @@
 import Component from './Component';
 
 export default Component.extend({
+  type: "summary",
+
   data() {
     return {
       transitioned: false,

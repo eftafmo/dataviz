@@ -418,8 +418,6 @@ export default Chart.extend({
             dataset = this.aggregate(
               this.filtered, ['fm', 'beneficiary'], ['allocation'], false
             );
-      // hack to ensure a minimum allocation and avoid overlaps. Temporary?
-      const min_amount = 0.01 * this.aggregated.allocation;
 
       // base the dataset on the constant list of FMs and beneficiaries,
       // to ensure 0-valued items exist regardless of filtering
@@ -437,11 +435,60 @@ export default Chart.extend({
 
         for (const bnf of this.BENEFICIARY_ARRAY) {
           const bnfdata = fmdata[bnf.id];
-          allocations.push(bnfdata !== undefined ? Math.max(min_amount, bnfdata.allocation) : 0);
+          allocations.push(bnfdata !== undefined ? bnfdata.allocation : 0);
         }
       }
 
-      return this.chord(matrix);
+      // if there are very small-valued items, we want to massage the data so
+      // they occupy enough space to be usable (and avoid overlapping labels).
+      //
+      // what the code below does is calculate a reference delta to increment
+      // the smalles value, and adjust all other items accordingly, so that
+      // they a) preserve their order and
+      //      b) keep a relative ratio from one to the next, while
+      //      c) the total sum is preserved
+
+      const MIN = .015
+
+      const totals = matrix.reduce(
+        (row, a) => row.map((b, i) => a[i] + b)
+      )
+      // for avg / stdev calculations we skip zeroes
+      const _totals = totals.filter(x => x != 0)
+
+      const sum = _totals.reduce((a, b) => a + b),
+            permitted = sum * MIN,
+            minval = Math.min.apply(Math, _totals)
+
+      // maybe there's nothing to do?
+      if (minval >= permitted) return this.chord(matrix)
+
+      const basedelta = permitted - minval,
+            avg = sum / _totals.length
+
+      const stdev = Math.sqrt(
+        _totals.map(x => (x - avg) * (x - avg))
+               .reduce((a, b) => a + b)
+
+        / (_totals.length - 1)
+      )
+
+      // this is where the magic happens:
+      const weights = totals.map(x => x == 0 ? 0 : (x - avg) / stdev)
+
+      const minweight = Math.min.apply(Math, weights) // this corresponds to minval
+
+      const deltas = totals.map((x, i) => x == 0 ? 0 : weights[i] * basedelta / minweight)
+
+      for (const row of matrix) {
+        row.forEach((x, i) => {
+          if (x == 0) return 0
+
+          row[i] = x + x / totals[i] * deltas[i]
+        })
+      }
+
+      return this.chord(matrix)
     },
   },
 

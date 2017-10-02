@@ -73,6 +73,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'dv.urls'
@@ -180,5 +184,16 @@ HAYSTACK_CONNECTIONS = {
         'URL': 'http://localhost:8983/solr/eeagrants'
     },
 }
+
+# Caching system
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+    }
+}
+
+API_CACHE_SECONDS = 60 * 60 * 24  # 1 day
 
 from .localsettings import *

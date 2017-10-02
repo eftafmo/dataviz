@@ -58,7 +58,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         ).distinct())
 
     def prepare_programme_name(self, obj):
-        return ['{}: {}'.format(obj.code, obj.name)]
+        return ['{}: {}'.format(obj.code, obj.name.strip())]
 
     def prepare_programme_area_ss(self, obj):
         return list(obj.programme_areas.values_list(
@@ -138,7 +138,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return [obj.programme_area.priority_sector.name]
 
     def prepare_programme_name(self, obj):
-        return ['{}: {}'.format(obj.programme.code, obj.programme.name)]
+        return ['{}: {}'.format(obj.programme.code, obj.programme.name.strip())]
 
     def prepare_outcome_ss(self, obj):
         return [obj.outcome.name.strip()]
@@ -176,8 +176,10 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
     city = indexes.FacetCharField(model_attr='city')
+    city_auto = indexes.EdgeNgramField(model_attr='city')
     # nuts = indexes.FacetCharField(model_attr='nuts')
     geotarget = indexes.FacetCharField(model_attr='geotarget', null=True)
+    geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget', null=True)
     # nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
     role_ss = indexes.FacetMultiValueField()
 
@@ -270,7 +272,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         ).distinct()
         result = []
         for prg in programmes:
-            result.append('{}: {}'.format(prg['programme__code'], prg['programme__name']))
+            result.append('{}: {}'.format(prg['programme__code'], prg['programme__name'].strip()))
         return result
 
     def prepare_programme_name_auto(self, obj):
@@ -309,3 +311,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
         else:
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
+
+    def prepare_geotarget_auto(self, obj):
+        geotargets = self.prepare_geotarget(obj)
+        return ' '.join(geotargets) if geotargets else None

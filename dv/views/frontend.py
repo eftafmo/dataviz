@@ -77,34 +77,76 @@ class FacetedSearchView(BaseFacetedSearchView):
         return self.request.GET.get('paginate_by', self.paginate_by)
 
     PRG_STATUS_SORT = {
-        'implementation': 0,
-        'closed': 1,
-        'approved': 2,
-        'withdrawn': 3,
-        'returned to po': 4,
+        'Implementation': 0,
+        'Closed': 1,
+        'Approved': 2,
+        'Withdrawn': 3,
+        'Returned to po': 4,
     }
     PRJ_STATUS_SORT = {
-        'in progress': 0,
-        'completed': 1,
-        'non completed': 2,
-        'terminated': 3,
+        'In Progress': 0,
+        'Completed': 1,
+        'Non Completed': 2,
+        'Terminated': 3,
     }
     AREAS_LIST = ProgrammeArea.objects.order_by(
         '-order'
     ).values(
-        'name', 'priority_sector__name', 'order'
+        'name',
+        'priority_sector__name',
+        'priority_sector__type__grant_name',
+        'order',
     )
     # sort by -order because there are some duplicated names and we need the first occurrence only
-    AREAS_SORT = dict([(x['name'].lower(), x['order']) for x in AREAS_LIST])
-    SECTORS_SORT = dict([(x['priority_sector__name'].lower(), x['order']) for x in AREAS_LIST])
+    AREAS_SORT = dict([(x['name'], x['order']) for x in AREAS_LIST])
+    SECTORS_SORT = dict([(
+        x['priority_sector__name'],
+        x['order']
+    ) for x in AREAS_LIST])
+
+    # dicts for filter_facets
+    AREAS_SECTORS = defaultdict(set)
+    AREAS_FMS = defaultdict(set)
+    SECTORS_FMS = defaultdict(set)
+    for x in AREAS_LIST:
+        AREAS_SECTORS[x['name']].add(x['priority_sector__name'])
+        AREAS_FMS[x['name']].add(x['priority_sector__type__grant_name'])
+        SECTORS_FMS[x['priority_sector__name']].add(x['priority_sector__type__grant_name'])
+
     ORG_ROLE_SORT = {
-        'national focal point': 0,
-        'programme operator': 1,
-        'donor programme partner': 2,
-        'project promoter': 3,
-        'donor project partner': 4,
-        'programme partner': 5,
-        'project partner': 6,
+        'National Focal Point': 0,
+        'Programme Operator': 1,
+        'Donor Programme Partner': 2,
+        'Project Promoter': 3,
+        'Donor Project Partner': 4,
+        'Programme Partner': 5,
+        'Project Partner': 6,
+    }
+
+    # Donor states first (incl. France as International), then beneficiary states
+    COUNTRY_SORT_BOOST = {
+        'Iceland': 0,
+        'Liechtenstein': 0,
+        'Norway': 0,
+
+        'France': 1,
+
+        'Bulgaria': 2,
+        'Cyprus': 2,
+        'Czech Republic': 2,
+        'Estonia': 2,
+        'Greece': 2,
+        'Hungary': 2,
+        'Latvia': 2,
+        'Lithuania': 2,
+        'Malta': 2,
+        'Poland': 2,
+        'Portugal': 2,
+        'Romania': 2,
+        'Slovakia': 2,
+        'Slovenia': 2,
+        'Spain': 2,
+        'Croatia': 2,
     }
 
     REORDER_FACETS = {
@@ -120,23 +162,79 @@ class FacetedSearchView(BaseFacetedSearchView):
             if facet in facets:
                 facets[facet] = sorted(
                     facets[facet],
-                    key=lambda x: order.get(x[0].lower(), 99)
+                    key=lambda x: order.get(x[0], 99)
                 )
+        # Special case for Country, refs #413
+        if 'country' in facets:
+            facets['country'] = sorted(
+                facets['country'],
+                key=lambda x: (self.COUNTRY_SORT_BOOST.get(x[0], 10) * 255 + ord(x[0][0]))
+            )
+
+    def filter_facets(self, facet_fields, form_facets):
+        if form_facets['financial_mechanism_ss']:
+            fms = set(form_facets['financial_mechanism_ss'])
+            # Narrow sectors and programme areas
+            facet_fields['priority_sector_ss'] = [(
+                x[0], x[1]
+            ) for x in facet_fields['priority_sector_ss']
+                if len(self.SECTORS_FMS[x[0]] & fms)
+            ]
+            facet_fields['programme_area_ss'] = [(
+                x[0], x[1]
+            ) for x in facet_fields['programme_area_ss']
+                if len(self.AREAS_FMS[x[0]] & fms)
+            ]
+        if form_facets['priority_sector_ss']:
+            sectors = set(form_facets['priority_sector_ss'])
+            facet_fields['programme_area_ss'] = [(
+                x[0], x[1]
+            ) for x in facet_fields['programme_area_ss']
+                if len(self.AREAS_SECTORS[x[0]] & sectors)
+            ]
+            # also filter fm facet if sector is selected
+            fms = [fm for x in sectors for fm in self.SECTORS_FMS[x]]
+            facet_fields['financial_mechanism_ss'] = [(
+                x[0], x[1]
+            ) for x in facet_fields['financial_mechanism_ss']
+                if x[0] in fms
+            ]
+        if form_facets['programme_area_ss']:
+            areas = set(form_facets['programme_area_ss'])
+            fms = [fm for x in areas for fm in self.AREAS_FMS[x]]
+            sectors = [ps for x in areas for ps in self.AREAS_SECTORS[x]]
+            facet_fields['financial_mechanism_ss'] = [(
+                x[0], x[1]
+            ) for x in facet_fields['financial_mechanism_ss']
+                if x[0] in fms
+            ]
+            facet_fields['priority_sector_ss'] = [(
+                x[0], x[1]
+            ) for x in facet_fields['priority_sector_ss']
+                if x[0] in sectors
+            ]
+
+        # Note: outcomes are still not filtered by FM
+        # see programme PL04, outcome PA4101
 
     def get_context_data(self, *args, **kwargs):
         objls = kwargs.pop('object_list', self.queryset)
         ctx = super().get_context_data(object_list=objls, **kwargs)
         ctx['page_sizes'] = [10, 25, 50, 100]
 
+        facet_fields = ctx.get('facets', {}).get('fields', {})
         # Custom sorting of some facets, refs #326
-        self.reorder_facets(ctx.get('facets', {}).get('fields', {}))
+        self.reorder_facets(facet_fields)
+        # Custom filtering of PS/PA facets, refs #329
+        self.filter_facets(facet_fields, kwargs['form'].facets)
 
         return ctx
 
     def get_queryset(self):
+        # Override default Solr settings
         qs = super(BaseFacetedSearchMixin, self).get_queryset()
         for field in self.facet_fields:
-            qs = qs.facet(field, limit=10000, sort='index')
+            qs = qs.facet(field, mincount=1, limit=10000, sort='index')
         return qs
 
 
@@ -219,12 +317,13 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             org_roles = res.object.roles.all()
             for org_role in org_roles:
                 role_name = org_role.organisation_role.role
-                if org_role.programme.is_tap:
+                if org_role.programme and org_role.programme.is_tap:
                     continue
                 prg_or_prj = org_role.programme
                 if org_role.project:
                     prg_or_prj = org_role.project
-                d[role_name].append('{} - {}'.format(prg_or_prj.code, prg_or_prj.name))
+                if prg_or_prj:
+                    d[role_name].append('{} - {}'.format(prg_or_prj.code, prg_or_prj.name))
             for role, plist in d.items():
                 d[role] = sorted(plist)
             res.prep_roles = dict(d)
@@ -332,8 +431,8 @@ class EmbedComponent(TemplateView):
         except KeyError:
             raise Http404
 
-        
-        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js') 
+
+        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js')
         cssfiles = webpack.get_files('styles', 'css')
 
         def geturl(f):
@@ -349,7 +448,7 @@ class EmbedComponent(TemplateView):
         }
 
         # this is ugly, nasty and not nice
-        if scenario in ("grants", "projects"):
+        if scenario in ("grants", "projects") and component == "xmap":
             props['detailsDatasource'] = self.request.build_absolute_uri(
                 reverse("api:%s-beneficiary-detail" % scenario, args=("XX",))
             )

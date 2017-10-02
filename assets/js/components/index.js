@@ -34,3 +34,7 @@ export {default as PartnersDonorProjects } from './PartnersDonorProjects';
 export {default as PartnersSummary } from './PartnersSummary';
 export {default as PartnersResults} from './PartnersResults';
 export {default as PartnersProjects} from './PartnersProjects';
+
+export {default as GrantsSidebar} from './GrantsSidebar'
+export {default as PartnersSidebar} from './PartnersSidebar'
+export {default as ProjectsSidebar} from './ProjectsSidebar'

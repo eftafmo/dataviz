@@ -634,7 +634,6 @@ def project_nuts(beneficiary, force_nuts3):
     }
     data = (
         Project.objects.filter(state=state)
-        .exclude(allocation=0)
         .annotate(**fields)
         .values(*fields.keys())
         .annotate(
@@ -733,7 +732,6 @@ def projects_beneficiary_detail(request, beneficiary):
     }
     data = (
         Project.objects.filter(state=state)
-        .exclude(allocation=0)
         .filter(nuts__length__gt=2)
         .exclude(nuts__endswith="Z")
         .annotate(**fields)
