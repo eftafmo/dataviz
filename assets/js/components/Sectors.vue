@@ -1,5 +1,5 @@
 <template>
-<div :class="$options.type" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div :class="$options.type" class="clearfix" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <div class="chart-wrapper">
@@ -104,11 +104,6 @@
   position: relative;
   @media(min-width: 1000px) and (max-width: 1400px) {
     display: block;
-    .chart-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
   }
 
   .chart-wrapper {
