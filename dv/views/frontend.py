@@ -298,6 +298,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'OrganisationFacetedSearchView'
     }
+    order_field = '-role_max_priority_code'
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
