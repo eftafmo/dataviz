@@ -210,6 +210,10 @@
         display: none;
       }
     }
+    @media(min-width: 769px) and (max-width: 1000px) {
+      width: auto;
+    }
+
   }
 }
 

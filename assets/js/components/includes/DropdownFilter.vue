@@ -27,7 +27,9 @@
     option {
       color: black;
     }
-
+    @media(min-width: 780px) and (max-width: 1000px){
+      width: 100%;
+    }
   }
 
   .dropdown {

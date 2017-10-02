@@ -42,6 +42,12 @@
   }
 }
 
+@media(min-width: 769px) and (max-width: 1000px) {
+  .aside {
+    flex-shrink: 0.4;
+    min-width: initial;
+  }
+}
 
 @media (min-width: 1400px) {
   main.main {
