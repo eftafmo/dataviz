@@ -9,7 +9,7 @@
     <slot name="legend" :data="data">
       <fm-legend :fms="data" class="clearfix">
         <template slot="fm-content" scope="x">
-          <span class="value" :style="{color: x.fm.colour}">{{ currency(x.fm.allocation) }}</span>
+          <span class="value" :style="{color: x.fm.colour}">{{ currency(x.fm.allocation || 0) }}</span>
           <span class="name">{{ x.fm.name }}</span>
         </template>
       </fm-legend>
