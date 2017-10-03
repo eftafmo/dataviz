@@ -62,7 +62,7 @@ export default Component.extend({
         }
       }
 
-      const out = this.getSortedNews(unique) || [];
+      const out = this.getSortedNews(unique);
 
       return out;
     },
