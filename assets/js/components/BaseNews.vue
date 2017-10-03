@@ -44,8 +44,6 @@
 
 
 <script>
-import * as d3 from 'd3';
-
 import Component from './Component';
 
 
@@ -56,18 +54,16 @@ export default Component.extend({
 
       const dataset = this.filtered;
       const unique = {};
+
       // use dict to remove duplicates
       for (const d of dataset) {
         for (const news of d.news){
           unique[news.link] = news;
         }
       }
-      const out = [];
-      for (const link in unique) {
-        out.push(unique[link]);
-      }
-      // sort by date
-      out.sort((a,b) => d3.descending(a.created,b.created));
+
+      const out = this.getSortedNews(unique);
+
       return out;
     },
   },

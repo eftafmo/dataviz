@@ -37,7 +37,7 @@ import BaseSidebar from './BaseSidebar'
 
 import Summary from './PartnersSummary'
 import Results from './PartnersResults'
-import News from './PartnerNews'
+import News from './PartnersNews'
 import Programmes from './Programmes'
 import Projects from './PartnersProjects'
 
