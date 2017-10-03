@@ -1,3 +1,4 @@
+from functools import reduce
 from haystack import indexes
 from haystack import exceptions
 from django_countries import countries
@@ -182,10 +183,23 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget', null=True)
     # nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
     role_ss = indexes.FacetMultiValueField()
+    role_max_priority_code = indexes.IntegerField()
 
     # extra data; avoid db hit
     name = indexes.CharField(model_attr='name', indexed=False)
     domestic_name = indexes.CharField(model_attr='domestic_name', indexed=False, null=True)
+
+    # Highest number = max priority for role. Others default to priority 0.
+
+    ROLE_PRIORITIES = {
+        'National Focal Point': 7,  # NFP
+        'Programme Operator': 6,  # PO
+        'Donor Programme Partner': 5,  # DPP
+        'Donor Project Partner': 4,  # PJDPP
+        'Programme Partner': 3,  # PP
+        'Project Partner': 2,  # PJPP
+        'Project Promoter': 1,  # PJPT
+    }
 
     def get_model(self):
         return Organisation
@@ -315,3 +329,15 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_geotarget_auto(self, obj):
         geotargets = self.prepare_geotarget(obj)
         return ' '.join(geotargets) if geotargets else None
+
+    def prepare(self, obj):
+        self.prepared_data = super().prepare(obj)
+        if self.prepared_data['role_ss']:
+            self.prepared_data['role_max_priority_code'] = reduce(
+                lambda max_value, role:
+                    max(max_value, self.ROLE_PRIORITIES.get(role, 0)),
+                self.prepared_data['role_ss'],
+                0)
+        else:
+            self.prepared_data['role_max_priority_code'] = None
+        return self.prepared_data
