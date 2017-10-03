@@ -255,11 +255,15 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_programme_area_ss(self, obj):
         result = set()
         result = result.union(obj.roles.filter(
-            is_programme=False, project__isnull=False
+            is_programme=False,
+            project__isnull=False,
+            project__programme_area__is_not_ta=True,
         ).values_list(
             'project__programme_area__name', flat=True).distinct())
         result = result.union(obj.roles.filter(
-            is_programme=True, programme__isnull=False
+            is_programme=True,
+            programme__isnull=False,
+            programme__programme_areas__is_not_ta=True,
         ).values_list(
             'programme__programme_areas__name', flat=True).distinct())
         return list(result)
@@ -267,11 +271,15 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_priority_sector_ss(self, obj):
         result = set()
         result = result.union(obj.roles.filter(
-            is_programme=False, project__isnull=False
+            is_programme=False,
+            project__isnull=False,
+            project__programme_area__is_not_ta=True,
         ).values_list(
             'project__programme_area__priority_sector__name', flat=True).distinct())
         result = result.union(obj.roles.filter(
-            is_programme=True, programme__isnull=False
+            is_programme=True,
+            programme__isnull=False,
+            programme__programme_areas__is_not_ta=True,
         ).values_list(
             'programme__programme_areas__priority_sector__name', flat=True).distinct())
         return list(result)
