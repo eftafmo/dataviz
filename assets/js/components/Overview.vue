@@ -16,7 +16,7 @@
       </g>
     </svg>
 
-    <div v-if="hasData" class="info">
+    <div v-if="hasData && aggregated.allocation" class="info">
       <transition name="fade"><div class="heading" :key="changed">
         <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
       </div></transition>
@@ -26,6 +26,17 @@
       </ul></transition></div>
       <div class="ending">
         <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
+      </div>
+    </div>
+    <div v-if="!hasData || !aggregated.allocation" class="info">
+      <transition name="fade"><div class="heading" :key="changed">
+        <p><span class="amount">No allocation available</span></p></div>
+      </transition>
+      <div class="data-wrapper">
+        <transition name="fade"><ul class="data" :key="changed">
+          <li class="programmes"><span class="amount"></span>No programmes available</li>
+          <li class="projects"><span class="amount"></span>No projects available</li></ul>
+        </transition>
       </div>
     </div>
 
@@ -456,9 +467,11 @@ export default Chart.extend({
       // for avg / stdev calculations we skip zeroes
       const _totals = totals.filter(x => x != 0)
 
-      const sum = _totals.reduce((a, b) => a + b),
+      const sum = _totals.reduce((a, b) => a + b, 0),
             permitted = sum * MIN,
             minval = Math.min.apply(Math, _totals)
+
+      if (sum == 0) return;
 
       // maybe there's nothing to do?
       if (minval >= permitted) return this.chord(matrix)
@@ -497,7 +510,8 @@ export default Chart.extend({
       const $this = this,
             chords = this.data,
             t = this.getTransition();
-
+      
+      if(!this.data) return;
       // avoid other transitions while this runs ¬
       t
         .on("start",
