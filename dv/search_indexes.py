@@ -350,13 +350,13 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         return 'News'
 
     def prepare_state_name(self, obj):
-        if obj.programmes.exists():
-            return list(obj.programmes.values_list('state__name', flat=True).distinct())
         try:
             if obj.project:
                 return [obj.project.state.name]
         except Project.DoesNotExist:
             pass
+        if obj.programmes.exists():
+            return list(obj.programmes.values_list('state__name', flat=True).distinct())
         return None
 
     def prepare_financial_mechanism_ss(self, obj):
@@ -368,58 +368,59 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         return None
 
     def prepare_programme_area_ss(self, obj):
-        if obj.programmes.exists():
-            return list(obj.programmes.values_list('programme_areas__name',
-                                                   flat=True).distinct())
         try:
             if obj.project:
                 return [obj.project.programme_area.name]
         except Project.DoesNotExist:
             pass
+        if obj.programmes.exists():
+            return list(obj.programmes.values_list('programme_areas__name',
+                                                   flat=True).distinct())
         return None
 
     def prepare_priority_sector_ss(self, obj):
-        if obj.programmes.exists():
-            return list(
-                obj.programmes.values_list('programme_areas__priority_sector__name',
-                                           flat=True).distinct())
         try:
             if obj.project:
                 return [obj.project.programme_area.priority_sector.name]
         except Project.DoesNotExist:
             pass
+        if obj.programmes.exists():
+            return list(
+                obj.programmes.values_list('programme_areas__priority_sector__name',
+                                           flat=True).distinct())
         return None
 
     def prepare_programme_name(self, obj):
-        if obj.programmes.exists():
-            return list(map(
-                lambda obj: '{}: {}'.format(obj[0], obj[1]),
-                obj.programmes.values_list('code', 'name')
-            ))
         try:
             if obj.project:
                 return ['{}: {}'.format(obj.project.programme.code,
                                         obj.project.programme.name)]
         except Project.DoesNotExist:
             pass
+        if obj.programmes.exists():
+            return list(map(
+                lambda obj: '{}: {}'.format(obj[0], obj[1]),
+                obj.programmes.values_list('code', 'name')
+            ))
         return None
 
     def prepare_project_name(self, obj):
         try:
             if obj.project:
-                return [obj.project.name]
+                return ['{}: {}'.format(obj.project.code,
+                                        obj.project.name)]
         except Project.DoesNotExist:
             pass
         return None
 
     def prepare_programme_status(self, obj):
-        if obj.programmes.exists():
-            return list(obj.programmes.values_list('status', flat=True).distinct())
         try:
             if obj.project:
                 return [obj.project.programme.status]
         except Project.DoesNotExist:
             pass
+        if obj.programmes.exists():
+            return list(obj.programmes.values_list('status', flat=True).distinct())
         return None
 
     def prepare_outcome_ss(self, obj):
@@ -428,6 +429,9 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.outcome.name.strip()]
         except Project.DoesNotExist:
             pass
+        if obj.programmes.exists():
+            return list(obj.programmes.values_list('outcomes__outcome__name',
+                                                   flat=True).distinct())
         return None
 
     def prepare_project_status(self, obj):
