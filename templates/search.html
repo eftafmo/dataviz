@@ -27,6 +27,9 @@
               <input type="radio" name="kind"
                    {% if form.facets.kind.0 == 'Organisation'%}checked{% endif %}>
               <label for="organisation-tab">Organisations</label>
+            <input type="radio" name="kind"
+                   {% if form.facets.kind.0 == 'News'%}checked{% endif %}>
+              <label for="news-tab">News</label>
         </div>
         </div>
 
@@ -40,7 +43,7 @@
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
-        {{ paginator.count }} {{form.facets.kind.0|lower}}{{ paginator.count|pluralize}} found
+        {{ paginator.count }} {{form.facets.kind.0|lower}}{% if form.facets.kind.0 != 'News' %}{{ paginator.count|pluralize}}{% endif %} found
       </span>
       <span class="search-results-options">
         <select name="paginate_by" id="" class="subtle-select main-auto-submit" form="main-search-form">
@@ -167,6 +170,62 @@
               {% endfor %}
             </div>
 
+          {% elif form.facets.kind.0 == 'News' %}
+            <div style="column-count: 2">
+              <div class="country_status">
+                  <span class="country">
+                  {% for state in res.state_name %}
+                    <img src="/assets/imgs/flag-{{ state|lower|cut:" " }}.png"
+                         alt="{{ state }} flag"
+                         height="20px">&nbsp;{{ state }}
+                {% endfor %}</span>
+              </div>
+                <div>{{ res.summary }}</div>
+              <img src="{{ res.image }}" style="column-span: 1">
+              <p>
+                <br>
+                <div>
+                  <b>Programme:</b>
+                  {% if res.programme_name|length == 1 %}
+                    {{ res.programme_name.0 }}
+                  {% else %}
+                    <ul class="search_listing">
+                      {% for programme in res.programme_name %}
+                        <li><span>{{ programme }}</span></li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+                {% if res.project_name %}
+                  <div><b>Project:</b> {{ res.project_name.0 }}</div>
+                  <div><b>Project status:</b> {{ res.project_status.0 }}</div>
+                  <div><b>Funded by :</b> {{ res.financial_mechanism_ss.0 }}</div>
+                  <div><b>Sector:</b>
+                    {% if res.priority_sector_ss|length == 1 %}
+                      {{ res.priority_sector_ss.0 }}
+                    {% else %}
+                      <ul class="search_listing">
+                        {% for sector in res.priority_sector_ss %}
+                        <li><span>{{ sector }}</span></li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                {% endif %}
+                <div>
+                  <b>Programme areas:</b>
+                  {% if res.programme_area_ss|length == 1 %}
+                    {{ res.programme_area_ss.0 }}
+                  {% else %}
+                    <ul class="search_listing">
+                      {% for area in res.programme_area_ss %}
+                        <li><span>{{ area }}</span></li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+              </div>
+              </p>
+            </div>
           {% else %}
             {{ res.text }}
           {% endif %}
@@ -251,6 +310,8 @@
                {% if form.facets.kind.0 == 'Project'%}checked{% endif %}>
         <input type="radio" name="kind" id="organisation-tab" value="Organisation"
                {% if form.facets.kind.0 == 'Organisation'%}checked{% endif %}>
+        <input type="radio" name="kind" id="news-tab" value="News"
+               {% if form.facets.kind.0 == 'News'%}checked{% endif %}>
       </div>
 
       </div>
@@ -349,7 +410,7 @@
       </div>
       {% endif %}
 
-      {% if form.facets.kind.0 == 'Programme' or form.facets.kind.0 == 'Project' %}
+      {% if form.facets.kind.0 == 'Programme' or form.facets.kind.0 == 'Project' or form.facets.kind.0 == 'News' %}
 
       <div class="input-group">
         <div class="input-box input-block">
@@ -383,7 +444,7 @@
 
       {% endif %}
 
-      {% if form.facets.kind.0 == 'Project' %}
+      {% if form.facets.kind.0 == 'Project' or form.facets.kind.0 == 'News' %}
         <div class="input-group">
           <div class="input-box input-block">
             <label for="project-status-facet">Project status</label>

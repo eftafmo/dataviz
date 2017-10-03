@@ -346,6 +346,16 @@ class OrganisationFacetedSearchView(FacetedSearchView):
         return ctx
 
 
+class NewsFacetedSearchView(FacetedSearchView):
+    facet_fields = ProjectFacetedSearchView.facet_fields
+
+    initial = {
+        'kind': ['News'],
+        # hack! we remove this at form init
+        'view_name': 'NewsFacetedSearchView'
+    }
+
+
 class _TypeaheadFacetedSearchView(object):
     form_class = EeaAutoFacetedSearchForm
     template_name = None

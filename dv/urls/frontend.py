@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^search/programme/$', views.ProgrammeFacetedSearchView.as_view(), name='search_programme'),
     url(r'^search/project/$', views.ProjectFacetedSearchView.as_view(), name='search_project'),
     url(r'^search/organisation/$', views.OrganisationFacetedSearchView.as_view(), name='search_organisation'),
+    url(r'^search/news/$', views.NewsFacetedSearchView.as_view(),
+        name='search_news'),
 
     url(r'^embed/(?P<scenario>[a-z]+)/(?P<component>[a-z][a-z-]+[a-z]).js$',
         views.EmbedComponent.as_view(),
