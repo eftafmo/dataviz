@@ -330,16 +330,15 @@
       {% if facets.fields.financial_mechanism_ss %}
       <div class="input-group">
         <div class="input-box input-block">
-          <label for="financial-mechanism-facet">Financial mechanism</label>
-          <select multiple name="financial_mechanism_ss" id="financial-mechanism-facet" form="main-search-form" class="main-auto-submit">
-            {% for o in facets.fields.financial_mechanism_ss %}
-              {% if o.1 %}
-              <option value="{{ o.0 }}" {% if o.0 in form.facets.financial_mechanism_ss %}selected{% endif %}>
-                {{ o.0 }} ({{ o.1 }})
-              </option>
-              {% endif %}
-            {% endfor %}
-          </select>
+          <label>Financial mechanism</label>
+          <!--select multiple name="" id="financial-mechanism-facet" form="main-search-form" class="main-auto-submit"-->
+          {% for o in facets.fields.financial_mechanism_ss %}
+            <label class="clearfix checkbox_label">
+              <input type="checkbox" name="financial_mechanism_ss" id="fm_{{ forloop.counter }}" value="{{ o.0 }}" {% if o.0 in form.facets.financial_mechanism_ss %}checked{% endif %} class="main-auto-submit" form="main-search-form">
+              <label for="fm_{{ forloop.counter }}"></label>
+              <span>{{ o.0 }} ({{ o.1 }})</span>
+            </label>
+          {% endfor %}
         </div>
       </div>
       {% endif %}
@@ -656,7 +655,7 @@
 
       var all_select2 = [];
       // common
-      all_select2.push($("#financial-mechanism-facet").select2());
+      //all_select2.push($("#financial-mechanism-facet").select2());
       all_select2.push($("#state-facet").select2());
       all_select2.push($("#priority-sector-facet").select2());
       all_select2.push($("#programme-area-facet").select2());
@@ -761,7 +760,6 @@
     $('.visible-checkboxes label').on('click',function(e){
       e.preventDefault()
       $target = $hidden_checkboxes.find("input#"+$(this).attr('for')+"");
-      console.log($target)
       $target.prop('checked', true);
       var action_url = '/search/' + $target.val().toLowerCase() + '/';
       $("#main-search-form").attr("action", action_url);
