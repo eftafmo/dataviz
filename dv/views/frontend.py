@@ -235,7 +235,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         # Override default Solr settings
         qs = super(BaseFacetedSearchMixin, self).get_queryset()
         for field in self.facet_fields:
-            qs = qs.facet(field, mincount=1, limit=10000)
+            qs = qs.facet(field, mincount=1, limit=10000, sort='index')
         if self.order_field:
             qs = qs.order_by(self.order_field)
         return qs
