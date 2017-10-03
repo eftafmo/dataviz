@@ -203,6 +203,18 @@ def projects(request):
         programme__isnull=True,
     ).distinct()
 
+    project_nuts_raw = Project.objects.values(
+        'financial_mechanism_id',
+        'programme_area_id',
+        'state_id',
+        'nuts',
+        'programme_id',
+    ).order_by('nuts').distinct()
+    project_nuts = defaultdict(list)
+    for item in project_nuts_raw:
+        key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id'] + item['programme_id']
+        project_nuts[key].append(item['nuts'])
+
     project_counts_raw = Project.objects.values(
         'financial_mechanism_id',
         'programme_area_id',
@@ -267,6 +279,7 @@ def projects(request):
                 p['programme__code']: {
                     'name': p['programme__name'],
                     'url': p['programme__url'],
+                    'nuts': project_nuts[key + p['programme__code']],
                 }
                 for p in programmes
                 if (
@@ -716,39 +729,39 @@ def project_nuts(beneficiary, force_nuts3):
 def projects_beneficiary_detail(request, beneficiary):
     return project_nuts(beneficiary, False)
 
-    # TODO: this copy-paste is evil. must ... fix ...
-    try:
-        state = State.objects.get_by_natural_key(beneficiary)
-    except State.DoesNotExist:
-        return JsonResponse({
-            'error': "Beneficiary state '%s' does not exist." % beneficiary
-        }, status=404)
-
-    fields = {
-        'id': F('nuts'),
-        'area': F('programme_area__name'),
-        'sector': F('programme_area__priority_sector__name'),
-        'fm': F('programme_area__priority_sector__type__grant_name'),
-    }
-    data = (
-        Project.objects.filter(state=state)
-        .filter(nuts__length__gt=2)
-        .exclude(nuts__endswith="Z")
-        .annotate(**fields)
-        .values(*fields.keys())
-        .annotate(
-            allocation=Sum('allocation'),
-            project_count=Count('code'),
-        )
-    )
-
-    out = list(data)
-
-    for row in out:
-        # strip away some of that crazy precision
-        row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
-
-    return JsonResponse(out)
+#    # TODO: this copy-paste is evil. must ... fix ...
+#    try:
+#        state = State.objects.get_by_natural_key(beneficiary)
+#    except State.DoesNotExist:
+#        return JsonResponse({
+#            'error': "Beneficiary state '%s' does not exist." % beneficiary
+#        }, status=404)
+#
+#    fields = {
+#        'id': F('nuts'),
+#        'area': F('programme_area__name'),
+#        'sector': F('programme_area__priority_sector__name'),
+#        'fm': F('programme_area__priority_sector__type__grant_name'),
+#    }
+#    data = (
+#        Project.objects.filter(state=state)
+#        .filter(nuts__length__gt=2)
+#        .exclude(nuts__endswith="Z")
+#        .annotate(**fields)
+#        .values(*fields.keys())
+#        .annotate(
+#            allocation=Sum('allocation'),
+#            project_count=Count('code'),
+#        )
+#    )
+#
+#    out = list(data)
+#
+#    for row in out:
+#        # strip away some of that crazy precision
+#        row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+#
+#    return JsonResponse(out)
 
 
 class ProjectList(ListAPIView):
@@ -757,11 +770,14 @@ class ProjectList(ListAPIView):
     def get_queryset(self):
         programme = self.request.query_params.get('programme', None)
         queryset = Project.objects.all()
+
         if programme is not None:
             queryset = queryset.filter(programme_id=programme)
+
         beneficiary = self.request.query_params.get('beneficiary', None)
         if beneficiary is not None:
             queryset = queryset.filter(state_id=beneficiary)
+
         programme_area_name = self.request.query_params.get('area', None)
         if programme_area_name:
             queryset = queryset.filter(programme_area__name=programme_area_name)
@@ -770,9 +786,15 @@ class ProjectList(ListAPIView):
             sector_name = self.request.query_params.get('sector', None)
             if sector_name:
                 queryset = queryset.filter(programme_area__priority_sector__name=sector_name)
+
+        nuts = self.request.query_params.get('nuts', None)
+        if nuts:
+            queryset = queryset.filter(nuts__startswith=nuts)
+
         is_dpp = self.request.query_params.get('is_dpp', None)
         if is_dpp:
             queryset = queryset.filter(is_dpp=True)
+
         donor = self.request.query_params.get('donor', None)
         if is_dpp and donor:
             donor_name = DONOR_STATES_REVERSED.get(donor)
