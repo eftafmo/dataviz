@@ -32,6 +32,7 @@
     "less-loader": "^4.0.3",
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.0",
+    "lodash.orderby": "^4.6.0",
     "normalize.css": "^7.0.0",
     "npm": "^5.3.0",
     "popper.js": "^1.12.3",
