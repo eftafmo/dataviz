@@ -43,7 +43,7 @@ RUN pip install -r requirements-docker.txt
 
 ADD . $APP_HOME
 COPY ./docker/localsettings.py $APP_HOME/dv/
-RUN npm run build
+RUN NODE_ENV=production npm run build
 
 RUN touch ~/.bashrc
 
