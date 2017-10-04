@@ -348,7 +348,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
 
 class NewsFacetedSearchView(FacetedSearchView):
     facet_fields = ProjectFacetedSearchView.facet_fields
-    order_field = '-news_created'
+    order_field = '-created_dt'
 
     initial = {
         'kind': ['News'],

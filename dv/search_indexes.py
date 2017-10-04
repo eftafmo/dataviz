@@ -376,7 +376,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     name = indexes.CharField(model_attr='title', indexed=False)
     url = indexes.CharField(model_attr='link', indexed=False)
     image = indexes.CharField(model_attr='image', indexed=False)
-    news_created = indexes.DateTimeField(model_attr='created', indexed=False, null=True)
+    created_dt = indexes.DateTimeField(model_attr='created', indexed=False, null=True)
 
     def get_model(self):
         return News
