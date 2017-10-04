@@ -459,7 +459,8 @@ export default Chart.extend({
       //      b) keep a relative ratio from one to the next, while
       //      c) the total sum is preserved
 
-      const MIN = .015
+      // no item should go below this (in percentage)
+      const MIN = this.textRadians / (Math.PI * 2 - this.padding * 2) * 1.10
 
       const totals = matrix.reduce(
         (row, a) => row.map((b, i) => a[i] + b)
@@ -510,7 +511,7 @@ export default Chart.extend({
       const $this = this,
             chords = this.data,
             t = this.getTransition();
-      
+
       if(!this.data) return;
       // avoid other transitions while this runs ¬
       t
