@@ -15,7 +15,8 @@
 }
 
 .sidebar-filters .sidebar-header {
-  display: flex;
+  -js-display: flex; 
+  display:flex;
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #ddd;
   align-items: center;

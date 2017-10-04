@@ -43,7 +43,7 @@ export default Base.extend({
     datasource: String,
     period: {
       type: String,
-      default: "2009 – 2014",
+      default: "2009–2014",
     },
     embedded: {
       type: Boolean,

@@ -1,6 +1,7 @@
 import os.path
 import re
 from collections import defaultdict
+from collections import OrderedDict
 
 from django.conf import settings
 from django.http import Http404, JsonResponse
@@ -65,6 +66,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         'programme_name',
         'kind',
     ]
+    order_field = None
     template_name = 'search.html'
     paginate_by = 10
     context_object_name = 'object_list'
@@ -235,6 +237,8 @@ class FacetedSearchView(BaseFacetedSearchView):
         qs = super(BaseFacetedSearchMixin, self).get_queryset()
         for field in self.facet_fields:
             qs = qs.facet(field, mincount=1, limit=10000, sort='index')
+        if self.order_field:
+            qs = qs.order_by(self.order_field)
         return qs
 
 
@@ -248,6 +252,7 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'ProgrammeFacetedSearchView'
     }
+    order_field = 'code'
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
@@ -276,6 +281,7 @@ class ProjectFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'ProjectFacetedSearchView'
     }
+    order_field = 'code'
 
 
 class OrganisationFacetedSearchView(FacetedSearchView):
@@ -293,6 +299,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
         # hack! we remove this at form init
         'view_name': 'OrganisationFacetedSearchView'
     }
+    order_field = '-role_max_priority_code'
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
@@ -323,11 +330,30 @@ class OrganisationFacetedSearchView(FacetedSearchView):
                 if org_role.project:
                     prg_or_prj = org_role.project
                 if prg_or_prj:
-                    d[role_name].append('{} - {}'.format(prg_or_prj.code, prg_or_prj.name))
+                    d[role_name].append({
+                        'name': '{} - {}'.format(prg_or_prj.code, prg_or_prj.name),
+                        'url': prg_or_prj.url,
+                    })
             for role, plist in d.items():
-                d[role] = sorted(plist)
-            res.prep_roles = dict(d)
+                # Sort programmes and projects
+                d[role] = sorted(plist, key=lambda p: p['name'])
+            # Sort by role name
+            res.prep_roles = OrderedDict(
+                sorted(
+                    d.items(), key=lambda item: self.ORG_ROLE_SORT.get(item[0], 99)
+                )
+            )
         return ctx
+
+
+class NewsFacetedSearchView(FacetedSearchView):
+    facet_fields = ProjectFacetedSearchView.facet_fields
+
+    initial = {
+        'kind': ['News'],
+        # hack! we remove this at form init
+        'view_name': 'NewsFacetedSearchView'
+    }
 
 
 class _TypeaheadFacetedSearchView(object):

@@ -38,15 +38,6 @@ export default StatesBarChart.extend({
     this.aggregate_on.push({source: 'projects', destination: 'projects', type: Object});
   },
 
-  updated() {
-    let dropdown = this.$el.querySelector('.viz-select');
-    if(!dropdown) return;
-    dropdown.style.cssFloat = 'initial'
-    dropdown.style.marginBottom = '2rem'
-    let title = this.$el.querySelector('h2')
-    if(!title) return;
-    title.style.marginBottom = '1rem'
-  },
 
   methods: {
     tooltipTemplate(d) {

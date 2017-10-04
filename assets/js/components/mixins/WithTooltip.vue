@@ -61,6 +61,7 @@
   }
 
   .title-container {
+    -js-display: flex;
     display: flex;
     justify-content: flex-start;
     align-items: center;

@@ -1,9 +1,12 @@
 <template>
 <div :class="classNames" v-show="hasData">
     <transition name="fade">
-      <div class="allocation" :key="changed">
+      <div class="allocation" :key="changed" v-if="data.allocation > 0">
         <strong>{{ currency(data.allocation) }}</strong>
         <small>{{ currency(data.bilateral_allocation / 0.925) }} for bilateral fund</small>
+      </div>
+      <div class="allocation" :key="changed" v-if="!data.allocation">
+        <strong>No allocation available</strong>
       </div>
     </transition>
   </div>

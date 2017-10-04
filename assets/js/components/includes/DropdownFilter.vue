@@ -15,24 +15,20 @@
 
 <style lang="less">
   .viz-select {
-    float: right;
     border-color: #fff;
     background: #fff;
     color: #aaa;
-    -webkit-appearance: none;
     font-family: inherit;
     max-width: 100%;
+    margin-bottom: 2rem!important;
     &:focus {
       outline: none;
     }
     option {
       color: black;
     }
-
-    @media (max-width: 950px){
-      float: initial;
-      margin-bottom: 4rem;
-      display: block;
+    @media(min-width: 780px) and (max-width: 1000px){
+      width: 100%;
     }
   }
 

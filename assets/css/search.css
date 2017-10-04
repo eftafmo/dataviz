@@ -3,33 +3,92 @@
   background-color: #0F609B;
   color: #fff;
 }
+
 .search-top .page-title {
   color: inherit;
 }
-@media (max-width: 768px) {
+
+@media (max-width:768px) {
   .search-top-inner {
     padding-top: 2rem;
   }
+
   .search-top .page-title {
     display: none;
   }
+
 }
-@media (min-width: 769px) {
+
+@media (min-width:769px) {
   .search-top-inner {
     padding-top: 2rem;
     padding-bottom: 2rem;
   }
+
 }
 
+.search-top-inner .search-form input[type=search] {
+  line-height: 2.2;
+  padding: 0;
+}
+
+.search-form input[type=checkbox] {
+  display: none;
+}
+
+/* to hide the checkbox itself */
+.search-form .checkbox_label * {
+  cursor: pointer;
+}
+
+.search-form input[type=checkbox] + label:before {
+  display: inline-block;
+}
+
+.search-form input[type=checkbox] + label {
+  display: inline-block;
+  border: solid #eee;
+  height: 19px;
+  width: 19px;
+  margin-right: .4rem;
+  margin-top: -2px;
+  position: relative;
+  margin-bottom: 0;
+  float: left;
+  transition: all 300ms;
+}
+
+.checkbox_label:hover label {
+  border-color: #50B9FF!important;
+}
+
+.search-form input[type=checkbox] + label:before {
+  content: """";
+  font-size: 2.5rem;
+  position: absolute;
+  top: 50%;
+  color: #50B9FF;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.search-form input[type=checkbox]:checked + label:before {
+  content: "✔";
+}
+
+/* checked icon */
+
 /* Search form */
-.search-top .search-form .input-group{
+.search-top .search-form .input-group {
   position: relative;
 }
+
 .search-top .search-form .input-box input {
   width: 100%;
   border-color: transparent;
 }
-@media (max-width: 768px) {
+
+@media (max-width:768px) {
   .search-top .search-form {
     display: block;
   }
@@ -37,33 +96,40 @@
   .search-top .search-form .input-box input {
     width: auto;
   }
+
   .search-top .search-form button {
     margin-left: -4px;
   }
+
 }
-@media (min-width: 769px) {
+
+@media (min-width:769px) {
   .search-top .search-form::after {
     content: '';
     display: block;
     clear: both;
   }
-  .search-top .search-form .input-box,
-  .search-top .search-form button {
+
+  .search-top .search-form .input-box, .search-top .search-form button {
     float: left;
   }
+
   .search-top .search-form .input-box {
     width: 480px;
   }
+
 }
 
 /* Search tabs */
 .search-tabs input {
   display: none;
 }
+
 .search-tabs input[type="radio"]:checked + label {
   font-weight: bold;
   position: relative;
 }
+
 .search-tabs input[type="radio"]:checked + label:after {
   content: '';
   position: absolute;
@@ -74,20 +140,24 @@
   border: 5px solid transparent;
   border-bottom-color: #fff;
 }
+
 .search-tabs label {
   display: inline-block;
   padding: 1.5rem 1rem;
   color: #fff;
+  cursor: pointer;
 }
 
 .search-tabs label:hover {
   text-decoration: none;
-  background-color: rgba(255,255,255,.2);
+  background-color: rgba(255, 255, 255, .2);
 }
+
 .search-tabs .muted {
-  color: rgba(255,255,255,.6);
+  color: rgba(255, 255, 255, .6);
 }
-@media (max-width: 768px) {
+
+@media (max-width:768px) {
   .search-tabs {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
@@ -96,17 +166,20 @@
     white-space: nowrap;
     overflow: auto;
   }
+
   .search-tabs .muted {
     display: none;
   }
+
 }
-@media (min-width: 769px) {
+
+@media (min-width:769px) {
   .search-tabs {
     position: relative;
     bottom: -2rem;
   }
-}
 
+}
 
 /* Search results listing */
 .search-results-header {
@@ -114,32 +187,36 @@
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #ddd;
 }
+
 .search-results-header::after {
   content: '';
   display: block;
   clear: both;
 }
+
 .search-results-count {
   float: left;
   font-size: larger;
   color: #005494;
 }
+
 .search-results-options {
   float: right;
   color: #898989;
 }
 
-@media (min-width: 769px) {
-  #toggle-sidebar-filters { display: none; }
-}
+@media (min-width:769px) {
+  #toggle-sidebar-filters {
+    display: none;
+  }
 
+}
 
 .search-results-footer {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid #ddd;
 }
-
 
 /* Search result */
 .search-result {
@@ -151,10 +228,12 @@
   // filter: url(#drop-shadow);
   box-shadow: 0px 0px 1px #aaa;
 }
+
 .search-result .title {
   margin: 0 0 .5rem;
   font-weight: normal;
 }
+
 .search-result .description {
   margin: 0;
   font-size: smaller;
@@ -169,7 +248,6 @@
   border-bottom: 1px solid #eee;
 }
 
-
 .results-list:last-of-type {
   border-bottom: none;
 }
@@ -179,11 +257,11 @@
   margin-bottom: .5rem;
 }
 
-
-.search_listing li{
-    list-style-type: square;
-    color: #56bafc;
+.search_listing li {
+  list-style-type: square;
+  color: #56bafc;
 }
+
 .search_listing span {
   color: #444;
 }
@@ -201,17 +279,16 @@
   background-color: #50B9FF;
 }
 
-
-.sidebar-body{
+.sidebar-body {
   max-height: calc(80vh - 93px);
 }
 
-@media(max-width: 768px){
+@media(max-width:768px) {
   .sidebar-body {
     max-height: 80%;
   }
-}
 
+}
 
 .hidden-form {
   display: none;

@@ -15,7 +15,7 @@
         <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
           <li v-for="programme in beneficiary.programmes" class="programme-item">
             <slot name="programme-content" :programme="programme" :beneficiary="beneficiary">
-              <a class="programme-sublist-item" target="_blank" :href=programme.programme_url> {{ programme.programme_name }} </a>
+              <a class="programme-sublist-item" target="_blank" :href="programme.programme_url"> {{ programme.programme_name }} </a>
             </slot>
           </li>
         </ul>
@@ -120,6 +120,7 @@
   }
 
   .title-wrapper {
+    -js-display: flex;
     display: flex;
     cursor: pointer;
     align-items: center;

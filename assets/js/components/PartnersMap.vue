@@ -81,6 +81,7 @@
 
   .selector {
     margin-bottom: 1rem;
+    -js-display: flex;
     display: flex;
     @media(max-width: 800px){
       display: block;
@@ -88,6 +89,7 @@
      > label {
         display: inline-flex;
         @media(max-width:800px){
+          -js-display: flex;
           display: flex;
         }
         margin-left: 1rem;

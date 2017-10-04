@@ -18,6 +18,7 @@
 }
 @media (min-width: 769px) {
   .page-body-inner {
+    -js-display: flex;
     display: flex;
     align-items: stretch;
   }
@@ -28,6 +29,7 @@
   .main {
     flex-grow: 2;
     margin-right: 3rem;
+    width: 100%;
   }
 }
 
@@ -40,6 +42,12 @@
   }
 }
 
+@media(min-width: 769px) and (max-width: 1000px) {
+  .aside {
+    flex-shrink: 0.4;
+    min-width: initial;
+  }
+}
 
 @media (min-width: 1400px) {
   main.main {

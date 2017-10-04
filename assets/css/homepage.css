@@ -5,7 +5,8 @@
 }
 
 .homepage-nav {
-  display: flex;
+  -js-display: flex; 
+  display:flex;
   justify-content: center;
 }
 .homepage-nav a {
@@ -55,7 +56,8 @@
 /* search */
 
 .homepage-search {
-  display: flex;
+  -js-display: flex; 
+  display:flex;
   margin: 1rem auto;
   align-items: strech;
   justify-content: center;

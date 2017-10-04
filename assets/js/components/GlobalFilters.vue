@@ -1,4 +1,5 @@
 <template>
+<div v-if="hasFilters()" id="global-filters" class="sticky visible">
   <div class="global-filters" :class="{active: hasFilters()}">
     <transition name="bounce">
       <div v-if="hasFilters" class="container">
@@ -23,6 +24,7 @@
         </div>
       </div>
     </transition>
+  </div>
   </div>
 </template>
 
@@ -206,14 +208,11 @@ export default Vue.extend({
     },
 
     hasFilters() {
-      let component_parent = document.getElementById('global-filters');
       for (const filter in this.filters) {
         if (this.filters[filter]) {
-          component_parent.classList.add('visible') ;
           return true;
         }
       }
-      component_parent.classList.remove('visible') ;
       return false;
     },
 

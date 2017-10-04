@@ -36,6 +36,7 @@
     position: relative;
     padding-left: 0;
     margin: 0;
+    -js-display: flex;
     display: flex;
   }
   .sidebar-tab-menu::before {
@@ -209,6 +210,10 @@
         display: none;
       }
     }
+    @media(min-width: 769px) and (max-width: 1000px) {
+      width: auto;
+    }
+
   }
 }
 
@@ -266,6 +271,7 @@ export default {
       if(this.embedded) return
 
       e = e || window.event;
+      if(e)
       e.stopPropagation(); // event will trigger expand and cancel collapse
       if (this.isMobileExpanded) {
         this.isMobileExpanded = false;

@@ -1,6 +1,6 @@
 <script>
 import * as d3 from 'd3';
-import _ from 'lodash';
+import orderBy from 'lodash.orderby';
 import BaseNews from './BaseNews';
 import ProjectsMixin from './mixins/Projects';
 
@@ -20,7 +20,7 @@ export default BaseNews.extend({
       // sometimes this.localfilters.region is null (for filtering by country or removing filters)
       if(this.localfilters.region) {
         // sort by relevance and created date
-        _.orderBy(news_for_nuts, ["nuts", "created"], ["desc", "desc"])
+        orderBy(news_for_nuts, ["nuts", "created"], ["desc", "desc"])
       } else {
         // sort by created date
         news_for_nuts.sort((a,b) => d3.descending(a.created,b.created));
