@@ -14,7 +14,7 @@ export default BaseNews.extend({
      * @returns {Object[]} news - all_news transformed in array, ordered by date
      */
     getSortedNews(all_news) {
-      const news = d3.values(all_news);
+      const news = d3.values(all_news); // nocommit
 
       // sort by created date
       news.sort((a,b) => d3.descending(a.created,b.created));
