@@ -46,6 +46,10 @@
 
 
 <style lang="less">
+// defs. shared with js below.
+@source_stroke_opacity: .1;
+@target_stroke_opacity: .5;
+
 .embed_dataviz .overview-viz {
   @media(min-width: 800px){
     margin-top: 1rem!important;
@@ -93,13 +97,15 @@
     }
 
     .fms > g.item path.arc {
-      stroke-opacity: .1;
+      // this is set as attribute
+      //stroke-opacity: @source_stroke_opacity;
     }
 
     .beneficiaries > g.item path.arc {
       fill: #ccc;
       stroke: #ccc;
-      stroke-opacity: .5;
+      // this is set as attribute
+      //stroke-opacity: @target_stroke_opacity;
     }
 
     .fms text {
@@ -310,6 +316,9 @@ export default Chart.extend({
       inner_radius: .85, // percentage of outer radius
 
       beneficiary_colour: "#ccc",
+
+      source_stroke_opacity: .1,
+      target_stroke_opacity: .5,
     };
   },
 
@@ -597,7 +606,8 @@ export default Chart.extend({
           .each(function(d) {
             this._prev = extract_coords(d);
           })
-          .attr("d", this.arc);
+          .attr("d", this.arc)
+          .attr("stroke-opacity", d => d.value === 0 ? 0 : this[type + "_stroke_opacity"])
 
         // blank stuff so the area behind the text reacts to mouse events
         const blank = sel
@@ -659,10 +669,26 @@ export default Chart.extend({
       fentered.call(setUp, "source");
       bentered.call(setUp, "target");
 
-      for (const sel of [fms, beneficiaries]) {
+      const _objs = {
+        source: fms,
+        target: beneficiaries,
+      }
+
+      for (const type in _objs) {
+        const sel = _objs[type]
+
         sel.select("path.arc")
           .transition(t)
-          .attrTween('d', mktweener(this.arc, extract_coords));
+          .attrTween('d', mktweener(this.arc, extract_coords))
+          // show / hide the items at the beginning / end of transitions
+          // (because even if 0-width their stroke keeps them visible)
+          .attr("stroke-opacity", d => d.value === 0 ? 0 : this[type + "_stroke_opacity"])
+          .on("start", function(d) {
+            if (d.value != 0) d3.select(this).style("display", null)
+          })
+          .on("end", function(d) {
+            if (d.value == 0) d3.select(this).style("display", "none")
+          })
 
         sel.select("path.blank")
           // don't tween this, save some cpu cycles
@@ -692,6 +718,7 @@ export default Chart.extend({
 
     _highlight(index, yes) {
       //// avoid funny race conditions ¬
+      // (to be enabled if mouse-over gets transitioned)
       //if(this._transitioning) return;
 
       //const t = this.getTransition(this.short_duration);
