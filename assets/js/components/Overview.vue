@@ -54,6 +54,15 @@
   @media(min-width: 800px){
     margin-top: 1rem!important;
   }
+
+  .chart-container {
+    @media (min-width: 800px)and (max-width:1000px){
+      width: 100%!important;
+    }
+    @media (min-width:1000px) {
+      width: 100%!important;
+    }
+  }
 }
 
 .dataviz .overview-viz {
