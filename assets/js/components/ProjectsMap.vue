@@ -548,7 +548,6 @@ export default BaseMap.extend({
     _mkLevelData(parentid, data) {
       // re-aggregate the data to compute per-level stuff
       const out = {}
-      const plen = parentid.length
 
       const _aggregate = (id, row) => {
         let item = out[id]
@@ -583,37 +582,25 @@ export default BaseMap.extend({
         }
       }
 
+      const plvl = this.getRegionLevel(parentid)
+
       for (const row of data) {
-        const rlen = row.id.length
-        let id
+        if (! this.isAncestorRegion(parentid, row.id)) continue
 
-        if (rlen > plen) {
-          // is this a descendant?
-          if (row.id.substr(0, plen) != parentid) continue
+        const rlvl = this.getRegionLevel(row.id)
+        let agglvl
 
-          // if level1 aggregate under level0 (because yeah that makes sense)
-          // else aggregate under the first(ish)-level descendants
-          id = row.id.substr(0, rlen == 3 ? 2 :
-                                            plen == 2 ? 4  : plen + 1)
+        // regions below zoomed_nuts_level, as well as regions of the form
+        // '??Z*' (that is, "extra-regio") get counted towards the country
+        if (rlvl < this.zoomed_nuts_level || row.id.substr(2, 1) == "Z") {
+          agglvl = 0
+        } else {
+          // aggregate under parent's first-ish level descendants
+          agglvl = plvl < this.zoomed_nuts_level ? this.zoomed_nuts_level : plvl + 1
         }
 
-        else if (rlen < plen) {
-          // is this an ancestor?
-          if (parentid.substr(0, rlen) != parentid) continue
-
-          // hardcoding again: level1s go under level0
-          // (TODO: use zoomed_nuts_level instead)
-          id = rlen === 3 ? row.id.substr(0, 2) : row.id
-        }
-
-        else { // if rlen == plen
-          // am i me?
-          if (row.id != parentid) continue
-
-          id = row.id
-        }
-
-        _aggregate(id, row)
+        const aggid = this.getAncestorRegion(row.id, agglvl)
+        _aggregate(aggid, row)
       }
 
       return out
