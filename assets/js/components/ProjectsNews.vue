@@ -15,7 +15,7 @@ export default BaseNews.extend({
      */
     getSortedNews(all_news) {
       const deep_search = true;
-       // this.localfilters.region is null (filtering by country or removing filters)
+       // sometimes this.localfilters.region is null (filtering by country or removing filters)
       const news_for_nuts = this.getSortedNewsForRegion(all_news, this.localfilters.region || "", deep_search);
 
       return news_for_nuts;
