@@ -1,5 +1,6 @@
 <template>
     <ul class="news">
+      -{{localfilters.region}}-
       <li v-for="news in data">
         <div class="content-item news_content">
         <a :href="`${news.link}`" target="_blank">
