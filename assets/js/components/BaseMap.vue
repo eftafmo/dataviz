@@ -312,7 +312,7 @@ export default Chart.extend({
 
     createTooltip() {
       let tip = d3.tip()
-          .attr('class', 'd3-tip map')
+          .attr('class', 'dataviz-tooltip map')
           .html(this.tooltipTemplate)
           .direction('n')
           .offset([0, 0])

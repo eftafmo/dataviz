@@ -78,7 +78,7 @@
      }
     }
 }
-.d3-tip.fms {
+.dataviz-tooltip.fms {
     line-height: 1.2;
     white-space: normal;
     &:after {
@@ -189,7 +189,7 @@ export default Chart.extend({
       const $this = this;
 
       let tip = d3.tip()
-          .attr('class', 'd3-tip fms')
+          .attr('class', 'dataviz-tooltip fms')
           .html(this.tooltipTemplate)
           .direction('s')
           .offset([0, 0])

@@ -311,7 +311,7 @@
   }
 }
 
-  .d3-tip.sect:after {
+  .dataviz-tooltip.sect:after {
     top: 19px;
     transform: rotate(180deg);
   }
@@ -693,7 +693,7 @@ export default Chart.extend({
     createTooltip() {
        // add tooltip
       let tip = d3.tip()
-          .attr('class', 'd3-tip sect')
+          .attr('class', 'dataviz-tooltip sect')
           .html(this.tooltipTemplate)
           .offset([15,30])
           .direction('s');
