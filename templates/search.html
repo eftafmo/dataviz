@@ -56,6 +56,23 @@
             </option>
           {% endfor %}
         </select>
+        {% if form.facets.kind.0 == 'Programme' %}
+          <a href="{% url 'frontend:programme_export' %}?{% for item in query.items %}{{ item.0 }}={{ item.1 }}&{% endfor %}">
+            Export
+          </a>
+        {% elif form.facets.kind.0 == 'Project' %}
+          <a href="{% url 'frontend:project_export' %}?{% for item in query.items %}{{ item.0 }}={{ item.1 }}&{% endfor %}">
+            Export
+          </a>
+        {% elif form.facets.kind.0 == 'Organisation' %}
+          <a href="{% url 'frontend:organisation_export' %}?{% for item in query.items %}{{ item.0 }}={{ item.1 }}&{% endfor %}">
+            Export
+          </a>
+        {% elif form.facets.kind.0 == 'News' %}
+          <a href="{% url 'frontend:news_export' %}?{% for item in query.items %}{{ item.0 }}={{ item.1 }}&{% endfor %}">
+            Export
+          </a>
+        {% endif %}
       </span>
     </div>
 

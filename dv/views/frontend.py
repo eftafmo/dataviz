@@ -1,15 +1,17 @@
+import io
 import os.path
 import re
 from collections import defaultdict
 from collections import OrderedDict
 
 from django.conf import settings
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.generic_views import FacetedSearchMixin as BaseFacetedSearchMixin
+from pyexcel import Sheet
 from webpack_loader import utils as webpack
 from dv.lib import utils
 from dv.models import (
@@ -31,22 +33,24 @@ SCENARIOS = (
 def home(request):
     return render(request, 'homepage.html')
 
+
 def grants(request):
     return render(request, 'grants.html')
+
 
 def partners(request):
     return render(request, 'partners.html')
 
+
 def projects(request):
     return render(request, 'projects.html')
 
-# def search(request):
-#     return render(request, 'search.html')
 
 def disclaimer(request):
     content = StaticContent.objects.filter(name='Disclaimer')
     context = dict(body=content[0].body if content else None)
     return render(request, 'disclaimer.html', context)
+
 
 def sandbox(request):
     return render(request, 'sandbox.html')
@@ -223,6 +227,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         objls = kwargs.pop('object_list', self.queryset)
         ctx = super().get_context_data(object_list=objls, **kwargs)
         ctx['page_sizes'] = [10, 25, 50, 100]
+        ctx['query'] = self.request.GET
 
         facet_fields = ctx.get('facets', {}).get('fields', {})
         # Custom sorting of some facets, refs #326
@@ -356,6 +361,104 @@ class NewsFacetedSearchView(FacetedSearchView):
     }
 
 
+class FacetedExportView(FacetedSearchView):
+    export_fields = ['name']
+
+    def get_paginate_by(self, queryset):
+        return queryset.count()
+
+    def form_valid(self, form):
+        self.queryset = form.search()
+        data = list(self.queryset.values_list(*self.export_fields))
+        name = self.initial['kind'][0]
+        sheet = Sheet(data,
+                      name=name,
+                      colnames=self.export_fields)
+        stream = io.BytesIO()
+        stream = sheet.save_to_memory('xls', stream)
+        response = HttpResponse(stream.read())
+        response['Content-Type'] = 'application/vnd.ms-excel'
+        response['Content-Disposition'] = 'attachment; filename="{0}.xls"'.format(name)
+        return response
+
+
+class ProgrammeFacetedExportView(FacetedExportView):
+    export_fields = [
+        'code',
+        'name',
+        'summary',
+        'url'
+    ]
+    facet_fields = FacetedSearchView.facet_fields + [
+        'programme_status',
+        'outcome_ss',
+    ]
+    initial = {
+        'kind': ['Programme'],
+        # hack! we remove this at form init
+        'view_name': 'ProgrammeFacetedExportView'
+    }
+    order_field = 'code'
+
+
+class ProjectFacetedExportView(FacetedExportView):
+    export_fields = [
+        'code',
+        'name',
+        'url',
+    ]
+    facet_fields = ProgrammeFacetedSearchView.facet_fields + [
+        'project_status',
+        'geotarget',
+        'theme_ss',
+    ]
+    initial = {
+        'kind': ['Project'],
+        # hack! we remove this at form init
+        'view_name': 'ProjectFacetedExportView'
+    }
+    order_field = 'code'
+
+
+class OrganisationFacetedExportView(FacetedExportView):
+    export_fields = [
+        'name',
+        'country',
+        'city',
+        'geotarget',
+    ]
+    facet_fields = FacetedSearchView.facet_fields + [
+        'project_name',
+        'country',
+        'city',
+        'geotarget',
+        'org_type_category',
+        'org_type',
+        'role_ss',
+    ]
+    initial = {
+        'kind': ['Organisation'],
+        # hack! we remove this at form init
+        'view_name': 'OrganisationFacetedExportView'
+    }
+    order_field = '-role_max_priority_code'
+
+
+class NewsFacetedExportView(FacetedExportView):
+    export_fields = [
+        'title',
+        'link',
+        'summary'
+    ]
+    facet_fields = ProjectFacetedSearchView.facet_fields
+
+    initial = {
+        'kind': ['News'],
+        # hack! we remove this at form init
+        'view_name': 'NewsFacetedExportView'
+    }
+
+
 class _TypeaheadFacetedSearchView(object):
     form_class = EeaAutoFacetedSearchForm
     template_name = None
@@ -393,15 +496,18 @@ class _TypeaheadFacetedSearchView(object):
         return JsonResponse(self.get_data(context), **response_kwargs)
 
 
-class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, ProgrammeFacetedSearchView):
+class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                          ProgrammeFacetedSearchView):
     pass
 
 
-class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, ProjectFacetedSearchView):
+class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                        ProjectFacetedSearchView):
     pass
 
 
-class OrganisationTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, OrganisationFacetedSearchView):
+class OrganisationTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                             OrganisationFacetedSearchView):
     pass
 
 
