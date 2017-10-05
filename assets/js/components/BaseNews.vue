@@ -1,5 +1,5 @@
 <template>
-    <ul class="news">
+    <ul :class="classNames">
       <li v-for="news in data">
         <div class="content-item news_content">
         <a :href="`${news.link}`" target="_blank">
@@ -16,7 +16,7 @@
 
 
 <style lang="less">
-.news {
+.dataviz .viz.news {
   li {
     list-style-type: none;
   }
@@ -48,6 +48,8 @@ import Component from './Component';
 
 
 export default Component.extend({
+  type: "news",
+
   computed: {
     data() {
       if (!this.hasData) return []

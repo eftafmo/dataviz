@@ -1,5 +1,5 @@
 <template>
-    <div class="results">
+    <div :class="classNames">
        <dl v-for="item in data" class="partner-result clearfix">
           <dt class="partner-result-achievement">{{ number(item.achievement) }}{{ item.unit }}</dt>
           <dd class="partner-result">{{ item.indicator }} </dd>
@@ -9,7 +9,7 @@
 
 
 <style lang="less">
-.results {
+.dataviz .viz.results {
   dl dt {
       font-weight: bold;
       display: inline;
@@ -18,9 +18,9 @@
       padding-left: 1rem;
       font-size: 1.6rem;
   }
-   
+
   dl dd {
-    margin:2px 0; 
+    margin:2px 0;
     font-size: 1.4rem;
     display: inline;
   }
@@ -37,10 +37,14 @@ import * as d3 from 'd3';
 
 import Component from './Component';
 import PartnersMixin from './mixins/Partners';
-import ComponentMixin from './mixins/Component.js'
+
 
 export default Component.extend({
-  mixins: [PartnersMixin],
+  type: "results",
+
+  mixins: [
+    PartnersMixin,
+  ],
 
   computed: {
     data() {

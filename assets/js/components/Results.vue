@@ -1,5 +1,5 @@
 <template>
-    <ul class="results">
+    <ul :class="classNames">
      <div v-for="items in data">
       <li v-for="(sectors, outcome) in items">
         <div class="content-item results_content">
@@ -23,7 +23,7 @@
 
 
 <style lang="less">
-.results {
+.dataviz .viz.results {
   li {
     list-style-type: none;
   }
@@ -71,10 +71,11 @@ import WithSectorsMixin from './mixins/WithSectors';
 
 
 export default Component.extend({
+  type: "results",
+
   mixins: [
     WithSectorsMixin,
   ],
-
 
   updated() {
   //TODO: this can be done a lot better

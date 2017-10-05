@@ -1,5 +1,5 @@
 <template>
-<div :class="[$options.type, { rendering: !rendered }]">
+<div :class="classNames">
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
 

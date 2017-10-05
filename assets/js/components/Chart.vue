@@ -1,13 +1,14 @@
 <style lang="less">
 /*
-  // use this in conjunction with the `rendered` property.
-  // for example on the root template node:
+  // use this in conjunction with the `rendered` property. for example
 
   <div :class="{ rendering: !rendered }">
     ...
   </div>
+
+  note that "rendering" is automatically added to `this.classNames`
 */
-.rendering {
+.dataviz .rendering {
   // (TODO: transition this?)
   visibility: hidden;
 }
@@ -23,7 +24,7 @@ import ChartMixin from './mixins/Chart';
 import Dropdown from './includes/DropdownFilter';
 
 
-export default Component.extend({
+const Chart = Component.extend({
   mixins: [
     ChartMixin,
   ],
@@ -52,6 +53,13 @@ export default Component.extend({
   },
 
   methods: {
+    _getClassNames() {
+      const names = this.$super(Chart, this)._getClassNames()
+      if (!this.rendered) names.push("rendering")
+
+      return names
+    },
+
     main() {
       // we need to do the rendering during next tick only,
       // to allow ChartMixin.computeDimensions() to do its work
@@ -84,5 +92,7 @@ export default Component.extend({
       this.render();
     },
   },
-});
+})
+
+export default Chart
 </script>

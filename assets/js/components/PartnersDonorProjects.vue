@@ -1,5 +1,5 @@
 <template>
-<div class="donor-projects">
+<div :class="classNames">
  <slot name="title" v-if="!this.embedded"></slot>
  <table>
    <thead>
@@ -30,7 +30,7 @@
 </template>
 
 <style lang="less">
-.dataviz .donor-projects {
+.dataviz .viz.donor-projects {
   width: 100%;
   @media(max-width: 800px){
     overflow: auto;
@@ -137,7 +137,10 @@ import Component from './Component';
 import PartnersMixin from './mixins/Partners';
 import CountriesMixin from './mixins/WithCountries';
 
+
 export default Component.extend({
+  type: "donor-projects",
+
   mixins: [
     PartnersMixin,
     CountriesMixin,

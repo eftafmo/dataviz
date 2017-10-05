@@ -1,5 +1,5 @@
 <template>
-<div class="overview-viz">
+<div :class="classNames">
   <chart-container :width="width" :height="height">
     <svg :viewBox="`0 0 ${width} ${height}`">
       <defs>
@@ -50,22 +50,7 @@
 @source_stroke_opacity: .1;
 @target_stroke_opacity: .5;
 
-.embed_dataviz .overview-viz {
-  @media(min-width: 800px){
-    margin-top: 1rem!important;
-  }
-
-  .chart-container {
-    @media (min-width: 800px)and (max-width:1000px){
-      width: 100%!important;
-    }
-    @media (min-width:1000px) {
-      width: 100%!important;
-    }
-  }
-}
-
-.dataviz .overview-viz {
+.dataviz .viz.overview {
   @media(min-width: 800px){
     margin-top: -5rem;
   }
@@ -289,6 +274,21 @@
       width: 60%;
     }
   }
+
+  &.embed {
+    @media(min-width: 800px){
+      margin-top: 1rem!important;
+    }
+
+    .chart-container {
+      @media (min-width: 800px)and (max-width:1000px){
+        width: 100%!important;
+      }
+      @media (min-width:1000px) {
+        width: 100%!important;
+      }
+    }
+  }
 }
 </style>
 
@@ -305,6 +305,8 @@ import WithCountriesMixin from './mixins/WithCountries';
 
 
 export default Chart.extend({
+  type: "overview",
+
   mixins: [
     WithFMsMixin, WithCountriesMixin
   ],

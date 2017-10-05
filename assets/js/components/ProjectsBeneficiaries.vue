@@ -6,9 +6,9 @@ import Legend from './includes/Legend';
 
 
 export default Beneficiaries.extend({
-  type: 'projects',
-
-  mixins: [ProjectsMixin],
+  mixins: [
+    ProjectsMixin,
+  ],
 
   data() {
     return {

@@ -1,5 +1,5 @@
 <template>
-<ul class="programmes">
+<ul :class="classNames">
   <li v-for="beneficiary in data.beneficiaries">
     <div class="content-item programmes_content">
       <div class="body">
@@ -27,7 +27,7 @@
 
 
 <style lang="less">
-.programmes{
+.dataviz .viz.programmes {
   li {
     list-style-type: none;
     color: inherit;
@@ -144,6 +144,8 @@ import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountri
 
 
 export default Component.extend({
+  type: "programmes",
+
   mixins: [
     WithCountriesMixin,
   ],

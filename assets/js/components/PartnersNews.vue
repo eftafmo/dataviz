@@ -1,13 +1,15 @@
 <script>
 import * as d3 from 'd3';
+
 import BaseNews from './BaseNews';
 import PartnersMixin from './mixins/Partners';
 
-export default BaseNews.extend({
 
+export default BaseNews.extend({
   mixins: [
     PartnersMixin,
   ],
+
   methods: {
     /**
      * @param {Object} all_news

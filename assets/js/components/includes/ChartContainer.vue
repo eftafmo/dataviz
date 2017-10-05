@@ -18,7 +18,7 @@
 </template>
 
 <style lang="less">
-.chart-container {
+.dataviz .viz .chart-container {
   position: relative;
   width: 100%;
 

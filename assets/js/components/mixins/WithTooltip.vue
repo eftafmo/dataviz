@@ -1,5 +1,4 @@
 <style lang="less">
-
 .dataviz .d3-tip {
   font-family: inherit;
  li {

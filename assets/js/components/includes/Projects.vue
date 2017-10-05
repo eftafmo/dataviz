@@ -18,7 +18,7 @@
 </template>
 
 <style lang="less">
-.projects {
+.dataviz .viz .projects {
   .programme-sublist-wrapper {
     .show-more {
         &:before,&:after {

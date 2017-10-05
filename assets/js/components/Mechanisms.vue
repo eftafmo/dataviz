@@ -1,5 +1,5 @@
 <template>
-<div :class="$options.type">
+<div :class="classNames">
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="rendered" filter="fm" title="No filter selected" :items="nonzero"></dropdown>
   <svg viewBox="0 0 100 10"  preserveAspectRatio="none">
@@ -101,7 +101,7 @@ import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Chart.extend({
-  type:'fms',
+  type: "fms",
 
   mixins: [
     WithFMsMixin,

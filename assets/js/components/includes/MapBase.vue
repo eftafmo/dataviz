@@ -38,7 +38,7 @@
 
 <style lang="less">
 // this is to be included only by the Map mixin, which uses this selector
-.viz.map {
+.dataviz .viz.map {
   // defs
   // - fills
   @water: #cbe9f6;

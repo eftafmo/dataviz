@@ -5,6 +5,7 @@ import PartnersMixin from './mixins/Partners';
 import BeneficiariesBarChartMixin from './mixins/BeneficiariesBarChart';
 import PartnersBarChartMixin from './mixins/PartnersBarChart';
 
+
 export default StatesBarChart.extend({
   mixins: [
     PartnersMixin,

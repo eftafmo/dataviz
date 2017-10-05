@@ -14,7 +14,7 @@
 </template>
 
 <style lang="less">
-  .viz-select {
+.dataviz .viz-select {
     border-color: #fff;
     background: #fff;
     color: #aaa;
