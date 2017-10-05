@@ -391,7 +391,12 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         except Project.DoesNotExist:
             pass
         if obj.programmes.exists():
-            return list(obj.programmes.values_list('state__name', flat=True).distinct())
+            # Get this from ProgrammeOutcome, because of IN22
+            return list(ProgrammeOutcome.objects.filter(
+                programme__news=obj,
+            ).values_list(
+                'state__name', flat=True
+            ).distinct())
         return None
 
     def prepare_financial_mechanism_ss(self, obj):
