@@ -349,6 +349,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             self.prepared_data['role_max_priority_code'] = None
         return self.prepared_data
 
+
 class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     state_name = indexes.FacetMultiValueField()
@@ -375,6 +376,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     name = indexes.CharField(model_attr='title', indexed=False)
     url = indexes.CharField(model_attr='link', indexed=False)
     image = indexes.CharField(model_attr='image', indexed=False)
+    created_dt = indexes.DateTimeField(model_attr='created', indexed=False, null=True)
 
     def get_model(self):
         return News
