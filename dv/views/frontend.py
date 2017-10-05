@@ -362,18 +362,26 @@ class NewsFacetedSearchView(FacetedSearchView):
 
 
 class FacetedExportView(FacetedSearchView):
-    export_fields = ['name']
+    export_fields = {}
+
+    def get_export_data(self, form):
+        queryset = form.search()
+        result = queryset.values_list(*self.export_fields.keys())
+        for row in result:
+            for i in range(len(row)):
+                if isinstance(row[i], list):
+                    row[i] = '\n'.join(row[i])
+        return result
 
     def get_paginate_by(self, queryset):
         return queryset.count()
 
     def form_valid(self, form):
-        self.queryset = form.search()
-        data = list(self.queryset.values_list(*self.export_fields))
+        data = self.get_export_data(form)
         name = self.initial['kind'][0]
         sheet = Sheet(data,
                       name=name,
-                      colnames=self.export_fields)
+                      colnames=self.export_fields.values())
         stream = io.BytesIO()
         stream = sheet.save_to_memory('xls', stream)
         response = HttpResponse(stream.read())
@@ -383,16 +391,18 @@ class FacetedExportView(FacetedSearchView):
 
 
 class ProgrammeFacetedExportView(FacetedExportView):
-    export_fields = [
-        'code',
-        'name',
-        'summary',
-        'url'
-    ]
-    facet_fields = FacetedSearchView.facet_fields + [
-        'programme_status',
-        'outcome_ss',
-    ]
+    export_fields = {
+        'code': 'Code',
+        'name': 'Name',
+        'financial_mechanism_ss': 'Financial mechanism',
+        'state_name': 'Beneficiary state',
+        'programme_status': 'Programme status',
+        'programme_area_ss': 'Programme area',
+        'priority_sector_ss': 'Sector',
+        'grant': 'Grant',
+        'outcome_ss': 'Outcome',
+        'url': 'Url'
+    }
     initial = {
         'kind': ['Programme'],
         # hack! we remove this at form init
@@ -402,11 +412,21 @@ class ProgrammeFacetedExportView(FacetedExportView):
 
 
 class ProjectFacetedExportView(FacetedExportView):
-    export_fields = [
-        'code',
-        'name',
-        'url',
-    ]
+    export_fields = {
+        'code': 'Code',
+        'name': 'Name',
+        'financial_mechanism_ss': 'Financial mechanism',
+        'state_name': 'Beneficiary state',
+        'programme_status': 'Programme status',
+        'programme_area_ss': 'Programme area',
+        'priority_sector_ss': 'Sector',
+        'grant': 'Grant',
+        'outcome_ss': 'Outcome',
+        'project_status': 'Project status',
+        'geotarget': 'Project region or city',
+        'theme_ss': 'Project theme',
+        'url': 'Url'
+    }
     facet_fields = ProgrammeFacetedSearchView.facet_fields + [
         'project_status',
         'geotarget',
@@ -421,12 +441,24 @@ class ProjectFacetedExportView(FacetedExportView):
 
 
 class OrganisationFacetedExportView(FacetedExportView):
-    export_fields = [
-        'name',
-        'country',
-        'city',
-        'geotarget',
-    ]
+    export_fields = {
+        'name': 'Name',
+        'domestic_name': 'Domestic name',
+        'financial_mechanism_ss': 'Financial mechanism',
+        'state_name': 'Beneficiary state',
+        'programme_status': 'Programme status',
+        'programme_area_ss': 'Programme area',
+        'priority_sector_ss': 'Sector',
+        'grant': 'Grant',
+        'project_name': 'Project name',
+        'project_status': 'Project status',
+        'geotarget': 'Project region or city',
+        'org_type_category': 'Organisation type category',
+        'org_type': 'Organisation type',
+        'country': 'Country',
+        'city': 'City',
+        'role_ss': 'Organisation role',
+    }
     facet_fields = FacetedSearchView.facet_fields + [
         'project_name',
         'country',
@@ -445,11 +477,20 @@ class OrganisationFacetedExportView(FacetedExportView):
 
 
 class NewsFacetedExportView(FacetedExportView):
-    export_fields = [
-        'title',
-        'link',
-        'summary'
-    ]
+    export_fields = {
+        'name': 'Name',
+        'domestic_name': 'Domestic name',
+        'financial_mechanism_ss': 'Financial mechanism',
+        'state_name': 'Beneficiary state',
+        'programme_status': 'Programme status',
+        'programme_area_ss': 'Programme area',
+        'priority_sector_ss': 'Sector',
+        'project_name': 'Project name',
+        'project_status': 'Project status',
+        'theme_ss': 'Project theme',
+        'geotarget': 'Project region or city',
+        'url': 'Url'
+    }
     facet_fields = ProjectFacetedSearchView.facet_fields
 
     initial = {
