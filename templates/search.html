@@ -161,7 +161,7 @@
                 <span>{{ role }} for:</span>
                 <ul>
                   {% for p in plist %}
-                  <li>{% if p.url %}<a href="{{p.url}}">{{ p.name }}</a>
+                  <li>{% if p.url %}<a href="{{p.url}}" target="_blank">{{ p.name }}</a>
                       {% else %}<span>{{p.name}}</span>
                       {% endif %}
                   </li>
