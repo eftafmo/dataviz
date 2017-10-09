@@ -395,8 +395,18 @@ class _TypeaheadFacetedSearchView:
         return JsonResponse(self.get_data(context), **response_kwargs)
 
 
+class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                        ProjectFacetedSearchView):
+    pass
+
+
 class OrganisationTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
                                              OrganisationFacetedSearchView):
+    pass
+
+
+class NewsTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                     NewsFacetedSearchView):
     pass
 
 

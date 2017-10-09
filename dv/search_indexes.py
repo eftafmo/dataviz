@@ -109,7 +109,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # specific facets
     project_status = indexes.FacetMultiValueField(model_attr='status')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
-    # geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
+    geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
     theme_ss = indexes.FacetMultiValueField(model_attr='themes__name')
 
     # specific fields
@@ -148,6 +148,10 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
             return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
         else:
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
+
+    def prepare_geotarget_auto(self, obj):
+        geotargets = self.prepare_geotarget(obj)
+        return ' '.join(geotargets) if geotargets else None
 
 
 class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
@@ -366,6 +370,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     project_name = indexes.FacetMultiValueField()
     project_status = indexes.FacetMultiValueField()
     geotarget = indexes.FacetCharField()
+    geotarget_auto = indexes.EdgeNgramField()
     theme_ss = indexes.FacetMultiValueField()
 
     # specific fields
@@ -493,6 +498,10 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         except Project.DoesNotExist:
             pass
         return None
+
+    def prepare_geotarget_auto(self, obj):
+        geotargets = self.prepare_geotarget(obj)
+        return ' '.join(geotargets) if geotargets else None
 
     def prepare_theme_ss(self, obj):
         try:
