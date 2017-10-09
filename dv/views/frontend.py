@@ -3,6 +3,7 @@ import os.path
 import re
 from collections import defaultdict
 from collections import OrderedDict
+from datetime import datetime
 
 from django.conf import settings
 from django.http import Http404, JsonResponse, HttpResponse
@@ -365,13 +366,28 @@ class NewsFacetedSearchView(FacetedSearchView):
 class FacetedExportView(FacetedSearchView):
     export_fields = {}
 
+    def type_format_field(self, raw_value):
+        if not raw_value:
+            return ''
+        if isinstance(raw_value, datetime):
+            return raw_value.strftime("%d %B %Y")
+        try:
+            return float(raw_value)
+        except ValueError:
+            pass
+        return raw_value
+
+    def format_field(self, raw_field):
+        if isinstance(raw_field, list):
+            return '\n'.join([self.type_format_field(item) for item in raw_field])
+        return self.type_format_field(raw_field)
+
     def get_export_data(self, form):
         queryset = form.search()
         result = queryset.values_list(*self.export_fields.keys())
         for row in result:
             for i in range(len(row)):
-                if isinstance(row[i], list):
-                    row[i] = '\n'.join(row[i])
+                row[i] = self.format_field(row[i])
         return result
 
     def get_paginate_by(self, queryset):
@@ -382,12 +398,12 @@ class FacetedExportView(FacetedSearchView):
         name = self.initial['kind'][0]
         sheet = Sheet(data,
                       name=name,
-                      colnames=self.export_fields.values())
+                      colnames=list(self.export_fields.values()))
         stream = io.BytesIO()
-        stream = sheet.save_to_memory('xls', stream)
+        stream = sheet.save_to_memory('xlsx', stream)
         response = HttpResponse(stream.read())
         response['Content-Type'] = 'application/vnd.ms-excel'
-        response['Content-Disposition'] = 'attachment; filename="{0}.xls"'.format(name)
+        response['Content-Disposition'] = 'attachment; filename="{0}.xlsx"'.format(name)
         return response
 
 
@@ -404,11 +420,8 @@ class ProgrammeFacetedExportView(FacetedExportView):
         'outcome_ss': 'Outcome',
         'url': 'Url'
     })
-    # facet_fields = ProgrammeFacetedSearchView.facet_fields
     initial = {
-        'kind': ['Programmes'],
-        # hack! we remove this at form init
-        # 'view_name': 'ProgrammeFacetedExportView'
+        'kind': ['Programme']
     }
     order_field = ProgrammeFacetedSearchView.order_field
 
@@ -429,11 +442,8 @@ class ProjectFacetedExportView(FacetedExportView):
         'theme_ss': 'Project theme',
         'url': 'Url'
     })
-    # facet_fields = ProjectFacetedSearchView.facet_fields
     initial = {
-        'kind': ['Project'],
-        # hack! we remove this at form init
-        # 'view_name': 'ProjectFacetedExportView'
+        'kind': ['Project']
     }
     order_field = ProjectFacetedSearchView.order_field
 
@@ -457,11 +467,8 @@ class OrganisationFacetedExportView(FacetedExportView):
         'city': 'City',
         'role_ss': 'Organisation role',
     })
-    facet_fields = OrganisationFacetedSearchView.facet_fields
     initial = {
-        'kind': ['Organisation'],
-        # hack! we remove this at form init
-        'view_name': 'OrganisationFacetedExportView'
+        'kind': ['Organisation']
     }
     order_field = OrganisationFacetedSearchView.order_field
 
@@ -470,6 +477,7 @@ class NewsFacetedExportView(FacetedExportView):
     export_fields = OrderedDict({
         'name': 'Name',
         'domestic_name': 'Domestic name',
+        'created_dt': 'Date',
         'financial_mechanism_ss': 'Financial mechanism',
         'state_name': 'Beneficiary state',
         'programme_status': 'Programme status',
@@ -482,11 +490,9 @@ class NewsFacetedExportView(FacetedExportView):
         'url': 'Url'
     })
     initial = {
-        'kind': ['News'],
-        # hack! we remove this at form init
-        'view_name': 'NewsFacetedExportView'
+        'kind': ['News']
     }
-    order_field = '-created_dt'
+    order_field = NewsFacetedSearchView.order_field
 
 
 class _TypeaheadFacetedSearchView(object):
