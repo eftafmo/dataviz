@@ -405,6 +405,13 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 return [obj.project.financial_mechanism.grant_name]
         except Project.DoesNotExist:
             pass
+        if obj.programmes.exists():
+            pa = obj.programmes.values_list('programme_areas__pk', flat=True).distinct()
+            return list(Allocation.objects.filter(
+                programme_area__pk__in=pa
+            ).values_list(
+                'financial_mechanism__grant_name', flat=True
+            ).distinct())
         return None
 
     def prepare_programme_area_ss(self, obj):
