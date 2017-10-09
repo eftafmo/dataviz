@@ -12,7 +12,7 @@
 
 
 <style lang="less">
-.sidebar {
+.dataviz .sidebar {
   border: 1px solid #ddd;
   box-shadow: 0 1px 5px rgba(0,0,0,.2);
   background: #fff;

@@ -1,5 +1,5 @@
 <style lang="less">
-.viz.map.projects {
+.dataviz .viz.map.is-projects {
   @bubble_color: rgb(196, 17, 48);
 
   .bubble {
@@ -155,8 +155,6 @@ const RegionDetails = {
 
 
 export default BaseMap.extend({
-  type: "projects",
-
   mixins: [
     ProjectsMixin,
   ],

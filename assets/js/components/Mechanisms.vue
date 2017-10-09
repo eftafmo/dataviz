@@ -1,5 +1,5 @@
 <template>
-<div :class="$options.type">
+<div :class="classNames">
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="rendered" filter="fm" title="No filter selected" :items="nonzero"></dropdown>
   <svg viewBox="0 0 100 10"  preserveAspectRatio="none">
@@ -78,7 +78,7 @@
      }
     }
 }
-.d3-tip.fms {
+.dataviz-tooltip.fms {
     line-height: 1.2;
     white-space: normal;
     &:after {
@@ -101,7 +101,7 @@ import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default Chart.extend({
-  type:'fms',
+  type: "fms",
 
   mixins: [
     WithFMsMixin,
@@ -189,7 +189,7 @@ export default Chart.extend({
       const $this = this;
 
       let tip = d3.tip()
-          .attr('class', 'd3-tip fms')
+          .attr('class', 'dataviz-tooltip fms')
           .html(this.tooltipTemplate)
           .direction('s')
           .offset([0, 0])

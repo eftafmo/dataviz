@@ -1,5 +1,5 @@
 <template>
-<div :class="[$options.type, { rendering: !rendered }]">
+<div :class="classNames">
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
 
@@ -312,7 +312,7 @@ export default Chart.extend({
 
     createTooltip() {
       let tip = d3.tip()
-          .attr('class', 'd3-tip map')
+          .attr('class', 'dataviz-tooltip map')
           .html(this.tooltipTemplate)
           .direction('n')
           .offset([0, 0])

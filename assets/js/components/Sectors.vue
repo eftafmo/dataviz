@@ -1,5 +1,5 @@
 <template>
-<div :class="$options.type" class="clearfix" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
+<div :class="classNames" class="clearfix" :style="{minHeight: chartWidth + 'px'}">  <!-- todo: a better way to preserve container height? -->
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="rendered" filter="sector" title="No filter selected" :items="filtered_dataset"></dropdown>
 <div class="chart-wrapper">
@@ -311,7 +311,7 @@
   }
 }
 
-  .d3-tip.sect:after {
+  .dataviz-tooltip.sect:after {
     top: 19px;
     transform: rotate(180deg);
   }
@@ -693,7 +693,7 @@ export default Chart.extend({
     createTooltip() {
        // add tooltip
       let tip = d3.tip()
-          .attr('class', 'd3-tip sect')
+          .attr('class', 'dataviz-tooltip sect')
           .html(this.tooltipTemplate)
           .offset([15,30])
           .direction('s');

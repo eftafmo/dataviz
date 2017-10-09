@@ -46,8 +46,7 @@ Usage:
   }
 
   var parent = document.createElement('div');
-  parent.classList.add('dataviz');
-  parent.classList.add('embed_dataviz');
+  parent.className = "dataviz";
 
   var el = document.createElement("div");
   el.id = "{{ elid }}";

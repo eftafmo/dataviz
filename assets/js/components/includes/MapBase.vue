@@ -38,7 +38,7 @@
 
 <style lang="less">
 // this is to be included only by the Map mixin, which uses this selector
-.viz.map {
+.dataviz .viz.map {
   // defs
   // - fills
   @water: #cbe9f6;
@@ -743,22 +743,22 @@ export default Vue.extend({
             LI_stroke = terrain_stroke / this.LI_zoom_factor;
 
       return `
-        .viz.map .chart .terrain {
+        .dataviz .viz.map .chart .terrain {
           stroke-width: ${terrain_stroke};
         }
 
-        .viz.map .chart .regions {
+        .dataviz .viz.map .chart .regions {
           stroke-width: ${region_stroke};
         }
 
-        .viz.map .chart .regions .level0 {
+        .dataviz .viz.map .chart .regions .level0 {
           stroke-width: ${terrain_stroke};
         }
-        .viz.map .chart .regions .LI {
+        .dataviz .viz.map .chart .regions .LI {
           stroke-width: ${LI_stroke};
         }
 
-        .viz.map .chart .base .graticule {
+        .dataviz .viz.map .chart .base .graticule {
           stroke-width: ${graticule_stroke};
         }
       `;

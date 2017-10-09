@@ -24,7 +24,7 @@
 
 
 <style lang="less">
-.viz .chart-legend {
+.dataviz .viz .chart-legend {
   margin-bottom: .5em;
 
   ul {

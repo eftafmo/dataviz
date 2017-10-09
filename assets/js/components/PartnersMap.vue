@@ -1,5 +1,5 @@
 <template>
-<div :class="[$options.type, { rendering: !rendered }]">
+<div :class="classNames">
   <slot name="title" v-if="!this.embedded"></slot>
 
   <div class="selector">
@@ -53,7 +53,7 @@
 @duration: .5s;
 @short_duration: .2s;
 
-.viz.map.partners {
+.dataviz .viz.map.is-partners {
   .chart .regions {
     path {
       stroke-opacity: .5;

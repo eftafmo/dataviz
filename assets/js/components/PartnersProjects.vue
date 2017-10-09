@@ -1,44 +1,25 @@
-<template>
-<programmes :datasource="datasource" :initial="initial" class="projects">
-  <template slot="programme-content" scope="x">
-    <projects
-        :country="x.beneficiary.id"
-        :sector="x.programme.sector"
-        :id="x.programme.programme_code"
-        :name="x.programme.programme_name"
-        extra="is_dpp=True"
-    ></projects>
-  </template>
-</programmes>
-</template>
-
-
-<style lang="less">
-.projects {
-  .programme-item {
-    list-style-type: none;
-  }
-  .programme-list {
-    padding-left: 0.5rem;
-  }
-  .title {
-    font-weight: 400;
-  }
-}
-</style>
-
-
 <script>
-import Component from './Component';
+import Projects from './Projects'
+import Programmes from './Programmes'
+import PartnersMixin from './mixins/Partners'
 
-import PartnersProgrammes from './includes/PartnersProgrammes';
-import Projects from './includes/Projects'
+
+const PartnersProgrammes = Programmes.extend({
+  mixins: [
+    PartnersMixin,
+  ],
+})
 
 
-export default Component.extend({
+export default Projects.extend({
   components: {
     programmes: PartnersProgrammes,
-    projects: Projects,
   },
-});
+
+  data() {
+    return {
+      extra: "is_dpp=True",
+    }
+  },
+})
 </script>

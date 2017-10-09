@@ -16,7 +16,7 @@
 
 
 <style lang="less">
-.nuts-selector {
+.dataviz .nuts-selector {
   padding: 7px 10px;
   background-color: rgba(249, 249, 249, .7);
 

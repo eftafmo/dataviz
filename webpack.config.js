@@ -48,19 +48,12 @@ module.exports = {
   context: __dirname,
   devtool: DEBUG ? "inline-source-map" : false,
   entry: {
-    
-    site: [
-          path.resolve(asset_dir, "js/site.js")
-    ],
-
     dataviz: [
-        path.resolve(asset_dir, "js/dataviz.js")
+      path.resolve(asset_dir, "dataviz")
     ],
-    
-    styles: [
-      path.resolve(asset_dir, 'css/main.css')
-    ]
-   
+    site: [
+      path.resolve(asset_dir, "site")
+    ],
   },
   output: {
     path: output_dir,
@@ -69,10 +62,7 @@ module.exports = {
     chunkFilename: DEBUG ? "[id].js" : "[id].[chunkhash:8].js",
   },
   resolve: {
-    modules: [
-      'node_modules',
-      asset_dir,
-    ],
+    modules: ['node_modules', asset_dir],
     extensions: ['.js', '.jsx', '.vue', '.css'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
@@ -101,12 +91,10 @@ module.exports = {
               use: "css-loader",
               fallback: "vue-style-loader",
             }),
-            /*
             less: cssExtractor.extract({
               use: "css-loader!less-loader",
               fallback: "vue-style-loader",
             }),
-            */
           }),
         },
       },
@@ -139,45 +127,45 @@ module.exports = {
         ]
       },
       {
-          test: /\.less$/,
-          use: [{
-              loader: "style-loader"
-          }, {
-                loader: "css-loader"
-          }, {
-               loader: "less-loader", options: {
-                  strictMath: true,
-                   noIeCompat: true
-                }
-          }]
-        }
+        test: /\.less$/,
+        use: [{
+          loader: "style-loader"
+        }, {
+          loader: "css-loader"
+        }, {
+          loader: "less-loader", options: {
+            strictMath: true,
+            noIeCompat: true
+          }
+        }]
+      }
     ]
   },
   plugins: [
-      // new CleanWebpackPlugin(['assets/bundles', 'static/bundles/'], {
-      //   verbose: true,
-      //   exclude: ['webpack-stats.json']
-      // }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'common'
-      }),
-      new webpack.NoEmitOnErrorsPlugin(),
-      new BundleTracker({path: build_dir, filename: "webpack-stats.json"}),
-      /*
+    new CleanWebpackPlugin([output_dir], {
+      allowExternal: true,
+    }),
+    // everything common goes into dataviz
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'dataviz',
+    }),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new BundleTracker({path: build_dir, filename: "webpack-stats.json"}),
+    /*
       new ManifestRevisionPlugin(path.resolve(outputPath, 'manifest.json'), {
-        rootAssetPath: relativeRootAssetPath,
-        ignorePaths: ['/js', '/css'],
+      rootAssetPath: relativeRootAssetPath,
+      ignorePaths: ['/js', '/css'],
       })
-      */
-    ].concat(
-      DEBUG ? [
-        new webpack.HotModuleReplacementPlugin(),
-        new FriendlyErrorsWebpackPlugin(),
-      ] : [
-        cssExtractor,
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-      ]
+    */
+  ].concat(
+    DEBUG ? [
+      new webpack.HotModuleReplacementPlugin(),
+      new FriendlyErrorsWebpackPlugin(),
+    ] : [
+      cssExtractor,
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+    ]
   ),
   devServer: {
     contentBase: asset_dir,

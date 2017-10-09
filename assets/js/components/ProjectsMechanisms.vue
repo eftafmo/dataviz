@@ -4,9 +4,9 @@ import ProjectsMixin from './mixins/Projects';
 
 
 export default Mechanisms.extend({
-  type: 'projects',
-
-  mixins: [ProjectsMixin],
+  mixins: [
+    ProjectsMixin,
+  ],
 
   data() {
     return {

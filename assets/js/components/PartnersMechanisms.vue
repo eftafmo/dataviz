@@ -1,5 +1,5 @@
 <template>
-<fms :datasource="datasource" :initial="initial" class="partners">
+<fms :datasource="datasource" :initial="initial">
   <template slot="title"><slot name="title"></slot></template>
   <template slot="legend" scope="x">
     <fm-legend :fms="x.data"></fm-legend>
@@ -9,7 +9,7 @@
 
 
 <style lang="less">
-.fms.viz.partners {
+.dataviz .viz.fms.is-partners {
   .legend {
     .fms{
       text-align: left;
@@ -38,8 +38,11 @@ import BaseMechanisms from './Mechanisms';
 import PartnersMixin from './mixins/Partners';
 import FMLegendComponent from './includes/FMLegend';
 
+
 const Mechanisms = BaseMechanisms.extend({
-  mixins: [PartnersMixin],
+  mixins: [
+    PartnersMixin,
+  ],
 
   data() {
     return {

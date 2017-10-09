@@ -4,6 +4,8 @@ const LOCALFILTERS = {
 
 
 export default {
+  type: "is-projects",
+
   data() {
     return {
       localfilters: LOCALFILTERS,

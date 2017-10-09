@@ -1,5 +1,5 @@
 export default {
-  type: "partners",
+  type: "is-partners",
 
   data() {
     return {

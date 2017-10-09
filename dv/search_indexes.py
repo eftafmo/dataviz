@@ -349,6 +349,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             self.prepared_data['role_max_priority_code'] = None
         return self.prepared_data
 
+
 class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets;
     state_name = indexes.FacetMultiValueField()
@@ -375,6 +376,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     name = indexes.CharField(model_attr='title', indexed=False)
     url = indexes.CharField(model_attr='link', indexed=False)
     image = indexes.CharField(model_attr='image', indexed=False)
+    created_dt = indexes.DateTimeField(model_attr='created', indexed=False, null=True)
 
     def get_model(self):
         return News
@@ -389,7 +391,12 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         except Project.DoesNotExist:
             pass
         if obj.programmes.exists():
-            return list(obj.programmes.values_list('state__name', flat=True).distinct())
+            # Get this from ProgrammeOutcome, because of IN22
+            return list(ProgrammeOutcome.objects.filter(
+                programme__news=obj,
+            ).values_list(
+                'state__name', flat=True
+            ).distinct())
         return None
 
     def prepare_financial_mechanism_ss(self, obj):

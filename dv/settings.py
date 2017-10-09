@@ -80,7 +80,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'dv.urls'
-CORS_ALLOW_PATHS = ('/api/', '/assets/data/')
+# Why fonts need CORS?
+CORS_ALLOW_PATHS = ('/api/', '/assets/data/', '/assets/fonts/')
 
 TEMPLATES = [
     {

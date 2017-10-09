@@ -1,5 +1,5 @@
 <template>
-    <div :class="[$options.type, {embedded: embedded}]" v-show="hasData">
+    <div :class="classNames" v-show="hasData">
       <transition name="fade">
         <div class="allocation" :key="changed" v-if="data.DPP_count > 0">
           <strong>{{ data.DPP_count }} donor programme {{ singularize('partners', data.DPP_count) }}</strong>
@@ -11,6 +11,7 @@
       </transition>
     </div>
 </template>
+
 
 <script>
 import Summary from './Summary';

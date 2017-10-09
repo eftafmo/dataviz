@@ -6,6 +6,7 @@
         :sector="x.programme.sector"
         :id="x.programme.programme_code"
         :name="x.programme.programme_name"
+        :extra="extra"
     ></projects>
   </template>
 </programmes>
@@ -13,7 +14,7 @@
 
 
 <style lang="less">
-.projects {
+.dataviz .viz.programmes.projects {
   .programme-item {
     list-style-type: none;
   }
@@ -28,9 +29,9 @@
 
 
 <script>
-import Component from './Component';
+import Component from './Component'
 
-import Programmes from './Programmes';
+import Programmes from './Programmes'
 import Projects from './includes/Projects'
 
 
@@ -39,5 +40,11 @@ export default Component.extend({
     programmes: Programmes,
     projects: Projects,
   },
-});
+
+  data() {
+    return {
+      extra: null,
+    }
+  },
+})
 </script>

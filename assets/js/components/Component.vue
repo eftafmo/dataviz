@@ -1,3 +1,8 @@
+<!--
+     when deriving components from this, you should use
+     :class="classNames" on the template's root element
+-->
+
 <style lang="less">
 @duration: .5s;
 @short_duration: .2s;
@@ -71,7 +76,12 @@ export default Base.extend({
   computed: {
     classNames() {
       if (!this.isReady) return []
+      return this._getClassNames()
+    },
+  },
 
+  methods: {
+    _getClassNames() {
       const names = this.$options.type.split()
       if (this.embedded) names.push("embedded")
 

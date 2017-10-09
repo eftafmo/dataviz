@@ -68,6 +68,7 @@
 <script>
 import Component from './Component';
 
+
 export default Component.extend({
   type: "summary",
 

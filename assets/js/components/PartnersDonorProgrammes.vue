@@ -1,5 +1,5 @@
 <template>
-<div class="donor-programmes">
+<div :class="classNames">
  <slot name="title" v-if="!this.embedded"></slot>
  <dropdown v-if="isReady" filter="DPP" title="No filter selected" :items="dropdown_items"></dropdown>
  <table>
@@ -33,7 +33,7 @@
 </template>
 
 <style lang="less">
-.dataviz .donor-programmes {
+.dataviz .viz.donor-programmes {
   width: 100%;
   @media(max-width: 800px){
     overflow: auto;
@@ -163,6 +163,8 @@ import CountriesMixin from './mixins/WithCountries';
 import Dropdown from './includes/DropdownFilter';
 
 export default Component.extend({
+  type: "donor-programmes",
+
   mixins: [
     PartnersMixin,
     CountriesMixin,

@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% block title %}{% endblock %}</title>
-  {% render_bundle 'styles' 'css' %}
+  {% render_bundle 'dataviz' 'css' %}
+  {% render_bundle 'site' 'css' %}
 </head>
 <body class="dataviz">
   <header class="header sticky">
@@ -68,10 +69,8 @@
         </div>
       </div>
   </footer>
-  {% render_bundle 'common' 'js' %}
   {% render_bundle 'dataviz' 'js' %}
   {% render_bundle 'site' 'js' %}
-  
 {% block finally %}
 {% endblock %}
 </body>

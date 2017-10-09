@@ -1,5 +1,5 @@
 <template>
-<div :class="[$options.type, { rendering: !rendered }]">
+<div :class="classNames">
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="hasData" :filter="state_type" title="No filter selected" :items="nonzero"></dropdown>
 
@@ -430,7 +430,7 @@ export default Chart.extend({
       const $this = this;
       // add tooltip
       let tip = d3.tip()
-          .attr('class', 'd3-tip state')
+          .attr('class', 'dataviz-tooltip state')
           .html(this.tooltipTemplate)
           .direction('n')
           .offset(function(d) {
@@ -440,7 +440,7 @@ export default Chart.extend({
             return [
               -$this.itemHeight * 0.9,
               Math.max(zeroed,
-                       // an amazing way to calculate the mouse position for d3-tip
+                       // an amazing way to calculate the mouse position for dataviz-tooltip
                        d3.event.clientX
                        -$this.chart.node().getBoundingClientRect().left
                        + zeroed
