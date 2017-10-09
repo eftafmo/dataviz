@@ -403,12 +403,13 @@ class ProgrammeFacetedExportView(FacetedExportView):
         'outcome_ss': 'Outcome',
         'url': 'Url'
     })
+    # facet_fields = ProgrammeFacetedSearchView.facet_fields
     initial = {
-        'kind': ['Programme'],
+        'kind': ['Programmes'],
         # hack! we remove this at form init
-        'view_name': 'ProgrammeFacetedExportView'
+        # 'view_name': 'ProgrammeFacetedExportView'
     }
-    order_field = 'code'
+    order_field = ProgrammeFacetedSearchView.order_field
 
 
 class ProjectFacetedExportView(FacetedExportView):
@@ -427,17 +428,13 @@ class ProjectFacetedExportView(FacetedExportView):
         'theme_ss': 'Project theme',
         'url': 'Url'
     })
-    facet_fields = ProgrammeFacetedSearchView.facet_fields + [
-        'project_status',
-        'geotarget',
-        'theme_ss',
-    ]
+    # facet_fields = ProjectFacetedSearchView.facet_fields
     initial = {
         'kind': ['Project'],
         # hack! we remove this at form init
-        'view_name': 'ProjectFacetedExportView'
+        # 'view_name': 'ProjectFacetedExportView'
     }
-    order_field = 'code'
+    order_field = ProjectFacetedSearchView.order_field
 
 
 class OrganisationFacetedExportView(FacetedExportView):
@@ -459,21 +456,13 @@ class OrganisationFacetedExportView(FacetedExportView):
         'city': 'City',
         'role_ss': 'Organisation role',
     })
-    facet_fields = FacetedSearchView.facet_fields + [
-        'project_name',
-        'country',
-        'city',
-        'geotarget',
-        'org_type_category',
-        'org_type',
-        'role_ss',
-    ]
+    facet_fields = OrganisationFacetedSearchView.facet_fields
     initial = {
         'kind': ['Organisation'],
         # hack! we remove this at form init
         'view_name': 'OrganisationFacetedExportView'
     }
-    order_field = '-role_max_priority_code'
+    order_field = OrganisationFacetedSearchView.order_field
 
 
 class NewsFacetedExportView(FacetedExportView):
@@ -491,13 +480,12 @@ class NewsFacetedExportView(FacetedExportView):
         'geotarget': 'Project region or city',
         'url': 'Url'
     })
-    facet_fields = ProjectFacetedSearchView.facet_fields
-
     initial = {
         'kind': ['News'],
         # hack! we remove this at form init
         'view_name': 'NewsFacetedExportView'
     }
+    order_field = '-created_dt'
 
 
 class _TypeaheadFacetedSearchView(object):
