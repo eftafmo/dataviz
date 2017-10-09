@@ -409,13 +409,13 @@ class FacetedExportView(FacetedSearchView):
 
 class ProgrammeFacetedExportView(FacetedExportView):
     export_fields = OrderedDict([
-        ('code', 'Code'),
-        ('name', 'Name'),
+        ('code', 'Case number'),
+        ('name', 'Programme name'),
         ('financial_mechanism_ss', 'Financial mechanism'),
+        ('priority_sector_ss', 'Sector'),
+        ('programme_area_ss', 'Programme area'),
         ('state_name', 'Beneficiary state'),
         ('programme_status', 'Programme status'),
-        ('programme_area_ss', 'Programme area'),
-        ('priority_sector_ss', 'Sector'),
         ('grant', 'Grant'),
         ('outcome_ss', 'Outcome'),
         ('url', 'Url'),
@@ -428,16 +428,16 @@ class ProgrammeFacetedExportView(FacetedExportView):
 
 class ProjectFacetedExportView(FacetedExportView):
     export_fields = OrderedDict({
-        'code': 'Code',
-        'name': 'Name',
+        'code': 'Case number',
+        'name': 'Project name',
         'financial_mechanism_ss': 'Financial mechanism',
+        'priority_sector_ss': 'Sector',
+        'programme_area_ss': 'Programme area',
         'state_name': 'Beneficiary state',
         'programme_status': 'Programme status',
-        'programme_area_ss': 'Programme area',
-        'priority_sector_ss': 'Sector',
+        'project_status': 'Project status',
         'grant': 'Grant',
         'outcome_ss': 'Outcome',
-        'project_status': 'Project status',
         'geotarget': 'Project region or city',
         'theme_ss': 'Project theme',
         'url': 'Url'
@@ -452,20 +452,18 @@ class OrganisationFacetedExportView(FacetedExportView):
     export_fields = OrderedDict([
         ('name', 'Name'),
         ('domestic_name', 'Domestic name'),
-        ('financial_mechanism_ss', 'Financial mechanism'),
-        ('state_name', 'Beneficiary state'),
-        ('programme_status', 'Programme status'),
-        ('programme_area_ss', 'Programme area'),
-        ('priority_sector_ss', 'Sector'),
-        ('grant', 'Grant'),
-        ('project_name', 'Project name'),
-        ('project_status', 'Project status'),
-        ('geotarget', 'Project region or city'),
-        ('org_type_category', 'Organisation type category'),
-        ('org_type', 'Organisation type'),
         ('country', 'Country'),
         ('city', 'City'),
         ('role_ss', 'Organisation role'),
+        ('org_type_category', 'Organisation type category'),
+        ('org_type', 'Organisation type'),
+        ('financial_mechanism_ss', 'Financial mechanism'),
+        ('priority_sector_ss', 'Sector'),
+        ('programme_area_ss', 'Programme area'),
+        ('state_name', 'Beneficiary state'),
+        ('programme_status', 'Programme status'),
+        ('project_name', 'Project name'),
+        ('project_status', 'Project status'),
     ])
     initial = {
         'kind': ['Organisation']
