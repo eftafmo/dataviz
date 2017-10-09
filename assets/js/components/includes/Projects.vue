@@ -102,7 +102,8 @@ export default Vue.extend({
     country: String,
     sector: String,
     name: String,
-    extra: String
+    extra: String,
+    localfilters: Object
   },
 
  data() {
@@ -119,7 +120,7 @@ export default Vue.extend({
       target.classList.add('spinning')
       target.classList.toggle('active')
 
-      if(this.posts.length == 0){
+      if(this.posts.length == 0) {
         let url=`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`
         if (this.filters.donor) {
           url = url + '&donor=' + this.filters.donor
@@ -133,9 +134,15 @@ export default Vue.extend({
         if (this.extra) {
           url = url + '&' + this.extra;
         }
-        axios.get(url)
+        axios
+          .get(url)
           .then(response => {
-            this.posts = response.data
+            // allProjects will be specific for each project,
+            // it will keep all projects, used for filtering by region
+            this.allProjects = response.data.results.slice();
+            this.posts = response.data;
+            this.posts.results = this.filterByNuts(this.posts.results);
+
             if(target.classList.contains('spinning'))
               target.classList.remove('spinning')
           })
@@ -143,10 +150,32 @@ export default Vue.extend({
             this.errors.push(e)
           });
       }
-      else
+      else {
         if(target.classList.contains('spinning'))
-              target.classList.remove('spinning')
-        this.posts=[]
+          target.classList.remove('spinning');
+        this.posts = [];
+        this.allProjects = null;
+      }
+
+    },    
+    filterByNuts(programmes) {
+      return programmes.filter(this.isRelevantForSelectedRegion);
+    },
+    isRelevantForSelectedRegion(program) {
+      if(!this.localfilters.region) {
+        return true;
+      }
+      if(program.nuts.length > this.localfilters.region.length) {
+        if(program.nuts.substr(0, this.localfilters.region.length) === this.localfilters.region) {
+          return true;
+        }
+        return false;
+      } else {
+        if(this.localfilters.region.substr(0, program.nuts.length) === program.nuts) {
+          return true;
+        }
+        return false;
+      }
     },
     showMore() {
       let href = this.posts.next;
@@ -156,11 +185,19 @@ export default Vue.extend({
             this.posts.next = response.data.next
             this.posts.count = response.data.count
             this.posts.previous = response.data.previous
-            this.posts.results.push.apply(this.posts.results, response.data.results)
+
+            this.allProjects.push.apply(this.allProjects, response.data.results.slice());
+            this.posts.results.push.apply(this.posts.results, this.filterByNuts(response.data.results));
           })
           .catch(e => {
             this.errors.push(e)
         });
+      }
+    },
+    handleFilterRegion() {
+      if(this.posts.results !== undefined){
+        this.posts = {};
+        this.posts.results = this.filterByNuts(this.allProjects);
       }
     }
 
@@ -175,6 +212,7 @@ export default Vue.extend({
         target.classList.remove('active')
       },
     },
+    'localfilters.region': 'handleFilterRegion',
   },
 
 });

@@ -150,6 +150,12 @@ export default Component.extend({
     WithCountriesMixin,
   ],
 
+
+  props: {
+    localfilters: Object
+  },
+
+
   updated() {
     //TODO: this can be done a lot better
     if (window.matchMedia("(max-width: 800px)").matches) {
@@ -159,8 +165,8 @@ export default Component.extend({
     }
   },
 
-  computed: {
 
+  computed: {
     data() {
       if (!this.hasData) return []
 
@@ -192,6 +198,7 @@ export default Component.extend({
               programme_code: p,
               programme_name: programmes[p].name,
               programme_url: programmes[p].url,
+              nuts: programmes[p].nuts,
             };
         }
       }
@@ -208,6 +215,7 @@ export default Component.extend({
                 programmes: [],
               };
         out.beneficiaries.push(beneficiary);
+
         for (const p in programmes) {
           if(programmes[p].programme_code)
             out.projectcount += 1;
@@ -216,7 +224,9 @@ export default Component.extend({
             beneficiary.projectcount = value;
             continue;
           }
-          beneficiary.programmes.push(value);
+          if(this.isRelevantForSelectedRegion(value)) {
+            beneficiary.programmes.push(value);
+          }
         }
         // Sort by programme code, the Tripartite programme always last
         beneficiary.programmes.sort((a,b) => d3.ascending(
@@ -227,9 +237,11 @@ export default Component.extend({
 
       //Sort by country
       out.beneficiaries.sort((a,b) => d3.ascending(this.get_country_name(a.id),this.get_country_name(b.id)));
+
       return out;
     },
   },
+
 
   methods: {
     toggleContent(e) {
@@ -254,6 +266,25 @@ export default Component.extend({
         target.classList.add('active')
       }
     },
-  },
+    isRelevantForSelectedRegion(program) {
+      const region = this.localfilters.region;
+      if(!region) {
+        return true;
+      }
+      for(const nutsItem of program.nuts) {
+        if(nutsItem.length > region.length) {
+          if(nutsItem.substr(0, region.length) === region) {
+            return true;
+          }
+          return false;
+        } else {
+          if(region.substr(0, nutsItem.length) === nutsItem) {
+            return true;
+          }
+          return false;
+        }
+      }
+    },
+  }
 });
 </script>
