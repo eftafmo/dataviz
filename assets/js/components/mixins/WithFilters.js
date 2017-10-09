@@ -2,18 +2,20 @@
 export const FILTERS = {
   fm: null,
   beneficiary: null,
+  region: null,
   sector: null,
   area: null,
   donor: null,
   DPP: null,
 }
 
+
 // and their usage across scenarios
 export const SCENARIOFILTERS = {
   index: ['fm', 'beneficiary'],
   grants: ['fm', 'beneficiary', 'sector', 'area'],
   partners: ['fm', 'beneficiary', 'sector', 'area', 'donor', 'DPP'],
-  projects: ['fm', 'beneficiary', 'sector', 'area'],
+  projects: ['fm', 'beneficiary', 'region', 'sector', 'area'],
   search: ['fm', 'beneficiary', 'sector', 'area', 'donor', 'DPP'],
 }
 
@@ -29,6 +31,7 @@ export default {
     // make sure every key exists from the start
     'filters.fm': 'handleFilterFm',
     'filters.beneficiary': 'handleFilterBeneficiary',
+    'filters.region': 'handleFilterRegion',
     'filters.sector': 'handleFilterSector',
     'filters.area': 'handleFilterArea',
     'filters.donor': 'handleFilterDonor',
@@ -49,6 +52,10 @@ export default {
     handleFilterBeneficiary(val, old) {
       const type = "beneficiary";
       this.handleFilter(type, val, old);
+    },
+    handleFilterRegion(val, old) {
+      const type = "region"
+      this.handleFilter(type, val, old)
     },
     handleFilterSector(val, old) {
       const type = "sector";

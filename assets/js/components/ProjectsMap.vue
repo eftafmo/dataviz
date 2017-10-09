@@ -218,14 +218,14 @@ export default BaseMap.extend({
     },
 
     zoomOut() {
-      const current = this.localfilters.region
+      const current = this.filters.region
 
       if (!current) {
         // no region selected, unset the country
         this.filters.beneficiary = null
       } else {
         // reset to country level
-        this.localfilters.region = null
+        this.filters.region = null
       }
     },
 
@@ -305,7 +305,7 @@ export default BaseMap.extend({
       if (!self) return
 
       if (d.id.length != 2)
-        this.localfilters.region = d.id
+        this.filters.region = d.id
     },
 
     _getChildrenLevel(region) {
@@ -607,7 +607,7 @@ export default BaseMap.extend({
     handleFilterBeneficiary(newid, oldid) {
       this.$super.handleFilterBeneficiary(newid, oldid)
       // unset the region filter
-      this.localfilters.region = null
+      this.filters.region = null
     },
 
     handleFilterRegion(v, old) {

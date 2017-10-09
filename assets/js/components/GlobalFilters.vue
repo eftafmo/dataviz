@@ -161,6 +161,7 @@ export default Vue.extend({
     this.FILTER_SETTINGS = {
       fm: {name:'FM'},
       beneficiary: {name: 'BS', formatter: this.get_country},
+      region: {name: 'Region'},
       sector: {name: 'PS', truncate: 20},
       area: {name:'PA', formatter: this.format_pa},
       donor: {name: 'DS', formatter: this.get_country},
