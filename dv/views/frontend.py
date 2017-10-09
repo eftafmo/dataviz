@@ -1,15 +1,18 @@
+import io
 import os.path
 import re
 from collections import defaultdict
 from collections import OrderedDict
+from datetime import datetime
 
 from django.conf import settings
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.generic_views import FacetedSearchMixin as BaseFacetedSearchMixin
+from pyexcel import Sheet
 from webpack_loader import utils as webpack
 from dv.lib import utils
 from dv.models import (
@@ -31,22 +34,24 @@ SCENARIOS = (
 def home(request):
     return render(request, 'homepage.html')
 
+
 def grants(request):
     return render(request, 'grants.html')
+
 
 def partners(request):
     return render(request, 'partners.html')
 
+
 def projects(request):
     return render(request, 'projects.html')
 
-# def search(request):
-#     return render(request, 'search.html')
 
 def disclaimer(request):
     content = StaticContent.objects.filter(name='Disclaimer')
     context = dict(body=content[0].body if content else None)
     return render(request, 'disclaimer.html', context)
+
 
 def sandbox(request):
     return render(request, 'sandbox.html')
@@ -223,6 +228,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         objls = kwargs.pop('object_list', self.queryset)
         ctx = super().get_context_data(object_list=objls, **kwargs)
         ctx['page_sizes'] = [10, 25, 50, 100]
+        ctx['query'] = self.request.GET
 
         facet_fields = ctx.get('facets', {}).get('fields', {})
         # Custom sorting of some facets, refs #326
@@ -357,6 +363,136 @@ class NewsFacetedSearchView(FacetedSearchView):
     }
 
 
+class FacetedExportView(FacetedSearchView):
+    export_fields = {}
+
+    def type_format_field(self, raw_value):
+        if not raw_value:
+            return ''
+        if isinstance(raw_value, datetime):
+            return raw_value.strftime("%d %B %Y")
+        try:
+            return float(raw_value)
+        except ValueError:
+            pass
+        return raw_value
+
+    def format_field(self, raw_field):
+        if isinstance(raw_field, list):
+            return '\n'.join([self.type_format_field(item) for item in raw_field])
+        return self.type_format_field(raw_field)
+
+    def get_export_data(self, form):
+        queryset = form.search()
+        result = queryset.values_list(*self.export_fields.keys())
+        for row in result:
+            for i in range(len(row)):
+                row[i] = self.format_field(row[i])
+        return result
+
+    def get_paginate_by(self, queryset):
+        return queryset.count()
+
+    def form_valid(self, form):
+        data = self.get_export_data(form)
+        name = self.initial['kind'][0]
+        sheet = Sheet(data,
+                      name=name,
+                      colnames=list(self.export_fields.values()))
+        stream = io.BytesIO()
+        stream = sheet.save_to_memory('xlsx', stream)
+        response = HttpResponse(stream.read())
+        response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        response['Content-Disposition'] = 'attachment; filename="{0}.xlsx"'.format(name)
+        return response
+
+
+class ProgrammeFacetedExportView(FacetedExportView):
+    export_fields = OrderedDict([
+        ('code', 'Case number'),
+        ('name', 'Programme name'),
+        ('financial_mechanism_ss', 'Financial mechanism'),
+        ('priority_sector_ss', 'Sector'),
+        ('programme_area_ss', 'Programme area'),
+        ('state_name', 'Beneficiary state'),
+        ('programme_status', 'Programme status'),
+        ('grant', 'Grant'),
+        ('outcome_ss', 'Outcome'),
+        ('url', 'Url'),
+    ])
+    initial = {
+        'kind': ['Programme']
+    }
+    order_field = ProgrammeFacetedSearchView.order_field
+
+
+class ProjectFacetedExportView(FacetedExportView):
+    export_fields = OrderedDict({
+        'code': 'Case number',
+        'name': 'Project name',
+        'financial_mechanism_ss': 'Financial mechanism',
+        'priority_sector_ss': 'Sector',
+        'programme_area_ss': 'Programme area',
+        'state_name': 'Beneficiary state',
+        'programme_status': 'Programme status',
+        'project_status': 'Project status',
+        'grant': 'Grant',
+        'outcome_ss': 'Outcome',
+        'geotarget': 'Project region or city',
+        'theme_ss': 'Project theme',
+        'url': 'Url'
+    })
+    initial = {
+        'kind': ['Project']
+    }
+    order_field = ProjectFacetedSearchView.order_field
+
+
+class OrganisationFacetedExportView(FacetedExportView):
+    export_fields = OrderedDict([
+        ('name', 'Name'),
+        ('domestic_name', 'Domestic name'),
+        ('country', 'Country'),
+        ('city', 'City'),
+        ('role_ss', 'Organisation role'),
+        ('org_type_category', 'Organisation type category'),
+        ('org_type', 'Organisation type'),
+        ('financial_mechanism_ss', 'Financial mechanism'),
+        ('priority_sector_ss', 'Sector'),
+        ('programme_area_ss', 'Programme area'),
+        ('state_name', 'Beneficiary state'),
+        ('programme_status', 'Programme status'),
+        ('project_name', 'Project name'),
+        ('project_status', 'Project status'),
+    ])
+    initial = {
+        'kind': ['Organisation']
+    }
+    order_field = OrganisationFacetedSearchView.order_field
+
+
+class NewsFacetedExportView(FacetedExportView):
+    export_fields = OrderedDict([
+        ('name', 'Title'),
+        ('created_dt', 'Date'),
+        ('financial_mechanism_ss', 'Financial mechanism'),
+        ('priority_sector_ss', 'Sector'),
+        ('programme_area_ss', 'Programme area'),
+        ('state_name', 'Beneficiary state'),
+        ('programme_name', 'Programme'),
+        ('programme_status', 'Programme status'),
+        ('project_name', 'Project'),
+        ('project_status', 'Project status'),
+        ('theme_ss', 'Project theme'),
+        ('geotarget', 'Project region or city'),
+        ('url', 'Url'),
+    ])
+    initial = {
+        'kind': ['News']
+    }
+    order_field = NewsFacetedSearchView.order_field
+
+
 class _TypeaheadFacetedSearchView(object):
     form_class = EeaAutoFacetedSearchForm
     template_name = None
@@ -394,15 +530,18 @@ class _TypeaheadFacetedSearchView(object):
         return JsonResponse(self.get_data(context), **response_kwargs)
 
 
-class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, ProgrammeFacetedSearchView):
+class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                          ProgrammeFacetedSearchView):
     pass
 
 
-class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, ProjectFacetedSearchView):
+class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                        ProjectFacetedSearchView):
     pass
 
 
-class OrganisationTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView, OrganisationFacetedSearchView):
+class OrganisationTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                             OrganisationFacetedSearchView):
     pass
 
 
