@@ -266,6 +266,10 @@ export default Component.extend({
         target.classList.add('active')
       }
     },
+    /**
+     * will consider relevant if either is parent, identical or child
+     * ex: for RO31, RO31, RO3, RO, RO312 will be relevant, but RO4 or RO32, will not
+     */
     isRelevantForSelectedRegion(program) {
       const region = this.localfilters.region;
       if(!region) {
