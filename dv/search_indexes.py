@@ -69,13 +69,8 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
             'priority_sector__name', flat=True).distinct())
 
     def prepare_financial_mechanism_ss(self, obj):
-        pa = obj.programme_areas.all()
-        # TODO: get via PA > PS > FM instead of Allocation
-        return list(Allocation.objects.filter(
-            programme_area__in=pa
-        ).values_list(
-            'financial_mechanism__grant_name', flat=True
-        ).distinct())
+        return list(obj.programme_areas.values_list('priority_sector__type__grant_name',
+                                                    flat=True).distinct())
 
     def prepare_outcome_ss(self, obj):
         outcomes = ProgrammeOutcome.objects.filter(
@@ -211,13 +206,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         result = result.union(obj.roles.filter(
             is_programme=False, project__isnull=False
         ).values_list(
-            'project__programme_area__allocation__financial_mechanism__grant_name',
+            'project__programme_area__priority_sector__type__grant_name',
             flat=True,
         ).distinct())
         result = result.union(obj.roles.filter(
             is_programme=True, programme__isnull=False
         ).values_list(
-            'programme__programme_areas__allocation__financial_mechanism__grant_name',
+            'programme__programme_areas__priority_sector__type__grant_name',
             flat=True,
         ).distinct())
         return list(result)
@@ -406,11 +401,9 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         except Project.DoesNotExist:
             pass
         if obj.programmes.exists():
-            pa = obj.programmes.values_list('programme_areas__pk', flat=True).distinct()
-            return list(Allocation.objects.filter(
-                programme_area__pk__in=pa
-            ).values_list(
-                'financial_mechanism__grant_name', flat=True
+            return list(obj.programmes.values_list(
+                'programme_areas__priority_sector__type__grant_name',
+                flat=True
             ).distinct())
         return None
 
