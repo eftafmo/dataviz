@@ -8,6 +8,15 @@ export const FILTERS = {
   DPP: null,
 }
 
+// and their usage across scenarios
+export const SCENARIOFILTERS = {
+  index: ['fm', 'beneficiary'],
+  grants: ['fm', 'beneficiary', 'sector', 'area'],
+  partners: ['fm', 'beneficiary', 'sector', 'area', 'donor', 'DPP'],
+  projects: ['fm', 'beneficiary', 'sector', 'area'],
+  search: ['fm', 'beneficiary', 'sector', 'area', 'donor', 'DPP'],
+}
+
 
 export default {
   data() {

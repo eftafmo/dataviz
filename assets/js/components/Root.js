@@ -5,7 +5,7 @@ import Base from './Base';
 import Embeddor from './includes/Embeddor'
 
 // access filters directly before they get bound, to avoid triggering handlers
-import {FILTERS} from './mixins/WithFilters'
+import {FILTERS, SCENARIOFILTERS} from './mixins/WithFilters'
 
 
 function getURL(obj) {
@@ -16,6 +16,17 @@ function getURL(obj) {
     url = obj._url = new URL(obj.href, window.location.href);
 
   return url;
+}
+
+function getScenario(url) {
+  const match = url.pathname.match(/^\/(\w+)?\/?$/)
+  if (!match) return null
+
+  const scenario = match[1]
+  if (scenario === undefined) return "index"
+  // test if this is a known scenario
+  if (SCENARIOFILTERS[scenario] === undefined) return null
+  return scenario
 }
 
 
@@ -33,18 +44,19 @@ export default Base.extend({
 
   beforeCreate() {
     // set filters from querystring.
-    const params = getURL(window.location).searchParams;
-    const page = getURL(window.location).pathname
-    for (const name in FILTERS) {
-      FILTERS[name] = params.get(name) || null;
-      if(page != '/partners/'){
-        FILTERS['DPP'] = FILTERS['donor'] = null
-      }
+    const url = getURL(window.location),
+          params = url.searchParams,
+          scenario = getScenario(url)
+
+    const filters = SCENARIOFILTERS[scenario]
+    for (const name of filters) {
+      FILTERS[name] = params.get(name) || null
     }
+
+    this.scenario = scenario
   },
 
   created() {
-
     // don't rely on the backend to serve updated anchors
     this.updateAnchors();
   },
@@ -90,16 +102,19 @@ export default Base.extend({
 
         const url = getURL(a);
         if (url.origin !== location.origin) continue;
-        this._updateURL(url);
+        const scenario = getScenario(url)
+        if (!scenario) continue
+
+        this._updateURL(url, SCENARIOFILTERS[scenario])
 
         a.href = url.href;
       }
     },
 
-    _updateURL(url) {
+    _updateURL(url, filters) {
       const params = url.searchParams;
 
-      for (const name in this.filters) {
+      for (const name of filters) {
         const value = this.filters[name];
 
         // remove the param and add it back if necessary
@@ -112,7 +127,7 @@ export default Base.extend({
 
     handleFilter(type, val, old) {
       const location = getURL(window.location);
-      this._updateURL(location);
+      this._updateURL(location, SCENARIOFILTERS[this.scenario]);
 
       // TODO: what's the more appropriate UX, push or replace?
       history.replaceState(null, null, location.href);
