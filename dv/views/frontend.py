@@ -402,24 +402,24 @@ class FacetedExportView(FacetedSearchView):
         stream = io.BytesIO()
         stream = sheet.save_to_memory('xlsx', stream)
         response = HttpResponse(stream.read())
-        response['Content-Type'] = 'application/vnd.ms-excel'
+        response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         response['Content-Disposition'] = 'attachment; filename="{0}.xlsx"'.format(name)
         return response
 
 
 class ProgrammeFacetedExportView(FacetedExportView):
-    export_fields = OrderedDict({
-        'code': 'Code',
-        'name': 'Name',
-        'financial_mechanism_ss': 'Financial mechanism',
-        'state_name': 'Beneficiary state',
-        'programme_status': 'Programme status',
-        'programme_area_ss': 'Programme area',
-        'priority_sector_ss': 'Sector',
-        'grant': 'Grant',
-        'outcome_ss': 'Outcome',
-        'url': 'Url'
-    })
+    export_fields = OrderedDict([
+        ('code', 'Code'),
+        ('name', 'Name'),
+        ('financial_mechanism_ss', 'Financial mechanism'),
+        ('state_name', 'Beneficiary state'),
+        ('programme_status', 'Programme status'),
+        ('programme_area_ss', 'Programme area'),
+        ('priority_sector_ss', 'Sector'),
+        ('grant', 'Grant'),
+        ('outcome_ss', 'Outcome'),
+        ('url', 'Url'),
+    ])
     initial = {
         'kind': ['Programme']
     }
@@ -449,24 +449,24 @@ class ProjectFacetedExportView(FacetedExportView):
 
 
 class OrganisationFacetedExportView(FacetedExportView):
-    export_fields = OrderedDict({
-        'name': 'Name',
-        'domestic_name': 'Domestic name',
-        'financial_mechanism_ss': 'Financial mechanism',
-        'state_name': 'Beneficiary state',
-        'programme_status': 'Programme status',
-        'programme_area_ss': 'Programme area',
-        'priority_sector_ss': 'Sector',
-        'grant': 'Grant',
-        'project_name': 'Project name',
-        'project_status': 'Project status',
-        'geotarget': 'Project region or city',
-        'org_type_category': 'Organisation type category',
-        'org_type': 'Organisation type',
-        'country': 'Country',
-        'city': 'City',
-        'role_ss': 'Organisation role',
-    })
+    export_fields = OrderedDict([
+        ('name', 'Name'),
+        ('domestic_name', 'Domestic name'),
+        ('financial_mechanism_ss', 'Financial mechanism'),
+        ('state_name', 'Beneficiary state'),
+        ('programme_status', 'Programme status'),
+        ('programme_area_ss', 'Programme area'),
+        ('priority_sector_ss', 'Sector'),
+        ('grant', 'Grant'),
+        ('project_name', 'Project name'),
+        ('project_status', 'Project status'),
+        ('geotarget', 'Project region or city'),
+        ('org_type_category', 'Organisation type category'),
+        ('org_type', 'Organisation type'),
+        ('country', 'Country'),
+        ('city', 'City'),
+        ('role_ss', 'Organisation role'),
+    ])
     initial = {
         'kind': ['Organisation']
     }
@@ -474,21 +474,21 @@ class OrganisationFacetedExportView(FacetedExportView):
 
 
 class NewsFacetedExportView(FacetedExportView):
-    export_fields = OrderedDict({
-        'name': 'Name',
-        'domestic_name': 'Domestic name',
-        'created_dt': 'Date',
-        'financial_mechanism_ss': 'Financial mechanism',
-        'state_name': 'Beneficiary state',
-        'programme_status': 'Programme status',
-        'programme_area_ss': 'Programme area',
-        'priority_sector_ss': 'Sector',
-        'project_name': 'Project name',
-        'project_status': 'Project status',
-        'theme_ss': 'Project theme',
-        'geotarget': 'Project region or city',
-        'url': 'Url'
-    })
+    export_fields = OrderedDict([
+        ('name', 'Title'),
+        ('created_dt', 'Date'),
+        ('financial_mechanism_ss', 'Financial mechanism'),
+        ('priority_sector_ss', 'Sector'),
+        ('programme_area_ss', 'Programme area'),
+        ('state_name', 'Beneficiary state'),
+        ('programme_name', 'Programme'),
+        ('programme_status', 'Programme status'),
+        ('project_name', 'Project'),
+        ('project_status', 'Project status'),
+        ('theme_ss', 'Project theme'),
+        ('geotarget', 'Project region or city'),
+        ('url', 'Url'),
+    ])
     initial = {
         'kind': ['News']
     }
