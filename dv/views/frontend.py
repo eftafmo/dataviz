@@ -391,7 +391,7 @@ class FacetedExportView(FacetedSearchView):
 
 
 class ProgrammeFacetedExportView(FacetedExportView):
-    export_fields = {
+    export_fields = OrderedDict({
         'code': 'Code',
         'name': 'Name',
         'financial_mechanism_ss': 'Financial mechanism',
@@ -402,7 +402,7 @@ class ProgrammeFacetedExportView(FacetedExportView):
         'grant': 'Grant',
         'outcome_ss': 'Outcome',
         'url': 'Url'
-    }
+    })
     initial = {
         'kind': ['Programme'],
         # hack! we remove this at form init
@@ -412,7 +412,7 @@ class ProgrammeFacetedExportView(FacetedExportView):
 
 
 class ProjectFacetedExportView(FacetedExportView):
-    export_fields = {
+    export_fields = OrderedDict({
         'code': 'Code',
         'name': 'Name',
         'financial_mechanism_ss': 'Financial mechanism',
@@ -426,7 +426,7 @@ class ProjectFacetedExportView(FacetedExportView):
         'geotarget': 'Project region or city',
         'theme_ss': 'Project theme',
         'url': 'Url'
-    }
+    })
     facet_fields = ProgrammeFacetedSearchView.facet_fields + [
         'project_status',
         'geotarget',
@@ -441,7 +441,7 @@ class ProjectFacetedExportView(FacetedExportView):
 
 
 class OrganisationFacetedExportView(FacetedExportView):
-    export_fields = {
+    export_fields = OrderedDict({
         'name': 'Name',
         'domestic_name': 'Domestic name',
         'financial_mechanism_ss': 'Financial mechanism',
@@ -458,7 +458,7 @@ class OrganisationFacetedExportView(FacetedExportView):
         'country': 'Country',
         'city': 'City',
         'role_ss': 'Organisation role',
-    }
+    })
     facet_fields = FacetedSearchView.facet_fields + [
         'project_name',
         'country',
@@ -477,7 +477,7 @@ class OrganisationFacetedExportView(FacetedExportView):
 
 
 class NewsFacetedExportView(FacetedExportView):
-    export_fields = {
+    export_fields = OrderedDict({
         'name': 'Name',
         'domestic_name': 'Domestic name',
         'financial_mechanism_ss': 'Financial mechanism',
@@ -490,7 +490,7 @@ class NewsFacetedExportView(FacetedExportView):
         'theme_ss': 'Project theme',
         'geotarget': 'Project region or city',
         'url': 'Url'
-    }
+    })
     facet_fields = ProjectFacetedSearchView.facet_fields
 
     initial = {
