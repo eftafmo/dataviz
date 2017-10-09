@@ -78,6 +78,15 @@
 
 .filter-item {
   display: inline-block;
+
+  &:after {
+    content: "\ea0f";
+    font-family: 'icomoon' !important;
+    vertical-align: middle;
+    font-size: smaller;
+    -webkit-text-stroke: 2px #3D90F3;
+  }
+
  @media(max-width: 800px){
   display: block;
   &:after {
@@ -227,13 +236,13 @@ export default Vue.extend({
         this.filters[lastFilter] = null;
       }
     },
-    
+
     resetFilters() {
       for (const filter in this.filters) {
         this.filters[filter] = null
       }
     },
-    
+
     // it is executed each time this.filters changes
     // it will keep track of all filters applied or removed, chronologically
     // if a previous same type filter is removed, then it will be removed from the list
