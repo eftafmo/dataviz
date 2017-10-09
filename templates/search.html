@@ -633,11 +633,13 @@
               return {
                 auto_name: facet,
                 auto_value: params.term,
+                page: params.page || 1,
               }
             },
             processResults: function(response, params) {
               return {
                 results: response.results,
+                pagination: response.pagination,
               }
             },
             delay: 300,

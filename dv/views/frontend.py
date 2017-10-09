@@ -4,6 +4,7 @@ from collections import defaultdict
 from collections import OrderedDict
 
 from django.conf import settings
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -360,7 +361,7 @@ class NewsFacetedSearchView(FacetedSearchView):
 class _TypeaheadFacetedSearchView:
     form_class = EeaAutoFacetedSearchForm
     template_name = None
-    results_limit = 50
+    results_limit = 10
 
     def get_data(self, context):
         form = context['form']
@@ -370,13 +371,24 @@ class _TypeaheadFacetedSearchView:
             key=lambda facet: facet[1],
             reverse=True
         )
+
+        paginator = Paginator(facets, self.results_limit)
+        page = self.request.GET.get('page', 1)
+        try:
+            facets = paginator.page(page)
+        except PageNotAnInteger or EmptyPage:
+            page = 1
+            facets = paginator.page(1)
+
         return {
             'results': [
                 {'text': facet, 'id': facet}
                 for facet, count in facets
             ],
             'results_for': form.auto_name,
-            'total_count': len(facets),
+            'total_count': paginator.count,
+            'page': page,
+            'pagination': {'more': int(page) < paginator.num_pages}
         }
 
     def render_to_response(self, context, **response_kwargs):
