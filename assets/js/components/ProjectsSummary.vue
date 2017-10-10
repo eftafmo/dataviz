@@ -10,7 +10,7 @@
             </template>
         </div>
         <div class="allocation" :key="changed" v-if="!data.project_percent_positive">
-          <strong>No donor programme partners exist</strong>
+          <strong>No relevant project data</strong>
         </div>
       </transition>
     </div>
