@@ -22,6 +22,9 @@
 <style lang="less">
 .embeddor {
   // make sure it never affects page layout
+  @media(max-width: 768px){
+    display: none;
+  }
   position: absolute;
   right: 0; bottom: 0;
 
