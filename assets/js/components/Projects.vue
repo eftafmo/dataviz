@@ -33,13 +33,21 @@ import Component from './Component'
 
 import Programmes from './Programmes'
 import Projects from './includes/Projects'
+import ProjectsMixin from './mixins/Projects';
 
 
 export default Component.extend({
+
+  mixins: [
+    ProjectsMixin,
+  ],
+
+
   components: {
     programmes: Programmes,
     projects: Projects,
   },
+
 
   data() {
     return {
