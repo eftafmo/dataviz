@@ -21,6 +21,10 @@ from dv.models import (
     ProgrammeArea,
     State,
 )
+from dv.views.facets_rules import (
+    BASE_FACETS, PROGRAMME_FACETS, PROJECT_FACETS,
+    ORGANISATION_FACETS, NEWS_FACETS
+)
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 
@@ -64,18 +68,24 @@ logger = logging.getLogger()
 
 class FacetedSearchView(BaseFacetedSearchView):
     form_class = EeaFacetedSearchForm
-    facet_fields = [
-        'state_name',
-        'programme_area_ss',
-        'priority_sector_ss',
-        'financial_mechanism_ss',
-        'programme_name',
-        'kind',
-    ]
+    facet_rules = BASE_FACETS
+    facet_kind = None
     order_field = None
     template_name = 'search.html'
     paginate_by = 10
     context_object_name = 'object_list'
+
+    def __init__(self):
+        super().__init__()
+        self.facet_fields = self.facet_rules.keys()
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'facet_rules': self.facet_rules,
+            'facet_kind': self.facet_kind,
+        })
+        return kwargs
 
     def form_invalid(self, form):
         self.queryset = form.search()
@@ -250,15 +260,8 @@ class FacetedSearchView(BaseFacetedSearchView):
 
 
 class ProgrammeFacetedSearchView(FacetedSearchView):
-    facet_fields = FacetedSearchView.facet_fields + [
-        'programme_status',
-        'outcome_ss',
-    ]
-    initial = {
-        'kind': ['Programme'],
-        # hack! we remove this at form init
-        'view_name': 'ProgrammeFacetedSearchView'
-    }
+    facet_rules = PROGRAMME_FACETS
+    facet_kind = 'Programme'
     order_field = 'code'
 
     def get_context_data(self, *args, **kwargs):
@@ -278,34 +281,14 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
 
 
 class ProjectFacetedSearchView(FacetedSearchView):
-    facet_fields = ProgrammeFacetedSearchView.facet_fields + [
-        'project_status',
-        'geotarget',
-        'theme_ss',
-    ]
-    initial = {
-        'kind': ['Project'],
-        # hack! we remove this at form init
-        'view_name': 'ProjectFacetedSearchView'
-    }
+    facet_rules = PROJECT_FACETS
+    facet_kind = 'Project'
     order_field = 'code'
 
 
 class OrganisationFacetedSearchView(FacetedSearchView):
-    facet_fields = FacetedSearchView.facet_fields + [
-        'project_name',
-        'country',
-        'city',
-        'geotarget',
-        'org_type_category',
-        'org_type',
-        'role_ss',
-    ]
-    initial = {
-        'kind': ['Organisation'],
-        # hack! we remove this at form init
-        'view_name': 'OrganisationFacetedSearchView'
-    }
+    facet_rules = ORGANISATION_FACETS
+    facet_kind = 'Organisation'
     order_field = '-role_max_priority_code'
 
     def get_context_data(self, *args, **kwargs):
@@ -354,14 +337,9 @@ class OrganisationFacetedSearchView(FacetedSearchView):
 
 
 class NewsFacetedSearchView(FacetedSearchView):
-    facet_fields = ProjectFacetedSearchView.facet_fields
+    facet_rules = NEWS_FACETS
+    facet_kind = 'News'
     order_field = '-created_dt'
-
-    initial = {
-        'kind': ['News'],
-        # hack! we remove this at form init
-        'view_name': 'NewsFacetedSearchView'
-    }
 
 
 class FacetedExportView(FacetedSearchView):

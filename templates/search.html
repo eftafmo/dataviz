@@ -20,16 +20,17 @@
           <span class="muted">Search for:</span>
              <input type="radio" name="kind"
                    {% if form.facets.kind.0 == 'Programme' %}checked{% endif %}>
-             <label for="programme-tab">Programmes</label>
+             <label for="programme-tab" data-kind="programme">Programmes</label>
               <input type="radio" name="kind"
                    {% if form.facets.kind.0 == 'Project'%}checked{% endif %}>
-              <label for="project-tab">Projects</label>
+              <label for="project-tab" data-kind="project">Projects</label>
               <input type="radio" name="kind"
                    {% if form.facets.kind.0 == 'Organisation'%}checked{% endif %}>
-              <label for="organisation-tab">Organisations</label>
+              <label for="organisation-tab"
+                     data-kind="organisation">Organisations</label>
             <input type="radio" name="kind"
                    {% if form.facets.kind.0 == 'News'%}checked{% endif %}>
-              <label for="news-tab">News</label>
+              <label for="news-tab" data-kind="news">News</label>
         </div>
         </div>
 
@@ -320,17 +321,6 @@
               value="{{ form.q.data | default_if_none:"" }}">
           </span>
         <button class="hidden-search-submit" type="submit" class="btn btn-primary" name="page" value="1">Search</button>
-
-       <div class="hidden-checkboxes search-tabs" id="search-tabs">
-        <input type="radio" name="kind" id="programme-tab" value="Programme"
-               {% if form.facets.kind.0 == 'Programme' %}checked{% endif %}>
-        <input type="radio" name="kind" id="project-tab" value="Project"
-               {% if form.facets.kind.0 == 'Project'%}checked{% endif %}>
-        <input type="radio" name="kind" id="organisation-tab" value="Organisation"
-               {% if form.facets.kind.0 == 'Organisation'%}checked{% endif %}>
-        <input type="radio" name="kind" id="news-tab" value="News"
-               {% if form.facets.kind.0 == 'News'%}checked{% endif %}>
-      </div>
 
       </div>
       {% if page_obj.object_list %}
@@ -785,15 +775,10 @@
           $('.hidden-search-submit').click();
       }
     });
-    // Sync the fake checboxes in the header with the ones in the form
-    $visible_checkboxes = $('.visible-checkboxes');
-    $hidden_checkboxes = $('.hidden-checkboxes');
 
     $('.visible-checkboxes label').on('click',function(e){
-      e.preventDefault()
-      $target = $hidden_checkboxes.find("input#"+$(this).attr('for')+"");
-      $target.prop('checked', true);
-      var action_url = '/search/' + $target.val().toLowerCase() + '/';
+      e.preventDefault();
+      var action_url = '/search/' + $(this).data('kind') + '/';
       $("#main-search-form").attr("action", action_url);
        $("#main-search-form").submit();
     })
