@@ -6,22 +6,17 @@ import logging
 logger = logging.getLogger()
 
 
-def _import_calling_view(view_name):
-    return getattr(importlib.import_module('..frontend', __name__), view_name)
-
-
 class EeaFacetedSearchForm(FacetedSearchForm):
 
     def __init__(self, *args, **kwargs):
         initial = kwargs.get('initial', {})
-        view_name = initial.pop('view_name', 'FacetedSearchView')
-        CallingView = _import_calling_view(view_name)
+        self.facet_rules = kwargs.pop('facet_rules', {})
 
         data = dict(kwargs.get('data', initial))
-        # This is set by the view class initial, and not part of the form vars anymore
-        data['kind'] = initial.pop('kind', "Programme")
-        self.facets = {}
-        for facet_name in CallingView.facet_fields:
+        self.facets = {
+            'kind': [kwargs.pop('facet_kind', 'Programme')]
+        }
+        for facet_name in self.facet_rules.keys():
             self.facets[facet_name] = data.get(facet_name, [])
         super().__init__(*args, **kwargs)
 
@@ -33,9 +28,10 @@ class EeaFacetedSearchForm(FacetedSearchForm):
         sqs = super().search()
         for facet_name, facet_values in self.facets.items():
             query = ''
+            operator = self.facet_rules.get(facet_name)
             for value in facet_values:
                 if query:
-                    query += ' AND '
+                    query += " {} ".format(operator)
                 query += '"{}"'.format(sqs.query.clean(value))
             if query:
                 sqs = sqs.narrow('{}:({})'.format(facet_name, query))

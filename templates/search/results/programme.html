@@ -1,0 +1,67 @@
+{% load tags %}
+
+<li class="results-list">
+  <div class="search-result search-result-programme">
+    <h3 class="title">
+      {% if programme.url %}
+        <a href="{{ programme.url }}" target="_blank">{{ programme.name }}</a>
+      {% else %}
+        <span>{{ programme.name }}</span>
+      {% endif %}
+    </h3>
+
+    <div class="country_status">
+              <span class="country">
+              {% for state in programme.state_name|sort %}
+                <img src="/assets/imgs/flag-{{ state|lower|cut:" " }}.png"
+                     alt="{{ state }} flag"
+                     height="20px">
+                <span>{{ state }}</span>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+              </span>
+      {% if programme.state_name|length == 1 %} | {% else %}<br>
+        <b>Status: </b>{% endif %}
+      <span title="Programme status">{{ programme.programme_status.0 }}</span>
+    </div>
+
+    <div>
+      <b>Funded by: </b>
+      {% for fm in programme.financial_mechanism_ss %}
+        <span>{{ fm }}</span>{% if not forloop.last %} and {% endif %}
+      {% endfor %}
+    </div>
+    {% with programme.priority_sector_ss|length as num_sectors %}
+      {% if num_sectors == 1 %}
+        <div><b>Sector:</b> <span>{{ programme.priority_sector_ss.0 }}</span></div>
+        {% with programme.programme_area_ss|length as num_areas %}
+          <div><b>Programme area{{ num_areas|pluralize }}:</b>
+            {% for pa in programme.programme_area_ss %}
+              <span>{{ pa }}</span>{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </div>
+        {% endwith %}
+      {% else %}
+        <div class="search_listing"><b>Sectors | Programme area(s):</b>
+          <ul>
+            {% for ps in programme.priority_sector_ss %}
+              <li><span title="Sector: {{ ps }}">{{ ps }}</span>
+                {% with programme.areas_by_sector|keyvalue:ps as areas %}
+                  <ul>
+                  {% for pa in areas %}
+                    <li>
+                      <span title="Programme area: {{ pa }}">{{ pa }}</span>
+                    </li>
+                  {% endfor %}
+                {% endwith %}
+                </ul>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+    {% endwith %}
+    <div><b>Grant: </b> {{ programme.grant | floatformat:0 | currency }}</div>
+    <div><b>Case number: </b> {{ programme.code }}</div>
+  </div>
+</li>

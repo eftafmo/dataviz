@@ -28,3 +28,20 @@ def keyvalue(dict, key):
         return dict[key]
     except KeyError:
         return ''
+
+
+@register.assignment_tag
+def build_filter_template(filter):
+    if filter:
+        return "search/filters/{}.html".format(filter)
+    return ''
+
+
+@register.assignment_tag
+def active(expected_kind, current_kind):
+    return 'active' if expected_kind == current_kind else ''
+
+
+@register.assignment_tag
+def assign(value):
+    return value

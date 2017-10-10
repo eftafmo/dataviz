@@ -21,6 +21,10 @@ from dv.models import (
     ProgrammeArea,
     State,
 )
+from dv.views.facets_rules import (
+    BASE_FACETS, PROGRAMME_FACETS, PROJECT_FACETS,
+    ORGANISATION_FACETS, NEWS_FACETS
+)
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 
@@ -64,18 +68,24 @@ logger = logging.getLogger()
 
 class FacetedSearchView(BaseFacetedSearchView):
     form_class = EeaFacetedSearchForm
-    facet_fields = [
-        'state_name',
-        'programme_area_ss',
-        'priority_sector_ss',
-        'financial_mechanism_ss',
-        'programme_name',
-        'kind',
-    ]
+    facet_rules = BASE_FACETS
+    facet_kind = None
     order_field = None
-    template_name = 'search.html'
+    template_name = 'search/main.html'
     paginate_by = 10
     context_object_name = 'object_list'
+
+    def __init__(self):
+        super().__init__()
+        self.facet_fields = self.facet_rules.keys()
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'facet_rules': self.facet_rules,
+            'facet_kind': self.facet_kind,
+        })
+        return kwargs
 
     def form_invalid(self, form):
         self.queryset = form.search()
@@ -230,6 +240,8 @@ class FacetedSearchView(BaseFacetedSearchView):
         ctx = super().get_context_data(object_list=objls, **kwargs)
         ctx['page_sizes'] = [10, 25, 50, 100]
         ctx['query'] = self.request.GET
+        ctx['kind'] = self.facet_kind
+        ctx['facet_rules'] = self.facet_rules
 
         facet_fields = ctx.get('facets', {}).get('fields', {})
         # Custom sorting of some facets, refs #326
@@ -250,15 +262,8 @@ class FacetedSearchView(BaseFacetedSearchView):
 
 
 class ProgrammeFacetedSearchView(FacetedSearchView):
-    facet_fields = FacetedSearchView.facet_fields + [
-        'programme_status',
-        'outcome_ss',
-    ]
-    initial = {
-        'kind': ['Programme'],
-        # hack! we remove this at form init
-        'view_name': 'ProgrammeFacetedSearchView'
-    }
+    facet_rules = PROGRAMME_FACETS
+    facet_kind = 'Programme'
     order_field = 'code'
 
     def get_context_data(self, *args, **kwargs):
@@ -278,34 +283,14 @@ class ProgrammeFacetedSearchView(FacetedSearchView):
 
 
 class ProjectFacetedSearchView(FacetedSearchView):
-    facet_fields = ProgrammeFacetedSearchView.facet_fields + [
-        'project_status',
-        'geotarget',
-        'theme_ss',
-    ]
-    initial = {
-        'kind': ['Project'],
-        # hack! we remove this at form init
-        'view_name': 'ProjectFacetedSearchView'
-    }
+    facet_rules = PROJECT_FACETS
+    facet_kind = 'Project'
     order_field = 'code'
 
 
 class OrganisationFacetedSearchView(FacetedSearchView):
-    facet_fields = FacetedSearchView.facet_fields + [
-        'project_name',
-        'country',
-        'city',
-        'geotarget',
-        'org_type_category',
-        'org_type',
-        'role_ss',
-    ]
-    initial = {
-        'kind': ['Organisation'],
-        # hack! we remove this at form init
-        'view_name': 'OrganisationFacetedSearchView'
-    }
+    facet_rules = ORGANISATION_FACETS
+    facet_kind = 'Organisation'
     order_field = '-role_max_priority_code'
 
     def get_context_data(self, *args, **kwargs):
@@ -354,14 +339,9 @@ class OrganisationFacetedSearchView(FacetedSearchView):
 
 
 class NewsFacetedSearchView(FacetedSearchView):
-    facet_fields = ProjectFacetedSearchView.facet_fields
+    facet_rules = NEWS_FACETS
+    facet_kind = 'News'
     order_field = '-created_dt'
-
-    initial = {
-        'kind': ['News'],
-        # hack! we remove this at form init
-        'view_name': 'NewsFacetedSearchView'
-    }
 
 
 class FacetedExportView(FacetedSearchView):
@@ -396,7 +376,7 @@ class FacetedExportView(FacetedSearchView):
 
     def form_valid(self, form):
         data = self.get_export_data(form)
-        name = self.initial['kind'][0]
+        name = self.facet_kind
         sheet = Sheet(data,
                       name=name,
                       colnames=list(self.export_fields.values()))
@@ -421,9 +401,8 @@ class ProgrammeFacetedExportView(FacetedExportView):
         ('outcome_ss', 'Outcome'),
         ('url', 'Url'),
     ])
-    initial = {
-        'kind': ['Programme']
-    }
+    facet_kind = 'Programme'
+    facet_rules = PROGRAMME_FACETS
     order_field = ProgrammeFacetedSearchView.order_field
 
 
@@ -443,9 +422,8 @@ class ProjectFacetedExportView(FacetedExportView):
         'theme_ss': 'Project theme',
         'url': 'Url'
     })
-    initial = {
-        'kind': ['Project']
-    }
+    facet_kind = 'Project'
+    facet_rules = PROJECT_FACETS
     order_field = ProjectFacetedSearchView.order_field
 
 
@@ -456,8 +434,8 @@ class OrganisationFacetedExportView(FacetedExportView):
         ('country', 'Country'),
         ('city', 'City'),
         ('role_ss', 'Organisation role'),
-        ('org_type_category', 'Organisation type category'),
-        ('org_type', 'Organisation type'),
+        ('org_type_category', 'Organisation category'),
+        ('org_type', 'Organisation sub category'),
         ('financial_mechanism_ss', 'Financial mechanism'),
         ('priority_sector_ss', 'Sector'),
         ('programme_area_ss', 'Programme area'),
@@ -466,9 +444,8 @@ class OrganisationFacetedExportView(FacetedExportView):
         ('project_name', 'Project name'),
         ('project_status', 'Project status'),
     ])
-    initial = {
-        'kind': ['Organisation']
-    }
+    facet_kind = 'Organisation'
+    facet_rules = ORGANISATION_FACETS
     order_field = OrganisationFacetedSearchView.order_field
 
 
@@ -488,9 +465,8 @@ class NewsFacetedExportView(FacetedExportView):
         ('geotarget', 'Project region or city'),
         ('url', 'Url'),
     ])
-    initial = {
-        'kind': ['News']
-    }
+    facet_kind = 'News'
+    facet_rules = NEWS_FACETS
     order_field = NewsFacetedSearchView.order_field
 
 

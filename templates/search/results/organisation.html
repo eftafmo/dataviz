@@ -1,0 +1,34 @@
+<li class="results-list">
+  <div class="search-result search-result-organisation">
+    <h3 class="title">
+      {% if organisation.url %}
+        <a href="{{ organisation.url }}" target="_blank">{{ organisation.name }}</a>
+      {% else %}
+        <span>{{ organisation.name }}</span>
+      {% endif %}
+    </h3>
+    <div class="country_status">
+      <span class="country">
+              {% if organisation.country in states_with_flags %}
+                <img src="/assets/imgs/flag-{{ organisation.country|lower|cut:" " }}.png"
+                     alt="{{ organisation.country }} flag"
+                     height="20px">&nbsp;{% endif %}{{ organisation.country }}</span> |
+      <span>{{ organisation.org_type_category }}</span> |
+      <span>{{ organisation.org_type }}</span>
+    </div>
+
+    <div class="search_listing">
+      {% for role, plist in organisation.prep_roles.items %}
+        <span>{{ role }} for:</span>
+        <ul>
+          {% for p in plist %}
+            <li>{% if p.url %}<a href="{{ p.url }}" target="_blank">{{ p.name }}</a>
+            {% else %}<span>{{ p.name }}</span>
+            {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </div>
+  </div>
+</li>
