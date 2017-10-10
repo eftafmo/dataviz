@@ -151,11 +151,6 @@ export default Component.extend({
   ],
 
 
-  props: {
-    localfilters: Object
-  },
-
-
   updated() {
     //TODO: this can be done a lot better
     if (window.matchMedia("(max-width: 800px)").matches) {
@@ -269,10 +264,10 @@ export default Component.extend({
      * ex: for RO31, RO31, RO3, RO, RO312 will be relevant, but RO4 or RO32, will not
      */
     isRelevantForSelectedRegion(programme) {
-      if (!this.localfilters)
+      if (!this.filters.region)
         // because grants.sidebar.programmes 
         return true
-      const region = this.localfilters.region;
+      const region = this.filters.region;
       if(!region)
         return true;
 

@@ -103,7 +103,6 @@ export default Vue.extend({
     sector: String,
     name: String,
     extra: String,
-    localfilters: Object
   },
 
  data() {
@@ -131,8 +130,8 @@ export default Vue.extend({
         if (this.filters.area) {
           url = url + '&area=' + this.filters.area
         }
-        if (this.localfilters.region) {
-          url = url + '&nuts=' + this.localfilters.region
+        if (this.filters.region) {
+          url = url + '&nuts=' + this.filters.region
         }
         if (this.extra) {
           // e.g. isDpp=true
@@ -170,16 +169,16 @@ export default Vue.extend({
      * ex: for RO31, RO31, RO3, RO, RO312 will be relevant, but RO4 or RO32, will not
      */
     isRelevantForSelectedRegion(program) {
-      if(!this.localfilters.region) {
+      if(!this.filters.region) {
         return true;
       }
-      if(program.nuts.length > this.localfilters.region.length) {
-        if(program.nuts.substr(0, this.localfilters.region.length) === this.localfilters.region) {
+      if(program.nuts.length > this.filters.region.length) {
+        if(program.nuts.substr(0, this.filters.region.length) === this.filters.region) {
           return true;
         }
         return false;
       } else {
-        if(this.localfilters.region.substr(0, program.nuts.length) === program.nuts) {
+        if(this.filters.region.substr(0, program.nuts.length) === program.nuts) {
           return true;
         }
         return false;
@@ -218,7 +217,6 @@ export default Vue.extend({
         target.classList.remove('active')
       },
     },
-    'localfilters.region': 'handleFilterRegion',
   },
 
 });

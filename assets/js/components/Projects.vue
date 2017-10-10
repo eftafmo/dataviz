@@ -1,5 +1,5 @@
 <template>
-<programmes :datasource="datasource" :initial="initial" :localfilters="localfilters" class="projects">
+<programmes :datasource="datasource" :initial="initial" class="projects">
   <template slot="programme-content" scope="x">
     <projects
         :country="x.beneficiary.id"
@@ -7,7 +7,6 @@
         :id="x.programme.programme_code"
         :name="x.programme.programme_name"
         :extra="extra"
-        :localfilters="localfilters"
     ></projects>
   </template>
 </programmes>
