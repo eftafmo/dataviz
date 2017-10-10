@@ -241,6 +241,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         ctx['page_sizes'] = [10, 25, 50, 100]
         ctx['query'] = self.request.GET
         ctx['kind'] = self.facet_kind
+        ctx['facet_rules'] = self.facet_rules
 
         facet_fields = ctx.get('facets', {}).get('fields', {})
         # Custom sorting of some facets, refs #326

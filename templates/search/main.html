@@ -169,9 +169,9 @@
 
         </div>
         {% if page_obj.object_list %}
-          {% for field, values in facets.fields.items %}
-            {% build_filter_template field as template %}
-            {% include template with values=values current_value=form.facets|keyvalue:field kind=kind %}
+          {% for facet in facet_rules.keys %}
+            {% build_filter_template facet as template %}
+            {% include template with values=facets.fields|keyvalue:facet current_value=form.facets|keyvalue:facet kind=kind %}
           {% endfor %}
         {% endif %}
       </form>
