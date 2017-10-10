@@ -125,12 +125,12 @@
   display: none;
 }
 
-.search-tabs input[type="radio"]:checked + label {
+.search-tabs label.active {
   font-weight: bold;
   position: relative;
 }
 
-.search-tabs input[type="radio"]:checked + label:after {
+.search-tabs label.active:after {
   content: '';
   position: absolute;
   bottom: 0;

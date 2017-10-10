@@ -1,0 +1,16 @@
+<div class="input-group">
+  <div class="input-box input-block">
+    <label for="project-status-facet">Project status</label>
+    <select multiple name="project_status" id="project-status-facet"
+            form="main-search-form" class="main-auto-submit facet-select">
+      {% for value in values %}
+        {% if value.1 %}
+          <option value="{{ value.0 }}"
+                  {% if value.0 in current_value %}selected{% endif %}>
+            {{ value.0 }} ({{ value.1 }})
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+</div>

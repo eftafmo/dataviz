@@ -1,0 +1,15 @@
+<div class="input-group">
+  <div class="input-box input-block">
+    <label>Financial mechanism</label>
+    {% for value in values %}
+      <label class="clearfix checkbox_label">
+        <input type="checkbox" name="financial_mechanism_ss"
+               id="fm_{{ forloop.counter }}" value="{{ value.0 }}"
+               {% if value.0 in current_value %}checked{% endif %}
+               class="main-auto-submit" form="main-search-form">
+        <label for="fm_{{ forloop.counter }}"></label>
+        <span>{{ value.0 }} ({{ value.1 }})</span>
+      </label>
+    {% endfor %}
+  </div>
+</div>

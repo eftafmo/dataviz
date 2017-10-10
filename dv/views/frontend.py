@@ -71,7 +71,7 @@ class FacetedSearchView(BaseFacetedSearchView):
     facet_rules = BASE_FACETS
     facet_kind = None
     order_field = None
-    template_name = 'search.html'
+    template_name = 'search/main.html'
     paginate_by = 10
     context_object_name = 'object_list'
 
