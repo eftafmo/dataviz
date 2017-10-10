@@ -11,6 +11,8 @@ def _import_calling_view(view_name):
 
 
 class EeaFacetedSearchForm(FacetedSearchForm):
+    # OR facets, default is AND
+    inclusive_facets = ['state_name', 'programme_name', 'project_name']
 
     def __init__(self, *args, **kwargs):
         initial = kwargs.get('initial', {})
@@ -33,9 +35,10 @@ class EeaFacetedSearchForm(FacetedSearchForm):
         sqs = super().search()
         for facet_name, facet_values in self.facets.items():
             query = ''
+            operator = 'OR' if facet_name in self.inclusive_facets else 'AND'
             for value in facet_values:
                 if query:
-                    query += ' AND '
+                    query += " {} ".format(operator)
                 query += '"{}"'.format(sqs.query.clean(value))
             if query:
                 sqs = sqs.narrow('{}:({})'.format(facet_name, query))
