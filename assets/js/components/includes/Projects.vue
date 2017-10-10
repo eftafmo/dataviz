@@ -140,11 +140,7 @@ export default Vue.extend({
         axios
           .get(url)
           .then(response => {
-            // allProjects will be specific for each programme,
-            // it will keep all projects, used for further filtering by region
-            //this.allProjects = response.data.results.slice();
             this.posts = response.data;
-            //this.posts.results = this.filterByNuts(this.posts.results);
 
             if(target.classList.contains('spinning'))
               target.classList.remove('spinning')
@@ -157,33 +153,9 @@ export default Vue.extend({
         if(target.classList.contains('spinning'))
           target.classList.remove('spinning');
         this.posts = [];
-        //this.allProjects = null;
       }
     },
 
-    filterByNuts(programmes) {
-      return programmes.filter(this.isRelevantForSelectedRegion);
-    },
-    /**
-     * will consider relevant if either is parent, identical or child
-     * ex: for RO31, RO31, RO3, RO, RO312 will be relevant, but RO4 or RO32, will not
-     */
-    isRelevantForSelectedRegion(program) {
-      if(!this.filters.region) {
-        return true;
-      }
-      if(program.nuts.length > this.filters.region.length) {
-        if(program.nuts.substr(0, this.filters.region.length) === this.filters.region) {
-          return true;
-        }
-        return false;
-      } else {
-        if(this.filters.region.substr(0, program.nuts.length) === program.nuts) {
-          return true;
-        }
-        return false;
-      }
-    },
     showMore() {
       let href = this.posts.next;
       if(href){
