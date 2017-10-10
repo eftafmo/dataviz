@@ -1,6 +1,7 @@
 <style lang="less">
 .dataviz .viz.map.is-projects {
   @bubble_color: rgb(196, 17, 48);
+  @nuts3_selected_color: rgb(200, 221, 249);
 
   .bubble {
     circle {
@@ -69,6 +70,12 @@
         .bubble;
       }
     }
+  }
+
+  .selected {
+    fill: @nuts3_selected_color;
+    fill-opacity: 0.5;
+    transition: fill .4s ease;
   }
 }
 </style>
@@ -306,6 +313,12 @@ export default BaseMap.extend({
 
       if (d.id.length != 2)
         this.filters.region = d.id
+
+      d3.select(".selected").classed("selected", false);
+
+      if (d.id.length > 4) {
+        d3.select(group[i]).classed("selected", true);
+      }
     },
 
     _getChildrenLevel(region) {
