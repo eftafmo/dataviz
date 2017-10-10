@@ -189,7 +189,7 @@ export default Component.extend({
               programme_url: programmes[p].url,
               nuts: programmes[p].nuts,
             };
-          else {
+          else if (programme.nuts !== undefined) {
             // need to merge their nuts
             programme.nuts = Array.from(new Set(
               programme.nuts.concat(programmes[p].nuts)
@@ -215,8 +215,6 @@ export default Component.extend({
           if(programmes[p].programme_code)
             out.projectcount += 1;
           const programme = programmes[p];
-          if ( p === 'RO10') {
-          }
           if(this.isRelevantForSelectedRegion(programme)) {
             beneficiary.programmes.push(programme);
           }
@@ -260,13 +258,10 @@ export default Component.extend({
       }
     },
     /**
-     * will consider relevant if either is parent, identical or child
-     * ex: for RO31, RO31, RO3, RO, RO312 will be relevant, but RO4 or RO32, will not
+     * will consider relevant if at least one nuts from the programme is contained in the selected region or its children
+     * ex: for RO31: RO31, RO312 will be relevant, but not RO, RO3, RO4 nor RO32
      */
     isRelevantForSelectedRegion(programme) {
-      if (!this.filters.region)
-        // because grants.sidebar.programmes 
-        return true
       const region = this.filters.region;
       if(!region)
         return true;
