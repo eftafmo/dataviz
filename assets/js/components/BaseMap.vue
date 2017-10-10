@@ -181,6 +181,7 @@ import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 import WithNUTSMixin from './mixins/WithNUTS';
+import WithRegionsMixin from './mixins/WithRegions';
 
 
 export default Chart.extend({
@@ -191,6 +192,7 @@ export default Chart.extend({
     WithCountriesMixin, WithFMsMixin,
     WithTooltipMixin,
     WithNUTSMixin,
+    WithRegionsMixin,
   ],
 
   components: {

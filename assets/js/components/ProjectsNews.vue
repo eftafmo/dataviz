@@ -2,11 +2,13 @@
 import orderBy from 'lodash.orderby';
 import BaseNews from './BaseNews';
 import ProjectsMixin from './mixins/Projects';
+import WithRegionsMixin from './mixins/WithRegions';
 
 export default BaseNews.extend({
 
   mixins: [
     ProjectsMixin,
+    WithRegionsMixin,
   ],
   methods: {
     /**
@@ -37,7 +39,7 @@ export default BaseNews.extend({
         const nuts = all_news[link].nuts;
         if(deep_search) {
           // if region is "RO31" it will include "RO31" and "RO31x"
-          if(nuts.substr(0, region.length) === region || region === "") {
+          if(region === "" || this.isAncestorRegion(region, nuts)) {
             filtered_news.push(all_news[link]);
           }
         } else {

@@ -141,6 +141,7 @@ import * as d3 from 'd3';
 
 import Component from './Component';
 import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
+import WithRegionsMixin from './mixins/WithRegions';
 
 
 export default Component.extend({
@@ -148,6 +149,7 @@ export default Component.extend({
 
   mixins: [
     WithCountriesMixin,
+    WithRegionsMixin,
   ],
 
 
@@ -263,11 +265,10 @@ export default Component.extend({
      */
     isRelevantForSelectedRegion(programme) {
       const region = this.filters.region;
-      if(!region)
-        return true;
+      if (!region) return true;
 
-      for(const nutsItem of programme.nuts) {
-        if(nutsItem.substr(0, region.length) === region) {
+      for (const nutsItem of programme.nuts) {
+        if (this.isAncestorRegion(region, nutsItem)) {
           return true;
         }
       }
