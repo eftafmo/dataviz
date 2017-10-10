@@ -11,7 +11,7 @@
          </li>
       </ul>
       <div v-if="posts.next" class="show-more small muted align-center">
-         <button @click="showMore" type="button" class="btn-link">show 10 more results</button>
+         <button @click="showMore" type="button" class="btn-link">show {{ show_more_count }} more results</button>
        </div>
     </div>
   </div>
@@ -92,6 +92,7 @@ import axios from 'axios';
 
 import WithFiltersMixin from '../mixins/WithFilters';
 
+
 export default Vue.extend({
   mixins: [
     WithFiltersMixin,
@@ -105,12 +106,19 @@ export default Vue.extend({
     extra: String,
   },
 
- data() {
+  data() {
     return {
       posts: [],
       errors: [],
-      }
+    }
+  },
+
+  computed: {
+    show_more_count() {
+      const count = this.posts.count - this.posts.results.length
+      return count < 10 ? count : 10
     },
+  },
 
   methods: {
     getProjects() {
@@ -176,8 +184,7 @@ export default Vue.extend({
       this.posts = [];
       const target = this.$el.querySelector('.programme-item-header')
       target.classList.remove('active')
-    }
-
+    },
   },
 
   watch: {
