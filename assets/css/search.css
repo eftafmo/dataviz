@@ -87,6 +87,7 @@
   width: 100%;
   min-height: 37px;
   border-color: transparent;
+  padding-left: 1rem;
 }
 
 @media (max-width:768px) {
