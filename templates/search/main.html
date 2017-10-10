@@ -44,14 +44,7 @@
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
-        {{ paginator.count }}
-        {% spaceless %}
-          {{ kind|lower }}
-          {% if kind != 'News' %}
-            {{ paginator.count|pluralize }}
-          {% endif %}
-        {% endspaceless %}
-        found
+        {{ paginator.count }} {{ kind|lower }}{% if kind != 'News' %}{{ paginator.count|pluralize }}{% endif %} found
       </span>
       <span class="search-results-options">
         <select name="paginate_by" id="" class="subtle-select main-auto-submit"
