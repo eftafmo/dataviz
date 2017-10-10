@@ -133,7 +133,7 @@ const RegionDetails = {
   computed: {
     label() {
       return this.region.id.length == 2 ? this.root_label
-                                        : this.$self.get_nuts_label(this.region.id)
+                                        : this.$self.get_nuts_label(this.region.id) + ' (' + this.region.id + ')'
     },
 
     count() {
