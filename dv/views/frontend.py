@@ -599,8 +599,8 @@ class EmbedComponent(TemplateView):
             raise Http404
 
 
-        jsfiles = webpack.get_files('common', 'js') + webpack.get_files('dataviz', 'js')
-        cssfiles = webpack.get_files('styles', 'css')
+        jsfiles = webpack.get_files('dataviz', 'js')
+        cssfiles = webpack.get_files('dataviz', 'css')
 
         def geturl(f):
             url = f['url']
