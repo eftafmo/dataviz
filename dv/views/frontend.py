@@ -374,7 +374,7 @@ class FacetedExportView(FacetedSearchView):
 
     def form_valid(self, form):
         data = self.get_export_data(form)
-        name = self.initial['kind'][0]
+        name = self.facet_kind
         sheet = Sheet(data,
                       name=name,
                       colnames=list(self.export_fields.values()))
@@ -399,9 +399,8 @@ class ProgrammeFacetedExportView(FacetedExportView):
         ('outcome_ss', 'Outcome'),
         ('url', 'Url'),
     ])
-    initial = {
-        'kind': ['Programme']
-    }
+    facet_kind = 'Programme'
+    facet_rules = PROGRAMME_FACETS
     order_field = ProgrammeFacetedSearchView.order_field
 
 
@@ -421,9 +420,8 @@ class ProjectFacetedExportView(FacetedExportView):
         'theme_ss': 'Project theme',
         'url': 'Url'
     })
-    initial = {
-        'kind': ['Project']
-    }
+    facet_kind = 'Project'
+    facet_rules = PROJECT_FACETS
     order_field = ProjectFacetedSearchView.order_field
 
 
@@ -434,8 +432,8 @@ class OrganisationFacetedExportView(FacetedExportView):
         ('country', 'Country'),
         ('city', 'City'),
         ('role_ss', 'Organisation role'),
-        ('org_type_category', 'Organisation type category'),
-        ('org_type', 'Organisation type'),
+        ('org_type_category', 'Organisation category'),
+        ('org_type', 'Organisation sub category'),
         ('financial_mechanism_ss', 'Financial mechanism'),
         ('priority_sector_ss', 'Sector'),
         ('programme_area_ss', 'Programme area'),
@@ -444,9 +442,8 @@ class OrganisationFacetedExportView(FacetedExportView):
         ('project_name', 'Project name'),
         ('project_status', 'Project status'),
     ])
-    initial = {
-        'kind': ['Organisation']
-    }
+    facet_kind = 'Organisation'
+    facet_rules = ORGANISATION_FACETS
     order_field = OrganisationFacetedSearchView.order_field
 
 
@@ -466,9 +463,8 @@ class NewsFacetedExportView(FacetedExportView):
         ('geotarget', 'Project region or city'),
         ('url', 'Url'),
     ])
-    initial = {
-        'kind': ['News']
-    }
+    facet_kind = 'News'
+    facet_rules = NEWS_FACETS
     order_field = NewsFacetedSearchView.order_field
 
 
