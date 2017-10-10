@@ -85,6 +85,7 @@
 
 .search-top .search-form .input-box input {
   width: 100%;
+  min-height: 37px;
   border-color: transparent;
 }
 
