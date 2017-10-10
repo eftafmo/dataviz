@@ -10,6 +10,7 @@
     "axios": "^0.16.2",
     "buble": "^0.15.2",
     "buble-loader": "^0.4.1",
+    "classlist-polyfill": "^1.2.0",
     "clean-webpack-plugin": "^0.1.16",
     "clipboard": "^1.7.1",
     "css-loader": "^0.27.3",
