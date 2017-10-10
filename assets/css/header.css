@@ -46,6 +46,16 @@
   width: 100%;
 }
 
+.header-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-search input {
+  margin-right: 5px; 
+}
+
 
 /* Menu */
 @media (max-width: 768px) {
