@@ -2,7 +2,7 @@
   <div class="projects">
     <div class="programme-item-header" @click="getProjects"> {{ name }} </div>
     <div v-if="posts.length != 0" class="programme-sublist-wrapper">
-      <small class="programme-sublist-header">{{ sector }}</small>
+      <small class="programme-sublist-header">{{ sector }} ({{ posts.count}})</small>
       <ul class="programme-sublist">
         <li class="programme-sublist-item"
             v-for="value of posts.results">
@@ -120,7 +120,7 @@ export default Vue.extend({
       target.classList.add('spinning')
       target.classList.toggle('active')
 
-      if(this.posts.length == 0) {
+      if (this.posts.length == 0) {
         let url=`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`
         if (this.filters.donor) {
           url = url + '&donor=' + this.filters.donor
@@ -131,17 +131,21 @@ export default Vue.extend({
         if (this.filters.area) {
           url = url + '&area=' + this.filters.area
         }
+        if (this.localfilters.region) {
+          url = url + '&nuts=' + this.localfilters.region
+        }
         if (this.extra) {
+          // e.g. isDpp=true
           url = url + '&' + this.extra;
         }
         axios
           .get(url)
           .then(response => {
-            // allProjects will be specific for each project,
-            // it will keep all projects, used for filtering by region
-            this.allProjects = response.data.results.slice();
+            // allProjects will be specific for each programme,
+            // it will keep all projects, used for further filtering by region
+            //this.allProjects = response.data.results.slice();
             this.posts = response.data;
-            this.posts.results = this.filterByNuts(this.posts.results);
+            //this.posts.results = this.filterByNuts(this.posts.results);
 
             if(target.classList.contains('spinning'))
               target.classList.remove('spinning')
@@ -154,10 +158,10 @@ export default Vue.extend({
         if(target.classList.contains('spinning'))
           target.classList.remove('spinning');
         this.posts = [];
-        this.allProjects = null;
+        //this.allProjects = null;
       }
+    },
 
-    },    
     filterByNuts(programmes) {
       return programmes.filter(this.isRelevantForSelectedRegion);
     },
@@ -190,8 +194,7 @@ export default Vue.extend({
             this.posts.count = response.data.count
             this.posts.previous = response.data.previous
 
-            this.allProjects.push.apply(this.allProjects, response.data.results.slice());
-            this.posts.results.push.apply(this.posts.results, this.filterByNuts(response.data.results));
+            this.posts.results.push.apply(this.posts.results, response.data.results);
           })
           .catch(e => {
             this.errors.push(e)
@@ -199,10 +202,9 @@ export default Vue.extend({
       }
     },
     handleFilterRegion() {
-      if(this.posts.results !== undefined){
-        this.posts = {};
-        this.posts.results = this.filterByNuts(this.allProjects);
-      }
+      this.posts = [];
+      const target = this.$el.querySelector('.programme-item-header')
+      target.classList.remove('active')
     }
 
   },
@@ -212,7 +214,7 @@ export default Vue.extend({
       deep: true,
       handler() {
         this.posts = [];
-        let target = this.$el.querySelector('.programme-item-header')
+        const target = this.$el.querySelector('.programme-item-header')
         target.classList.remove('active')
       },
     },

@@ -172,7 +172,6 @@ export default Component.extend({
 
       const dataset = this.filtered;
       const beneficiaries = {};
-      let totalcount = 0;
       let programmes_array = [];
 
       for (const d of dataset) {
@@ -182,30 +181,31 @@ export default Component.extend({
 
         let beneficiary = beneficiaries[d.beneficiary];
         if (beneficiary === undefined)
-          beneficiary = beneficiaries[d.beneficiary] = {
-            _projectcount: 0,
-          };
+          beneficiary = beneficiaries[d.beneficiary] = {};
 
         for (const p in programmes) {
-          // TODO: clean the project count logic
-          const projectcount = 0;
-          //const projectcount = +programmes[p];
-          //if (projectcount == 0) continue;
           let programme = beneficiary[p];
           if (programme === undefined)
             programme = beneficiary[p] = {
               sector: d.sector,
+              // TODO: programmes may have multiple sectors, see CZ02
               programme_code: p,
               programme_name: programmes[p].name,
               programme_url: programmes[p].url,
               nuts: programmes[p].nuts,
             };
+          else {
+            // need to merge their nuts
+            programme.nuts = Array.from(new Set(
+              programme.nuts.concat(programmes[p].nuts)
+            ))
+          }
         }
       }
 
       const out = {
         beneficiaries: [],
-        projectcount: totalcount,
+        projectcount: 0,
       };
 
       for (const b in beneficiaries) {
@@ -219,13 +219,11 @@ export default Component.extend({
         for (const p in programmes) {
           if(programmes[p].programme_code)
             out.projectcount += 1;
-          const value = programmes[p];
-          if (p === '_projectcount') {
-            beneficiary.projectcount = value;
-            continue;
+          const programme = programmes[p];
+          if ( p === 'RO10') {
           }
-          if(this.isRelevantForSelectedRegion(value)) {
-            beneficiary.programmes.push(value);
+          if(this.isRelevantForSelectedRegion(programme)) {
+            beneficiary.programmes.push(programme);
           }
         }
         // Sort by programme code, the Tripartite programme always last
@@ -270,24 +268,20 @@ export default Component.extend({
      * will consider relevant if either is parent, identical or child
      * ex: for RO31, RO31, RO3, RO, RO312 will be relevant, but RO4 or RO32, will not
      */
-    isRelevantForSelectedRegion(program) {
+    isRelevantForSelectedRegion(programme) {
+      if (!this.localfilters)
+        // because grants.sidebar.programmes 
+        return true
       const region = this.localfilters.region;
-      if(!region) {
+      if(!region)
         return true;
-      }
-      for(const nutsItem of program.nuts) {
-        if(nutsItem.length > region.length) {
-          if(nutsItem.substr(0, region.length) === region) {
-            return true;
-          }
-          return false;
-        } else {
-          if(region.substr(0, nutsItem.length) === nutsItem) {
-            return true;
-          }
-          return false;
+
+      for(const nutsItem of programme.nuts) {
+        if(nutsItem.substr(0, region.length) === region) {
+          return true;
         }
       }
+      return false;
     },
   }
 });
