@@ -240,6 +240,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         ctx = super().get_context_data(object_list=objls, **kwargs)
         ctx['page_sizes'] = [10, 25, 50, 100]
         ctx['query'] = self.request.GET
+        ctx['kind'] = self.facet_kind
 
         facet_fields = ctx.get('facets', {}).get('fields', {})
         # Custom sorting of some facets, refs #326

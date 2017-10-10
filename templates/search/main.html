@@ -18,20 +18,20 @@
             <button type="submit" class="btn btn-primary visible-search-submit">Search
             </button>
           </div>
-          <div class="search-tabs visible-checkboxes" id="search-tabs">
+          <div class="search-tabs" id="search-tabs">
             <span class="muted">Search for:</span>
-            {% with form.facets.kind.0 as kind %}
-              <label for="programme-tab"
-                     data-kind="programme"
-                     class="{% active 'Programme' kind %}">Programmes</label>
-              <label for="project-tab" data-kind="project"
-                     class="{% active 'Project' kind %}">Projects</label>
-              <label for="organisation-tab"
-                     data-kind="organisation"
-                     class="{% active 'Organisation' kind %}">Organisations</label>
-              <label for="news-tab" data-kind="news"
-                     class="{% active 'News' kind %}">News</label>
-            {% endwith %}
+            <label for="programme-tab"
+                   data-url="{% url 'frontend:search_programme' %}"
+                   class="{% active 'Programme' kind %}">Programmes</label>
+            <label for="project-tab"
+                   data-url="{% url 'frontend:search_project' %}"
+                   class="{% active 'Project' kind %}">Projects</label>
+            <label for="organisation-tab"
+                   data-url="{% url 'frontend:search_organisation' %}"
+                   class="{% active 'Organisation' kind %}">Organisations</label>
+            <label for="news-tab"
+                   data-url="{% url 'frontend:search_news' %}"
+                   class="{% active 'News' kind %}">News</label>
           </div>
         </div>
 
@@ -41,12 +41,16 @@
 {% endblock %}
 
 {% block main %}
-
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
         {{ paginator.count }}
-        {{ form.facets.kind.0|lower }}{% if form.facets.kind.0 != 'News' %}{{ paginator.count|pluralize }}{% endif %}
+        {% spaceless %}
+          {{ kind|lower }}
+          {% if kind != 'News' %}
+            {{ paginator.count|pluralize }}
+          {% endif %}
+        {% endspaceless %}
         found
       </span>
       <span class="search-results-options">
@@ -59,11 +63,13 @@
             </option>
           {% endfor %}
         </select>
-          <a rel="nofollow" {% if form.facets.kind.0 == 'Programme' %}
-                href="{% url 'frontend:programme_export' %}?{% elif form.facets.kind.0 == 'Project' %}
-                href="{% url 'frontend:project_export' %}?{% elif form.facets.kind.0 == 'Organisation' %}
-                href="{% url 'frontend:organisation_export' %}?{% else %}
-                href="{% url 'frontend:news_export' %}?{% endif %}{% for item in query.items %}{{ item.0 }}={{ item.1 }}{% if not forloop.last %}&{% endif %}{% endfor %}">
+          <a rel="nofollow"
+             {# No pretty indent because Django can't strip spaces inside tags #}
+             href="
+               {% if kind == 'Programme' %}{% url 'frontend:programme_export' %}?{% elif kind == 'Project' %}
+                 {% url 'frontend:project_export' %}?{% elif kind == 'Organisation' %}
+                 {% url 'frontend:organisation_export' %}?{% elif kind == 'News' %}
+                 {% url 'frontend:news_export' %}?{% endif %}{% for item in query.items %}{{ item.0 }}={{ item.1 }}{% if not forloop.last %}&{% endif %}{% endfor %}">
             Export
           </a>
       </span>
@@ -71,13 +77,13 @@
 
     <ul class="no-list">
       {% for res in page_obj.object_list %}
-        {% if form.facets.kind.0 == 'Programme' %}
+        {% if kind == 'Programme' %}
           {% include 'search/results/programme.html' with programme=res %}
-        {% elif form.facets.kind.0 == 'Project' %}
+        {% elif kind == 'Project' %}
           {% include 'search/results/project.html' with project=res %}
-        {% elif form.facets.kind.0 == 'Organisation' %}
+        {% elif kind == 'Organisation' %}
           {% include 'search/results/organisation.html' with organisation=res %}
-        {% elif form.facets.kind.0 == 'News' %}
+        {% elif kind == 'News' %}
           {% include 'search/results/news.html' with news=res %}
         {% else %}
           {{ res.text }}
@@ -165,7 +171,7 @@
         {% if page_obj.object_list %}
           {% for field, values in facets.fields.items %}
             {% build_filter_template field as template %}
-            {% include template with values=values current_value=form.facets|keyvalue:field kind=form.facets.kind.0 %}
+            {% include template with values=values current_value=form.facets|keyvalue:field kind=kind %}
           {% endfor %}
         {% endif %}
       </form>
@@ -201,15 +207,6 @@
         }
       }
 
-      $("#search-tabs").change(function () {
-        var selected = $(this).find("input:checked");
-        if (selected.length) {
-          var action_url = '/search/' + selected.val().toLowerCase() + '/';
-          $("#main-search-form").attr("action", action_url);
-          $("#main-search-form").submit();
-        }
-      });
-
       var all_select2 = [];
       $("select.facet-select").each(function () {
         var select = $(this);
@@ -231,6 +228,7 @@
       $(".main-auto-submit").change(function () {
         $("#main-search-form").submit();
       });
+
       $("#main-reset").click(function () {
         all_select2.forEach(function (e) {
           e.val(null).trigger("change");
@@ -274,14 +272,14 @@
       });
 
       //Fixing ie form attribute issue
-      $visilbe_input = $('.visible-search-input');
+      $visible_input = $('.visible-search-input');
       $hidden_input = $('.hidden-search-input');
 
       //get initial value on page reload
-      $visilbe_input.val($hidden_input.val());
+      $visible_input.val($hidden_input.val());
 
       //sync the real input and submit with the fake ones
-      $visilbe_input.on('keyup', function () {
+      $visible_input.on('keyup', function () {
         $hidden_input.val($(this).val())
       });
 
@@ -289,16 +287,15 @@
         $('.hidden-search-submit').click()
       });
 
-      $visilbe_input.keyup(function (event) {
+      $visible_input.keyup(function (event) {
         if (event.keyCode == 13) {
           $('.hidden-search-submit').click();
         }
       });
 
-      $('.visible-checkboxes label').on('click', function (e) {
+      $('.search-tabs label').on('click', function (e) {
         e.preventDefault();
-        var action_url = '/search/' + $(this).data('kind') + '/';
-        $("#main-search-form").attr("action", action_url);
+        $("#main-search-form").attr("action", $(this).data('url'));
         $("#main-search-form").submit();
       })
 

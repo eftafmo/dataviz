@@ -40,3 +40,8 @@ def build_filter_template(filter):
 @register.assignment_tag
 def active(expected_kind, current_kind):
     return 'active' if expected_kind == current_kind else ''
+
+
+@register.assignment_tag
+def assign(value):
+    return value
