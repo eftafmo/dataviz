@@ -1,6 +1,6 @@
 <template>
-<div v-if="hasFilters()" id="global-filters" class="sticky visible">
-  <div class="global-filters" :class="{active: hasFilters()}">
+<div :class="{ on_top: hasFilters() }" id="global-filters">
+  <div v-if="hasFilters()" class="global-filters" :class="{active: hasFilters()}">
     <transition name="bounce">
       <div v-if="hasFilters" class="container">
         <div class="global-filters-inner">
@@ -30,7 +30,9 @@
 
 
 <style lang="less">
-
+.on_top{
+  z-index: 2;
+}
 .filter-item {
   cursor: pointer;
   margin-left: .5rem;
