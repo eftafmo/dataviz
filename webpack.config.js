@@ -13,6 +13,9 @@ var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 // Separate js and css bundles apart. See: https://github.com/webpack-contrib/extract-text-webpack-plugin
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+var lessLoader = 'css-loader!less-loader?strictMath&noIeCompat'
+
 // I used this previously in order to has version images too, but there should be other solutions now
 // See: https://github.com/owais/django-webpack-loader/issues/51#issuecomment-194964129
 // TODO research a new and easy way to track bundled images
@@ -92,7 +95,7 @@ module.exports = {
               fallback: "vue-style-loader",
             }),
             less: cssExtractor.extract({
-              use: "css-loader!less-loader",
+              use: lessLoader,
               fallback: "vue-style-loader",
             }),
           }),
@@ -102,6 +105,13 @@ module.exports = {
         test: /\.css$/,
         loader: DEBUG ? 'style-loader!css-loader' : cssExtractor.extract({
           use: "css-loader",
+          fallback: "style-loader",
+        }),
+      },
+      {
+        test: /\.less$/,
+        loader: DEBUG ? 'style-loader!' + lessLoader : cssExtractor.extract({
+          use: lessLoader,
           fallback: "style-loader",
         }),
       },
@@ -126,19 +136,6 @@ module.exports = {
           // 'image?bypassOnDebug&optimizationLevel=7&interlaced=false',
         ]
       },
-      {
-        test: /\.less$/,
-        use: [{
-          loader: "style-loader"
-        }, {
-          loader: "css-loader"
-        }, {
-          loader: "less-loader", options: {
-            strictMath: true,
-            noIeCompat: true
-          }
-        }]
-      }
     ]
   },
   plugins: [
