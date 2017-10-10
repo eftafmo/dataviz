@@ -6,6 +6,7 @@ from collections import OrderedDict
 from datetime import datetime
 
 from django.conf import settings
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -496,43 +497,38 @@ class NewsFacetedExportView(FacetedExportView):
 class _TypeaheadFacetedSearchView(object):
     form_class = EeaAutoFacetedSearchForm
     template_name = None
+    results_limit = 10
 
     def get_data(self, context):
         form = context['form']
-        sqs = context[self.context_object_name]
+        facets = context['facets']['fields'][form.auto_name]
+        # facets format: [(value, count), ...]
+        facets.sort(
+            key=lambda facet: facet[1],
+            reverse=True
+        )
 
-        # we fish for values that match our search terms.
-        # say, the user is looking for Programmes that are related to outcomes containing
-        # words starting with green and familiy
-        # and are also narrowed down to only kind:Programme, Poland Programmes, and EEA FM
-        # we want to present to the js select2 multiselect only distinct, relevant values
-        # and no more than a certain limit, 10 possibilities
-        # TODO actually we look for term1 AND term2 match inside the CONCATENATION
-        # TODO of all Programme's outcomes; because of this concatenation the user adding words
-        # TODO will not necessarily improve his results: some words will fall inside one Outcome
-        # TODO and some in other Outcome belonging to the same Programme. It will look like
-        # TODO an AND match from our side but like an OR match from his side
-        # TODO this will be fun to fix :(
-        vals = set()
-        terms = form.auto_value.lower().split()
-        for res in sqs:
-            vals = vals.union(form.matched_multi_values(res, terms))
-            # limit this - we are going to ajax this often
-            if len(vals) >= 20:
-                break
+        paginator = Paginator(facets, self.results_limit)
+        page = self.request.GET.get('page', 1)
+        try:
+            facets = paginator.page(page)
+        except PageNotAnInteger or EmptyPage:
+            page = 1
+            facets = paginator.page(1)
+
         return {
-            'results': [ {'text': val, 'id': val} for val in vals ],
+            'results': [
+                {'text': facet, 'id': facet}
+                for facet, count in facets
+            ],
             'results_for': form.auto_name,
-            'total_count': len(vals),
+            'total_count': paginator.count,
+            'page': page,
+            'pagination': {'more': int(page) < paginator.num_pages}
         }
 
     def render_to_response(self, context, **response_kwargs):
         return JsonResponse(self.get_data(context), **response_kwargs)
-
-
-class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
-                                          ProgrammeFacetedSearchView):
-    pass
 
 
 class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
@@ -542,6 +538,11 @@ class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
 
 class OrganisationTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
                                              OrganisationFacetedSearchView):
+    pass
+
+
+class NewsTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                     NewsFacetedSearchView):
     pass
 
 

@@ -30,10 +30,6 @@ urlpatterns = [
         views.ProjectList.as_view(),
         name='project-list',
         ),
-    url(r'^search_programme_typeahead/$',
-        front_views.ProgrammeTypeaheadFacetedSearchView.as_view(),
-        name='search_programme_typeahead'
-        ),
     url(r'^search_project_typeahead/$',
         front_views.ProjectTypeaheadFacetedSearchView.as_view(),
         name='search_project_typeahead'
@@ -41,5 +37,9 @@ urlpatterns = [
     url(r'^search_organisation_typeahead/$',
         front_views.OrganisationTypeaheadFacetedSearchView.as_view(),
         name='search_organisation_typeahead'
+        ),
+    url(r'^search_news_typeahead/$',
+        front_views.NewsTypeaheadFacetedSearchView.as_view(),
+        name='search_news_typeahead'
         ),
 ]

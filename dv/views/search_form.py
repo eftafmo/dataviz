@@ -49,7 +49,7 @@ class EeaAutoFacetedSearchForm(EeaFacetedSearchForm):
         self.auto_name = data.pop('auto_name')
         if self.auto_name:
             self.auto_name = self.auto_name[0]
-        self.auto_value = data.pop('auto_value')
+        self.auto_value = data.pop('auto_value', '')
         if self.auto_value:
             self.auto_value = ' '.join(self.auto_value)
 

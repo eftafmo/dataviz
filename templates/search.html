@@ -650,16 +650,17 @@
               return {
                 auto_name: facet,
                 auto_value: params.term,
+                page: params.page || 1,
               }
             },
             processResults: function(response, params) {
               return {
                 results: response.results,
+                pagination: response.pagination,
               }
             },
             delay: 300,
           },
-          minimumInputLength: 2,
         }
       };
       $("#search-tabs").change(function() {
@@ -681,29 +682,42 @@
       all_select2.push($("#programme-status-facet").select2());
 
       // programme
-      // all_select2.push($("#outcome-facet").select2(select2AjaxFactory('programme', 'outcome_ss')));
-      all_select2.push($("#outcome-facet").select2());
+      {% if form.facets.kind.0 == 'Programme' %}
+        all_select2.push($("#outcome-facet").select2());
+      {% endif %}
 
       // project
-      all_select2.push($("#project-status-facet").select2());
-      all_select2.push($("#project-programme-name-facet").select2());
-      all_select2.push($("#project-theme-facet").select2());
-      //all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget')))
-      all_select2.push($("#geotarget-facet").select2());
+      {% if form.facets.kind.0 == 'Project' %}
+        all_select2.push($("#project-status-facet").select2());
+        all_select2.push($("#project-programme-name-facet").select2());
+        all_select2.push($("#project-theme-facet").select2());
+        all_select2.push($("#outcome-facet").select2());
+        all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('project', 'geotarget')));
+      {% endif %}
 
       // organisation
-      //all_select2.push($("#organisation-programme-name-facet").select2(select2AjaxFactory('organisation', 'programme_name')));
-      all_select2.push($("#organisation-project-status-facet").select2());
-      all_select2.push($("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name')));
-      all_select2.push($("#country-facet").select2());
-      {% if facets.fields.city|length > 200 %}
-        all_select2.push($("#city-facet").select2(select2AjaxFactory('organisation', 'city')));
-      {% else %}
-        all_select2.push($("#city-facet").select2());
+      {% if form.facets.kind.0 == 'Organisation' %}
+        all_select2.push($("#organisation-project-status-facet").select2());
+        all_select2.push($("#organisation-project-name-facet").select2(select2AjaxFactory('organisation', 'project_name')));
+        all_select2.push($("#country-facet").select2());
+        {% if facets.fields.city|length > 200 %}
+          all_select2.push($("#city-facet").select2(select2AjaxFactory('organisation', 'city')));
+        {% else %}
+          all_select2.push($("#city-facet").select2());
+        {% endif %}
+        all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('organisation', 'geotarget')));
+        all_select2.push($("#org-type-category-facet").select2());
+        all_select2.push($("#org-type-facet").select2());
+        all_select2.push($("#role-facet").select2());
       {% endif %}
-      all_select2.push($("#org-type-category-facet").select2());
-      all_select2.push($("#org-type-facet").select2());
-      all_select2.push($("#role-facet").select2());
+
+      // news
+      {% if form.facets.kind.0 == 'News' %}
+        all_select2.push($("#project-status-facet").select2());
+        all_select2.push($("#project-theme-facet").select2());
+        all_select2.push($("#outcome-facet").select2());
+        all_select2.push($("#geotarget-facet").select2(select2AjaxFactory('news', 'geotarget')));
+      {% endif %}
 
       $(".main-auto-submit").change(function() {
         $("#main-search-form").submit();
