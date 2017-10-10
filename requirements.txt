@@ -2,6 +2,7 @@ bleach>=2,<=3
 django-ckeditor==5.3.0
 Django>=1.11,<1.12
 Jinja2>=2.9.6,<2.10
+pyexcel-io==0.3.2
 pyexcel>=0.4.2,<0.5
 pyexcel-xls>=0.3.1,<0.4
 pyexcel-xlsx>=0.3.0,<0.4
@@ -15,5 +16,4 @@ pysolr==3.6.0
 git+git://github.com/django-haystack/django-haystack.git@3f6016e107adefa40a681fa467d6fa9b8b431426
 
 djangorestframework>=3.6.3,<3.7
-pysolr==3.6.0
 django-countries>=4.6,<4.7
