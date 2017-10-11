@@ -112,7 +112,7 @@ class FacetedSearchView(BaseFacetedSearchView):
     ).values(
         'name',
         'priority_sector__name',
-        'priority_sector__type__grant_name',
+        'financial_mechanism__grant_name',
         'order',
     )
     # sort by -order because there are some duplicated names and we need the first occurrence only
@@ -128,8 +128,8 @@ class FacetedSearchView(BaseFacetedSearchView):
     SECTORS_FMS = defaultdict(set)
     for x in AREAS_LIST:
         AREAS_SECTORS[x['name']].add(x['priority_sector__name'])
-        AREAS_FMS[x['name']].add(x['priority_sector__type__grant_name'])
-        SECTORS_FMS[x['priority_sector__name']].add(x['priority_sector__type__grant_name'])
+        AREAS_FMS[x['name']].add(x['financial_mechanism__grant_name'])
+        SECTORS_FMS[x['priority_sector__name']].add(x['financial_mechanism__grant_name'])
 
     ORG_ROLE_SORT = {
         'National Focal Point': 0,

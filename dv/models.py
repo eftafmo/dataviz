@@ -123,7 +123,6 @@ class PrioritySector(_MainModel):
         {
             'src': 'BeneficiaryStatePrioritySector',
             'map': {
-                'type': 'FMCode',
                 'code': 'PSCode',
                 'name': 'PrioritySector',
             }
@@ -133,8 +132,6 @@ class PrioritySector(_MainModel):
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=64)  # not unique
 
-    type = models.ForeignKey(FinancialMechanism)
-
 
 class ProgrammeArea(_MainModel):
     # programme areas are defined in the same sheet with priority sectors
@@ -142,6 +139,7 @@ class ProgrammeArea(_MainModel):
         {
             'src': 'BeneficiaryStatePrioritySector',
             'map': {
+                'financial_mechanism': 'FMCode',
                 'priority_sector': 'PSCode',
                 'code': 'PACode',
                 'name': 'ProgrammeArea',
@@ -162,6 +160,7 @@ class ProgrammeArea(_MainModel):
     objective = models.TextField()
 
     priority_sector = models.ForeignKey(PrioritySector)
+    financial_mechanism = models.ForeignKey(FinancialMechanism)
     # Allocation also branches off towards FM
     allocations = models.ManyToManyField(State, through="Allocation")
 
@@ -424,9 +423,10 @@ class Project(_MainModel):
             'map': {
                 'state': ('name', 'BeneficiaryState'),
                 'programme': 'ProgrammeCode',
-                'programme_area': 'PACode',
                 'outcome': 'OutcomeCode',
                 'financial_mechanism': 'FMCode',
+                'priority_sector': 'PSCode',
+                'programme_area': 'PACode',
                 'status': 'ProjectStatus',
                 'code': 'ProjectCode',
                 'name': 'Project',
@@ -486,6 +486,7 @@ class Project(_MainModel):
     programme_area = models.ForeignKey(ProgrammeArea)
     outcome = models.ForeignKey(Outcome)
     financial_mechanism = models.ForeignKey(FinancialMechanism)
+    priority_sector = models.ForeignKey(PrioritySector)
 
     status = EnumField(STATUS, max_length=11)
 

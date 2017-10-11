@@ -69,7 +69,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
             'priority_sector__name', flat=True).distinct())
 
     def prepare_financial_mechanism_ss(self, obj):
-        return list(obj.programme_areas.values_list('priority_sector__type__grant_name',
+        return list(obj.programme_areas.values_list('financial_mechanism__grant_name',
                                                     flat=True).distinct())
 
     def prepare_outcome_ss(self, obj):
@@ -210,13 +210,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         result = result.union(obj.roles.filter(
             is_programme=False, project__isnull=False
         ).values_list(
-            'project__programme_area__priority_sector__type__grant_name',
+            'project__programme_area__financial_mechanism__grant_name',
             flat=True,
         ).distinct())
         result = result.union(obj.roles.filter(
             is_programme=True, programme__isnull=False
         ).values_list(
-            'programme__programme_areas__priority_sector__type__grant_name',
+            'programme__programme_areas__financial_mechanism__grant_name',
             flat=True,
         ).distinct())
         return list(result)
@@ -407,7 +407,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             pass
         if obj.programmes.exists():
             return list(obj.programmes.values_list(
-                'programme_areas__priority_sector__type__grant_name',
+                'programme_areas__financial_mechanism__grant_name',
                 flat=True
             ).distinct())
         return None

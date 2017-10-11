@@ -47,7 +47,7 @@ def overview(request):
         'outcome__programme_area__priority_sector',
     ).values(
         'programme__code',
-        'outcome__programme_area__priority_sector__type_id',
+        'outcome__programme_area__financial_mechanism_id',
         'state__code',
         'programme__is_tap',
     ).exclude(
@@ -77,7 +77,7 @@ def overview(request):
                 p['programme__code']
                 for p in programmes
                 if (
-                    p['outcome__programme_area__priority_sector__type_id'] == a['financial_mechanism_id'] and
+                    p['outcome__programme_area__financial_mechanism_id'] == a['financial_mechanism_id'] and
                     p['state__code'] == a['state_id'] and
                     not p['programme__is_tap']
                 )
@@ -317,7 +317,7 @@ def partners(request):
         'programme',
         'outcome__programme_area',
         'outcome__programme_area__priority_sector',
-        'outcome__programme_area__priority_sector__type',
+        'outcome__programme_area__financial_mechanism',
         'programme__organisation_roles',
     ).annotate(
         code=F('programme__code'),
@@ -326,7 +326,7 @@ def partners(request):
         pa_code=F('outcome__programme_area__code'),
         pa_name=F('outcome__programme_area__name'),
         sector=F('outcome__programme_area__priority_sector__name'),
-        fm=F('outcome__programme_area__priority_sector__type__grant_name'),
+        fm=F('outcome__programme_area__financial_mechanism__grant_name'),
         allocation_eea=F('programme__allocation_eea'),
         allocation_norway=F('programme__allocation_norway'),
     ).values(
@@ -642,7 +642,7 @@ def project_nuts(beneficiary, force_nuts3):
         'id': F('nuts'),
         'area': F('programme_area__name'),
         'sector': F('programme_area__priority_sector__name'),
-        'fm': F('programme_area__priority_sector__type__grant_name'),
+        'fm': F('programme_area__financial_mechanism__grant_name'),
         'programme_id': F('programme_id'),
     }
     data = (
@@ -741,7 +741,7 @@ def projects_beneficiary_detail(request, beneficiary):
 #        'id': F('nuts'),
 #        'area': F('programme_area__name'),
 #        'sector': F('programme_area__priority_sector__name'),
-#        'fm': F('programme_area__priority_sector__type__grant_name'),
+#        'fm': F('programme_area__financial_mechanism__grant_name'),
 #    }
 #    data = (
 #        Project.objects.filter(state=state)
@@ -777,6 +777,10 @@ class ProjectList(ListAPIView):
         beneficiary = self.request.query_params.get('beneficiary', None)
         if beneficiary is not None:
             queryset = queryset.filter(state_id=beneficiary)
+
+        fm_name = self.request.query_params.get('fm', None)
+        if fm_name:
+            queryset = queryset.filter(financial_mechanism__grant_name=fm_name)
 
         programme_area_name = self.request.query_params.get('area', None)
         if programme_area_name:

@@ -132,6 +132,9 @@ export default Vue.extend({
         if (this.filters.donor) {
           url = url + '&donor=' + this.filters.donor
         }
+        if (this.filters.fm) {
+          url = url + '&fm=' + this.filters.fm
+        }
         if (this.filters.sector) {
           url = url + '&sector=' + this.filters.sector
         }
