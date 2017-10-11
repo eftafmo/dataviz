@@ -22,8 +22,13 @@ PROJECT_CUSTOM_FACETS = [
 ]
 
 ORGANISATION_CUSTOM_FACETS = [
-    ('project_name', 'AND'),
+    ('financial_mechanism_ss', 'AND'),
     ('role_ss', 'AND'),
+    ('state_name', 'OR'),
+    ('priority_sector_ss', 'OR'),
+    ('programme_area_ss', 'AND'),
+    ('programme_name', 'OR'),
+    ('project_name', 'AND'),
     ('country', 'AND'),
     ('city', 'AND'),
     ('geotarget', 'AND'),
@@ -33,5 +38,5 @@ ORGANISATION_CUSTOM_FACETS = [
 
 PROGRAMME_FACETS = OrderedDict(BASE_FACETS + PROGRAMME_CUSTOM_FACETS)
 PROJECT_FACETS = OrderedDict(BASE_FACETS + PROJECT_CUSTOM_FACETS)
-ORGANISATION_FACETS = OrderedDict(BASE_FACETS + ORGANISATION_CUSTOM_FACETS)
+ORGANISATION_FACETS = OrderedDict(ORGANISATION_CUSTOM_FACETS)
 NEWS_FACETS = OrderedDict(PROJECT_FACETS)
