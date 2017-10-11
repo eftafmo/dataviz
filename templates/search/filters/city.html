@@ -1,17 +1,1 @@
-<div class="input-group">
-  <div class="input-box input-block">
-    <label for="city-facet">City</label>
-    <select multiple name="city" id="city-facet" form="main-search-form"
-            data-kind="{{ kind|lower }}" data-field="city"
-            class="main-auto-submit facet-select">
-      {% for value in values %}
-        {% if value.0 %}
-          <option value="{{ value.0 }}"
-                  {% if value.0 in current_value %}selected{% endif %}>
-            {{ value.0 }} ({{ value.1 }})
-          </option>
-        {% endif %}
-      {% endfor %}
-    </select>
-  </div>
-</div>
+{% include 'search/filters/inputs/ajax_select2.html' with name='city' label='City' %}
