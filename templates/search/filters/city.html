@@ -4,8 +4,13 @@
     <select multiple name="city" id="city-facet" form="main-search-form"
             data-kind="{{ kind|lower }}" data-field="city"
             class="main-auto-submit facet-select">
-      {% for value in current_value %}
-        <option value="{{ value }}" selected>{{ value }}</option>
+      {% for value in values %}
+        {% if value.0 %}
+          <option value="{{ value.0 }}"
+                  {% if value.0 in current_value %}selected{% endif %}>
+            {{ value.0 }} ({{ value.1 }})
+          </option>
+        {% endif %}
       {% endfor %}
     </select>
   </div>

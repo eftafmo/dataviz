@@ -494,7 +494,10 @@ class _TypeaheadFacetedSearchView(object):
 
         return {
             'results': [
-                {'text': facet, 'id': facet}
+                {
+                    'id': facet,
+                    'text': "{0} ({1})".format(facet, count)
+                }
                 for facet, count in facets
             ],
             'results_for': form.auto_name,
