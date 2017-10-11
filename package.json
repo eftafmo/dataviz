@@ -6,6 +6,11 @@
   "directories": {
     "test": "tests"
   },
+  "browserslist": [
+    "IE >= 9",
+    "last 2 versions",
+    "> 5%"
+  ],
   "dependencies": {
     "axios": "^0.16.2",
     "buble": "^0.15.2",
@@ -52,7 +57,9 @@
     "webpack-bundle-tracker": "^0.2.0"
   },
   "devDependencies": {
+    "autoprefixer": "^7.1.5",
     "clean-webpack-plugin": "^0.1.17",
+    "postcss-loader": "^2.0.7",
     "webpack-dev-server": "^2.4.2"
   },
   "config": {

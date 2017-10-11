@@ -14,7 +14,9 @@ var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 // Separate js and css bundles apart. See: https://github.com/webpack-contrib/extract-text-webpack-plugin
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var lessLoader = 'css-loader!less-loader?strictMath&noIeCompat'
+var cssLoader = 'css-loader'
+if (!DEBUG) cssLoader += '?importLoaders=1!postcss-loader'
+var lessLoader = cssLoader + '!less-loader?strictMath&noIeCompat'
 
 // I used this previously in order to has version images too, but there should be other solutions now
 // See: https://github.com/owais/django-webpack-loader/issues/51#issuecomment-194964129
@@ -91,7 +93,7 @@ module.exports = {
             js: bubleLoader,
           }, DEBUG ? {} : {
             css: cssExtractor.extract({
-              use: "css-loader",
+              use: cssLoader,
               fallback: "vue-style-loader",
             }),
             less: cssExtractor.extract({
@@ -103,8 +105,8 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: DEBUG ? 'style-loader!css-loader' : cssExtractor.extract({
-          use: "css-loader",
+        loader: DEBUG ? 'style-loader!' + cssLoader : cssExtractor.extract({
+          use: cssLoader,
           fallback: "style-loader",
         }),
       },
