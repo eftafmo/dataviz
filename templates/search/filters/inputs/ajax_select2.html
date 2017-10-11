@@ -1,0 +1,17 @@
+<div class="input-group">
+  <div class="input-box input-block">
+    <label for="{{ name }}-facet">{{ label }}</label>
+    <select multiple name="{{ name }}" id="{{ name }}-facet" form="main-search-form"
+            data-kind="{{ kind|lower }}" data-field="{{ name }}"
+            class="main-auto-submit facet-select">
+      {% for value in values %}
+        {% if value.0 %}
+          <option value="{{ value.0 }}"
+                  {% if value.0 in current_value %}selected{% endif %}>
+            {{ value.0 }} ({{ value.1 }})
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+</div>
