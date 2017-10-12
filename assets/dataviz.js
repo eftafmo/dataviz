@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === "production") {
   console.info("Running in production mode! Enabling Sentry.");
 
   Raven
-    .config('https://59751ecaf8714e57b3e0c29494723596@sentry.io/212832')
+    .config(process.env.FRONTEND_SENTRY_DSN)
     .addPlugin(RavenVue, Vue)
     .install();
 }
