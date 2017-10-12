@@ -10,6 +10,8 @@ var webpack = require('webpack'),
 var BundleTracker = require('webpack-bundle-tracker');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+var SVGSpriteLoaderPlugin = require('svg-sprite-loader/plugin')
+
 
 // Separate js and css bundles apart. See: https://github.com/webpack-contrib/extract-text-webpack-plugin
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -118,7 +120,37 @@ module.exports = {
         }),
       },
       {
+        test: /\.svg$/,
+        include: path.resolve(asset_dir, 'sprites'),
+        loader: 'svg-sprite-loader',
+        options: {
+          spriteFilename: 'imgs/sprites.[hash:8].svg',
+          // disabling this for now until we find a way to address
+          // the emitted file in templates. TODO. #
+          extract: !DEBUG,
+        },
+      },
+      // until things get turned to svgs...
+      {
+        test: /\.png$/,
+        include: path.resolve(asset_dir, 'sprites'),
+        // like above, but with an extra-loader is needed because of this bug:
+        // https://github.com/kisenka/svg-sprite-loader/issues/179
+        use: [
+          {
+            loader: 'svg-sprite-loader',
+            options: {
+              spriteFilename: 'imgs/sprites.[hash:8].svg',
+              // TODO. ^^ #
+              //extract: !DEBUG,
+            },
+          },
+          'image2svg-loader',
+        ],
+      },
+      {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
+        include: path.resolve(asset_dir, 'fonts'),
         loader: 'file-loader',
         options: {
           name: '[path][name].[hash:8].[ext]',
@@ -127,6 +159,7 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/,
+        include: path.resolve(asset_dir, 'imgs'),
         loaders: [
           {
             loader: 'file-loader',
@@ -162,6 +195,7 @@ module.exports = {
       new FriendlyErrorsWebpackPlugin(),
     ] : [
       cssExtractor,
+      //new SVGSpriteLoaderPlugin(), // TODO ^^ #
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
     ]

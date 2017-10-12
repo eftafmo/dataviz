@@ -55,12 +55,9 @@ export function get_sort_order(code) {
   return sort_order;
 }
 
-const req = require.context('svg-sprite-loader!imgs', false, /flag-[a-z]+\.png$/);
-// we could load all of req.keys() instead, but we want things to fail
-// if there's a mismatch between country names and png files.
-// (possible TODO: compare req.keys() with countries and warn if necessary)
+// force-load all flags so they get bundled as sprites
 for (const code in COUNTRIES) {
-  req(`./${get_flag_name(code)}.png`);
+  require(`sprites/flags/${get_flag_name(code)}.png`);
 }
 
 

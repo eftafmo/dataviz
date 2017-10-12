@@ -7,12 +7,9 @@ for (const sector of _SECTORS) {
   SECTORS[sid] = Object.assign({id: sid}, sector);
 }
 
-const req = require.context('svg-sprite-loader!imgs/sectors', false, /[a-z]+\.png$/);
-// we could load all of req.keys() instead, but we want things to fail
-// if there's a mismatch between sector names and png files.
-// (possible TODO: compare req.keys() with sectors and warn if necessary)
+// force-load all sector icons so they get bundled as sprites
 for (const sector in SECTORS) {
-  req(`./${SECTORS[sector].icon}`);
+  require(`sprites/sectors/${SECTORS[sector].icon}`)
 }
 
 
