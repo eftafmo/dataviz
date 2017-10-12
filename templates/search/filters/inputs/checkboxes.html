@@ -1,14 +1,14 @@
 <div class="input-group">
   <div class="input-box input-block">
     <label>{{ label }}</label>
-    {% for value in values %}
+    {% for facet in facets %}
       <label class="clearfix checkbox_label">
         <input type="checkbox" name="{{ name }}"
-               id="{{ name }}_{{ forloop.counter }}" value="{{ value.0 }}"
-               {% if value.0 in current_value %}checked{% endif %}
+               id="{{ name }}_{{ forloop.counter }}" value="{{ facet.0 }}"
+               {% if facet.0 in selected_facets %}checked{% endif %}
                class="main-auto-submit" form="main-search-form">
         <label for="{{ name }}_{{ forloop.counter }}"></label>
-        <span>{{ value.0 }} ({{ value.1 }})</span>
+        <span>{{ facet.0 }} ({{ facet.1 }})</span>
       </label>
     {% endfor %}
   </div>
