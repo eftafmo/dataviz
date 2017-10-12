@@ -13,7 +13,7 @@ INSTALLED_APPS += (
     'raven.contrib.django.raven_compat',
 )
 RAVEN_CONFIG = {
-    'dsn': env('SENTRY_DNS')
+    'dsn': env('SENTRY_DSN')
 }
 
 DEBUG = False
