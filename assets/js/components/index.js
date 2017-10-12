@@ -8,7 +8,7 @@ export {default as Sectors} from './Sectors';
 export {default as PartnersSectors} from './PartnersSectors';
 export {default as ProjectsSectors} from './ProjectsSectors';
 
-export {default as AllocationMap} from './AllocationMap';
+export {default as GrantsMap} from './GrantsMap';
 export {default as PartnersMap} from './PartnersMap';
 export {default as ProjectsMap} from './ProjectsMap';
 
