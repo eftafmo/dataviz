@@ -30,6 +30,14 @@ def keyvalue(dict, key):
         return ''
 
 
+@register.filter
+def facet_count(facets, facet_name):
+    for facet in facets:
+        if facet[0] == facet_name:
+            return facet[1]
+    return ''
+
+
 @register.assignment_tag
 def build_filter_template(filter):
     if filter:

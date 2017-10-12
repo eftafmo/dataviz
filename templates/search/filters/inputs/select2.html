@@ -3,11 +3,11 @@
     <label for="{{ name }}-facet">{{ label }}</label>
     <select multiple name="{{ name }}" id="{{ name }}-facet" form="main-search-form"
             class="main-auto-submit facet-select">
-      {% for value in values %}
-        {% if value.1 %}
-          <option value="{{ value.0 }}"
-                  {% if value.0 in current_value %}selected{% endif %}>
-            {{ value.0 }} ({{ value.1 }})
+      {% for facet in facets %}
+        {% if facet.1 %}
+          <option value="{{ facet.0 }}"
+                  {% if facet.0 in selected_facets %}selected{% endif %}>
+            {{ facet.0 }} ({{ facet.1 }})
           </option>
         {% endif %}
       {% endfor %}
