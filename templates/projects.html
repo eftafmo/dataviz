@@ -54,7 +54,9 @@
 {% block aside %}
 
 <sidebar class="sticky"
-         :initial="dataset">
+         :initial="dataset"
+         projects-datasource="{% url "api:project-list" %}"
+>
 </sidebar>
 
 {% endblock %}

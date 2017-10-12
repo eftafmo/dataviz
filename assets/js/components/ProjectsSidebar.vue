@@ -17,6 +17,7 @@
       <projects
           class="sidebar-content"
           :initial="dataset"
+          :details-datasource="projectsDatasource"
           :embedded="embedded"
       ></projects>
     </tab>
@@ -38,6 +39,10 @@ export default BaseSidebar.extend({
     xsummary: Summary,
     news: News,
     projects: Projects,
+  },
+
+  props: {
+    projectsDatasource: String,
   },
 })
 </script>

@@ -609,6 +609,15 @@ class EmbedComponent(TemplateView):
             props['detailsDatasource'] = self.request.build_absolute_uri(
                 reverse("api:%s-beneficiary-detail" % scenario, args=("XX",))
             )
+        elif scenario in ("partners", "projects") and component == "projects":
+            props['detailsDatasource'] = self.request.build_absolute_uri(
+                reverse("api:project-list")
+            )
+        elif scenario in ("partners", "projects") and component == "sidebar":
+            props['projectsDatasource'] = self.request.build_absolute_uri(
+                reverse("api:project-list")
+            )
+
 
         context.update({
             'jsfiles': [geturl(f) for f in jsfiles],

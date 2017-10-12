@@ -99,6 +99,7 @@ export default Vue.extend({
   ],
 
   props: {
+    detailsDatasource: String,
     id: String,
     country: String,
     sector: String,
@@ -122,13 +123,12 @@ export default Vue.extend({
 
   methods: {
     getProjects() {
-      const $this= this;
       let target = this.$el.querySelector('.programme-item-header')
       target.classList.add('spinning')
       target.classList.toggle('active')
 
       if (this.posts.length == 0) {
-        let url=`/api/projects/?beneficiary=${$this.country}&programme=${$this.id}`
+        let url=`${this.detailsDatasource}?beneficiary=${this.country}&programme=${this.id}`
         if (this.filters.donor) {
           url = url + '&donor=' + this.filters.donor
         }
