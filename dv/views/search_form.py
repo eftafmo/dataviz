@@ -1,5 +1,3 @@
-import importlib
-
 from haystack.forms import FacetedSearchForm
 
 import logging
@@ -27,15 +25,27 @@ class EeaFacetedSearchForm(FacetedSearchForm):
     def search(self):
         sqs = super().search()
         for facet_name, facet_values in self.facets.items():
+            # Determine operation type - AND/OR supported so far
+            operator = self.facet_rules.get(facet_name, None)
+            if facet_name == 'kind':
+                operator = 'AND'
+            if operator not in ['AND', 'OR']:
+                continue
+
+            # Build faceted query
             query = ''
-            operator = self.facet_rules.get(facet_name)
             for value in facet_values:
                 if query:
                     query += " {} ".format(operator)
                 query += '"{}"'.format(sqs.query.clean(value))
             if query:
-                sqs = sqs.narrow('{}:({})'.format(facet_name, query))
-
+                if operator == 'AND':
+                    sqs = sqs.narrow('{}:({})'.format(facet_name, query))
+                elif operator == 'OR':
+                    # Create all_{facet_name} facets, by excluding the {facet_name}
+                    # from query
+                    sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
+                    sqs = sqs.facet('{{!ex={0} key=all_{0}}}{0}'.format(facet_name))
         return sqs
 
 
