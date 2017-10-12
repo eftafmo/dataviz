@@ -30,6 +30,10 @@ urlpatterns = [
         views.ProjectList.as_view(),
         name='project-list',
         ),
+    url(r'^search_programme_typeahead/$',
+        front_views.ProgrammeTypeaheadFacetedSearchView.as_view(),
+        name='search_programme_typeahead'
+        ),
     url(r'^search_project_typeahead/$',
         front_views.ProjectTypeaheadFacetedSearchView.as_view(),
         name='search_project_typeahead'
