@@ -4,36 +4,36 @@ BASE_FACETS = [
     ('financial_mechanism_ss', 'AND'),
     ('state_name', 'OR'),
     ('priority_sector_ss', 'OR'),
-    ('programme_area_ss', 'AND'),
+    ('programme_area_ss', 'OR'),
     ('programme_name', 'OR'),
 ]
 
 PROGRAMME_CUSTOM_FACETS = [
-    ('programme_status', 'AND'),
-    ('outcome_ss', 'AND'),
+    ('programme_status', 'OR'),
+    ('outcome_ss', 'OR'),
 ]
 
 PROJECT_CUSTOM_FACETS = [
-    ('programme_status', 'AND'),
-    ('outcome_ss', 'AND'),
-    ('project_status', 'AND'),
-    ('theme_ss', 'AND'),
-    ('geotarget', 'AND'),
+    ('programme_status', 'OR'),
+    ('outcome_ss', 'OR'),
+    ('project_status', 'OR'),
+    ('theme_ss', 'OR'),
+    ('geotarget', 'OR'),
 ]
 
 ORGANISATION_CUSTOM_FACETS = [
     ('financial_mechanism_ss', 'AND'),
-    ('role_ss', 'AND'),
+    ('role_ss', 'OR'),
     ('state_name', 'OR'),
     ('priority_sector_ss', 'OR'),
-    ('programme_area_ss', 'AND'),
+    ('programme_area_ss', 'OR'),
     ('programme_name', 'OR'),
-    ('project_name', 'AND'),
-    ('country', 'AND'),
-    ('city', 'AND'),
-    ('geotarget', 'AND'),
-    ('org_type_category', 'AND'),
-    ('org_type', 'AND'),
+    ('project_name', 'OR'),
+    ('country', 'OR'),
+    ('city', 'OR'),
+    ('geotarget', 'OR'),
+    ('org_type_category', 'OR'),
+    ('org_type', 'OR'),
 ]
 
 PROGRAMME_FACETS = OrderedDict(BASE_FACETS + PROGRAMME_CUSTOM_FACETS)
