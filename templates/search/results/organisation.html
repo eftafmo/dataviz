@@ -10,7 +10,7 @@
     <div class="country_status">
       <span class="country">
               {% if organisation.country in states_with_flags %}
-                <img src="/assets/imgs/flag-{{ organisation.country|lower|cut:" " }}.png"
+                <img src="/assets/sprites/flags/flag-{{ organisation.country|lower|cut:" " }}.png"
                      alt="{{ organisation.country }} flag"
                      height="20px">&nbsp;{% endif %}{{ organisation.country }}</span> |
       <span>{{ organisation.org_type_category }}</span> |

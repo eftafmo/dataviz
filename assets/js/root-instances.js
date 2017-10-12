@@ -30,7 +30,7 @@ export const Grants = Base.extend({
   components: {
     mechanisms: components.Mechanisms,
     sectors: components.Sectors,
-    xmap: components.AllocationMap,
+    xmap: components.GrantsMap,
     beneficiaries: components.Beneficiaries,
     xsummary: components.Summary,
     programmes: components.Programmes,

@@ -2,6 +2,7 @@
 <programmes :datasource="datasource" :initial="initial" class="projects">
   <template slot="programme-content" scope="x">
     <projects
+        :details-datasource="detailsDatasource"
         :country="x.beneficiary.id"
         :sector="x.programme.sector"
         :id="x.programme.programme_code"
@@ -37,17 +38,18 @@ import ProjectsMixin from './mixins/Projects';
 
 
 export default Component.extend({
-
   mixins: [
     ProjectsMixin,
   ],
-
 
   components: {
     programmes: Programmes,
     projects: Projects,
   },
 
+  props: {
+    detailsDatasource: String,
+  },
 
   data() {
     return {
