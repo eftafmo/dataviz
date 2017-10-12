@@ -46,7 +46,11 @@ class EeaFacetedSearchForm(FacetedSearchForm):
                     # Note that we are using as key the same facet_name, not a new alias
                     # See https://wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
                     sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
-                    sqs = sqs.facet('{{!ex={0} key={0}}}{0}'.format(facet_name))
+                    del sqs.query.facets[facet_name]
+                    sqs = sqs.facet(
+                        '{{!ex={0} key={0}}}{0}'.format(facet_name),
+                        mincount=1, limit=10000, sort='index'
+                    )
         return sqs
 
 
