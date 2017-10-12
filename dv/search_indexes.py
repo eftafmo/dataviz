@@ -98,6 +98,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
     programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
     outcome_ss = indexes.FacetMultiValueField(model_attr='outcome__name')
+    outcome_ss_auto = indexes.EdgeNgramField()
 
     kind = indexes.FacetCharField()
 
@@ -137,6 +138,9 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_outcome_ss(self, obj):
         return [obj.outcome.name.strip()]
+
+    def prepare_outcome_ss_auto(self, obj):
+        return ' '.join(self.prepare_outcome_ss(obj))
 
     def prepare_geotarget(self, obj):
         if len(obj.nuts) > 2:

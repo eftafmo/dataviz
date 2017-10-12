@@ -510,6 +510,11 @@ class _TypeaheadFacetedSearchView(object):
         return JsonResponse(self.get_data(context), **response_kwargs)
 
 
+class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
+                                          ProjectFacetedSearchView):
+    pass
+
+
 class ProjectTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
                                         ProjectFacetedSearchView):
     pass
