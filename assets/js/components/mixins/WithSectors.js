@@ -9,8 +9,8 @@ for (const sector of _SECTORS) {
 
 const req = require.context('svg-sprite-loader!imgs/sectors', false, /[a-z]+\.png$/);
 // we could load all of req.keys() instead, but we want things to fail
-// if there's a mismatch between country names and png files.
-// (possible TODO: compare req.keys() with countries and warn if necessary)
+// if there's a mismatch between sector names and png files.
+// (possible TODO: compare req.keys() with sectors and warn if necessary)
 for (const sector in SECTORS) {
   req(`./${SECTORS[sector].icon}`);
 }
@@ -31,6 +31,11 @@ export default {
     sectorcolour(sectorname) {
       // using sector's name because we're mostly dealing with that
       return this.SECTORS[slugify(sectorname)].colour;
+    },
+    sectoricon(sectorname) {
+      // TODO: mismatch between sectors.icon and slugify(sname)
+      // see other.png
+      return slugify(sectorname);
     },
   },
 };

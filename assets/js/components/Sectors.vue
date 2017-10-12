@@ -10,7 +10,7 @@
     </svg>
     <transition appear>
     <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
-      <use :xlink:href="`#${get_image(filters.sector)}`" />
+      <use :xlink:href="`#${sectoricon(filters.sector)}`" />
     </svg>
     </transition>
   </chart-container>
@@ -650,8 +650,6 @@ export default Chart.extend({
     },
     getArcID(node) { return "a-" + this._getID(node); },
     getLabelID(node) { return "l-" + this._getID(node); },
-
-    get_image(sname) { return slugify(sname); },
 
     tooltipTemplate(d) {
       // TODO: such horribleness.
