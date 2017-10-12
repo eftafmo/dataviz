@@ -189,12 +189,12 @@ export default Component.extend({
               programme_code: p,
               programme_name: programmes[p].name,
               programme_url: programmes[p].url,
-              nuts: programmes[p].nuts,
+              nuts: Object.keys(programmes[p].nuts),
             };
           else if (programme.nuts !== undefined) {
             // need to merge their nuts
             programme.nuts = Array.from(new Set(
-              programme.nuts.concat(programmes[p].nuts)
+              programme.nuts.concat(Object.keys(programmes[p].nuts))
             ))
           }
         }

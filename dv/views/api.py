@@ -207,13 +207,30 @@ def projects(request):
         'financial_mechanism_id',
         'programme_area_id',
         'state_id',
+        'code',
         'nuts',
         'programme_id',
-    ).order_by('nuts').distinct()
-    project_nuts = defaultdict(list)
+        'has_ended',
+        'is_positive_fx',
+    ).annotate(
+        project_count=Count('code')
+    )
+    project_nuts = defaultdict(lambda: defaultdict(dict))
     for item in project_nuts_raw:
         key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id'] + item['programme_id']
-        project_nuts[key].append(item['nuts'])
+        nuts = project_nuts[key][item['nuts']]
+        if not nuts:
+            nuts = project_nuts[key][item['nuts']] = {
+                'count': 0,
+                'ended': 0,
+                'positive': 0,
+            }
+        nuts['count'] += item['project_count']
+        if item['has_ended']:
+            nuts['ended'] += item['project_count']
+            if item['is_positive_fx']:
+                # Only count positive effects for projects which have ended
+                nuts['positive'] += item['project_count']
 
     project_counts_raw = Project.objects.values(
         'financial_mechanism_id',
