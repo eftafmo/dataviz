@@ -23,7 +23,8 @@ from dv.models import (
 )
 from dv.views.facets_rules import (
     BASE_FACETS, PROGRAMME_FACETS, PROJECT_FACETS,
-    ORGANISATION_FACETS, NEWS_FACETS
+    ORGANISATION_FACETS, NEWS_FACETS,
+    FACET_MIN_COUNT, FACET_LIMIT, FACET_SORT,
 )
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
@@ -68,7 +69,7 @@ logger = logging.getLogger()
 
 class FacetedSearchView(BaseFacetedSearchView):
     form_class = EeaFacetedSearchForm
-    facet_rules = BASE_FACETS
+    facet_rules = OrderedDict(BASE_FACETS)
     facet_kind = None
     order_field = None
     template_name = 'search/main.html'
@@ -243,7 +244,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         ctx['kind'] = self.facet_kind
         ctx['facet_rules'] = self.facet_rules
 
-        facet_fields = ctx.get('facets', {}).get('fields', {})
+        facet_fields = self.queryset.facet_counts()['fields']
         # Custom sorting of some facets, refs #326
         self.reorder_facets(facet_fields)
         # Custom filtering of PS/PA facets, refs #329
@@ -255,7 +256,12 @@ class FacetedSearchView(BaseFacetedSearchView):
         # Override default Solr settings
         qs = super(BaseFacetedSearchMixin, self).get_queryset()
         for field in self.facet_fields:
-            qs = qs.facet(field, mincount=1, limit=10000, sort='index')
+            qs = qs.facet(
+                field,
+                mincount=FACET_MIN_COUNT,
+                limit=FACET_LIMIT,
+                sort=FACET_SORT
+            )
         if self.order_field:
             qs = qs.order_by(self.order_field)
         return qs

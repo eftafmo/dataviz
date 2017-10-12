@@ -1,9 +1,11 @@
-import importlib
-
 from haystack.forms import FacetedSearchForm
 
 import logging
 logger = logging.getLogger()
+
+from dv.views.facets_rules import (
+    FACET_MIN_COUNT, FACET_LIMIT, FACET_SORT,
+)
 
 
 class EeaFacetedSearchForm(FacetedSearchForm):
@@ -27,15 +29,34 @@ class EeaFacetedSearchForm(FacetedSearchForm):
     def search(self):
         sqs = super().search()
         for facet_name, facet_values in self.facets.items():
+            # Determine operation type - AND/OR supported so far
+            operator = self.facet_rules.get(facet_name, None)
+            if facet_name == 'kind':
+                operator = 'AND'
+            if operator not in ['AND', 'OR']:
+                continue
+
+            # Build faceted query
             query = ''
-            operator = self.facet_rules.get(facet_name)
             for value in facet_values:
                 if query:
                     query += " {} ".format(operator)
                 query += '"{}"'.format(sqs.query.clean(value))
             if query:
-                sqs = sqs.narrow('{}:({})'.format(facet_name, query))
-
+                if operator == 'AND':
+                    sqs = sqs.narrow('{}:({})'.format(facet_name, query))
+                elif operator == 'OR':
+                    # Exclude {facet_name} when calculating facets and counts
+                    # Note that we are using as key the same facet_name, not a new alias
+                    # See https://wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
+                    sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
+                    del sqs.query.facets[facet_name]
+                    sqs = sqs.facet(
+                        '{{!ex={0} key={0}}}{0}'.format(facet_name),
+                        mincount=FACET_MIN_COUNT,
+                        limit=FACET_LIMIT,
+                        sort=FACET_SORT,
+                    )
         return sqs
 
 
