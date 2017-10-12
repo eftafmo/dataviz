@@ -3,6 +3,10 @@ from haystack.forms import FacetedSearchForm
 import logging
 logger = logging.getLogger()
 
+from dv.views.facets_rules import (
+    FACET_MIN_COUNT, FACET_LIMIT, FACET_SORT,
+)
+
 
 class EeaFacetedSearchForm(FacetedSearchForm):
 
@@ -49,7 +53,9 @@ class EeaFacetedSearchForm(FacetedSearchForm):
                     del sqs.query.facets[facet_name]
                     sqs = sqs.facet(
                         '{{!ex={0} key={0}}}{0}'.format(facet_name),
-                        mincount=1, limit=10000, sort='index'
+                        mincount=FACET_MIN_COUNT,
+                        limit=FACET_LIMIT,
+                        sort=FACET_SORT,
                     )
         return sqs
 
