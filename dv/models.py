@@ -355,7 +355,7 @@ class _FussyOutcomeCode(object):
 class Outcome(_FussyOutcomeCode, _MainModel):
     IMPORT_SOURCES = [
         {
-            'src': 'ProgrammeOutcomes',
+            'src': 'ProgrammeOutcome',
             'map': {
                 'programme_area': 'PACode',
                 'code': 'OutcomeCode',
@@ -379,7 +379,7 @@ class Outcome(_FussyOutcomeCode, _MainModel):
 class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
     IMPORT_SOURCES = [
         {
-            'src': 'ProgrammeOutcomes',
+            'src': 'ProgrammeOutcome',
             'map': {
                 'programme': 'ProgrammeCode',
                 'outcome': 'OutcomeCode',

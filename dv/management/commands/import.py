@@ -56,8 +56,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('directory',
-                            help="a directory containing spreadsheet files. xlsx and "
-                                 "xls is are supported")
+                            help="a directory containing spreadsheet files. xlsx is supported")
 
     def handle(self, *args, **options):
         directory_path = options['directory']
@@ -83,14 +82,16 @@ class Command(BaseCommand):
                 file_path = os.path.join(cached_directory, file)
                 with open(file_path, 'rb') as cached:
                     book = pickle.load(cached)
-                    sheets[file.split('.')[0]] = book['Sheet1']
+                    name = file.split('.')[0]
+                    sheets[name] = book[name]
         else:
             os.makedirs(cached_directory)
             for file in files:
                 file_path = os.path.join(directory_path, file)
                 cached_file_path = os.path.join(cached_directory, file)
                 book = pyexcel.get_book(file_name=file_path)
-                sheets[file.split('.')[0]] = book['Sheet1']
+                name = file.split('.')[0]
+                sheets[name] = book[name]
                 with open(cached_file_path, 'wb') as cached:
                     pickle.dump(book, cached)
 
