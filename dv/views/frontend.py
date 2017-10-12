@@ -68,7 +68,7 @@ logger = logging.getLogger()
 
 class FacetedSearchView(BaseFacetedSearchView):
     form_class = EeaFacetedSearchForm
-    facet_rules = BASE_FACETS
+    facet_rules = OrderedDict(BASE_FACETS)
     facet_kind = None
     order_field = None
     template_name = 'search/main.html'
@@ -175,16 +175,6 @@ class FacetedSearchView(BaseFacetedSearchView):
         'role_ss': ORG_ROLE_SORT,
     }
 
-    def replace_or_facets_counts(self, facet_fields):
-        or_facets = [
-            facet
-            for facet in self.facet_fields
-            if self.facet_rules[facet] == 'OR']
-        for facet in or_facets:
-            if 'all_{}'.format(facet) in facet_fields:
-                facet_values = facet_fields.pop('all_{}'.format(facet))
-                facet_fields[facet] = facet_values
-
     def reorder_facets(self, facets):
         for facet, order in self.REORDER_FACETS.items():
             if facet in facets:
@@ -254,8 +244,6 @@ class FacetedSearchView(BaseFacetedSearchView):
         ctx['facet_rules'] = self.facet_rules
 
         facet_fields = self.queryset.facet_counts()['fields']
-        # Replace facet counts for OR facets, refs #461
-        self.replace_or_facets_counts(facet_fields)
         # Custom sorting of some facets, refs #326
         self.reorder_facets(facet_fields)
         # Custom filtering of PS/PA facets, refs #329

@@ -42,10 +42,11 @@ class EeaFacetedSearchForm(FacetedSearchForm):
                 if operator == 'AND':
                     sqs = sqs.narrow('{}:({})'.format(facet_name, query))
                 elif operator == 'OR':
-                    # Create all_{facet_name} facets, by excluding the {facet_name}
-                    # from query
+                    # Exclude {facet_name} when calculating facets and counts
+                    # Note that we are using as key the same facet_name, not a new alias
+                    # See https://wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
                     sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
-                    sqs = sqs.facet('{{!ex={0} key=all_{0}}}{0}'.format(facet_name))
+                    sqs = sqs.facet('{{!ex={0} key={0}}}{0}'.format(facet_name))
         return sqs
 
 
