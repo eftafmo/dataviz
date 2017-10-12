@@ -153,8 +153,6 @@ class FacetedSearchView(BaseFacetedSearchView):
             'Project Partner': 6,
         }
 
-        # Donor states first (incl. France as International), then beneficiary states
-
         REORDER_FACETS = {
             'programme_status': PRG_STATUS_SORT,
             'project_status': PRJ_STATUS_SORT,
@@ -168,6 +166,8 @@ class FacetedSearchView(BaseFacetedSearchView):
         cls.AREAS_FMS = AREAS_FMS
         cls.AREAS_SECTORS = AREAS_SECTORS
         cls.ORG_ROLE_SORT = ORG_ROLE_SORT
+
+    # Donor states first (incl. France as International), then beneficiary states
 
     COUNTRY_SORT_BOOST = {
         'Iceland': 0,
