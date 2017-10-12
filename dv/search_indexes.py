@@ -299,11 +299,15 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return ' '.join(self.prepare_programme_name(obj))
 
     def prepare_project_name(self, obj):
-        return list(obj.roles.filter(
+        projects = obj.roles.filter(
             is_programme=False, project__isnull=False
-        ).values_list(
-            'project__name', flat=True
-        ).distinct())
+        ).values(
+            'project__name', 'project__code'
+        ).distinct()
+        return [
+            '{}: {}'.format(prj['project__code'], prj['project__name'])
+            for prj in projects
+        ]
 
     def prepare_project_name_auto(self, obj):
         return ' '.join(self.prepare_project_name(obj))
