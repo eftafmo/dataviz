@@ -216,8 +216,11 @@ def projects(request):
         project_count=Count('code')
     )
     project_nuts = defaultdict(lambda: defaultdict(dict))
+    project_count = defaultdict(int)
     for item in project_nuts_raw:
-        key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id'] + item['programme_id']
+        key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id']
+        project_count[key] += item['project_count']
+        key = key + item['programme_id']
         nuts = project_nuts[key][item['nuts']]
         if not nuts:
             nuts = project_nuts[key][item['nuts']] = {
@@ -231,28 +234,6 @@ def projects(request):
             if item['is_positive_fx']:
                 # Only count positive effects for projects which have ended
                 nuts['positive'] += item['project_count']
-
-    project_counts_raw = Project.objects.values(
-        'financial_mechanism_id',
-        'programme_area_id',
-        'state_id',
-        'has_ended',
-        'is_positive_fx'
-    ).annotate(
-        project_count=Count('code')
-    )
-
-    project_count, project_count_ended, project_count_positive = (
-        defaultdict(int), defaultdict(int), defaultdict(int)
-    )
-    for item in project_counts_raw:
-        key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id']
-        project_count[key] += item['project_count']
-        if item['has_ended']:
-            project_count_ended[key] += item['project_count']
-            if item['is_positive_fx']:
-                # Only count positive effects for projects which have ended
-                project_count_positive[key] += item['project_count']
 
     news_raw = (
         News.objects.all()
@@ -289,8 +270,6 @@ def projects(request):
             'is_ta': not a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
             'project_count': project_count.get(key, 0),
-            'project_count_ended': project_count_ended.get(key, 0),
-            'project_count_positive': project_count_positive.get(key, 0),
             'news': news.get(key, []),
             'programmes': {
                 p['programme__code']: {
