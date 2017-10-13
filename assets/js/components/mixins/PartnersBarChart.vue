@@ -2,23 +2,7 @@
 <script>
 import * as d3 from 'd3';
 
-import Legend from '../includes/Legend';
-
-
-const CustomLegend = Legend.extend({
-  props: {
-    what: {
-      type: String,
-      default: "organisations",
-    },
-  },
-})
-
-
 export default {
-  components: {
-    "chart-legend": CustomLegend,
-  },
 
   created() {
     for (const k in this.columns) {
