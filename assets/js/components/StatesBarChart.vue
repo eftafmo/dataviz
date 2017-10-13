@@ -365,17 +365,52 @@ export default Chart.extend({
         }, {})
     },
 
+    /**
+     * returns projects/programmes for donors/beneficiaries
+     * if a donor or beneficiary is selected (filter is applied)
+     * it will show the projects/programmes for that state
+     */
     legend_items() {
       // just the totals merged into the types
       const out = {}
+
       for (const t in this.types) {
-        out[t] = Object.assign({
-          value: this.totals[t],
-        }, this.types[t])
+        if(this.filters[this.state_type]) {
+          out[t] = Object.assign({
+            value: this.filter_values[t],
+          }, this.types[t])
+        } else {
+          out[t] = Object.assign({
+            value: this.totals[t],
+          }, this.types[t])
+        }
       }
+
       // return an array though
       return d3.values(out)
     },
+
+    /**
+     * finds the selected state (beneficiary or donor) returns its programmes/projects
+     * @return {Object} projects
+     * @return {number} projects.programmes
+     * @return {number} projects.projects
+     */
+    filter_values(){
+      const selectedState = this.data.filter(item => item.id == this.filters[this.state_type]);
+
+      return selectedState.reduce(
+        (totals, item) => {
+          for (const type of item.data) {
+            const id = type.id,
+                  value = type.value;
+
+            totals[id] = value;
+          }
+
+          return totals;
+        }, {});
+    }
   },
 
   methods: {
