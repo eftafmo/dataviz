@@ -224,8 +224,6 @@ class Programme(_MainModel):
                 'co_financing': 'ProgrammeCoFinancing',
                 'status': 'ProgrammeStatus',
                 'url': 'UrlProgrammePage',
-                # TODO: leftovers
-                #IsDirectlyContracted
                 'is_tap': 'IsTAProgramme'
             }
         },
@@ -361,9 +359,6 @@ class Outcome(_FussyOutcomeCode, _MainModel):
                 'code': 'OutcomeCode',
                 'name': 'Outcome',
                 'fixed_budget_line': 'IsFixedBudgetline',
-                # TODO: leftovers
-                #'IsProgrammeArea',
-                #'IsForReportingOnly'
             }
         },
     ]
@@ -445,14 +440,6 @@ class Project(_MainModel):
                 'is_continued_coop': 'ResultContinuedCooperation',
                 'is_published': 'IsPublished',
                 'summary': 'PlannedSummary',
-
-                # TODO: leftovers
-                #'Predefined',
-                #'ActualSummary',
-                #'IsSmallGrantScheme',
-                #'IsPredefined',
-                #'IsBestPracticeProject',
-                #'IsMobility',
             }
         },
     ]
