@@ -285,6 +285,10 @@ export default Chart.extend({
       return txtwidth * 1.1 + this.flagBoundingWidth;
     },
 
+    types() {
+      throw new Error("Not implemented");
+    },
+
     x() {
       return d3.scaleLinear()
                .range([0, this.width - this.legendWidth - this.barPadding])
@@ -352,12 +356,14 @@ export default Chart.extend({
 
     totals() {
       // like above, but grouped by type
+      const state = this.filters[this.state_type]
       return this.data.reduce(
         (totals, item) => {
+          // when filtering by state, ignore other states
+          if (state && item.id != state) return totals
           for (const type of item.data) {
             const id = type.id,
                   value = type.value;
-
             let total = totals[id] || 0
             totals[id] = total + value
           }
@@ -367,12 +373,14 @@ export default Chart.extend({
 
     legend_items() {
       // just the totals merged into the types
+      if (!this.isReady) return []
       const out = {}
       for (const t in this.types) {
         out[t] = Object.assign({
           value: this.totals[t],
         }, this.types[t])
       }
+
       // return an array though
       return d3.values(out)
     },

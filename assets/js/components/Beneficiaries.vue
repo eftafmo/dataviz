@@ -58,17 +58,18 @@ export default StatesBarChart.extend({
     },
 
     totals() {
+      const state = this.filters[this.state_type]
       // we want to preserve the total even for disabled fms
       return this.data.reduce(
         (totals, item) => {
+          // when filtering by state, ignore other states
+          if (state && item.id != state) return totals
           for (const fmid in this.FMS) {
             const fm = this.FMS[fmid],
                   value = this.totalvaluefunc(item[fm.name]);
-
             let total = totals[fmid] || 0
             totals[fmid] = total + value
           }
-
           return totals
         }, {})
     },
