@@ -508,8 +508,9 @@ export default Chart.extend({
     },
 
     clickfunc(d, i, group) {
-      const self = d3.select(group[i])
+      if(d.id.length != 2 || this.COUNTRIES[d.id].type !== "beneficiary") return;
 
+      const self = d3.select(group[i])
       if (self.classed("zero")) return
 
       if (d.id.length == 2) this.toggleBeneficiary(d)
@@ -519,8 +520,6 @@ export default Chart.extend({
 
     registerEvents(selection) {
       selection
-        // only beneficiaries have events
-        .filter(d => d.id.length != 2 || this.COUNTRIES[d.id].type === "beneficiary")
         .on("click", this.clickfunc)
         .on("mouseenter", this.mouseenterfunc)
         .on("mouseleave", this.mouseleavefunc)

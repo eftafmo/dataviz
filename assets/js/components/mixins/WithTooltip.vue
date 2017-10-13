@@ -71,6 +71,9 @@
     margin-left: .5rem;
     margin-right: .5rem;
     border-bottom: 1px solid #eee;
+    &.donor-tooltip {
+      border-bottom: none;
+    }
     svg {
       max-width: 30px;
       box-shadow: 0px 0px 2px #aaa;

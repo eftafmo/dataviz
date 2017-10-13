@@ -239,11 +239,14 @@ export default BaseMap.extend({
     tooltipTemplate(d) {
       const level = this.getRegionLevel(d.id)
       const allocation = d.allocation || 0,
-            num_projects = this.getprojectcount(d)
+            num_projects = this.getprojectcount(d),
+            country_is_donor = d.id.length === 2 && this.COUNTRIES[d.id].type === "donor",
+            state_type = country_is_donor ? 'donor-tooltip' : '';
 
       let details = `
         <li>${ this.number(num_projects) } ` + this.singularize(`projects`, num_projects) + `</li>
       `;
+
       if (num_projects) {
         details += `
           <li>${ this.currency(allocation) }</li>
@@ -254,33 +257,37 @@ export default BaseMap.extend({
       }
 
       if (level === 0) {
+        const country_details = country_is_donor ? '' : `
+                <ul>
+                  ${ details }
+                </ul>
+                <span class="action">Click to filter by beneficiary state</span>
+              `;
+
         return `
-          <div class="title-container">
+          <div class="title-container ${state_type}">
             <svg>
               <use xlink:href="#${this.get_flag_name(d.id)}" />
             </svg>
             <span class="name">${ this.COUNTRIES[d.id].name }</span>
-          </div>
-          <ul>
-            ${ details }
-          </ul>
-          <span class="action">Click to filter by beneficiary state</span>
-        `;
+          </div>` + country_details;
       } else {
         const action = level == 3 ? "Click to filter news by region"
-                                  : `Click to display NUTS${level} regions`
+                                  : `Click to display NUTS${level} regions`,
+              country_details = country_is_donor ? '' : `
+                <ul>
+                  ${ details }
+                </ul>
+                <span class="action">${ action }</span>
+              `;
+
         return `
-          <div class="title-container">
+          <div class="title-container ${state_type}">
             <svg>
               <use xlink:href="#${this.get_flag_name(d.id)}" />
             </svg>
             <span class="name">${ this.get_nuts_label(d.id) } (${d.id})</span>
-          </div>
-          <ul>
-            ${ details }
-          </ul>
-          <span class="action">${ action }</span>
-        `;
+          </div>` + country_details;
       }
     },
 

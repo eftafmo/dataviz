@@ -23,7 +23,10 @@ export default BaseMap.extend({
 
   methods: {
     tooltipTemplate(d) {
-      const allocation = d.allocation || 0;
+      const allocation = d.allocation || 0,
+            country_is_donor = d.id.length === 2 && this.COUNTRIES[d.id].type === "donor",
+            state_type = country_is_donor ? 'donor-tooltip' : '';
+
       let region_name;
       let extra = "";
       if (d.id.length == 2) {
@@ -36,22 +39,23 @@ export default BaseMap.extend({
       }
 
       // get a set's amount
-      const get_amount = s => (s === undefined) ? 0 : s.size()
+      const get_amount = s => (s === undefined) ? 0 : s.size(),
+            country_details = country_is_donor ? '' : `
+              <ul>
+                ${ extra }
+                <li>${ get_amount(d.sectors) } `+  this.singularize(`sectors`, get_amount(d.sectors)) + `</li>
+                <li>${ get_amount(d.areas) } `+  this.singularize(`programme areas`, get_amount(d.areas)) + `</li>
+                <li>${ get_amount(d.programmes) }  `+  this.singularize(`programmes`, get_amount(d.programmes) ) + `</li>
+              </ul>
+            `;
 
       return `
-          <div class="title-container">
-            <svg>
-              <use xlink:href="#${this.get_flag_name(d.id)}" />
-            </svg>
-            <span class="name">${ region_name }</span>
-          </div>
-          <ul>
-            ${ extra }
-            <li>${ get_amount(d.sectors) } `+  this.singularize(`sectors`, get_amount(d.sectors)) + `</li>
-            <li>${ get_amount(d.areas) } `+  this.singularize(`programme areas`, get_amount(d.areas)) + `</li>
-            <li>${ get_amount(d.programmes) }  `+  this.singularize(`programmes`, get_amount(d.programmes) ) + `</li>
-          </ul>
-      `;
+        <div class="title-container ${state_type}">
+          <svg>
+            <use xlink:href="#${this.get_flag_name(d.id)}" />
+          </svg>
+          <span class="name">${ region_name }</span>
+        </div>` + country_details;
     },
 
     _domouse(over, d, i, group) {
@@ -60,7 +64,8 @@ export default BaseMap.extend({
 
       if (this.beneficiary_colour_hovered &&
           d.id.length == 2 &&
-          d.allocation != 0
+          d.allocation != 0 &&
+          this.COUNTRIES[d.id].type === "beneficiary"
       )
         self
           .transition(this.getTransition(this.short_duration))
