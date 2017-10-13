@@ -58,42 +58,21 @@ export default StatesBarChart.extend({
     },
 
     totals() {
+      const state = this.filters[this.state_type]
       // we want to preserve the total even for disabled fms
       return this.data.reduce(
         (totals, item) => {
+          // when filtering by state, ignore other states
+          if (state && item.id != state) return totals
           for (const fmid in this.FMS) {
             const fm = this.FMS[fmid],
                   value = this.totalvaluefunc(item[fm.name]);
-
             let total = totals[fmid] || 0
             totals[fmid] = total + value
           }
-
           return totals
         }, {})
     },
-
-    /**
-     * finds the selected state (beneficiary or donor) returns its projects
-     * @return {Object} projects
-     * @return {number} projects.eea-grants
-     * @return {number} projects.norway-grants
-     */
-    filter_values(){
-      const selectedState = this.data.filter(item => item.id == this.filters[this.state_type]);
-
-      return selectedState.reduce(
-        (projects, item) => {
-          for (const fmid in this.FMS) {
-            const fm = this.FMS[fmid],
-                  value = item[fm.name] ? item[fm.name].project_count : 0;
-
-            projects[fmid] = value;
-          }
-
-          return projects;
-      }, {});
-    }
   },
 
   methods: {
