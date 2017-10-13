@@ -79,6 +79,8 @@ class FacetedSearchView(BaseFacetedSearchView):
     def __init__(self):
         super().__init__()
         self.facet_fields = self.facet_rules.keys()
+        if not self.REORDER_FACETS:
+            FacetedSearchView.init_reordering_rules()
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -95,54 +97,78 @@ class FacetedSearchView(BaseFacetedSearchView):
     def get_paginate_by(self, queryset):
         return self.request.GET.get('paginate_by', self.paginate_by)
 
-    PRG_STATUS_SORT = {
-        'Implementation': 0,
-        'Closed': 1,
-        'Approved': 2,
-        'Withdrawn': 3,
-        'Returned to po': 4,
-    }
-    PRJ_STATUS_SORT = {
-        'In Progress': 0,
-        'Completed': 1,
-        'Non Completed': 2,
-        'Terminated': 3,
-    }
-    AREAS_LIST = ProgrammeArea.objects.order_by(
-        '-order'
-    ).values(
-        'name',
-        'priority_sector__name',
-        'financial_mechanism__grant_name',
-        'order',
-    )
-    # sort by -order because there are some duplicated names and we need the first occurrence only
-    AREAS_SORT = dict([(x['name'], x['order']) for x in AREAS_LIST])
-    SECTORS_SORT = dict([(
-        x['priority_sector__name'],
-        x['order']
-    ) for x in AREAS_LIST])
+    REORDER_FACETS = {}
+    SECTORS_FMS = {}
+    AREAS_FMS = {}
+    AREAS_SECTORS = {}
+    ORG_ROLE_SORT = {}
 
-    # dicts for filter_facets
-    AREAS_SECTORS = defaultdict(set)
-    AREAS_FMS = defaultdict(set)
-    SECTORS_FMS = defaultdict(set)
-    for x in AREAS_LIST:
-        AREAS_SECTORS[x['name']].add(x['priority_sector__name'])
-        AREAS_FMS[x['name']].add(x['financial_mechanism__grant_name'])
-        SECTORS_FMS[x['priority_sector__name']].add(x['financial_mechanism__grant_name'])
+    @classmethod
+    def init_reordering_rules(cls):
+        PRG_STATUS_SORT = {
+            'Implementation': 0,
+            'Closed': 1,
+            'Approved': 2,
+            'Withdrawn': 3,
+            'Returned to po': 4,
+        }
+        PRJ_STATUS_SORT = {
+            'In Progress': 0,
+            'Completed': 1,
+            'Non Completed': 2,
+            'Terminated': 3,
+        }
+        AREAS_LIST = ProgrammeArea.objects.order_by(
+            '-order'
+        ).values(
+            'name',
+            'priority_sector__name',
+            'financial_mechanism__grant_name',
+            'order',
+        )
+        # sort by -order because there are some duplicated names and we need the first occurrence only
+        AREAS_SORT = dict([(x['name'], x['order']) for x in AREAS_LIST])
+        SECTORS_SORT = dict([(
+            x['priority_sector__name'],
+            x['order']
+        ) for x in AREAS_LIST])
 
-    ORG_ROLE_SORT = {
-        'National Focal Point': 0,
-        'Programme Operator': 1,
-        'Donor Programme Partner': 2,
-        'Project Promoter': 3,
-        'Donor Project Partner': 4,
-        'Programme Partner': 5,
-        'Project Partner': 6,
-    }
+        # dicts for filter_facets
+        AREAS_SECTORS = defaultdict(set)
+        AREAS_FMS = defaultdict(set)
+        SECTORS_FMS = defaultdict(set)
+        for x in AREAS_LIST:
+            AREAS_SECTORS[x['name']].add(x['priority_sector__name'])
+            AREAS_FMS[x['name']].add(x['financial_mechanism__grant_name'])
+            SECTORS_FMS[x['priority_sector__name']].add(
+                x['financial_mechanism__grant_name'])
+
+        ORG_ROLE_SORT = {
+            'National Focal Point': 0,
+            'Programme Operator': 1,
+            'Donor Programme Partner': 2,
+            'Project Promoter': 3,
+            'Donor Project Partner': 4,
+            'Programme Partner': 5,
+            'Project Partner': 6,
+        }
+
+        REORDER_FACETS = {
+            'programme_status': PRG_STATUS_SORT,
+            'project_status': PRJ_STATUS_SORT,
+            'programme_area_ss': AREAS_SORT,
+            'priority_sector_ss': SECTORS_SORT,
+            'role_ss': ORG_ROLE_SORT,
+        }
+
+        cls.REORDER_FACETS = REORDER_FACETS
+        cls.SECTORS_FMS = SECTORS_FMS
+        cls.AREAS_FMS = AREAS_FMS
+        cls.AREAS_SECTORS = AREAS_SECTORS
+        cls.ORG_ROLE_SORT = ORG_ROLE_SORT
 
     # Donor states first (incl. France as International), then beneficiary states
+
     COUNTRY_SORT_BOOST = {
         'Iceland': 0,
         'Liechtenstein': 0,
@@ -166,14 +192,6 @@ class FacetedSearchView(BaseFacetedSearchView):
         'Slovenia': 2,
         'Spain': 2,
         'Croatia': 2,
-    }
-
-    REORDER_FACETS = {
-        'programme_status': PRG_STATUS_SORT,
-        'project_status': PRJ_STATUS_SORT,
-        'programme_area_ss': AREAS_SORT,
-        'priority_sector_ss': SECTORS_SORT,
-        'role_ss': ORG_ROLE_SORT,
     }
 
     def reorder_facets(self, facets):
