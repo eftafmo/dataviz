@@ -73,5 +73,8 @@
   {% render_bundle 'site' 'js' %}
 {% block finally %}
 {% endblock %}
+  {% if settings.GOOGLE_ANALYTICS_PROPERTY_ID %}
+    {% include "ga.html" %}
+  {% endif %}
 </body>
 </html>
