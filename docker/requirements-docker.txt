@@ -3,3 +3,4 @@
 #uwsgi
 gunicorn
 django-environ
+raven

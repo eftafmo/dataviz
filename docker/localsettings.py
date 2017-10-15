@@ -2,12 +2,19 @@ import os.path
 import environ
 
 try:
-    BASE_DIR
+    BASE_DIR, INSTALLED_APPS
 except NameError:
-    from .settings import BASE_DIR
+    from .settings import BASE_DIR, INSTALLED_APPS
 
 root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
+
+INSTALLED_APPS += (
+    'raven.contrib.django.raven_compat',
+)
+RAVEN_CONFIG = {
+    'dsn': env('BACKEND_SENTRY_DSN')
+}
 
 DEBUG = False
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
