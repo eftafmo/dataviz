@@ -508,7 +508,7 @@ export default Chart.extend({
     },
 
     clickfunc(d, i, group) {
-      if(d.id.length != 2 || this.COUNTRIES[d.id].type !== "beneficiary") return;
+      if(d.id.length === 2 && this.COUNTRIES[d.id].type !== "beneficiary") return;
 
       const self = d3.select(group[i])
       if (self.classed("zero")) return
