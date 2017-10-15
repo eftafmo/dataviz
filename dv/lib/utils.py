@@ -12,7 +12,8 @@ EEA_DONOR_STATES = {
     'Norway': 'NO',
 }
 
-DONOR_STATES = dict(**EEA_DONOR_STATES, International='Intl')
+DONOR_STATES = {'International': 'Intl'}
+DONOR_STATES.update(EEA_DONOR_STATES)
 
 DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
 
