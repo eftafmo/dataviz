@@ -8,7 +8,6 @@ from django_countries import countries
 from dv.models import (
     Organisation,
     Programme,
-    ProgrammeOutcome,
     Project,
     News)
 
@@ -49,14 +48,11 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return (
             self.get_model().objects
             .filter(is_tap=False)
-            # prefetch related M2M so that property lookup is an instant query,
-            # since it queries by pk
             .prefetch_related(
+                'outcomes',
+                'outcomes__state',
                 'programme_areas',
                 'programme_areas__priority_sector',
-                'programme_areas__financial_mechanism',
-                'outcomes',
-                'outcomes__state'
             )
         )
 
@@ -65,33 +61,51 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_state_name(self, obj):
         # Get this from ProgrammeOutcome, because of IN22
-        return list(obj.outcomes.values_list(
-            'state__name', flat=True).distinct())
+        return list(set([outcome['state_name'] for outcome in self.programme_outcomes]))
 
     def prepare_programme_name(self, obj):
         return ['{}: {}'.format(obj.code, obj.name.strip())]
 
     def prepare_programme_area_ss(self, obj):
-        return list(obj.programme_areas.values_list(
-            'name', flat=True).distinct())
+        return list(set([area['name'] for area in self.programme_areas]))
 
     def prepare_priority_sector_ss(self, obj):
-        return list(obj.programme_areas.values_list(
-            'priority_sector__name', flat=True).distinct())
+        return list(set([area['sector'] for area in self.programme_areas]))
 
     def prepare_financial_mechanism_ss(self, obj):
-        return list(obj.programme_areas.values_list(
-            'financial_mechanism__grant_name', flat=True).distinct())
+        return list(set([area['mechanism'] for area in self.programme_areas]))
 
     def prepare_outcome_ss(self, obj):
-        outcomes = obj.outcomes.exclude(outcome__fixed_budget_line=True).values_list(
-            'outcome__name', flat=True).distinct()
+        outcomes = (
+            name
+            for outcome in self.programme_outcomes.exclude(
+                outcome__fixed_budget_line=True)
+            for name in outcome['outcome_names']
+        )
         return [o.strip() for o in outcomes]
 
     def prepare_grant(self, obj):
         return obj.allocation_eea + obj.allocation_norway
 
     def prepare(self, obj):
+        self.programme_outcomes = (
+            obj.outcomes
+            .annotate(
+                outcome_names=F('outcome__name'),
+                state_name=F('state__name'),
+            )
+            .values('outcome_names', 'state_name')
+        )
+
+        self.programme_areas = (
+            obj.programme_areas
+            .annotate(
+                mechanism=F('financial_mechanism__grant_name'),
+                sector=F('priority_sector__name'),
+            )
+            .values('mechanism', 'name', 'sector')
+        )
+
         self.prepared_data = super().prepare(obj)
         self.prepared_data['outcome_ss_auto'] = (
             ' '.join(self.prepared_data['outcome_ss'])
@@ -133,16 +147,14 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return (
             self.get_model().objects
             .select_related(
-                'state',
+                'financial_mechanism',
+                'outcome',
                 'programme',
                 'programme_area',
                 'programme_area__priority_sector',
-                'financial_mechanism',
-                'outcome'
+                'state',
             )
-           .prefetch_related(
-                'themes'
-            )
+           .prefetch_related('themes')
         )
 
     def get_model(self):
@@ -223,7 +235,6 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     domestic_name = indexes.CharField(model_attr='domestic_name', indexed=False, null=True)
 
     # Highest number = max priority for role. Others default to priority 0.
-
     ROLE_PRIORITIES = {
         'National Focal Point': 7,  # NFP
         'Programme Operator': 6,  # PO
@@ -309,37 +320,39 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             obj.roles
             .filter(is_programme=False, project__isnull=False)
             .annotate(
-                name=F('project__name'),
                 code=F('project__code'),
+                name=F('project__name'),
+                state=F('project__state__name'),
                 status=F('project__status'),
-                state=F('project__state__name')
             )
-            .values('name', 'code', 'status', 'state')
+            .values('code', 'name', 'state', 'status')
             .distinct()
         )
 
         self.programmes = list()
+        # organisations can be involved directly in a programme
         self.programmes += list(
             obj.roles
             .filter(is_programme=True, programme__isnull=False)
             .annotate(
-                name=F('programme__name'),
                 code=F('programme__code'),
+                name=F('programme__name'),
+                state=F('programme__outcomes__state__name'),
                 status=F('programme__status'),
-                state=F('programme__outcomes__state__name')
             )
-            .values('name', 'code', 'status', 'state')
+            .values('code', 'name', 'state', 'status')
             .distinct()
         )
+        # or in a project related to a programme
         self.programmes += list(
             obj.roles.filter(is_programme=False, project__isnull=False)
             .annotate(
-                name=F('project__programme__name'),
                 code=F('project__programme__code'),
-                status=F('project__programme__status'),
+                name=F('project__programme__name'),
                 state=F('project__programme__state__name'),
+                status=F('project__programme__status'),
             )
-            .values('name', 'code', 'status', 'state')
+            .values('code', 'name', 'state', 'status')
             .distinct()
         )
         self.programmes = [
@@ -347,30 +360,34 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         ]
 
         self.programme_areas = list()
+        # organisations can be involved in a programme area by participating in a
+        # programme in that area
         self.programme_areas += list(
             obj.roles
             .filter(is_programme=True, programme__isnull=False,
                     programme__programme_areas__is_not_ta=True)
             .annotate(
                 code=F('programme__programme_areas__code'),
-                sector=F('programme__programme_areas__priority_sector__name'),
+                mechanism=F(
+                    'programme__programme_areas__financial_mechanism__grant_name'),
                 name=F('programme__programme_areas__name'),
-                mechanism=F('programme__programme_areas__financial_mechanism__grant_name')
+                sector=F('programme__programme_areas__priority_sector__name'),
             )
-            .values('code', 'name', 'sector', 'mechanism')
+            .values('code', 'mechanism', 'name', 'sector')
             .distinct()
         )
+        # or by participating in a project in that area
         self.programme_areas += list(
             obj.roles
             .filter(is_programme=False, project__isnull=False,
                     project__programme_area__is_not_ta=True)
             .annotate(
                 code=F('project__programme_area__code'),
+                mechanism=F('project__programme_area__financial_mechanism__grant_name'),
                 name=F('project__programme_area__name'),
                 sector=F('project__programme_area__priority_sector__name'),
-                mechanism=F('project__programme_area__financial_mechanism__grant_name'),
             )
-            .values('code', 'name', 'sector', 'mechanism')
+            .values('code', 'mechanism', 'name', 'sector')
             .distinct()
         )
         self.programme_areas = [
@@ -443,17 +460,14 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             self.get_model().objects
             .select_related(
                 'project',
-                'project__state',
                 'project__financial_mechanism',
+                'project__outcome',
+                'project__programme',
                 'project__programme_area',
                 'project__programme_area__priority_sector',
-                'project__programme',
-                'project__outcome',
+                'project__state',
             )
-            .prefetch_related(
-                'programmes',
-                'project__themes',
-            )
+            .prefetch_related('programmes', 'project__themes')
         )
 
     def prepare_state_name(self, obj):
@@ -512,8 +526,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_project_name(self, obj):
         if self.project:
-            return ['{}: {}'.format(self.project.code,
-                                    self.project.name)]
+            return ['{}: {}'.format(self.project.code, self.project.name)]
         return None
 
     def prepare_programme_status(self, obj):
@@ -565,14 +578,14 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             self.programmes = (
                 obj.programmes
                 .annotate(
-                    outcome_names=F('outcomes__outcome__name'),
-                    sectors=F('programme_areas__priority_sector__name'),
                     areas=F('programme_areas__name'),
                     mechanisms=F('programme_areas__financial_mechanism__grant_name'),
+                    outcome_names=F('outcomes__outcome__name'),
+                    sectors=F('programme_areas__priority_sector__name'),
                     states=F('outcomes__state__name')
                 )
-                .values('outcome_names', 'status', 'code', 'name', 'sectors', 'areas',
-                        'mechanisms', 'states')
+                .values('areas', 'code', 'mechanisms', 'name', 'outcome_names',
+                        'sectors', 'states', 'status')
             )
         self.prepared_data = super().prepare(obj)
         self.prepared_data['geotarget_auto'] = (
