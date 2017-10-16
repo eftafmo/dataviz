@@ -176,18 +176,16 @@
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
 
-import Chart from './Chart';
+import BaseMap from './BaseMap'
 
 import PartnersMixin from './mixins/Partners';
-import MapMixin from './mixins/Map';
 import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
 
 
-export default Chart.extend({
+export default BaseMap.extend({
   mixins: [
     PartnersMixin,
-    MapMixin,
     WithFMsMixin, WithCountriesMixin,
   ],
 

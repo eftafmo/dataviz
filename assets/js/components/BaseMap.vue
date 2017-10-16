@@ -1,3 +1,4 @@
+<script>
 /*
   // ATTENTION: map-base must be used like this:
 
@@ -8,10 +9,12 @@
 
  */
 
-import MapBase from '../includes/MapBase';
+import Chart from './Chart'
+
+import MapBase from './includes/MapBase'
 
 
-export default {
+export default Chart.extend({
   type: "map",
 
   components: {
@@ -58,4 +61,5 @@ export default {
       this.map_rendered = true
     },
   },
-};
+})
+</script>

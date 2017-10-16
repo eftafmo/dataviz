@@ -169,9 +169,8 @@
 import * as d3 from 'd3';
 import {slugify} from 'js/lib/util';
 
-import Chart from './Chart';
+import BaseMap from './BaseMap'
 
-import MapMixin from './mixins/Map';
 import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
@@ -179,11 +178,10 @@ import WithNUTSMixin from './mixins/WithNUTS';
 import WithRegionsMixin from './mixins/WithRegions';
 
 
-export default Chart.extend({
+export default BaseMap.extend({
   type: "allocation",
 
   mixins: [
-    MapMixin,
     WithCountriesMixin, WithFMsMixin,
     WithTooltipMixin,
     WithNUTSMixin,
