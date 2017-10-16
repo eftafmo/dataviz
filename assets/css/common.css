@@ -17,5 +17,27 @@ a:hover {
   clear: both;
   height: 0;
 }
+
+
+
+.btn-link,
+.btn-anchor,
+.no-btn {
+  font: inherit;
+  background: transparent;
+  padding: 0;
+  border: 0;
+}
+
+.btn-link,
+.btn-anchor {
+  color: #3D90F3;
+}
+
+.btn-link:hover,
+.btn-anchor:hover {
+  text-decoration: underline;
+}
+
 * html .clearfix             { zoom: 1; } /* IE6 */
 *:first-child+html .clearfix { zoom: 1; } /* IE7 */
