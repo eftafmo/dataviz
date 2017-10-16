@@ -3,12 +3,14 @@
     <label>{{ label }}</label>
     {% for facet in facets %}
       <label class="clearfix checkbox_label">
+        {% if facet.1 %}
         <input type="checkbox" name="{{ name }}"
                id="{{ name }}_{{ forloop.counter }}" value="{{ facet.0 }}"
                {% if facet.0 in selected_facets %}checked{% endif %}
                class="main-auto-submit" form="main-search-form">
         <label for="{{ name }}_{{ forloop.counter }}"></label>
         <span>{{ facet.0 }} ({{ facet.1 }})</span>
+        {% endif %}
       </label>
     {% endfor %}
   </div>
