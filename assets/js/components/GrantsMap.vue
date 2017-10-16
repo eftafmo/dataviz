@@ -12,14 +12,15 @@
 }
 </style>
 
+
 <script>
 import * as d3 from 'd3';
 import {interpolateYlGn} from 'd3-scale-chromatic';
 
-import BaseMap from './BaseMap';
+import AllocationMap from './AllocationMap'
 
 
-export default BaseMap.extend({
+export default AllocationMap.extend({
   type: "grants",
 
   data() {

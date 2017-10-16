@@ -84,7 +84,7 @@
 <script>
 import * as d3 from 'd3';
 
-import BaseMap from './BaseMap';
+import AllocationMap from './AllocationMap'
 import ProjectsMixin from './mixins/Projects';
 
 
@@ -161,7 +161,7 @@ const RegionDetails = {
 }
 
 
-export default BaseMap.extend({
+export default AllocationMap.extend({
   mixins: [
     ProjectsMixin,
   ],
