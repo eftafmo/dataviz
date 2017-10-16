@@ -88,6 +88,7 @@
   min-height: 37px;
   border-color: transparent;
   padding-left: 1rem;
+  height: 38px;
 }
 
 @media (max-width:768px) {
@@ -114,6 +115,7 @@
 
   .search-top .search-form .input-box, .search-top .search-form button {
     float: left;
+    height: 38px;
   }
 
   .search-top .search-form .input-box {
