@@ -73,7 +73,7 @@
 }
 
 .search-form input[type=checkbox]:checked + label:before {
-  content: "✔";
+  content: "✔\fe0e";
 }
 
 /* checked icon */

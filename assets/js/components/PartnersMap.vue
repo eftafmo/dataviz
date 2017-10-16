@@ -119,7 +119,7 @@
    left: 50%;
    transform: translate(-50%,-50%);
   }
-  input[type=checkbox]:checked + label:before { content: "✔"; } /* checked icon */
+  input[type=checkbox]:checked + label:before { content: "✔\fe0e"; } /* checked icon */
   #programmes {
     + label:before {
       color: rgb(8,153,0);
