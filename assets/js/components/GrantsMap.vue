@@ -1,3 +1,17 @@
+<style lang="less">
+.dataviz .viz.map.allocation.grants {
+  .legend {
+    .square {
+      &.amount {
+        width: 160px;
+        background: #fcf5c4; /* Old browsers */
+        background: linear-gradient(to right, #fcf5c4 0%,#fcf5c4 25%,#278b33 60%,#036121 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      }
+    }
+  }
+}
+</style>
+
 <script>
 import * as d3 from 'd3';
 import {interpolateYlGn} from 'd3-scale-chromatic';

@@ -72,7 +72,7 @@
 .dataviz .viz.map.allocation {
   @beneficiary: #ddd;
 
-  .chart {
+  .chart{
     .transitioning {
       pointer-events: none;
     }
@@ -159,11 +159,6 @@
       display: inline-block;
       margin-right: 1rem;
       position: relative;
-      &.amount {
-        width: 160px;
-        background: #fcf5c4; /* Old browsers */
-        background: linear-gradient(to right, #fcf5c4 0%,#fcf5c4 25%,#278b33 60%,#036121 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-      }
     }
   }
 }
