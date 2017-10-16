@@ -1,10 +1,11 @@
 from functools import reduce
+
+from django.db.models import Q, F
 from haystack import indexes
 from haystack import exceptions
 from django_countries import countries
 
 from dv.models import (
-    Allocation,
     Organisation,
     Programme,
     ProgrammeOutcome,
@@ -15,15 +16,16 @@ STATES = dict(countries)
 
 
 class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
-    # common facets;
-    # some non-DRY code here, but the factor out is not trivial due to common indexes having different model lookup
-    state_name = indexes.FacetMultiValueField(model_attr='state__name')
-    programme_area_ss = indexes.FacetMultiValueField(model_attr='programme_areas__name')
-    priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_areas__priority_sector__name')
+    # common facets
+    # some non-DRY code here, but the factor out is not trivial due to common indexes
+    # having different model lookup
+    state_name = indexes.FacetMultiValueField()
+    programme_area_ss = indexes.FacetMultiValueField()
+    priority_sector_ss = indexes.FacetMultiValueField()
     financial_mechanism_ss = indexes.FacetMultiValueField()
     outcome_ss = indexes.FacetMultiValueField()
     outcome_ss_auto = indexes.EdgeNgramField()
-    programme_name = indexes.FacetMultiValueField(model_attr='name')
+    programme_name = indexes.FacetMultiValueField()
     programme_status = indexes.FacetMultiValueField(model_attr='status')
 
     kind = indexes.FacetCharField()
@@ -44,18 +46,27 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return Programme
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(is_tap=False)
+        return (
+            self.get_model().objects
+            .filter(is_tap=False)
+            # prefetch related M2M so that property lookup is an instant query,
+            # since it queries by pk
+            .prefetch_related(
+                'programme_areas',
+                'programme_areas__priority_sector',
+                'programme_areas__financial_mechanism',
+                'outcomes',
+                'outcomes__state'
+            )
+        )
 
     def prepare_kind(self, obj):
         return 'Programme'
 
     def prepare_state_name(self, obj):
         # Get this from ProgrammeOutcome, because of IN22
-        return list(ProgrammeOutcome.objects.filter(
-            programme__code=obj.code,
-        ).values_list(
-            'state__name', flat=True
-        ).distinct())
+        return list(obj.outcomes.values_list(
+            'state__name', flat=True).distinct())
 
     def prepare_programme_name(self, obj):
         return ['{}: {}'.format(obj.code, obj.name.strip())]
@@ -69,35 +80,35 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
             'priority_sector__name', flat=True).distinct())
 
     def prepare_financial_mechanism_ss(self, obj):
-        return list(obj.programme_areas.values_list('financial_mechanism__grant_name',
-                                                    flat=True).distinct())
+        return list(obj.programme_areas.values_list(
+            'financial_mechanism__grant_name', flat=True).distinct())
 
     def prepare_outcome_ss(self, obj):
-        outcomes = ProgrammeOutcome.objects.filter(
-            programme=obj,
-        ).exclude(
-            outcome__fixed_budget_line=True,
-        ).values_list(
-            'outcome__name', flat=True
-        ).distinct()
+        outcomes = obj.outcomes.exclude(outcome__fixed_budget_line=True).values_list(
+            'outcome__name', flat=True).distinct()
         return [o.strip() for o in outcomes]
-
-    def prepare_outcome_ss_auto(self, obj):
-        return ' '.join(self.prepare_outcome_ss(obj))
 
     def prepare_grant(self, obj):
         return obj.allocation_eea + obj.allocation_norway
 
+    def prepare(self, obj):
+        self.prepared_data = super().prepare(obj)
+        self.prepared_data['outcome_ss_auto'] = (
+            ' '.join(self.prepared_data['outcome_ss'])
+            if self.prepared_data['outcome_ss'] else None
+        )
+        return self.prepared_data
+
 
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
-    # common facets;
-    state_name = indexes.FacetMultiValueField(model_attr='state__name')
-    financial_mechanism_ss = indexes.FacetMultiValueField(model_attr='financial_mechanism__grant_name')
-    programme_area_ss = indexes.FacetMultiValueField(model_attr='programme_area__name')
-    priority_sector_ss = indexes.FacetMultiValueField(model_attr='programme_area__priority_sector__name')
-    programme_name = indexes.FacetMultiValueField(model_attr='programme__name')
-    programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
-    outcome_ss = indexes.FacetMultiValueField(model_attr='outcome__name')
+    # common facets
+    state_name = indexes.FacetMultiValueField()
+    financial_mechanism_ss = indexes.FacetMultiValueField()
+    programme_area_ss = indexes.FacetMultiValueField()
+    priority_sector_ss = indexes.FacetMultiValueField()
+    programme_name = indexes.FacetMultiValueField()
+    programme_status = indexes.FacetMultiValueField()
+    outcome_ss = indexes.FacetMultiValueField()
     outcome_ss_auto = indexes.EdgeNgramField()
 
     kind = indexes.FacetCharField()
@@ -106,7 +117,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     project_status = indexes.FacetMultiValueField(model_attr='status')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
     geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
-    theme_ss = indexes.FacetMultiValueField(model_attr='themes__name')
+    theme_ss = indexes.FacetMultiValueField()
 
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
@@ -117,6 +128,22 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     name = indexes.CharField(model_attr='name', indexed=False)
     code = indexes.FacetCharField(model_attr='code')
     grant = indexes.DecimalField(model_attr='allocation')
+
+    def index_queryset(self, using=None):
+        return (
+            self.get_model().objects
+            .select_related(
+                'state',
+                'programme',
+                'programme_area',
+                'programme_area__priority_sector',
+                'financial_mechanism',
+                'outcome'
+            )
+           .prefetch_related(
+                'themes'
+            )
+        )
 
     def get_model(self):
         return Project
@@ -139,23 +166,30 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_outcome_ss(self, obj):
         return [obj.outcome.name.strip()]
 
-    def prepare_outcome_ss_auto(self, obj):
-        return ' '.join(self.prepare_outcome_ss(obj))
-
     def prepare_geotarget(self, obj):
         if len(obj.nuts) > 2:
             return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
         else:
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
 
-    def prepare_geotarget_auto(self, obj):
-        geotargets = self.prepare_geotarget(obj)
-        return ' '.join(geotargets) if geotargets else None
+    def prepare(self, obj):
+        self.prepared_data = super().prepare(obj)
+        self.prepared_data['outcome_ss_auto'] = (
+            ' '.join(self.prepared_data['outcome_ss'])
+                     if self.prepared_data['outcome_ss'] else None
+            )
+        self.prepared_data['geotarget_auto'] = (
+            ' '.join(self.prepared_data['geotarget'])
+            if self.prepared_data['geotarget'] else None
+        )
+        return self.prepared_data
 
 
 class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
-    # common facets;
-    # this should be *_ss for this model, but we want the same name across indexes for this logical entity
+    # common facets
+    # This should be *_ss for this model, but we want the same name across
+    # indexes for this logical entity
+
     # This will upgrade the previous definitions from CharField to MultiValue
     # make sure you rebuild_index from zero when adding such "upgrade" here
     state_name = indexes.FacetMultiValueField()
@@ -173,17 +207,14 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     kind = indexes.FacetCharField()
 
     # specific facets
-    # haystack handles null apparently
     project_status = indexes.FacetMultiValueField()
     org_type_category = indexes.FacetCharField(model_attr='orgtype__category')
     org_type = indexes.FacetCharField(model_attr='orgtype__name')
     country = indexes.FacetCharField(model_attr='country')
     city = indexes.FacetCharField(model_attr='city')
     city_auto = indexes.EdgeNgramField(model_attr='city')
-    # nuts = indexes.FacetCharField(model_attr='nuts')
-    geotarget = indexes.FacetCharField(model_attr='geotarget', null=True)
-    geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget', null=True)
-    # nuts_auto = indexes.EdgeNgramField(model_attr='nuts')
+    geotarget = indexes.FacetCharField(null=True)
+    geotarget_auto = indexes.EdgeNgramField(null=True)
     role_ss = indexes.FacetMultiValueField()
     role_max_priority_code = indexes.IntegerField()
 
@@ -203,6 +234,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         'Project Promoter': 1,  # PJPT
     }
 
+    def index_queryset(self, using=None):
+        return (
+            self.get_model().objects
+            .select_related('orgtype')
+            .prefetch_related('roles')
+        )
+
     def get_model(self):
         return Organisation
 
@@ -210,111 +248,37 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return 'Organisation'
 
     def prepare_financial_mechanism_ss(self, obj):
-        result = set()
-        result = result.union(obj.roles.filter(
-            is_programme=False, project__isnull=False
-        ).values_list(
-            'project__programme_area__financial_mechanism__grant_name',
-            flat=True,
-        ).distinct())
-        result = result.union(obj.roles.filter(
-            is_programme=True, programme__isnull=False
-        ).values_list(
-            'programme__programme_areas__financial_mechanism__grant_name',
-            flat=True,
-        ).distinct())
-        return list(result)
+        return [area['mechanism'] for area in self.programme_areas]
 
     def prepare_state_name(self, obj):
         result = set()
-        result = result.union(obj.roles.filter(
-            is_programme=False, project__isnull=False
-        ).values_list(
-            'project__state__name', flat=True).distinct())
-
-        result = result.union(obj.roles.filter(
-            is_programme=True, programme__isnull=False
-        ).values_list(
-            'programme__outcomes__state__name', flat=True).distinct())
+        result = result.union([project['state'] for project in self.projects])
+        result = result.union([programme['state'] for programme in self.programmes])
         return list(result)
 
-    # we don't union here because we have two different fields on each Organisation
-    # one telling us the programme statuses related to it and another the project statuses
     def prepare_programme_status(self, obj):
-        return list(obj.roles.filter(
-            is_programme=True, programme__isnull=False
-        ).distinct().values_list(
-            'programme__status', flat=True
-        ))
+        return [programme['status'] for programme in self.programmes]
 
     def prepare_project_status(self, obj):
-        return list(obj.roles.filter(
-            is_programme=False, project__isnull=False
-        ).distinct().values_list(
-            'project__status', flat=True
-        ))
+        return [project['status'] for project in self.projects]
 
     def prepare_programme_area_ss(self, obj):
-        result = set()
-        result = result.union(obj.roles.filter(
-            is_programme=False,
-            project__isnull=False,
-            project__programme_area__is_not_ta=True,
-        ).values_list(
-            'project__programme_area__name', flat=True).distinct())
-        result = result.union(obj.roles.filter(
-            is_programme=True,
-            programme__isnull=False,
-            programme__programme_areas__is_not_ta=True,
-        ).values_list(
-            'programme__programme_areas__name', flat=True).distinct())
-        return list(result)
+        return [area['name'] for area in self.programme_areas]
 
     def prepare_priority_sector_ss(self, obj):
-        result = set()
-        result = result.union(obj.roles.filter(
-            is_programme=False,
-            project__isnull=False,
-            project__programme_area__is_not_ta=True,
-        ).values_list(
-            'project__programme_area__priority_sector__name', flat=True).distinct())
-        result = result.union(obj.roles.filter(
-            is_programme=True,
-            programme__isnull=False,
-            programme__programme_areas__is_not_ta=True,
-        ).values_list(
-            'programme__programme_areas__priority_sector__name', flat=True).distinct())
-        return list(result)
+        return [area['sector'] for area in self.programme_areas]
 
     def prepare_programme_name(self, obj):
-        programmes = obj.roles.filter(
-            programme__isnull=False,
-            programme__is_tap=0,
-        ).values(
-            'programme__code',
-            'programme__name',
-        ).distinct()
-        result = []
-        for prg in programmes:
-            result.append('{}: {}'.format(prg['programme__code'], prg['programme__name'].strip()))
-        return result
-
-    def prepare_programme_name_auto(self, obj):
-        return ' '.join(self.prepare_programme_name(obj))
-
-    def prepare_project_name(self, obj):
-        projects = obj.roles.filter(
-            is_programme=False, project__isnull=False
-        ).values(
-            'project__name', 'project__code'
-        ).distinct()
         return [
-            '{}: {}'.format(prj['project__code'], prj['project__name'])
-            for prj in projects
+            '{}: {}'.format(programme['code'], programme['name'].strip())
+            for programme in self.programmes
         ]
 
-    def prepare_project_name_auto(self, obj):
-        return ' '.join(self.prepare_project_name(obj))
+    def prepare_project_name(self, obj):
+        return [
+            '{}: {}'.format(project['code'], project['name'])
+            for project in self.projects
+        ]
 
     def prepare_role_ss(self, obj):
         # skip Donor States
@@ -340,12 +304,94 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         else:
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
 
-    def prepare_geotarget_auto(self, obj):
-        geotargets = self.prepare_geotarget(obj)
-        return ' '.join(geotargets) if geotargets else None
-
     def prepare(self, obj):
+        self.projects = (
+            obj.roles
+            .filter(is_programme=False, project__isnull=False)
+            .annotate(
+                name=F('project__name'),
+                code=F('project__code'),
+                status=F('project__status'),
+                state=F('project__state__name')
+            )
+            .values('name', 'code', 'status', 'state')
+            .distinct()
+        )
+
+        self.programmes = list()
+        self.programmes += list(
+            obj.roles
+            .filter(is_programme=True, programme__isnull=False)
+            .annotate(
+                name=F('programme__name'),
+                code=F('programme__code'),
+                status=F('programme__status'),
+                state=F('programme__outcomes__state__name')
+            )
+            .values('name', 'code', 'status', 'state')
+            .distinct()
+        )
+        self.programmes += list(
+            obj.roles.filter(is_programme=False, project__isnull=False)
+            .annotate(
+                name=F('project__programme__name'),
+                code=F('project__programme__code'),
+                status=F('project__programme__status'),
+                state=F('project__programme__state__name'),
+            )
+            .values('name', 'code', 'status', 'state')
+            .distinct()
+        )
+        self.programmes = [
+            item for item in {v['code']:v for v in self.programmes}.values()
+        ]
+
+        self.programme_areas = list()
+        self.programme_areas += list(
+            obj.roles
+            .filter(is_programme=True, programme__isnull=False,
+                    programme__programme_areas__is_not_ta=True)
+            .annotate(
+                code=F('programme__programme_areas__code'),
+                sector=F('programme__programme_areas__priority_sector__name'),
+                name=F('programme__programme_areas__name'),
+                mechanism=F('programme__programme_areas__financial_mechanism__grant_name')
+            )
+            .values('code', 'name', 'sector', 'mechanism')
+            .distinct()
+        )
+        self.programme_areas += list(
+            obj.roles
+            .filter(is_programme=False, project__isnull=False,
+                    project__programme_area__is_not_ta=True)
+            .annotate(
+                code=F('project__programme_area__code'),
+                name=F('project__programme_area__name'),
+                sector=F('project__programme_area__priority_sector__name'),
+                mechanism=F('project__programme_area__financial_mechanism__grant_name'),
+            )
+            .values('code', 'name', 'sector', 'mechanism')
+            .distinct()
+        )
+        self.programme_areas = [
+            item for item in {v['code']:v for v in self.programme_areas}.values()
+        ]
+
         self.prepared_data = super().prepare(obj)
+
+        self.prepared_data['programme_name_auto'] = (
+            ' '.join(self.prepared_data['programme_name'])
+            if self.prepared_data['programme_name'] else None
+        )
+        self.prepared_data['project_name_auto'] = (
+            ' '.join(self.prepared_data['project_name'])
+            if self.prepared_data['project_name'] else None
+        )
+        self.prepared_data['geotarget_auto'] = (
+            ' '.join(self.prepared_data['geotarget'])
+            if self.prepared_data['geotarget'] else None
+        )
+
         if self.prepared_data['role_ss']:
             self.prepared_data['role_max_priority_code'] = reduce(
                 lambda max_value, role:
@@ -392,129 +438,145 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_kind(self, obj):
         return 'News'
 
+    def index_queryset(self, using=None):
+        return (
+            self.get_model().objects
+            .select_related(
+                'project',
+                'project__state',
+                'project__financial_mechanism',
+                'project__programme_area',
+                'project__programme_area__priority_sector',
+                'project__programme',
+                'project__outcome',
+            )
+            .prefetch_related(
+                'programmes',
+                'project__themes',
+            )
+        )
+
     def prepare_state_name(self, obj):
-        try:
-            if obj.project:
-                return [obj.project.state.name]
-        except Project.DoesNotExist:
-            pass
-        if obj.programmes.exists():
+        if self.project:
+            return [self.project.state.name]
+        elif self.programmes:
             # Get this from ProgrammeOutcome, because of IN22
-            return list(ProgrammeOutcome.objects.filter(
-                programme__news=obj,
-            ).values_list(
-                'state__name', flat=True
-            ).distinct())
+            return list(set([
+                state
+                for programme in self.programmes
+                for state in programme['states']
+            ]))
         return None
 
     def prepare_financial_mechanism_ss(self, obj):
-        try:
-            if obj.project:
-                return [obj.project.financial_mechanism.grant_name]
-        except Project.DoesNotExist:
-            pass
-        if obj.programmes.exists():
-            return list(obj.programmes.values_list(
-                'programme_areas__financial_mechanism__grant_name',
-                flat=True
-            ).distinct())
+        if self.project:
+            return [self.project.financial_mechanism.grant_name]
+        if self.programmes:
+            return set(list([
+                mechanism
+                for programme in self.programmes
+                for mechanism in programme['mechanisms']
+            ]))
         return None
 
     def prepare_programme_area_ss(self, obj):
-        try:
-            if obj.project:
-                return [obj.project.programme_area.name]
-        except Project.DoesNotExist:
-            pass
-        if obj.programmes.exists():
-            return list(obj.programmes.values_list('programme_areas__name',
-                                                   flat=True).distinct())
+        if self.project:
+            return [self.project.programme_area.name]
+        if self.programmes:
+            return list(set([
+                area
+                for programme in self.programmes
+                for area in programme['areas']
+            ]))
         return None
 
     def prepare_priority_sector_ss(self, obj):
-        try:
-            if obj.project:
-                return [obj.project.programme_area.priority_sector.name]
-        except Project.DoesNotExist:
-            pass
-        if obj.programmes.exists():
-            return list(
-                obj.programmes.values_list('programme_areas__priority_sector__name',
-                                           flat=True).distinct())
+        if self.project:
+            return [self.project.programme_area.priority_sector.name]
+        if self.programmes.exists():
+            return list(set([
+                sector
+                for programme in self.programmes
+                for sector in programme['sectors']
+            ]))
         return None
 
     def prepare_programme_name(self, obj):
-        try:
-            if obj.project:
-                return ['{}: {}'.format(obj.project.programme.code,
-                                        obj.project.programme.name)]
-        except Project.DoesNotExist:
-            pass
-        if obj.programmes.exists():
-            return list(map(
-                lambda obj: '{}: {}'.format(obj[0], obj[1]),
-                obj.programmes.values_list('code', 'name')
-            ))
+        if self.project:
+            return ['{}: {}'.format(self.project.programme.code,
+                                    self.project.programme.name)]
+        if self.programmes:
+            return ['{}: {}'.format(programme['code'], programme['name'])
+                    for programme in self.programmes]
         return None
 
     def prepare_project_name(self, obj):
-        try:
-            if obj.project:
-                return ['{}: {}'.format(obj.project.code,
-                                        obj.project.name)]
-        except Project.DoesNotExist:
-            pass
+        if self.project:
+            return ['{}: {}'.format(self.project.code,
+                                    self.project.name)]
         return None
 
     def prepare_programme_status(self, obj):
-        try:
-            if obj.project:
-                return [obj.project.programme.status]
-        except Project.DoesNotExist:
-            pass
-        if obj.programmes.exists():
-            return list(obj.programmes.values_list('status', flat=True).distinct())
+        if self.project:
+            return [self.project.programme.status]
+        if self.programmes:
+            return list(set([programme['status'] for programme in self.programmes]))
         return None
 
     def prepare_outcome_ss(self, obj):
-        try:
-            if obj.project:
-                return [obj.project.outcome.name.strip()]
-        except Project.DoesNotExist:
-            pass
-        if obj.programmes.exists():
-            return list(obj.programmes.values_list('outcomes__outcome__name',
-                                                   flat=True).distinct())
+        if self.project:
+            return [self.project.outcome.name.strip()]
+        if self.programmes.exists():
+            return set([
+                outcome
+                for programme in self.programmes
+                for outcome in programme['outcome_names']
+            ])
         return None
 
     def prepare_project_status(self, obj):
-        try:
-            if obj.project:
-                return [obj.project.status]
-        except Project.DoesNotExist:
-            pass
+        if self.project:
+            return [self.project.status]
         return None
 
     def prepare_geotarget(self, obj):
-        try:
-            if obj.project:
-                if len(obj.project.nuts) > 2:
-                    return ['{}: {}, {}'.format(obj.project.nuts, obj.project.geotarget,
-                                                STATES[obj.project.nuts[:2]])]
-                else:
-                    return ['{}: {}'.format(obj.project.nuts, obj.project.geotarget)]
-        except Project.DoesNotExist:
-            pass
+        if self.project:
+            if len(self.project.nuts) > 2:
+                return ['{}: {}, {}'.format(self.project.nuts, self.project.geotarget,
+                                            STATES[self.project.nuts[:2]])]
+            else:
+                return ['{}: {}'.format(self.project.nuts, self.project.geotarget)]
         return None
-
-    def prepare_geotarget_auto(self, obj):
-        geotargets = self.prepare_geotarget(obj)
-        return ' '.join(geotargets) if geotargets else None
 
     def prepare_theme_ss(self, obj):
+        if self.project:
+            return list(set([theme.name for theme in self.project.themes.all()]))
+        return None
+
+    def prepare(self, obj):
+        self.project = None
+        self.programmes = list()
         try:
             if obj.project:
-                return list(obj.project.themes.values_list('name', flat=True).distinct())
+                self.project = obj.project
         except Project.DoesNotExist:
             pass
-        return None
+        if obj.programmes.exists():
+            self.programmes = (
+                obj.programmes
+                .annotate(
+                    outcome_names=F('outcomes__outcome__name'),
+                    sectors=F('programme_areas__priority_sector__name'),
+                    areas=F('programme_areas__name'),
+                    mechanisms=F('programme_areas__financial_mechanism__grant_name'),
+                    states=F('outcomes__state__name')
+                )
+                .values('outcome_names', 'status', 'code', 'name', 'sectors', 'areas',
+                        'mechanisms', 'states')
+            )
+        self.prepared_data = super().prepare(obj)
+        self.prepared_data['geotarget_auto'] = (
+            ' '.join(self.prepared_data['geotarget'])
+            if self.prepared_data['geotarget'] else None
+        )
+        return self.prepared_data
