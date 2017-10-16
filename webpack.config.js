@@ -194,6 +194,12 @@ module.exports = {
       new webpack.HotModuleReplacementPlugin(),
       new FriendlyErrorsWebpackPlugin(),
     ] : [
+      // this is pretty dumb but it's needed.
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"prod" + "uction"'
+        }
+      }),
       cssExtractor,
       //new SVGSpriteLoaderPlugin(), // TODO ^^ #
       new webpack.optimize.OccurrenceOrderPlugin(),
