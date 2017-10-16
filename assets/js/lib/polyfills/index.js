@@ -1,8 +1,8 @@
 import 'url-polyfill';
 import 'form-association-polyfill'
 require('es6-promise').polyfill();
-import flexibility from 'flexibility';
-flexibility(document.documentElement);
+// import flexibility from 'flexibility'
+// flexibility(document.documentElement);
 import 'classlist-polyfill'
 
 if (!Object.assign) {
