@@ -56,6 +56,10 @@
   margin-right: 5px; 
 }
 
+.header-search input:focus {
+  background: #f4f4f4;
+}
+
 
 /* Menu */
 @media (max-width: 768px) {
