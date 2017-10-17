@@ -78,9 +78,12 @@ export default Chart.extend({
     return {
       origin: origin,
 
-      beneficiary_colour: "none",
-      region_colour: "none",
-      donor_colour_inactive: "#ffffff",
+      beneficiary_colour: "#ddd",
+      beneficiary_colour_hovered: "#96d2f9",
+      beneficiary_colour_zero: "#eee",
+      region_colour: "#ddd",
+      region_colour_zero: "#eee",
+      donor_colour_inactive: "#fff",
 
       width: 0,
       height: 0,
