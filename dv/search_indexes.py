@@ -463,7 +463,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 'project__programme_area__priority_sector',
                 'project__state',
             )
-            .prefetch_related('programmes', 'project__themes')
+            .prefetch_related('programmes', 'programmes__outcomes', 'project__themes')
         )
 
     def prepare_state_name(self, obj):
@@ -472,9 +472,8 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         elif self.programmes:
             # Get this from ProgrammeOutcome, because of IN22
             return list(set([
-                state
+                programme['country']
                 for programme in self.programmes
-                for state in programme['states']
             ]))
         return None
 
@@ -482,10 +481,9 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         if self.project:
             return [self.project.financial_mechanism.grant_name]
         if self.programmes:
-            return set(list([
-                mechanism
+            return list(set([
+                programme['mechanism']
                 for programme in self.programmes
-                for mechanism in programme['mechanisms']
             ]))
         return None
 
@@ -494,9 +492,8 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             return [self.project.programme_area.name]
         if self.programmes:
             return list(set([
-                area
+                programme['area']
                 for programme in self.programmes
-                for area in programme['areas']
             ]))
         return None
 
@@ -505,9 +502,8 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             return [self.project.programme_area.priority_sector.name]
         if self.programmes.exists():
             return list(set([
-                sector
+                programme['sector']
                 for programme in self.programmes
-                for sector in programme['sectors']
             ]))
         return None
 
@@ -516,8 +512,10 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             return ['{}: {}'.format(self.project.programme.code,
                                     self.project.programme.name)]
         if self.programmes:
-            return ['{}: {}'.format(programme['code'], programme['name'])
-                    for programme in self.programmes]
+            return list(set([
+                '{}: {}'.format(programme['code'], programme['name'])
+                for programme in self.programmes
+            ]))
         return None
 
     def prepare_project_name(self, obj):
@@ -536,11 +534,11 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         if self.project:
             return [self.project.outcome.name.strip()]
         if self.programmes.exists():
-            return set([
-                outcome
+            return list(set([
+                programme['outcome_name']
                 for programme in self.programmes
-                for outcome in programme['outcome_names']
-            ])
+                if not programme['outcome_fbl']
+            ]))
         return None
 
     def prepare_project_status(self, obj):
@@ -574,14 +572,16 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             self.programmes = (
                 obj.programmes
                 .annotate(
-                    areas=F('programme_areas__name'),
-                    mechanisms=F('programme_areas__financial_mechanism__grant_name'),
-                    outcome_names=F('outcomes__outcome__name'),
-                    sectors=F('programme_areas__priority_sector__name'),
-                    states=F('outcomes__state__name')
+                    area=F('programme_areas__name'),
+                    mechanism=F('programme_areas__financial_mechanism__grant_name'),
+                    outcome_name=F('outcomes__outcome__name'),
+                    outcome_fbl=F('outcomes__outcome__fixed_budget_line'),
+                    sector=F('programme_areas__priority_sector__name'),
+                    country=F('outcomes__state__name')
                 )
-                .values('areas', 'code', 'mechanisms', 'name', 'outcome_names',
-                        'sectors', 'states', 'status')
+                .values('area', 'code', 'mechanism', 'name',
+                        'outcome_name', 'outcome_fbl',
+                        'sector', 'country', 'status')
             )
         self.prepared_data = super().prepare(obj)
         self.prepared_data['geotarget_auto'] = (
