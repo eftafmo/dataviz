@@ -4,6 +4,11 @@ import FMLegendComponent from '../includes/FMLegend';
 import FMS from 'js/constants/financial-mechanisms.json5';
 
 
+export function fmcolour(fmid) {
+  return FMS[fmid].colour;
+}
+
+
 export default {
   beforeCreate() {
     this.FMS = FMS;
@@ -22,7 +27,7 @@ export default {
 
   methods: {
     fmcolour(fmid) {
-      return FMS[fmid].colour;
+      return fmcolour(fmid)
     },
 
     getFilterClassFm(fm) {

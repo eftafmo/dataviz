@@ -16,6 +16,8 @@
       </label>
   </div>
 
+  <pijama-defs ref="defs"></pijama-defs>
+
   <map-base
       ref="map"
       @rendered="handleMapRendered"
@@ -266,14 +268,6 @@ export default BaseMap.extend({
   },
 
   methods: {
-    fillfunc(d) {
-      const id = d.id,
-            country = id.substr(0, 2),
-            type = this.COUNTRIES[country].type;
-
-      return type == "donor" ? this.fmcolour("eea-grants") : "#fff"
-    },
-
     getContainer(ref) {
       const c = this.$refs[ref];
 
@@ -311,6 +305,10 @@ export default BaseMap.extend({
     },
 
     renderChart(redraw) {
+      const t = this.getTransition()
+
+      this.renderDonorColours(t)
+
       const $this = this,
             container = this.getContainer("container");
 

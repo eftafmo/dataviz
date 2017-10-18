@@ -3,22 +3,7 @@
   <slot name="title" v-if="!this.embedded"></slot>
   <dropdown v-if="hasData" filter="beneficiary" title="No filter selected" :items="data"></dropdown>
 
-  <svg class="defs" ref="defs">
-    <defs>
-      <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
-        <rect x="0" y="0" width="50" height="6"
-              class="norway-grants"
-              :fill="fmcolour('norway-grants')"
-              :stroke="fmcolour('norway-grants')"
-        />
-        <rect x="0" y="6" width="50" height="5"
-              class="eea-grants"
-              :fill="fmcolour('eea-grants')"
-              :stroke="fmcolour('eea-grants')"
-        />
-      </pattern>
-    </defs>
-  </svg>
+  <pijama-defs ref="defs"></pijama-defs>
 
   <map-base
       ref="map"
@@ -100,15 +85,6 @@
     }
   }
 
-  svg.defs {
-    height: 0;
-    width: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    opacity: 0;
-  }
-
   .toolbox {
     position: absolute;
     right: 1em;
@@ -174,8 +150,6 @@ import BaseMap from './BaseMap'
 import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
-import WithNUTSMixin from './mixins/WithNUTS';
-import WithRegionsMixin from './mixins/WithRegions';
 
 
 export default BaseMap.extend({
@@ -184,8 +158,6 @@ export default BaseMap.extend({
   mixins: [
     WithCountriesMixin, WithFMsMixin,
     WithTooltipMixin,
-    WithNUTSMixin,
-    WithRegionsMixin,
   ],
 
   components: {
@@ -200,11 +172,6 @@ export default BaseMap.extend({
 
   data() {
     return {
-      donor_colour_inactive: "#fff",
-
-      beneficiary_colour: "none",
-      region_colour: "none",
-
       zoomed_nuts_level: 3,
 
       all_nuts_levels: [0, 3],
@@ -316,28 +283,6 @@ export default BaseMap.extend({
        this.chart.call(this.tip)
     },
 
-    fillfunc(d) {
-      const id = d.id,
-            level = id.length - 2,
-            country = id.substr(0, 2),
-            type = this.COUNTRIES[country].type;
-
-      if (type == "donor") {
-        if (country == "NO")
-          return "url(#multi-fm)"
-
-        if (this.filters.fm == "Norway Grants")
-          return this.donor_colour_inactive
-
-        return this.fmcolour("eea-grants")
-      }
-
-      if (level == 0)
-        return this.beneficiary_colour
-
-      return this.region_colour
-    },
-
     opacityfunc(parentid) {
       return parentid == "" ? 1 : 0
     },
@@ -414,58 +359,6 @@ export default BaseMap.extend({
     computeRegionData(regiondataset) {
       const filtered = this.filter(regiondataset, this.filter_by)
       return this.aggregate(filtered, ['id'], this.aggregate_on, true)
-    },
-
-    renderDonorColours(t) {
-      let with_eea = false,
-          with_no = false;
-
-      const eea = this.FMS["eea-grants"].name,
-            no = this.FMS["norway-grants"].name;
-
-      const fmfilter = this.filters.fm
-
-      if (fmfilter == eea)
-        with_eea = true
-
-      else if (fmfilter == no)
-        with_no = true
-
-      else {
-        // the dataset is the source of truth
-        for (const row of this.data) {
-          if (row.fms.has(eea))
-            with_eea = true
-
-          if (row.fms.has(no))
-            with_no = true
-
-          if (with_eea && with_no) break
-        }
-      }
-
-      // EEA donors are either coloured or inactive
-      this.chart.select(".regions .level0").selectAll("path.donor")
-        .filter(d => d.id != "NO")
-        .transition(t)
-        .attr("fill",
-              with_eea ? this.fmcolour("eea-grants") :
-                         this.donor_colour_inactive
-        )
-
-      // Norway donors are handled via the pattern fill
-      const colourfuncNO = id => {
-        if (with_eea && with_no) return this.fmcolour(id)
-
-        if (with_eea) return this.fmcolour("eea-grants")
-        if (with_no) return this.fmcolour("norway-grants")
-      }
-
-      d3.select(this.$refs.defs).selectAll("pattern#multi-fm rect")
-        .datum(function() { return this.getAttribute("class") })
-        .transition(t)
-        .attr("fill", colourfuncNO)
-        .attr("stroke", colourfuncNO)
     },
 
     _domouse(over, d, i, group) {

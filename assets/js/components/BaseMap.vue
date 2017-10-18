@@ -1,24 +1,75 @@
-<script>
-/*
+<!--
   // ATTENTION: map-base must be used like this:
 
   <map-base
       ref="map"
       v-on:rendered="handleMapRendered"
   >
+-->
 
- */
+<style lang="less">
+.dataviz .viz.map {
+  svg.defs {
+    height: 0;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+}
+</style>
+
+
+<script>
+import * as d3 from 'd3'
+import {fmcolour} from './mixins/WithFMs'
 
 import Chart from './Chart'
-
 import MapBase from './includes/MapBase'
 
+import WithNUTSMixin from './mixins/WithNUTS'
+import WithRegionsMixin from './mixins/WithRegions'
+
+
+// jumping through hoops because of vue's lack of template inheritance.
+// don't forget to add this to the template.
+const PijamaDefs = {
+  template: `<svg class="defs">
+    <defs>
+      <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
+        <rect x="0" y="0" width="50" height="6"
+              class="norway-grants"
+              :fill="fmcolour('norway-grants')"
+              :stroke="fmcolour('norway-grants')"
+        />
+        <rect x="0" y="6" width="50" height="5"
+              class="eea-grants"
+              :fill="fmcolour('eea-grants')"
+              :stroke="fmcolour('eea-grants')"
+        />
+      </pattern>
+    </defs>
+  </svg>`,
+
+  methods: {
+    fmcolour(fmid) {
+      return fmcolour(fmid)
+    },
+  },
+}
 
 export default Chart.extend({
   type: "map",
 
+  mixins: [
+    WithNUTSMixin,
+    WithRegionsMixin,
+  ],
+
   components: {
     "map-base": MapBase,
+    "pijama-defs": PijamaDefs,
   },
 
   data() {
@@ -30,6 +81,10 @@ export default Chart.extend({
 
     return {
       origin: origin,
+
+      beneficiary_colour: "none",
+      region_colour: "none",
+      donor_colour_inactive: "#ffffff",
 
       width: 0,
       height: 0,
@@ -59,6 +114,86 @@ export default Chart.extend({
   methods: {
     handleMapRendered() {
       this.map_rendered = true
+    },
+
+    renderDonorColours(t) {
+      let with_eea = false,
+          with_no = false;
+
+      const eea = this.FMS["eea-grants"].name,
+            no = this.FMS["norway-grants"].name;
+
+      const fmfilter = this.filters.fm
+
+      if (fmfilter == eea)
+        with_eea = true
+
+      else if (fmfilter == no)
+        with_no = true
+
+      else {
+        // the dataset is the source of truth
+        for (const row of this.data) {
+          if (!with_eea && row.fms.has(eea))
+            with_eea = true
+
+          if (!with_no && row.fms.has(no))
+            with_no = true
+
+          if (with_eea && with_no) break
+        }
+      }
+
+      // TODO: FIXME. this dreadful thing is necessary for now
+      // because of partners' custom aggregation
+      if (!with_eea && !with_no) {
+        with_eea = with_no = true
+      }
+
+      // EEA donors are either coloured or inactive
+      this.chart.select(".regions").selectAll("path.donor")
+        .filter(d => this.getAncestorRegion(d.id, 0) != "NO")
+        .transition(t)
+        .attr("fill",
+              with_eea ? this.fmcolour("eea-grants") :
+                         this.donor_colour_inactive
+        )
+
+      // Norway donors are handled via the pattern fill
+      const colourfuncNO = id => {
+        if (with_eea && with_no) return this.fmcolour(id)
+
+        if (with_eea) return this.fmcolour("eea-grants")
+        if (with_no) return this.fmcolour("norway-grants")
+      }
+
+      d3.select("pattern#multi-fm").selectAll("rect")
+        .datum(function() { return this.getAttribute("class") })
+        .transition(t)
+        .attr("fill", colourfuncNO)
+        .attr("stroke", colourfuncNO)
+    },
+
+    fillfunc(d) {
+      const id = d.id,
+            level = id.length - 2,
+            country = id.substr(0, 2),
+            type = this.COUNTRIES[country].type;
+
+      if (type == "donor") {
+        if (country == "NO")
+          return "url(#multi-fm)"
+
+        if (this.filters.fm == "Norway Grants")
+          return this.donor_colour_inactive
+
+        return this.fmcolour("eea-grants")
+      }
+
+      if (level == 0)
+        return this.beneficiary_colour
+
+      return this.region_colour
     },
   },
 })
