@@ -76,12 +76,10 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return list(set([area['mechanism'] for area in self.programme_areas]))
 
     def prepare_outcome_ss(self, obj):
-        outcomes = (
-            name
-            for outcome in self.programme_outcomes.exclude(
-                outcome__fixed_budget_line=True)
-            for name in outcome['outcome_names']
-        )
+        outcomes = [
+            outcome['outcome_name'].strip()
+            for outcome in self.programme_outcomes
+        ]
         return [o.strip() for o in outcomes]
 
     def prepare_grant(self, obj):
@@ -90,11 +88,13 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare(self, obj):
         self.programme_outcomes = (
             obj.outcomes
-            .annotate(
-                outcome_names=F('outcome__name'),
+            .exclude(
+                outcome__fixed_budget_line=True
+            ).annotate(
+                outcome_name=F('outcome__name'),
                 state_name=F('state__name'),
             )
-            .values('outcome_names', 'state_name')
+            .values('outcome_name', 'state_name')
         )
 
         self.programme_areas = (
