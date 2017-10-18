@@ -535,7 +535,7 @@ class _TypeaheadFacetedSearchView(object):
 
 
 class ProgrammeTypeaheadFacetedSearchView(_TypeaheadFacetedSearchView,
-                                          ProjectFacetedSearchView):
+                                          ProgrammeFacetedSearchView):
     pass
 
 
