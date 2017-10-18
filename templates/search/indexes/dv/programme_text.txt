@@ -5,4 +5,7 @@
 {% endfor %}
 {{ object.summary }}
 {{ object.name }}
-{{ object.state.name }}
+{% for outcome in object.outcomes.all %}
+{{ outcome.name }}
+{{ outcome.state.name }}
+{% endfor %}
