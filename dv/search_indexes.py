@@ -116,12 +116,12 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
 
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets
-    state_name = indexes.FacetMultiValueField()
+    state_name = indexes.FacetMultiValueField(model_attr='state__name')
     financial_mechanism_ss = indexes.FacetMultiValueField()
     programme_area_ss = indexes.FacetMultiValueField()
     priority_sector_ss = indexes.FacetMultiValueField()
     programme_name = indexes.FacetMultiValueField()
-    programme_status = indexes.FacetMultiValueField()
+    programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
     outcome_ss = indexes.FacetMultiValueField()
     outcome_ss_auto = indexes.EdgeNgramField()
 
@@ -153,8 +153,9 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
                 'programme_area',
                 'programme_area__priority_sector',
                 'state',
-            )
-           .prefetch_related('themes')
+            ).prefetch_related('themes')
+            # using prefetch_related may require --batch-size 999 to avoid
+            # sqlite3.OperationalError: too many SQL variables
         )
 
     def get_model(self):
@@ -184,12 +185,15 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         else:
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
 
+    def prepare_theme_ss(self, obj):
+        return list(set([theme.name for theme in obj.themes.all()]))
+
     def prepare(self, obj):
         self.prepared_data = super().prepare(obj)
         self.prepared_data['outcome_ss_auto'] = (
             ' '.join(self.prepared_data['outcome_ss'])
-                     if self.prepared_data['outcome_ss'] else None
-            )
+            if self.prepared_data['outcome_ss'] else None
+        )
         self.prepared_data['geotarget_auto'] = (
             ' '.join(self.prepared_data['geotarget'])
             if self.prepared_data['geotarget'] else None
