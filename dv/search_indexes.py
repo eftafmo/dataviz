@@ -1,6 +1,6 @@
 from functools import reduce
 
-from django.db.models import Q, F
+from django.db.models import F
 from haystack import indexes
 from haystack import exceptions
 from django_countries import countries
@@ -197,11 +197,6 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
 
 class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets
-    # This should be *_ss for this model, but we want the same name across
-    # indexes for this logical entity
-
-    # This will upgrade the previous definitions from CharField to MultiValue
-    # make sure you rebuild_index from zero when adding such "upgrade" here
     state_name = indexes.FacetMultiValueField()
     programme_status = indexes.FacetMultiValueField()
     financial_mechanism_ss = indexes.FacetMultiValueField()
@@ -260,16 +255,13 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return [area['mechanism'] for area in self.programme_areas]
 
     def prepare_state_name(self, obj):
-        result = set()
-        result = result.union([project['state'] for project in self.projects])
-        result = result.union([programme['state'] for programme in self.programmes])
-        return list(result)
+        return self.states
 
     def prepare_programme_status(self, obj):
-        return [programme['status'] for programme in self.programmes]
+        return list(set([programme['status'] for programme in self.programmes]))
 
     def prepare_project_status(self, obj):
-        return [project['status'] for project in self.projects]
+        return list(set([project['status'] for project in self.projects]))
 
     def prepare_programme_area_ss(self, obj):
         return [area['name'] for area in self.programme_areas]
@@ -317,6 +309,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         self.projects = (
             obj.roles
             .filter(is_programme=False, project__isnull=False)
+            .select_related('project')
             .annotate(
                 code=F('project__code'),
                 name=F('project__name'),
@@ -347,12 +340,17 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             .annotate(
                 code=F('project__programme__code'),
                 name=F('project__programme__name'),
-                state=F('project__programme__state__name'),
+                state=F('project__state__name'),
                 status=F('project__programme__status'),
             )
             .values('code', 'name', 'state', 'status')
             .distinct()
         )
+        # Store states before grouping programmes by code
+        # because IN22 has multiple states
+        self.states = list(set([
+            prg['state'] for prg in self.programmes
+        ]))
         self.programmes = [
             item for item in {v['code']:v for v in self.programmes}.values()
         ]
