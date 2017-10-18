@@ -16,8 +16,6 @@ STATES = dict(countries)
 
 class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets
-    # some non-DRY code here, but the factor out is not trivial due to common indexes
-    # having different model lookup
     state_name = indexes.FacetMultiValueField()
     programme_area_ss = indexes.FacetMultiValueField()
     priority_sector_ss = indexes.FacetMultiValueField()
@@ -30,15 +28,13 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     kind = indexes.FacetCharField()
 
     # specific facets
+    code = indexes.FacetCharField(model_attr='code')
 
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
-
-    # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     summary = indexes.CharField(model_attr='summary', indexed=False)
     name = indexes.CharField(model_attr='name', indexed=False)
-    code = indexes.FacetCharField(model_attr='code')
     grant = indexes.DecimalField()
 
     def get_model(self):
@@ -128,6 +124,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     kind = indexes.FacetCharField()
 
     # specific facets
+    code = indexes.FacetCharField(model_attr='code')
     project_status = indexes.FacetMultiValueField(model_attr='status')
     geotarget = indexes.FacetCharField(model_attr='geotarget')
     geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
@@ -136,11 +133,8 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
     summary = indexes.CharField(model_attr='summary', indexed=False)
-
-    # extra data; avoid db hit
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     name = indexes.CharField(model_attr='name', indexed=False)
-    code = indexes.FacetCharField(model_attr='code')
     grant = indexes.DecimalField(model_attr='allocation')
 
     def index_queryset(self, using=None):
@@ -446,8 +440,6 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
     summary = indexes.CharField(model_attr='summary', indexed=False)
-
-    # extra data; avoid db hit
     name = indexes.CharField(model_attr='title', indexed=False)
     url = indexes.CharField(model_attr='link', indexed=False)
     image = indexes.CharField(model_attr='image', indexed=False)
