@@ -1,6 +1,15 @@
-export default {
+import NUTS from 'js/constants/nuts.json';
 
+
+export function getRegionLabel(id) {
+  return NUTS[id]
+}
+
+
+export default {
   methods: {
+    getRegionLabel,
+
     getRegionLevel(id) {
       if (!id) return null
       return id.length - 2

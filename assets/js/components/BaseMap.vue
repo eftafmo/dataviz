@@ -28,7 +28,6 @@ import {fmcolour} from './mixins/WithFMs'
 import Chart from './Chart'
 import MapBase from './includes/MapBase'
 
-import WithNUTSMixin from './mixins/WithNUTS'
 import WithRegionsMixin from './mixins/WithRegions'
 
 
@@ -63,7 +62,6 @@ export default Chart.extend({
   type: "map",
 
   mixins: [
-    WithNUTSMixin,
     WithRegionsMixin,
   ],
 
