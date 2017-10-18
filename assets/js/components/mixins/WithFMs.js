@@ -26,9 +26,7 @@ export default {
   },
 
   methods: {
-    fmcolour(fmid) {
-      return fmcolour(fmid)
-    },
+    fmcolour,
 
     getFilterClassFm(fm) {
       if (!this.filters.fm)

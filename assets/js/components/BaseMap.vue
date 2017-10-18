@@ -52,9 +52,7 @@ const PijamaDefs = {
   </svg>`,
 
   methods: {
-    fmcolour(fmid) {
-      return fmcolour(fmid)
-    },
+    fmcolour,
   },
 }
 

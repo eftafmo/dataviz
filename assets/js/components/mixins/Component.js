@@ -9,26 +9,19 @@ export default {
   },
 
   computed: {
-    currency() {
-      return util.formatCurrency
-    },
-
-    number() {
-      return util.formatNumber
-    },
-
     inactivecolour() {
       return (
         (c) => util.colour2gray(c, this.inactive_opacity)
       )
     },
 
-    singularize() {
-      return util.singularize
-    },
+  },
 
-    pluralize() {
-      return util.pluralize
-    },
+  methods: {
+    currency: util.formatCurrency,
+    number: util.formatNumber,
+
+    singularize: util.singularize,
+    pluralize: util.pluralize,
   },
 }
