@@ -17,73 +17,6 @@ from dv.models import (
 
 STATES = dict(countries)
 
-# Cache programmes
-_fields = {
-    'code': F('programme__code'),
-    'name': F('programme__name'),
-    'area': F('outcome__programme_area__name'),
-    'sector': F('outcome__programme_area__priority_sector__name'),
-    'fm': F('outcome__programme_area__financial_mechanism__grant_name'),
-    'state_name': F('state__name'),
-    'status': F('programme__status'),
-}
-_all_programmes_raw = (
-    ProgrammeOutcome.objects.all().select_related(
-        'programme',
-        'outcome',
-        'outcome__programe_area__financial_mechanism',
-        'outcome__programe_area__priority_sector',
-        'outcome__programe_area',
-        'state',
-    ).exclude(programme__isnull=True)
-    .exclude(programme__is_tap=True)
-    .annotate(**_fields)
-    .values(*_fields.keys())
-    .distinct()
-)
-ALL_PROGRAMMES = defaultdict(lambda: {
-    'fms': set(),
-    'sectors': set(),
-    'areas': set(),
-    'states': set(),
-})
-for prg in _all_programmes_raw:
-    ALL_PROGRAMMES[prg['code']]['name'] = prg['name'].strip()
-    ALL_PROGRAMMES[prg['code']]['fms'].add(prg['fm'])
-    ALL_PROGRAMMES[prg['code']]['sectors'].add(prg['sector'])
-    ALL_PROGRAMMES[prg['code']]['areas'].add(prg['area'])
-    ALL_PROGRAMMES[prg['code']]['states'].add(prg['state_name'])
-    ALL_PROGRAMMES[prg['code']]['status'] = prg['status']
-
-# Cache projects
-_fields = {
-    'prj_code': F('code'),
-    'prj_name': F('name'),
-    'prg_code': F('programme_id'),
-    'area': F('programme_area__name'),
-    'sector': F('priority_sector__name'),
-    'fm': F('financial_mechanism__grant_name'),
-    'state_name': F('state__name'),
-    'prj_status': F('status'),
-}
-_all_projects_raw = (
-    Project.objects.all().select_related(
-        'financial_mechanism',
-        'priority_sector',
-        'programe_area',
-        'state',
-    ).annotate(**_fields)
-    .values(*_fields.keys())
-)
-ALL_PROJECTS = {
-    prj['prj_code']: prj
-    for prj in _all_projects_raw
-}
-
-ALL_ROLES = {
-    x.code: x.role for x in OrganisationRole.objects.all()
-}
-
 
 class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
     # common facets
@@ -309,6 +242,87 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         'Project Promoter': 1,  # PJPT
     }
 
+    # Caches, lazy init
+    ALL_PROGRAMMES = {}
+    ALL_PROJECTS = {}
+    ALL_ROLES = {}
+
+    def __init__(self):
+        super().__init__()
+        if not self.ALL_PROGRAMMES:
+            OrganisationIndex.init_caches()
+
+    @classmethod
+    def init_caches(cls):
+        # Cache programmes
+        _fields = {
+            'code': F('programme__code'),
+            'name': F('programme__name'),
+            'area': F('outcome__programme_area__name'),
+            'sector': F('outcome__programme_area__priority_sector__name'),
+            'fm': F('outcome__programme_area__financial_mechanism__grant_name'),
+            'state_name': F('state__name'),
+            'status': F('programme__status'),
+        }
+        _all_programmes_raw = (
+            ProgrammeOutcome.objects.all().select_related(
+                'programme',
+                'outcome',
+                'outcome__programe_area__financial_mechanism',
+                'outcome__programe_area__priority_sector',
+                'outcome__programe_area',
+                'state',
+            ).exclude(programme__isnull=True)
+            .exclude(programme__is_tap=True)
+            .annotate(**_fields)
+            .values(*_fields.keys())
+            .distinct()
+        )
+        ALL_PROGRAMMES = defaultdict(lambda: {
+            'fms': set(),
+            'sectors': set(),
+            'areas': set(),
+            'states': set(),
+        })
+        for prg in _all_programmes_raw:
+            ALL_PROGRAMMES[prg['code']]['name'] = prg['name'].strip()
+            ALL_PROGRAMMES[prg['code']]['fms'].add(prg['fm'])
+            ALL_PROGRAMMES[prg['code']]['sectors'].add(prg['sector'])
+            ALL_PROGRAMMES[prg['code']]['areas'].add(prg['area'])
+            ALL_PROGRAMMES[prg['code']]['states'].add(prg['state_name'])
+            ALL_PROGRAMMES[prg['code']]['status'] = prg['status']
+
+        cls.ALL_PROGRAMMES = ALL_PROGRAMMES
+
+        # Cache projects
+        _fields = {
+            'prj_code': F('code'),
+            'prj_name': F('name'),
+            'prg_code': F('programme_id'),
+            'area': F('programme_area__name'),
+            'sector': F('priority_sector__name'),
+            'fm': F('financial_mechanism__grant_name'),
+            'state_name': F('state__name'),
+            'prj_status': F('status'),
+        }
+        _all_projects_raw = (
+            Project.objects.all().select_related(
+                'financial_mechanism',
+                'priority_sector',
+                'programe_area',
+                'state',
+            ).annotate(**_fields)
+            .values(*_fields.keys())
+        )
+        cls.ALL_PROJECTS = {
+            prj['prj_code']: prj
+            for prj in _all_projects_raw
+        }
+
+        cls.ALL_ROLES = {
+            x.code: x.role for x in OrganisationRole.objects.all()
+        }
+
     def index_queryset(self, using=None):
         return (
             self.get_model().objects
@@ -324,32 +338,32 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_financial_mechanism_ss(self, obj):
         fm = [
-            ALL_PROJECTS[prj]['fm']
+            self.ALL_PROJECTS[prj]['fm']
             for prj in self.projects
         ]
         for prg in self.programmes:
-            fm += list(ALL_PROGRAMMES[prg]['fms'])
+            fm += list(self.ALL_PROGRAMMES[prg]['fms'])
         return list(set(fm))
 
     def prepare_state_name(self, obj):
         # programme IN22 can have multiple states
         states = [
-            ALL_PROJECTS[prj]['state_name']
+            self.ALL_PROJECTS[prj]['state_name']
             for prj in self.projects
         ]
         for prg in self.programmes:
-            states += list(ALL_PROGRAMMES[prg]['states'])
+            states += list(self.ALL_PROGRAMMES[prg]['states'])
         return list(set(states))
 
     def prepare_programme_status(self, obj):
         statuses = [
-            ALL_PROGRAMMES[programme]['status']
+            self.ALL_PROGRAMMES[programme]['status']
             for programme in self.programmes
         ]
         # Add programme status from projects also
         statuses += [
-            ALL_PROGRAMMES[
-                ALL_PROJECTS[prj_code]['prg_code']
+            self.ALL_PROGRAMMES[
+                self.ALL_PROJECTS[prj_code]['prg_code']
             ]['status']
             for prj_code in self.projects
         ]
@@ -357,38 +371,38 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_project_status(self, obj):
         return list(set([
-            ALL_PROJECTS[project_code]['prj_status']
+            self.ALL_PROJECTS[project_code]['prj_status']
             for project_code in self.projects
         ]))
 
     def prepare_programme_area_ss(self, obj):
         areas = [
-            ALL_PROJECTS[prj]['area']
+            self.ALL_PROJECTS[prj]['area']
             for prj in self.projects
         ]
         for prg in self.programmes:
-            areas += list(ALL_PROGRAMMES[prg]['areas'])
+            areas += list(self.ALL_PROGRAMMES[prg]['areas'])
         return list(set(areas))
 
     def prepare_priority_sector_ss(self, obj):
         sectors = [
-            ALL_PROJECTS[prj]['sector']
+            self.ALL_PROJECTS[prj]['sector']
             for prj in self.projects
         ]
         for prg in self.programmes:
-            sectors += list(ALL_PROGRAMMES[prg]['sectors'])
+            sectors += list(self.ALL_PROGRAMMES[prg]['sectors'])
         return list(set(sectors))
 
     def prepare_programme_name(self, obj):
         prg_codes = list(self.programmes)
         prg_codes += [
-            ALL_PROJECTS[project_code]['prg_code']
+            self.ALL_PROJECTS[project_code]['prg_code']
             for project_code in self.projects
         ]
         return [
             '{}: {}'.format(
                 prg_code,
-                ALL_PROGRAMMES[prg_code]['name']
+                self.ALL_PROGRAMMES[prg_code]['name']
             )
             for prg_code in set(prg_codes)
         ]
@@ -397,14 +411,14 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return [
             '{}: {}'.format(
                 project_code,
-                ALL_PROJECTS[project_code]['prj_name']
+                self.ALL_PROJECTS[project_code]['prj_name']
             )
             for project_code in self.projects
         ]
 
     def prepare_role_ss(self, obj):
         return [
-            ALL_ROLES[role_code]
+            self.ALL_ROLES[role_code]
             for role_code in self.roles
         ]
 
@@ -425,11 +439,11 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         self.programmes = list()
         self.roles = set()
         for role in obj.roles.all():
-            if role.project_id and ALL_PROJECTS[role.project_id].get('prj_code'):
-                # check prj_code because ALL_PROJECTS is defaultdict
+            if role.project_id and self.ALL_PROJECTS[role.project_id].get('prj_code'):
+                # check prj_code because self.ALL_PROJECTS is defaultdict
                 self.projects.append(role.project_id)
-            elif role.programme_id and ALL_PROGRAMMES[role.programme_id].get('name'):
-                # check programme name because ALL_PROGRAMMES is defaultdict
+            elif role.programme_id and self.ALL_PROGRAMMES[role.programme_id].get('name'):
+                # check programme name because self.ALL_PROGRAMMES is defaultdict
                 self.programmes.append(role.programme_id)
             if role.organisation_role_id != 'DS':
                 # Skip donor states
