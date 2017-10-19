@@ -1,7 +1,5 @@
 from haystack.forms import FacetedSearchForm
-
-import logging
-logger = logging.getLogger()
+from haystack.inputs import AltParser
 
 from dv.views.facets_rules import (
     FACET_MIN_COUNT, FACET_LIMIT, FACET_SORT,
@@ -27,7 +25,18 @@ class EeaFacetedSearchForm(FacetedSearchForm):
         return self.searchqueryset
 
     def search(self):
+        try:
+            q = self.cleaned_data.pop('q')
+        except KeyError:
+            pass
         sqs = super().search()
+        if q:
+            params = {
+                'q.op': 'AND'
+            }
+            # Set default op for multi-word search term
+            sqs = sqs.filter(content=AltParser('dismax', q, **params))
+
         for facet_name, facet_values in self.facets.items():
             # Determine operation type - AND/OR supported so far
             operator = self.facet_rules.get(facet_name, None)
