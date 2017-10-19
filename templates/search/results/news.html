@@ -1,67 +1,80 @@
 <li class="results-list">
   <div class="search-result search-result-news">
-    <h3 class="title">
-      {% if news.url %}
-        <a href="{{ news.url }}" target="_blank">{{ news.name }}</a>
-      {% else %}
-        <span>{{ news.name }}</span>
-      {% endif %}
-    </h3>
-    <div style="column-count: 2">
-      <div class="country_status">
-                  <span class="country">
-                  {% for state in news.state_name %}
-                    <img src="/assets/sprites/flags/flag-{{ state|lower|cut:" " }}.png"
-                         alt="{{ state }} flag"
-                         height="20px">&nbsp;{{ state }}
-                  {% endfor %}</span>
-      </div>
-      <div>{{ news.created_dt | date:"d F Y" }}</div>
-      <div>{{ news.summary }}</div>
-      <div>
-        <b>Programme:</b>
-        {% if news.programme_name|length == 1 %}
-          {{ news.programme_name.0 }}
-        {% else %}
-          <ul class="search_listing">
-            {% for programme in news.programme_name %}
-              <li><span>{{ programme }}</span></li>
-            {% endfor %}
-          </ul>
-        {% endif %}
+    <div class="news-container clearfix">
+    
+      <div class="news-header clearfix">
+        <div class="news-header-body">
+          <div class="date_country">
+            <span class="country_status">
+                            <span class="country">
+                            {% for state in news.state_name %}
+                              <img src="/assets/sprites/flags/flag-{{ state|lower|cut:" " }}.png"
+                                   alt="{{ state }} flag"
+                                   height="20px">&nbsp;{{ state }}
+                            {% endfor %}</span>
+              </span>
+              <span>{{ news.created_dt | date:"d F Y" }}</span>
+          </div>
+          <div>
+           <h4 class="title">
+              {% if news.url %}
+                <a href="{{ news.url }}" target="_blank">{{ news.name }}</a>
+              {% else %}
+                <span>{{ news.name }}</span>
+              {% endif %}
+            </h4>
+         
+          
+            <div class="news_summary">{{ news.summary }}</div>
+          </div>
+          <img src="{{ news.image }}" style="column-span: 1">
+        </div>
       </div>
 
-      {% if news.project_name %}
-        <div><b>Project:</b> {{ news.project_name.0 }}</div>
-        <div><b>Project status:</b> {{ news.project_status.0 }}</div>
-        <div><b>Funded by :</b> {{ news.financial_mechanism_ss.0 }}</div>
-        <div><b>Sector:</b>
-          {% if news.priority_sector_ss|length == 1 %}
-            {{ news.priority_sector_ss.0 }}
+      <div class="news-body">
+        <div>
+          <b>Programme:</b>
+          {% if news.programme_name|length == 1 %}
+            {{ news.programme_name.0 }}
           {% else %}
             <ul class="search_listing">
-              {% for sector in news.priority_sector_ss %}
-                <li><span>{{ sector }}</span></li>
+              {% for programme in news.programme_name %}
+                <li><span>{{ programme }}</span></li>
               {% endfor %}
             </ul>
           {% endif %}
         </div>
-      {% endif %}
 
-      <div>
-        <b>Programme areas:</b>
-        {% if news.programme_area_ss|length == 1 %}
-          {{ news.programme_area_ss.0 }}
-        {% else %}
-          <ul class="search_listing">
-            {% for area in news.programme_area_ss %}
-              <li><span>{{ area }}</span></li>
-            {% endfor %}
-          </ul>
+        {% if news.project_name %}
+          <div><b>Project:</b> {{ news.project_name.0 }}</div>
+          <div><b>Project status:</b> {{ news.project_status.0 }}</div>
+          <div><b>Funded by :</b> {{ news.financial_mechanism_ss.0 }}</div>
+          <div><b>Sector:</b>
+            {% if news.priority_sector_ss|length == 1 %}
+              {{ news.priority_sector_ss.0 }}
+            {% else %}
+              <ul class="search_listing">
+                {% for sector in news.priority_sector_ss %}
+                  <li><span>{{ sector }}</span></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
         {% endif %}
-      </div>
 
-      <img src="{{ news.image }}" style="column-span: 1">
+        <div>
+          <b>Programme areas:</b>
+          {% if news.programme_area_ss|length == 1 %}
+            {{ news.programme_area_ss.0 }}
+          {% else %}
+            <ul class="search_listing">
+              {% for area in news.programme_area_ss %}
+                <li><span>{{ area }}</span></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </li>
