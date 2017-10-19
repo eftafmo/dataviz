@@ -28,10 +28,6 @@ export default AllocationMap.extend({
       nuts_level: 3,
       draw_nuts_levels: [3],
 
-      beneficiary_colour: "#ddd",
-      beneficiary_colour_hovered: "#9dccec",
-      beneficiary_colour_zero: "#eee",
-
       region_colour: interpolateYlGn(0),
     }
   },
@@ -91,27 +87,7 @@ export default AllocationMap.extend({
     renderData(t) {
       if (t === undefined) t = this.getTransition();
       const dataset = d3.values(this.data);
-
-      const beneficiaries = this.chart.selectAll('.regions > .level0 > path.beneficiary')
-                                .data(dataset, (d) => d.id );
-
-      beneficiaries
-        .classed("zero", false)
-        .transition(t)
-        .attr("fill", this.beneficiary_colour)
-
-      beneficiaries
-        .exit()
-        .classed("zero", true)
-        .each(function(d) {
-          // reset data in a nice, hardcoded way
-          Object.assign(d, {
-            allocation: 0,
-          })
-        })
-        .transition(t)
-        .attr("fill", this.beneficiary_colour_zero)
-
+      this.renderBeneficiary(dataset, t)
       // and TODO: disable filtering for 0 / missing items
     },
 

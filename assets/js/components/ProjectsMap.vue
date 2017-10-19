@@ -1,7 +1,7 @@
 <style lang="less">
 .dataviz .viz.map.is-projects {
   @bubble_color: rgb(196, 17, 48);
-  @nuts3_selected_color: rgb(200, 221, 249);
+  @nuts3_selected_color: rgb(3, 152, 251);
 
   .bubble {
     circle {
@@ -173,9 +173,6 @@ export default AllocationMap.extend({
   data() {
     return {
       // need to set these so pointer events work in IE
-      beneficiary_colour: "#fff",
-      region_colour: "#fff",
-
       zoomed_nuts_level: 2,
 
       all_nuts_levels: [0, 2, 3],
@@ -309,7 +306,17 @@ export default AllocationMap.extend({
       const bubble = this.projects.select(selector)
 
       bubble.classed("hovered", over)
+
       if (over) bubble.raise()
+
+      if (d.id.length == 2 &&
+        this.COUNTRIES[d.id].type === "donor"
+      ) return;
+
+      self
+        .transition(this.getTransition(this.short_duration))
+        .attr("fill", over ? this.beneficiary_colour_hovered :
+                              this.beneficiary_colour)
     },
 
     clickfunc(d, i, group) {
@@ -548,6 +555,7 @@ export default AllocationMap.extend({
     renderData(t) {
       const dataset = d3.values(this.data)
       this._renderRegionData(null, dataset, t)
+      this.renderBeneficiary(dataset, t)
     },
 
     renderRegionData(region, regiondata, t) {

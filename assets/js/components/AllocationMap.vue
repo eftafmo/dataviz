@@ -43,8 +43,12 @@
         <span class="square"></span>
         Beneficiary states
       </li>
+      <li v-if="$options.type == 'viz map allocation is-projects'">
+        <span class="bubble_circle"></span>
+        Project count
+      </li>
       <li v-if="filters.beneficiary && $options.type == 'viz map allocation grants'">
-      <span class="square amount"></span>
+        <span class="square amount"></span>
         Project grants
       </li>
     </ul>
@@ -56,6 +60,7 @@
 <style lang="less">
 .dataviz .viz.map.allocation {
   @beneficiary: #ddd;
+  @bubble_color: rgb(196, 17, 48);
 
   .chart{
     .transitioning {
@@ -131,7 +136,17 @@
     .square {
       height: 20px;
       width: 20px;
-      background: @beneficiary;;
+      background: @beneficiary;
+      display: inline-block;
+      margin-right: 1rem;
+      position: relative;
+    }
+
+    .bubble_circle {
+      background: @bubble_color;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
       display: inline-block;
       margin-right: 1rem;
       position: relative;
@@ -285,6 +300,29 @@ export default BaseMap.extend({
 
     opacityfunc(parentid) {
       return parentid == "" ? 1 : 0
+    },
+
+    renderBeneficiary(dataset, t) {
+      const beneficiaries = this.chart
+                                  .selectAll('.regions > .level0 > path.beneficiary')
+                                  .data(dataset, (d) => d.id );
+
+      beneficiaries
+        .classed("zero", false)
+        .transition(t)
+        .attr("fill", this.beneficiary_colour)
+
+      beneficiaries
+        .exit()
+        .classed("zero", true)
+        .each(function(d) {
+          // reset data in a nice, hardcoded way
+          Object.assign(d, {
+            allocation: 0,
+          })
+        })
+        .transition(t)
+        .attr("fill", this.beneficiary_colour_zero)
     },
 
     renderChart() {
