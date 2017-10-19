@@ -1,1 +1,7 @@
-{% include 'search/filters/inputs/ajax_select2.html' with name='geotarget' label='Project region or city' %}
+{% load tags %}
+{% if kind == 'Organisation' %}
+  {% assign 'Organisation location (region)' as label %}
+{% else %}
+  {% assign 'Project location (region)' as label %}
+{% endif %}
+{% include 'search/filters/inputs/ajax_select2.html' with name='geotarget' label=label %}
