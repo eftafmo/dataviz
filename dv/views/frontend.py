@@ -511,7 +511,6 @@ class _TypeaheadFacetedSearchView(object):
             key=lambda facet: facet[1],
             reverse=True
         )
-        facets = [facet for facet in facets if facet[1] > 0]
 
         paginator = Paginator(facets, self.results_limit)
         page = self.request.GET.get('page', 1)
