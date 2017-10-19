@@ -499,14 +499,19 @@ class _TypeaheadFacetedSearchView(object):
     template_name = None
     results_limit = 10
 
+    def get_context_data(self, *args, **kwargs):
+        # override so that it won't paginate queryset
+        return {'form': kwargs['form']}
+
     def get_data(self, context):
         form = context['form']
-        facets = context['facets']['fields'][form.auto_name]
+        facets = self.queryset.facet_counts()['fields'][form.auto_name]
         # facets format: [(value, count), ...]
         facets.sort(
             key=lambda facet: facet[1],
             reverse=True
         )
+        facets = [facet for facet in facets if facet[1] > 0]
 
         paginator = Paginator(facets, self.results_limit)
         page = self.request.GET.get('page', 1)
