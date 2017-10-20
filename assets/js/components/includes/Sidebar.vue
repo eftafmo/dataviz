@@ -78,12 +78,14 @@
     height: 3px;
     background: transparent;
   }
-  .tabs-component-tab:hover a{
-    text-decoration: none;
-    color: #50B9FF;
-  }
-  .tabs-component-tab:hover::after {
-    background: #50B9FF;
+  @media (min-width: 768px){
+    .tabs-component-tab:hover a{
+      text-decoration: none;
+      color: #50B9FF;
+    }
+    .tabs-component-tab:hover::after {
+      background: #50B9FF;
+    }
   }
   .tabs-component-tab.is-active a {
     color: rgb(0, 117, 188);
