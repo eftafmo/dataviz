@@ -68,17 +68,22 @@
     }
 
     .regions {
-      .beneficiary:not(.zero) {
-        &:hover {
-          stroke: #000;
+      @media (min-width: 768px){ 
+        .beneficiary:not(.zero) {
+          &:hover {
+            stroke: #000;
+          }
         }
       }
-      .level0 .beneficiary{
-        &:not(.zero) {
-          cursor: pointer;
 
-          &:hover {
-            stroke: #005494;
+      .level0 .beneficiary{
+        @media (min-width: 768px){ 
+          &:not(.zero) {
+            cursor: pointer;
+
+            &:hover {
+              stroke: #005494;
+            }
           }
         }
 
@@ -444,9 +449,12 @@ export default BaseMap.extend({
 
     registerEvents(selection) {
       selection
-        .on("click", this.clickfunc)
-        .on("mouseenter", this.mouseenterfunc)
-        .on("mouseleave", this.mouseleavefunc)
+        .on("click", this.clickfunc);
+        if (window.matchMedia("(min-width: 768px)").matches) {
+          selection.on("mouseenter", this.mouseenterfunc)
+                   .on("mouseleave", this.mouseleavefunc)
+        } 
+
     },
 
     doZoom(t) {
