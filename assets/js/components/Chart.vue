@@ -84,7 +84,8 @@ const Chart = Component.extend({
       else if (duration === undefined) duration = this.duration;
 
       return d3.transition()
-               .duration(duration);
+               .duration(duration)
+               .ease(d3.easeCubicOut)
     },
 
     // filters should re-render by default, unless specifically handled
