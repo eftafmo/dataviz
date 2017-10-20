@@ -5,8 +5,10 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
+@media (min-width: 768px) { 
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
 .clearfix:after {
