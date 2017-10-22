@@ -245,7 +245,7 @@ class Programme(_MainModel):
         """ Mutates its data! """
         mapping = cls.IMPORT_SOURCES[src_idx]['map']
         data[mapping['summary']] = bleach.clean(
-            data[mapping['summary']], strip=True, strip_comments=True)
+            data[mapping['summary']] or '', strip=True, strip_comments=True)
         data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
 
         return super().from_data(data, src_idx)
@@ -481,7 +481,7 @@ class Project(_MainModel):
         """ Mutates its data! """
         mapping = cls.IMPORT_SOURCES[src_idx]['map']
         data[mapping['summary']] = bleach.clean(
-            data[mapping['summary']], strip=True, strip_comments=True)
+            data[mapping['summary']] or '', strip=True, strip_comments=True)
         data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
 
         return super().from_data(data, src_idx)
