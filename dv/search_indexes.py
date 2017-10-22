@@ -217,8 +217,8 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
 
     # specific facets
     project_status = indexes.FacetMultiValueField()
-    org_type_category = indexes.FacetCharField(model_attr='orgtype__category')
-    org_type = indexes.FacetCharField(model_attr='orgtype__name')
+    org_type_category = indexes.FacetCharField(model_attr='orgtypecateg')
+    org_type = indexes.FacetCharField(model_attr='orgtype')
     country = indexes.FacetCharField(model_attr='country')
     city = indexes.FacetCharField(model_attr='city')
     city_auto = indexes.EdgeNgramField(model_attr='city')
@@ -256,8 +256,8 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     def init_caches(cls):
         # Cache programmes
         _fields = {
-            'code': F('programme__code'),
-            'name': F('programme__name'),
+            'prg_code': F('programme__code'),
+            'prg_name': F('programme__name'),
             'area': F('outcome__programme_area__name'),
             'sector': F('outcome__programme_area__priority_sector__name'),
             'fm': F('outcome__programme_area__financial_mechanism__grant_name'),
@@ -285,12 +285,12 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             'states': set(),
         })
         for prg in _all_programmes_raw:
-            ALL_PROGRAMMES[prg['code']]['name'] = prg['name'].strip()
-            ALL_PROGRAMMES[prg['code']]['fms'].add(prg['fm'])
-            ALL_PROGRAMMES[prg['code']]['sectors'].add(prg['sector'])
-            ALL_PROGRAMMES[prg['code']]['areas'].add(prg['area'])
-            ALL_PROGRAMMES[prg['code']]['states'].add(prg['state_name'])
-            ALL_PROGRAMMES[prg['code']]['status'] = prg['status']
+            ALL_PROGRAMMES[prg['prg_code']]['name'] = prg['prg_name'].strip()
+            ALL_PROGRAMMES[prg['prg_code']]['fms'].add(prg['fm'])
+            ALL_PROGRAMMES[prg['prg_code']]['sectors'].add(prg['sector'])
+            ALL_PROGRAMMES[prg['prg_code']]['areas'].add(prg['area'])
+            ALL_PROGRAMMES[prg['prg_code']]['states'].add(prg['state_name'])
+            ALL_PROGRAMMES[prg['prg_code']]['status'] = prg['status']
 
         cls.ALL_PROGRAMMES = ALL_PROGRAMMES
 
@@ -326,7 +326,6 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         return (
             self.get_model().objects
-            .select_related('orgtype')
             .prefetch_related('roles')
         )
 

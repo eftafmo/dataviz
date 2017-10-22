@@ -100,11 +100,16 @@ class ImportableModelMixin(object):
         for field, column in mapping.items():
             # the "column" can in fact be a tuple of (related field, input column)
             rel_field = None
-            if isinstance(column, (tuple, list)):
+            if isinstance(column, (tuple)):
+                # get the foreign relation by a non-pk field
                 rel_field, column = column
 
             try:
-                val = data[column]
+                if isinstance(column, list):
+                    # concatenate several columns into one field
+                    val = ''.join([str(data[c]) for c in column])
+                else:
+                    val = data[column]
             except KeyError:
                 logger.error("Column %s not found in sheet %s", column, sheet_name)
                 raise
@@ -113,8 +118,8 @@ class ImportableModelMixin(object):
                     _assign(field, val, rel_field)
                 except ObjectDoesNotExist as e:
                     logger.warning(
-                        "Error while assigning val: {} to field: {}, rel_field: {} ({})".format(
-                            val, field, rel_field, e))
+                        "Error while assigning {}.{}={}, rel_field: {} ({})".format(
+                            cls.__name__, field, val, rel_field, e))
                     return
 
         # if we have kernel_keys then identify an object already in db and update it
