@@ -1,4 +1,7 @@
-MAILTO=andrei.melis@eaudeweb.ro
+MAILTO=eeagrants@eaudeweb.ro
 PYTHONPATH=/usr/local/bin
 SHELL=/bin/bash
+
+
+0 4 * * *  . /root/.bashrc; $PYTHONPATH/python /var/local/dataviz/manage.py import /var/local/upload > /var/local/logs/import.log 2>&1
 
