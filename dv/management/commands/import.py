@@ -1,6 +1,7 @@
 import logging
 import pyexcel
 import os.path
+
 from functools import partial
 from itertools import cycle
 
@@ -8,6 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.cache import cache
 from django.db import IntegrityError
 from django.conf import settings
+from django.utils.timezone import localtime, now
 
 from dv.models import (
     FinancialMechanism, State, PrioritySector, ProgrammeArea,
@@ -51,9 +53,6 @@ MODELS = (
     OrganisationRole,
     Organisation_OrganisationRole,
 )
-#MODELS = (PrioritySector,Allocation,)
-#EXCEL_FILES = ('BeneficiaryStatePrioritySector',)
-
 
 class Command(BaseCommand):
     help = 'Import the files in the directory given as argument'
@@ -155,6 +154,12 @@ class Command(BaseCommand):
                 _write(_back + "Imported %s (%d rows): %d updated, %d skipped, %d failed" % (
                     model._meta.label, rows, updated, skipped, failed
                 ), self.style.SUCCESS)
+
+        # cleanup old data
+        d = localtime(now()).replace(hour=0, minute=0, second=0, microsecond=0)
+        for model in MODELS:
+            (count, _) = model.objects.filter(updated_at__lt=d).delete()
+            _write("Deleted {} {} older than {:%Y.%m.%d}".format(count, model._meta.label, d))
 
         cache.clear()
         _write("Cache cleared")
