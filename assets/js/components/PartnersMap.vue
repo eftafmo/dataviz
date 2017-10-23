@@ -137,6 +137,7 @@
 <script>
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
+import {colour2gray, slugify} from 'js/lib/util'
 
 import BaseMap from './BaseMap'
 
@@ -171,14 +172,6 @@ export default BaseMap.extend({
   },
 
   computed: {
-    chart_colours() {
-      return this.getColours(this.chart_opacity, .5);
-    },
-
-    region_colours() {
-      return this.getColours(this.region_opacity, .75);
-    },
-
     scale() {
       return this.chartWidth / this.width;
     },
@@ -255,35 +248,6 @@ export default BaseMap.extend({
         </div>`
     },
 
-
-    getColours(opacity, pmod) {
-      // projects modifier, because there's too many project lines
-      // TODO: should alter the opacity based on line density instead
-      if (!pmod) pmod = 1;
-
-      const cs = {};
-      for (const c in this.colours) {
-        cs[c] = d3.color(this.colours[c]);
-        cs[c].opacity = c != "projects" ? opacity : opacity * pmod;
-      }
-
-      return cs;
-    },
-
-    getRegionData(type, id) { // TODO: remove?
-      const data = this.data[type];
-      if (data === undefined) return;
-
-      const out = [];
-      for (const row of data) {
-        if (row.source === id || row.target === id) {
-          out.push(row);
-        }
-      }
-
-      return out;
-    },
-
     renderChart() {
       const t = this.getTransition()
 
@@ -349,6 +313,30 @@ export default BaseMap.extend({
             regions = container.selectAll('g')
                                .data(data, d => d.id)
 
+      const getColour = d => {
+        const colour = this.colours[type]
+
+        if (!this.filters.fm)
+          return colour
+
+        const country = this.getAncestorRegion(d.id, 0),
+              fms = this.COUNTRIES[country].fms
+
+        if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1) {
+          const gray = colour2gray(colour)
+          // get something inbetween this gray and the base colour
+          // (this could use some tweaking...)
+          const base = d3.rgb(colour)
+          for (const k of 'rgb') {
+            gray[k] = (gray[k] + base[k]) / 2
+          }
+
+          return gray
+        }
+        else
+          return colour
+      }
+
       // group connections by source region. will help us transition
       // to grayscale when filtering by fm
       const rentered = regions.enter()
@@ -360,7 +348,11 @@ export default BaseMap.extend({
                                 if (fms) out += " " + fms.join(" ")
                                 return out
                               })
-                              .attr('stroke', this.colours[type])
+                              .attr('stroke', getColour)
+
+      regions
+        .transition(t)
+        .attr('stroke', getColour)
 
       const rexit = regions.exit().remove()
 
