@@ -73,7 +73,7 @@
   }
 
   .partnerships {
-    stroke-width: 1; // TODO: make it dynamic
+    stroke-width: 1.5; // TODO: make it dynamic
     fill: none;
     pointer-events: none;
   }
@@ -121,13 +121,13 @@
   input[type=checkbox]:checked + label:before { content: "✔\fe0e"; } /* checked icon */
   #programmes {
     + label:before {
-      color: rgb(8,153,0);
+      color: #089900;
     }
   }
 
   #projects {
     + label:before {
-      color: rgb(204,133,0);
+      color: #e68a00;
     }
   }
 }
@@ -137,7 +137,7 @@
 <script>
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
-import {colour2gray, slugify} from 'js/lib/util'
+import {slugify} from 'js/lib/util'
 
 import BaseMap from './BaseMap'
 
@@ -167,7 +167,7 @@ export default BaseMap.extend({
       chart_opacity: 1.0,
       region_opacity: .8,
 
-      default_opacity: .7,
+      default_opacity: .8,
     };
   },
 
@@ -323,15 +323,7 @@ export default BaseMap.extend({
               fms = this.COUNTRIES[country].fms
 
         if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1) {
-          const gray = colour2gray(colour)
-          // get something inbetween this gray and the base colour
-          // (this could use some tweaking...)
-          const base = d3.rgb(colour)
-          for (const k of 'rgb') {
-            gray[k] = (gray[k] + base[k]) / 2
-          }
-
-          return gray
+          return this.weak_colours[type]
         }
         else
           return colour
