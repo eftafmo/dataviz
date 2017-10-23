@@ -236,6 +236,12 @@ export default BaseMap.extend({
     },
   },
 
+  mounted() {
+    // make remote territories visible
+    // this is very ugly. TODO: fix... somehow.. better
+    this.chart.attr('transform', 'translate(60,0)')
+  },
+
   methods: {
     tooltipTemplate(d) {
       const country = this.getAncestorRegion(d.id, 0)
