@@ -1,14 +1,14 @@
 import NUTS from 'js/constants/nuts.json';
 
 
-export function getRegionLabel(id) {
+export function getRegionName(id) {
   return NUTS[id]
 }
 
 
 export default {
   methods: {
-    getRegionLabel,
+    getRegionName,
 
     getRegionLevel(id) {
       if (!id) return null

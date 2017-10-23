@@ -28,22 +28,12 @@
       :zoomable="false"
   >
 
-    <template slot="after-map">
-      <transition-group name="fade"
-                        tag="div"
-                        ref="container"
-                        class="charts"
-      >
-        <div v-for="layer in layers"
-             v-show="visible_layers.indexOf(layer) != -1"
-             :key="layer"
-             class="layer"
-             :class="layer"
-        ></div>
-      </transition-group>
-
-      <div ref="current" class="current"></div>
-    </template>
+    <g class="partnerships">
+      <g v-for="layer in layers"
+         :class="layer"
+         class="base"
+      ></g>
+    </g>
 
   </map-base>
 
@@ -62,23 +52,30 @@
       pointer-events: all;
     }
 
-    path.donor  {
-      &:hover {
+    path.donor {
+      &:not(.zero):hover {
         stroke: #fff;
         stroke-opacity: 1;
       }
     }
 
-    path.beneficiary {
-      &:hover {
+    path.beneficiary, path.partner {
+      &.zero {
+        fill: none;
+        stroke: none;
+      }
+
+      &:not(.zero):hover {
         stroke: #000;
         stroke-opacity: 1;
       }
     }
+  }
 
-    path.partner {
-      opacity: 0;
-    }
+  .partnerships {
+    stroke-width: 1; // TODO: make it dynamic
+    fill: none;
+    pointer-events: none;
   }
 
   .selector {
@@ -133,43 +130,6 @@
       color: rgb(204,133,0);
     }
   }
-
-  .charts, .current {
-    &, * {
-      position: absolute;
-      left: 0;
-      top: 0;
-
-      width: 100%;
-      height: 100%;
-
-      pointer-events: none; // TODO: not enough on IE
-    }
-
-    canvas {
-      display: block;
-      opacity: 0;
-      transition: opacity @short_duration;
-
-      &.current {
-        opacity: 1;
-      }
-
-      &.previous {
-        opacity: 0;
-      }
-    }
-  }
-
-
-  .charts {
-    transition: opacity @short_duration;
-    opacity: 1;
-
-    &.with-region {
-      opacity: .3;
-    }
-  }
 }
 </style>
 
@@ -205,6 +165,8 @@ export default BaseMap.extend({
 
       chart_opacity: 1.0,
       region_opacity: .8,
+
+      default_opacity: .7,
     };
   },
 
@@ -226,6 +188,7 @@ export default BaseMap.extend({
         programmes: {},
         projects: {},
       }
+
       const dataset = this.filtered;
       for (const d of dataset) {
         for (const po_code in d.PO) {
@@ -248,33 +211,56 @@ export default BaseMap.extend({
           }
         }
       }
-      // initially stored as dict to remove duplicates, now convert to array
-      out.programmes = d3.values(out.programmes);
-      out.projects = d3.values(out.projects);
-      return out
+
+      // re-aggregate the data in both directions.
+      // we'll use this for d3's data binding.
+      const sources = {},
+            targets = {}
+
+      for (const type in out) {
+        const data = d3.values(out[type])
+
+        sources[type] = this.aggregate(
+          data,
+          [{source: 'source', destination: 'id'}],
+          [{source: 'target', destination: 'regions', type: String}]
+        )
+        targets[type] = this.aggregate(
+          data,
+          [{source: 'target', destination: 'id'}],
+          [{source: 'source', destination: 'regions', type: String}]
+        )
+      }
+
+      return {sources, targets}
     },
-  },
-
-  created() {
-    // set up the canvas cache
-    const ccache = {}
-    for (const l of this.layers) {
-      ccache[l] = {}
-    }
-    this._ccache = ccache
-
-    this.renderCurrentRegion = debounce(this.renderCurrentRegion,
-                                        this.renderWait.min)
   },
 
   methods: {
-    getContainer(ref) {
-      const c = this.$refs[ref];
+    tooltipTemplate(d) {
+      const country = this.getAncestorRegion(d.id, 0)
 
-      // if it's an element, it's a direct reference.
-      // if it's a transition group, then it's a component.
-      return c.$el ? c.$el : c;
+      let details = ''
+      for (const type in d.states) {
+        const typestr = type.charAt(0).toUpperCase() + type.slice(1, -1),
+              count = d.states[type].size()
+
+        details += `<li>${ typestr } partnerships with
+                    ${ count } ${ this.pluralize("state", count) }</li>`
+      }
+
+      return `
+        <div class="title-container">
+          <svg>
+            <use xlink:href="#${ this.get_flag_name(country) }" />
+          </svg>
+          <span class="name">${ this.getRegionName(d.id) } (${ d.id })</span>
+        </div>
+        <ul>
+          ${ details }
+        </ul>`
     },
+
 
     getColours(opacity, pmod) {
       // projects modifier, because there's too many project lines
@@ -290,7 +276,7 @@ export default BaseMap.extend({
       return cs;
     },
 
-    getRegionData(type, id) {
+    getRegionData(type, id) { // TODO: remove?
       const data = this.data[type];
       if (data === undefined) return;
 
@@ -304,145 +290,114 @@ export default BaseMap.extend({
       return out;
     },
 
-    renderChart(redraw) {
+    renderChart() {
       const t = this.getTransition()
 
       this.renderDonorColours(t)
-
-      const $this = this,
-            container = this.getContainer("container");
-
-      // ideally we'd remove these onTransitionEnd, but ... ....
-      d3.select(container).selectAll(".layer > canvas.previous")
-        .remove()
-
-      const prev = d3.select(container).selectAll(".layer > canvas:not(.previous)")
-      if (redraw)
-        prev.remove();
-      else
-        prev.attr("class", "previous");
-
-      const charts = d3.select(container).selectAll(".layer")
-        .data(this.layers) // we count on index order for match
-        .append("canvas")
-        .datum(d => d)
-        .attr("width", this.chartWidth)
-        .attr("height", this.chartHeight)
-        .each(function(d) {
-          const data = $this.data[d],
-                colour = $this.chart_colours[d]
-          $this.renderLayer(this, data, colour)
-        })
-
-      // fade in unless it's the initial render or a redraw
-      // (and let css handle the transitions)
-      if (!this.rendered || this.redraw)
-        charts.attr("class", "current")
-      else
-        this.$nextTick(function(){ charts.attr("class", "current") })
+      this.renderRegionData(t)
+      this.renderConnections(t)
+      this.renderVisibleLayers(t)
     },
 
-    renderCurrentRegion(r) {
-      d3.select(this.getContainer("container"))
-        .classed("with-region", r)
+    renderRegionData(t) {
+      // "render". this only updates the data
+      // so the toolip works
+      const dataset = this.data
 
-      const container = this.getContainer("current")
+      // merge the datasets to feed d3
+      const data = {}
 
-      d3.select(container).selectAll("canvas.previous")
-        .remove()
+      for (const collection in dataset) {
+        for (const type in dataset[collection]) {
+          for (const id in dataset[collection][type]) {
+            const row = dataset[collection][type][id]
 
-      d3.select(container).selectAll("canvas:not(.previous)")
-        .attr("class", "previous")
+            let item = data[id]
+            if (item === undefined)
+              item = data[id] = {
+                id: id,
+                states: {},
+              }
 
-      if(!r) return;
-
-      const canvases = []
-      // don't bother rendering non-visible stuff
-      for (const type of this.visible_layers) {
-        // cache the canvas.
-        // TODO: disabled for now. check memory usage.
-        // it's seems surprisingly small in chrome, very high in firefox
-        // (for ~450 canvases (data for ~400 regions))
-        //let canvas = this._ccache[type][r];
-
-        //if (canvas === undefined) {
-          const data = this.getRegionData(type, r)
-
-          // skip no-data
-          if(!data || !data.length) continue
-
-          //canvas = this._ccache[type][r] = document.createElement("canvas")
-          const canvas = document.createElement("canvas")
-
-          canvas.setAttribute("width", this.chartWidth)
-          canvas.setAttribute("height", this.chartHeight)
-
-          const colour = this.region_colours[type]
-
-          this.renderLayer(canvas, data, colour)
-        //}
-
-        canvases.push(canvas)
-      }
-
-      for (const c of canvases) {
-        if (c.parentNode) {
-          // if it's already bound to the parent it was pending cleanup
-          c.className = "current"
-          continue
+            const states = d3.set()
+            row.regions.each(x => states.add(this.getAncestorRegion(x, 0)))
+            item.states[type] = states
+          }
         }
-        container.appendChild(c)
-        this.$nextTick(function(){ c.className = "current" })
+      }
+
+      const regions = this.chart.selectAll('.regions > g > path')
+                          .data(d3.values(data), d => d.id)
+
+      regions
+        .classed("zero", false)
+
+      regions
+        .exit()
+        .classed("zero", true)
+        .each(function(d) {
+          // reset data
+          delete d.states
+        })
+    },
+
+    renderConnections(t) {
+      // we render from the donor side
+      const conndata = this.data.sources
+
+      for (const type in conndata) {
+        this._renderConnections(type, d3.values(conndata[type]), t)
       }
     },
 
-    renderLayer(canvas, data, colour) {
-      if (data === undefined || data.length == 0) return;
+    _renderConnections(type, data, t) {
+      const container = this.chart.select(`.partnerships > .${ type }`),
+            regions = container.selectAll('g')
+                               .data(data, d => d.id)
 
-      // note that setting the width or height causes the context
-      // to be discarded. normally this is a fresh canvas and
-      // the dimensions were set appropriately by vue, however
-      // this might be a forced refresh during resizing
-      if (canvas.width != this.chartWidth) {
-        canvas.width = this.chartWidth
-        canvas.height = this.chartHeight
-      }
+      // group connections by source region. will help us transition
+      // to grayscale when filtering by fm
+      const rentered = regions.enter()
+                              .append('g')
+                              .attr('class', d => {
+                                const country = this.getAncestorRegion(d.id, 0),
+                                      fms = this.COUNTRIES[country].fms
+                                let out = d.id
+                                if (fms) out += " " + fms.join(" ")
+                                return out
+                              })
+                              .attr('stroke', this.colours[type])
 
-      const ctx = canvas.getContext("2d");
+      const rexit = regions.exit().remove()
 
-      const geodetails = this.map.geodetails
-      const k = this.scale
+      const connections = regions.merge(rentered).selectAll('path')
+                                 .data(
+                                   // make the path aware of the source
+                                   d => d.regions.values().map(
+                                     x => ({src: d.id, dst: x})
+                                   ),
+                                   d => d.src + '-' + d.dst
+                                 )
 
+      const _badids = d3.set()
 
-      const _badids = d3.set();
+      const getArc = (src, dst) => { // TODO: memoize this
+        // the simple approach would be to draw an arc with the same radius
+        // as the distance between points, but we're gonna use a quadratic
+        // curve instead, which allows us to mess with the arc's radius
+        // programatically §
+        // (also, we can use the same calculations to draw into a canvas)
 
-      // no need to clear, it's done by setting the width & height
-      //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const geodetails = this.map.geodetails
 
-      //ctx.fillStyle = colour;
-      ctx.strokeStyle = colour;
-
-      // for WebKit/Blink -based browsers
-      try{
-        ctx.setStrokeColor(colour);
-      }
-      catch(e) {
-      }
-
-      // make the line 1px wide, but scale down if necessary
-      ctx.lineWidth = k > 1 ? 1 : Math.min(1, k * 2);
-
-      ctx.beginPath();
-
-      for (const d of data) {
-        const i0 = d.source,
-              i1 = d.target,
-              o0 = geodetails[i0],
-              o1 = geodetails[i1];
+        const o0 = geodetails[src],
+              o1 = geodetails[dst]
 
         if (o0 === undefined) _badids.add(i0);
         if (o1 === undefined) _badids.add(i1);
-        if (o0 === undefined || o1 === undefined) continue;
+        if (o0 === undefined || o1 === undefined) return
+
+        const k = 1 // this.scale if drawing into a canvas
 
         const p0 = o0.centroid,
               p1 = o1.centroid,
@@ -452,9 +407,6 @@ export default BaseMap.extend({
 
               x1 = p1.x * k,
               y1 = p1.y * k,
-
-              // approximate the arc of a circle with radius equal to the distance
-              // between p0 and p1, using a quadratic curve (a single control point)
 
               // distance between points
               _dx = x1 - x0,
@@ -481,23 +433,116 @@ export default BaseMap.extend({
         let x = _mx + s * _ox,
             y = _my - s * _oy;
 
-        // a little hack for iceland - portugal links
+        // a little hack for iceland - portugal links §
         if (x < 0) {
           x = _mx + s * _ox / 2;
           y = _my - s * _oy / 2;
         }
 
-        ctx.moveTo(x0, y0)
-        ctx.quadraticCurveTo(x, y, x1, y1)
 
-        //ctx.fillRect(x0 - 2, y0 - 2, 4, 4)
-        //ctx.fillRect(x1 - 2, y1 - 2, 4, 4)
+        //return `M ${ x0 },${ y0 } A ${ r },${ r } 0 0,${ (s + 1) / 2 } ${ x1 },${ y1 }`
+        return `M ${ x0 },${ y0 } Q ${ x },${ y } ${ x1 },${ y1 }`
+
+        ctx.quadraticCurveTo(x, y, x1, y1)
       }
 
-      ctx.stroke();
+      // because performing transitions on hundreds of paths kills rendering,
+      // connections that enter / exit will instead be moved to a different
+      // layer, and transitioned all at once
 
+      const connentered = connections.enter()
+        .append('path')
+        .attr('class', d => d.dst)
+        .attr('d', d => getArc(d.src, d.dst))
+
+      // (some error checking)
       if (!_badids.empty())
         console.error("Unknown NUTS codes:", _badids.values());
+
+      const connexit = connections.exit().remove()
+
+      // buuut don't go through the craziness if there's nothing to transition
+      if (t.duration() == 0) return
+
+      const transitionConnections = (selection, newstuff) => {
+        if (selection.empty()) return
+
+        // shallow clone the container
+        const baselayer = container.node(),
+              newlayer = baselayer.cloneNode(false)
+
+        // insert the clone before the original if pending removal,
+        // or after if the stuff is new
+        baselayer.parentNode.insertBefore(newlayer,
+                                          newstuff ? baselayer.nextSibling : baselayer)
+
+        // if exiting, this is a good time to add the fully-removed regions
+        if (!newstuff) {
+          rexit.each(function() {
+            newlayer.appendChild(this)
+          })
+        }
+
+        if (newstuff) newlayer.setAttribute('opacity', 0)
+
+        // we're gonna move all the exit nodes under the new layer, but
+        // we must clone each parent group as well, so...
+        // instead of looping over connexit.nodes() and chasing each parent,
+        // we'll using d3's beautifulous internals, which are structured
+        // exactly the way we want them
+
+        selection._groups.forEach(function(group, i) {
+          // filter out empty elements
+          group = group.filter(x => true)
+          if (!group.length) return
+
+          const parent = selection._parents[i],
+                newparent = parent.cloneNode(false)
+          newlayer.appendChild(newparent)
+
+          for (const connection of group) {
+            newparent.appendChild(connection)
+          }
+        })
+
+        const exitfunc = function() {
+          this.remove()
+        }
+
+        const enterfunc = function() {
+          const parents = this.querySelectorAll('g')
+
+          for (const parent of parents) {
+            const selector = parent.getAttribute("class")
+                                   .split(" ").map(c => "." + c).join("")
+
+            const baseparent = baselayer.querySelector('g' + selector)
+            // also bring the parent to front, avoids some flicker
+            baseparent.parentNode.appendChild(baseparent)
+
+            while (parent.firstChild) {
+              baseparent.appendChild(parent.firstChild)
+            }
+          }
+
+          this.remove()
+        }
+
+        // we need to delay things a bit or d3 gets very confused
+        this.$nextTick( () =>
+          d3.select(newlayer)
+            .classed("base", false)
+            .classed(newstuff ? "new" : "old", true)
+            .transition(t)
+            .attr('opacity', newstuff ? this.default_opacity : 0)
+            .on('end', newstuff ? enterfunc : exitfunc)
+        )
+      }
+
+      // FIXME: there's something broken with the enter, leaving as is for now
+      //transitionConnections(connentered, true)
+      transitionConnections(connexit, false)
+
     },
 
     registerEvents(selection) {
@@ -505,22 +550,39 @@ export default BaseMap.extend({
 
       const doMouse = (over) => {
         return function(d, i) {
-          const sel = d3.select(this);
+          const self = d3.select(this)
+
+          // disable when zeroed
+          if (self.classed("zero")) return
 
           if (over) {
-            sel
-              .raise()
-            //$this.tip.show.call(this, d, i)
+            self.raise()
+            $this.tip.show.call(this, d, i)
           } else {
-            //$this.tip.hide.call(this, d, i)
+            $this.tip.hide.call(this, d, i)
           }
 
-          $this.renderCurrentRegion(over ? d.id : null);
+          //$this.renderCurrentRegion(over ? d.id : null);
         }
       }
 
       selection.on("mouseenter", doMouse(true))
       selection.on("mouseleave", doMouse(false))
+    },
+
+    renderVisibleLayers(t) {
+      if (t === undefined) t = this.getTransition()
+
+      for (const layer of this.layers) {
+        this.chart.select(`.partnerships > .${ layer }`)
+          .transition(t)
+          .attr('opacity', this.visible_layers.indexOf(layer) === -1 ?
+                0 : this.default_opacity)
+      }
+    },
+
+    handleLayers() {
+      this.renderVisibleLayers()
     },
 
     handleFilter() {
@@ -529,14 +591,13 @@ export default BaseMap.extend({
   },
 
   watch: {
+    visible_layers: "handleLayers",
+
     chartWidth() {
       // re-render on resize. but don't hijack the initial render.
       if (!this.rendered) return
 
-      this.renderChart(true)
-      for (const l in this._ccache) {
-        this._ccache[l] = {}
-      }
+      this.renderChart()
     },
   },
 });

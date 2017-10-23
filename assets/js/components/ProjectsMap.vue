@@ -133,7 +133,7 @@ const RegionDetails = {
   computed: {
     label() {
       return this.region.id.length == 2 ? this.root_label
-                                        : this.$self.getRegionLabel(this.region.id) + ' (' + this.region.id + ')'
+                                        : this.$self.getRegionName(this.region.id) + ' (' + this.region.id + ')'
     },
 
     count() {
@@ -283,7 +283,7 @@ export default AllocationMap.extend({
             <svg>
               <use xlink:href="#${this.get_flag_name(d.id)}" />
             </svg>
-            <span class="name">${ this.getRegionLabel(d.id) } (${d.id})</span>
+            <span class="name">${ this.getRegionName(d.id) } (${d.id})</span>
           </div>` + country_details;
       }
     },

@@ -169,7 +169,6 @@ import BaseMap from './BaseMap'
 
 import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
-import WithTooltipMixin from './mixins/WithTooltip';
 
 
 export default BaseMap.extend({
@@ -177,7 +176,6 @@ export default BaseMap.extend({
 
   mixins: [
     WithCountriesMixin, WithFMsMixin,
-    WithTooltipMixin,
   ],
 
   components: {
@@ -286,21 +284,6 @@ export default BaseMap.extend({
 
     zoomOut() {
       this.filters.beneficiary = null
-    },
-
-    tooltipTemplate() {
-      throw new Error("Not implemented");
-    },
-
-    createTooltip() {
-      let tip = d3.tip()
-          .attr('class', 'dataviz-tooltip map')
-          .html(this.tooltipTemplate)
-          .direction('n')
-          .offset([0, 0])
-
-       this.tip = tip;
-       this.chart.call(this.tip)
     },
 
     opacityfunc(parentid) {

@@ -29,6 +29,7 @@ import Chart from './Chart'
 import MapBase from './includes/MapBase'
 
 import WithRegionsMixin from './mixins/WithRegions'
+import WithTooltipMixin from './mixins/WithTooltip'
 
 
 // jumping through hoops because of vue's lack of template inheritance.
@@ -61,6 +62,7 @@ export default Chart.extend({
 
   mixins: [
     WithRegionsMixin,
+    WithTooltipMixin,
   ],
 
   components: {
@@ -115,6 +117,21 @@ export default Chart.extend({
       this.map_rendered = true
     },
 
+    tooltipTemplate() {
+      throw new Error("Not implemented");
+    },
+
+    createTooltip() {
+      let tip = d3.tip()
+          .attr('class', 'dataviz-tooltip map')
+          .html(this.tooltipTemplate)
+          .direction('n')
+          .offset([0, 0])
+
+       this.tip = tip;
+       this.chart.call(this.tip)
+    },
+
     renderDonorColours(t) {
       let with_eea = false,
           with_no = false;
@@ -131,15 +148,29 @@ export default Chart.extend({
         with_no = true
 
       else {
-        // the dataset is the source of truth
-        for (const row of this.data) {
-          if (!with_eea && row.fms.has(eea))
-            with_eea = true
+        // the dataset is the source of truth.
+        // normally we already looped over if and have it aggregated:
+        if (this.data instanceof Array) {
+          for (const row of this.data) {
+            if (!with_eea && row.fms.has(eea))
+              with_eea = true
 
-          if (!with_no && row.fms.has(no))
-            with_no = true
+            if (!with_no && row.fms.has(no))
+              with_no = true
 
-          if (with_eea && with_no) break
+            if (with_eea && with_no) break
+          }
+        } else {
+          // we need to loop over the entire filtered dataset
+          for (const row of this.filtered) {
+            if (!with_eea && row.fm == eea)
+              with_eea = true
+
+            if (!with_no && row.fm == no)
+              with_no = true
+
+            if (with_eea && with_no) break
+          }
         }
       }
 
