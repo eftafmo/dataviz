@@ -246,25 +246,13 @@ export default BaseMap.extend({
     tooltipTemplate(d) {
       const country = this.getAncestorRegion(d.id, 0)
 
-      let details = ''
-      for (const type in d.states) {
-        const typestr = type.charAt(0).toUpperCase() + type.slice(1, -1),
-              count = d.states[type].size()
-
-        details += `<li>${ typestr } partnerships with
-                    ${ count } ${ this.pluralize("state", count) }</li>`
-      }
-
       return `
         <div class="title-container">
           <svg>
             <use xlink:href="#${ this.get_flag_name(country) }" />
           </svg>
           <span class="name">${ this.getRegionName(d.id) } (${ d.id })</span>
-        </div>
-        <ul>
-          ${ details }
-        </ul>`
+        </div>`
     },
 
 
