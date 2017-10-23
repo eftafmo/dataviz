@@ -9,7 +9,7 @@
               <small v-show="!filters.sector">{{ sector }}</small>
               <ul class="indicators">
                  <li v-for="(value, indicator) in indicators" class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
-                    <div class="indicator-achievement"> {{ value }}</div>
+                    <div class="indicator-achievement"> {{ number(value) }}</div>
                     <div class="indicator-name"> {{ indicator }} </div>
                  </li>
               </ul>
