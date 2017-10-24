@@ -7829,14 +7829,14 @@
     "model": "dv.nuts",
     "pk": "IS001",
     "fields": {
-      "label": "Hfuborgarsvi"
+      "label": "Höfuðborgarsvæði"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "IS002",
     "fields": {
-      "label": "Landsbygg"
+      "label": "Landsbyggð"
     }
   },
   {
