@@ -29,10 +29,8 @@
   >
 
     <g class="partnerships">
-      <g v-for="layer in layers"
-         :class="layer"
-         class="base"
-      ></g>
+      <g class="base projects"></g>
+      <g class="base programmes"></g>
     </g>
 
   </map-base>
