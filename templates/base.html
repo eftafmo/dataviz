@@ -1,5 +1,6 @@
 <!doctype html>
 {% load webpack_loader %}
+{% load tags %}
 <html>
 <head>
   <meta charset="utf-8">
@@ -28,9 +29,8 @@
             <li><a href="{% url 'frontend:projects' %}"{% if current_view == 'frontend:projects' %} class="active"{% endif %}>Projects</a></li>
           </ul>
         </nav>
+        <form action="{% url view|search_view_name:current_view %}" class="header-search">
 {% endwith %}
-
-        <form action="{% url 'frontend:search_programme' %}" class="header-search">
           <input type="search" placeholder="Search" name="q">
           <button type="submit" title="Search" name="page" value="1">
             <span class="icon icon-search"></span>

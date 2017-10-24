@@ -3,6 +3,8 @@ from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import force_text
 
+from dv.views import frontend as views
+
 register = template.Library()
 
 
@@ -64,3 +66,14 @@ def kind_label(kind, count):
         'News': ('news', 'project news'),
     }
     return kinds[kind][1 if count > 1 else 0]
+
+
+@register.filter
+def search_view_name(view, view_name):
+    if isinstance(view, views.FacetedSearchView):
+        return view_name
+    scenarios = {
+        'frontend:partners': 'frontend:search_organisation',
+        'frontend:projects': 'frontend:search_project',
+    }
+    return scenarios.get(view_name, 'frontend:search_programme')
