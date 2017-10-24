@@ -9558,7 +9558,7 @@
     "model": "dv.nuts",
     "pk": "NO0",
     "fields": {
-      "label": "Norway"
+      "label": "NORGE"
     }
   },
   {
@@ -9607,14 +9607,14 @@
     "model": "dv.nuts",
     "pk": "NO03",
     "fields": {
-      "label": "Sr-stlandet"
+      "label": "Sør-Østlandet"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "NO031",
     "fields": {
-      "label": "stfold"
+      "label": "Østfold"
     }
   },
   {
@@ -9691,28 +9691,28 @@
     "model": "dv.nuts",
     "pk": "NO053",
     "fields": {
-      "label": "Mre og Romsdal"
+      "label": "Møre og Romsdal"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "NO06",
     "fields": {
-      "label": "Trndelag"
+      "label": "Trøndelag"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "NO061",
     "fields": {
-      "label": "Sr-Trndelag"
+      "label": "Sør-Trøndelag"
     }
   },
   {
     "model": "dv.nuts",
     "pk": "NO062",
     "fields": {
-      "label": "Nord-Trndelag"
+      "label": "Nord-Trøndelag"
     }
   },
   {
