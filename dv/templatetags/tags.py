@@ -53,3 +53,14 @@ def active(expected_kind, current_kind):
 @register.assignment_tag
 def assign(value):
     return value
+
+
+@register.filter
+def kind_label(kind, count):
+    kinds = {
+        'Programme': ('programme', 'programmes'),
+        'Project': ('project', 'projects'),
+        'Organisation': ('organisation', 'organisations'),
+        'News': ('news', 'project news'),
+    }
+    return kinds[kind][1 if count > 1 else 0]
