@@ -68,7 +68,7 @@
     }
 
     .regions {
-      @media (min-width: 768px){ 
+      @media (min-width: 768px){
         .beneficiary:not(.zero) {
           &:hover {
             stroke: #000;
@@ -77,7 +77,7 @@
       }
 
       .level0 .beneficiary{
-        @media (min-width: 768px){ 
+        @media (min-width: 768px){
           &:not(.zero) {
             cursor: pointer;
 
@@ -171,7 +171,7 @@ import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
 
 
-export default BaseMap.extend({
+const AllocationMap = BaseMap.extend({
   type: "allocation",
 
   mixins: [
@@ -391,32 +391,12 @@ export default BaseMap.extend({
       // disable mouseover events while transitioning
       if (this.transitioning) return
 
-      const self = d3.select(group[i])
+      // disable mouseover events on mobile because of iphone quirks
+      // TODO: fix this, it's too broad
+      // (and events should be handled specifically for mobile as needed)
+      if (window.matchMedia("(max-width: 767px)").matches) return
 
-      // also disable when zeroed
-      if (self.classed("zero")) return
-
-      if (over) {
-        self.raise()
-        // we also need to raise the parent container
-        d3.select(this.parentNode).raise()
-
-        this.tip.show.call(self.node(), d, i)
-        this.hovered_region = d
-      } else {
-        this.tip.hide.call(self.node(), d, i)
-        this.hovered_region = null
-      }
-
-      return self
-    },
-
-    mouseenterfunc(d, i, group) {
-      return this._domouse(true, d, i, group)
-    },
-
-    mouseleavefunc(d, i, group) {
-      return this._domouse(false, d, i, group)
+      return this.$super(AllocationMap, this)._domouse(over, d, i, group)
     },
 
     clickfunc(d, i, group) {
@@ -428,16 +408,6 @@ export default BaseMap.extend({
       if (d.id.length == 2) this.toggleBeneficiary(d)
 
       return self
-    },
-
-    registerEvents(selection) {
-      selection
-        .on("click", this.clickfunc);
-        if (window.matchMedia("(min-width: 768px)").matches) {
-          selection.on("mouseenter", this.mouseenterfunc)
-                   .on("mouseleave", this.mouseleavefunc)
-        } 
-
     },
 
     doZoom(t) {
@@ -543,5 +513,7 @@ export default BaseMap.extend({
       this.render()
     },
   },
-});
+})
+
+export default AllocationMap
 </script>

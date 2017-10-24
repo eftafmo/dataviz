@@ -518,32 +518,6 @@ export default BaseMap.extend({
       // FIXME: there's something broken with the enter, leaving as is for now
       //transitionConnections(connentered, true)
       transitionConnections(connexit, false)
-
-    },
-
-    registerEvents(selection) {
-      const $this = this;
-
-      const doMouse = (over) => {
-        return function(d, i) {
-          const self = d3.select(this)
-
-          // disable when zeroed
-          if (self.classed("zero")) return
-
-          if (over) {
-            self.raise()
-            $this.tip.show.call(this, d, i)
-          } else {
-            $this.tip.hide.call(this, d, i)
-          }
-
-          //$this.renderCurrentRegion(over ? d.id : null);
-        }
-      }
-
-      selection.on("mouseenter", doMouse(true))
-      selection.on("mouseleave", doMouse(false))
     },
 
     renderVisibleLayers(t) {

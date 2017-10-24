@@ -320,7 +320,6 @@ export default AllocationMap.extend({
     },
 
     clickfunc(d, i, group) {
-      const $this = this;
       const self = this.$super.clickfunc(d, i, group)
 
       if (!self) return

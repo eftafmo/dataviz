@@ -132,6 +132,47 @@ export default Chart.extend({
        this.chart.call(this.tip)
     },
 
+    registerEvents(selection) {
+      selection
+        .on("click", this.clickfunc)
+        .on("mouseenter", this.mouseenterfunc)
+        .on("mouseleave", this.mouseleavefunc)
+    },
+
+    clickfunc(d, i, group) {
+      return
+    },
+
+    mouseenterfunc(d, i, group) {
+      return this._domouse(true, d, i, group)
+    },
+
+    mouseleavefunc(d, i, group) {
+      return this._domouse(false, d, i, group)
+    },
+
+    _domouse(over, d, i, group) {
+      const thisnode = group[i]
+      const self = d3.select(thisnode)
+
+      // disable mouse-over when zeroed
+      if (self.classed("zero")) return
+
+      if (over) {
+        self.raise()
+        // we also need to raise the parent container
+        d3.select(thisnode.parentNode).raise()
+
+        this.tip.show.call(self.node(), d, i)
+        this.hovered_region = d
+      } else {
+        this.tip.hide.call(self.node(), d, i)
+        this.hovered_region = null
+      }
+
+      return self
+    },
+
     renderDonorColours(t) {
       let with_eea = false,
           with_no = false;
