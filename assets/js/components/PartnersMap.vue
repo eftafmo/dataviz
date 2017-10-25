@@ -29,8 +29,7 @@
   >
 
     <g class="partnerships">
-      <g class="base projects"></g>
-      <g class="base programmes"></g>
+      <g v-for="layer in layers" :class="layer" class="base"></g>
     </g>
 
   </map-base>
@@ -153,7 +152,8 @@ export default BaseMap.extend({
   props: {
     layers: {
       type: Array,
-      default: () => ["programmes", "projects"],
+      // note the order. (makes sure "programmes" is always on top in svgs)
+      default: () => ["projects", "programmes"]
     },
   },
 
@@ -166,64 +166,134 @@ export default BaseMap.extend({
       region_opacity: .8,
 
       default_opacity: .8,
+      highlighted_opacity: .9,
+      faded_opacity: .2,
     };
   },
 
   computed: {
+    current_layers() {
+      // like visible_layers, but preserving order
+      return this.layers.filter(x => this.visible_layers.indexOf(x) !== -1)
+    },
+
     scale() {
       return this.chartWidth / this.width;
     },
 
-    data() {
-      const out = {
-        programmes: {},
-        projects: {},
-      }
+    aggregated() {
+      /*
+        this exists because we need to compute two datasets:
 
-      const dataset = this.filtered;
-      for (const d of dataset) {
-        for (const po_code in d.PO) {
-          if (d.DPP_nuts) {
-            // we can have rows with PO but not DPP (only projects)
-            out.programmes[d.DPP_nuts+d.PO[po_code].nuts] = {
-              'source': d.DPP_nuts,
-              'target': d.PO[po_code].nuts,
-            };
-          }
-        }
-        for (const prj_nuts of d.prj_nuts) {
-          if (prj_nuts.dst) {
-            // many project partners don't have nuts. let them be
-            // we do want to see donor project partners with no nuts, though
-            out.projects[prj_nuts.src+prj_nuts.dst] = {
-              'source': prj_nuts.src,
-              'target': prj_nuts.dst,
+        - the region-to-region array, for drawing the connections.
+          must be grouped by type (programme / project) and source country;
+
+        - the array of regions involved, for showing on the map, resembling
+          what we would "normally" aggregate.
+          must contain aggregated FMs (so the donor colours can be derived).
+      */
+
+      const dataset = this.filtered
+
+      const connections = {
+              programmes: {},
+              projects: {},
+            },
+            // group regions by type as well, so we can use the type
+            // as a "data filter" later on
+            regions = {
+              programmes: {},
+              projects: {},
             }
-          }
+
+      const _getConnectionGroup = (type, id) => {
+        // grouping by country
+        const country = this.getAncestorRegion(id, 0)
+
+        let group = connections[type][country]
+        if (group === undefined) group = connections[type][country] = {}
+
+        return group
+      }
+
+      const _getRegion = (type, id) => {
+        let region = regions[type][id]
+        if (region === undefined) region = regions[type][id] = {
+          //id: id, // skipping this because data() reaggregates anyway
+          fms: d3.set(),
+          // add here anything else you might want to aggregate on
+        }
+        return region
+      }
+
+      const _setData = (type, source, target, d) => {
+        const conngroup = _getConnectionGroup(type, source)
+        conngroup[`${source}-${target}`] = {source, target}
+
+        if (source) _getRegion(type, source).fms.add(d.fm)
+        if (target) _getRegion(type, target).fms.add(d.fm)
+      }
+
+      for (const d of dataset) {
+        let type
+
+        type = "programmes"
+        for (const po_code in d.PO) {
+          if (!d.DPP_nuts) continue
+          // we can have rows with PO but not DPP (only projects)
+          const source = d.DPP_nuts,
+                target = d.PO[po_code].nuts
+
+          _setData(type, source, target, d)
+        }
+
+        type = "projects"
+        for (const prj_nuts of d.prj_nuts) {
+          if (!prj_nuts.dst) continue
+          // many project partners don't have nuts. let them be
+          // we do want to see donor project partners with no nuts, though
+          const source = prj_nuts.src,
+                target = prj_nuts.dst
+
+          _setData(type, source, target, d)
         }
       }
 
-      // re-aggregate the data in both directions.
-      // we'll use this for d3's data binding.
-      const sources = {},
-            targets = {}
-
-      for (const type in out) {
-        const data = d3.values(out[type])
-
-        sources[type] = this.aggregate(
-          data,
-          [{source: 'source', destination: 'id'}],
-          [{source: 'target', destination: 'regions', type: String}]
-        )
-        targets[type] = this.aggregate(
-          data,
-          [{source: 'target', destination: 'id'}],
-          [{source: 'source', destination: 'regions', type: String}]
-        )
+      // flatten the connections data
+      for (const type in connections) {
+        const collection = []
+        for (const country in connections[type]) {
+          collection.push({
+            country: country,
+            connections: d3.values(connections[type][country])
+          })
+        }
+        connections[type] = collection
       }
 
-      return {sources, targets}
+      return {regions, connections}
+    },
+
+    data() {
+      const datasets = this.aggregated.regions
+      // merge the regions together
+      // NOTE: if we want to filter by type this is where we can do it
+      const out = {}
+
+      for (const type in datasets) {
+        const dataset = datasets[type]
+
+        for (const id in dataset) {
+          let region = out[id]
+          if (region === undefined) region = out[id] = {
+            id: id,
+            fms: d3.set(),
+          }
+          dataset[id].fms.each(x => region.fms.add(x))
+        }
+      }
+
+      return d3.values(out)
     },
   },
 
@@ -256,34 +326,10 @@ export default BaseMap.extend({
     },
 
     renderRegionData(t) {
-      // "render". this only updates the data
-      // so the toolip works
-      const dataset = this.data
-
-      // merge the datasets to feed d3
-      const data = {}
-
-      for (const collection in dataset) {
-        for (const type in dataset[collection]) {
-          for (const id in dataset[collection][type]) {
-            const row = dataset[collection][type][id]
-
-            let item = data[id]
-            if (item === undefined)
-              item = data[id] = {
-                id: id,
-                states: {},
-              }
-
-            const states = d3.set()
-            row.regions.each(x => states.add(this.getAncestorRegion(x, 0)))
-            item.states[type] = states
-          }
-        }
-      }
-
+      // "render". this only updates the data so the tooltip works.
+      // TODO: transition the zero <-> non-zero beneficiaries
       const regions = this.chart.selectAll('.regions > g > path')
-                          .data(d3.values(data), d => d.id)
+                          .data(this.data, d => d.id)
 
       regions
         .classed("zero", false)
@@ -291,15 +337,11 @@ export default BaseMap.extend({
       regions
         .exit()
         .classed("zero", true)
-        .each(function(d) {
-          // reset data
-          delete d.states
-        })
     },
 
     renderConnections(t) {
       // we render from the donor side
-      const conndata = this.data.sources
+      const conndata = this.aggregated.connections
 
       for (const type in conndata) {
         this._renderConnections(type, d3.values(conndata[type]), t)
@@ -309,7 +351,7 @@ export default BaseMap.extend({
     _renderConnections(type, data, t) {
       const container = this.chart.select(`.partnerships > .${ type }`),
             regions = container.selectAll('g')
-                               .data(data, d => d.id)
+                               .data(data, d => d.country)
 
       const getColour = d => {
         const colour = this.colours[type]
@@ -317,27 +359,20 @@ export default BaseMap.extend({
         if (!this.filters.fm)
           return colour
 
-        const country = this.getAncestorRegion(d.id, 0),
+        const country = d.country,
               fms = this.COUNTRIES[country].fms
 
-        if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1) {
+        if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1)
           return this.weak_colours[type]
-        }
         else
           return colour
       }
 
-      // group connections by source region. will help us transition
+      // connections are grouped by source state. will help us transition
       // to grayscale when filtering by fm
       const rentered = regions.enter()
                               .append('g')
-                              .attr('class', d => {
-                                const country = this.getAncestorRegion(d.id, 0),
-                                      fms = this.COUNTRIES[country].fms
-                                let out = d.id
-                                if (fms) out += " " + fms.join(" ")
-                                return out
-                              })
+                              .attr('class', d => d.country)
                               .attr('stroke', getColour)
 
       regions
@@ -348,16 +383,13 @@ export default BaseMap.extend({
 
       const connections = regions.merge(rentered).selectAll('path')
                                  .data(
-                                   // make the path aware of the source
-                                   d => d.regions.values().map(
-                                     x => ({src: d.id, dst: x})
-                                   ),
+                                   d => d.connections,
                                    d => d.src + '-' + d.dst
                                  )
 
       const _badids = d3.set()
 
-      const getArc = (src, dst) => { // TODO: memoize this
+      const getArc = (source, target) => { // TODO: memoize this
         // the simple approach would be to draw an arc with the same radius
         // as the distance between points, but we're gonna use a quadratic
         // curve instead, which allows us to mess with the arc's radius
@@ -366,8 +398,8 @@ export default BaseMap.extend({
 
         const geodetails = this.map.geodetails
 
-        const o0 = geodetails[src],
-              o1 = geodetails[dst]
+        const o0 = geodetails[source],
+              o1 = geodetails[target]
 
         if (o0 === undefined) _badids.add(i0);
         if (o1 === undefined) _badids.add(i1);
@@ -428,8 +460,8 @@ export default BaseMap.extend({
 
       const connentered = connections.enter()
         .append('path')
-        .attr('class', d => d.dst)
-        .attr('d', d => getArc(d.src, d.dst))
+        .attr('class', d => `${d.source} ${d.target}`)
+        .attr('d', d => getArc(d.source, d.target))
 
       // (some error checking)
       if (!_badids.empty())
@@ -518,6 +550,84 @@ export default BaseMap.extend({
       // FIXME: there's something broken with the enter, leaving as is for now
       //transitionConnections(connentered, true)
       transitionConnections(connexit, false)
+    },
+
+    _domouse(over, d, i, group) {
+      const self = this.$super._domouse(over, d, i, group)
+      if (!self) return
+      if (self.classed("zero")) return
+
+      const t = this.getTransition(this.short_duration)
+      const root = this.chart.select('.partnerships')
+
+      // these will hold the region's connections, one per type
+      let containers = root.selectAll(`g.${d.id}`)
+
+      if (over) {
+        if (containers.empty()) {
+          // create the new containers and *copy* the connections under them
+          // (while preserving their ancestry)
+
+          const newlayers = []
+          for (const type of this.current_layers) {
+            const base = root.select(`g.base.${type}`)
+
+            const connections = base.selectAll('g').selectAll(`path.${d.id}`)
+
+            if (connections.empty()) continue
+
+            const baselayer = base.node(),
+                  newlayer = baselayer.cloneNode(false)
+
+            newlayer.classList.remove('base')
+            newlayer.classList.add(d.id)
+            baselayer.parentNode.appendChild(newlayer)
+
+            connections._groups.forEach(function(group, i) {
+              if (!group.length) return
+
+              const parent = connections._parents[i],
+                    newparent = parent.cloneNode(false)
+
+              newlayer.appendChild(newparent)
+
+              for (const connection of group) {
+                newparent.appendChild(connection.cloneNode())
+              }
+            })
+
+            newlayers.push(newlayer)
+          }
+          containers = d3.selectAll(newlayers)
+        }
+        // else they already exist, that is they weren't fully transitioned out.
+        // fade them in
+        containers
+          .transition(t)
+          .attr('opacity', this.highlighted_opacity)
+
+        // fade out the base layers
+        for (const type of this.visible_layers)
+          root.select(`g.base.${ type }`)
+            .transition(t)
+            .attr('opacity', this.faded_opacity)
+
+      } else { // (mouse out)
+
+        // fade them out
+        containers
+          .transition(t)
+          .attr('opacity', 0)
+          .on('end', function() {
+            this.remove()
+          })
+
+        // fade in the base layers
+        for (const type of this.visible_layers)
+          root.select(`g.base.${ type }`)
+            .transition(t)
+            .attr('opacity', this.default_opacity)
+      }
     },
 
     renderVisibleLayers(t) {
