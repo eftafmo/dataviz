@@ -161,7 +161,10 @@ export default Chart.extend({
       if (over) {
         self.raise()
         // we also need to raise the parent container
-        d3.select(thisnode.parentNode).raise()
+        // TODO: re-enable this. commented out because
+        // the parent region was supposed to have display: none,
+        // but it doesn't. FIXME.
+        //d3.select(thisnode.parentNode).raise()
 
         this.tip.show.call(self.node(), d, i)
         this.hovered_region = d
