@@ -17,6 +17,7 @@ export default {
 
     // ancestor id, descendant id
     isAncestorRegion(aid, did) {
+      if (!did) return !aid
       return aid == did.substr(0, aid.length)
     },
 

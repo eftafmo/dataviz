@@ -449,9 +449,9 @@ const AllocationMap = BaseMap.extend({
       const _showregion = (id, yes) => {
         const level = id.length == 2 ? 0 : id.length - 2
 
-        const region = this.chart.select(`.regions > .level${level}`)
-          //.lower()
-          .selectAll(`.${id}`) // must selectAll, or else data goes poof
+        const region = this.chart
+          // must selectAll, or else data goes poof
+          .selectAll(`.regions > .level${level} > .${id}`)
           .style("display", null)
           .transition(t)
           .attr("opacity", Number(yes))
@@ -482,23 +482,20 @@ const AllocationMap = BaseMap.extend({
         _showchildren(newid, true)
       }
 
-      if (oldid) {
-        // show the old region
-        _showregion(oldid, true)
-        // hide old region unless it's an ancestor
-        if (!newid || oldid != newid.substr(0, oldid.length)) {
-          // find the topmost ancestor of the previous region
-          // that isn't the new one or the new one's parent
-          const common = newid ? this.getParentRegion(newid) : newid
-          let prev = oldid
+      if (oldid &&
+          // don't do anything if the old region is an ancestor
+          (!newid || !this.isAncestorRegion(oldid, newid))
+      ) {
+        // we need to recursively handle all ancestors of the old region,
+        // until we meet the current one's parent
+        let id = oldid
+        while (true) {
+          // show the region, hide its children
+          _showregion(id, true)
+          _showchildren(id, false)
 
-          while (true) {
-            const p = this.getParentRegion(prev)
-            if (p == newid || p == common) break
-            else prev = p
-          }
-
-          _showchildren(prev, false)
+          id = this.getParentRegion(id)
+          if (!id || this.isAncestorRegion(id, newid)) break
         }
       }
 
