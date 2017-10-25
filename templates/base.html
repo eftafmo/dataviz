@@ -24,9 +24,9 @@
 {% with current_view=request.resolver_match.view_name %}
         <nav class="header-menu">
           <ul>
-            <li><a href="{% url 'frontend:grants' %}"{% if current_view == 'frontend:grants' %} class="active"{% endif %}>Grants</a></li>
-            <li><a href="{% url 'frontend:partners' %}"{% if current_view == 'frontend:partners' %} class="active"{% endif %}>Partners</a></li>
-            <li><a href="{% url 'frontend:projects' %}"{% if current_view == 'frontend:projects' %} class="active"{% endif %}>Projects</a></li>
+            <li><a href="{% url 'frontend:grants' %}?{{ form.facets|scenario_urlparams:'grants'}}"{% if current_view == 'frontend:grants' %} class="active"{% endif %}>Grants</a></li>
+            <li><a href="{% url 'frontend:partners' %}?{{ form.facets|scenario_urlparams:'partners'}}"{% if current_view == 'frontend:partners' %} class="active"{% endif %}>Partners</a></li>
+            <li><a href="{% url 'frontend:projects' %}?{{ form.facets|scenario_urlparams:'projects'}}"{% if current_view == 'frontend:projects' %} class="active"{% endif %}>Projects</a></li>
           </ul>
         </nav>
         <form action="{% url view|search_view_name:current_view %}" class="header-search">

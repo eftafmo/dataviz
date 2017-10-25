@@ -2,8 +2,10 @@ import re
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import force_text
+from django.utils.http import urlencode
 
 from dv.views import frontend as views
+from dv.views.facets_rules import FACET_TO_FILTERS
 
 register = template.Library()
 
@@ -77,3 +79,15 @@ def search_view_name(view, view_name):
         'frontend:projects': 'frontend:search_project',
     }
     return scenarios.get(view_name, 'frontend:search_programme')
+
+
+@register.filter
+def scenario_urlparams(facets, scenario):
+    #  TODO: there must be a better way to map these
+    result = {}
+    for f in facets:
+        if facets[f] and f in FACET_TO_FILTERS[scenario]:
+            rules = FACET_TO_FILTERS[scenario][f]
+            for r in rules:
+                result[r[0]] = facets[f][0] if not r[1] else r[1](facets[f][0])
+    return urlencode(result)
