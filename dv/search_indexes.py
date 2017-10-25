@@ -444,8 +444,8 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             elif role.programme_id and self.ALL_PROGRAMMES[role.programme_id].get('name'):
                 # check programme name because self.ALL_PROGRAMMES is defaultdict
                 self.programmes.append(role.programme_id)
-            if role.organisation_role_id != 'DS':
-                # Skip donor states
+            if role.organisation_role_id != 'DS' and (role.project_id or role.programme_id):
+                # Skip donor states and organisations with no project nor programme
                 self.roles.add(role.organisation_role_id)
         if len(self.roles) == 0:
             raise exceptions.SkipDocument
