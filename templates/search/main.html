@@ -22,19 +22,18 @@
             <span class="muted">Search for:</span>
             <label for="programme-tab"
                    data-url="{% url 'frontend:search_programme' %}"
-                   class="{% active 'Programme' kind %}">Programmes</label>
+                   class="{% active 'Programme' kind %}">{{'Programme'|kind_label:2|capfirst}}</label>
             <label for="project-tab"
                    data-url="{% url 'frontend:search_project' %}"
-                   class="{% active 'Project' kind %}">Projects</label>
+                   class="{% active 'Project' kind %}">{{'Project'|kind_label:2|capfirst}}</label>
             <label for="organisation-tab"
                    data-url="{% url 'frontend:search_organisation' %}"
-                   class="{% active 'Organisation' kind %}">Organisations</label>
+                   class="{% active 'Organisation' kind %}">{{'Organisation'|kind_label:2|capfirst}}</label>
             <label for="news-tab"
                    data-url="{% url 'frontend:search_news' %}"
-                   class="{% active 'News' kind %}">News</label>
+                   class="{% active 'News' kind %}">{{'News'|kind_label:2|capfirst}}</label>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -44,7 +43,7 @@
   <div class="search-results">
     <div class="search-results-header">
       <span class="search-results-count">
-        {{ paginator.count }} {{ kind|lower }}{% if kind != 'News' %}{{ paginator.count|pluralize }}{% endif %} found
+        {{ paginator.count }} {{ kind|kind_label:paginator.count }} found
       </span>
       <span class="search-results-options">
         <select name="paginate_by" id="" class="subtle-select main-auto-submit"

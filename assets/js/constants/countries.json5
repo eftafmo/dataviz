@@ -4,18 +4,21 @@
       id: "IS",
       name: "Iceland",
       alt_name: "Icelandic",
+      fms: ["eea-grants"],
       sort_order: 1,
     },
     LI: {
       id: "LI",
       name: "Liechtenstein",
       alt_name: "Liechtenstein",
+      fms: ["eea-grants"],
       sort_order: 2,
     },
     NO: {
       id: "NO",
       name: "Norway",
       alt_name: "Norwegian",
+      fms: ["norway-grants", "eea-grants"],
       sort_order: 3,
     },
     Intl: {

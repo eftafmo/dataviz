@@ -29,6 +29,7 @@ import Chart from './Chart'
 import MapBase from './includes/MapBase'
 
 import WithRegionsMixin from './mixins/WithRegions'
+import WithTooltipMixin from './mixins/WithTooltip'
 
 // jumping through hoops because of vue's lack of template inheritance.
 // don't forget to add this to the template.
@@ -60,6 +61,7 @@ export default Chart.extend({
 
   mixins: [
     WithRegionsMixin,
+    WithTooltipMixin,
   ],
 
   components: {
@@ -114,6 +116,62 @@ export default Chart.extend({
       this.map_rendered = true
     },
 
+    tooltipTemplate() {
+      throw new Error("Not implemented");
+    },
+
+    createTooltip() {
+      let tip = d3.tip()
+          .attr('class', 'dataviz-tooltip map')
+          .html(this.tooltipTemplate)
+          .direction('n')
+          .offset([0, 0])
+
+       this.tip = tip;
+       this.chart.call(this.tip)
+    },
+
+    registerEvents(selection) {
+      selection
+        .on("click", this.clickfunc)
+        .on("mouseenter", this.mouseenterfunc)
+        .on("mouseleave", this.mouseleavefunc)
+    },
+
+    clickfunc(d, i, group) {
+      return
+    },
+
+    mouseenterfunc(d, i, group) {
+      return this._domouse(true, d, i, group)
+    },
+
+    mouseleavefunc(d, i, group) {
+      return this._domouse(false, d, i, group)
+    },
+
+    _domouse(over, d, i, group) {
+      const thisnode = group[i]
+      const self = d3.select(thisnode)
+
+      // disable mouse-over when zeroed
+      if (self.classed("zero")) return
+
+      if (over) {
+        self.raise()
+        // we also need to raise the parent container
+        d3.select(thisnode.parentNode).raise()
+
+        this.tip.show.call(self.node(), d, i)
+        this.hovered_region = d
+      } else {
+        this.tip.hide.call(self.node(), d, i)
+        this.hovered_region = null
+      }
+
+      return self
+    },
+
     renderDonorColours(t) {
       let with_eea = false,
           with_no = false;
@@ -130,15 +188,29 @@ export default Chart.extend({
         with_no = true
 
       else {
-        // the dataset is the source of truth
-        for (const row of this.data) {
-          if (!with_eea && row.fms.has(eea))
-            with_eea = true
+        // the dataset is the source of truth.
+        // normally we already looped over if and have it aggregated:
+        if (this.data instanceof Array) {
+          for (const row of this.data) {
+            if (!with_eea && row.fms.has(eea))
+              with_eea = true
 
-          if (!with_no && row.fms.has(no))
-            with_no = true
+            if (!with_no && row.fms.has(no))
+              with_no = true
 
-          if (with_eea && with_no) break
+            if (with_eea && with_no) break
+          }
+        } else {
+          // we need to loop over the entire filtered dataset
+          for (const row of this.filtered) {
+            if (!with_eea && row.fm == eea)
+              with_eea = true
+
+            if (!with_no && row.fm == no)
+              with_no = true
+
+            if (with_eea && with_no) break
+          }
         }
       }
 

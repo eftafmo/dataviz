@@ -12,7 +12,7 @@
   min-width: 320px;
   max-width: 420px;
   padding: 1rem 2rem;
-  background: white;
+  background: rgba(255, 255, 255, .85);
   box-shadow: 0px 0px 3px #aaa;
   .btn {
     position: absolute;

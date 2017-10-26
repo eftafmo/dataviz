@@ -15,7 +15,7 @@ wait_solr() {
 
 install_crontab() {
     echo "Installing crontab"
-    #printenv | sed 's/^\(.*\)$/export \1/g' | grep -E "(EDW|MYSQL|EEAG)" &> ~/.bashrc
+    printenv | sed 's/^\(.*\)$/export \1/g' &> ~/.bashrc
     crontab /etc/crontab.dataviz
 }
 

@@ -2,6 +2,10 @@ import re
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import force_text
+from django.utils.http import urlencode
+
+from dv.views import frontend as views
+from dv.views.facets_rules import FACET_TO_FILTERS
 
 register = template.Library()
 
@@ -53,3 +57,37 @@ def active(expected_kind, current_kind):
 @register.assignment_tag
 def assign(value):
     return value
+
+
+@register.filter
+def kind_label(kind, count):
+    kinds = {
+        'Programme': ('programme', 'programmes'),
+        'Project': ('project', 'projects'),
+        'Organisation': ('organisation', 'organisations'),
+        'News': ('news', 'project news'),
+    }
+    return kinds[kind][1 if count > 1 else 0]
+
+
+@register.filter
+def search_view_name(view, view_name):
+    if isinstance(view, views.FacetedSearchView):
+        return view_name
+    scenarios = {
+        'frontend:partners': 'frontend:search_organisation',
+        'frontend:projects': 'frontend:search_project',
+    }
+    return scenarios.get(view_name, 'frontend:search_programme')
+
+
+@register.filter
+def scenario_urlparams(facets, scenario):
+    #  TODO: there must be a better way to map these
+    result = {}
+    for f in facets:
+        if facets[f] and f in FACET_TO_FILTERS[scenario]:
+            rules = FACET_TO_FILTERS[scenario][f]
+            for r in rules:
+                result[r[0]] = facets[f][0] if not r[1] else r[1](facets[f][0])
+    return urlencode(result)

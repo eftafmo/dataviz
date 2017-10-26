@@ -25,10 +25,9 @@
         <g class="frames" />
       </g>
 
+      <slot></slot>
+
     </g>
-
-    <slot></slot>
-
   </svg>
 
   <slot name="after-map"></slot>

@@ -1,4 +1,6 @@
-MAILTO=andrei.melis@eaudeweb.ro
+MAILTO=eeagrants@eaudeweb.ro
 PYTHONPATH=/usr/local/bin
 SHELL=/bin/bash
+
+0 4 * * *  . /root/.bashrc; /bin/import.sh >> /var/local/logs/import.log 2>&1
 

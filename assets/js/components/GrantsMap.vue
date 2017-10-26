@@ -46,7 +46,7 @@ export default AllocationMap.extend({
             <li>${ this.currency(allocation) }</li>
             `
       } else {
-        region_name = this.getRegionLabel(d.id) + '(' + d.id + ')';
+        region_name = this.getRegionName(d.id) + '(' + d.id + ')';
       }
 
       // get a set's amount

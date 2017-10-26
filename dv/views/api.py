@@ -316,7 +316,7 @@ def partners(request):
         'outcome__programme_area__financial_mechanism',
         'programme__organisation_roles',
     ).annotate(
-        code=F('programme__code'),
+        prg_code=F('programme__code'),
         name=F('programme__name'),
         url=F('programme__url'),
         pa_code=F('outcome__programme_area__code'),
@@ -326,7 +326,7 @@ def partners(request):
         allocation_eea=F('programme__allocation_eea'),
         allocation_norway=F('programme__allocation_norway'),
     ).values(
-        'code',
+        'prg_code',
         'name',
         'url',
         'pa_code',
@@ -345,8 +345,8 @@ def partners(request):
 
     partnership_programmes = {}
     for p in partnership_programmes_raw:
-        if p['code'] not in partnership_programmes:
-            partnership_programmes[p['code']] = {
+        if p['prg_code'] not in partnership_programmes:
+            partnership_programmes[p['prg_code']] = {
                 'name': p['name'],
                 'url': p['url'],
                 'areas': {},
@@ -357,8 +357,8 @@ def partners(request):
                 'news': [],
                 'allocation': p['allocation_eea'] + p['allocation_norway'],
             }
-        partnership_programmes[p['code']]['beneficiaries'].add(p['state__code'])
-        partnership_programmes[p['code']]['areas'][p['pa_code']] = {
+        partnership_programmes[p['prg_code']]['beneficiaries'].add(p['state__code'])
+        partnership_programmes[p['prg_code']]['areas'][p['pa_code']] = {
             'area': p['pa_name'],
             'sector': p['sector'],
             'fm': p['fm'],

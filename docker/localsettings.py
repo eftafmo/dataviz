@@ -32,7 +32,9 @@ DATABASES = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://solr:8983/solr/eeagrants'
+        'URL': 'http://solr:8983/solr/eeagrants',
+        'BATCH_SIZE': 999,
+        'SILENTLY_FAIL': False,
     },
 }
 

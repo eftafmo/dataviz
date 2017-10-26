@@ -183,7 +183,9 @@ WEBPACK_LOADER = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://localhost:8983/solr/eeagrants'
+        'URL': 'http://localhost:8983/solr/eeagrants',
+        'BATCH_SIZE': 999,
+        'SILENTLY_FAIL': False,
     },
 }
 

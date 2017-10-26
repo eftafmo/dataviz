@@ -28,22 +28,9 @@
       :zoomable="false"
   >
 
-    <template slot="after-map">
-      <transition-group name="fade"
-                        tag="div"
-                        ref="container"
-                        class="charts"
-      >
-        <div v-for="layer in layers"
-             v-show="visible_layers.indexOf(layer) != -1"
-             :key="layer"
-             class="layer"
-             :class="layer"
-        ></div>
-      </transition-group>
-
-      <div ref="current" class="current"></div>
-    </template>
+    <g class="partnerships">
+      <g v-for="layer in layers" :class="layer" class="base"></g>
+    </g>
 
   </map-base>
 
@@ -62,23 +49,30 @@
       pointer-events: all;
     }
 
-    path.donor  {
-      &:hover {
+    path.donor {
+      &:not(.zero):hover {
         stroke: #fff;
         stroke-opacity: 1;
       }
     }
 
-    path.beneficiary {
-      &:hover {
+    path.beneficiary, path.partner {
+      &.zero {
+        fill: none;
+        stroke: none;
+      }
+
+      &:not(.zero):hover {
         stroke: #000;
         stroke-opacity: 1;
       }
     }
+  }
 
-    path.partner {
-      opacity: 0;
-    }
+  .partnerships {
+    stroke-width: 1.5; // TODO: make it dynamic
+    fill: none;
+    pointer-events: none;
   }
 
   .selector {
@@ -124,50 +118,13 @@
   input[type=checkbox]:checked + label:before { content: "✔\fe0e"; } /* checked icon */
   #programmes {
     + label:before {
-      color: rgb(8,153,0);
+      color: #089900;
     }
   }
 
   #projects {
     + label:before {
-      color: rgb(204,133,0);
-    }
-  }
-
-  .charts, .current {
-    &, * {
-      position: absolute;
-      left: 0;
-      top: 0;
-
-      width: 100%;
-      height: 100%;
-
-      pointer-events: none; // TODO: not enough on IE
-    }
-
-    canvas {
-      display: block;
-      opacity: 0;
-      transition: opacity @short_duration;
-
-      &.current {
-        opacity: 1;
-      }
-
-      &.previous {
-        opacity: 0;
-      }
-    }
-  }
-
-
-  .charts {
-    transition: opacity @short_duration;
-    opacity: 1;
-
-    &.with-region {
-      opacity: .3;
+      color: #e68a00;
     }
   }
 }
@@ -177,6 +134,7 @@
 <script>
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
+import {slugify} from 'js/lib/util'
 
 import BaseMap from './BaseMap'
 
@@ -194,7 +152,8 @@ export default BaseMap.extend({
   props: {
     layers: {
       type: Array,
-      default: () => ["programmes", "projects"],
+      // note the order. (makes sure "programmes" is always on top in svgs)
+      default: () => ["projects", "programmes"]
     },
   },
 
@@ -205,244 +164,248 @@ export default BaseMap.extend({
 
       chart_opacity: 1.0,
       region_opacity: .8,
+
+      default_opacity: .8,
+      highlighted_opacity: .9,
+      faded_opacity: .2,
     };
   },
 
   computed: {
-    chart_colours() {
-      return this.getColours(this.chart_opacity, .5);
-    },
-
-    region_colours() {
-      return this.getColours(this.region_opacity, .75);
+    current_layers() {
+      // like visible_layers, but preserving order
+      return this.layers.filter(x => this.visible_layers.indexOf(x) !== -1)
     },
 
     scale() {
       return this.chartWidth / this.width;
     },
 
-    data() {
-      const out = {
-        programmes: {},
-        projects: {},
-      }
-      const dataset = this.filtered;
-      for (const d of dataset) {
-        for (const po_code in d.PO) {
-          if (d.DPP_nuts) {
-            // we can have rows with PO but not DPP (only projects)
-            out.programmes[d.DPP_nuts+d.PO[po_code].nuts] = {
-              'source': d.DPP_nuts,
-              'target': d.PO[po_code].nuts,
-            };
-          }
-        }
-        for (const prj_nuts of d.prj_nuts) {
-          if (prj_nuts.dst) {
-            // many project partners don't have nuts. let them be
-            // we do want to see donor project partners with no nuts, though
-            out.projects[prj_nuts.src+prj_nuts.dst] = {
-              'source': prj_nuts.src,
-              'target': prj_nuts.dst,
+    aggregated() {
+      /*
+        this exists because we need to compute two datasets:
+
+        - the region-to-region array, for drawing the connections.
+          must be grouped by type (programme / project) and source country;
+
+        - the array of regions involved, for showing on the map, resembling
+          what we would "normally" aggregate.
+          must contain aggregated FMs (so the donor colours can be derived).
+      */
+
+      const dataset = this.filtered
+
+      const connections = {
+              programmes: {},
+              projects: {},
+            },
+            // group regions by type as well, so we can use the type
+            // as a "data filter" later on
+            regions = {
+              programmes: {},
+              projects: {},
             }
-          }
+
+      const _getConnectionGroup = (type, id) => {
+        // grouping by country
+        const country = this.getAncestorRegion(id, 0)
+
+        let group = connections[type][country]
+        if (group === undefined) group = connections[type][country] = {}
+
+        return group
+      }
+
+      const _getRegion = (type, id) => {
+        let region = regions[type][id]
+        if (region === undefined) region = regions[type][id] = {
+          //id: id, // skipping this because data() reaggregates anyway
+          fms: d3.set(),
+          // add here anything else you might want to aggregate on
+        }
+        return region
+      }
+
+      const _setData = (type, source, target, d) => {
+        const conngroup = _getConnectionGroup(type, source)
+        conngroup[`${source}-${target}`] = {source, target}
+
+        if (source) _getRegion(type, source).fms.add(d.fm)
+        if (target) _getRegion(type, target).fms.add(d.fm)
+      }
+
+      for (const d of dataset) {
+        let type
+
+        type = "programmes"
+        for (const po_code in d.PO) {
+          if (!d.DPP_nuts) continue
+          // we can have rows with PO but not DPP (only projects)
+          const source = d.DPP_nuts,
+                target = d.PO[po_code].nuts
+
+          _setData(type, source, target, d)
+        }
+
+        type = "projects"
+        for (const prj_nuts of d.prj_nuts) {
+          if (!prj_nuts.dst) continue
+          // many project partners don't have nuts. let them be
+          // we do want to see donor project partners with no nuts, though
+          const source = prj_nuts.src,
+                target = prj_nuts.dst
+
+          _setData(type, source, target, d)
         }
       }
-      // initially stored as dict to remove duplicates, now convert to array
-      out.programmes = d3.values(out.programmes);
-      out.projects = d3.values(out.projects);
-      return out
+
+      // flatten the connections data
+      for (const type in connections) {
+        const collection = []
+        for (const country in connections[type]) {
+          collection.push({
+            country: country,
+            connections: d3.values(connections[type][country])
+          })
+        }
+        connections[type] = collection
+      }
+
+      return {regions, connections}
+    },
+
+    data() {
+      const datasets = this.aggregated.regions
+      // merge the regions together
+      // NOTE: if we want to filter by type this is where we can do it
+      const out = {}
+
+      for (const type in datasets) {
+        const dataset = datasets[type]
+
+        for (const id in dataset) {
+          let region = out[id]
+          if (region === undefined) region = out[id] = {
+            id: id,
+            fms: d3.set(),
+          }
+          dataset[id].fms.each(x => region.fms.add(x))
+        }
+      }
+
+      return d3.values(out)
     },
   },
 
-  created() {
-    // set up the canvas cache
-    const ccache = {}
-    for (const l of this.layers) {
-      ccache[l] = {}
-    }
-    this._ccache = ccache
-
-    this.renderCurrentRegion = debounce(this.renderCurrentRegion,
-                                        this.renderWait.min)
+  mounted() {
+    // make remote territories visible
+    // this is very ugly. TODO: fix... somehow.. better
+    this.chart.attr('transform', 'translate(60,0)')
   },
 
   methods: {
-    getContainer(ref) {
-      const c = this.$refs[ref];
+    tooltipTemplate(d) {
+      const country = this.getAncestorRegion(d.id, 0)
 
-      // if it's an element, it's a direct reference.
-      // if it's a transition group, then it's a component.
-      return c.$el ? c.$el : c;
+      return `
+        <div class="title-container">
+          <svg>
+            <use xlink:href="#${ this.get_flag_name(country) }" />
+          </svg>
+          <span class="name">${ this.getRegionName(d.id) } (${ d.id })</span>
+        </div>`
     },
 
-    getColours(opacity, pmod) {
-      // projects modifier, because there's too many project lines
-      // TODO: should alter the opacity based on line density instead
-      if (!pmod) pmod = 1;
-
-      const cs = {};
-      for (const c in this.colours) {
-        cs[c] = d3.color(this.colours[c]);
-        cs[c].opacity = c != "projects" ? opacity : opacity * pmod;
-      }
-
-      return cs;
-    },
-
-    getRegionData(type, id) {
-      const data = this.data[type];
-      if (data === undefined) return;
-
-      const out = [];
-      for (const row of data) {
-        if (row.source === id || row.target === id) {
-          out.push(row);
-        }
-      }
-
-      return out;
-    },
-
-    renderChart(redraw) {
+    renderChart() {
       const t = this.getTransition()
 
       this.renderDonorColours(t)
-
-      const $this = this,
-            container = this.getContainer("container");
-
-      // ideally we'd remove these onTransitionEnd, but ... ....
-      d3.select(container).selectAll(".layer > canvas.previous")
-        .remove()
-
-      const prev = d3.select(container).selectAll(".layer > canvas:not(.previous)")
-      if (redraw)
-        prev.remove();
-      else
-        prev.attr("class", "previous");
-
-      const charts = d3.select(container).selectAll(".layer")
-        .data(this.layers) // we count on index order for match
-        .append("canvas")
-        .datum(d => d)
-        .attr("width", this.chartWidth)
-        .attr("height", this.chartHeight)
-        .each(function(d) {
-          const data = $this.data[d],
-                colour = $this.chart_colours[d]
-          $this.renderLayer(this, data, colour)
-        })
-
-      // fade in unless it's the initial render or a redraw
-      // (and let css handle the transitions)
-      if (!this.rendered || this.redraw)
-        charts.attr("class", "current")
-      else
-        this.$nextTick(function(){ charts.attr("class", "current") })
+      this.renderRegionData(t)
+      this.renderConnections(t)
+      this.renderVisibleLayers(t)
     },
 
-    renderCurrentRegion(r) {
-      d3.select(this.getContainer("container"))
-        .classed("with-region", r)
+    renderRegionData(t) {
+      // "render". this only updates the data so the tooltip works.
+      // TODO: transition the zero <-> non-zero beneficiaries
+      const regions = this.chart.selectAll('.regions > g > path')
+                          .data(this.data, d => d.id)
 
-      const container = this.getContainer("current")
+      regions
+        .classed("zero", false)
 
-      d3.select(container).selectAll("canvas.previous")
-        .remove()
+      regions
+        .exit()
+        .classed("zero", true)
+    },
 
-      d3.select(container).selectAll("canvas:not(.previous)")
-        .attr("class", "previous")
+    renderConnections(t) {
+      // we render from the donor side
+      const conndata = this.aggregated.connections
 
-      if(!r) return;
-
-      const canvases = []
-      // don't bother rendering non-visible stuff
-      for (const type of this.visible_layers) {
-        // cache the canvas.
-        // TODO: disabled for now. check memory usage.
-        // it's seems surprisingly small in chrome, very high in firefox
-        // (for ~450 canvases (data for ~400 regions))
-        //let canvas = this._ccache[type][r];
-
-        //if (canvas === undefined) {
-          const data = this.getRegionData(type, r)
-
-          // skip no-data
-          if(!data || !data.length) continue
-
-          //canvas = this._ccache[type][r] = document.createElement("canvas")
-          const canvas = document.createElement("canvas")
-
-          canvas.setAttribute("width", this.chartWidth)
-          canvas.setAttribute("height", this.chartHeight)
-
-          const colour = this.region_colours[type]
-
-          this.renderLayer(canvas, data, colour)
-        //}
-
-        canvases.push(canvas)
-      }
-
-      for (const c of canvases) {
-        if (c.parentNode) {
-          // if it's already bound to the parent it was pending cleanup
-          c.className = "current"
-          continue
-        }
-        container.appendChild(c)
-        this.$nextTick(function(){ c.className = "current" })
+      for (const type in conndata) {
+        this._renderConnections(type, d3.values(conndata[type]), t)
       }
     },
 
-    renderLayer(canvas, data, colour) {
-      if (data === undefined || data.length == 0) return;
+    _renderConnections(type, data, t) {
+      const container = this.chart.select(`.partnerships > .${ type }`),
+            regions = container.selectAll('g')
+                               .data(data, d => d.country)
 
-      // note that setting the width or height causes the context
-      // to be discarded. normally this is a fresh canvas and
-      // the dimensions were set appropriately by vue, however
-      // this might be a forced refresh during resizing
-      if (canvas.width != this.chartWidth) {
-        canvas.width = this.chartWidth
-        canvas.height = this.chartHeight
+      const getColour = d => {
+        const colour = this.colours[type]
+
+        if (!this.filters.fm)
+          return colour
+
+        const country = d.country,
+              fms = this.COUNTRIES[country].fms
+
+        if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1)
+          return this.weak_colours[type]
+        else
+          return colour
       }
 
-      const ctx = canvas.getContext("2d");
+      // connections are grouped by source state. will help us transition
+      // to grayscale when filtering by fm
+      const rentered = regions.enter()
+                              .append('g')
+                              .attr('class', d => d.country)
+                              .attr('stroke', getColour)
 
-      const geodetails = this.map.geodetails
-      const k = this.scale
+      regions
+        .transition(t)
+        .attr('stroke', getColour)
 
+      const rexit = regions.exit().remove()
 
-      const _badids = d3.set();
+      const connections = regions.merge(rentered).selectAll('path')
+                                 .data(
+                                   d => d.connections,
+                                   d => d.src + '-' + d.dst
+                                 )
 
-      // no need to clear, it's done by setting the width & height
-      //ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const _badids = d3.set()
 
-      //ctx.fillStyle = colour;
-      ctx.strokeStyle = colour;
+      const getArc = (source, target) => { // TODO: memoize this
+        // the simple approach would be to draw an arc with the same radius
+        // as the distance between points, but we're gonna use a quadratic
+        // curve instead, which allows us to mess with the arc's radius
+        // programatically §
+        // (also, we can use the same calculations to draw into a canvas)
 
-      // for WebKit/Blink -based browsers
-      try{
-        ctx.setStrokeColor(colour);
-      }
-      catch(e) {
-      }
+        const geodetails = this.map.geodetails
 
-      // make the line 1px wide, but scale down if necessary
-      ctx.lineWidth = k > 1 ? 1 : Math.min(1, k * 2);
-
-      ctx.beginPath();
-
-      for (const d of data) {
-        const i0 = d.source,
-              i1 = d.target,
-              o0 = geodetails[i0],
-              o1 = geodetails[i1];
+        const o0 = geodetails[source],
+              o1 = geodetails[target]
 
         if (o0 === undefined) _badids.add(i0);
         if (o1 === undefined) _badids.add(i1);
-        if (o0 === undefined || o1 === undefined) continue;
+        if (o0 === undefined || o1 === undefined) return
+
+        const k = 1 // this.scale if drawing into a canvas
 
         const p0 = o0.centroid,
               p1 = o1.centroid,
@@ -452,9 +415,6 @@ export default BaseMap.extend({
 
               x1 = p1.x * k,
               y1 = p1.y * k,
-
-              // approximate the arc of a circle with radius equal to the distance
-              // between p0 and p1, using a quadratic curve (a single control point)
 
               // distance between points
               _dx = x1 - x0,
@@ -481,46 +441,208 @@ export default BaseMap.extend({
         let x = _mx + s * _ox,
             y = _my - s * _oy;
 
-        // a little hack for iceland - portugal links
+        // a little hack for iceland - portugal links §
         if (x < 0) {
           x = _mx + s * _ox / 2;
           y = _my - s * _oy / 2;
         }
 
-        ctx.moveTo(x0, y0)
-        ctx.quadraticCurveTo(x, y, x1, y1)
 
-        //ctx.fillRect(x0 - 2, y0 - 2, 4, 4)
-        //ctx.fillRect(x1 - 2, y1 - 2, 4, 4)
+        //return `M ${ x0 },${ y0 } A ${ r },${ r } 0 0,${ (s + 1) / 2 } ${ x1 },${ y1 }`
+        return `M ${ x0 },${ y0 } Q ${ x },${ y } ${ x1 },${ y1 }`
+
+        ctx.quadraticCurveTo(x, y, x1, y1)
       }
 
-      ctx.stroke();
+      // because performing transitions on hundreds of paths kills rendering,
+      // connections that enter / exit will instead be moved to a different
+      // layer, and transitioned all at once
 
+      const connentered = connections.enter()
+        .append('path')
+        .attr('class', d => `${d.source} ${d.target}`)
+        .attr('d', d => getArc(d.source, d.target))
+
+      // (some error checking)
       if (!_badids.empty())
         console.error("Unknown NUTS codes:", _badids.values());
-    },
 
-    registerEvents(selection) {
-      const $this = this;
+      const connexit = connections.exit().remove()
 
-      const doMouse = (over) => {
-        return function(d, i) {
-          const sel = d3.select(this);
+      // buuut don't go through the craziness if there's nothing to transition
+      if (t.duration() == 0) return
 
-          if (over) {
-            sel
-              .raise()
-            //$this.tip.show.call(this, d, i)
-          } else {
-            //$this.tip.hide.call(this, d, i)
+      const transitionConnections = (selection, newstuff) => {
+        if (selection.empty()) return
+
+        // shallow clone the container
+        const baselayer = container.node(),
+              newlayer = baselayer.cloneNode(false)
+
+        // insert the clone before the original if pending removal,
+        // or after if the stuff is new
+        baselayer.parentNode.insertBefore(newlayer,
+                                          newstuff ? baselayer.nextSibling : baselayer)
+
+        // if exiting, this is a good time to add the fully-removed regions
+        if (!newstuff) {
+          rexit.each(function() {
+            newlayer.appendChild(this)
+          })
+        }
+
+        if (newstuff) newlayer.setAttribute('opacity', 0)
+
+        // we're gonna move all the exit nodes under the new layer, but
+        // we must clone each parent group as well, so...
+        // instead of looping over connexit.nodes() and chasing each parent,
+        // we'll using d3's beautifulous internals, which are structured
+        // exactly the way we want them
+
+        selection._groups.forEach(function(group, i) {
+          // filter out empty elements
+          group = group.filter(x => true)
+          if (!group.length) return
+
+          const parent = selection._parents[i],
+                newparent = parent.cloneNode(false)
+          newlayer.appendChild(newparent)
+
+          for (const connection of group) {
+            newparent.appendChild(connection)
+          }
+        })
+
+        const exitfunc = function() {
+          this.remove()
+        }
+
+        const enterfunc = function() {
+          const parents = this.querySelectorAll('g')
+
+          for (const parent of parents) {
+            const selector = parent.getAttribute("class")
+                                   .split(" ").map(c => "." + c).join("")
+
+            const baseparent = baselayer.querySelector('g' + selector)
+            // also bring the parent to front, avoids some flicker
+            baseparent.parentNode.appendChild(baseparent)
+
+            while (parent.firstChild) {
+              baseparent.appendChild(parent.firstChild)
+            }
           }
 
-          $this.renderCurrentRegion(over ? d.id : null);
+          this.remove()
         }
+
+        // we need to delay things a bit or d3 gets very confused
+        this.$nextTick( () =>
+          d3.select(newlayer)
+            .classed("base", false)
+            .classed(newstuff ? "new" : "old", true)
+            .transition(t)
+            .attr('opacity', newstuff ? this.default_opacity : 0)
+            .on('end', newstuff ? enterfunc : exitfunc)
+        )
       }
 
-      selection.on("mouseenter", doMouse(true))
-      selection.on("mouseleave", doMouse(false))
+      // FIXME: there's something broken with the enter, leaving as is for now
+      //transitionConnections(connentered, true)
+      transitionConnections(connexit, false)
+    },
+
+    _domouse(over, d, i, group) {
+      const self = this.$super._domouse(over, d, i, group)
+      if (!self) return
+      if (self.classed("zero")) return
+
+      const t = this.getTransition(this.short_duration)
+      const root = this.chart.select('.partnerships')
+
+      // these will hold the region's connections, one per type
+      let containers = root.selectAll(`g.${d.id}`)
+
+      if (over) {
+        if (containers.empty()) {
+          // create the new containers and *copy* the connections under them
+          // (while preserving their ancestry)
+
+          const newlayers = []
+          for (const type of this.current_layers) {
+            const base = root.select(`g.base.${type}`)
+
+            const connections = base.selectAll('g').selectAll(`path.${d.id}`)
+
+            if (connections.empty()) continue
+
+            const baselayer = base.node(),
+                  newlayer = baselayer.cloneNode(false)
+
+            newlayer.classList.remove('base')
+            newlayer.classList.add(d.id)
+            baselayer.parentNode.appendChild(newlayer)
+
+            connections._groups.forEach(function(group, i) {
+              if (!group.length) return
+
+              const parent = connections._parents[i],
+                    newparent = parent.cloneNode(false)
+
+              newlayer.appendChild(newparent)
+
+              for (const connection of group) {
+                newparent.appendChild(connection.cloneNode())
+              }
+            })
+
+            newlayers.push(newlayer)
+          }
+          containers = d3.selectAll(newlayers)
+        }
+        // else they already exist, that is they weren't fully transitioned out.
+        // fade them in
+        containers
+          .transition(t)
+          .attr('opacity', this.highlighted_opacity)
+
+        // fade out the base layers
+        for (const type of this.visible_layers)
+          root.select(`g.base.${ type }`)
+            .transition(t)
+            .attr('opacity', this.faded_opacity)
+
+      } else { // (mouse out)
+
+        // fade them out
+        containers
+          .transition(t)
+          .attr('opacity', 0)
+          .on('end', function() {
+            this.remove()
+          })
+
+        // fade in the base layers
+        for (const type of this.visible_layers)
+          root.select(`g.base.${ type }`)
+            .transition(t)
+            .attr('opacity', this.default_opacity)
+      }
+    },
+
+    renderVisibleLayers(t) {
+      if (t === undefined) t = this.getTransition()
+
+      for (const layer of this.layers) {
+        this.chart.select(`.partnerships > .${ layer }`)
+          .transition(t)
+          .attr('opacity', this.visible_layers.indexOf(layer) === -1 ?
+                0 : this.default_opacity)
+      }
+    },
+
+    handleLayers() {
+      this.renderVisibleLayers()
     },
 
     handleFilter() {
@@ -529,14 +651,13 @@ export default BaseMap.extend({
   },
 
   watch: {
+    visible_layers: "handleLayers",
+
     chartWidth() {
       // re-render on resize. but don't hijack the initial render.
       if (!this.rendered) return
 
-      this.renderChart(true)
-      for (const l in this._ccache) {
-        this._ccache[l] = {}
-      }
+      this.renderChart()
     },
   },
 });

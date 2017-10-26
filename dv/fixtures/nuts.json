@@ -7806,6 +7806,41 @@
   },
   {
     "model": "dv.nuts",
+    "pk": "IS",
+    "fields": {
+      "label": "ICELAND"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "IS0",
+    "fields": {
+      "label": "Iceland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "IS00",
+    "fields": {
+      "label": "Iceland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "IS001",
+    "fields": {
+      "label": "Höfuðborgarsvæði"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "IS002",
+    "fields": {
+      "label": "Landsbyggð"
+    }
+  },
+  {
+    "model": "dv.nuts",
     "pk": "IT",
     "fields": {
       "label": "ITALIA "
@@ -8765,6 +8800,34 @@
   },
   {
     "model": "dv.nuts",
+    "pk": "LI",
+    "fields": {
+      "label": "LIECHTENSTEIN"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "LI0",
+    "fields": {
+      "label": "Liechtenstein"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "LI00",
+    "fields": {
+      "label": "Liechtenstein"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "LI000",
+    "fields": {
+      "label": "Liechtenstein"
+    }
+  },
+  {
+    "model": "dv.nuts",
     "pk": "LT",
     "fields": {
       "label": "LIETUVA"
@@ -9482,6 +9545,202 @@
     "pk": "NLZZZ",
     "fields": {
       "label": "Extra-Regio"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO",
+    "fields": {
+      "label": "NORWAY"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO0",
+    "fields": {
+      "label": "NORGE"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO01",
+    "fields": {
+      "label": "Oslo og Akershus"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO011",
+    "fields": {
+      "label": "Oslo"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO012",
+    "fields": {
+      "label": "Akershus"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO02",
+    "fields": {
+      "label": "Hedmark og Oppland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO021",
+    "fields": {
+      "label": "Hedmark"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO022",
+    "fields": {
+      "label": "Oppland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO03",
+    "fields": {
+      "label": "Sør-Østlandet"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO031",
+    "fields": {
+      "label": "Østfold"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO032",
+    "fields": {
+      "label": "Buskerud"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO033",
+    "fields": {
+      "label": "Vestfold"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO034",
+    "fields": {
+      "label": "Telemark"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO04",
+    "fields": {
+      "label": "Agder og Rogaland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO041",
+    "fields": {
+      "label": "Aust-Agder"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO042",
+    "fields": {
+      "label": "Vest-Agder"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO043",
+    "fields": {
+      "label": "Rogaland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO05",
+    "fields": {
+      "label": "Vestlandet"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO051",
+    "fields": {
+      "label": "Hordaland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO052",
+    "fields": {
+      "label": "Sogn og Fjordane"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO053",
+    "fields": {
+      "label": "Møre og Romsdal"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO06",
+    "fields": {
+      "label": "Trøndelag"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO061",
+    "fields": {
+      "label": "Sør-Trøndelag"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO062",
+    "fields": {
+      "label": "Nord-Trøndelag"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO07",
+    "fields": {
+      "label": "Nord-Norge"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO071",
+    "fields": {
+      "label": "Nordland"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO072",
+    "fields": {
+      "label": "Troms"
+    }
+  },
+  {
+    "model": "dv.nuts",
+    "pk": "NO073",
+    "fields": {
+      "label": "Finnmark"
     }
   },
   {

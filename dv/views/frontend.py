@@ -25,6 +25,8 @@ from dv.views.facets_rules import (
     BASE_FACETS, PROGRAMME_FACETS, PROJECT_FACETS,
     ORGANISATION_FACETS, NEWS_FACETS,
     FACET_MIN_COUNT, FACET_LIMIT, FACET_SORT,
+    COUNTRY_SORT_BOOST, ORG_ROLE_SORT,
+    ModelFacetRules,
 )
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
@@ -79,8 +81,7 @@ class FacetedSearchView(BaseFacetedSearchView):
     def __init__(self):
         super().__init__()
         self.facet_fields = self.facet_rules.keys()
-        if not self.REORDER_FACETS:
-            FacetedSearchView.init_reordering_rules()
+        ModelFacetRules.init_reordering_rules()
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -97,105 +98,8 @@ class FacetedSearchView(BaseFacetedSearchView):
     def get_paginate_by(self, queryset):
         return self.request.GET.get('paginate_by', self.paginate_by)
 
-    REORDER_FACETS = {}
-    SECTORS_FMS = {}
-    AREAS_FMS = {}
-    AREAS_SECTORS = {}
-    ORG_ROLE_SORT = {}
-
-    @classmethod
-    def init_reordering_rules(cls):
-        PRG_STATUS_SORT = {
-            'Implementation': 0,
-            'Closed': 1,
-            'Approved': 2,
-            'Withdrawn': 3,
-            'Returned to po': 4,
-        }
-        PRJ_STATUS_SORT = {
-            'In Progress': 0,
-            'Completed': 1,
-            'Non Completed': 2,
-            'Terminated': 3,
-        }
-        AREAS_LIST = ProgrammeArea.objects.order_by(
-            '-order'
-        ).values(
-            'name',
-            'priority_sector__name',
-            'financial_mechanism__grant_name',
-            'order',
-        )
-        # sort by -order because there are some duplicated names and we need the first occurrence only
-        AREAS_SORT = dict([(x['name'], x['order']) for x in AREAS_LIST])
-        SECTORS_SORT = dict([(
-            x['priority_sector__name'],
-            x['order']
-        ) for x in AREAS_LIST])
-
-        # dicts for filter_facets
-        AREAS_SECTORS = defaultdict(set)
-        AREAS_FMS = defaultdict(set)
-        SECTORS_FMS = defaultdict(set)
-        for x in AREAS_LIST:
-            AREAS_SECTORS[x['name']].add(x['priority_sector__name'])
-            AREAS_FMS[x['name']].add(x['financial_mechanism__grant_name'])
-            SECTORS_FMS[x['priority_sector__name']].add(
-                x['financial_mechanism__grant_name'])
-
-        ORG_ROLE_SORT = {
-            'National Focal Point': 0,
-            'Programme Operator': 1,
-            'Donor Programme Partner': 2,
-            'Project Promoter': 3,
-            'Donor Project Partner': 4,
-            'Programme Partner': 5,
-            'Project Partner': 6,
-        }
-
-        REORDER_FACETS = {
-            'programme_status': PRG_STATUS_SORT,
-            'project_status': PRJ_STATUS_SORT,
-            'programme_area_ss': AREAS_SORT,
-            'priority_sector_ss': SECTORS_SORT,
-            'role_ss': ORG_ROLE_SORT,
-        }
-
-        cls.REORDER_FACETS = REORDER_FACETS
-        cls.SECTORS_FMS = SECTORS_FMS
-        cls.AREAS_FMS = AREAS_FMS
-        cls.AREAS_SECTORS = AREAS_SECTORS
-        cls.ORG_ROLE_SORT = ORG_ROLE_SORT
-
-    # Donor states first (incl. France as International), then beneficiary states
-
-    COUNTRY_SORT_BOOST = {
-        'Iceland': 0,
-        'Liechtenstein': 0,
-        'Norway': 0,
-
-        'France': 1,
-
-        'Bulgaria': 2,
-        'Cyprus': 2,
-        'Czech Republic': 2,
-        'Estonia': 2,
-        'Greece': 2,
-        'Hungary': 2,
-        'Latvia': 2,
-        'Lithuania': 2,
-        'Malta': 2,
-        'Poland': 2,
-        'Portugal': 2,
-        'Romania': 2,
-        'Slovakia': 2,
-        'Slovenia': 2,
-        'Spain': 2,
-        'Croatia': 2,
-    }
-
     def reorder_facets(self, facets):
-        for facet, order in self.REORDER_FACETS.items():
+        for facet, order in ModelFacetRules.REORDER_FACETS.items():
             if facet in facets:
                 facets[facet] = sorted(
                     facets[facet],
@@ -205,7 +109,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         if 'country' in facets:
             facets['country'] = sorted(
                 facets['country'],
-                key=lambda x: (self.COUNTRY_SORT_BOOST.get(x[0], 10) * 255 + ord(x[0][0]))
+                key=lambda x: (COUNTRY_SORT_BOOST.get(x[0], 10) * 255 + ord(x[0][0]))
             )
 
     def filter_facets(self, facet_fields, form_facets):
@@ -215,22 +119,22 @@ class FacetedSearchView(BaseFacetedSearchView):
             facet_fields['priority_sector_ss'] = [(
                 x[0], x[1]
             ) for x in facet_fields['priority_sector_ss']
-                if len(self.SECTORS_FMS[x[0]] & fms)
+                if len(ModelFacetRules.SECTORS_FMS[x[0]] & fms)
             ]
             facet_fields['programme_area_ss'] = [(
                 x[0], x[1]
             ) for x in facet_fields['programme_area_ss']
-                if len(self.AREAS_FMS[x[0]] & fms)
+                if len(ModelFacetRules.AREAS_FMS[x[0]] & fms)
             ]
         if form_facets['priority_sector_ss']:
             sectors = set(form_facets['priority_sector_ss'])
             facet_fields['programme_area_ss'] = [(
                 x[0], x[1]
             ) for x in facet_fields['programme_area_ss']
-                if len(self.AREAS_SECTORS[x[0]] & sectors)
+                if len(ModelFacetRules.AREAS_SECTORS[x[0]] & sectors)
             ]
             # also filter fm facet if sector is selected
-            fms = [fm for x in sectors for fm in self.SECTORS_FMS[x]]
+            fms = [fm for x in sectors for fm in ModelFacetRules.SECTORS_FMS[x]]
             facet_fields['financial_mechanism_ss'] = [(
                 x[0], x[1]
             ) for x in facet_fields['financial_mechanism_ss']
@@ -238,8 +142,8 @@ class FacetedSearchView(BaseFacetedSearchView):
             ]
         if form_facets['programme_area_ss']:
             areas = set(form_facets['programme_area_ss'])
-            fms = [fm for x in areas for fm in self.AREAS_FMS[x]]
-            sectors = [ps for x in areas for ps in self.AREAS_SECTORS[x]]
+            fms = [fm for x in areas for fm in ModelFacetRules.AREAS_FMS[x]]
+            sectors = [ps for x in areas for ps in ModelFacetRules.AREAS_SECTORS[x]]
             facet_fields['financial_mechanism_ss'] = [(
                 x[0], x[1]
             ) for x in facet_fields['financial_mechanism_ss']
@@ -326,7 +230,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             'name',
             flat=True,
         ))
-        #states.extend(['Liechtenstein', 'Norway', 'Iceland'])
+        # states.extend(['Liechtenstein', 'Norway', 'Iceland'])
         states.extend(utils.EEA_DONOR_STATES.keys())
         ctx['states_with_flags'] = states
 
@@ -356,7 +260,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             # Sort by role name
             res.prep_roles = OrderedDict(
                 sorted(
-                    d.items(), key=lambda item: self.ORG_ROLE_SORT.get(item[0], 99)
+                    d.items(), key=lambda item: ORG_ROLE_SORT.get(item[0], 99)
                 )
             )
         return ctx

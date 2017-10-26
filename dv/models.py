@@ -19,6 +19,8 @@ class _BaseModel(ImportableModelMixin, models.Model):
     class Meta:
         abstract = True
 
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
 
 class _MainManager(_BaseManager):
     def get_by_natural_key(self, nkey):
@@ -74,17 +76,7 @@ class FinancialMechanism(_MainModel):
     grant_name = models.CharField(max_length=128, unique=True)
 
 
-# TODO: fix NUTS data issues and use this as foreign key below
-class NUTS(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 0,
-            'map': {
-                'code': 'CODE',
-                'label': 'LABEL',
-            }
-        },
-    ]
+class NUTS(models.Model):
 
     code = models.CharField(max_length=2, primary_key=True)
     label = models.CharField(max_length=128)
@@ -185,6 +177,14 @@ class Allocation(_MainModel):
         },
     ]
 
+    @classmethod
+    def from_data(cls, data, src_idx):
+        """ add fake code field """
+        obj = super().from_data(data, src_idx)
+        obj.code = obj.state_id + obj.programme_area_id
+        return obj
+
+    code = models.CharField(max_length=6, primary_key=True)
     state = models.ForeignKey(State)
     programme_area = models.ForeignKey(ProgrammeArea)
     # PA is already including FM, but add this so we have more data traversal paths
@@ -206,6 +206,15 @@ class Allocation(_MainModel):
 
     class Meta(_MainModel.Meta):
         unique_together = ('state', 'programme_area', 'financial_mechanism')
+
+
+class ProgrammeStatus(Enum):
+    APPROVED = 'approved'
+    IMPLEMENTATION = 'implementation'
+
+    class Labels:
+        APPROVED = _('Approved')
+        IMPLEMENTATION = _('Implementation')
 
 
 class Programme(_MainModel):
@@ -231,20 +240,12 @@ class Programme(_MainModel):
 
     __post_bleach_comments_re = re.compile(r'&lt;!--.*--&gt;')
 
-    class STATUS(Enum):
-        APPROVED = 'approved'
-        IMPLEMENTATION = 'implementation'
-
-        class Labels:
-            APPROVED = _('Approved')
-            IMPLEMENTATION = _('Implementation')
-
     @classmethod
     def from_data(cls, data, src_idx):
         """ Mutates its data! """
         mapping = cls.IMPORT_SOURCES[src_idx]['map']
         data[mapping['summary']] = bleach.clean(
-            data[mapping['summary']], strip=True, strip_comments=True)
+            data[mapping['summary']] or '', strip=True, strip_comments=True)
         data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
 
         return super().from_data(data, src_idx)
@@ -256,7 +257,7 @@ class Programme(_MainModel):
     code = models.CharField(max_length=5, primary_key=True)
     name = models.CharField(max_length=256)  # not unique
 
-    status = EnumField(STATUS, max_length=14)
+    status = EnumField(ProgrammeStatus, max_length=14)
 
     url = models.CharField(max_length=256, null=True)
     summary = models.TextField()
@@ -291,6 +292,7 @@ class Programme_ProgrammeArea(_BaseModel):
             'map': {
                 'programme': 'programme',
                 'programme_area': 'programme_area',
+                'code': ['programme', 'programme_area']
             },
             # note the leading underscore, this won't hit ImportableModelMixin.from_data
             '_map': {
@@ -325,6 +327,7 @@ class Programme_ProgrammeArea(_BaseModel):
         # weird - we can't get away with bare super()...
         return ( super(cls, cls).from_data(subdata, src_idx) for subdata in _generate_data())
 
+    code = models.CharField(max_length=9, primary_key=True)
     programme = models.ForeignKey(Programme)
     programme_area = models.ForeignKey(ProgrammeArea)
 
@@ -383,7 +386,7 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
                 'co_financing': 'ProgrammeCoFinancing',
             }
         },
-        # Update ProgrammeOutcom based on info from ProgrammeIndicators
+        # Update ProgrammeOutcome based on info from ProgrammeIndicators
         # make sure you identify same row (all uniq constraints present)
         {
             'src': 'ProgrammeIndicators',
@@ -395,6 +398,19 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
         },
     ]
 
+    @classmethod
+    def from_data(cls, data, src_idx):
+        """ add fake code field """
+        obj = super(cls, cls).from_data(data, src_idx)
+        if obj is not None:
+            obj.code = (
+                obj.state_id +
+                (obj.programme_id if obj.programme_id else '') +
+                obj.outcome_id
+            )
+        return obj
+
+    code = models.CharField(max_length=20, primary_key=True)
     # programme can be null, e.g. "Reserve FM2004-09"
     programme = models.ForeignKey(Programme, null=True, related_name='outcomes')
     outcome = models.ForeignKey(Outcome, related_name='programmes')
@@ -409,6 +425,19 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
 
     def __str__(self):
         return "%s _ %s" % (self.programme.code, self.outcome.code)
+
+
+class ProjectStatus(Enum):
+    IN_PROGRESS = 'in progress'
+    COMPLETED = 'completed'
+    TERMINATED = 'terminated'
+    NON_COMPLETED = 'non completed'
+
+    class Labels:
+        IN_PROGRESS = _('In Progress')
+        COMPLETED = _('Completed')
+        TERMINATED = _('Terminated')
+        NON_COMPLETED = _('Non Completed')
 
 
 class Project(_MainModel):
@@ -446,24 +475,13 @@ class Project(_MainModel):
 
     __post_bleach_comments_re = re.compile(r'&lt;!--.*--&gt;')
 
-    class STATUS(Enum):
-        IN_PROGRESS = 'in progress'
-        COMPLETED = 'completed'
-        TERMINATED = 'terminated'
-        NON_COMPLETED = 'non completed'
-
-        class Labels:
-            IN_PROGRESS = _('In Progress')
-            COMPLETED = _('Completed')
-            TERMINATED = _('Terminated')
-            NON_COMPLETED = _('Non Completed')
 
     @classmethod
     def from_data(cls, data, src_idx):
         """ Mutates its data! """
         mapping = cls.IMPORT_SOURCES[src_idx]['map']
         data[mapping['summary']] = bleach.clean(
-            data[mapping['summary']], strip=True, strip_comments=True)
+            data[mapping['summary']] or '', strip=True, strip_comments=True)
         data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
 
         return super().from_data(data, src_idx)
@@ -475,7 +493,7 @@ class Project(_MainModel):
     financial_mechanism = models.ForeignKey(FinancialMechanism)
     priority_sector = models.ForeignKey(PrioritySector)
 
-    status = EnumField(STATUS, max_length=11)
+    status = EnumField(ProjectStatus, max_length=11)
 
     code = models.CharField(max_length=9, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
@@ -507,6 +525,14 @@ class ProjectTheme(_BaseModel):
         },
     ]
 
+    @classmethod
+    def from_data(cls, data, src_idx):
+        """ add fake code field """
+        obj = super().from_data(data, src_idx)
+        obj.code = obj.project_id + obj.name
+        return obj
+
+    code = models.CharField(max_length=512, primary_key=True)
     project = models.ForeignKey(Project, related_name='themes')
     name = models.CharField(max_length=512)  # not unique
 
@@ -551,6 +577,22 @@ class ProgrammeIndicator(_BaseModel):
     #'ProgrammeAreaCode',
     #'OutcomeCode',
 
+
+    @classmethod
+    def from_data(cls, data, src_idx):
+        """ add fake code field """
+        obj = super().from_data(data, src_idx)
+        if obj is not None:
+            obj.code = (
+                obj.state_id +
+                (obj.programme_id if obj.programme_id else '') +
+                obj.outcome_id +
+                obj.indicator_id
+            )
+        return obj
+
+    code = models.CharField(max_length=255, primary_key=True)
+
     indicator = models.ForeignKey(Indicator)
 
     programme = models.ForeignKey(Programme)
@@ -565,50 +607,6 @@ class ProgrammeIndicator(_BaseModel):
 
     def __str__(self):
         return "%s - %s" % (self.programme.code, self.indicator.code)
-
-
-class OrganisationType(_BaseModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'Organisation',
-            'map': {
-                'category': 'OrganisationTypeCategory',
-                'name': 'OrganisationType',
-            }
-        },
-    ]
-
-    @classmethod
-    def from_data(cls, data, src_idx):
-        # skip empty stuff
-        mapping = cls.IMPORT_SOURCES[src_idx]['map']
-        if data[mapping['name']] is None:
-            return
-
-        return super().from_data(data, src_idx)
-
-    class CATEGORY(Enum):
-        PRIVATE_SECTOR = 'private sector'
-        PUBLIC_SECTOR = 'public sector'
-        CIVIL_SOCIETY = 'civil society'
-        EDUCATION = 'education'
-
-        INTERNATIONAL_INSTITUTIONS = 'international institutions'
-        OTHER = 'other'
-
-        class Labels:
-            PRIVATE_SECTOR = _('Private sector')
-            PUBLIC_SECTOR = _('Public sector')
-            CIVIL_SOCIETY = _('Civil society')
-            EDUCATION = _('Education')
-            INTERNATIONAL_INSTITUTIONS = _('International institutions')
-            OTHER = _('Other')
-
-    category = EnumField(CATEGORY, max_length=26)
-    name = models.CharField(max_length=128, unique=True)
-
-    def __str__(self):
-        return "%s / %s" % (self.category, self.name)
 
 
 class OrganisationRole(_MainModel):
@@ -629,6 +627,15 @@ class OrganisationRole(_MainModel):
         return "%s _ %s" % (self.code, self.role)
 
 
+class OrganisationPType(Enum):
+    PROGRAMME = 'programme'
+    PROJECT = 'project'
+
+    class Labels:
+        PROGRAMME = _('Programme')
+        PROJECT = _('Project')
+
+
 class Organisation(_BaseModel):
     IMPORT_SOURCES = [
         {
@@ -638,28 +645,17 @@ class Organisation(_BaseModel):
                 'name': 'Organisation',
                 'domestic_name': 'OrganisationDomesticName',
                 'ptype': 'IsProgrammeOrProjectOrg',
-                'orgtype': ('name', 'OrganisationType'),
+                'orgtype': 'OrganisationType',
+                'orgtypecateg': 'OrganisationTypeCategory',
                 'nuts': 'NUTSCode',
                 'country': 'Country',
                 'city': 'City',
                 'geotarget': 'GeographicalTarget',
-
-                # leftovers
-                #'City',
             }
         },
     ]
 
-    class ORGANISATION_TYPE(Enum):
-        PROGRAMME = 'programme'
-        PROJECT = 'project'
-
-        class Labels:
-            PROGRAMME = _('Programme')
-            PROJECT = _('Project')
-
-    ptype = EnumField(ORGANISATION_TYPE, max_length=9)
-    orgtype = models.ForeignKey(OrganisationType, null=True)
+    ptype = EnumField(OrganisationPType, max_length=9)
     # the countries can be different from member states; that's why we don't use FK
     country = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
@@ -667,6 +663,8 @@ class Organisation(_BaseModel):
     domestic_name = models.CharField(max_length=256, null=True)
     geotarget = models.CharField(max_length=256)
     nuts = models.CharField(max_length=5)
+    orgtype = models.CharField(max_length=256)
+    orgtypecateg = models.CharField(max_length=256)
 
     role = models.ManyToManyField(OrganisationRole, through="Organisation_OrganisationRole")
 
@@ -681,6 +679,7 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
         {
             'src': 'OrganisationRoles',
             'map': {
+                'code': ['IdOrganisation', 'OrganisationRoleCode', 'ProgrammeCode', 'ProjectCode'],
                 'organisation': ('id', 'IdOrganisation'),
                 'organisation_role': 'OrganisationRoleCode',
                 'programme': 'ProgrammeCode',
@@ -709,6 +708,7 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
 
         return super().from_data(data, src_idx)
 
+    code = models.CharField(max_length=64, primary_key=True)
     organisation = models.ForeignKey(Organisation, related_name='roles')
     organisation_role = models.ForeignKey(OrganisationRole, related_name='organisations')
 

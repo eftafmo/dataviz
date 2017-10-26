@@ -68,7 +68,7 @@
     }
 
     .regions {
-      @media (min-width: 768px){ 
+      @media (min-width: 768px){
         .beneficiary:not(.zero) {
           &:hover {
             stroke: #000;
@@ -77,7 +77,7 @@
       }
 
       .level0 .beneficiary{
-        @media (min-width: 768px){ 
+        @media (min-width: 768px){
           &:not(.zero) {
             cursor: pointer;
 
@@ -169,15 +169,14 @@ import BaseMap from './BaseMap'
 
 import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
-import WithTooltipMixin from './mixins/WithTooltip';
 import MobileTooltip from './includes/MobileTooltip'
 
-export default BaseMap.extend({
+
+const AllocationMap = BaseMap.extend({
   type: "allocation",
 
   mixins: [
     WithCountriesMixin, WithFMsMixin,
-    WithTooltipMixin,
   ],
 
   components: {
@@ -290,21 +289,6 @@ export default BaseMap.extend({
       this.filters.beneficiary = null
     },
 
-    tooltipTemplate() {
-      throw new Error("Not implemented");
-    },
-
-    createTooltip() {
-      let tip = d3.tip()
-          .attr('class', 'dataviz-tooltip map')
-          .html(this.tooltipTemplate)
-          .direction('n')
-          .offset([0, 0])
-
-       this.tip = tip;
-       this.chart.call(this.tip)
-    },
-
     opacityfunc(parentid) {
       return parentid == "" ? 1 : 0
     },
@@ -410,32 +394,12 @@ export default BaseMap.extend({
       // disable mouseover events while transitioning
       if (this.transitioning) return
 
-      const self = d3.select(group[i])
+      // disable mouseover events on mobile because of iphone quirks
+      // TODO: fix this, it's too broad
+      // (and events should be handled specifically for mobile as needed)
+      if (window.matchMedia("(max-width: 767px)").matches) return
 
-      // also disable when zeroed
-      if (self.classed("zero")) return
-
-      if (over) {
-        self.raise()
-        // we also need to raise the parent container
-        d3.select(this.parentNode).raise()
-
-        this.tip.show.call(self.node(), d, i)
-        this.hovered_region = d
-      } else {
-        this.tip.hide.call(self.node(), d, i)
-        this.hovered_region = null
-      }
-
-      return self
-    },
-
-    mouseenterfunc(d, i, group) {
-      return this._domouse(true, d, i, group)
-    },
-
-    mouseleavefunc(d, i, group) {
-      return this._domouse(false, d, i, group)
+      return this.$super(AllocationMap, this)._domouse(over, d, i, group)
     },
 
     clickfunc(d, i, group) {
@@ -451,16 +415,6 @@ export default BaseMap.extend({
       if (d.id.length == 2) this.toggleBeneficiary(d)
 
       return self
-    },
-
-    registerEvents(selection) {
-      selection
-        .on("click", this.clickfunc);
-        if (window.matchMedia("(min-width: 768px)").matches) {
-          selection.on("mouseenter", this.mouseenterfunc)
-                   .on("mouseleave", this.mouseleavefunc)
-        } 
-
     },
 
     doZoom(t) {
@@ -502,9 +456,9 @@ export default BaseMap.extend({
       const _showregion = (id, yes) => {
         const level = id.length == 2 ? 0 : id.length - 2
 
-        const region = this.chart.select(`.regions > .level${level}`)
-          //.lower()
-          .selectAll(`.${id}`) // must selectAll, or else data goes poof
+        const region = this.chart
+          // must selectAll, or else data goes poof
+          .selectAll(`.regions > .level${level} > .${id}`)
           .style("display", null)
           .transition(t)
           .attr("opacity", Number(yes))
@@ -535,23 +489,20 @@ export default BaseMap.extend({
         _showchildren(newid, true)
       }
 
-      if (oldid) {
-        // show the old region
-        _showregion(oldid, true)
-        // hide old region unless it's an ancestor
-        if (!newid || oldid != newid.substr(0, oldid.length)) {
-          // find the topmost ancestor of the previous region
-          // that isn't the new one or the new one's parent
-          const common = newid ? this.getParentRegion(newid) : newid
-          let prev = oldid
+      if (oldid &&
+          // don't do anything if the old region is an ancestor
+          (!newid || !this.isAncestorRegion(oldid, newid))
+      ) {
+        // we need to recursively handle all ancestors of the old region,
+        // until we meet the current one's parent
+        let id = oldid
+        while (true) {
+          // show the region, hide its children
+          _showregion(id, true)
+          _showchildren(id, false)
 
-          while (true) {
-            const p = this.getParentRegion(prev)
-            if (p == newid || p == common) break
-            else prev = p
-          }
-
-          _showchildren(prev, false)
+          id = this.getParentRegion(id)
+          if (!id || this.isAncestorRegion(id, newid)) break
         }
       }
 
@@ -571,5 +522,7 @@ export default BaseMap.extend({
       this.mobileData = null;
     }
   },
-});
+})
+
+export default AllocationMap
 </script>

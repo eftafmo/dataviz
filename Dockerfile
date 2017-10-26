@@ -27,7 +27,7 @@ RUN mkdir -p $APP_HOME &&\
     mkdir -p /var/local/logs
 
 COPY ./docker/crontab /etc/crontab.dataviz
-COPY ./docker/entrypoint.sh /bin/
+COPY ./docker/entrypoint.sh ./docker/import.sh /bin/
 
 ADD requirements.txt \
     ./docker/requirements-docker.txt \
