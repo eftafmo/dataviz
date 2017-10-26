@@ -17,25 +17,40 @@
     </svg>
 
     <div v-if="hasData && aggregated.allocation" class="info">
-      <transition name="fade"><div class="heading" :key="changed">
-        <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
-      </div></transition>
-      <div class="data-wrapper"><transition name="fade"><ul class="data" :key="changed">
-        <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
-        <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
-      </ul></transition></div>
-      <div class="ending">
+      <transition name="fade">
+        <div :style="{fontSize: fonts.top_text + 'px'}" class="heading" :key="changed">
+          <p><span class="amount">{{ currency(aggregated.allocation) }}</span> spent on</p>
+        </div>
+      </transition>
+      <div class="data-wrapper">
+        <ul :style="{ 
+        fontSize: fonts.middle_text + 'px', 
+        paddingTop: circle_dimensions.padding_top + 'px',
+        paddingBottom: circle_dimensions.padding_top + 'px',
+        paddingLeft: circle_dimensions.padding_left + 'px',
+        paddingRight: circle_dimensions.padding_left + 'px'
+        }" 
+         class="data" :key="changed">
+          <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
+          <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
+        </ul>
+      </div>
+      <div :style="{ fontSize: fonts.bottom_text + 'px' }" class="ending">
         <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
       </div>
     </div>
+
+
     <div v-if="!hasData || !aggregated.allocation" class="info">
       <transition name="fade"><div class="heading" :key="changed">
         <p><span class="amount">No allocation available</span></p></div>
       </transition>
       <div class="data-wrapper">
-        <transition name="fade"><ul class="data" :key="changed">
-          <li class="programmes"><span class="amount"></span>No programmes available</li>
-          <li class="projects"><span class="amount"></span>No projects available</li></ul>
+        <transition name="fade">
+          <ul :style="{ fontSize: fonts.middle_text + '%'}" class="data" :key="changed">
+            <li class="programmes"><span class="amount"></span>No programmes available</li>
+            <li class="projects"><span class="amount"></span>No projects available</li>
+          </ul>
         </transition>
       </div>
     </div>
@@ -158,37 +173,23 @@
         top: -29px;
         font-size: 95%;
       }
-      /*
-      .amount {
-        font-size: 1.2em;
-      }
-      */
+
     }
 
     .data-wrapper {
-      width: 40%;
-      padding-bottom: 40%;
-      left: 30%;
-      top: 50%;
-      transform: translateY(-50%);
       background: rgba(251, 251, 251, 0.8);
       background: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
       border: .2em solid white;
-      border-radius: 50%;
-      @media (max-width: 800px) {
-        font-size: 49%;
-      }
+      border-radius: 100%;
+      width: auto;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
     }
 
     .data {
       list-style-type: none;
       padding: 0;
-
-      position: absolute;
-      width: 100%;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%,-50%);
 
       & > li:not(:last-child) {
         margin-bottom: .5em;
@@ -226,18 +227,14 @@
      @media(min-width:800px)and(max-width:1400px){
       .heading,
       .ending {
-        transform: scale(0.8);
       }
 
       .ending {
         font-size: 105%;
       }
-
-      .data-wrapper {
-        transform: translateY(-50%) scale(0.8);
-      }
     }
   }
+
 
   .legend {
     position: absolute;
@@ -275,12 +272,21 @@
     }
   }
 
-  &.embed {
-    @media(min-width: 800px){
-      margin-top: 1rem!important;
+  &.embedded {
+    .ending {
+      left: 0;
+      width: 100%;
+    }
+    .info {
+      .data-wrapper {
+        margin-top: -1rem;
+      }
     }
 
+      margin-top: 1rem!important;
     .chart-container {
+      padding-bottom: 2rem;
+
       @media (min-width: 800px)and (max-width:1000px){
         width: 100%!important;
       }
@@ -330,6 +336,18 @@ export default Chart.extend({
 
       source_stroke_opacity: .1,
       target_stroke_opacity: .5,
+
+      // css properties that need to scale with the component container size
+      fonts: {
+        bottom_text: 0,
+        top_text: 0,
+        middle_text: 0,
+      },
+
+      circle_dimensions: {
+        padding_left : 0,
+        padding_top: 0,
+      }
     };
   },
 
@@ -392,6 +410,7 @@ export default Chart.extend({
         .outerRadius(this.radius)
         .innerRadius(this.innerRadius);
     },
+
 
     blank() {
       const outerRadius = this.radius + this.margin,
@@ -527,6 +546,26 @@ export default Chart.extend({
   },
 
   methods: {
+    computeDimensions(event) {
+
+      //the constants used for the calculations are the ideal sizes of the element's css properties for maxWidth
+
+      let baseWidth = this.$el.offsetWidth > 1000 ? this.$el.offsetWidth : 1000 
+      //different behaviour for mobile
+      if (this.$el.offsetWidth < 440){
+        baseWidth = this.$el.offsetWidth > 700 ? this.$el.offsetWidth : 700 
+      }        
+
+      let maxWidth = 1360
+      // FONTS
+      this.fonts.bottom_text = (21 * baseWidth) / maxWidth 
+      this.fonts.top_text = (35 * baseWidth) / maxWidth
+      this.fonts.middle_text = (25 * baseWidth) / maxWidth 
+
+      // Paddings used for circle size
+      this.circle_dimensions.padding_top = (25 * baseWidth) / maxWidth
+      this.circle_dimensions.padding_left = (35 * baseWidth) / maxWidth
+    },
     renderChart() {
       const $this = this,
             chords = this.data,
