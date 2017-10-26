@@ -54,6 +54,7 @@ MODELS = (
     Organisation_OrganisationRole,
 )
 
+
 class Command(BaseCommand):
     help = 'Import the files in the directory given as argument'
 
@@ -71,15 +72,15 @@ class Command(BaseCommand):
             if (
                 os.path.isfile(os.path.join(directory_path, f)) and
                 f.endswith('.xlsx') and
-                f[:-5] in EXCEL_FILES
+                f[:-5].lower() in (name.lower() for name in EXCEL_FILES)
             )
         ]
         if not files:
             raise CommandError('Directory %s is empty' % directory_path)
 
-        existing_books = [file.split('.')[0] for file in files]
+        existing_books = [file.split('.')[0].lower() for file in files]
         for file in EXCEL_FILES:
-            if file not in existing_books:
+            if file.lower() not in existing_books:
                 raise CommandError('%s workbook is missing' % file)
 
         def _write(*args, **kwargs):
@@ -97,6 +98,7 @@ class Command(BaseCommand):
             file_path = os.path.join(directory_path, file)
             book = pyexcel.get_book(file_name=file_path)
             name = file.split('.')[0]
+            name = next(f for f in EXCEL_FILES if f.lower() == name.lower())
             sheets[name] = book[name]
 
         for sheet in sheets.values():
