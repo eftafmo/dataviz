@@ -30,7 +30,7 @@
         paddingLeft: circle_dimensions.padding_left + 'px',
         paddingRight: circle_dimensions.padding_left + 'px'
         }" 
-         class="data" :key="changed">
+         class="data">
           <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
           <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
         </ul>
@@ -42,16 +42,22 @@
 
 
     <div v-if="!hasData || !aggregated.allocation" class="info">
-      <transition name="fade"><div class="heading" :key="changed">
-        <p><span class="amount">No allocation available</span></p></div>
+      <transition name="fade">
+        <div :style="{fontSize: fonts.top_text + 'px'}" class="heading" :key="changed">
+          <p><span class="amount">No allocation available</span></p>
+        </div>
       </transition>
       <div class="data-wrapper">
-        <transition name="fade">
-          <ul :style="{ fontSize: fonts.middle_text + '%'}" class="data" :key="changed">
+          <ul :style="{ 
+          fontSize: fonts.middle_text + 'px', 
+          paddingTop: circle_dimensions.padding_top + 'px',
+          paddingBottom: circle_dimensions.padding_top + 'px',
+          paddingLeft: circle_dimensions.padding_left + 'px',
+          paddingRight: circle_dimensions.padding_left + 'px'
+          }"  class="data">
             <li class="programmes"><span class="amount"></span>No programmes available</li>
             <li class="projects"><span class="amount"></span>No projects available</li>
           </ul>
-        </transition>
       </div>
     </div>
 
