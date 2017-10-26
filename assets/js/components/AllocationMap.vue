@@ -189,7 +189,6 @@ export default BaseMap.extend({
     // this is a "template" with the string 'XX' meant to be replaced
     // with the country code
     detailsDatasource: String,
-    mobileData: null,
   },
 
   data() {
@@ -207,6 +206,7 @@ export default BaseMap.extend({
 
       current_region: null,
       hovered_region: null,
+      mobileData: null,
 
       current_region_data: null,
     }
@@ -422,7 +422,6 @@ export default BaseMap.extend({
 
         this.tip.show.call(self.node(), d, i)
         this.hovered_region = d
-        this.mobileData = d
       } else {
         this.tip.hide.call(self.node(), d, i)
         this.hovered_region = null
@@ -441,6 +440,10 @@ export default BaseMap.extend({
 
     clickfunc(d, i, group) {
       if(d.id.length === 2 && this.COUNTRIES[d.id].type !== "beneficiary") return;
+
+      //for mobile tooltip
+      this.mobileData = d
+
 
       const self = d3.select(group[i])
       if (self.classed("zero")) return
@@ -561,7 +564,6 @@ export default BaseMap.extend({
       if (!v) this.current_region_data = null
       this.tip.hide()
       this.render()
-      this.mobileData = this.hovered_region
     },
 
     handleFilter(){
