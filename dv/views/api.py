@@ -517,6 +517,8 @@ def partners(request):
                     'has_ended': pp['project__has_ended'],
                     'continued_coop': pp['project__is_continued_coop'],
                     'improved_knowledge': pp['project__is_improved_knowledge'],
+                    'src_nuts': [],
+                    'dst_nuts': [],
                 }
                 project_nuts[prj_code] = {
                     'src': [],
@@ -573,6 +575,10 @@ def partners(request):
                                     'src': src,
                                     'dst': dst,
                                 }
+                                if src not in projects[key_donor][prj_code]['src_nuts']:
+                                    projects[key_donor][prj_code]['src_nuts'].append(src)
+                                if dst not in projects[key_donor][prj_code]['dst_nuts']:
+                                    projects[key_donor][prj_code]['dst_nuts'].append(dst)
                     row = {
                         'fm': pa_data['fm'],
                         'sector': pa_data['sector'],

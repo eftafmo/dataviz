@@ -221,17 +221,42 @@ export default BaseMap.extend({
         if (region === undefined) region = regions[type][id] = {
           //id: id, // skipping this because data() reaggregates anyway
           fms: d3.set(),
+          states: d3.set(),
+          bs_orgs: d3.set(),
+          ds_orgs: d3.set(),
+          programmes: d3.set(),
+          projects: d3.set(),
           // add here anything else you might want to aggregate on
         }
         return region
       }
 
-      const _setData = (type, source, target, d) => {
+      const _setData = (type, source, target, ds_orgs, bs_orgs, d) => {
         const conngroup = _getConnectionGroup(type, source)
         conngroup[`${source}-${target}`] = {source, target}
-
-        if (source) _getRegion(type, source).fms.add(d.fm)
-        if (target) _getRegion(type, target).fms.add(d.fm)
+        const projects = d3.set()
+        for (const prj in d.projects) {
+          if (d.projects[prj]['src_nuts'].includes(source) && d.projects[prj]['dst_nuts'].includes(target))
+            projects.add(prj)
+        }
+        if (source) {
+          const region = _getRegion(type, source)
+          region.fms.add(d.fm)
+          ds_orgs.each(x => region.ds_orgs.add(x))
+          bs_orgs.each(x => region.bs_orgs.add(x))
+          region.programmes.add(d.programme)
+          projects.each(x => region.projects.add(x))
+          if (target) region.states.add(target.substr(0,2))
+        }
+        if (target) {
+          const region = _getRegion(type, target)
+          region.fms.add(d.fm)
+          ds_orgs.each(x => region.ds_orgs.add(x))
+          bs_orgs.each(x => region.bs_orgs.add(x))
+          region.programmes.add(d.programme)
+          projects.each(x => region.projects.add(x))
+          if (source) region.states.add(source.substr(0,2))
+        }
       }
 
       for (const d of dataset) {
@@ -242,9 +267,11 @@ export default BaseMap.extend({
           if (!d.DPP_nuts) continue
           // we can have rows with PO but not DPP (only projects)
           const source = d.DPP_nuts,
-                target = d.PO[po_code].nuts
+                target = d.PO[po_code].nuts,
+                ds_orgs = d3.set().add(d.DPP),
+                bs_orgs = d3.set().add(po_code)
 
-          _setData(type, source, target, d)
+          _setData(type, source, target, ds_orgs, bs_orgs, d)
         }
 
         type = "projects"
@@ -254,9 +281,20 @@ export default BaseMap.extend({
           // we do want to see donor project partners with no nuts, though
           const source = prj_nuts.src,
                 target = prj_nuts.dst
+          const ds_orgs = d3.set()
+          for (const org in d.PJDPP) {
+            if (d.PJDPP[org].nuts === source)
+              ds_orgs.add(org)
+          }
+          const bs_orgs = d3.set()
+          for ( const org in d.PJPT) {
+            if (d.PJPT[org].nuts === target)
+              bs_orgs.add(org)
+          }
 
-          _setData(type, source, target, d)
+          _setData(type, source, target, ds_orgs, bs_orgs, d)
         }
+
       }
 
       // flatten the connections data
@@ -289,7 +327,22 @@ export default BaseMap.extend({
             id: id,
             fms: d3.set(),
           }
+          if (region[type] === undefined) {
+            region[type] = {
+              states: d3.set(),
+              ds_orgs: d3.set(),
+              bs_orgs: d3.set(),
+              programmes: d3.set(),
+              projects: d3.set(),
+            }
+          }
+
           dataset[id].fms.each(x => region.fms.add(x))
+          dataset[id].states.each(x => region[type].states.add(x))
+          dataset[id].ds_orgs.each(x => region[type].ds_orgs.add(x))
+          dataset[id].bs_orgs.each(x => region[type].bs_orgs.add(x))
+          dataset[id].programmes.each(x => region[type].programmes.add(x))
+          dataset[id].projects.each(x => region[type].projects.add(x))
         }
       }
 
@@ -304,8 +357,34 @@ export default BaseMap.extend({
   },
 
   methods: {
+
+
     tooltipTemplate(d) {
       const country = this.getAncestorRegion(d.id, 0)
+
+      const is_ds = (this.COUNTRIES[country].type !== 'beneficiary')
+      let details = ''
+      let _plm = (prefix, word, count) => `${count} ${prefix} ${this.pluralize(word, count)}`
+      let _line = (src_text, dst_text, in_text, is_ds) => {
+        if (is_ds) [src_text, dst_text] = [dst_text, src_text]
+        return `<li>${src_text} working with ${dst_text} in ${in_text}</li>`
+      }
+      if (d.programmes) {
+        details += _line(
+          _plm('programme', 'operator', d.programmes.bs_orgs.size()),
+          _plm('donor', 'partner', d.programmes.ds_orgs.size()),
+          _plm('', 'programme', d.programmes.programmes.size()),
+          is_ds
+        )
+      }
+      if (d.projects) {
+        details += _line(
+          _plm('project', 'promoter', d.projects.bs_orgs.size()),
+          _plm('donor', 'partner', d.projects.ds_orgs.size()),
+          _plm('', 'project', d.projects.projects.size()),
+          is_ds
+        )
+      }
 
       return `
         <div class="title-container">
@@ -313,7 +392,10 @@ export default BaseMap.extend({
             <use xlink:href="#${ this.get_flag_name(country) }" />
           </svg>
           <span class="name">${ this.getRegionName(d.id) } (${ d.id })</span>
-        </div>`
+        </div>
+        <ul>
+          ${ details }
+        </ul>`
     },
 
     renderChart() {
