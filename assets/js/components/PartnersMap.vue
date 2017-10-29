@@ -466,7 +466,7 @@ export default BaseMap.extend({
       const connections = regions.merge(rentered).selectAll('path')
                                  .data(
                                    d => d.connections,
-                                   d => d.src + '-' + d.dst
+                                   d => d.source + '-' + d.target
                                  )
 
       const _badids = d3.set()
