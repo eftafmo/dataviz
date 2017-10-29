@@ -734,13 +734,6 @@ export default BaseMap.extend({
 
   watch: {
     visible_layers: "handleLayers",
-
-    chartWidth() {
-      // re-render on resize. but don't hijack the initial render.
-      if (!this.rendered) return
-
-      this.renderChart()
-    },
   },
 });
 </script>
