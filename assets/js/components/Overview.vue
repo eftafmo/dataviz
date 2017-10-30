@@ -72,10 +72,6 @@
 @target_stroke_opacity: .5;
 
 .dataviz .viz.overview {
-  @media(min-width: 800px){
-    margin-top: -5rem;
-  }
-
   .chart {
     .fms > g.item, .beneficiaries > g.item {
       cursor: pointer;
@@ -275,6 +271,11 @@
     }
     @media (min-width:1000px) {
       width: 60%;
+    }
+  }
+  &:not(.embedded){
+    @media(min-width: 800px){
+      margin-top: -5rem;
     }
   }
 
