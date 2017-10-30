@@ -1,6 +1,6 @@
 <style lang="less">
 .dataviz-tooltip {
-  font-family: inherit;
+  font-family: Arial;
  li {
   list-style-type: none;
  }
