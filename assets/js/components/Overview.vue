@@ -557,24 +557,34 @@ export default Chart.extend({
 
   methods: {
     computeDimensions(event) {
+      this.$super.computeDimensions(event)
 
       //the constants used for the calculations are the ideal sizes of the element's css properties for maxWidth
 
-      let baseWidth = this.$el.offsetWidth > 1000 ? this.$el.offsetWidth : 1000 
-      //different behaviour for mobile
-      if (this.$el.offsetWidth < 440){
-        baseWidth = this.$el.offsetWidth > 700 ? this.$el.offsetWidth : 700 
-      }        
+      let baseWidth = Math.max(this.$el.offsetWidth, 1000)
 
-      let maxWidth = 1360
+      //different behaviour for embedded 
+      if(this.$el.classList.contains("embedded")){
+        baseWidth = Math.max(this.$el.offsetWidth, 1200) 
+        if (this.$el.offsetWidth > 1199) {
+          baseWidth = Math.max(this.$el.offsetWidth, 1400)
+        } 
+      }
+      //different behaviour for mobile and tablet
+      if (this.$el.offsetWidth < 500) baseWidth = 700
+
+      // some very magic numbers
+      const maxWidth = 1360,
+            ratio = baseWidth / maxWidth
+
       // FONTS
-      this.fonts.bottom_text = (21 * baseWidth) / maxWidth 
-      this.fonts.top_text = (35 * baseWidth) / maxWidth
-      this.fonts.middle_text = (25 * baseWidth) / maxWidth 
+      this.fonts.bottom_text = 21 * ratio
+      this.fonts.top_text = 35 * ratio
+      this.fonts.middle_text = 25 * ratio 
 
       // Paddings used for circle size
-      this.circle_dimensions.padding_top = (25 * baseWidth) / maxWidth
-      this.circle_dimensions.padding_left = (35 * baseWidth) / maxWidth
+      this.circle_dimensions.padding_top = 25 * ratio
+      this.circle_dimensions.padding_left = 35 * ratio
     },
     renderChart() {
       const $this = this,
