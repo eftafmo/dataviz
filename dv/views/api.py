@@ -482,6 +482,7 @@ def partners(request):
     for pp in pp_raw:
         # Projects have only one BS and one PA, so keep them separated
         prj_code = pp['project_id']
+
         if pp['organisation_role_id'] == 'PJPT':
             # Project promoters are stored by project, only for projects with dpp
             if (prj_code in donor_projects):
@@ -520,6 +521,7 @@ def partners(request):
                     'src_nuts': [],
                     'dst_nuts': [],
                 }
+            if prj_code not in project_nuts:
                 project_nuts[prj_code] = {
                     'src': [],
                     'dst': [],
