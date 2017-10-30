@@ -18,7 +18,6 @@
      </tr>
      <tr
       class="section_item"
-      hidden="true"
       v-for="organization in item.organizations"
       :class="{active_filter : filters.DPP == organization.name}"
       @click="toggleDPP($event, organization.name)"
@@ -39,14 +38,6 @@
     overflow: auto;
   }
 
-  //fallback for ie
-  [hidden="hidden"] {
-    display: none;
-  }
-
-  [hidden="false"] {
-    display: table-row;
-  }
 
   .active {
     th:first-of-type:before {
@@ -101,7 +92,7 @@
       }
     }
 
-    .section_item.hidden {
+    .section_item {
       display: none;
     }
 
@@ -110,6 +101,9 @@
         &:before{
           transform:rotate(90deg)
         }
+      }
+      .section_item {
+        display: table-row;
       }
     }
 
@@ -264,18 +258,6 @@ export default Component.extend({
     show_items(e){
       let target = e.target.parentNode.parentNode
       target.classList.toggle('active')
-      let dest = target.querySelectorAll('.section_item');
-      for (let t in dest){
-        try {
-          if(dest[t].getAttribute('hidden') == 'hidden')
-            dest[t].setAttribute('hidden','false')
-          else
-            dest[t].setAttribute('hidden','hidden')
-        }
-        catch (e) {
-          return null;
-        }
-      }
     }
   },
 
