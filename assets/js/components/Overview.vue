@@ -36,7 +36,7 @@
         </ul>
       </div>
       <div :style="{ fontSize: fonts.bottom_text + 'px' }" class="ending">
-        <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
+        <p>to reduce social and economic disparities across Europe and <br>to strenghten bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
       </div>
     </div>
 
@@ -171,11 +171,6 @@
     .heading {
       top: 5%;
       font-size: 1.5em;
-      @media (max-width: 800px) {
-        top: -29px;
-        font-size: 95%;
-      }
-
     }
 
     .data-wrapper {
@@ -242,10 +237,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    @media(max-width: 800px){
-      left: -1.5rem;
-      top: -91px;
-    }
+   
 
     .fm span {
       width: 10px; height: 10px;
@@ -274,8 +266,19 @@
     }
   }
   &:not(.embedded){
-    @media(min-width: 800px){
-      margin-top: -5rem;
+      @media(min-width: 800px){
+        margin-top: -5rem;
+      }
+
+    .ending {
+      br {
+        display: none;
+      }
+    }
+    .heading {
+      @media (max-width: 800px) {
+        top: -29px;
+      }
     }
   }
 
