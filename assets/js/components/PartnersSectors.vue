@@ -1,5 +1,6 @@
 <script>
 import * as d3 from 'd3';
+import {slugify} from 'js/lib/util'
 
 import Sectors from './Sectors';
 import PartnersMixin from './mixins/Partners';
@@ -14,32 +15,72 @@ export default Sectors.extend({
     }
   },
 
+  computed: {
+    programme_counts() {
+      // this data-shuffling is needed because a single programme can belong
+      // to multiple areas, which leads to pie chart distortions.
+      const out = {}
+
+      for (const sname in this.aggregated) {
+        const sector = this.aggregated[sname],
+              sid = slugify(sname)
+
+        const values = {},
+              // used to group the areas by programme
+              programmes = {},
+              programmeset = d3.set()
+
+        for (const aname in sector) {
+          const area = sector[aname],
+                aid = area.id
+
+          values[aid] = area.programmes.size()
+
+          area.programmes.each(pname => {
+            let programme
+            if (programmeset.has(pname)) {
+              programme = programmes[pname]
+            } else {
+              programme = programmes[pname] = []
+              programmeset.add(pname)
+            }
+            programme.push(aid)
+          })
+        }
+
+        // substract the duplicate programmes
+        for (const pname in programmes) {
+          const areas = programmes[pname],
+                len = areas.length
+          if (len <= 1) continue
+
+          // the programmes get "divided" between the areas
+          for (const aid of areas) {
+            values[aid] -= (len - 1) / len
+          }
+        }
+
+        out[sid] = {
+          value: programmeset.size(),
+          areas: values,
+        }
+      }
+
+      return out
+    },
+  },
 
   methods: {
     valuefunc(d) {
-      if (this.isRoot(d) || this.isRogue(d))
+      if (this.isRoot(d) || this.isRogue(d) || this.isSector(d))
         return 0
 
       if (!this.isEnabled(d)) return 0
 
-      if (this.isSector(d)) {
-        // get rid of the doubly-counted programmes
-        const all = d3.set()
-        let sum = 0
-
-        for (const aid in d.children) {
-          const prgs = d.children[aid].programmes
-          if (prgs === undefined) continue
-
-          prgs.each( x => all.add(x) )
-          sum += prgs.size()
-        }
-        return all.size() - sum
-      }
-
       // is this a rogue area?
       if (d.programmes === undefined) return 0
-      return d.programmes.size()
+
+      return this.programme_counts[d.parentid].areas[d.id]
     },
 
     display(item) {
@@ -50,11 +91,13 @@ export default Sectors.extend({
     tooltipTemplate(d) {
       // TODO: such horribleness. sad face.
       let thing = "programme area",
+          value,
           dss = d.data.donors,
           bss = d.data.beneficiaries;
 
       if(d.depth == 1) {
         thing = "sector";
+        value = this.programme_counts[d.data.id].value
         dss = d3.set()
         bss = d3.set();
 
@@ -66,6 +109,8 @@ export default Sectors.extend({
             for (const bs of c.data.beneficiaries.values())
               bss.add(bs);
         }
+      } else {
+        value = d.data.programmes.size()
       }
 
       const num_bs = bss.size();
@@ -82,7 +127,7 @@ export default Sectors.extend({
         </div>
         <ul>
           <li>Donor states: ${ds_sorted}</li>
-          <li>${d.value}\u00a0` + this.singularize("programmes", d.value) + `</li>
+          <li>${value}\u00a0` + this.singularize("programmes", value) + `</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
         </ul>
         <span class="action">Click to filter by ${ thing }</span>

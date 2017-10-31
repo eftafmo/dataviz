@@ -455,6 +455,7 @@ export default Chart.extend({
           const colourscale = this._mkcolourscale(colour, areas.length);
 
           for (const area of areas) {
+            area.parentid = sector.id
             area.parentname = sector.name;
             area.colour = colourscale(area.id);
           }
