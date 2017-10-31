@@ -25,43 +25,35 @@ export default Sectors.extend({
         const sector = this.aggregated[sname],
               sid = slugify(sname)
 
-        const values = {},
-              // used to group the areas by programme
-              programmes = {},
-              programmeset = d3.set()
+        // take into account the difference caused by duplicate programmes
+        // and condense all areas proportionally
+
+        const programmeset = d3.set(),
+              values = {}
+        let sum = 0
 
         for (const aname in sector) {
           const area = sector[aname],
-                aid = area.id
+                aid = area.id,
+                value = area.programmes.size()
 
-          values[aid] = area.programmes.size()
-
-          area.programmes.each(pname => {
-            let programme
-            if (programmeset.has(pname)) {
-              programme = programmes[pname]
-            } else {
-              programme = programmes[pname] = []
-              programmeset.add(pname)
-            }
-            programme.push(aid)
-          })
+          values[aid] = value
+          sum += value
+          area.programmes.each(p => programmeset.add(p))
         }
 
-        // substract the duplicate programmes
-        for (const pname in programmes) {
-          const areas = programmes[pname],
-                len = areas.length
-          if (len <= 1) continue
+        const count = programmeset.size()
 
-          // the programmes get "divided" between the areas
-          for (const aid of areas) {
-            values[aid] -= (len - 1) / len
+        if (count !== sum) {
+          const ratio = count / sum
+
+          for (const aid in values) {
+            values[aid] = values[aid] * ratio
           }
         }
 
         out[sid] = {
-          value: programmeset.size(),
+          value: count,
           areas: values,
         }
       }
