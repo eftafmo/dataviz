@@ -1,15 +1,13 @@
 <template>
     <ul :class="classNames">
-      <li v-for="news in data">
-        <div class="content-item news_content">
-        <a :href="`${news.link}`" target="_blank">
-          <div class="body clearfix">
-            <img :src="`${news.image}`">
+      <li class="content-item news_content" v-for="news in data">
+        <a class="body clearfix" :href="`${news.link}`" target="_blank">
+          <img :src="`${news.image}`">
+          <div :class="{ no_img : !news.image }" class="pull-right news_text">
             <h4 class="title">{{news.title}}</h4>
             <small>{{formatDate(news.created)}}</small>
           </div>
         </a>
-        </div>
       </li>
     </ul>
 </template>
@@ -27,6 +25,18 @@
 
   small {
     color: #898989;
+  }
+
+  .pull-right {
+    float: right;
+  }
+
+  .news_text {
+    width: calc(~'60% - 1rem');
+    &.no_img {
+      float: initial;
+      width: 100%;
+    }
   }
 
   img {
