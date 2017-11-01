@@ -331,6 +331,7 @@ export default Vue.extend({
 
       d3.json(this.datasource, (error, ds) => {
         if (error) throw error;
+        Object.freeze(ds)
         this.dataset = ds;
       });
     },
