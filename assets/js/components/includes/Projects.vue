@@ -2,7 +2,7 @@
   <div class="projects">
     <div class="programme-item-header" @click="getProjects"> {{ name }} </div>
     <div v-if="posts.length != 0" class="programme-sublist-wrapper">
-      <small class="programme-sublist-header">{{ sector }} ({{ posts.count}})</small>
+      <small class="programme-sublist-header">{{ sector }} ({{ posts.count}} {{ pluralize('project', posts.count) }})</small>
       <ul class="programme-sublist">
         <li class="programme-sublist-item"
             v-for="value of posts.results">
@@ -91,11 +91,12 @@ import Vue from 'vue';
 import axios from 'axios';
 
 import WithFiltersMixin from '../mixins/WithFilters';
-
+import ComponentMixin from '../mixins/Component'
 
 export default Vue.extend({
   mixins: [
     WithFiltersMixin,
+    ComponentMixin,
   ],
 
   props: {
