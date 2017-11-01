@@ -488,7 +488,8 @@ export default Chart.extend({
         .attr("opacity", 0)
         .attr("transform", `translate(0,${this.height})`);
 
-      const sboth = states.merge(sentered);
+      const sboth = states.merge(sentered)
+                          .attr('display', null)
 
       sboth.filter( (d) => d.total != 0 ) // entered items can also be 0-ed
         .transition(t)
@@ -501,6 +502,9 @@ export default Chart.extend({
         // translate items out of the viewport.
         // disabled because it only makes sense with ordered values.
         //.attr("transform", `translate(0,${this.height})`)
+        .on("end", function() {
+          this.setAttribute('display', 'none')
+        })
 
       /*
        * render the row labels
