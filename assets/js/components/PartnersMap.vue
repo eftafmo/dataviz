@@ -236,8 +236,10 @@ export default BaseMap.extend({
         conngroup[`${source}-${target}`] = {source, target}
         const projects = d3.set()
         for (const prj in d.projects) {
-          if (d.projects[prj]['src_nuts'].includes(source) && d.projects[prj]['dst_nuts'].includes(target))
+          if ( d.projects[prj]['src_nuts'].indexOf(source) !== -1 &&
+               d.projects[prj]['dst_nuts'].indexOf(target) !== -1 ) {
             projects.add(prj)
+          }
         }
         if (source) {
           const region = _getRegion(type, source)
