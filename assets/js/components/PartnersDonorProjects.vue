@@ -17,7 +17,7 @@
        <td>{{item.programmes.size()}}</td>
        <td>{{item.projects.size()}}</td>
      </tr>
-     <tr class="section_item hidden" v-for="organizations in item.organizations">
+     <tr class="section_item" v-for="organizations in item.organizations">
       <td colspan="2">{{organizations.name}}</td>
       <!-- <td>  </td> -->
       <td>{{organizations.countries.size()}}</td>
@@ -77,7 +77,7 @@
       //}
     }
 
-    .section_item.hidden {
+    .section_item {
       display: none;
     }
 
@@ -87,6 +87,9 @@
           transform:rotate(90deg)
         }
       }
+       .section_item {
+        display: table-row;
+       }
     }
 
 
@@ -217,11 +220,6 @@ export default Component.extend({
     show_items(e){
       let target = e.target.parentNode.parentNode
       target.classList.toggle('active')
-      let dest = target.querySelectorAll('.section_item');
-      for (let t in dest){
-        if(dest[t].classList)
-        dest[t].classList.toggle('hidden')
-      }
     }
   },
 

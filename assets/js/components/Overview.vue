@@ -36,7 +36,7 @@
         </ul>
       </div>
       <div :style="{ fontSize: fonts.bottom_text + 'px' }" class="ending">
-        <p>to reduce social and economic disparities across Europe and to strenghten bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
+        <p>to reduce social and economic disparities across Europe and <br>to strenghten bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
       </div>
     </div>
 
@@ -72,10 +72,6 @@
 @target_stroke_opacity: .5;
 
 .dataviz .viz.overview {
-  @media(min-width: 800px){
-    margin-top: -5rem;
-  }
-
   .chart {
     .fms > g.item, .beneficiaries > g.item {
       cursor: pointer;
@@ -175,11 +171,6 @@
     .heading {
       top: 5%;
       font-size: 1.5em;
-      @media (max-width: 800px) {
-        top: -29px;
-        font-size: 95%;
-      }
-
     }
 
     .data-wrapper {
@@ -246,10 +237,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    @media(max-width: 800px){
-      left: -1.5rem;
-      top: -91px;
-    }
+   
 
     .fm span {
       width: 10px; height: 10px;
@@ -275,6 +263,22 @@
     }
     @media (min-width:1000px) {
       width: 60%;
+    }
+  }
+  &:not(.embedded){
+      @media(min-width: 800px){
+        margin-top: -5rem;
+      }
+
+    .ending {
+      br {
+        display: none;
+      }
+    }
+    .heading {
+      @media (max-width: 800px) {
+        top: -29px;
+      }
     }
   }
 
@@ -553,24 +557,34 @@ export default Chart.extend({
 
   methods: {
     computeDimensions(event) {
+      this.$super.computeDimensions(event)
 
       //the constants used for the calculations are the ideal sizes of the element's css properties for maxWidth
 
-      let baseWidth = this.$el.offsetWidth > 1000 ? this.$el.offsetWidth : 1000 
-      //different behaviour for mobile
-      if (this.$el.offsetWidth < 440){
-        baseWidth = this.$el.offsetWidth > 700 ? this.$el.offsetWidth : 700 
-      }        
+      let baseWidth = Math.max(this.$el.offsetWidth, 1000)
 
-      let maxWidth = 1360
+      //different behaviour for embedded 
+      if(this.$el.classList.contains("embedded")){
+        baseWidth = Math.max(this.$el.offsetWidth, 1200) 
+        if (this.$el.offsetWidth > 1199) {
+          baseWidth = Math.max(this.$el.offsetWidth, 1400)
+        } 
+      }
+      //different behaviour for mobile and tablet
+      if (this.$el.offsetWidth < 500) baseWidth = 700
+
+      // some very magic numbers
+      const maxWidth = 1360,
+            ratio = baseWidth / maxWidth
+
       // FONTS
-      this.fonts.bottom_text = (21 * baseWidth) / maxWidth 
-      this.fonts.top_text = (35 * baseWidth) / maxWidth
-      this.fonts.middle_text = (25 * baseWidth) / maxWidth 
+      this.fonts.bottom_text = 21 * ratio
+      this.fonts.top_text = 35 * ratio
+      this.fonts.middle_text = 25 * ratio 
 
       // Paddings used for circle size
-      this.circle_dimensions.padding_top = (25 * baseWidth) / maxWidth
-      this.circle_dimensions.padding_left = (35 * baseWidth) / maxWidth
+      this.circle_dimensions.padding_top = 25 * ratio
+      this.circle_dimensions.padding_left = 35 * ratio
     },
     renderChart() {
       const $this = this,
