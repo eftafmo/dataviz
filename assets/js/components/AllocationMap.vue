@@ -278,8 +278,8 @@ const AllocationMap = BaseMap.extend({
       if (level == 0)
         return null // for consistency with filter values
       if (level == this.zoomed_nuts_level)
-        return id.substr(0, 2)
-      return id.substr(0, id.length - 1)
+        return this.getAncestorRegion(id, 0)
+      return this.getAncestorRegion(id, level - 1)
     },
 
     zoomOut() {
@@ -288,29 +288,6 @@ const AllocationMap = BaseMap.extend({
 
     opacityfunc(parentid) {
       return parentid == "" ? 1 : 0
-    },
-
-    renderBeneficiary(dataset, t) {
-      const beneficiaries = this.chart
-                                  .selectAll('.regions > .level0 > path.beneficiary')
-                                  .data(dataset, (d) => d.id );
-
-      beneficiaries
-        .classed("zero", false)
-        .transition(t)
-        .attr("fill", this.beneficiary_colour)
-
-      beneficiaries
-        .exit()
-        .classed("zero", true)
-        .each(function(d) {
-          // reset data in a nice, hardcoded way
-          Object.assign(d, {
-            allocation: 0,
-          })
-        })
-        .transition(t)
-        .attr("fill", this.beneficiary_colour_zero)
     },
 
     renderChart() {
@@ -391,12 +368,23 @@ const AllocationMap = BaseMap.extend({
       // disable mouseover events while transitioning
       if (this.transitioning) return
 
+      // avoid strangeness, disable events for the current region
+      // (it should always be covered by its children)
+      if (this.current_region && d.id == this.current_region)
+        return
+
       // disable mouseover events on mobile because of iphone quirks
       // TODO: fix this, it's too broad
       // (and events should be handled specifically for mobile as needed)
       if (window.matchMedia("(max-width: 767px)").matches) return
 
-      return this.$super(AllocationMap, this)._domouse(over, d, i, group)
+      const self = this.$super(AllocationMap, this)._domouse(over, d, i, group)
+      if (!self) return
+
+      if (this.getRegionLevel(d.id) == 0 && this.isDonor(d))
+        return
+
+      return self
     },
 
     clickfunc(d, i, group) {
@@ -442,27 +430,24 @@ const AllocationMap = BaseMap.extend({
               .style("display", "none")
               // also reset regions to default colour
               .selectAll("path")
-              .attr("fill", $this.region_colour)
+              .attr("fill", $this.fillfunc)
           })
       }
 
       const _showregion = (id, yes) => {
-        const level = id.length == 2 ? 0 : id.length - 2
+        const level = this.getRegionLevel(id)
 
         const region = this.chart
           // must selectAll, or else data goes poof
           .selectAll(`.regions > .level${level} > .${id}`)
-          .style("display", null)
           .transition(t)
-          .attr("opacity", Number(yes))
+          .attr("fill", this.fillfunc)
 
           .on("start", function() {
             $this.transitioning = true
           })
           .on("end", function() {
             $this.transitioning = false
-            if (!yes)
-              d3.select(this).style("display", "none")
           })
           .on("interrupt", function(d) {
             // watch out for the impossible "double interrupt":
@@ -471,7 +456,7 @@ const AllocationMap = BaseMap.extend({
             // (that's a real fast triple click in at least 2 different places)
             if (oldid && oldid != d.id && !yes) {
               $this.chart.select(".regions > .level0").selectAll(`.${oldid}`)
-                .attr("opacity", 1)
+                .attr("fill", $this.fillfunc)
             }
           })
       }
@@ -482,16 +467,15 @@ const AllocationMap = BaseMap.extend({
         _showchildren(newid, true)
       }
 
-      if (oldid &&
-          // don't do anything if the old region is an ancestor
-          (!newid || !this.isAncestorRegion(oldid, newid))
-      ) {
+      if (oldid) {
         // we need to recursively handle all ancestors of the old region,
         // until we meet the current one's parent
         let id = oldid
         while (true) {
           // show the region, hide its children
           _showregion(id, true)
+          // however, if it's an ancestor of the current one, stop
+          if (newid && this.isAncestorRegion(oldid, newid)) break
           _showchildren(id, false)
 
           id = this.getParentRegion(id)

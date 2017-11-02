@@ -309,10 +309,7 @@ export default AllocationMap.extend({
 
       if (over) bubble.raise()
 
-      if (d.id.length == 2 &&
-        this.COUNTRIES[d.id].type === "donor"
-      ) return;
-
+      // TODO: this shouldn't be handled here, but in AllocationMap or BaseMa
       self
         .transition(this.getTransition(this.short_duration))
         .attr("fill", over ? this.beneficiary_colour_hovered :
@@ -381,7 +378,7 @@ export default AllocationMap.extend({
                                .data(regions)
                                .enter().append("g")
                                .attr("class", d => `region ${d.id}`)
-                               .attr("opacity", 0)
+                               //.attr("opacity", 0)
                                .property("_value", 0)
 
       if (!main) {
@@ -554,7 +551,6 @@ export default AllocationMap.extend({
     renderData(t) {
       const dataset = d3.values(this.data)
       this._renderRegionData(null, dataset, t)
-      this.renderBeneficiary(dataset, t)
     },
 
     renderRegionData(region, regiondata, t) {

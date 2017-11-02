@@ -87,7 +87,27 @@ export default AllocationMap.extend({
     renderData(t) {
       if (t === undefined) t = this.getTransition();
       const dataset = d3.values(this.data);
-      this.renderBeneficiary(dataset, t)
+
+      const beneficiaries = this.chart.selectAll('.regions > .level0 > path.beneficiary')
+                                .data(dataset, (d) => d.id );
+
+      beneficiaries
+        .classed("zero", false)
+        .transition(t)
+        .attr("fill", this.beneficiary_colour)
+
+      beneficiaries
+        .exit()
+        .classed("zero", true)
+        .each(function(d) {
+          // reset data in a nice, hardcoded way
+          Object.assign(d, {
+            allocation: 0,
+          })
+        })
+        .transition(t)
+        .attr("fill", this.beneficiary_colour_zero)
+
       // and TODO: disable filtering for 0 / missing items
     },
 

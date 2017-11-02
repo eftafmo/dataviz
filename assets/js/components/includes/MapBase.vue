@@ -651,8 +651,7 @@ export default Vue.extend({
         .attr("class", d => `${this.COUNTRIES[d.id.substr(0, 2)].type} ${d.id}`)
         .attr("d", this.path)
         .attr("fill", this.fillfunc)
-        // some hardcoding, because level-0 paths get opacity transitions
-        .attr("opacity", d => d.id.length == 2 ? 1 : null)
+        .attr("opacity", 1)
 
         /*
         .on("mouseenter", () => this.$emit("enter", ...arguments))

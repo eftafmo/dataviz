@@ -80,11 +80,15 @@ export default Chart.extend({
     return {
       origin: origin,
 
-      beneficiary_colour: "#ddd",
-      beneficiary_colour_hovered: "#96d2f9",
-      beneficiary_colour_zero: "#eee",
-      region_colour: "#ddd",
-      region_colour_zero: "#eee",
+      beneficiary_colour: 'rgba(221, 221, 221, 0.5)',
+      beneficiary_colour_hovered: 'rgba(150, 210, 249, 0.5)',
+      beneficiary_colour_zero: 'rgba(238, 238, 238, 0.5)',
+      region_colour: 'rgba(221, 221, 221, 0.5)',
+      region_colour_zero: 'rgba(238, 238, 238, 0.5)',
+
+      current_region_colour: 'rgba(221, 238, 255, 1)',
+      ancestor_region_colour: 'rgba(221, 238, 255, 0)',
+
       donor_colour_inactive: "#fff",
 
       width: 0,
@@ -160,8 +164,10 @@ export default Chart.extend({
 
       if (over) {
         self.raise()
-        // we also need to raise the parent container
-        d3.select(thisnode.parentNode).raise()
+        // we would normally want to raise the parent container too,
+        // but we won't, because the current parent region is always
+        // visible (currently) and it would cover its children
+        //d3.select(thisnode.parentNode).raise()
 
         this.tip.show.call(self.node(), d, i)
         this.hovered_region = d
@@ -245,10 +251,10 @@ export default Chart.extend({
         .attr("stroke", colourfuncNO)
     },
 
-    fillfunc(d) {
+    fillfunc(d, i, group) {
       const id = d.id,
-            level = id.length - 2,
-            country = id.substr(0, 2),
+            level = this.getRegionLevel(id),
+            country = this.getAncestorRegion(id, 0),
             type = this.COUNTRIES[country].type;
 
       if (type == "donor") {
@@ -259,6 +265,14 @@ export default Chart.extend({
           return this.donor_colour_inactive
 
         return this.fmcolour("eea-grants")
+      }
+
+      if (this.current_region) {
+        if (id == this.current_region)
+          return this.current_region_colour
+
+        if (this.isAncestorRegion(id, this.current_region))
+          return this.ancestor_region_colour
       }
 
       if (level == 0)
