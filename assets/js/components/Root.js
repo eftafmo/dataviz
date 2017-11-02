@@ -47,10 +47,13 @@ export default Base.extend({
     const url = getURL(window.location),
           params = url.searchParams,
           scenario = getScenario(url)
-
     const filters = SCENARIOFILTERS[scenario]
     for (const name of filters) {
-      FILTERS[name] = params.get(name) || null
+      let param = params.get(name) || null
+      if (param) {
+        param = param.replace(/\+/g, ' ')
+      }
+      FILTERS[name] = param
     }
 
     this.scenario = scenario
@@ -129,7 +132,6 @@ export default Base.extend({
       const location = getURL(window.location);
       this._updateURL(location, SCENARIOFILTERS[this.scenario]);
 
-      // TODO: what's the more appropriate UX, push or replace?
       history.replaceState(null, null, location.href);
 
       this.updateAnchors();
