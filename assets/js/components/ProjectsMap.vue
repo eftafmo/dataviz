@@ -546,6 +546,10 @@ export default AllocationMap.extend({
             .style("display", "none")
             .classed("transitioning", false)
         })
+
+      // also "un-hover" bubbles because they sometimes get stuck
+      this.projects.selectAll('g.hovered')
+        .classed('hovered', false)
     },
 
     renderData(t) {
