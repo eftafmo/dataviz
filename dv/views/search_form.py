@@ -59,7 +59,9 @@ class EeaFacetedSearchForm(FacetedSearchForm):
                     # Note that we are using as key the same facet_name, not a new alias
                     # See https://wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
                     sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
-                    del sqs.query.facets[facet_name]
+                    #del sqs.query.facets[facet_name]
+                    # Don't delete the original facet, because x.facet.mincount does not support tagging and local params
+                    # fixes #518
                     sqs = sqs.facet(
                         '{{!ex={0} key={0}}}{0}'.format(facet_name),
                         mincount=FACET_MIN_COUNT,
