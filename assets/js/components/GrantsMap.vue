@@ -81,7 +81,7 @@ export default AllocationMap.extend({
         self
           .transition(this.getTransition(this.short_duration))
           .attr("fill", over ? this.hovered_region_colour :
-                               fillfunc)
+                               this.fillfunc)
     },
 
     renderData(t) {
