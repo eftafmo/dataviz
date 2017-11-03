@@ -80,12 +80,12 @@ export default Chart.extend({
     return {
       origin: origin,
 
-      beneficiary_colour: 'rgba(221, 221, 221, 0.5)',
-      beneficiary_colour_hovered: 'rgba(150, 210, 249, 0.5)',
-      beneficiary_colour_zero: 'rgba(238, 238, 238, 0.5)',
+      beneficiary_colour: 'rgba(221, 221, 221, 1)',
+      beneficiary_colour_zero: 'rgba(238, 238, 238, 1)',
       region_colour: 'rgba(221, 221, 221, 0.5)',
       region_colour_zero: 'rgba(238, 238, 238, 0.5)',
 
+      hovered_region_colour: 'rgba(150, 210, 249, 0.5)',
       current_region_colour: 'rgba(221, 238, 255, 1)',
       ancestor_region_colour: 'rgba(221, 238, 255, 0)',
 
@@ -252,6 +252,7 @@ export default Chart.extend({
     },
 
     fillfunc(d, i, group) {
+      // returns the fill colour of a country or region
       const id = d.id,
             level = this.getRegionLevel(id),
             country = this.getAncestorRegion(id, 0),

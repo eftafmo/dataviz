@@ -309,11 +309,11 @@ export default AllocationMap.extend({
 
       if (over) bubble.raise()
 
-      // TODO: this shouldn't be handled here, but in AllocationMap or BaseMa
+      // TODO: this shouldn't be handled here, but in AllocationMap or BaseMap
       self
         .transition(this.getTransition(this.short_duration))
-        .attr("fill", over ? this.beneficiary_colour_hovered :
-                              this.beneficiary_colour)
+        .attr("fill", over ? this.hovered_region_colour :
+                              this.fillfunc)
     },
 
     clickfunc(d, i, group) {

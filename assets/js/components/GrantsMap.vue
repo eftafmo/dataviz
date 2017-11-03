@@ -73,15 +73,15 @@ export default AllocationMap.extend({
       const self = this.$super._domouse(over, d, i, group)
       if (!self) return
 
-      if (this.beneficiary_colour_hovered &&
+      if (this.hovered_region_colour &&
           d.id.length == 2 &&
           d.allocation != 0 &&
           this.COUNTRIES[d.id].type === "beneficiary"
       )
         self
           .transition(this.getTransition(this.short_duration))
-          .attr("fill", over ? this.beneficiary_colour_hovered :
-                               this.beneficiary_colour)
+          .attr("fill", over ? this.hovered_region_colour :
+                               fillfunc)
     },
 
     renderData(t) {
