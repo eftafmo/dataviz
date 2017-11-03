@@ -162,6 +162,8 @@ export default BaseMap.extend({
       visible_layers: this.layers,
       region: null,
 
+      region_colour: '#ccc',
+
       chart_opacity: 1.0,
       region_opacity: .8,
 
