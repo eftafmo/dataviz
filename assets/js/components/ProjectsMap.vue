@@ -324,7 +324,8 @@ export default AllocationMap.extend({
       if (d.id.length != 2)
         this.filters.region = d.id
 
-      d3.select(".selected").classed("selected", false);
+      this.chart.select(".regions").selectAll(".selected")
+                                   .classed("selected", false)
 
       if (d.id.length > 4) {
         d3.select(group[i]).classed("selected", true);
