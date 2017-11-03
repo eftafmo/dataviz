@@ -39,8 +39,8 @@
 
 
 <style lang="less">
-@duration: .5s;
-@short_duration: .2s;
+@duration: .3s;
+@short_duration: .1s;
 
 .dataviz .viz.map.is-partners {
   .chart .regions {

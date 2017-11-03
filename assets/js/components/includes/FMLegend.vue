@@ -48,7 +48,7 @@
       opacity: 0.3;
     }
 
-    transition: all .5s ease;
+    transition: all .3s ease;
   }
 }
 </style>

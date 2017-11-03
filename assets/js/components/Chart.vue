@@ -38,9 +38,9 @@ const Chart = Component.extend({
       // these need to be synced with each component's css
       // TODO: load them from a common json / less-file?
       // default transition duration
-      duration: 500,
+      duration: 300,
       // alternate
-      short_duration: 200,
+      short_duration: 100,
 
       chart_rendered: false,
     };

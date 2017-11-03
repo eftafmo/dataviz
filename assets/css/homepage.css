@@ -15,7 +15,7 @@
   color: rgb(0, 117, 188);
   max-width: 28rem;
   padding: 1.5rem;
-  transition: .2s;
+  transition: .1s;
   border-top: 4px solid #355785;
 }
 @media(max-width:700px){

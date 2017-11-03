@@ -75,7 +75,7 @@
   .selected {
     fill: @nuts3_selected_color;
     fill-opacity: 0.5;
-    transition: fill .4s ease;
+    transition: fill .1s ease;
   }
 }
 </style>

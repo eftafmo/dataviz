@@ -97,8 +97,8 @@
   // defs
   @text-colour: #444;
   // these need to be synced with js
-  @duration: .5s;
-  @short_duration: .25s;
+  @duration: .3s;
+  @short_duration: .1s;
   @inactive_opacity: .7;
 
   position: relative;
