@@ -498,7 +498,11 @@ export default AllocationMap.extend({
           `.regions > ${this._getRegionSelector(parentid)} > path.beneficiary`
         )
         .data(dataset, d => d.id)
+
+      mapregions
         .classed("zero", false)
+        .transition(t)
+        .attr("fill", this.fillfunc)
 
       // reset the 0ed ones
       mapregions.exit()
@@ -511,6 +515,9 @@ export default AllocationMap.extend({
             id: id
           })
         })
+        .transition(t)
+        .attr("fill", d => this.getRegionLevel(d.id) == 0 ?
+                           this.beneficiary_colour_zero : this.region_colour_zero)
 
       // we only go this far if this isn't the current region
       // (we just want to bind data for the tooltip to work)
