@@ -8,7 +8,7 @@
  ul {
   padding-left: 0;
  }
-
+  z-index: 2;
   min-width: 320px;
   max-width: 420px;
   padding: 1rem 2rem;
