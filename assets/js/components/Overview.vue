@@ -36,7 +36,7 @@
         </ul>
       </div>
       <div :style="{ fontSize: fonts.bottom_text + 'px' }" class="ending">
-        <p>to reduce social and economic disparities across Europe and <br>to strenghten bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
+        <p>to reduce social and economic disparities across Europe and <br>to strengthen bilateral relations in <span style="white-space:nowrap;">{{ period }}</span> funding period</p>
       </div>
     </div>
 
