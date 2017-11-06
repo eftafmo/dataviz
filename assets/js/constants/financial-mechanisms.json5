@@ -7,7 +7,7 @@
   },
   "norway-grants": {
     id: "norway-grants",
-    donor_list: "Norway",
+    donor_list: "Norway 100%",
     name: "Norway Grants",
     colour: "rgb(255, 0, 22)",
   },
