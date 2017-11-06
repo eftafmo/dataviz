@@ -426,6 +426,10 @@ export default BaseMap.extend({
     },
 
     renderConnections(t) {
+      // don't transition connections in IE. not nice, but necessary.
+      const is_ie = !!document.documentMode
+      if (is_ie) t = this.getTransition(0)
+
       // we render from the donor side
       const conndata = this.aggregated.connections
 
