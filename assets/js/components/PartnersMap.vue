@@ -439,7 +439,7 @@ export default BaseMap.extend({
     },
 
     _renderConnections(type, data, t) {
-      const container = this.chart.select(`.partnerships > .${ type }`),
+      const container = this.chart.select(`.partnerships > .base.${ type }`),
             regions = container.selectAll('g')
                                .data(data, d => d.country)
 
