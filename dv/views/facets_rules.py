@@ -83,10 +83,11 @@ FACET_TO_FILTERS['projects'].update({
 
 PRG_STATUS_SORT = {
     'Implementation': 0,
-    'Closed': 1,
-    'Approved': 2,
-    'Withdrawn': 3,
-    'Returned to po': 4,
+    'Completed': 1,
+    'Closed': 2,
+    'Approved': 3,
+    'Withdrawn': 4,
+    'Returned to po': 5,
 }
 PRJ_STATUS_SORT = {
     'In Progress': 0,

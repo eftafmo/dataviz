@@ -211,10 +211,18 @@ class Allocation(_MainModel):
 class ProgrammeStatus(Enum):
     APPROVED = 'approved'
     IMPLEMENTATION = 'implementation'
+    COMPLETED = 'completed'
+    CLOSED = 'closed'
+    WITHDRAWN = 'withdrawn'
+    RETURNED = 'returned'
 
     class Labels:
         APPROVED = _('Approved')
         IMPLEMENTATION = _('Implementation')
+        COMPLETED = _('Completed')
+        CLOSED = _('Closed')
+        WITHDRAWN = _('Withdrawn')
+        RETURNED = _('Returned to po')
 
 
 class Programme(_MainModel):
