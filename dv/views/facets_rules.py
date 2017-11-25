@@ -41,10 +41,19 @@ ORGANISATION_CUSTOM_FACETS = [
     ('org_type', 'OR'),
 ]
 
+NEWS_CUSTOM_FACETS = [
+    ('programme_status', 'OR'),
+    ('outcome_ss', 'OR'),
+    ('project_name', 'OR'),
+    ('project_status', 'OR'),
+    ('theme_ss', 'OR'),
+    ('geotarget', 'OR'),
+]
+
 PROGRAMME_FACETS = OrderedDict(BASE_FACETS + PROGRAMME_CUSTOM_FACETS)
 PROJECT_FACETS = OrderedDict(BASE_FACETS + PROJECT_CUSTOM_FACETS)
 ORGANISATION_FACETS = OrderedDict(ORGANISATION_CUSTOM_FACETS)
-NEWS_FACETS = OrderedDict(PROJECT_FACETS)
+NEWS_FACETS = OrderedDict(BASE_FACETS + NEWS_CUSTOM_FACETS)
 
 
 def state_name_to_code(state_name):

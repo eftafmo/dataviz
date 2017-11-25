@@ -228,8 +228,9 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     role_max_priority_code = indexes.IntegerField()
 
     # extra data; avoid db hit
-    name = indexes.CharField(model_attr='name', indexed=False)
-    domestic_name = indexes.CharField(model_attr='domestic_name', indexed=False, null=True)
+    org_name = indexes.FacetCharField(model_attr='name')
+    org_name_auto = indexes.EdgeNgramField()
+    domestic_name = indexes.CharField(model_attr='domestic_name', null=True)
 
     # Highest number = max priority for role. Others default to priority 0.
     ROLE_PRIORITIES = {
@@ -470,6 +471,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             ' '.join(self.prepared_data['geotarget'])
             if self.prepared_data['geotarget'] else None
         )
+        self.prepared_data['org_name_auto'] = self.prepared_data['org_name']
 
         if self.prepared_data['role_ss']:
             self.prepared_data['role_max_priority_code'] = reduce(
@@ -496,6 +498,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
     # specific facets
     project_name = indexes.FacetMultiValueField()
+    project_name_auto = indexes.EdgeNgramField()
     project_status = indexes.FacetMultiValueField()
     geotarget = indexes.FacetCharField()
     geotarget_auto = indexes.EdgeNgramField()
@@ -651,5 +654,9 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         self.prepared_data['geotarget_auto'] = (
             ' '.join(self.prepared_data['geotarget'])
             if self.prepared_data['geotarget'] else None
+        )
+        self.prepared_data['project_name_auto'] = (
+            ' '.join(self.prepared_data['project_name'])
+            if self.prepared_data['project_name'] else None
         )
         return self.prepared_data

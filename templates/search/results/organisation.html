@@ -2,9 +2,9 @@
   <div class="search-result search-result-organisation">
     <h3 class="title">
       {% if organisation.url %}
-        <a href="{{ organisation.url }}" target="_blank">{{ organisation.name }}</a>
+        <a href="{{ organisation.url }}" target="_blank">{{ organisation.org_name }}</a>
       {% else %}
-        <span>{{ organisation.name }}</span>
+        <span>{{ organisation.org_name }}</span>
       {% endif %}
     </h3>
     <div class="country_status">

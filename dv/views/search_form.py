@@ -24,6 +24,38 @@ class EeaFacetedSearchForm(FacetedSearchForm):
     def no_query_found(self):
         return self.searchqueryset
 
+    def alter_or_facets(self, sqs, facet_name, facet_values):
+        # Determine operation type - AND/OR supported so far
+        operator = self.facet_rules.get(facet_name, None)
+        if facet_name == 'kind':
+            operator = 'AND'
+        if operator not in ['AND', 'OR']:
+            return sqs
+        query = ''
+        for value in facet_values:
+            if query:
+                query += " {} ".format(operator)
+            query += '"{}"'.format(sqs.query.clean(value))
+        if query:
+            if operator == 'AND':
+                sqs = sqs.narrow('{}:({})'.format(facet_name, query))
+            elif operator == 'OR':
+                # Exclude {facet_name} when calculating facets and counts
+                # Note that we are using as key the same facet_name, not a new alias
+                # wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
+                # When searching for autocomplete facets, must not filter by itself
+                sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
+                # del sqs.query.facets[facet_name]
+                # Don't delete the original facet, no support for tagging/params in facet.mincount
+                # Fixes #518
+                sqs = sqs.facet(
+                    '{{!ex={0} key={0}}}{0}'.format(facet_name),
+                    mincount=FACET_MIN_COUNT,
+                    limit=FACET_LIMIT,
+                    sort=FACET_SORT,
+                )
+        return sqs
+
     def search(self):
         try:
             q = self.cleaned_data.pop('q')
@@ -38,36 +70,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
             sqs = sqs.filter(content=AltParser('dismax', q, **params))
 
         for facet_name, facet_values in self.facets.items():
-            # Determine operation type - AND/OR supported so far
-            operator = self.facet_rules.get(facet_name, None)
-            if facet_name == 'kind':
-                operator = 'AND'
-            if operator not in ['AND', 'OR']:
-                continue
-
-            # Build faceted query
-            query = ''
-            for value in facet_values:
-                if query:
-                    query += " {} ".format(operator)
-                query += '"{}"'.format(sqs.query.clean(value))
-            if query:
-                if operator == 'AND':
-                    sqs = sqs.narrow('{}:({})'.format(facet_name, query))
-                elif operator == 'OR':
-                    # Exclude {facet_name} when calculating facets and counts
-                    # Note that we are using as key the same facet_name, not a new alias
-                    # See https://wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
-                    sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
-                    #del sqs.query.facets[facet_name]
-                    # Don't delete the original facet, because x.facet.mincount does not support tagging and local params
-                    # fixes #518
-                    sqs = sqs.facet(
-                        '{{!ex={0} key={0}}}{0}'.format(facet_name),
-                        mincount=FACET_MIN_COUNT,
-                        limit=FACET_LIMIT,
-                        sort=FACET_SORT,
-                    )
+            sqs = self.alter_or_facets(sqs, facet_name, facet_values)
         return sqs
 
 
