@@ -105,9 +105,12 @@ class EeaAutoFacetedSearchForm(EeaFacetedSearchForm):
         # We do only one autocomplete at a time so there's only one auto field name/value
         # (we type in only one field at a time, select the value desired, then type for a new match)
         if self.auto_name and self.auto_value and len(self.auto_value) >= 2:
-            kw = {
-                '{}_auto'.format(self.auto_name): self.auto_value
-            }
-            sqs = sqs.autocomplete(**kw)
+            # Remove one-letter words from auto_value because default minGramSize=2 in haystack
+            search_term = ' '.join([w for w in self.auto_value.split() if len(w) > 1])
+            if search_term:
+                kw = {
+                    '{}_auto'.format(self.auto_name): search_term
+                }
+                sqs = sqs.autocomplete(**kw)
 
         return sqs
