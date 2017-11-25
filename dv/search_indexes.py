@@ -64,7 +64,7 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return list(set([outcome['state_name'] for outcome in self.programme_outcomes]))
 
     def prepare_programme_name(self, obj):
-        return ['{}: {}'.format(obj.code, obj.name.strip())]
+        return ['{}: {}'.format(obj.code, ' '.join(obj.name.split()))]
 
     def prepare_programme_area_ss(self, obj):
         return list(set([area['name'] for area in self.programme_areas]))
@@ -76,11 +76,10 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return list(set([area['mechanism'] for area in self.programme_areas]))
 
     def prepare_outcome_ss(self, obj):
-        outcomes = [
-            outcome['outcome_name'].strip()
+        return [
+            ' '.join(outcome['outcome_name'].split())
             for outcome in self.programme_outcomes
         ]
-        return [o.strip() for o in outcomes]
 
     def prepare_grant(self, obj):
         return obj.allocation_eea + obj.allocation_norway
@@ -172,10 +171,13 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return [obj.programme_area.priority_sector.name]
 
     def prepare_programme_name(self, obj):
-        return ['{}: {}'.format(obj.programme.code, obj.programme.name.strip())]
+        return ['{}: {}'.format(
+            obj.programme.code,
+            ' '.join(obj.programme.name.split())
+        )]
 
     def prepare_outcome_ss(self, obj):
-        return [obj.outcome.name.strip()]
+        return [' '.join(obj.outcome.name.split())]
 
     def prepare_geotarget(self, obj):
         if len(obj.nuts) > 2:
@@ -228,7 +230,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
     role_max_priority_code = indexes.IntegerField()
 
     # extra data; avoid db hit
-    org_name = indexes.FacetCharField(model_attr='name')
+    org_name = indexes.FacetCharField()
     org_name_auto = indexes.EdgeNgramField()
     domestic_name = indexes.CharField(model_attr='domestic_name', null=True)
 
@@ -402,7 +404,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return [
             '{}: {}'.format(
                 prg_code,
-                self.ALL_PROGRAMMES[prg_code]['name']
+                ' '.join(self.ALL_PROGRAMMES[prg_code]['name'].split())
             )
             for prg_code in set(prg_codes)
         ]
@@ -411,7 +413,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return [
             '{}: {}'.format(
                 project_code,
-                self.ALL_PROJECTS[project_code]['prj_name']
+                ' '.join(self.ALL_PROJECTS[project_code]['prj_name'].split())
             )
             for project_code in self.projects
         ]
@@ -433,6 +435,9 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
         else:
             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
+
+    def prepare_org_name(self, obj):
+        return ' '.join(obj.name.split())
 
     def prepare(self, obj):
         self.projects = list()
@@ -587,7 +592,10 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_project_name(self, obj):
         if self.project:
-            return ['{}: {}'.format(self.project.code, self.project.name)]
+            return ['{}: {}'.format(
+                self.project.code,
+                ' '.join(self.project.name.split())
+            )]
         return None
 
     def prepare_programme_status(self, obj):
