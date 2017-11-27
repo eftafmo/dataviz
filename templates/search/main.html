@@ -61,7 +61,7 @@
                {% if kind == 'Programme' %}{% url 'frontend:programme_export' %}?{% elif kind == 'Project' %}
                  {% url 'frontend:project_export' %}?{% elif kind == 'Organisation' %}
                  {% url 'frontend:organisation_export' %}?{% elif kind == 'News' %}
-                 {% url 'frontend:news_export' %}?{% endif %}{% for item in query.items %}{{ item.0 }}={{ item.1 }}{% if not forloop.last %}&{% endif %}{% endfor %}">
+                 {% url 'frontend:news_export' %}?{% endif %}{% for item in query %}{{ item.0 }}={{ item.1 }}{% if not forloop.last %}&{% endif %}{% endfor %}">
             Export
           </a>
       </span>

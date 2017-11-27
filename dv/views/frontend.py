@@ -162,7 +162,12 @@ class FacetedSearchView(BaseFacetedSearchView):
         objls = kwargs.pop('object_list', self.queryset)
         ctx = super().get_context_data(object_list=objls, **kwargs)
         ctx['page_sizes'] = [10, 25, 50, 100]
-        ctx['query'] = self.request.GET
+
+        ctx['query'] = [
+            (key, value)
+            for key in self.request.GET.keys()
+            for value in self.request.GET.getlist(key)
+        ]
         ctx['kind'] = self.facet_kind
         ctx['facet_rules'] = self.facet_rules
 
