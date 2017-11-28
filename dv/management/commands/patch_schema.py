@@ -25,12 +25,16 @@ class Command(BaseCommand):
                 schema.remove(fields[i])
                 schema.insert(i, fields[i])
 
-            text_en_type = schema.find("fieldType[@name='text_en']")
-            for analyzer in text_en_type.findall('analyzer'):
-                ascii_filter = ElementTree.fromstring(
-                    "<filter class=\"solr.ASCIIFoldingFilterFactory\" "
-                    "preserveOriginal=\"true\"/>"
-                )
-                analyzer.insert(0, ascii_filter)
+            ftypes = [
+                schema.find("fieldType[@name='text_en']"),
+                schema.find("fieldType[@name='edge_ngram']")
+            ]
+            for ftype in ftypes:
+                for analyzer in ftype.findall('analyzer'):
+                    ascii_filter = ElementTree.fromstring(
+                        "<filter class=\"solr.ASCIIFoldingFilterFactory\" "
+                        "preserveOriginal=\"true\"/>"
+                    )
+                    analyzer.insert(0, ascii_filter)
 
             tree.write(schema_path, xml_declaration=True, encoding="UTF-8")
