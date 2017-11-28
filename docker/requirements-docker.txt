@@ -1,6 +1,6 @@
 -r requirements.txt
 
-#uwsgi
 gunicorn
 django-environ
 raven
+lxml>=4.1,<4.2
