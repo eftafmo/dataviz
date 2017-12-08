@@ -14,7 +14,7 @@ SECRET_KEY = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN'
 DEBUG = True
 
 # this needs to be properly set up
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -22,7 +22,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         # store the temporary database one level above the repo folder
-        'NAME': os.path.join(os.path.dirname(BASE_DIR), 'db.sqlite3'),
+        'NAME': os.path.join(os.path.join(os.path.dirname(BASE_DIR), 'db'), 'eeag.sqlite3'),
     }
 }
 
@@ -30,4 +30,14 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
+}
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://solr:8983/solr/eeagrants',
+        'BATCH_SIZE': 999,
+        'SILENTLY_FAIL': False,
+    },
 }
