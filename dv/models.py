@@ -88,6 +88,7 @@ class NUTS(models.Model):
 
     class Meta(_BaseModel.Meta):
         ordering = ['code']
+        verbose_name_plural = "NUTS"
 
     def __str__(self):
         return self.code
@@ -196,12 +197,11 @@ class Allocation(_MainModel):
     order = models.SmallIntegerField()
 
     def __str__(self):
-        return "{} / {} / {} of gross: {} (net: {})".format(
+        return "{} / {} / {} gross: {}".format(
             self.financial_mechanism_id,
             self.state_id,
             self.programme_area_id,
             self.gross_allocation,
-            self.net_allocation
         )
 
     class Meta(_MainModel.Meta):
@@ -754,6 +754,7 @@ class News(models.Model):
 
     class Meta:
         ordering = ('-created',)
+        verbose_name_plural = "news"
 
 
 class StaticContent(models.Model):

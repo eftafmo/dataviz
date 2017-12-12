@@ -33,7 +33,7 @@ class Command(BaseCommand):
     def _save(self, item):
         try:
             link = item['link'].replace('http://', 'https://')
-            self.stdout.write('Importing post %s' % link)
+            # self.stdout.write('Importing post %s' % link)
             news, created = News.objects.get_or_create(link=link)
             news.title = item['title']
             tz = timezone('Europe/Brussels')
