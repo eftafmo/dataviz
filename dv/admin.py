@@ -260,6 +260,13 @@ class StateAdmin(admin.ModelAdmin):
     ordering = ('code',)
 
 
+@admin.register(ImportLog)
+class ImportLogAdmin(admin.ModelAdmin):
+    readonly_fields = ('created_at', 'data')
+    list_display = ('created_at',)
+    ordering = ('-created_at',)
+
+
 # just register all the remaining models
 __models_module = '.'.join(__name__.split('.')[:-1] + ['models'])
 _models = [m for m in locals().values()

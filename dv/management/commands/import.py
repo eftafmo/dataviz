@@ -1,9 +1,11 @@
 import logging
 import pyexcel
 import os.path
+import time
 
 from functools import partial
 from itertools import cycle
+from io import StringIO
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.cache import cache
@@ -17,7 +19,8 @@ from dv.models import (
     Programme, Programme_ProgrammeArea,
     Outcome, ProgrammeOutcome, Indicator, ProgrammeIndicator,
     Project, ProjectTheme,
-    Organisation, OrganisationRole, Organisation_OrganisationRole
+    Organisation, OrganisationRole, Organisation_OrganisationRole,
+    ImportLog
 )
 from dv.lib.utils import is_iter
 
@@ -83,9 +86,16 @@ class Command(BaseCommand):
             if file.lower() not in existing_books:
                 raise CommandError('%s workbook is missing' % file)
 
+        output = StringIO()
+
         def _write(*args, **kwargs):
             self.stderr.write(*args, **kwargs)
             self.stderr.flush()
+            if kwargs.get('ending') != '':
+                # because _inline
+                output.write(time.strftime('%b %d, %Y %H:%M:%S '))
+                output.write(args[0])
+
         _inline = partial(_write, ending='')
         _back = chr(8)
         throbber = cycle(_back + c for c in r'\|/-')
@@ -94,7 +104,7 @@ class Command(BaseCommand):
         sheets = dict()
 
         for file in files:
-            _write('Loading %s\n' % (file))
+            _write('Loading %s' % (file))
             file_path = os.path.join(directory_path, file)
             book = pyexcel.get_book(file_name=file_path)
             name = file.split('.')[0]
@@ -116,7 +126,7 @@ class Command(BaseCommand):
                 sheet_name = import_src['src']
                 sheet = sheets[sheet_name]
 
-                _write('Importing "%s" into %s …  ' % (sheet_name, model._meta.label))
+                _write('Importing "%s" into %s …  \n' % (sheet_name, model._meta.label))
 
                 pk_cache = set()
 
@@ -153,7 +163,7 @@ class Command(BaseCommand):
                     else:
                         _save(obj)
 
-                _write(_back + "Imported %s (%d rows): %d updated, %d skipped, %d failed" % (
+                _write("Imported %s (%d rows): %d updated, %d skipped, %d failed\n" % (
                     model._meta.label, rows, updated, skipped, failed
                 ), self.style.SUCCESS)
 
@@ -161,7 +171,12 @@ class Command(BaseCommand):
         d = localtime(now()).replace(hour=0, minute=0, second=0, microsecond=0)
         for model in MODELS:
             (count, _) = model.objects.filter(updated_at__lt=d).delete()
-            _write("Deleted {} {} older than {:%Y.%m.%d}".format(count, model._meta.label, d))
+            _write("Deleted {} {} older than {:%Y.%m.%d}\n".format(count, model._meta.label, d))
 
         cache.clear()
-        _write("Cache cleared")
+        _write("Cache cleared.\n")
+
+        log = ImportLog()
+        log.data = output.getvalue()
+        log.save()
+

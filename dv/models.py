@@ -766,3 +766,9 @@ class StaticContent(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ImportLog(models.Model):
+
+    created_at = models.DateTimeField(auto_now=True, null=True)
+    data = models.TextField()
