@@ -104,7 +104,7 @@ class Command(BaseCommand):
         sheets = dict()
 
         for file in files:
-            _write('Loading %s' % (file))
+            _write('Loading %s\n' % (file))
             file_path = os.path.join(directory_path, file)
             book = pyexcel.get_book(file_name=file_path)
             name = file.split('.')[0]
