@@ -81,6 +81,10 @@ class Command(BaseCommand):
         if not files:
             raise CommandError('Directory %s is empty' % directory_path)
 
+        log = ImportLog()
+        log.status = 'ERROR'
+        log.save()
+
         existing_books = [file.split('.')[0].lower() for file in files]
         for file in EXCEL_FILES:
             if file.lower() not in existing_books:
@@ -176,7 +180,6 @@ class Command(BaseCommand):
         cache.clear()
         _write("Cache cleared.\n")
 
-        log = ImportLog()
         log.data = output.getvalue()
+        log.status = 'SUCCESS'
         log.save()
-

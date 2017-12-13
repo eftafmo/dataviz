@@ -262,8 +262,8 @@ class StateAdmin(admin.ModelAdmin):
 
 @admin.register(ImportLog)
 class ImportLogAdmin(admin.ModelAdmin):
-    readonly_fields = ('created_at', 'data')
-    list_display = ('created_at',)
+    readonly_fields = ('created_at', 'data', 'status')
+    list_display = ('created_at', 'updated_at', 'status')
     ordering = ('-created_at',)
 
 
