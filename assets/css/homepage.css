@@ -5,7 +5,7 @@
 }
 
 .homepage-nav {
-  -js-display: flex; 
+  -js-display: flex;
   display:flex;
   justify-content: center;
 }
@@ -56,7 +56,7 @@
 /* search */
 
 .homepage-search {
-  -js-display: flex; 
+  -js-display: flex;
   display:flex;
   margin: 1rem auto;
   align-items: strech;
@@ -66,7 +66,7 @@
   border: 1px solid #eee;
 }
 .homepage-search input,
-.homepage-search button {
+.homepage-search a {
   box-sizing: border-box;
   padding: 1rem;
   border: 0;
@@ -79,7 +79,7 @@
 .homepage-search input {
   flex-grow: 4;
 }
-.homepage-search button {
+.homepage-search a {
     flex-grow: 1;
     border-left: 1px solid #eee;
     color: white;

@@ -129,12 +129,12 @@
   display: none;
 }
 
-.search-tabs label.active {
+.search-tabs a.active {
   font-weight: bold;
   position: relative;
 }
 
-.search-tabs label.active:after {
+.search-tabs a.active:after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -145,14 +145,14 @@
   border-bottom-color: #fff;
 }
 
-.search-tabs label {
+.search-tabs a {
   display: inline-block;
   padding: 1.5rem 1rem;
   color: #fff;
   cursor: pointer;
 }
 
-.search-tabs label:hover {
+.search-tabs a:hover {
   text-decoration: none;
   background-color: rgba(255, 255, 255, .2);
 }
@@ -379,7 +379,7 @@
     margin-bottom: 1rem;
   }
 
-  .results-list .search-result-news .date_country { 
+  .results-list .search-result-news .date_country {
     border-left: none;
   }
 }

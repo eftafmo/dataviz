@@ -20,18 +20,22 @@
           </div>
           <div class="search-tabs" id="search-tabs">
             <span class="muted">Search for:</span>
-            <label for="programme-tab"
-                   data-url="{% url 'frontend:search_programme' %}"
-                   class="{% active 'Programme' kind %}">{{'Programme'|kind_label:2|capfirst}}</label>
-            <label for="project-tab"
-                   data-url="{% url 'frontend:search_project' %}"
-                   class="{% active 'Project' kind %}">{{'Project'|kind_label:2|capfirst}}</label>
-            <label for="organisation-tab"
-                   data-url="{% url 'frontend:search_organisation' %}"
-                   class="{% active 'Organisation' kind %}">{{'Organisation'|kind_label:2|capfirst}}</label>
-            <label for="news-tab"
-                   data-url="{% url 'frontend:search_news' %}"
-                   class="{% active 'News' kind %}">{{'News'|kind_label:2|capfirst}}</label>
+            <a
+              href="{% url 'frontend:search_programme' %}"
+              class="{% active 'Programme' kind %}">{{'Programme'|kind_label:2|capfirst}}
+            </a>
+            <a
+              href="{% url 'frontend:search_project' %}"
+              class="{% active 'Project' kind %}">{{'Project'|kind_label:2|capfirst}}
+            </a>
+            <a
+              href="{% url 'frontend:search_organisation' %}"
+              class="{% active 'Organisation' kind %}">{{'Organisation'|kind_label:2|capfirst}}
+            </a>
+            <a
+              href="{% url 'frontend:search_news' %}"
+              class="{% active 'News' kind %}">{{'News'|kind_label:2|capfirst}}
+            </a>
           </div>
         </div>
       </div>
@@ -285,9 +289,9 @@
         }
       });
 
-      $('.search-tabs label').on('click', function (e) {
+      $('.search-tabs a').on('click', function (e) {
         e.preventDefault();
-        $("#main-search-form").attr("action", $(this).data('url'));
+        $("#main-search-form").attr("action", this.href);
         $("#main-search-form").submit();
       })
 
