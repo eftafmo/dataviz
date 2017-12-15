@@ -16,18 +16,18 @@ Data visualisation website
 1. Get the docker installation repository and the source code:
 
         $ git clone git@gitlab.com:eftafmo/eeag.docker.git
-        $ cd eeag.docker/eeag
-        $ git clone git@github.com:eftafmo/dataviz.git
+        $ cd eeag.docker
+        $ git clone git@github.com:eftafmo/dataviz.git src
   
 2. Prepare environment:
         
-        $ cp docker-compose.override.yml.example docker-compose.override.yml
+        $ cp docker-compose.override-dev.yml.example docker-compose.override.yml
         $ cp web/web.dev.env.example web/web.dev.env
 
 3. Replace database file with the latest version from production
-        
+
         $ mkdir ../db
-        $ cp eeag.sqlite3 ../db/eeag.sqlite3
+        $ scp edwsys@data.eeagrants.org:/var/local/eeag.docker/db/eeag.sqlite3 ../db/eeag.sqlite3
    
 5. Create local settings:
         
