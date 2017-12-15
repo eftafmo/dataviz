@@ -20,10 +20,12 @@ Data visualisation website
         $ git clone git@github.com:eftafmo/dataviz.git src
 
 2. Prepare environment:
+
         $ cd eeag/
         $ cp docker-compose.override-dev.yml.example docker-compose.override.yml
         $ cp web/web.dev.env.example web/web.dev.env
         $ cd ..
+
 
 3. Replace database file with the latest version from production
 
