@@ -213,13 +213,16 @@ def projects(request):
         'has_ended',
         'is_positive_fx',
     ).annotate(
-        project_count=Count('code')
+        project_count=Count('code'),
+        total_allocation=Sum('allocation')
     )
     project_nuts = defaultdict(lambda: defaultdict(dict))
+    project_allocation = defaultdict(float)
     project_count = defaultdict(int)
     for item in project_nuts_raw:
         key = item['financial_mechanism_id'] + item['programme_area_id'] + item['state_id']
         project_count[key] += item['project_count']
+        project_allocation[key] += float(item['total_allocation'])
         key = key + item['programme_id']
         nuts = project_nuts[key][item['nuts']]
         if not nuts:
@@ -269,6 +272,7 @@ def projects(request):
             'beneficiary': a.state.code,
             'is_ta': not a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
+            'project_allocation': project_allocation.get(key, 0),
             'project_count': project_count.get(key, 0),
             'news': news.get(key, []),
             'programmes': {

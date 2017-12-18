@@ -22,6 +22,11 @@ export default Beneficiaries.extend({
   },
 
   methods: {
+    valuefunc(item, fm) {
+      fm = this.FMS[fm]
+      return this.isDisabledFm(fm) ? 0 : (item[fm.name] ? item[fm.name].project_allocation : 0)
+    },
+
     totalvaluefunc(v) {
       return v ? v.project_count : 0
     },
