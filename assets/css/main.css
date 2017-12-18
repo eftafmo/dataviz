@@ -101,6 +101,12 @@ a.muted:hover {
   margin-bottom: .5rem;
   display: block;
 }
+
+.link-page-button {
+  text-decoration: none !important;
+}
+
+
 @media (max-width: 950px){
   .grant-dataviz h2 {
     margin-bottom: .5rem;
