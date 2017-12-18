@@ -96,7 +96,6 @@
                   {% if page_obj.has_previous %}
                   name="page"
                   href="{% url_replace request 'page' page_obj.previous_page_number %}"
-                  form="main-search-form"
                   {% else %}
                   disabled="disabled"
                   {% endif %}
@@ -111,8 +110,6 @@
                         class="btn btn-default link-page-button"
                         {% if not page_obj.number == page_num %}
                         href="{% url_replace request 'page' page_num %}"
-                        data-value="{{ page_num }}"
-                        form="main-search-form"
                         {% else %}
                         class="is-current-page"
                         disabled="disabled"
@@ -127,9 +124,7 @@
                   {% if page_obj.has_next %}
                   name="page"
                   href="{% url_replace request 'page' page_obj.next_page_number %}"
-                  form="main-search-form"
                   {% else %}
-                  data-disabled="disabled"
                   disabled="disabled"
                   {% endif %}
           > &gt;
