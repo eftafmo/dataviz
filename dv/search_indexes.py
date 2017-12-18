@@ -136,6 +136,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     # specific fields
     text = indexes.CharField(document=True, use_template=True)
     summary = indexes.CharField(model_attr='summary', indexed=False)
+    actual_summary = indexes.CharField(model_attr='actual_summary', indexed=False)
     url = indexes.CharField(model_attr='url', indexed=False, null=True)
     name = indexes.CharField(model_attr='name', indexed=False)
     grant = indexes.DecimalField(model_attr='allocation')

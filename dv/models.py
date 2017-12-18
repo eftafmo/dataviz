@@ -477,12 +477,12 @@ class Project(_MainModel):
                 'is_continued_coop': 'ResultContinuedCooperation',
                 'is_published': 'IsPublished',
                 'summary': 'PlannedSummary',
+                'actual_summary': 'ActualSummary',
             }
         },
     ]
 
     __post_bleach_comments_re = re.compile(r'&lt;!--.*--&gt;')
-
 
     @classmethod
     def from_data(cls, data, src_idx):
@@ -491,6 +491,13 @@ class Project(_MainModel):
         data[mapping['summary']] = bleach.clean(
             data[mapping['summary']] or '', strip=True, strip_comments=True)
         data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
+
+        data[mapping['actual_summary']] = bleach.clean(
+            data[mapping['actual_summary']] or '', strip=True, strip_comments=True)
+        data[mapping['actual_summary']] = cls.__post_bleach_comments_re.sub(
+            '',
+            data[mapping['actual_summary']]
+        )
 
         return super().from_data(data, src_idx)
 
@@ -520,6 +527,7 @@ class Project(_MainModel):
     is_continued_coop = models.BooleanField()
     is_published = models.BooleanField()
     summary = models.TextField()
+    actual_summary = models.TextField()
 
 
 class ProjectTheme(_BaseModel):

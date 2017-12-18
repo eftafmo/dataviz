@@ -3,3 +3,4 @@
 {{ object.state.name }}
 {{ object.programme.name }}
 {{ object.summary }}
+{{ object.actual_summary }}
