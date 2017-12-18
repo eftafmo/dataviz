@@ -108,7 +108,7 @@
               {% if page_num >= page_obj.number|add:"-1" and page_num <= page_obj.number|add:"1" or page_num == 1 or page_num == paginator.num_pages %}
                 <a
                         name="page"
-                        class="btn btn-default"
+                        class="btn btn-default link-page-button"
                         {% if not page_obj.number == page_num %}
                         href="{% url_replace request 'page' page_num %}"
                         data-value="{{ page_num }}"
