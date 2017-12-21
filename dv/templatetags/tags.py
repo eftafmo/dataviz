@@ -91,3 +91,12 @@ def scenario_urlparams(facets, scenario):
             for r in rules:
                 result[r[0]] = facets[f][0] if not r[1] else r[1](facets[f][0])
     return urlencode(result)
+
+
+@register.simple_tag
+def url_replace(request, field, value):
+
+    dict_ = request.GET.copy()
+
+    dict_[field] = value
+    return '?' + dict_.urlencode()

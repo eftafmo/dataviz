@@ -20,18 +20,22 @@
           </div>
           <div class="search-tabs" id="search-tabs">
             <span class="muted">Search for:</span>
-            <label for="programme-tab"
-                   data-url="{% url 'frontend:search_programme' %}"
-                   class="{% active 'Programme' kind %}">{{'Programme'|kind_label:2|capfirst}}</label>
-            <label for="project-tab"
-                   data-url="{% url 'frontend:search_project' %}"
-                   class="{% active 'Project' kind %}">{{'Project'|kind_label:2|capfirst}}</label>
-            <label for="organisation-tab"
-                   data-url="{% url 'frontend:search_organisation' %}"
-                   class="{% active 'Organisation' kind %}">{{'Organisation'|kind_label:2|capfirst}}</label>
-            <label for="news-tab"
-                   data-url="{% url 'frontend:search_news' %}"
-                   class="{% active 'News' kind %}">{{'News'|kind_label:2|capfirst}}</label>
+            <a
+              href="{% url 'frontend:search_programme' %}"
+              class="{% active 'Programme' kind %}">{{'Programme'|kind_label:2|capfirst}}
+            </a>
+            <a
+              href="{% url 'frontend:search_project' %}"
+              class="{% active 'Project' kind %}">{{'Project'|kind_label:2|capfirst}}
+            </a>
+            <a
+              href="{% url 'frontend:search_organisation' %}"
+              class="{% active 'Organisation' kind %}">{{'Organisation'|kind_label:2|capfirst}}
+            </a>
+            <a
+              href="{% url 'frontend:search_news' %}"
+              class="{% active 'News' kind %}">{{'News'|kind_label:2|capfirst}}
+            </a>
           </div>
         </div>
       </div>
@@ -87,49 +91,44 @@
     {% if is_paginated %}
       <div class="search-results-footer">
         <div class="pagination clearfix">
-          <button
-                  class="btn btn-default pagination-previous"
+          <a
+                  class="btn btn-default pagination-previous link-page-button"
                   {% if page_obj.has_previous %}
                   name="page"
-                  value="{{ page_obj.previous_page_number }}"
-                  type="submit"
-                  form="main-search-form"
+                  href="{% url_replace request 'page' page_obj.previous_page_number %}"
                   {% else %}
                   disabled="disabled"
                   {% endif %}
           > &lt;
-          </button>
+          </a>
 
           <div class="pagination-pages">
             {% for page_num in paginator.page_range %}
               {% if page_num >= page_obj.number|add:"-1" and page_num <= page_obj.number|add:"1" or page_num == 1 or page_num == paginator.num_pages %}
-                <button
+                <a
                         name="page"
-                        class="btn btn-default"
-                        value="{{ page_num }}"
-                        type="submit"
-                        form="main-search-form"
-                        {% if page_obj.number == page_num %}
+                        class="btn btn-default link-page-button"
+                        {% if not page_obj.number == page_num %}
+                        href="{% url_replace request 'page' page_num %}"
+                        {% else %}
                         class="is-current-page"
                         disabled="disabled"
                         {% endif %}
-                >{{ page_num }}</button>
+                >{{ page_num }}</a>
               {% endif %}
             {% endfor %}
           </div>
 
-          <button
-                  class="btn btn-default pagination-next"
+          <a
+                  class="btn btn-default pagination-next link-page-button"
                   {% if page_obj.has_next %}
                   name="page"
-                  value="{{ page_obj.next_page_number }}"
-                  type="submit"
-                  form="main-search-form"
+                  href="{% url_replace request 'page' page_obj.next_page_number %}"
                   {% else %}
                   disabled="disabled"
                   {% endif %}
           > &gt;
-          </button>
+          </a>
 
         </div>
       </div>
@@ -285,9 +284,9 @@
         }
       });
 
-      $('.search-tabs label').on('click', function (e) {
+      $('.search-tabs a').on('click', function (e) {
         e.preventDefault();
-        $("#main-search-form").attr("action", $(this).data('url'));
+        $("#main-search-form").attr("action", this.href);
         $("#main-search-form").submit();
       })
 

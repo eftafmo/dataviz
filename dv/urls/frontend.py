@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^embed/(?P<scenario>[a-z]+)/(?P<component>[a-z][a-z-]+[a-z]).js$',
         views.EmbedComponent.as_view(),
         name='embed'),
-
+    url(r'^robots.txt/$', views.RobotsView.as_view(), name='robots'),
     # [dev-only] sandbox for testing ui components
     url(r'^sandbox/$', views.sandbox, name='sandbox'),
 ]

@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views import View
 from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.generic_views import FacetedSearchMixin as BaseFacetedSearchMixin
@@ -561,3 +562,27 @@ class EmbedComponent(TemplateView):
             'randomness': utils.mkrandstr(),
         })
         return context
+
+
+class RobotsView(View):
+
+    def get(self, request, *args, **kwargs):
+        test_settings = [
+            'Disallow: /',
+        ]
+
+        prod_settings = [
+            'User-agent: *',
+            'Crawl-delay: 10',
+            'Disallow: /assets/',
+            'Disallow: /api/',
+            'Disallow: /embed/',
+        ]
+
+        if settings.DEBUG:
+            robots = "\n".join(test_settings)
+        else:
+            robots = "\n".join(prod_settings)
+
+        return HttpResponse(robots,
+                            content_type='text/plain; charset=utf8')

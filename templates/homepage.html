@@ -29,8 +29,9 @@
         or search programmes, projects, organisations:
       </div>
       <form class="homepage-search" action="{% url 'frontend:search_programme' %}">
-        <input type="search" name="q" placeholder="Programmes, Projects, Organisations, etc.">
-        <button type="submit" name="page" value="1">Search</button>
+        <input  id="search_request_input" type="search" name="q"
+                placeholder="Programmes, Projects, Organisations, etc.">
+        <a id="search_request" href="{% url 'frontend:search_programme' %}">Search</a>
       </form>
     </div>
 
@@ -45,6 +46,14 @@ new root.Index({
   data: {
     datasource: "{% url "api:index" %}",
   },
+});
+
+a_element = document.getElementById("search_request");
+input = document.getElementById("search_request_input");
+a_element.addEventListener("click", function(){
+
+  a_element.href = a_element.href + "?q=" + input.value;
+
 });
 </script>
 {% endblock %}
