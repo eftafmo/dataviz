@@ -47,13 +47,8 @@ INSTALLED_APPS = [
     'webpack_loader',
     'dv',
     'ckeditor',
+    'django.contrib.staticfiles',
 ]
-
-if not DEBUG:
-    # needed in production for collectstatic.
-    # on dev the staticfiles view is configured manually in urls,
-    # because otherwise this skips middleware.
-    INSTALLED_APPS += ['django.contrib.staticfiles']
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': (
