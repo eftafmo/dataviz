@@ -16,7 +16,7 @@ RAVEN_CONFIG = {
     'dsn': env('BACKEND_SENTRY_DSN')
 }
 
-DEBUG = False
+DEBUG = env('DEBUG', False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 SECRET_KEY = env('SECRET_KEY')
 USE_X_FORWARDED_HOST = True
