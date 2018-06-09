@@ -2,7 +2,7 @@
 
 date '+%Y-%m-%d %H:%M:%S'
 $PYTHONPATH/python /var/local/dataviz/manage.py import_news
-$PYTHONPATH/python /var/local/dataviz/manage.py update_index dv.news
+$PYTHONPATH/python /var/local/dataviz/manage.py update_index dv.news --remove
 
 UPLOAD_DIR=/var/local/upload
 date '+%Y-%m-%d %H:%M:%S'
