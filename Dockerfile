@@ -22,28 +22,26 @@ RUN runDeps="vim git curl cron netcat-traditional gnupg" \
  && rm -vrf /var/lib/apt/lists/* \
  && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
  && apt-get install -y nodejs \
+ && curl -sL https://sentry.io/get-cli/ | bash \
  && mkdir -p $APP_HOME \
- && mkdir -p /var/local/logs
+ && mkdir -p /var/local/logs \
+ && touch ~/.bashrc
 
 COPY ./docker/crontab /etc/crontab.dataviz
 COPY ./docker/entrypoint.sh ./docker/import.sh /bin/
 
 ADD requirements.txt \
     ./docker/requirements-docker.txt \
-    package.json \
+    package.json postcss.config.js \
     $APP_HOME/
 
 WORKDIR $APP_HOME
 
-RUN npm install
-
-RUN pip install -r requirements-docker.txt
+RUN npm install \
+ && pip install -r requirements-docker.txt
 
 ADD . $APP_HOME
 COPY ./docker/localsettings.py $APP_HOME/dv/
 RUN NODE_ENV=production npm run build
-
-RUN touch ~/.bashrc
-
 
 ENTRYPOINT ["entrypoint.sh"]
