@@ -11,20 +11,19 @@ LABEL maintainer="andrei.melis@eaudeweb.ro" \
 
 #RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 
-RUN runDeps="vim git curl cron netcat-traditional" \
+ENV APP_HOME=/var/local/dataviz \
+    PATH=/var/local/scripts:$PATH \
+    NODE_ENV=production
+
+RUN runDeps="vim git curl cron netcat-traditional gnupg" \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends $runDeps \
  && apt-get clean \
- && rm -vrf /var/lib/apt/lists/*
-
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN apt-get install -y nodejs
-
-ENV APP_HOME=/var/local/dataviz \
-    PATH=/var/local/scripts:$PATH
-
-RUN mkdir -p $APP_HOME &&\
-    mkdir -p /var/local/logs
+ && rm -vrf /var/lib/apt/lists/* \
+ && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+ && apt-get install -y nodejs \
+ && mkdir -p $APP_HOME \
+ && mkdir -p /var/local/logs
 
 COPY ./docker/crontab /etc/crontab.dataviz
 COPY ./docker/entrypoint.sh ./docker/import.sh /bin/
@@ -37,7 +36,6 @@ ADD requirements.txt \
 WORKDIR $APP_HOME
 
 RUN npm install
-ENV NODE_ENV=production
 
 RUN pip install -r requirements-docker.txt
 
