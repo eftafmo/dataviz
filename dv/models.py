@@ -440,12 +440,14 @@ class ProjectStatus(Enum):
     COMPLETED = 'completed'
     TERMINATED = 'terminated'
     NON_COMPLETED = 'non completed'
+    PARTIALLY_COMPLETED = 'partially completed'
 
     class Labels:
         IN_PROGRESS = _('In Progress')
         COMPLETED = _('Completed')
         TERMINATED = _('Terminated')
         NON_COMPLETED = _('Non Completed')
+        PARTIALLY_COMPLETED = _('Partially Completed')
 
 
 class Project(_MainModel):
