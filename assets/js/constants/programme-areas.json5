@@ -183,5 +183,10 @@
     "name": "Reserve for projects under 2004-2009 period",
     "short_name": "Reserve FM2004-09",
     "sort_order": 420
-  }
+  },
+  "Research cooperation": {
+    "name": "Research cooperation",
+    "short_name": "Research",
+    "sort_order": 18
+  },
 }
