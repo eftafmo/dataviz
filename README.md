@@ -2,7 +2,7 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 =========================================
 
 
-[![Docker build](https://img.shields.io/docker/build/eftafmo/dataviz.svg)](https://hub.docker.com/r/eftafmo/datavi/builds) [![Updates](https://pyup.io/repos/github/eftafmo/dataviz/shield.svg)](https://pyup.io/repos/github/eftafmo/dataviz/)
+[![Docker build](https://img.shields.io/docker/build/eftafmo/dataviz.svg)](https://hub.docker.com/r/eftafmo/dataviz/builds) [![Updates](https://pyup.io/repos/github/eftafmo/dataviz/shield.svg)](https://pyup.io/repos/github/eftafmo/dataviz/)
 
 
 
