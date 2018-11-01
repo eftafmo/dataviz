@@ -110,10 +110,18 @@ class Command(BaseCommand):
         for file in files:
             _write('Loading %s\n' % (file))
             file_path = os.path.join(directory_path, file)
+            #import pdb; pdb.set_trace()
             book = pyexcel.get_book(file_name=file_path)
             name = file.split('.')[0]
             name = next(f for f in EXCEL_FILES if f.lower() == name.lower())
-            sheets[name] = book[name]
+            try:
+                sheets[name] = book[name]
+            except KeyError:
+                # if book name different than file name just load the first one
+                if len(book.sheet_names()) == 0:
+                    raise CommandError('No worksheets found in %s' % (name))
+                _write('Assuming first worksheet of %s\n' % (','.join(book.sheet_names())))
+                sheets[name] = book.sheet_by_index(0)
 
         for sheet in sheets.values():
             sheet.name_columns_by_row(0)
