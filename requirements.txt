@@ -3,9 +3,9 @@ django-ckeditor==5.3.0
 Django>=1.11,<1.12
 Jinja2>=2.9.6,<2.10
 pyexcel-io==0.3.2
-pyexcel>=0.4.2,<0.5
-pyexcel-xls>=0.3.1,<0.4
-pyexcel-xlsx>=0.3.0,<0.4
+pyexcel>=0.4.2
+pyexcel-xls>=0.3.1
+pyexcel-xlsx>=0.3.0
 django-enumfields>=0.8.2,<0.9
 django-material>=1.0.0,<1.1
 django-webpack-loader>=0.5,<0.6
