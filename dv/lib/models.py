@@ -44,7 +44,6 @@ class ImportableModelMixin(object):
             kernel_keys = initial_insert_keys & current_keys
             extra_keys = current_keys - initial_insert_keys
 
-
         def _assign(fld, val, rel_field=None):
             field = fields[fld]
 
@@ -60,8 +59,12 @@ class ImportableModelMixin(object):
                     # so below doesn't really apply
 
                     # TODO: this is pretty. pretty ugly.
-                    val = getattr(type(field.choices[0][0]),
-                                  utils.str_to_constant_name(val))
+                    try:
+                        val = getattr(type(field.choices[0][0]),
+                                      utils.str_to_constant_name(val))
+                    except AttributeError:
+                        logger.error("Invalid value %s for field %s", val, field)
+                        raise
                 elif field.choices:
                     # this logic is based on the assumption that the choices are
                     # a `model_utils.Choices` instance, and on the convention
