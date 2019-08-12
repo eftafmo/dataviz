@@ -35,6 +35,7 @@ export default Vue.extend({
       // default to columns common to all scenarios.
       aggregate_on: [
         'allocation',
+        'net_allocation',
         {source: 'beneficiary', destination: 'beneficiaries',
          type: String, exclude: 'is_ta'},
         {source: 'sector', destination: 'sectors',

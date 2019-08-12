@@ -141,6 +141,7 @@ def grants(request):
             'beneficiary': a.state.code,
             'is_ta': not a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
+            'net_allocation': a.net_allocation,
 
             'bilateral_allocation': sum(p.allocation
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'
@@ -272,6 +273,7 @@ def projects(request):
             'beneficiary': a.state.code,
             'is_ta': not a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
+            'net_allocation': a.net_allocation,
             'project_allocation': project_allocation.get(key, 0),
             'project_count': project_count.get(key, 0),
             'news': news.get(key, []),

@@ -60,7 +60,7 @@ export default Sectors.extend({
         </div>
         <ul>
           <li>${ this.display(d) }</li>
-          <li>${ this.currency(d.value) } gross allocation</li>
+          <li>${ this.currency(d.value) } net allocation</li>
           <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
           <li>${num_prg}  `+  this.singularize(`programmes`, num_prg) + `</li>
         </ul>

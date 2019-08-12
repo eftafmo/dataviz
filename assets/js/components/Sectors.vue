@@ -544,7 +544,7 @@ export default Chart.extend({
       // filter out disabled items
       if (!this.isEnabled(d)) return 0
 
-      return d.allocation
+      return d.net_allocation
     },
 
     // the value displayed for legend items
