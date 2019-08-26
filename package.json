@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "autoprefixer": "^7.1.5",
-    "axios": "^0.16.2",
+    "axios": "^0.19.0",
     "buble": "^0.15.2",
     "buble-loader": "^0.4.1",
     "classlist-polyfill": "^1.2.0",
