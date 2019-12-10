@@ -573,7 +573,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_priority_sector_ss(self, obj):
         if self.project:
             return [self.project.programme_area.priority_sector.name]
-        if self.programmes.exists():
+        if self.programmes:
             return list(set([
                 programme['sector']
                 for programme in self.programmes
@@ -609,7 +609,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_outcome_ss(self, obj):
         if self.project:
             return [self.project.outcome.name.strip()]
-        if self.programmes.exists():
+        if self.programmes:
             return list(set([
                 programme['outcome_name']
                 for programme in self.programmes
@@ -644,7 +644,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 self.project = obj.project
         except Project.DoesNotExist:
             pass
-        if obj.programmes.exists():
+        if obj.programmes:
             self.programmes = (
                 obj.programmes
                 .annotate(
