@@ -9,7 +9,7 @@ from pytz import timezone
 from django.core.management.base import BaseCommand
 from dv.models import News
 
-ENDPOINT = 'http://eeagrants.org/rest/articles?page={}'
+ENDPOINT = 'https://eeagrants.org/rest/articles?page={}'
 
 
 class Command(BaseCommand):
@@ -21,7 +21,7 @@ class Command(BaseCommand):
         while page == 0 or data:
             with urlopen(ENDPOINT.format(page)) as url:
                 data = json.loads(url.read().decode())['posts']
-                if page == 1:
+                if page == 0:
                     News.objects.all().delete()
                 print('Importing {} news from page {}'.format(len(data), page))
                 for item in data:
