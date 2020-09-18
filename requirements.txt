@@ -1,4 +1,4 @@
-bleach>=2,<=3
+bleach==3.2.1
 django-ckeditor==5.3.0
 Django>=1.11,<1.12
 Jinja2>=2.10.1
