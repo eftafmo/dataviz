@@ -4,4 +4,4 @@ django-debug-toolbar
 django-extensions
 ipython
 ipdb
-lxml
+lxml==4.6.1
