@@ -21,6 +21,9 @@ RUN runDeps="vim git curl cron netcat-traditional gnupg" \
  && apt-get clean \
  && rm -vrf /var/lib/apt/lists/* \
  && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+ && echo 'Package: *' > /etc/apt/preferences.d/nodesource \
+ && echo 'Pin: origin deb.nodesource.com' >> /etc/apt/preferences.d/nodesource \
+ && echo 'Pin-Priority: 600' >> /etc/apt/preferences.d/nodesource \
  && apt-get install -y nodejs \
  && curl -sL https://sentry.io/get-cli/ | bash \
  && mkdir -p $APP_HOME \
