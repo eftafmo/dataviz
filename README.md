@@ -28,7 +28,7 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 
         $ cd eeag/
         $ cp docker-compose.override-dev.yml.example docker-compose.override.yml
-        $ cp web/web.dev.env.example web/web.dev.env
+        $ cp web/web.dev.env.example web/web.env
         $ cd ..
 
 
@@ -41,9 +41,11 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 
         $ cd src
         $ cp dv/localsettings.py.example dv/localsettings.py
+        $ cd ..
 
 6. Start services:
 
+        $ cd eeag/
         $ docker-compose up -d
 
 6. Reload solr schema:
