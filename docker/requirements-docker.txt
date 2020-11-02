@@ -1,6 +1,0 @@
--r requirements.txt
-
-gunicorn
-django-environ
-raven
-lxml>=4.1,<4.2

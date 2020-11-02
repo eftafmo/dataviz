@@ -46,8 +46,8 @@ RUN runDeps="git curl cron" \
 WORKDIR $APP_HOME
 COPY ./docker/crontab /etc/crontab.dataviz
 COPY ./docker/entrypoint.sh ./docker/import.sh /bin/
-ADD requirements.txt ./docker/requirements-docker.txt ./
-RUN pip install --no-cache-dir -r requirements-docker.txt
+ADD requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 ADD . $APP_HOME
 COPY ./docker/localsettings.py $APP_HOME/dv/
 COPY --from=frontend /var/local/build /var/local/build
