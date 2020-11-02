@@ -4,3 +4,6 @@ node_modules
 provisioning
 solr
 *.log
+localsettings.py
+__pycache__
+.vagrant
