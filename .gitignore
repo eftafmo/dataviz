@@ -8,5 +8,7 @@ node_modules/
 provisioning/salt-config/minion
 provisioning/salt-pillar/settings.sls
 
+schema.xml
+
 ### sublime
 *.sublime-*
