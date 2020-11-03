@@ -1,3 +1,0 @@
-{%- set name = "webpack runner" %}
-{%- set command = "cd %s; npm run dev" % settings['repo_dir'] %}
-{%- include 'application/files/tmux.service.jinja' with context %}
