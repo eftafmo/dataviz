@@ -1,0 +1,88 @@
+version: '2'
+services:
+  solr:
+    image: solr:6.6.4
+    container_name: eeag_solr
+    depends_on:
+      - solrvolumefixer
+    volumes_from:
+      - solrvolumefixer
+    environment:
+      - TZ=Europe/Brussels
+      - SOLR_HOME=/solr_home
+      - SOLR_HEAP=256m
+      - SOLR_TIMEZONE=CET
+      - SOLR_LOG_LEVEL=CONFIG
+      - SOLR_LOGS_DIR=/solr_logs
+      - INIT_SOLR_HOME=yes
+      # LOG4J_PROPS=/var/solr/log4j.properties
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - eeagrants
+    restart: "always"
+
+  solrvolumefixer:
+    image: solr:6.6.4
+    container_name: eeag_solrvolumefixer
+    user: root
+    volumes:
+      - ../solr_home:/solr_home
+      - ../logs/solr:/solr_logs
+    entrypoint: ["chown"]
+    command: ["-R", "8983:8983", "/solr_home", "/solr_logs"]
+
+
+  web:
+    image: eftafmo/dataviz:latest
+    container_name: eeag_web
+    environment:
+      - NUM_WORKERS=3
+    env_file:
+      - web/web.env
+    volumes:
+      - ../logs/web:/var/local/logs
+      - ../db:/var/local/db
+      - ../webroot:/var/local/webroot
+    restart: "always"
+
+  nginx:
+    image: nginx:1.13-alpine
+    container_name: eeag_nginx
+    environment:
+      NGINX_CONF: |-
+        types {
+          application/json topojson;
+        }
+        upstream djangoapp {
+          server web:8000 fail_timeout=1s;
+        }
+        server {
+          listen 8888;
+          access_log /var/log/nginx/access.log main;
+
+          location /assets {
+            sendfile on;
+            tcp_nopush on;
+            gzip on;
+            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+            expires 1d;
+            alias /var/local/webroot/static;
+            add_header 'Access-Control-Allow-Origin' "*" always;
+          }
+          location / {
+            proxy_pass http://djangoapp;
+            proxy_set_header Host $$host;
+            proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $$remote_addr;
+            gzip on;
+            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+            expires 1h;
+          }
+        }
+    depends_on:
+    - web
+    volumes:
+    - ../webroot:/var/local/webroot:ro
+    command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/conf.d/default.conf && exec nginx -g "daemon off;"'
+    restart: "always"

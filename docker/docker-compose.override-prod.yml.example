@@ -1,0 +1,11 @@
+version: '2'
+services:
+  solr:
+    ports:
+    - "127.0.0.1:8983:8983"
+  web:
+    volumes:
+    - /home/dataviz/upload:/var/local/upload
+  nginx:
+    ports:
+    - "127.0.0.1:8888:8888"

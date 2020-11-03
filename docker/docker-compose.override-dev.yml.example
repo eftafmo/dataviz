@@ -1,0 +1,12 @@
+version: '2'
+services:
+  solr:
+    ports:
+    - "127.0.0.1:8983:8983"
+  web:
+    ports:
+     - "127.0.0.1:8000:8000"
+     - "2992:2992"
+    entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
+    volumes:
+      - ../src:/var/local/dataviz

@@ -1,5 +1,6 @@
 ### project-related files
 dv/localsettings.py
+docker/web.env
 
 ### generic stuff
 __pycache__/
@@ -7,6 +8,8 @@ node_modules/
 
 provisioning/salt-config/minion
 provisioning/salt-pillar/settings.sls
+
+docker-compose.override.yml
 
 ### sublime
 *.sublime-*
