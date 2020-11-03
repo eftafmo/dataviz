@@ -5,9 +5,6 @@ dv/localsettings.py
 __pycache__/
 node_modules/
 
-.vagrant/
-Vagrantfile
-
 provisioning/salt-config/minion
 provisioning/salt-pillar/settings.sls
 
