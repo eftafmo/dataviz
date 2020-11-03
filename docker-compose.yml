@@ -27,8 +27,8 @@ services:
     container_name: eeag_solrvolumefixer
     user: root
     volumes:
-      - ../solr_home:/solr_home
-      - ../logs/solr:/solr_logs
+      - solr_home:/solr_home
+      - solr_logs:/solr_logs
     entrypoint: ["chown"]
     command: ["-R", "8983:8983", "/solr_home", "/solr_logs"]
 
@@ -39,11 +39,11 @@ services:
     environment:
       - NUM_WORKERS=3
     env_file:
-      - web/web.env
+      - docker/web.env
     volumes:
-      - ../logs/web:/var/local/logs
-      - ../db:/var/local/db
-      - ../webroot:/var/local/webroot
+      - web_logs:/var/local/logs
+      - web_db:/var/local/db
+      - webroot:/var/local/webroot
     restart: "always"
 
   nginx:
@@ -83,6 +83,13 @@ services:
     depends_on:
     - web
     volumes:
-    - ../webroot:/var/local/webroot:ro
+    - webroot:/var/local/webroot:ro
     command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/conf.d/default.conf && exec nginx -g "daemon off;"'
     restart: "always"
+
+volumes:
+  webroot:
+  web_db:
+  web_logs:
+  solr_home:
+  solr_logs:
