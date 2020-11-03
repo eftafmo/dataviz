@@ -34,7 +34,7 @@ LABEL maintainer="andrei.melis@eaudeweb.ro" \
 ENV APP_HOME=/var/local/dataviz \
     PYTHONUNBUFFERED=1
 
-RUN runDeps="git curl cron" \
+RUN runDeps="git curl cron netcat-traditional" \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends $runDeps \
  && curl -sL https://sentry.io/get-cli/ | bash \
