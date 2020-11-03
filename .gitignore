@@ -10,6 +10,7 @@ provisioning/salt-config/minion
 provisioning/salt-pillar/settings.sls
 
 docker-compose.override.yml
+schema.xml
 
 ### sublime
 *.sublime-*
