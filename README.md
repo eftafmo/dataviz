@@ -20,52 +20,46 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 
 1. Get the docker installation repository and the source code:
 
-        $ git clone git@gitlab.com:eftafmo/eeag.docker.git
-        $ cd eeag.docker
-        $ git clone git@github.com:eftafmo/dataviz.git src
+        $ git clone git@github.com:eftafmo/dataviz.git
+        $ cd dataviz
 
-2. Prepare environment:
+1. Prepare environment:
 
-        $ cd eeag/
-        $ cp docker-compose.override-dev.yml.example docker-compose.override.yml
-        $ cp web/web.dev.env.example web/web.env
-        $ cd ..
+        $ cp docker/docker-compose.override-dev.yml.example docker-compose.override.yml
+        $ cp docker/web.dev.env.example docker/web.env
 
 
-3. Replace database file with the latest version from production
+1. Create local settings:
 
-        $ mkdir db
-        $ scp edwsys@data.eeagrants.org:/var/local/eeag.docker/db/eeag.sqlite3  db/eeag.sqlite3
-
-5. Create local settings:
-
-        $ cd src
         $ cp dv/localsettings.py.example dv/localsettings.py
-        $ cd ..
 
-6. Start services:
+1. Start services:
 
-        $ cd eeag/
         $ docker-compose up -d
 
-6. Reload solr schema:
+1. Reload solr schema:
 
-        $ ./solr/reload_schema.sh
+        $ ./docker/solr_reload_schema.sh
+        $ rm schema.xml
 
+1. Replace database file with the latest version from production
 
-7. Step in the container,install requirements and rebuild solr indexes.
+        $ scp edwsys@data.eeagrants.org:/var/local/eeag.docker/db/eeag.sqlite3 /tmp/eeag.sqlite3
+        $ docker cp /tmp/eeag.sqlite3 eeag_web:/var/local/db/eeag.sqlite3
 
-        $ docker exec -it eeag_web bash
+1. Step in the container, install requirements and rebuild solr indexes.
+
+        $ docker-compose exec web bash
         $ pip install -r requirements.dev.txt
         $ python manage.py rebuild_index --noinput
 
-8. Install npm and start webpack dev server(*leave this container open*):
+1. Install npm and start webpack dev server(*leave this container open*):
 
         $ export NODE_ENV=debug
         $ npm install
         $ npm run dev
 
-9. Open another web container and start the django server:
+1. Open another web container and start the django server:
 
-        $ docker exec -it eeag_web bash
+        $ docker-compose exec web bash
         $ python manage.py runserver 0.0.0.0:8000
