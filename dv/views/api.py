@@ -29,6 +29,10 @@ from dv.lib.utils import (
 CharField.register_lookup(Length, 'length')
 
 
+def test_sentry(request):
+    division_by_zero = 1 / 0
+
+
 def overview(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed()
