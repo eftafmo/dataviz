@@ -15,7 +15,7 @@ pysolr==3.6.0
 # waiting for a release containing pull request 1526
 git+git://github.com/django-haystack/django-haystack.git@3f6016e107adefa40a681fa467d6fa9b8b431426
 
-djangorestframework>=3.9.1,<3.11
+djangorestframework>=3.11.2,<3.12
 django-countries>=4.6,<4.7
 
 gunicorn
