@@ -3,10 +3,7 @@ services:
   solr:
     image: solr:6.6.4
     container_name: eeag_solr
-    depends_on:
-      - solrvolumefixer
-    volumes_from:
-      - solrvolumefixer
+    user: root
     environment:
       - TZ=Europe/Brussels
       - SOLR_HOME=/solr_home
@@ -16,21 +13,11 @@ services:
       - SOLR_LOGS_DIR=/solr_logs
       - INIT_SOLR_HOME=yes
       # LOG4J_PROPS=/var/solr/log4j.properties
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - eeagrants
-    restart: "always"
-
-  solrvolumefixer:
-    image: solr:6.6.4
-    container_name: eeag_solrvolumefixer
-    user: root
     volumes:
       - solr_home:/solr_home
       - solr_logs:/solr_logs
-    entrypoint: ["chown"]
-    command: ["-R", "8983:8983", "/solr_home", "/solr_logs"]
+    command: ["bash", "-c", "chown solr: /solr_home /solr_logs && exec gosu solr docker-entrypoint.sh solr-precreate eeagrants"]
+    restart: "always"
 
 
   web:
