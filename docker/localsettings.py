@@ -9,13 +9,6 @@ except NameError:
 root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
 
-INSTALLED_APPS += (
-    'raven.contrib.django.raven_compat',
-)
-RAVEN_CONFIG = {
-    'dsn': env('SENTRY_DSN')
-}
-
 DEBUG = env('DEBUG', False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 SECRET_KEY = env('SECRET_KEY')
