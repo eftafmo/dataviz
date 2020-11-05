@@ -38,6 +38,7 @@ services:
     - webroot:/var/local/webroot:ro
     - nginxconfig:/etc/nginx/conf.d:ro
     restart: "always"
+    command: ["sh", "-c", "(set -x; until grep -q web /etc/hosts; do sleep 1; done); echo 'web ready; starting nginx'; exec nginx -g 'daemon off;'"]
 
 volumes:
   webroot:
