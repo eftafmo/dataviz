@@ -39,6 +39,8 @@ services:
     - nginxconfig:/etc/nginx/conf.d:ro
     restart: "always"
     command: ["sh", "-c", "set -x; until grep -q web /etc/hosts; do sleep 1; done; exec nginx -g 'daemon off;'"]
+    ports:
+      - 80:80
 
 volumes:
   webroot:
