@@ -32,21 +32,24 @@ services:
 
   nginx:
     domainname: eeagstaging
-    image: nginx:1.13-alpine
+    # TODO use version tag when they are available
+    # https://github.com/staticfloat/docker-nginx-certbot/issues/29
+    image: staticfloat/nginx-certbot:latest
     depends_on:
       - web
     volumes:
       - webroot:/var/local/webroot:ro
-      - nginxconfig:/etc/nginx/conf.d:ro
+      - nginxconfig:/nginxconfig
     deploy:
       resources:
         limits:
           cpus: "0.2"
           memory: 100M
     restart: unless-stopped
-    command: ["sh", "-c", "set -x; until grep -q web /etc/hosts; do sleep 1; done; exec nginx -g 'daemon off;'"]
+    command: ["/bin/bash", "/nginxconfig/entrypoint.sh"]
     ports:
       - 80:80
+      - 443:443
 
 volumes:
   webroot:

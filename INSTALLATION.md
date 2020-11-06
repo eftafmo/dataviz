@@ -26,12 +26,10 @@ These instructions assume you're deploying to Azure Containers, and have already
     docker compose -f docker-compose-azure.yml up
     ```
 
-1. Upload nginx configuration and reload nginx:
+1. Upload nginx configuration:
     ```shell
-    az storage copy -s docker/nginx.conf -d 'https://eeagstorage.file.core.windows.net/nginxconfig/nginx.conf'
-    docker exec -it dataviz_nginx sh  # log in to nginx container
-    kill -HUP 1  # reload nginx configuration
-    exit  # log out of nginx container
+    az storage copy -s docker/azure-nginx.conf -d 'https://eeagstorage.file.core.windows.net/nginxconfig/nginx.conf'
+    az storage copy -s docker/azure-entrypoint.sh -d 'https://eeagstorage.file.core.windows.net/nginxconfig/entrypoint.sh'
     ```
 
 1. Upload existing database file:
