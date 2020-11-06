@@ -13,7 +13,12 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Create volumes:
     ```shell
-    (set +x; for name in solrhome solrlogs webdb weblogs webroot nginxconfig; do docker volume create --storage-account eeagstorage $name; done)
+    docker volume create --storage-account eeagstorage solrhome
+    docker volume create --storage-account eeagstorage solrlogs
+    docker volume create --storage-account eeagstorage webdb
+    docker volume create --storage-account eeagstorage weblogs
+    docker volume create --storage-account eeagstorage webroot
+    docker volume create --storage-account eeagstorage nginxconfig
     ```
 
 1. Deploy the app:

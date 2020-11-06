@@ -15,7 +15,7 @@ services:
     volumes:
       - solrhome:/solr_home
       - solrlogs:/solr_logs
-    restart: "always"
+    restart: unless-stopped
 
 
   web:
@@ -28,22 +28,22 @@ services:
       - weblogs:/var/local/logs
       - webdb:/var/local/db
       - webroot:/var/local/webroot
-    restart: "always"
+    restart: unless-stopped
 
   nginx:
     domainname: eeagstaging
     image: nginx:1.13-alpine
     depends_on:
-    - web
+      - web
     volumes:
-    - webroot:/var/local/webroot:ro
-    - nginxconfig:/etc/nginx/conf.d:ro
+      - webroot:/var/local/webroot:ro
+      - nginxconfig:/etc/nginx/conf.d:ro
     deploy:
       resources:
         limits:
           cpus: "0.2"
           memory: 100M
-    restart: "always"
+    restart: unless-stopped
     command: ["sh", "-c", "set -x; until grep -q web /etc/hosts; do sleep 1; done; exec nginx -g 'daemon off;'"]
     ports:
       - 80:80
