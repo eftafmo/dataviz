@@ -40,6 +40,8 @@ services:
     volumes:
       - webroot:/var/local/webroot:ro
       - nginxconfig:/nginxconfig
+    env_file:
+      - docker/azure-nginx.env
     deploy:
       resources:
         limits:

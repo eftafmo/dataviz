@@ -11,6 +11,12 @@ These instructions assume you're deploying to Azure Containers, and have already
     source docker/set_context.sh eeagstaging
     ```
 
+1. Configure environment variables – copy and modify the examples:
+    ```shell
+    cp docker/web.prod.env.example docker/web.env
+    cp docker/azure-nginx.env.example docker/azure-nginx.env
+    ```
+
 1. Create volumes:
     ```shell
     docker volume create --storage-account eeagstorage solrhome

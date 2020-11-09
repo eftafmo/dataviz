@@ -41,10 +41,5 @@ until grep -q web /etc/hosts; do
 done
 echo "Found 'web' in /etc/hosts, proceeding"
 
-echo "Setting up environment variables"
-export CERTBOT_EMAIL="eeagrants@edw.ro"
-export ENVSUBST_VARS="FQDN"
-export FQDN="eeagrants-azure.edw.ro"
-
 echo "Running default entrypoint /scripts/entrypoint.sh ..."
 exec /scripts/entrypoint.sh
