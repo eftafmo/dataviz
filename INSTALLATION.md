@@ -21,20 +21,26 @@ These instructions assume you're deploying to Azure Containers, and have already
     docker volume create --storage-account eeagstorage nginxconfig
     ```
 
-1. Deploy the app:
-    ```shell
-    docker compose -f docker-compose-azure.yml up
-    ```
-
 1. Upload nginx configuration:
     ```shell
     az storage copy -s docker/azure-nginx.conf -d 'https://eeagstorage.file.core.windows.net/nginxconfig/nginx.conf'
     az storage copy -s docker/azure-entrypoint.sh -d 'https://eeagstorage.file.core.windows.net/nginxconfig/entrypoint.sh'
     ```
 
-1. Upload existing database file:
+1. Prepare the database file to work on Azure persistent volumes:
+    ```shell
+    sqlite3 eeag.sqlite3
+    sqlite> PRAGMA journal_mode=wal;
+    ```
+
+1. Upload the database file:
     ```shell
     az storage copy -s eeag.sqlite3 -d 'https://eeagstorage.file.core.windows.net/webdb/eeag.sqlite3'
+    ```
+
+1. Deploy the app:
+    ```shell
+    docker compose -f docker-compose-azure.yml up
     ```
 
 1. Reload Solr schema:
