@@ -22,10 +22,14 @@ tar cz -C /etc letsencrypt > $LETSENCRYPT_BACKUP
 EOF
 
 echo "Hacking /scripts/util.sh to call backup script when it's done"
-cat >> /scripts/util.sh <<EOF
+if ! [ -f /scripts/util-orig.sh ]; then
+  cp /scripts/util.sh /scripts/util-orig.sh
+fi
+cat > /scripts/util.sh <<EOF
+source /scripts/util-orig.sh
 eval "\$(echo "orig_get_certificate()"; declare -f get_certificate | tail -n +2)"
 get_certificate() {
-  orig_get_certificate
+  orig_get_certificate "\$@"
   bash /backup-letsencrypt.sh
 }
 EOF
