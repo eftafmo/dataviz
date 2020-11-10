@@ -11,11 +11,37 @@ These instructions assume you're deploying to Azure Containers, and have already
     source docker/set_context.sh eeagstaging
     ```
 
-1. Configure environment variables – copy and modify the examples:
-    ```shell
-    cp docker/web.prod.env.example docker/web.env
-    cp docker/azure-nginx.env.example docker/azure-nginx.env
-    ```
+1. Set up secrets
+
+    1. If it's a first-time deployment, set up a Key Vault:
+
+        ```shell
+        az keyvault create --location northeurope --name eeagsecrets --resource-group eeagstaging
+        ```
+
+       Then enter secrets:
+
+        ```shell
+        az keyvault secret set --vault-name eeagsecrets --name secret-key --value 'not-so-secret'
+        ```
+
+       The following secrets are required:
+
+       * `allowed-hosts`: Domain name for the site.
+       * `secret-key`: A random string for Django's `SECRET_KEY` setting.
+       * `frontend-sentry-dsn`: Sentry DSN for the front-end.
+       * `sentry-dsn`: Sentry DSN for the back-end.
+       * `sentry-environment`: Sentry environment name.
+       * `google-analytics-property-id`: Google Analytics tracking ID, e.g. `UA-12345-1`.
+       * `fqdn`: Domain name for the site.
+       * `certbot-email`: Email to use when requesting a certificate from Let's Encrypt. Used for [Expiration Emails](https://letsencrypt.org/docs/expiration-emails/).
+
+    1. Download secrets and generate a configuration file:
+
+        ```shell
+        docker/azure-get-secrets.py eeagsecrets web > docker/azure-web.env
+        docker/azure-get-secrets.py eeagsecrets nginx > docker/azure-nginx.env
+        ```
 
 1. Create volumes:
     ```shell

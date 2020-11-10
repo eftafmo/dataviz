@@ -1,6 +1,7 @@
 ### project-related files
 dv/localsettings.py
 docker/web.env
+docker/azure-web.env
 docker/azure-nginx.env
 
 ### generic stuff

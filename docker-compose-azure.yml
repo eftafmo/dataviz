@@ -23,7 +23,7 @@ services:
     environment:
       - NUM_WORKERS=3
     env_file:
-      - docker/web.env
+      - docker/azure-web.env
     volumes:
       - weblogs:/var/local/logs
       - webdb:/var/local/db
@@ -41,6 +41,8 @@ services:
     volumes:
       - webroot:/var/local/webroot:ro
       - nginxconfig:/nginxconfig
+    environment:
+      - ENVSUBST_VARS=FQDN
     env_file:
       - docker/azure-nginx.env
     deploy:
