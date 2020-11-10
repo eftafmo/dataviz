@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+import environ
+
+env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
+
 # project's base directory (the repo root)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # root directory, where project is deployed
@@ -195,5 +201,13 @@ CACHES = {
 }
 
 API_CACHE_SECONDS = 60 * 60 * 24  # 1 day
+
+SENTRY_DSN = env('SENTRY_DSN')
+SENTRY_ENVIRONMENT = env('SENTRY_ENVIRONMENT')
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    integrations=[DjangoIntegration()],
+)
 
 from .localsettings import *
