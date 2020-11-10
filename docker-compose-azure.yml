@@ -28,6 +28,7 @@ services:
       - weblogs:/var/local/logs
       - webdb:/var/local/db
       - webroot:/var/local/webroot
+      - upload:/var/local/upload
     restart: unless-stopped
 
   nginx:
@@ -83,4 +84,9 @@ volumes:
     driver: azure_file
     driver_opts:
       share_name: nginxconfig
+      storage_account_name: eeagstorage
+  upload:
+    driver: azure_file
+    driver_opts:
+      share_name: upload
       storage_account_name: eeagstorage

@@ -25,6 +25,7 @@ These instructions assume you're deploying to Azure Containers, and have already
     docker volume create --storage-account eeagstorage weblogs
     docker volume create --storage-account eeagstorage webroot
     docker volume create --storage-account eeagstorage nginxconfig
+    docker volume create --storage-account eeagstorage upload
     ```
 
 1. Upload nginx configuration:
