@@ -29,7 +29,6 @@ These instructions assume you're deploying to Azure Containers, and have already
 
        * `allowed-hosts`: Domain name for the site.
        * `secret-key`: A random string for Django's `SECRET_KEY` setting.
-       * `frontend-sentry-dsn`: Sentry DSN for the front-end.
        * `sentry-dsn`: Sentry DSN for the back-end.
        * `sentry-environment`: Sentry environment name.
        * `google-analytics-property-id`: Google Analytics tracking ID, e.g. `UA-12345-1`.

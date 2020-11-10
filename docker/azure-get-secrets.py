@@ -8,7 +8,6 @@ VARS = {
     "web": [
         "allowed-hosts",
         "secret-key",
-        "frontend-sentry-dsn",
         "sentry-dsn",
         "sentry-environment",
         "google-analytics-property-id",
