@@ -1,5 +1,7 @@
 import os.path
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 try:
     BASE_DIR, INSTALLED_APPS
@@ -8,13 +10,6 @@ except NameError:
 
 root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
-
-INSTALLED_APPS += (
-    'raven.contrib.django.raven_compat',
-)
-RAVEN_CONFIG = {
-    'dsn': env('SENTRY_DSN')
-}
 
 DEBUG = env('DEBUG', False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
@@ -39,6 +34,11 @@ HAYSTACK_CONNECTIONS = {
 }
 
 GOOGLE_ANALYTICS_PROPERTY_ID = env('GOOGLE_ANALYTICS_PROPERTY_ID')
+
+sentry_sdk.init(
+    dsn=env('SENTRY_DSN'),
+    integrations=[DjangoIntegration()],
+)
 
 # CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = (,)
