@@ -28,6 +28,7 @@ HAYSTACK_CONNECTIONS = {
         'URL': 'http://solr:8983/solr/eeagrants',
         'BATCH_SIZE': 999,
         'SILENTLY_FAIL': False,
+        'TIMEOUT': env("HAYSTACK_SOLR_TIMEOUT", cast=int, default=60),
     },
 }
 
