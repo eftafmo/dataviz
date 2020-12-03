@@ -4,11 +4,18 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Install Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 
-1. Set up an Azure context in Docker:
+1. Log into Azure
     ```shell
     docker login azure
-    docker context create aci eeagstaging
-    source docker/set_context.sh eeagstaging
+    ```
+
+1. Set up shell variables and Docker context:
+    ```shell
+    # deploy to staging:
+    source docker/set_context_staging.sh
+
+    # deploy to production:
+    #source docker/set_context_production.sh
     ```
 
 1. Set up secrets
@@ -16,18 +23,18 @@ These instructions assume you're deploying to Azure Containers, and have already
     1. If it's a first-time deployment, set up a Key Vault:
 
         ```shell
-        az keyvault create --location northeurope --name eeagsecrets --resource-group eeagstaging
+        az keyvault create --location $EEAG_REGION --name $EEAG_VAULT --resource-group $EEAG_RESOURCE_GROUP
         ```
 
        Then enter secrets:
 
         ```shell
-        az keyvault secret set --vault-name eeagsecrets --name secret-key --value 'not-so-secret'
+        az keyvault secret set --vault-name $EEAG_VAULT --name secret-key --value 'not-so-secret'
         ```
 
        The following secrets are required:
 
-       * `allowed-hosts`: Domain name for the site.
+       * `allowed-hosts`: Domain name for the site. _(Set `*` to allow cron scripts to do their job. Remote requests come in via the load balancer, therefore this doesn't open up a security hole.)_
        * `secret-key`: A random string for Django's `SECRET_KEY` setting.
        * `sentry-dsn`: Sentry DSN for the back-end.
        * `sentry-environment`: Sentry environment name.
@@ -38,25 +45,25 @@ These instructions assume you're deploying to Azure Containers, and have already
     1. Download secrets and generate a configuration file:
 
         ```shell
-        docker/azure-get-secrets.py eeagsecrets web > docker/azure-web.env
-        docker/azure-get-secrets.py eeagsecrets nginx > docker/azure-nginx.env
+        docker/azure-get-secrets.py $EEAG_VAULT web > docker/azure-web.env
+        docker/azure-get-secrets.py $EEAG_VAULT nginx > docker/azure-nginx.env
         ```
 
 1. Create volumes:
     ```shell
-    docker volume create --storage-account eeagstorage solrhome
-    docker volume create --storage-account eeagstorage solrlogs
-    docker volume create --storage-account eeagstorage webdb
-    docker volume create --storage-account eeagstorage weblogs
-    docker volume create --storage-account eeagstorage webroot
-    docker volume create --storage-account eeagstorage nginxconfig
-    docker volume create --storage-account eeagstorage upload
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT solrhome
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT solrlogs
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT webdb
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT weblogs
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT webroot
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT nginxconfig
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT upload
     ```
 
 1. Upload nginx configuration:
     ```shell
-    az storage copy -s docker/azure-nginx.conf -d 'https://eeagstorage.file.core.windows.net/nginxconfig/nginx.conf'
-    az storage copy -s docker/azure-entrypoint.sh -d 'https://eeagstorage.file.core.windows.net/nginxconfig/entrypoint.sh'
+    az storage copy -s docker/azure-nginx.conf -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/nginxconfig/nginx.conf"
+    az storage copy -s docker/azure-entrypoint.sh -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/nginxconfig/entrypoint.sh"
     ```
 
 1. Prepare the database file to work on Azure persistent volumes:
@@ -67,7 +74,7 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Upload the database file:
     ```shell
-    az storage copy -s eeag.sqlite3 -d 'https://eeagstorage.file.core.windows.net/webdb/eeag.sqlite3'
+    az storage copy -s eeag.sqlite3 -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/webdb/eeag.sqlite3"
     ```
 
 1. Deploy the app:
@@ -82,7 +89,7 @@ These instructions assume you're deploying to Azure Containers, and have already
     ./manage.py patch_schema /var/local/db/schema.xml
     exit  # log out of web container
 
-    az storage copy -s 'https://eeagstorage.file.core.windows.net/webdb/schema.xml' -d 'https://eeagstorage.file.core.windows.net/solrhome/eeagrants/conf/schema.xml'
+    az storage copy -s "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/webdb/schema.xml" -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/solrhome/eeagrants/conf/schema.xml"
 
     docker exec -it dataviz_solr bash  # log in to solr container
     rm /solr_home/eeagrants/conf/managed-schema
