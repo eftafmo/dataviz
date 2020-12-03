@@ -1,0 +1,94 @@
+version: '2'
+services:
+  solr:
+    image: solr:6.6.4
+    user: root
+    environment:
+      - TZ=Europe/Brussels
+      - SOLR_HOME=/solr_home
+      - SOLR_HEAP=256m
+      - SOLR_TIMEZONE=CET
+      - SOLR_LOG_LEVEL=CONFIG
+      - SOLR_LOGS_DIR=/solr_logs
+      - INIT_SOLR_HOME=yes
+      # LOG4J_PROPS=/var/solr/log4j.properties
+    volumes:
+      - solrhome:/solr_home
+      - solrlogs:/solr_logs
+    restart: unless-stopped
+
+
+  web:
+    image: eftafmo/dataviz:latest
+    environment:
+      - NUM_WORKERS=3
+    env_file:
+      - docker/azure-web.env
+    volumes:
+      - weblogs:/var/local/logs
+      - webdb:/var/local/db
+      - webroot:/var/local/webroot
+      - upload:/var/local/upload
+    restart: unless-stopped
+
+  nginx:
+    domainname: eeagstaging
+    # TODO use version tag when they are available
+    # https://github.com/staticfloat/docker-nginx-certbot/issues/29
+    image: staticfloat/nginx-certbot:latest
+    depends_on:
+      - web
+    volumes:
+      - webroot:/var/local/webroot:ro
+      - nginxconfig:/nginxconfig
+    environment:
+      - ENVSUBST_VARS=FQDN
+    env_file:
+      - docker/azure-nginx.env
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 100M
+    restart: unless-stopped
+    command: ["/bin/bash", "/nginxconfig/entrypoint.sh"]
+    ports:
+      - 80:80
+      - 443:443
+
+volumes:
+  webroot:
+    driver: azure_file
+    driver_opts:
+      share_name: webroot
+      storage_account_name: eeagstorage
+  webdb:
+    driver: azure_file
+    driver_opts:
+      share_name: webdb
+      storage_account_name: eeagstorage
+  weblogs:
+    driver: azure_file
+    driver_opts:
+      share_name: weblogs
+      storage_account_name: eeagstorage
+  solrhome:
+    driver: azure_file
+    driver_opts:
+      share_name: solrhome
+      storage_account_name: eeagstorage
+  solrlogs:
+    driver: azure_file
+    driver_opts:
+      share_name: solrlogs
+      storage_account_name: eeagstorage
+  nginxconfig:
+    driver: azure_file
+    driver_opts:
+      share_name: nginxconfig
+      storage_account_name: eeagstorage
+  upload:
+    driver: azure_file
+    driver_opts:
+      share_name: upload
+      storage_account_name: eeagstorage

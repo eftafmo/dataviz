@@ -69,6 +69,12 @@
         </div>
       </div>
   </footer>
+  <script>
+    window._dv_sentry_config = {
+      dsn: "{{ settings.SENTRY_DSN|escapejs }}",
+      environment: "{{ settings.SENTRY_ENVIRONMENT|escapejs }}",
+    };
+  </script>
   {% render_bundle 'dataviz' 'js' %}
   {% render_bundle 'site' 'js' %}
 {% block finally %}

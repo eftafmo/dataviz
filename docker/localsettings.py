@@ -1,7 +1,5 @@
 import os.path
 import environ
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
 try:
     BASE_DIR, INSTALLED_APPS
@@ -30,15 +28,11 @@ HAYSTACK_CONNECTIONS = {
         'URL': 'http://solr:8983/solr/eeagrants',
         'BATCH_SIZE': 999,
         'SILENTLY_FAIL': False,
+        'TIMEOUT': env("HAYSTACK_SOLR_TIMEOUT", cast=int, default=60),
     },
 }
 
 GOOGLE_ANALYTICS_PROPERTY_ID = env('GOOGLE_ANALYTICS_PROPERTY_ID')
-
-sentry_sdk.init(
-    dsn=env('SENTRY_DSN'),
-    integrations=[DjangoIntegration()],
-)
 
 # CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = (,)
