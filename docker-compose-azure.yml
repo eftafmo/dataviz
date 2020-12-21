@@ -60,35 +60,35 @@ volumes:
   webroot:
     driver: azure_file
     driver_opts:
-      share_name: webroot
-      storage_account_name: eeagstorage
+      share_name: we-p-fmo-dockervolume-webroot
+      storage_account_name: wepfmodockerstorage
   webdb:
     driver: azure_file
     driver_opts:
-      share_name: webdb
-      storage_account_name: eeagstorage
+      share_name: we-p-fmo-dockervolume-webdb
+      storage_account_name: wepfmodockerstorage
   weblogs:
     driver: azure_file
     driver_opts:
-      share_name: weblogs
-      storage_account_name: eeagstorage
+      share_name: we-p-fmo-dockervolume-weblogs
+      storage_account_name: wepfmodockerstorage
   solrhome:
     driver: azure_file
     driver_opts:
-      share_name: solrhome
-      storage_account_name: eeagstorage
+      share_name: we-p-fmo-dockervolume-solrhome
+      storage_account_name: wepfmodockerstorage
   solrlogs:
     driver: azure_file
     driver_opts:
-      share_name: solrlogs
-      storage_account_name: eeagstorage
+      share_name: we-p-fmo-dockervolume-solrlogs
+      storage_account_name: wepfmodockerstorage
   nginxconfig:
     driver: azure_file
     driver_opts:
-      share_name: nginxconfig
-      storage_account_name: eeagstorage
+      share_name: we-p-fmo-dockervolume-nginxconfig
+      storage_account_name: wepfmodockerstorage
   upload:
     driver: azure_file
     driver_opts:
-      share_name: upload
-      storage_account_name: eeagstorage
+      share_name: we-p-fmo-dockervolume-upload
+      storage_account_name: wepfmodockerstorage

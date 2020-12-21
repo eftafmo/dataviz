@@ -7,6 +7,10 @@ These instructions assume you're deploying to Azure Containers, and have already
 1. Log into Azure
     ```shell
     docker login azure
+
+    # for production, make sure you're using the correct tenant-id and subscription-id:
+    #docker login azure --tenant-id fdf06eeb-4370-4758-bad3-26541c642925
+    #az account set --subscription d0c8e6b7-00d8-49e3-bb85-7a0467fc4dcc
     ```
 
 1. Set up shell variables and Docker context:
@@ -51,19 +55,19 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Create volumes:
     ```shell
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT solrhome
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT solrlogs
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT webdb
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT weblogs
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT webroot
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT nginxconfig
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT upload
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-solrhome
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-solrlogs
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-webdb
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-weblogs
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-webroot
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-nginxconfig
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-upload
     ```
 
 1. Upload nginx configuration:
     ```shell
-    az storage copy -s docker/azure-nginx.conf -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/nginxconfig/nginx.conf"
-    az storage copy -s docker/azure-entrypoint.sh -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/nginxconfig/entrypoint.sh"
+    az storage copy -s docker/azure-nginx.conf -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-nginxconfig/nginx.conf"
+    az storage copy -s docker/azure-entrypoint.sh -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-nginxconfig/entrypoint.sh"
     ```
 
 1. Prepare the database file to work on Azure persistent volumes:
@@ -74,7 +78,7 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Upload the database file:
     ```shell
-    az storage copy -s eeag.sqlite3 -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/webdb/eeag.sqlite3"
+    az storage copy -s eeag.sqlite3 -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-webdb/eeag.sqlite3"
     ```
 
 1. Deploy the app:
@@ -84,14 +88,14 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Reload Solr schema:
     ```shell
-    docker exec -it dataviz_web bash  # log in to web container
+    docker exec -it we-p-fmo-docker-dataeeagrantsorg-cg_web bash  # log in to web container
     ./manage.py build_solr_schema --filename /var/local/db/schema.xml
     ./manage.py patch_schema /var/local/db/schema.xml
     exit  # log out of web container
 
-    az storage copy -s "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/webdb/schema.xml" -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/solrhome/eeagrants/conf/schema.xml"
+    az storage copy -s "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-webdb/schema.xml" -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-solrhome/eeagrants/conf/schema.xml"
 
-    docker exec -it dataviz_solr bash  # log in to solr container
+    docker exec -it we-p-fmo-docker-dataeeagrantsorg-cg_solr bash  # log in to solr container
     rm /solr_home/eeagrants/conf/managed-schema
     curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=eeagrants"
     exit  # log out of solr container
@@ -99,7 +103,7 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Rebuild indexes:
     ```shell
-    docker exec -it dataviz_web bash  # log in to web container
+    docker exec -it we-p-fmo-docker-dataeeagrantsorg-cg_web bash  # log in to web container
     ./manage.py rebuild_index --noinput
     exit  # log out of web container
     ```
