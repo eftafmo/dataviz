@@ -16,6 +16,7 @@ services:
       - solrhome:/solr_home
       - solrlogs:/solr_logs
     restart: unless-stopped
+    command: ["solr-precreate", "eeagrants"]
 
 
   web:
@@ -32,7 +33,7 @@ services:
     restart: unless-stopped
 
   nginx:
-    domainname: eeagstaging
+    domainname: we-p-fmo-docker-dataeeagrantsorg-rg
     # TODO use version tag when they are available
     # https://github.com/staticfloat/docker-nginx-certbot/issues/29
     image: staticfloat/nginx-certbot:latest
