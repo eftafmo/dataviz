@@ -5,7 +5,7 @@ ENV APP_HOME=/var/local/dataviz
 RUN runDeps="curl gnupg" \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends $runDeps \
- && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+ && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
  && echo 'Package: *' > /etc/apt/preferences.d/nodesource \
  && echo 'Pin: origin deb.nodesource.com' >> /etc/apt/preferences.d/nodesource \
  && echo 'Pin-Priority: 600' >> /etc/apt/preferences.d/nodesource \
