@@ -1,49 +1,55 @@
 <!-- for use with StatesBarChart components -->
 <script>
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 export default {
-
   created() {
     for (const k in this.columns) {
-      this.aggregate_on.push(this.columns[k])
+      this.aggregate_on.push(this.columns[k]);
     }
   },
 
   computed: {
     types() {
-      const types = {}
+      const types = {};
 
       for (const k in this.columns) {
-        const col = this.columns[k]
+        const col = this.columns[k];
 
-        types[k] = Object.assign({
-          id: k,
-          colour: this.colours[k],
-        }, col)
+        types[k] = Object.assign(
+          {
+            id: k,
+            colour: this.colours[k],
+          },
+          col
+        );
       }
 
-      return types
+      return types;
     },
 
     div_types() {
-      return d3.values(this.types)
+      return d3.values(this.types);
     },
   },
 
   methods: {
     valuefunc(item, type) {
-      const orgs = item[this.types[type].source] // this is a set
-      return orgs ? orgs.size() : 0
+      const orgs = item[this.types[type].source]; // this is a set
+      return orgs ? orgs.size() : 0;
     },
 
     tooltipTemplate(d) {
-      const data = d.data
-                    .filter( (x) => x.value != 0 );
+      const data = d.data.filter((x) => x.value != 0);
       const datatxt = data
-        .map( (x) => `
-            <li>${ this.number(x.value) } ${ this.singularize(x.name, x.value) }</li>
-        ` )
+        .map(
+          (x) => `
+            <li>${this.number(x.value)} ${this.singularize(
+            x.name,
+            x.value
+          )}</li>
+        `
+        )
         .join("");
 
       return `
@@ -53,8 +59,10 @@ export default {
           </svg>
           <span class="name">${d.name}</span>
         </div>
-        <ul> ${ datatxt } </ul>
-        <span class="action">Click to filter by ${ this.state_type } state</span>`;
+        <ul> ${datatxt} </ul>
+        <span class="action">Click to filter by ${
+          this.state_type
+        } state</span>`;
     },
   },
 };

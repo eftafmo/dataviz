@@ -4,16 +4,14 @@
  *          embedding code still works.
  */
 
-import {default as Root} from './components/Root';
-import * as components from './components';
-
+import * as components from "./components";
+import { default as Root } from "./components/Root";
 
 const Base = Root.extend({
   components: {
     globalfilters: components.GlobalFilters,
   },
 });
-
 
 export const Index = Base.extend({
   name: "Index",
@@ -22,7 +20,6 @@ export const Index = Base.extend({
     overview: components.Overview,
   },
 });
-
 
 export const Grants = Base.extend({
   name: "Grants",

@@ -1,30 +1,42 @@
 <template>
-<ul :class="classNames">
-  <li v-for="beneficiary in data.beneficiaries">
-    <div class="content-item programmes_content">
-      <div class="body">
-        <div @click="toggleContent($event)" class="title-wrapper">
-          <div class="flag">
-            <svg class="flag">
-              <use :xlink:href="`#${get_flag_name(beneficiary.id)}`"></use>
-            </svg>
+  <ul :class="classNames">
+    <li v-for="beneficiary in data.beneficiaries">
+      <div class="content-item programmes_content">
+        <div class="body">
+          <div @click="toggleContent($event)" class="title-wrapper">
+            <div class="flag">
+              <svg class="flag">
+                <use :xlink:href="`#${get_flag_name(beneficiary.id)}`"></use>
+              </svg>
+            </div>
+            <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
+            <small>({{ beneficiary.programmes.length }} programmes)</small>
           </div>
-          <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
-          <small>({{ beneficiary.programmes.length }} programmes)</small>
+          <ul class="programme-list" :class="[{ active: filters.beneficiary }]">
+            <li
+              v-for="programme in beneficiary.programmes"
+              class="programme-item"
+            >
+              <slot
+                name="programme-content"
+                :programme="programme"
+                :beneficiary="beneficiary"
+              >
+                <a
+                  class="programme-sublist-item"
+                  target="_blank"
+                  :href="programme.programme_url"
+                >
+                  {{ programme.programme_name }}
+                </a>
+              </slot>
+            </li>
+          </ul>
         </div>
-        <ul class="programme-list" :class="[{ active : filters.beneficiary }]">
-          <li v-for="programme in beneficiary.programmes" class="programme-item">
-            <slot name="programme-content" :programme="programme" :beneficiary="beneficiary">
-              <a class="programme-sublist-item" target="_blank" :href="programme.programme_url"> {{ programme.programme_name }} </a>
-            </slot>
-          </li>
-        </ul>
       </div>
-    </div>
-  </li>
-</ul>
+    </li>
+  </ul>
 </template>
-
 
 <style lang="less">
 .dataviz .viz.programmes {
@@ -49,13 +61,13 @@
   .flag {
     box-shadow: 0px 0px 2px #757575;
   }
-  .active .programme-sublist-wrapper     {
+  .active .programme-sublist-wrapper {
     display: block;
   }
 
   .programme-sublist {
     padding-left: 0;
-    margin-left: 2rem
+    margin-left: 2rem;
   }
 
   .programme-sublist-item {
@@ -65,18 +77,18 @@
   .programme-item {
     list-style-type: square;
     color: #56bafc;
-    a{
+    a {
       color: #444;
     }
   }
 
-  .title-wrapper:hover .title{
+  .title-wrapper:hover .title {
     text-decoration: underline;
   }
 
-  a.programme-sublist-item:hover{
+  a.programme-sublist-item:hover {
     &:before {
-    text-decoration: none;
+      text-decoration: none;
     }
   }
 
@@ -84,7 +96,7 @@
     width: 30px;
     height: 20px;
     img {
-        width: 100%;
+      width: 100%;
     }
   }
 
@@ -113,10 +125,9 @@
     display: block;
   }
 
-
   .title-wrapper > * {
     display: inline-block;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 
   .title-wrapper {
@@ -130,46 +141,40 @@
   .country_thumbnail {
     display: inline-block;
     width: 24px;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
-import Component from './Component';
-import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
-import WithRegionsMixin from './mixins/WithRegions';
-
+import Component from "./Component";
+import WithCountriesMixin from "./mixins/WithCountries";
+import WithRegionsMixin from "./mixins/WithRegions";
 
 export default Component.extend({
   type: "programmes",
 
-  mixins: [
-    WithCountriesMixin,
-    WithRegionsMixin,
-  ],
-
+  mixins: [WithCountriesMixin, WithRegionsMixin],
 
   updated() {
     //TODO: this can be done a lot better
     if (window.matchMedia("(max-width: 800px)").matches) {
-      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]');
+      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector(
+        '[aria-controls="#programmes"]'
+      );
       if (!parent_nav) return;
-      parent_nav.innerHTML = 'Programmes ('+this.data.projectcount+')'
+      parent_nav.innerHTML = "Programmes (" + this.data.projectcount + ")";
     }
   },
 
-
   computed: {
     data() {
-      if (!this.hasData) return []
+      if (!this.hasData) return [];
 
       const dataset = this.filtered;
       const beneficiaries = {};
-      let programmes_array = [];
 
       for (const d of dataset) {
         const programmes = d.programmes;
@@ -193,9 +198,9 @@ export default Component.extend({
             };
           else if (programme.nuts) {
             // need to merge their nuts
-            programme.nuts = Array.from(new Set(
-              programme.nuts.concat(Object.keys(programmes[p].nuts))
-            ))
+            programme.nuts = Array.from(
+              new Set(programme.nuts.concat(Object.keys(programmes[p].nuts)))
+            );
           }
         }
       }
@@ -207,34 +212,36 @@ export default Component.extend({
 
       for (const b in beneficiaries) {
         const programmes = beneficiaries[b],
-              beneficiary = {
-                id: b,
-                programmes: [],
-              };
+          beneficiary = {
+            id: b,
+            programmes: [],
+          };
         out.beneficiaries.push(beneficiary);
 
         for (const p in programmes) {
-          if(programmes[p].programme_code)
-            out.projectcount += 1;
+          if (programmes[p].programme_code) out.projectcount += 1;
           const programme = programmes[p];
-          if(this.isRelevantForSelectedRegion(programme)) {
+          if (this.isRelevantForSelectedRegion(programme)) {
             beneficiary.programmes.push(programme);
           }
         }
         // Sort by programme code, the Tripartite programme always last
-        beneficiary.programmes.sort((a,b) => d3.ascending(
-          a.programme_code.replace('IN22', 'ZZZZ'),
-          b.programme_code.replace('IN22', 'ZZZZ')
-        ));
+        beneficiary.programmes.sort((a, b) =>
+          d3.ascending(
+            a.programme_code.replace("IN22", "ZZZZ"),
+            b.programme_code.replace("IN22", "ZZZZ")
+          )
+        );
       }
 
       //Sort by country
-      out.beneficiaries.sort((a,b) => d3.ascending(this.get_country_name(a.id),this.get_country_name(b.id)));
+      out.beneficiaries.sort((a, b) =>
+        d3.ascending(this.get_country_name(a.id), this.get_country_name(b.id))
+      );
 
       return out;
     },
   },
-
 
   methods: {
     toggleContent(e) {
@@ -248,15 +255,18 @@ export default Component.extend({
 
       //TODO : get rid of the parenNode logic
       let target;
-      if (e.target.parentNode.classList.contains('flag'))
-        target = e.target.parentNode.parentNode.parentNode.querySelector('.programme-list');
+      if (e.target.parentNode.classList.contains("flag"))
+        target = e.target.parentNode.parentNode.parentNode.querySelector(
+          ".programme-list"
+        );
       else
-         target = e.target.parentNode.parentNode.querySelector('.programme-list');
-      if(target.classList.contains('active')){
-        target.classList.remove('active')
-      }
-      else {
-        target.classList.add('active')
+        target = e.target.parentNode.parentNode.querySelector(
+          ".programme-list"
+        );
+      if (target.classList.contains("active")) {
+        target.classList.remove("active");
+      } else {
+        target.classList.add("active");
       }
     },
     /**
@@ -274,6 +284,6 @@ export default Component.extend({
       }
       return false;
     },
-  }
+  },
 });
 </script>

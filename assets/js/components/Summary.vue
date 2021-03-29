@@ -1,9 +1,11 @@
 <template>
-<div :class="classNames" v-show="hasData">
+  <div :class="classNames" v-show="hasData">
     <transition name="fade">
       <div class="allocation" :key="changed" v-if="data.allocation > 0">
         <strong>{{ currency(data.allocation) }}</strong>
-        <small>{{ currency(data.bilateral_allocation) }} for bilateral fund</small>
+        <small
+          >{{ currency(data.bilateral_allocation) }} for bilateral fund</small
+        >
       </div>
       <div class="allocation" :key="changed" v-if="!data.allocation">
         <strong>No allocation available</strong>
@@ -11,7 +13,6 @@
     </transition>
   </div>
 </template>
-
 
 <style lang="less">
 .dataviz .viz.summary {
@@ -28,7 +29,7 @@
 
   small {
     display: block;
-    color: #2FB82A;
+    color: #2fb82a;
   }
 
   .allocation {
@@ -61,13 +62,10 @@
 .sidebar-tab-content .active {
   display: block;
 }
-
 </style>
 
-
 <script>
-import Component from './Component';
-
+import Component from "./Component";
 
 export default Component.extend({
   type: "summary",
@@ -75,20 +73,17 @@ export default Component.extend({
   data() {
     return {
       transitioned: false,
-    }
+    };
   },
 
   computed: {
     data() {
-      if (!this.hasData) return {}
+      if (!this.hasData) return {};
 
       const out = this.aggregate(
         this.filtered,
         [],
-        [
-          'allocation',
-          'bilateral_allocation',
-        ],
+        ["allocation", "bilateral_allocation"],
         false
       );
 

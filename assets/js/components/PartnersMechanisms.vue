@@ -1,17 +1,16 @@
 <template>
-<fms :datasource="datasource" :initial="initial">
-  <template slot="title"><slot name="title"></slot></template>
-  <template slot="legend" scope="x">
-    <fm-legend :fms="x.data"></fm-legend>
-  </template>
-</fms>
+  <fms :datasource="datasource" :initial="initial">
+    <template slot="title"><slot name="title"></slot></template>
+    <template slot="legend" scope="x">
+      <fm-legend :fms="x.data"></fm-legend>
+    </template>
+  </fms>
 </template>
-
 
 <style lang="less">
 .dataviz .viz.fms.is-partners {
   .legend {
-    .fms{
+    .fms {
       text-align: left;
     }
     .fm {
@@ -30,33 +29,32 @@
 }
 </style>
 
-
 <script>
-import Component from './Component';
-import BaseMechanisms from './Mechanisms';
+import Component from "./Component";
+import BaseMechanisms from "./Mechanisms";
 
-import PartnersMixin from './mixins/Partners';
-import FMLegendComponent from './includes/FMLegend';
-
+import PartnersMixin from "./mixins/Partners";
+import FMLegendComponent from "./includes/FMLegend";
 
 const Mechanisms = BaseMechanisms.extend({
-  mixins: [
-    PartnersMixin,
-  ],
+  mixins: [PartnersMixin],
 
   data() {
-    return {
-    };
+    return {};
   },
 
   computed: {
     aggregated() {
       // allocation amounts are duplicated sometimes by donors,
       // so we need to overwrite it.
-      this.aggregate_on = this.aggregate_on.filter(item => item !== 'allocation');
-      const aggregated = this.aggregate(this.filtered,
-                                        this.aggregate_by,
-                                        this.aggregate_on);
+      this.aggregate_on = this.aggregate_on.filter(
+        (item) => item !== "allocation"
+      );
+      const aggregated = this.aggregate(
+        this.filtered,
+        this.aggregate_by,
+        this.aggregate_on
+      );
       for (const k in aggregated) {
         aggregated[k].allocation = 0;
       }
@@ -75,27 +73,36 @@ const Mechanisms = BaseMechanisms.extend({
 
   methods: {
     tooltipTemplate(d) {
-      return `
+      return (
+        `
         <div class="title-container">
           <span class="name">${d.name}</span>
         </div>
         <ul>
-          <li>${d.programmes.size()} partner ` + this.singularize(`programmes`, d.programmes.size()) + `</li>
-          <li>${d.beneficiaries.size()} `+  this.singularize(`beneficiary states`, d.beneficiaries.size()) + `</li>
-          <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-          <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
+          <li>${d.programmes.size()} partner ` +
+        this.singularize(`programmes`, d.programmes.size()) +
+        `</li>
+          <li>${d.beneficiaries.size()} ` +
+        this.singularize(`beneficiary states`, d.beneficiaries.size()) +
+        `</li>
+          <li>${d.sectors.size()} ` +
+        this.singularize(`sectors`, d.sectors.size()) +
+        `</li>
+          <li>${d.areas.size()} ` +
+        this.singularize(`programme areas`, d.areas.size()) +
+        `</li>
         </ul>
         <span class="action">Click to filter by financial mechanism</span>
-      `;
+      `
+      );
     },
   },
 });
 
-
 export default Component.extend({
   components: {
     fms: Mechanisms,
-    'fm-legend': FMLegendComponent,
+    "fm-legend": FMLegendComponent,
   },
 });
 </script>

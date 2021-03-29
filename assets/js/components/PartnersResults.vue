@@ -1,26 +1,27 @@
 <template>
-    <div :class="classNames">
-       <dl v-for="item in data" class="partner-result clearfix">
-          <dt class="partner-result-achievement">{{ number(item.achievement) }}{{ item.unit }}</dt>
-          <dd class="partner-result">{{ item.indicator }} </dd>
-       </dl>
-    </div>
+  <div :class="classNames">
+    <dl v-for="item in data" class="partner-result clearfix">
+      <dt class="partner-result-achievement">
+        {{ number(item.achievement) }}{{ item.unit }}
+      </dt>
+      <dd class="partner-result">{{ item.indicator }}</dd>
+    </dl>
+  </div>
 </template>
-
 
 <style lang="less">
 .dataviz .viz.results {
   dl dt {
-      font-weight: bold;
-      display: inline;
-      text-align: center;
-      border-left: 3px solid rgb(0, 117, 188);
-      padding-left: 1rem;
-      font-size: 1.6rem;
+    font-weight: bold;
+    display: inline;
+    text-align: center;
+    border-left: 3px solid rgb(0, 117, 188);
+    padding-left: 1rem;
+    font-size: 1.6rem;
   }
 
   dl dd {
-    margin:2px 0;
+    margin: 2px 0;
     font-size: 1.4rem;
     display: inline;
   }
@@ -31,24 +32,20 @@
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
-import Component from './Component';
-import PartnersMixin from './mixins/Partners';
-
+import Component from "./Component";
+import PartnersMixin from "./mixins/Partners";
 
 export default Component.extend({
   type: "results",
 
-  mixins: [
-    PartnersMixin,
-  ],
+  mixins: [PartnersMixin],
 
   computed: {
     data() {
-      if (!this.hasData) return []
+      if (!this.hasData) return [];
 
       const dataset = this.filtered;
       const aggregated = {
@@ -84,42 +81,47 @@ export default Component.extend({
       const results = [];
       const num_DPP = aggregated.DPP_programmes.size();
       if (num_DPP > 0) {
-        results.push(
-          {
-            achievement: num_DPP,
-            indicator: this.singularize("programmes", num_DPP) + " with donor programme partners"
-          }
-        );
+        results.push({
+          achievement: num_DPP,
+          indicator:
+            this.singularize("programmes", num_DPP) +
+            " with donor programme partners",
+        });
       }
       const num_dpp = aggregated.dpp_projects.size();
       if (num_dpp > 0) {
-        results.push(
-          {
-            achievement: num_dpp,
-            indicator: this.singularize("projects", num_dpp) + " with donor project partners"
-          }
-        )
+        results.push({
+          achievement: num_dpp,
+          indicator:
+            this.singularize("projects", num_dpp) +
+            " with donor project partners",
+        });
       }
       const num_prg_dpp = aggregated.dpp_programmes.size();
       if (num_prg_dpp > 0) {
-        results.push(
-          {
-            achievement: num_prg_dpp,
-            indicator: this.singularize("programmes", num_prg_dpp) + " with donor project partners"
-          }
-        );
+        results.push({
+          achievement: num_prg_dpp,
+          indicator:
+            this.singularize("programmes", num_prg_dpp) +
+            " with donor project partners",
+        });
       }
       const num_prj_ended = aggregated.dpp_projects_ended.size();
       if (num_prj_ended) {
         results.push({
-          achievement: Math.round(100 * aggregated.dpp_projects_coop.size() / num_prj_ended),
-          unit: '%',
-          indicator: "of partnership projects will continue the cooperation."
+          achievement: Math.round(
+            (100 * aggregated.dpp_projects_coop.size()) / num_prj_ended
+          ),
+          unit: "%",
+          indicator: "of partnership projects will continue the cooperation.",
         });
         results.push({
-          achievement: Math.round(100 * aggregated.dpp_projects_improved.size() / num_prj_ended),
-          unit: '%',
-          indicator: "of partnership projects have resulted in improved knowledge and mutual understanding between the partners."
+          achievement: Math.round(
+            (100 * aggregated.dpp_projects_improved.size()) / num_prj_ended
+          ),
+          unit: "%",
+          indicator:
+            "of partnership projects have resulted in improved knowledge and mutual understanding between the partners.",
         });
       }
       return results;
@@ -128,9 +130,8 @@ export default Component.extend({
 
   methods: {
     format(v) {
-      return this.number(v)
+      return this.number(v);
     },
   },
-
 });
 </script>

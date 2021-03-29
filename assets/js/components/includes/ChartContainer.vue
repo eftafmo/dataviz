@@ -10,11 +10,11 @@
 -->
 
 <template>
-<div class="chart-container">
-  <!-- "the canvas trick": http://stackoverflow.com/a/30416241 -->
-  <canvas :width="width" :height="height" />
-  <slot />
-</div>
+  <div class="chart-container">
+    <!-- "the canvas trick": http://stackoverflow.com/a/30416241 -->
+    <canvas :width="width" :height="height" />
+    <slot />
+  </div>
 </template>
 
 <style lang="less">
@@ -22,7 +22,8 @@
   position: relative;
   width: 100%;
 
-  & > svg, & > canvas {
+  & > svg,
+  & > canvas {
     display: block;
     width: 100%;
   }

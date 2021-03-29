@@ -1,38 +1,33 @@
 <template>
-<sidebar :class="classNames" :embedded="embedded">
-  <xsummary
-      :initial="dataset"
-      :embedded="embedded"
-  ></xsummary>
+  <sidebar :class="classNames" :embedded="embedded">
+    <xsummary :initial="dataset" :embedded="embedded"></xsummary>
 
-  <tabs cache-lifetime="">
-    <tab name="News">
-      <news
+    <tabs cache-lifetime="">
+      <tab name="News">
+        <news
           class="sidebar-content"
           :initial="dataset"
           :embedded="embedded"
-      ></news>
-    </tab>
-    <tab name="Projects">
-      <projects
+        ></news>
+      </tab>
+      <tab name="Projects">
+        <projects
           class="sidebar-content"
           :initial="dataset"
           :details-datasource="projectsDatasource"
           :embedded="embedded"
-      ></projects>
-    </tab>
-  </tabs>
-</sidebar>
+        ></projects>
+      </tab>
+    </tabs>
+  </sidebar>
 </template>
 
-
 <script>
-import BaseSidebar from './BaseSidebar'
+import BaseSidebar from "./BaseSidebar";
 
-import Summary from './ProjectsSummary'
-import News from './ProjectsNews'
-import Projects from './Projects'
-
+import Summary from "./ProjectsSummary";
+import News from "./ProjectsNews";
+import Projects from "./Projects";
 
 export default BaseSidebar.extend({
   components: {
@@ -44,5 +39,5 @@ export default BaseSidebar.extend({
   props: {
     projectsDatasource: String,
   },
-})
+});
 </script>

@@ -1,17 +1,14 @@
-import * as d3 from 'd3';
-import debounce from 'lodash.debounce';
-
-import ChartContainer from '../includes/ChartContainer';
-
+import * as d3 from "d3";
+import debounce from "lodash.debounce";
+import ChartContainer from "../includes/ChartContainer";
 
 export default {
   components: {
-    'chart-container': ChartContainer,
+    "chart-container": ChartContainer,
   },
 
-  data: function() {
+  data: function () {
     return {
-
       // these are to be recomputed on any layout changes.
       // setting them explicitly to null, so things fail with a bang
       // if initialised too early
@@ -29,8 +26,9 @@ export default {
 
   created() {
     // replace this.render() with a debounced version
-    this.render = debounce(this.render,
-                           this.renderWait.min, {maxWait: this.renderWait.max});
+    this.render = debounce(this.render, this.renderWait.min, {
+      maxWait: this.renderWait.max,
+    });
 
     // do that to computeDimensions as well, because why not
     // (but allow it to be delayed indefinitely)
@@ -38,16 +36,16 @@ export default {
   },
 
   mounted() {
-    this.chart = d3.select(this.$el).select('.chart');
+    this.chart = d3.select(this.$el).select(".chart");
     const chart = this.chart.node();
     this.svg = chart.ownerSVGElement ? chart.ownerSVGElement : chart;
 
     this.computeDimensions();
-    window.addEventListener('resize', this.computeDimensions);
+    window.addEventListener("resize", this.computeDimensions);
   },
 
   beforeDestroy() {
-    window.removeEventListener('resize', this.computeDimensions);
+    window.removeEventListener("resize", this.computeDimensions);
   },
 
   methods: {
@@ -69,6 +67,5 @@ export default {
     render() {
       throw new Error("Not implemented");
     },
-
   },
 };

@@ -3,31 +3,27 @@
   -->
 
 <template>
-<ul class="fms">
-  <li
+  <ul class="fms">
+    <li
       v-for="fm in fms"
       class="fm"
-      :class="[
-        fm.id,
-        getFilterClassFm(fm),
-        { zero: fm.allocation == 0 },
-      ]"
+      :class="[fm.id, getFilterClassFm(fm), { zero: fm.allocation == 0 }]"
       @click="toggleFm(fm, $event.target)"
-  >
-    <slot name="fm-content" :fm="fm">
-      <span class="fill" :style="{backgroundColor: fm.colour}"></span>
-      {{ fm.name }}
-    </slot>
-  </li>
-</ul>
+      :key="fm.id"
+    >
+      <slot name="fm-content" :fm="fm">
+        <span class="fill" :style="{ backgroundColor: fm.colour }"></span>
+        {{ fm.name }}
+      </slot>
+    </li>
+  </ul>
 </template>
-
 
 <style lang="less">
 .legend {
   .fm {
     list-style-type: none;
-    @media(min-width: 800px){
+    @media (min-width: 800px) {
       margin-right: 2rem;
     }
 
@@ -43,26 +39,26 @@
       pointer-events: none;
     }
 
-    &.disabled, &.zero {
+    &.disabled,
+    &.zero {
       filter: grayscale(100%);
       opacity: 0.3;
     }
 
-    transition: all .5s ease;
+    transition: all 0.5s ease;
   }
 }
 </style>
 
-
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 export default Vue.extend({
-  props: ['fms'],
+  props: ["fms"],
 
   methods: {
     _findAncestorProperty(name) {
       let current = this,
-          property = undefined;
+        property = undefined;
 
       while (property === undefined) {
         current = current.$parent;
@@ -73,12 +69,12 @@ export default Vue.extend({
     },
 
     getFilterClassFm(fm) {
-      const func = this._findAncestorProperty('getFilterClassFm');
+      const func = this._findAncestorProperty("getFilterClassFm");
       return func(fm);
     },
 
     toggleFm(fm, etarget) {
-      const func = this._findAncestorProperty('toggleFm');
+      const func = this._findAncestorProperty("toggleFm");
       return func(fm, etarget);
     },
   },

@@ -1,42 +1,37 @@
 import axios from "axios";
 
+window.Footer = (function () {
+  var elFromMarkup = function (markup, selector) {
+    var content = document.createElement("div");
+    content.innerHTML = markup;
+    return content.querySelector(selector);
+  };
 
-window.Footer = (function() {
-
-  var elFromMarkup = function(markup, selector) {
-      var content = document.createElement('div');
-      content.innerHTML = markup;
-      return content.querySelector(selector);
-  }
-
-  var Backdrop = function(el, onHide) {
-
-    let hide = function() {
+  var Backdrop = function (el, onHide) {
+    let hide = function () {
       onHide ? onHide() : null;
-      el.style.zIndex = '';
-      el.style.display = '';
-      el.removeEventListener('click', hide, false);
-    }
+      el.style.zIndex = "";
+      el.style.display = "";
+      el.removeEventListener("click", hide, false);
+    };
 
-    let show = function() {
-      el.style.display = 'block';
-      el.style.zIndex = '200';
-      el.addEventListener('click', hide, false);
-    }
+    let show = function () {
+      el.style.display = "block";
+      el.style.zIndex = "200";
+      el.addEventListener("click", hide, false);
+    };
 
     return {
       show: show,
-      hide: hide
-    }
+      hide: hide,
+    };
+  };
 
-  }
+  var Popup = function (target, content) {
+    let elBackdrop = document.querySelector("#backdrop");
+    let el = document.createElement("div");
 
-  var Popup = function(target, content) {
-
-    let elBackdrop = document.querySelector('#backdrop');
-    let el = document.createElement('div');
-
-    el.className = 'modal-popup';
+    el.className = "modal-popup";
     el.innerHTML = `
       <button type="button" title="Close popup" class="no-btn close-btn">
         <span class="icon icon-cross"></span>
@@ -46,54 +41,54 @@ window.Footer = (function() {
 
     let backdrop;
 
-    let hideOnEsc = function(e) {
+    let hideOnEsc = function (e) {
       if (e.keyCode === 27) {
         backdrop.hide();
-        window.removeEventListener('keyup', hideOnEsc, false);
+        window.removeEventListener("keyup", hideOnEsc, false);
       }
-    }
+    };
 
-    var show = function() {
+    var show = function () {
       let modal = target.appendChild(el);
-      backdrop = Backdrop(elBackdrop, function() {
-        this.hide(target, modal)
-      }.bind(this));
+      backdrop = Backdrop(
+        elBackdrop,
+        function () {
+          this.hide(target, modal);
+        }.bind(this)
+      );
 
-      target.style.overflow = 'hidden';
+      target.style.overflow = "hidden";
 
       backdrop.show();
 
-      el.querySelector('button').addEventListener('click', backdrop.hide);
+      el.querySelector("button").addEventListener("click", backdrop.hide);
 
-      window.addEventListener('keyup', hideOnEsc, false);
-    }
+      window.addEventListener("keyup", hideOnEsc, false);
+    };
 
-    var hide = function(target, modal) {
+    var hide = function (target, modal) {
       target.removeChild(modal);
-      target.style.overflow = 'initial';
-    }
+      target.style.overflow = "initial";
+    };
 
     return {
       show: show,
-      hide: hide
-    }
-  }
+      hide: hide,
+    };
+  };
 
-  var popup = function(evt, el) {
+  var popup = function (evt, el) {
     evt.preventDefault();
 
-    axios.get(el.href)
-      .then(resp => {
-        let content = elFromMarkup(resp.data, '#content .main');
-        Popup(document.body, content).show();
-      });
+    axios.get(el.href).then((resp) => {
+      let content = elFromMarkup(resp.data, "#content .main");
+      Popup(document.body, content).show();
+    });
 
     return false;
-  }
+  };
 
   return {
-    popup: popup
-  }
-
-}());
-
+    popup: popup,
+  };
+})();

@@ -1,17 +1,13 @@
 <script>
-import StatesBarChart from './StatesBarChart';
+import StatesBarChart from "./StatesBarChart";
 
-import PartnersMixin from './mixins/Partners';
-import PartnersBarChartMixin from './mixins/PartnersBarChart';
-
+import PartnersMixin from "./mixins/Partners";
+import PartnersBarChartMixin from "./mixins/PartnersBarChart";
 
 export default StatesBarChart.extend({
   type: "donors",
 
-  mixins: [
-    PartnersMixin,
-    PartnersBarChartMixin,
-  ],
+  mixins: [PartnersMixin, PartnersBarChartMixin],
 
   data() {
     return {
@@ -29,36 +25,35 @@ export default StatesBarChart.extend({
           type: Object,
         },
       },
-    }
+    };
   },
 
   created() {
     // need to re-remove donors from filters, because it's re-added
     // by PartnersMixin. silly.
-    const col = "donor"
-    const idx = this.filter_by.indexOf(col)
-    if (idx !== -1)
-      this.filter_by.splice(idx, 1)
+    const col = "donor";
+    const idx = this.filter_by.indexOf(col);
+    if (idx !== -1) this.filter_by.splice(idx, 1);
   },
 
   computed: {
     STATES() {
-      return this.DONORS
+      return this.DONORS;
     },
 
     longestText() {
-      return this.longestDonor
+      return this.longestDonor;
     },
 
     clickFunc() {
-      return this.toggleDonor
+      return this.toggleDonor;
     },
   },
 
   methods: {
     handleFilterDonor() {
-      this.handleStateFilter()
+      this.handleStateFilter();
     },
-  }
+  },
 });
 </script>

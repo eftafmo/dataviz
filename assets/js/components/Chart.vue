@@ -15,25 +15,21 @@
 </style>
 
 <script>
-import * as d3 from 'd3';
-import debounce from 'lodash.debounce';
+import * as d3 from "d3";
 
-import Component from './Component';
-import ChartMixin from './mixins/Chart';
+import Component from "./Component";
+import ChartMixin from "./mixins/Chart";
 
-import Dropdown from './includes/DropdownFilter';
-
+import Dropdown from "./includes/DropdownFilter";
 
 const Chart = Component.extend({
-  mixins: [
-    ChartMixin,
-  ],
+  mixins: [ChartMixin],
 
   components: {
-    'dropdown': Dropdown,
+    dropdown: Dropdown,
   },
 
-  data: function() {
+  data: function () {
     return {
       // these need to be synced with each component's css
       // TODO: load them from a common json / less-file?
@@ -54,10 +50,10 @@ const Chart = Component.extend({
 
   methods: {
     _getClassNames() {
-      const names = this.$super(Chart, this)._getClassNames()
-      if (!this.rendered) names.push("rendering")
+      const names = this.$super(Chart, this)._getClassNames();
+      if (!this.rendered) names.push("rendering");
 
-      return names
+      return names;
     },
 
     main() {
@@ -80,12 +76,10 @@ const Chart = Component.extend({
 
     getTransition(duration) {
       // returns a transition that has 0 duration during first render
-      if (!this.rendered) duration = 0
+      if (!this.rendered) duration = 0;
       else if (duration === undefined) duration = this.duration;
 
-      return d3.transition()
-               .duration(duration)
-               .ease(d3.easeCubicOut)
+      return d3.transition().duration(duration).ease(d3.easeCubicOut);
     },
 
     // filters should re-render by default, unless specifically handled
@@ -93,7 +87,7 @@ const Chart = Component.extend({
       this.render();
     },
   },
-})
+});
 
-export default Chart
+export default Chart;
 </script>

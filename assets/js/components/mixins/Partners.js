@@ -1,4 +1,4 @@
-import {rgb} from 'd3';
+import { rgb } from "d3";
 
 export default {
   type: "is-partners",
@@ -6,8 +6,8 @@ export default {
   data() {
     return {
       colours: {
-        programmes: '#089900',
-        projects: '#e68a00',
+        programmes: "#089900",
+        projects: "#e68a00",
       },
       weak_colours: {
         programmes: rgb(8, 153, 0, 0.2),
@@ -17,12 +17,20 @@ export default {
   },
 
   created() {
-    this.filter_by.push('donor');
-    this.filter_by.push('DPP');
+    this.filter_by.push("donor");
+    this.filter_by.push("DPP");
 
     // not sure if this is needed
-    this.aggregate_on.push({source: 'donor', destination: 'donors', type: String});
+    this.aggregate_on.push({
+      source: "donor",
+      destination: "donors",
+      type: String,
+    });
     //this.aggregate_on.push({source: 'programme', destination: 'programmes', type: String});
-    this.aggregate_on.push({source: 'programmes', destination: 'programmes', type: Object});
+    this.aggregate_on.push({
+      source: "programmes",
+      destination: "programmes",
+      type: Object,
+    });
   },
 };

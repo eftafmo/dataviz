@@ -1,15 +1,11 @@
 <script>
-import Projects from './Projects'
-import Programmes from './Programmes'
-import PartnersMixin from './mixins/Partners'
-
+import Projects from "./Projects";
+import Programmes from "./Programmes";
+import PartnersMixin from "./mixins/Partners";
 
 const PartnersProgrammes = Programmes.extend({
-  mixins: [
-    PartnersMixin,
-  ],
-})
-
+  mixins: [PartnersMixin],
+});
 
 export default Projects.extend({
   components: {
@@ -19,7 +15,7 @@ export default Projects.extend({
   data() {
     return {
       extra: "is_dpp=True",
-    }
+    };
   },
-})
+});
 </script>

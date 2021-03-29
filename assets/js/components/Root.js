@@ -1,12 +1,8 @@
-import debounce from 'lodash.debounce';
-
-import Base from './Base';
-
-import Embeddor from './includes/Embeddor'
-
+import debounce from "lodash.debounce";
+import Base from "./Base";
+import Embeddor from "./includes/Embeddor";
 // access filters directly before they get bound, to avoid triggering handlers
-import {FILTERS, SCENARIOFILTERS} from './mixins/WithFilters'
-
+import { FILTERS, SCENARIOFILTERS } from "./mixins/WithFilters";
 
 function getURL(obj) {
   // obj must have a .href property.
@@ -19,16 +15,15 @@ function getURL(obj) {
 }
 
 function getScenario(url) {
-  const match = url.pathname.match(/^\/(\w+)?\/?$/)
-  if (!match) return null
+  const match = url.pathname.match(/^\/(\w+)?\/?$/);
+  if (!match) return null;
 
-  const scenario = match[1]
-  if (scenario === undefined) return "index"
+  const scenario = match[1];
+  if (scenario === undefined) return "index";
   // test if this is a known scenario
-  if (SCENARIOFILTERS[scenario] === undefined) return null
-  return scenario
+  if (SCENARIOFILTERS[scenario] === undefined) return null;
+  return scenario;
 }
-
 
 export default Base.extend({
   components: {
@@ -45,18 +40,18 @@ export default Base.extend({
   beforeCreate() {
     // set filters from querystring.
     const url = getURL(window.location),
-          params = url.searchParams,
-          scenario = getScenario(url)
-    const filters = SCENARIOFILTERS[scenario]
+      params = url.searchParams,
+      scenario = getScenario(url);
+    const filters = SCENARIOFILTERS[scenario];
     for (const name of filters) {
-      let param = params.get(name) || null
+      let param = params.get(name) || null;
       if (param) {
-        param = param.replace(/\+/g, ' ')
+        param = param.replace(/\+/g, " ");
       }
-      FILTERS[name] = param
+      FILTERS[name] = param;
     }
 
-    this.scenario = scenario
+    this.scenario = scenario;
   },
 
   created() {
@@ -65,24 +60,21 @@ export default Base.extend({
   },
 
   mounted() {
-    const vizcomps = []
+    const vizcomps = [];
     // recurse through all children to find those that are dataviz
-    let parent = this
 
     const recurse = (current) => {
       for (const comp of current.$children) {
-        if (comp.$options.isDataviz)
-          vizcomps.push(comp) // end of the road
-        else
-          recurse(comp) // not end of the road
+        if (comp.$options.isDataviz) vizcomps.push(comp);
+        // end of the road
+        else recurse(comp); // not end of the road
       }
-    }
+    };
 
-    recurse(this)
+    recurse(this);
 
-    this.vizcomponents = vizcomps
+    this.vizcomponents = vizcomps;
   },
-
 
   methods: {
     updateAnchors() {
@@ -90,7 +82,8 @@ export default Base.extend({
       let updater = this._debouncedUpdateAnchors;
       if (updater === undefined)
         updater = this._debouncedUpdateAnchors = debounce(
-          this._updateAnchors, 100
+          this._updateAnchors,
+          100
         );
 
       updater();
@@ -105,10 +98,10 @@ export default Base.extend({
 
         const url = getURL(a);
         if (url.origin !== location.origin) continue;
-        const scenario = getScenario(url)
-        if (!scenario) continue
+        const scenario = getScenario(url);
+        if (!scenario) continue;
 
-        this._updateURL(url, SCENARIOFILTERS[scenario])
+        this._updateURL(url, SCENARIOFILTERS[scenario]);
 
         a.href = url.href;
       }
@@ -123,8 +116,7 @@ export default Base.extend({
         // remove the param and add it back if necessary
         // (so we have a nice, predictable order. not OCD at all.)
         params.delete(name);
-        if (value)
-          params.set(name, value);
+        if (value) params.set(name, value);
       }
     },
 
