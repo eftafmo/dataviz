@@ -1,4 +1,4 @@
-FROM python:3.6-slim-buster AS frontend
+FROM python:3.9-slim-buster AS frontend
 
 ENV APP_HOME=/var/local/dataviz
 
@@ -20,7 +20,7 @@ ADD . $APP_HOME
 RUN NODE_ENV=production npm run build
 
 
-FROM python:3.6-slim-buster
+FROM python:3.9-slim-buster
 
 # roles:
 #   front - publishes ports to the world; this depends on run/docker-compose though...
