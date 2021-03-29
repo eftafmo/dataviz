@@ -13,7 +13,7 @@
                    v-for="(item, key) in data"
                    v-if="item != null"
                    @click="removeFilter(key)"
-                   :key="key">
+                   >
                {{item.name}}: {{item.value}}
               </li>
             </transition-group>

@@ -8,7 +8,7 @@
   <div v-if="hasData" class="legend">
     <slot name="legend" :data="data">
       <fm-legend :fms="data" class="clearfix">
-        <template slot="fm-content" scope="x">
+        <template slot="fm-content" slot-scope="x">
           <span class="value" :style="{color: x.fm.colour}">{{ currency(x.fm.allocation || 0) }}</span>
           <span class="name">{{ x.fm.name }}</span>
         </template>
@@ -92,6 +92,7 @@
 
 <script>
 import * as d3 from 'd3';
+import d3tip from 'd3-tip';
 import {colour2gray, slugify} from 'js/lib/util';
 
 import Chart from './Chart';
@@ -188,7 +189,7 @@ export default Chart.extend({
     createTooltip() {
       const $this = this;
 
-      let tip = d3.tip()
+      let tip = d3tip()
           .attr('class', 'dataviz-tooltip fms')
           .html(this.tooltipTemplate)
           .direction('s')

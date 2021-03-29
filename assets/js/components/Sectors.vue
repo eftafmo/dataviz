@@ -320,6 +320,7 @@
 
 <script>
 import * as d3 from 'd3';
+import d3tip from 'd3-tip';
 import debounce from 'lodash.debounce';
 import merge from 'lodash.merge';
 import {colour2gray, slugify} from 'js/lib/util';
@@ -691,7 +692,7 @@ export default Chart.extend({
 
     createTooltip() {
        // add tooltip
-      let tip = d3.tip()
+      let tip = d3tip()
           .attr('class', 'dataviz-tooltip sect')
           .html(this.tooltipTemplate)
           .offset([15,30])

@@ -1,6 +1,6 @@
 <template>
 <programmes :datasource="datasource" :initial="initial" class="projects">
-  <template slot="programme-content" scope="x">
+  <template slot="programme-content" slot-scope="x">
     <projects
         :details-datasource="detailsDatasource"
         :country="x.beneficiary.id"

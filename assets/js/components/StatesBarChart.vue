@@ -129,6 +129,7 @@
 
 <script>
 import * as d3 from 'd3';
+import d3tip from 'd3-tip';
 import {slugify} from 'js/lib/util';
 
 import Chart from './Chart';
@@ -437,7 +438,7 @@ export default Chart.extend({
     createTooltip() {
       const $this = this;
       // add tooltip
-      let tip = d3.tip()
+      let tip = d3tip()
           .attr('class', 'dataviz-tooltip state')
           .html(this.tooltipTemplate)
           .direction('n')

@@ -23,6 +23,7 @@
 
 <script>
 import * as d3 from 'd3'
+import d3tip from 'd3-tip';
 import {fmcolour} from './mixins/WithFMs'
 
 import Chart from './Chart'
@@ -126,7 +127,7 @@ export default Chart.extend({
     },
 
     createTooltip() {
-      let tip = d3.tip()
+      let tip = d3tip()
           .attr('class', 'dataviz-tooltip map')
           .html(this.tooltipTemplate)
           .direction('n')

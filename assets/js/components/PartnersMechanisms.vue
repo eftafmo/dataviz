@@ -1,7 +1,7 @@
 <template>
 <fms :datasource="datasource" :initial="initial">
   <template slot="title"><slot name="title"></slot></template>
-  <template slot="legend" scope="x">
+  <template slot="legend" slot-scope="x">
     <fm-legend :fms="x.data"></fm-legend>
   </template>
 </fms>
