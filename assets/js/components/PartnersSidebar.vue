@@ -32,7 +32,6 @@
 </sidebar>
 </template>
 
-
 <script>
 import BaseSidebar from './BaseSidebar'
 
@@ -41,16 +40,15 @@ import Results from './PartnersResults'
 import News from './PartnersNews'
 import Projects from './PartnersProjects'
 
-
 export default BaseSidebar.extend({
   components: {
     xsummary: Summary,
     results: Results,
     news: News,
-    projects: Projects,
+    projects: Projects
   },
   props: {
-    projectsDatasource: String,
-  },
+    projectsDatasource: String
+  }
 })
 </script>

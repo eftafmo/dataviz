@@ -3,17 +3,16 @@
   <label>NUTS level</label>
   <div>
     <input type="range"
-           :min="min" :max="max" :step="step"
-           v-model.number="level"
+      :min="min" :max="max" :step="step"
+      v-model.number="level"
     >
     <label
-        v-for="l in levels"
-        @click="level = l"
+      v-for="l in levels"
+      @click="level = l"
     >{{ l }}</label>
   </div>
 </div>
 </template>
-
 
 <style lang="less">
 .dataviz .nuts-selector {
@@ -80,43 +79,42 @@
 }
 </style>
 
-
 <script>
 export default {
   props: {
     levels: {
       type: Array,
-      default: () => [1, 2, 3],
+      default: () => [1, 2, 3]
     },
 
     value: {
       type: Number,
-      default: 3,
-    },
+      default: 3
+    }
   },
 
-  data() {
+  data () {
     return {
-      level: this.value,
-    };
+      level: this.value
+    }
   },
 
   computed: {
-    min() {
-      return this.levels[0];
+    min () {
+      return this.levels[0]
     },
-    max() {
-      return this.levels[this.levels.length - 1];
+    max () {
+      return this.levels[this.levels.length - 1]
     },
-    step() {
-      return this.levels[1] - this.levels[0];
-    },
+    step () {
+      return this.levels[1] - this.levels[0]
+    }
   },
 
   watch: {
-    level(v) {
-      this.$emit("input", v);
-    },
-  },
-};
+    level (v) {
+      this.$emit('input', v)
+    }
+  }
+}
 </script>

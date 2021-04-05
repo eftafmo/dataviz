@@ -1,11 +1,11 @@
 export default {
-  data() {
+  data () {
     return {
-      is_mounted: false,
+      is_mounted: false
     }
   },
 
-  mounted() {
+  mounted () {
     this.is_mounted = true
-  },
+  }
 }

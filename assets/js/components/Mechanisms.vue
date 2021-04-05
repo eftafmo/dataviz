@@ -18,7 +18,6 @@
 </div>
 </template>
 
-
 <style lang="less">
 .dataviz .viz.fms {
   position: relative;
@@ -89,84 +88,81 @@
 
 </style>
 
-
 <script>
-import * as d3 from 'd3';
-import {colour2gray, slugify} from 'js/lib/util';
+import * as d3 from 'd3'
+import { colour2gray, slugify } from 'js/lib/util'
 
-import Chart from './Chart';
+import Chart from './Chart'
 
-import WithFMsMixin from './mixins/WithFMs';
-import WithTooltipMixin from './mixins/WithTooltip';
-
+import WithFMsMixin from './mixins/WithFMs'
+import WithTooltipMixin from './mixins/WithTooltip'
 
 export default Chart.extend({
-  type: "fms",
+  type: 'fms',
 
   mixins: [
     WithFMsMixin,
-    WithTooltipMixin,
+    WithTooltipMixin
   ],
 
   props: {
     disabled_colour: {
       type: String,
-      default: "#ccc",
-    },
+      default: '#ccc'
+    }
   },
 
-  created() {
+  created () {
     // don't filter by fm
-    const idx = this.filter_by.indexOf("fm");
+    const idx = this.filter_by.indexOf('fm')
 
-    if (idx !== -1)
-      this.filter_by.splice(idx, 1);
+    if (idx !== -1) { this.filter_by.splice(idx, 1) }
   },
 
-  data() {
+  data () {
     return {
       aggregate_by: [
-        {source: 'fm', destination: 'name'}
+        { source: 'fm', destination: 'name' }
       ],
 
-      inactive_opacity: .7,
-    };
+      inactive_opacity: 0.7
+    }
   },
 
   computed: {
-    data() {
-      const aggregated = this.aggregated;
+    data () {
+      const aggregated = this.aggregated
 
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
-      const out = [];
+      const out = []
       for (const fm in this.FMS) {
-        const basefm = this.FMS[fm];
-        let item = aggregated[basefm.name];
+        const basefm = this.FMS[fm]
+        let item = aggregated[basefm.name]
 
         if (item === undefined) {
           // mirror an existing object
-          item = {};
-          const sample = d3.values(aggregated)[0];
-          for (var k in sample) {
-            item[k] = sample[k].constructor();
+          item = {}
+          const sample = d3.values(aggregated)[0]
+          for (const k in sample) {
+            item[k] = sample[k].constructor()
           }
         }
 
-        Object.assign(item, basefm);
-        out.push(item);
+        Object.assign(item, basefm)
+        out.push(item)
       }
 
-      return out;
+      return out
     },
 
-    nonzero() {
-      return this.data.filter( (d) => d.allocation != 0 );
-    },
+    nonzero () {
+      return this.data.filter((d) => d.allocation !== 0)
+    }
   },
 
   methods: {
-    tooltipTemplate(d) {
+    tooltipTemplate (d) {
       return `
         <div class="title-container">
           <span class="name">${d.name}</span>
@@ -176,90 +172,90 @@ export default Chart.extend({
         </div>
         <ul>
           <li>${this.currency(d.allocation)}</li>
-          <li>${d.beneficiaries.size()} `+  this.singularize(`beneficiary states`, d.beneficiaries.size()) + `</li>
-          <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-          <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
-          <li>${d.programmes.size()}  `+  this.singularize(`programmes`, d.programmes.size()) + `</li>
+          <li>${d.beneficiaries.size()} ` + this.singularize('beneficiary states', d.beneficiaries.size()) + `</li>
+          <li>${d.sectors.size()} ` + this.singularize('sectors', d.sectors.size()) + `</li>
+          <li>${d.areas.size()} ` + this.singularize('programme areas', d.areas.size()) + `</li>
+          <li>${d.programmes.size()}  ` + this.singularize('programmes', d.programmes.size()) + `</li>
         </ul>
         <span class="action">Click to filter by financial mechanism</span>
-      `;
+      `
     },
 
-    createTooltip() {
-      const $this = this;
+    createTooltip () {
+      const tip = d3.tip()
+        .attr('class', 'dataviz-tooltip fms')
+        .html(this.tooltipTemplate)
+        .direction('s')
+        .offset([0, 0])
 
-      let tip = d3.tip()
-          .attr('class', 'dataviz-tooltip fms')
-          .html(this.tooltipTemplate)
-          .direction('s')
-          .offset([0, 0])
-
-       this.tip = tip;
-       this.chart.call(this.tip)
+      this.tip = tip
+      this.chart.call(this.tip)
     },
 
-    renderChart() {
-      const $this = this,
-            chart = this.chart;
+    renderChart () {
+      const $this = this
+      const chart = this.chart
 
-      const t = this.getTransition();
+      const t = this.getTransition()
 
       // we always use width 100, because viewBox and preserveAspectRatio=none
-      const width = 100;
+      const width = 100
 
       const x = d3.scaleLinear()
-          .rangeRound([0, width])
-          .domain([0, d3.sum(this.data.map( (d) => d.allocation ))]);
+        .rangeRound([0, width])
+        .domain([0, d3.sum(this.data.map((d) => d.allocation))])
 
-      const fms = chart.selectAll("g.fm")
-                       .data(this.data, (d) => d.id );
-      const fentered = fms.enter().append("g")
-                          .attr("class", (d) => "fm " + d.id );
+      const fms = chart.selectAll('g.fm')
+        .data(this.data, (d) => d.id)
+      const fentered = fms.enter().append('g')
+        .attr('class', (d) => 'fm ' + d.id)
       fentered
         .call(this.renderColours)
-      .append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("height", "100%")
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('height', '100%')
         // start with a 0-width so we transition this during enter too
-        //.attr("width", (d) => x(d.allocation) )
-        .attr("width", 0)
-        .attr("transform", (d, i) => {
+        // .attr("width", (d) => x(d.allocation) )
+        .attr('width', 0)
+        .attr('transform', (d, i) => {
           // draw the second bar from right to left
-          if (i == 1) return (
+          if (i === 1) {
+            return (
             `scale(-1,1) translate(-${width},0)`
-          );
+            )
+          }
         })
-        .on("click", function (d) {
-          $this.toggleFm(d, this);
+        .on('click', function (d) {
+          $this.toggleFm(d, this)
         })
-        .on("mouseenter", this.tip.show)
-        .on("mouseleave", this.tip.hide)
+        .on('mouseenter', this.tip.show)
+        .on('mouseleave', this.tip.hide)
 
         .transition(t)
-        .attr("width", (d) => x(d.allocation) );
+        .attr('width', (d) => x(d.allocation))
 
-      fms.select("rect")
+      fms.select('rect')
         .transition(t)
-        .attr("width", (d) => x(d.allocation) );
+        .attr('width', (d) => x(d.allocation))
     },
 
-    renderColours(selection) {
+    renderColours (selection) {
       selection
-        .attr("fill", (d) => (
-          this.isDisabledFm(d) ?
-          colour2gray(d.colour, this.inactive_opacity) :
-          d.colour
-        ) );
+        .attr('fill', (d) => (
+          this.isDisabledFm(d)
+            ? colour2gray(d.colour, this.inactive_opacity)
+            : d.colour
+        ))
     },
 
-    handleFilterFm(val, old) {
+    handleFilterFm (val, old) {
       // transition the chart to disabled / selected.
       // (the legend is handled by vue.)
-      this.chart.selectAll("g.fm")
-          .transition(this.getTransition())
-          .call(this.renderColours);
-    },
-  },
-});
+      this.chart.selectAll('g.fm')
+        .transition(this.getTransition())
+        .call(this.renderColours)
+    }
+  }
+})
 </script>

@@ -3,23 +3,21 @@ import Projects from './Projects'
 import Programmes from './Programmes'
 import PartnersMixin from './mixins/Partners'
 
-
 const PartnersProgrammes = Programmes.extend({
   mixins: [
-    PartnersMixin,
-  ],
+    PartnersMixin
+  ]
 })
-
 
 export default Projects.extend({
   components: {
-    programmes: PartnersProgrammes,
+    programmes: PartnersProgrammes
   },
 
-  data() {
+  data () {
     return {
-      extra: "is_dpp=True",
+      extra: 'is_dpp=True'
     }
-  },
+  }
 })
 </script>

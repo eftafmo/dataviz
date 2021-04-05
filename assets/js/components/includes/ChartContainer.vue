@@ -41,7 +41,7 @@
 export default {
   props: {
     width: Number,
-    height: Number,
-  },
-};
+    height: Number
+  }
+}
 </script>

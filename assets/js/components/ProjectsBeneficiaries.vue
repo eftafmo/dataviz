@@ -1,45 +1,44 @@
 <script>
-import Beneficiaries from './Beneficiaries';
-import ProjectsMixin from './mixins/Projects';
+import Beneficiaries from './Beneficiaries'
+import ProjectsMixin from './mixins/Projects'
 
-import Legend from './includes/Legend';
-
+import Legend from './includes/Legend'
 
 export default Beneficiaries.extend({
   mixins: [
-    ProjectsMixin,
+    ProjectsMixin
   ],
 
-  data() {
+  data () {
     return {
     }
   },
 
   computed: {
-    legendFormatFunc() {
-      return v => this.number(v) + " " + this.pluralize("project", v)
-    },
+    legendFormatFunc () {
+      return v => this.number(v) + ' ' + this.pluralize('project', v)
+    }
   },
 
   methods: {
-    valuefunc(item, fm) {
+    valuefunc (item, fm) {
       fm = this.FMS[fm]
       return this.isDisabledFm(fm) ? 0 : (item[fm.name] ? item[fm.name].project_allocation : 0)
     },
 
-    totalvaluefunc(v) {
+    totalvaluefunc (v) {
       return v ? v.project_count : 0
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate (d) {
       // TODO: oh my, the copy-paste. it hurts.
       const data = d.data
-                    .filter( (x) => x.value != 0 );
+        .filter((x) => x.value !== 0)
       const datatxt = data
-        .map( (x) => `
-            <ul>${ x.name } : ${ this.number(d[x.name].project_count) } projects</ul>
-        ` )
-        .join("");
+        .map((x) => `
+            <ul>${x.name} : ${this.number(d[x.name].project_count)} projects</ul>
+        `)
+        .join('')
 
       return `
         <div class="title-container">
@@ -48,9 +47,9 @@ export default Beneficiaries.extend({
           </svg>
           <span class="name">${d.name}</span>
         </div>
-        <ul> ${ datatxt } </ul>
-        <span class="action">Click to filter by beneficiary state</span>`;
-    },
+        <ul> ${datatxt} </ul>
+        <span class="action">Click to filter by beneficiary state</span>`
+    }
   }
-});
+})
 </script>

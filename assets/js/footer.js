@@ -1,76 +1,71 @@
-import axios from "axios";
+import axios from 'axios'
 
-
-window.Footer = (function() {
-
-  var elFromMarkup = function(markup, selector) {
-      var content = document.createElement('div');
-      content.innerHTML = markup;
-      return content.querySelector(selector);
+window.Footer = (function () {
+  const elFromMarkup = function (markup, selector) {
+    const content = document.createElement('div')
+    content.innerHTML = markup
+    return content.querySelector(selector)
   }
 
-  var Backdrop = function(el, onHide) {
-
-    let hide = function() {
-      onHide ? onHide() : null;
-      el.style.zIndex = '';
-      el.style.display = '';
-      el.removeEventListener('click', hide, false);
+  const Backdrop = function (el, onHide) {
+    const hide = function () {
+      onHide ? onHide() : null
+      el.style.zIndex = ''
+      el.style.display = ''
+      el.removeEventListener('click', hide, false)
     }
 
-    let show = function() {
-      el.style.display = 'block';
-      el.style.zIndex = '200';
-      el.addEventListener('click', hide, false);
+    const show = function () {
+      el.style.display = 'block'
+      el.style.zIndex = '200'
+      el.addEventListener('click', hide, false)
     }
 
     return {
       show: show,
       hide: hide
     }
-
   }
 
-  var Popup = function(target, content) {
+  const Popup = function (target, content) {
+    const elBackdrop = document.querySelector('#backdrop')
+    const el = document.createElement('div')
 
-    let elBackdrop = document.querySelector('#backdrop');
-    let el = document.createElement('div');
-
-    el.className = 'modal-popup';
+    el.className = 'modal-popup'
     el.innerHTML = `
       <button type="button" title="Close popup" class="no-btn close-btn">
         <span class="icon icon-cross"></span>
       </button>
       <div class="content">${content.innerHTML}</div>
-    `;
+    `
 
-    let backdrop;
+    let backdrop
 
-    let hideOnEsc = function(e) {
+    const hideOnEsc = function (e) {
       if (e.keyCode === 27) {
-        backdrop.hide();
-        window.removeEventListener('keyup', hideOnEsc, false);
+        backdrop.hide()
+        window.removeEventListener('keyup', hideOnEsc, false)
       }
     }
 
-    var show = function() {
-      let modal = target.appendChild(el);
-      backdrop = Backdrop(elBackdrop, function() {
+    const show = function () {
+      const modal = target.appendChild(el)
+      backdrop = Backdrop(elBackdrop, function () {
         this.hide(target, modal)
-      }.bind(this));
+      }.bind(this))
 
-      target.style.overflow = 'hidden';
+      target.style.overflow = 'hidden'
 
-      backdrop.show();
+      backdrop.show()
 
-      el.querySelector('button').addEventListener('click', backdrop.hide);
+      el.querySelector('button').addEventListener('click', backdrop.hide)
 
-      window.addEventListener('keyup', hideOnEsc, false);
+      window.addEventListener('keyup', hideOnEsc, false)
     }
 
-    var hide = function(target, modal) {
-      target.removeChild(modal);
-      target.style.overflow = 'initial';
+    const hide = function (target, modal) {
+      target.removeChild(modal)
+      target.style.overflow = 'initial'
     }
 
     return {
@@ -79,21 +74,19 @@ window.Footer = (function() {
     }
   }
 
-  var popup = function(evt, el) {
-    evt.preventDefault();
+  const popup = function (evt, el) {
+    evt.preventDefault()
 
     axios.get(el.href)
       .then(resp => {
-        let content = elFromMarkup(resp.data, '#content .main');
-        Popup(document.body, content).show();
-      });
+        const content = elFromMarkup(resp.data, '#content .main')
+        Popup(document.body, content).show()
+      })
 
-    return false;
+    return false
   }
 
   return {
     popup: popup
   }
-
-}());
-
+}())

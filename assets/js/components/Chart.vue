@@ -15,25 +15,24 @@
 </style>
 
 <script>
-import * as d3 from 'd3';
-import debounce from 'lodash.debounce';
+import * as d3 from 'd3'
+import debounce from 'lodash.debounce'
 
-import Component from './Component';
-import ChartMixin from './mixins/Chart';
+import Component from './Component'
+import ChartMixin from './mixins/Chart'
 
-import Dropdown from './includes/DropdownFilter';
-
+import Dropdown from './includes/DropdownFilter'
 
 const Chart = Component.extend({
   mixins: [
-    ChartMixin,
+    ChartMixin
   ],
 
   components: {
-    'dropdown': Dropdown,
+    dropdown: Dropdown
   },
 
-  data: function() {
+  data: function () {
     return {
       // these need to be synced with each component's css
       // TODO: load them from a common json / less-file?
@@ -42,57 +41,57 @@ const Chart = Component.extend({
       // alternate
       short_duration: 200,
 
-      chart_rendered: false,
-    };
+      chart_rendered: false
+    }
   },
 
   computed: {
-    rendered() {
-      return this.chart_rendered;
-    },
+    rendered () {
+      return this.chart_rendered
+    }
   },
 
   methods: {
-    _getClassNames() {
+    _getClassNames () {
       const names = this.$super(Chart, this)._getClassNames()
-      if (!this.rendered) names.push("rendering")
+      if (!this.rendered) names.push('rendering')
 
       return names
     },
 
-    main() {
+    main () {
       // we need to do the rendering during next tick only,
       // to allow ChartMixin.computeDimensions() to do its work
-      this.$nextTick(this.render);
+      this.$nextTick(this.render)
     },
 
     // this is automatically debounced by the ChartMixin
-    render(initial) {
+    render (initial) {
       // TODO: this smells like a bug-maker
-      if (initial) this.chart_rendered = false;
-      this.renderChart();
-      this.chart_rendered = true;
+      if (initial) this.chart_rendered = false
+      this.renderChart()
+      this.chart_rendered = true
     },
 
-    renderChart() {
-      throw new Error("Not implemented");
+    renderChart () {
+      throw new Error('Not implemented')
     },
 
-    getTransition(duration) {
+    getTransition (duration) {
       // returns a transition that has 0 duration during first render
       if (!this.rendered) duration = 0
-      else if (duration === undefined) duration = this.duration;
+      else if (duration === undefined) duration = this.duration
 
       return d3.transition()
-               .duration(duration)
-               .ease(d3.easeCubicOut)
+        .duration(duration)
+        .ease(d3.easeCubicOut)
     },
 
     // filters should re-render by default, unless specifically handled
-    handleFilter() {
-      this.render();
-    },
-  },
+    handleFilter () {
+      this.render()
+    }
+  }
 })
 
 export default Chart

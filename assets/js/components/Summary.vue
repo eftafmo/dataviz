@@ -12,7 +12,6 @@
   </div>
 </template>
 
-
 <style lang="less">
 .dataviz .viz.summary {
   position: relative;
@@ -64,22 +63,20 @@
 
 </style>
 
-
 <script>
-import Component from './Component';
-
+import Component from './Component'
 
 export default Component.extend({
-  type: "summary",
+  type: 'summary',
 
-  data() {
+  data () {
     return {
-      transitioned: false,
+      transitioned: false
     }
   },
 
   computed: {
-    data() {
+    data () {
       if (!this.hasData) return {}
 
       const out = this.aggregate(
@@ -87,13 +84,13 @@ export default Component.extend({
         [],
         [
           'allocation',
-          'bilateral_allocation',
+          'bilateral_allocation'
         ],
         false
-      );
+      )
 
-      return out;
-    },
-  },
-});
+      return out
+    }
+  }
+})
 </script>

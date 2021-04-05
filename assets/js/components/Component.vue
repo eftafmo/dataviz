@@ -25,20 +25,18 @@
 
 </style>
 
-
 <script>
 import Vue from 'vue'
 import Base from './Base'
 
 import ComponentMixin from './mixins/Component'
 
-import {FILTERS} from './mixins/WithFilters'
-
+import { FILTERS } from './mixins/WithFilters'
 
 export default Base.extend({
   // set this on a derived component to build a "type tree".
   // useful for component class names.
-  type: "viz",
+  type: 'viz',
 
   isDataviz: true,
 
@@ -48,19 +46,19 @@ export default Base.extend({
     datasource: String,
     period: {
       type: String,
-      default: "2009–2014",
+      default: '2009–2014'
     },
     embedded: {
       type: Boolean,
-      default: false,
+      default: false
     },
     opts: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
 
-  beforeCreate() {
+  beforeCreate () {
     // set filter values from opts.
     // do it before filters get bound, to avoid triggering handlers.
     const opts = this.$options.propsData.opts
@@ -74,28 +72,27 @@ export default Base.extend({
   },
 
   computed: {
-    classNames() {
+    classNames () {
       if (!this.isReady) return []
       return this._getClassNames()
-    },
+    }
   },
 
   methods: {
-    _getClassNames() {
+    _getClassNames () {
       const names = this.$options.type.split()
-      if (this.embedded) names.push("embedded")
+      if (this.embedded) names.push('embedded')
 
       return names
-    },
-  },
+    }
+  }
 })
-
 
 // concatenate the type values
 Vue.config.optionMergeStrategies.type = function (previous, current) {
   if (!previous) return current
   if (!current) return previous
 
-  return previous + " " + current
+  return previous + ' ' + current
 }
 </script>

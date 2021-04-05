@@ -27,12 +27,12 @@ export default {
     }
   },
   methods: {
-    dismiss: function(event) {
-      this.$emit('dismiss');
+    dismiss: function (event) {
+      this.$emit('dismiss')
       // console.log('this', this);
       // console.log('event', event);
       // alert('dismiss tag');
     }
   }
-};
+}
 </script>

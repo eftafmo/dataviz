@@ -150,47 +150,44 @@
 </style>
 
 <script>
-import Vue from 'vue';
-import * as d3 from 'd3';
-import * as topojson from 'topojson-client';
+import Vue from 'vue'
+import * as d3 from 'd3'
+import * as topojson from 'topojson-client'
 
 import BaseMixin from '../mixins/Base'
-import ChartMixin from '../mixins/Chart';
-import {COUNTRIES, default as WithCountriesMixin} from '../mixins/WithCountries';
+import ChartMixin from '../mixins/Chart'
+import { COUNTRIES, default as WithCountriesMixin } from '../mixins/WithCountries'
 
-import ChartContainer from './ChartContainer';
-
+import ChartContainer from './ChartContainer'
 
 // TODO: pass these through webpack maybe?
-const LAYERS_URL = "/assets/data/layers.topojson";
-const REGIONS_URL = "/assets/data/nuts2006.topojson";
+const LAYERS_URL = '/assets/data/layers.topojson'
+const REGIONS_URL = '/assets/data/nuts2006.topojson'
 
-
-function _mk_topo_funcs(data) {
-  const layers = data.objects;
+function _mk_topo_funcs (data) {
+  const layers = data.objects
 
   return {
-    mesh(layer, filter) {
-      return topojson.mesh(data, layers[layer], filter);
+    mesh (layer, filter) {
+      return topojson.mesh(data, layers[layer], filter)
     },
 
-    features(layer) {
-      return topojson.feature(data, layers[layer]).features;
-    },
-  };
+    features (layer) {
+      return topojson.feature(data, layers[layer]).features
+    }
+  }
 }
-
 
 export default Vue.extend({
   mixins: [
     BaseMixin, ChartMixin,
-    WithCountriesMixin,
+    WithCountriesMixin
   ],
 
   props: {
     origin: {
       type: String,
-      default: "",
+      default: ''
     },
 
     // a combination of states / levels that should be rendered by default.
@@ -198,19 +195,19 @@ export default Vue.extend({
     // a missing key will cause all_states / all_levels to get rendered
     initial_regions: {
       type: Array,
-      default: () => [{}],
+      default: () => [{}]
     },
 
     // all states used by this. set it to discard unused data.
     all_states: {
       type: Array,
-      default: () => Object.keys(COUNTRIES).filter(x => x != "Intl"),
+      default: () => Object.keys(COUNTRIES).filter(x => x != 'Intl')
     },
 
     // all nuts levels used by this. set it to discard unused data.
     all_levels: {
       type: Array,
-      default: () => [0, 1, 2, 3],
+      default: () => [0, 1, 2, 3]
     },
 
     fillfunc: {
@@ -225,11 +222,11 @@ export default Vue.extend({
 
     zoomable: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
 
-  data() {
+  data () {
     return {
       base_loaded: false,
       regions_loaded: false,
@@ -240,42 +237,43 @@ export default Vue.extend({
       width: 800,
       height: 800,
 
-      zoom_padding: .1,
+      zoom_padding: 0.1,
 
       terrain_stroke_width: 0.8,
       region_stroke_width: 0.2,
       graticule_stroke_width: 0.2,
 
-      LI_zoom_factor: 5,
-    };
+      LI_zoom_factor: 5
+    }
   },
 
   computed: {
-    LAYERS_URL() {
-      return this.origin + LAYERS_URL;
+    LAYERS_URL () {
+      return this.origin + LAYERS_URL
     },
-    REGIONS_URL() {
-      return this.origin + REGIONS_URL;
+    REGIONS_URL () {
+      return this.origin + REGIONS_URL
     },
 
-    rendered() {
+    rendered () {
       return this.base_rendered && this.regions_rendered
     },
 
-    can_render_base() {
+    can_render_base () {
       return this.base_loaded && this.is_mounted
     },
 
-    can_render_regions() {
+    can_render_regions () {
       return this.regions_loaded && this.is_mounted
     },
 
-    donor_colour_no() {
-      return this.norway_colour !== undefined ?
-             this.norway_colour : this.donor_colour;
+    donor_colour_no () {
+      return this.norway_colour !== undefined
+        ? this.norway_colour
+        : this.donor_colour
     },
 
-    projection() {
+    projection () {
       /*
        * "The European grid is a proposed, multipurpose Pan-European mapping standard.
        *  It is based on the ETRS89 Lambert Azimuthal Equal-Area projection coordinate
@@ -289,38 +287,38 @@ export default Vue.extend({
 
       // not precisely to spec, but fits everything
       return d3.geoAzimuthalEqualArea()
-               .rotate([-9.9, -53.33, 0])
-               .scale(1215)
-               .translate([this.width/2.455, this.height/1.9975]);
+        .rotate([-9.9, -53.33, 0])
+        .scale(1215)
+        .translate([this.width / 2.455, this.height / 1.9975])
     },
 
-    path() {
-      return d3.geoPath().projection(this.projection);
-    },
+    path () {
+      return d3.geoPath().projection(this.projection)
+    }
   },
 
-  created() {
+  created () {
     // initialise here things that we don't want obeserved:
     // - cache for computed geofeature-related data
-    this.geodetails = {};
+    this.geodetails = {}
     // - placeholders for fetched topojson data
     this.geodata = {
       layers: null,
-      regions: null,
-    };
+      regions: null
+    }
     // - remember what got rendered
     this._rendered_regions = []
     // - this will be updated real-time, don't make it observable
-    this.current_zoom = 1;
+    this.current_zoom = 1
 
     // trigger base & initial region rendering.
     // these will only run once, when the watched things go false -> true.
-    const _base_unwatch = this.$watch("can_render_base", v => {
+    const _base_unwatch = this.$watch('can_render_base', v => {
       this.renderBase()
       _base_unwatch()
     })
 
-    const _regions_unwatch = this.$watch("can_render_regions", v => {
+    const _regions_unwatch = this.$watch('can_render_regions', v => {
       for (const x of this.initial_regions) {
         this.renderRegions(x.states, x.levels)
       }
@@ -329,13 +327,13 @@ export default Vue.extend({
 
     // aaand we can start fetching data already
     d3.json(this.LAYERS_URL, (error, data) => {
-      if (error) throw error;
-      this.geodata.layers = data;
+      if (error) throw error
+      this.geodata.layers = data
       this.base_loaded = true
-    });
+    })
 
     d3.json(this.REGIONS_URL, (error, data) => {
-      if (error) throw error;
+      if (error) throw error
 
       // discard unused level data
       Object.keys(data.objects).filter(
@@ -346,41 +344,41 @@ export default Vue.extend({
 
       this.geodata.regions = data
       this.regions_loaded = true
-    });
+    })
   },
 
-  mounted() {
+  mounted () {
     // create a stylesheet for dynamic changes
-    this.stylesheet = document.createElement("style");
-    this.$el.appendChild(this.stylesheet);
+    this.stylesheet = document.createElement('style')
+    this.$el.appendChild(this.stylesheet)
 
-    //this.updateStyle(); // this is already triggered by the watched chartWidth
+    // this.updateStyle(); // this is already triggered by the watched chartWidth
   },
 
   methods: {
-    getZoomPadding(id) {
+    getZoomPadding (id) {
       // double the zoom padding for lower levels
       return this.zoom_padding * (id.length == 2 ? 1 : 2)
     },
 
-    cacheGeoDetails(d) {
-      const path = this.path;
+    cacheGeoDetails (d) {
+      const path = this.path
 
-      const centroid = path.centroid(d),
-            bounds = path.bounds(d);
+      const centroid = path.centroid(d)
+      const bounds = path.bounds(d)
 
       // bounds are an array of [x0, y0], [x1, y1]
-      const x1 = bounds[0][0],
-            x2 = bounds[1][0],
+      const x1 = bounds[0][0]
+      const x2 = bounds[1][0]
 
-            y1 = bounds[0][1],
-            y2 = bounds[1][1],
+      const y1 = bounds[0][1]
+      const y2 = bounds[1][1]
 
-            dx = x2 - x1,
-            dy = y2 - y1,
+      const dx = x2 - x1
+      const dy = y2 - y1
 
-            cx = (x1 + x2) / 2,
-            cy = (y1 + y2) / 2;
+      const cx = (x1 + x2) / 2
+      const cy = (y1 + y2) / 2
 
       this.geodetails[d.id] = {
 
@@ -391,56 +389,56 @@ export default Vue.extend({
 
         center: {
           x: cx,
-          y: cy,
+          y: cy
         },
 
         centroid: {
           x: centroid[0],
-          y: centroid[1],
-        },
-      };
+          y: centroid[1]
+        }
+      }
 
-      if (!this.zoomable) return;
+      if (!this.zoomable) return
       // since we're at this, let's calculate the zoom transform data too
-      const w = this.width,
-            h = this.height,
+      const w = this.width
+      const h = this.height
 
-            spacing = Math.min(w, h) * this.getZoomPadding(d.id),
+      const spacing = Math.min(w, h) * this.getZoomPadding(d.id)
 
-            k = Math.min((w - spacing) / dx,
-                         (h - spacing) / dy),
+      const k = Math.min((w - spacing) / dx,
+        (h - spacing) / dy)
 
-            x = w / 2 - cx * k,
-            y = h / 2 - cy * k;
+      const x = w / 2 - cx * k
+      const y = h / 2 - cy * k
 
       this.geodetails[d.id].transform = {
         x: x,
         y: y,
-        k: k,
-      };
+        k: k
+      }
     },
 
-    renderBase() {
+    renderBase () {
       if (!this.can_render_base) {
-        console.error("This should never happen, really")
+        console.error('This should never happen, really')
         return
       }
 
-      const topo = _mk_topo_funcs(this.geodata.layers);
+      const topo = _mk_topo_funcs(this.geodata.layers)
 
-      const base = this.chart.select('.base'),
-            terrain = this.chart.select('.terrain'),
-            top = this.chart.select('.top'),
+      const base = this.chart.select('.base')
+      const terrain = this.chart.select('.terrain')
+      const top = this.chart.select('.top')
 
-            path = this.path;
+      const path = this.path
 
-      base.select(".sphere")
-          .datum({ type: "Sphere" })
-          .attr("d", path);
+      base.select('.sphere')
+        .datum({ type: 'Sphere' })
+        .attr('d', path)
 
-      base.select(".graticule")
-          .datum(d3.geoGraticule())
-          .attr("d", path);
+      base.select('.graticule')
+        .datum(d3.geoGraticule())
+        .attr('d', path)
 
       // handle the layers. they are:
       // - framemalta
@@ -452,21 +450,21 @@ export default Vue.extend({
 
       // the frames need to be drawn twice, because
       const _framedata = [
-        topo.mesh("framemalta"),
-        topo.mesh("frameremote"),
-      ];
+        topo.mesh('framemalta'),
+        topo.mesh('frameremote')
+      ]
       for (const sel of [base, top]) {
-        sel.select(".frames").selectAll("path")
-           .data(_framedata)
-           .enter()
-           .append("path")
-           .attr("d", path);
+        sel.select('.frames').selectAll('path')
+          .data(_framedata)
+          .enter()
+          .append('path')
+          .attr('d', path)
       }
 
       // coastlines get drawn as a mesh
-      terrain.select(".coastline")
-             .datum(topo.mesh("coasts"))
-             .attr("d", path);
+      terrain.select('.coastline')
+        .datum(topo.mesh('coasts'))
+        .attr('d', path)
 
       // countries are filled
       // TODO: it's useless to use countries here, because the real remote
@@ -474,66 +472,66 @@ export default Vue.extend({
       // but we still need the terrain for non-EU countries, which is
       // provided here, yet the layers topojson doesn't have country names,
       // so we can't filter on those. meh. fix this?
-      const countries = terrain.select(".countries").selectAll("path")
-      for (const layer of ["countries",
-                           "remoteterritories",
-                           "cyprusnorth"]
+      const countries = terrain.select('.countries').selectAll('path')
+      for (const layer of ['countries',
+        'remoteterritories',
+        'cyprusnorth']
       ) {
         countries
           .data(topo.features(layer))
           .enter()
-          .append("path")
-          .attr("d", path);
+          .append('path')
+          .attr('d', path)
       }
 
       // we can delete the base layers at this point, save some memory
-      delete this.geodata.layers;
+      delete this.geodata.layers
 
       this.base_rendered = true
-      this.$emit("base-rendered")
+      this.$emit('base-rendered')
     },
 
-    setupLI(sel) {
+    setupLI (sel) {
       // Liechtenstein needs a bit of magnification
-      const scale = this.LI_zoom_factor,
-            frame_padding = 1.7;
+      const scale = this.LI_zoom_factor
+      const frame_padding = 1.7
 
-      const geo = this.geodetails[sel.datum().id];
+      const geo = this.geodetails[sel.datum().id]
 
       sel
-        .attr("transform", (d) => {
+        .attr('transform', (d) => {
           // though incorrect, centroid looks better than center
-          const center = geo.centroid,
-                tx = -center.x * (scale - 1),
-                ty = -center.y * (scale - 1);
+          const center = geo.centroid
+          const tx = -center.x * (scale - 1)
+          const ty = -center.y * (scale - 1)
           return `translate(${tx},${ty}) scale(${scale})`
         })
 
       // and give it a frame too, or two
       if (this._li_setup) return
 
-      d3.selectAll(".middle, .top").select(".frames")
-        .append("circle")
-        .attr("cx", geo.center.x)
-        .attr("cy", geo.center.y)
-        .attr("r",
-              Math.max(geo.width, geo.height) / 2 *
+      d3.selectAll('.middle, .top').select('.frames')
+        .append('circle')
+        .attr('cx', geo.center.x)
+        .attr('cy', geo.center.y)
+        .attr('r',
+          Math.max(geo.width, geo.height) / 2 *
               scale * frame_padding
         )
 
       this._li_setup = true
     },
 
-    _cleanupGeoData(what) {
+    _cleanupGeoData (what) {
       const geodata = this.geodata.regions
 
       for (const lvl in what) {
-        const idxs = what[lvl],
-              obj = "nuts" + lvl,
-              collection = geodata.objects[obj],
-              geometries = collection.geometries;
+        const idxs = what[lvl]
+        const obj = 'nuts' + lvl
+        const collection = geodata.objects[obj]
+        const geometries = collection.geometries
 
-        for (let i = idxs.length; i--; ) {
+        for (let i = idxs.length; i--;) {
           geometries.splice(idxs[i], 1)
         }
 
@@ -548,24 +546,21 @@ export default Vue.extend({
       delete this.geodata.regions
     },
 
-    renderRegions(regions, levels) {
+    renderRegions (regions, levels) {
       if (!this.can_render_regions) {
-        console.error("This should never happen either")
+        console.error('This should never happen either')
         return
       }
 
-      if (typeof regions === "string") regions = [regions]
+      if (typeof regions === 'string') regions = [regions]
       else if (!regions || regions.length === 0) regions = this.all_states
-      if (typeof levels === "number") levels = [levels]
+      if (typeof levels === 'number') levels = [levels]
       else if (!levels || levels.length === 0) levels = this.all_levels
 
       // skip everything already rendered
       // (the simpleton version: look only at the arguments)
-      const _args = regions.join("-") + "/" + levels.join("-")
-      if(this._rendered_regions.indexOf(_args) !== -1)
-        return
-      else
-        this._rendered_regions.push(_args)
+      const _args = regions.join('-') + '/' + levels.join('-')
+      if (this._rendered_regions.indexOf(_args) !== -1) { return } else { this._rendered_regions.push(_args) }
 
       const $this = this
 
@@ -573,31 +568,30 @@ export default Vue.extend({
       // we're gonna flatten everything (place all layers at the same level),
       // and group data by its parent region
 
-      function _getParent(id) {
-        return id.length == 2 ? "" : id.substr(0, id.length - 1)
+      function _getParent (id) {
+        return id.length == 2 ? '' : id.substr(0, id.length - 1)
       }
 
-      function _getChildrenLevel(id) {
-        return id == "" ? 0 : id.length - 2 + 1
+      function _getChildrenLevel (id) {
+        return id == '' ? 0 : id.length - 2 + 1
       }
 
       const collection = {}
 
       const _gcs = {} // garbage-collect this stuff
       for (const level of levels) {
-        const source = this.geodata.regions.objects["nuts" + level]
+        const source = this.geodata.regions.objects['nuts' + level]
         if (source === undefined) // this got fully garbage-collected
-          continue
+        { continue }
         const _gc = _gcs[level] = []
 
         // we could simply filter, but since we're iterating anyway,
         // let's clean up unneeded data
-        source.geometries.forEach( (g, i) => { // we use the index for gc
+        source.geometries.forEach((g, i) => { // we use the index for gc
           const state = g.id.substr(0, 2)
           if (regions.map(x => x.substr(0, 2)).indexOf(state) === -1) {
             // clean up stuff that's never gonna be needed
-            if (regions === this.all_states || this.all_states.indexOf(state) === -1)
-              _gc.push(i)
+            if (regions === this.all_states || this.all_states.indexOf(state) === -1) { _gc.push(i) }
 
             return
           }
@@ -615,12 +609,12 @@ export default Vue.extend({
         })
       }
 
-      const containers = this.chart.select(".regions").selectAll("g")
+      const containers = this.chart.select('.regions').selectAll('g')
         .data(Object.keys(collection), d => d)
 
       const centered = containers.enter()
-        .append("g")
-        .attr("class", d => {
+        .append('g')
+        .attr('class', d => {
           const cls = []
           // add the entire region tree as class names
           let r = d
@@ -628,99 +622,99 @@ export default Vue.extend({
             cls.push(r)
             r = _getParent(r)
           }
-          cls.push("level" + _getChildrenLevel(d))
-          return cls.join(" ")
+          cls.push('level' + _getChildrenLevel(d))
+          return cls.join(' ')
         })
-        .attr("opacity", this.opacityfunc)
+        .attr('opacity', this.opacityfunc)
 
-      const shapes = containers.merge(centered).selectAll("path")
+      const shapes = containers.merge(centered).selectAll('path')
         .data(
           x => {
             const geodata = this.geodata.regions
             // this has to be a geometry collection
             const objects = {
-              type: "GeometryCollection",
-              geometries: collection[x],
+              type: 'GeometryCollection',
+              geometries: collection[x]
             }
             return topojson.feature(geodata, objects).features
           },
           d => d.id
         )
         .enter()
-        .append("path")
-        .attr("class", d => `${this.COUNTRIES[d.id.substr(0, 2)].type} ${d.id}`)
-        .attr("d", this.path)
-        .attr("fill", this.fillfunc)
-        .attr("opacity", 1)
+        .append('path')
+        .attr('class', d => `${this.COUNTRIES[d.id.substr(0, 2)].type} ${d.id}`)
+        .attr('d', this.path)
+        .attr('fill', this.fillfunc)
+        .attr('opacity', 1)
 
-        /*
+      /*
         .on("mouseenter", () => this.$emit("enter", ...arguments))
         .on("mouseleave", () => this.$emit("leave", ...arguments))
         .on("click", () => this.$emit("click", ...arguments))
         */
 
-        .each(function(d) {
+        .each(function (d) {
           // don't forget to cache the stuff
           $this.cacheGeoDetails(d)
 
           const sel = d3.select(this)
           // handle liechtenstein if needed
-          if (d.id.substr(0, 2) == "LI") $this.setupLI(sel)
+          if (d.id.substr(0, 2) == 'LI') $this.setupLI(sel)
 
           // and clear the geo-data, we don't need it
           sel.datum({
             id: d.id,
-            name: d.properties.name,
+            name: d.properties.name
           })
         })
 
       this._cleanupGeoData(_gcs)
 
       this.regions_rendered = true
-      if (!shapes.empty()) this.$emit("regions-rendered", shapes)
+      if (!shapes.empty()) this.$emit('regions-rendered', shapes)
     },
 
-    zoomTo(id, eventfuncs, t) {
+    zoomTo (id, eventfuncs, t) {
       if (eventfuncs instanceof d3.transition) {
-        t = eventfuncs;
-        eventfuncs = undefined;
+        t = eventfuncs
+        eventfuncs = undefined
       }
 
-      let zoomFunc;
+      let zoomFunc
       if (eventfuncs) {
-        zoomFunc = eventfuncs.zoom;
-        delete eventfuncs.zoom;
+        zoomFunc = eventfuncs.zoom
+        delete eventfuncs.zoom
       }
 
       const zoom = d3.zoom()
-                     .on("zoom", () => {
-                       this.chart.attr("transform", d3.event.transform);
-                       this.current_zoom = d3.event.transform.k;
-                       this.updateStyle();
-                       if (zoomFunc) zoomFunc();
-                     });
+        .on('zoom', () => {
+          this.chart.attr('transform', d3.event.transform)
+          this.current_zoom = d3.event.transform.k
+          this.updateStyle()
+          if (zoomFunc) zoomFunc()
+        })
       for (const event in eventfuncs) {
-        zoom.on(event, eventfuncs[event]);
+        zoom.on(event, eventfuncs[event])
       }
 
-      let transformer = d3.zoomIdentity;
+      let transformer = d3.zoomIdentity
 
       if (id) {
-        const d = this.geodetails[id].transform;
+        const d = this.geodetails[id].transform
         transformer = transformer.translate(d.x, d.y)
-                                 .scale(d.k);
+          .scale(d.k)
       }
 
-      const context = t ? this.chart.transition(t) : this.chart;
+      const context = t ? this.chart.transition(t) : this.chart
 
-      zoom.transform(context, transformer);
+      zoom.transform(context, transformer)
     },
 
-    updateStyle() {
-      this.stylesheet.innerHTML = this.mkStyle();
+    updateStyle () {
+      this.stylesheet.innerHTML = this.mkStyle()
     },
 
-    getScaleFactor() {
+    getScaleFactor () {
       // don't make this computed, it changes too fast
       const k = this.chartWidth / this.width * this.current_zoom
 
@@ -732,13 +726,13 @@ export default Vue.extend({
       return k / modificator
     },
 
-    mkStyle() {
-      const k = this.getScaleFactor(),
-            terrain_stroke = this.terrain_stroke_width / k,
-            region_stroke = this.region_stroke_width / k,
-            graticule_stroke = this.graticule_stroke_width / k,
+    mkStyle () {
+      const k = this.getScaleFactor()
+      const terrain_stroke = this.terrain_stroke_width / k
+      const region_stroke = this.region_stroke_width / k
+      const graticule_stroke = this.graticule_stroke_width / k
 
-            LI_stroke = terrain_stroke / this.LI_zoom_factor;
+      const LI_stroke = terrain_stroke / this.LI_zoom_factor
 
       return `
         .dataviz .viz.map .chart .terrain {
@@ -759,19 +753,19 @@ export default Vue.extend({
         .dataviz .viz.map .chart .base .graticule {
           stroke-width: ${graticule_stroke};
         }
-      `;
-    },
+      `
+    }
   },
 
   watch: {
-    chartWidth: "updateStyle",
+    chartWidth: 'updateStyle',
 
     rendered: {
       immediate: true,
-      handler(yes) {
-        if(yes) this.$emit("rendered");
+      handler (yes) {
+        if (yes) this.$emit('rendered')
       }
-    },
-  },
-});
+    }
+  }
+})
 </script>

@@ -28,7 +28,6 @@
   </div>
 </template>
 
-
 <style lang="less">
 .on_top{
   z-index: 2;
@@ -133,111 +132,108 @@
 
 </style>
 
-
-
 <script>
-import Vue from 'vue';
-import * as d3 from 'd3';
-import {truncate} from 'js/lib/util';
-import _programme_areas from 'js/constants/programme-areas.json5';
-import {COUNTRIES} from './mixins/WithCountries';
+import Vue from 'vue'
+import * as d3 from 'd3'
+import { truncate } from 'js/lib/util'
+import _programme_areas from 'js/constants/programme-areas.json5'
+import { COUNTRIES } from './mixins/WithCountries'
 
 import WithFiltersMixin from './mixins/WithFilters'
 
-
 export default Vue.extend({
   mixins: [
-    WithFiltersMixin,
+    WithFiltersMixin
   ],
 
-  beforeCreate() {
-    this.format_pa = function(programme_area) {
-      return _programme_areas[programme_area]['short_name'];
-    };
-    this.get_country = function(country_code) {
-      return COUNTRIES[country_code]['name'];
+  beforeCreate () {
+    this.format_pa = function (programme_area) {
+      return _programme_areas[programme_area].short_name
+    }
+    this.get_country = function (country_code) {
+      return COUNTRIES[country_code].name
     }
     this.FILTER_SETTINGS = {
-      fm: {name:'FM'},
-      beneficiary: {name: 'BS', formatter: this.get_country},
-      region: {name: 'Region'},
-      sector: {name: 'PS', truncate: 20},
-      area: {name:'PA', formatter: this.format_pa},
-      donor: {name: 'DS', formatter: this.get_country},
-      DPP: {name: 'Programme partner', truncate: 60},
-      dpp: {name: 'Project partner', truncate: 60},
+      fm: { name: 'FM' },
+      beneficiary: { name: 'BS', formatter: this.get_country },
+      region: { name: 'Region' },
+      sector: { name: 'PS', truncate: 20 },
+      area: { name: 'PA', formatter: this.format_pa },
+      donor: { name: 'DS', formatter: this.get_country },
+      DPP: { name: 'Programme partner', truncate: 60 },
+      dpp: { name: 'Project partner', truncate: 60 }
     }
   },
 
   computed: {
-    data() {
+    data () {
       const filters = {}
       for (const key in this.filters) {
         if (this.filters[key]) {
-          const settings = this.FILTER_SETTINGS[key];
-          let filter_value = this.filters[key];
-          if (settings['formatter']) {
-            filter_value = settings['formatter'](filter_value);
+          const settings = this.FILTER_SETTINGS[key]
+          let filter_value = this.filters[key]
+          if (settings.formatter) {
+            filter_value = settings.formatter(filter_value)
           }
-          if (settings['truncate']) {
-            filter_value = truncate(filter_value, settings['truncate']);
+          if (settings.truncate) {
+            filter_value = truncate(filter_value, settings.truncate)
           }
           filters[key] = {
-            name: settings['name'],
-            value: filter_value,
+            name: settings.name,
+            value: filter_value
           }
         }
       }
 
-      return filters;
-    },
+      return filters
+    }
   },
 
-  created() {
-    this.filters_stack = [];
+  created () {
+    this.filters_stack = []
 
-    this.initFiltersStack();
-    this.handleEsc();
+    this.initFiltersStack()
+    this.handleEsc()
   },
 
   methods: {
-    initFiltersStack() {
-      for(const type in this.filters) {
-        if(this.filters[type]) {
-          this.filters_stack.push(type);
+    initFiltersStack () {
+      for (const type in this.filters) {
+        if (this.filters[type]) {
+          this.filters_stack.push(type)
         }
       }
     },
 
-    handleEsc() {
-      const self = this;
-      window.addEventListener("keyup", e => {
-          if(e.keyCode == 27) self.removeLastFilter();
-        });
+    handleEsc () {
+      const self = this
+      window.addEventListener('keyup', e => {
+        if (e.code === 'Escape') self.removeLastFilter()
+      })
     },
 
-    hasFilters() {
+    hasFilters () {
       for (const filter in this.filters) {
         if (this.filters[filter]) {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     },
 
-    removeFilter(key) {
-      this.filters[key] = null;
+    removeFilter (key) {
+      this.filters[key] = null
     },
 
     // filters_stack holds the active filters ordered chronologically
-    removeLastFilter() {
-      if(this.filters_stack.length > 0) {
-        const lastFilter = this.filters_stack[this.filters_stack.length-1];
-        this.filters[lastFilter] = null;
+    removeLastFilter () {
+      if (this.filters_stack.length > 0) {
+        const lastFilter = this.filters_stack[this.filters_stack.length - 1]
+        this.filters[lastFilter] = null
       }
     },
 
-    resetFilters() {
+    resetFilters () {
       for (const filter in this.filters) {
         this.filters[filter] = null
       }
@@ -247,12 +243,12 @@ export default Vue.extend({
     // it will keep track of all filters applied or removed, chronologically
     // if a previous same type filter is removed, then it will be removed from the list
     // but if it is changed after remove, the new one will be added as the most recent
-    handleFilter(type, val, old) {
-      const index = this.filters_stack.indexOf(type);
-      if (index !== -1) this.filters_stack.splice(index, 1);
-      if (val) this.filters_stack.push(type);
-    },
-  },
-});
+    handleFilter (type, val, old) {
+      const index = this.filters_stack.indexOf(type)
+      if (index !== -1) this.filters_stack.splice(index, 1)
+      if (val) this.filters_stack.push(type)
+    }
+  }
+})
 
 </script>

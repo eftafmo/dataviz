@@ -1,15 +1,16 @@
 <template>
   <div class="sidebar">
-    <button type="button" id="close-sidebar" class="no-btn"
-                  title="Close results"
-                v-if="isMobileExpanded"
-                v-on:click="mobileCollapse">
-          <span class="icon icon-cross"></span>
+    <button type="button"
+      id="close-sidebar"
+      class="no-btn"
+      title="Close results"
+      v-if="isMobileExpanded"
+      v-on:click="mobileCollapse">
+      <span class="icon icon-cross"></span>
   </button>
     <slot></slot>
   </div>
 </template>
-
 
 <style lang="less">
 .dataviz .sidebar {
@@ -229,60 +230,58 @@
 
 </style>
 
-
 <script>
 export default {
   props: {
     embedded: {
       type: Boolean,
-      default: false,
-    },
-  },
-
-  data() {
-    return {
-      // these are only used on the local site
-      onMobile: false,
-      isMobileExpanded: false,
+      default: false
     }
   },
 
-  created() {
+  data () {
+    return {
+      // these are only used on the local site
+      onMobile: false,
+      isMobileExpanded: false
+    }
+  },
+
+  created () {
     if (this.embedded) return
 
     // Add a media query listener handle mobile events
-    var mq = window.matchMedia ('(max-width: 768px)');
-    var self = this;
-    mq.addListener(function(mq) { self.onMobile = mq.matches; });
-    this.onMobile = mq.matches; // initial check;
+    const mq = window.matchMedia('(max-width: 768px)')
+    const self = this
+    mq.addListener(function (mq) { self.onMobile = mq.matches })
+    this.onMobile = mq.matches // initial check;
   },
 
   methods: {
-    mobileExpand() {
-      if(this.embedded) return
+    mobileExpand () {
+      if (this.embedded) return
 
       if (!this.isMobileExpanded) {
-        this.isMobileExpanded = true;
-        this.$el.classList.add('is-expanded-on-mobile');
-        document.querySelector('body').classList.add('sidebar-open');
-        document.querySelector('html').classList.add('sidebar-open');
+        this.isMobileExpanded = true
+        this.$el.classList.add('is-expanded-on-mobile')
+        document.querySelector('body').classList.add('sidebar-open')
+        document.querySelector('html').classList.add('sidebar-open')
       }
     },
 
-    mobileCollapse(e) {
-      if(this.embedded) return
+    mobileCollapse (e) {
+      if (this.embedded) return
 
-      e = e || window.event;
-      if(e)
-      e.stopPropagation(); // event will trigger expand and cancel collapse
+      e = e || window.event
+      if (e) { e.stopPropagation() } // event will trigger expand and cancel collapse
       if (this.isMobileExpanded) {
-        this.isMobileExpanded = false;
-        var el = this.$el;
-        el.classList.remove('is-expanded-on-mobile');
+        this.isMobileExpanded = false
+        const el = this.$el
+        el.classList.remove('is-expanded-on-mobile')
         document.querySelector('body').classList.remove('sidebar-open')
         document.querySelector('html').classList.remove('sidebar-open')
       }
-    },
+    }
   },
 
   watch: {
@@ -290,12 +289,12 @@ export default {
       if (this.embedded) return
 
       if (matches) {
-        this.$el.addEventListener('click', this.mobileExpand, false);
+        this.$el.addEventListener('click', this.mobileExpand, false)
       } else {
-        this.$el.removeEventListener('click', this.mobileExpand, false);
-        this.mobileCollapse();
+        this.$el.removeEventListener('click', this.mobileExpand, false)
+        this.mobileCollapse()
       }
-    },
-  },
+    }
+  }
 }
 </script>

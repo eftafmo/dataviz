@@ -12,7 +12,6 @@
     </ul>
 </template>
 
-
 <style lang="less">
 .dataviz .viz.news {
   li {
@@ -52,48 +51,43 @@
 }
 </style>
 
-
 <script>
-import Component from './Component';
-
+import Component from './Component'
 
 export default Component.extend({
-  type: "news",
+  type: 'news',
 
   computed: {
-    data() {
+    data () {
       if (!this.hasData) return []
 
-      const dataset = this.filtered;
-      const unique = {};
+      const dataset = this.filtered
+      const unique = {}
 
       // use dict to remove duplicates
       for (const d of dataset) {
-        for (const news of d.news){
-          unique[news.link] = news;
+        for (const news of d.news) {
+          unique[news.link] = news
         }
       }
 
-      const out = this.getSortedNews(unique);
+      const out = this.getSortedNews(unique)
 
-      return out;
-    },
+      return out
+    }
   },
 
   methods: {
-    formatDate(timestamp){
-      const date = new Date(timestamp);
-      let nav_lang;
+    formatDate (timestamp) {
+      const date = new Date(timestamp)
+      let nav_lang
 
-      if (navigator.languages)
-        nav_lang = navigator.languages[0];
-      else
-        nav_lang = "en"
+      if (navigator.languages) { nav_lang = navigator.languages[0] } else { nav_lang = 'en' }
 
-      var options = { day: 'numeric', month: 'long', year: 'numeric' };
-      var new_date = date.toLocaleDateString(nav_lang,options);
+      const options = { day: 'numeric', month: 'long', year: 'numeric' }
+      const new_date = date.toLocaleDateString(nav_lang, options)
       return new_date
-    },
-  },
-});
+    }
+  }
+})
 </script>

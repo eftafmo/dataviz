@@ -1,70 +1,68 @@
 // TODO: this is very bad. it messes with embeds.
 // should be a component or in a different js bundle.
-window.Header = (function() {
+window.Header = (function () {
+  const el = document.querySelector('.dataviz .header')
+  if (!el) return
 
-  var el = document.querySelector('.dataviz .header');
-  if (!el) return;
-
-  var backdrop = function() {
-    var el = document.createElement('DIV');
-    el.id = 'backdrop';
-    document.body.appendChild(el);
+  const backdrop = (function () {
+    const el = document.createElement('DIV')
+    el.id = 'backdrop'
+    document.body.appendChild(el)
 
     return {
       el: el,
-      show: function() { el.style.display = 'block'; },
-      hide: function() { el.style.display = 'none'; }
+      show: function () { el.style.display = 'block' },
+      hide: function () { el.style.display = 'none' }
     }
-  }();
+  }())
 
-  var menus = el.querySelector('.header-inner')
+  const menus = el.querySelector('.header-inner')
 
-  var active;
+  let active
 
-  function _bodyClass(targetName) {
-    return targetName + '-is-open';
+  function _bodyClass (targetName) {
+    return targetName + '-is-open'
   }
 
-  var open = function(targetName) {
-    var target = menus;
+  const open = function (targetName) {
+    const target = menus
 
-    close();
+    close()
 
-    active = targetName;
-    document.body.classList.add(_bodyClass(targetName));
+    active = targetName
+    document.body.classList.add(_bodyClass(targetName))
 
-    target.classList.add('is-open');
-    backdrop.show();
-    //target.querySelector('input').focus();
-  };
+    target.classList.add('is-open')
+    backdrop.show()
+    // target.querySelector('input').focus();
+  }
 
-  var close = function() {
+  const close = function () {
     if (active) {
-      var target = menus;
-      document.body.classList.remove(_bodyClass(active));
-      target.classList.remove('is-open');
+      const target = menus
+      document.body.classList.remove(_bodyClass(active))
+      target.classList.remove('is-open')
 
-      active = undefined;
-      backdrop.hide();
+      active = undefined
+      backdrop.hide()
     }
-  };
+  }
 
-  backdrop.el.addEventListener('click', close, false);
+  backdrop.el.addEventListener('click', close, false)
 
-  window.addEventListener('keyup', function(e) {
-    if (e.keyCode === 27 && active)
-      close()
-  });
+  window.addEventListener('keyup', function (e) {
+    if (e.code === 'Escape' && active) { close() }
+  })
 
   return {
     open: open,
     close: close,
-    toggle: function(targetName) {
-      if (active != targetName) {
+    toggle: function (targetName) {
+      if (active !== targetName) {
         open(targetName)
       } else {
         close()
       }
     }
   }
-}());
+}())

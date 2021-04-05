@@ -37,7 +37,6 @@
 </div>
 </template>
 
-
 <style lang="less">
 @duration: .5s;
 @short_duration: .2s;
@@ -130,34 +129,32 @@
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
-import debounce from 'lodash.debounce';
-import {slugify} from 'js/lib/util'
+import * as d3 from 'd3'
+import debounce from 'lodash.debounce'
+import { slugify } from 'js/lib/util'
 
 import BaseMap from './BaseMap'
 
-import PartnersMixin from './mixins/Partners';
-import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin from './mixins/WithCountries';
-
+import PartnersMixin from './mixins/Partners'
+import WithFMsMixin from './mixins/WithFMs'
+import WithCountriesMixin from './mixins/WithCountries'
 
 export default BaseMap.extend({
   mixins: [
     PartnersMixin,
-    WithFMsMixin, WithCountriesMixin,
+    WithFMsMixin, WithCountriesMixin
   ],
 
   props: {
     layers: {
       type: Array,
       // note the order. (makes sure "programmes" is always on top in svgs)
-      default: () => ["projects", "programmes"]
-    },
+      default: () => ['projects', 'programmes']
+    }
   },
 
-  data() {
+  data () {
     return {
       visible_layers: this.layers,
       region: null,
@@ -165,25 +162,25 @@ export default BaseMap.extend({
       region_colour: '#ccc',
 
       chart_opacity: 1.0,
-      region_opacity: .8,
+      region_opacity: 0.8,
 
-      default_opacity: .8,
-      highlighted_opacity: .9,
-      faded_opacity: .2,
-    };
+      default_opacity: 0.8,
+      highlighted_opacity: 0.9,
+      faded_opacity: 0.2
+    }
   },
 
   computed: {
-    current_layers() {
+    current_layers () {
       // like visible_layers, but preserving order
       return this.layers.filter(x => this.visible_layers.indexOf(x) !== -1)
     },
 
-    scale() {
-      return this.chartWidth / this.width;
+    scale () {
+      return this.chartWidth / this.width
     },
 
-    aggregated() {
+    aggregated () {
       /*
         this exists because we need to compute two datasets:
 
@@ -198,15 +195,15 @@ export default BaseMap.extend({
       const dataset = this.filtered
 
       const connections = {
-              programmes: {},
-              projects: {},
-            },
-            // group regions by type as well, so we can use the type
-            // as a "data filter" later on
-            regions = {
-              programmes: {},
-              projects: {},
-            }
+        programmes: {},
+        projects: {}
+      }
+      // group regions by type as well, so we can use the type
+      // as a "data filter" later on
+      const regions = {
+        programmes: {},
+        projects: {}
+      }
 
       const _getConnectionGroup = (type, id) => {
         // grouping by country
@@ -220,26 +217,28 @@ export default BaseMap.extend({
 
       const _getRegion = (type, id) => {
         let region = regions[type][id]
-        if (region === undefined) region = regions[type][id] = {
-          //id: id, // skipping this because data() reaggregates anyway
-          fms: d3.set(),
-          states: d3.set(),
-          bs_orgs: d3.set(),
-          ds_orgs: d3.set(),
-          programmes: d3.set(),
-          projects: d3.set(),
+        if (region === undefined) {
+          region = regions[type][id] = {
+          // id: id, // skipping this because data() reaggregates anyway
+            fms: d3.set(),
+            states: d3.set(),
+            bs_orgs: d3.set(),
+            ds_orgs: d3.set(),
+            programmes: d3.set(),
+            projects: d3.set()
           // add here anything else you might want to aggregate on
+          }
         }
         return region
       }
 
       const _setData = (type, source, target, ds_orgs, bs_orgs, d) => {
         const conngroup = _getConnectionGroup(type, source)
-        conngroup[`${source}-${target}`] = {source, target}
+        conngroup[`${source}-${target}`] = { source, target }
         const projects = d3.set()
         for (const prj in d.projects) {
-          if ( d.projects[prj]['src_nuts'].indexOf(source) !== -1 &&
-               d.projects[prj]['dst_nuts'].indexOf(target) !== -1 ) {
+          if (d.projects[prj].src_nuts.indexOf(source) !== -1 &&
+               d.projects[prj].dst_nuts.indexOf(target) !== -1) {
             projects.add(prj)
           }
         }
@@ -250,7 +249,7 @@ export default BaseMap.extend({
           bs_orgs.each(x => region.bs_orgs.add(x))
           region.programmes.add(d.programme)
           projects.each(x => region.projects.add(x))
-          if (target) region.states.add(target.substr(0,2))
+          if (target) region.states.add(target.substr(0, 2))
         }
         if (target) {
           const region = _getRegion(type, target)
@@ -259,46 +258,43 @@ export default BaseMap.extend({
           bs_orgs.each(x => region.bs_orgs.add(x))
           region.programmes.add(d.programme)
           projects.each(x => region.projects.add(x))
-          if (source) region.states.add(source.substr(0,2))
+          if (source) region.states.add(source.substr(0, 2))
         }
       }
 
       for (const d of dataset) {
         let type
 
-        type = "programmes"
+        type = 'programmes'
         for (const po_code in d.PO) {
           if (!d.DPP_nuts) continue
           // we can have rows with PO but not DPP (only projects)
-          const source = d.DPP_nuts,
-                target = d.PO[po_code].nuts,
-                ds_orgs = d3.set().add(d.DPP),
-                bs_orgs = d3.set().add(po_code)
+          const source = d.DPP_nuts
+          const target = d.PO[po_code].nuts
+          const ds_orgs = d3.set().add(d.DPP)
+          const bs_orgs = d3.set().add(po_code)
 
           _setData(type, source, target, ds_orgs, bs_orgs, d)
         }
 
-        type = "projects"
+        type = 'projects'
         for (const prj_nuts of d.prj_nuts) {
           if (!prj_nuts.dst) continue
           // many project partners don't have nuts. let them be
           // we do want to see donor project partners with no nuts, though
-          const source = prj_nuts.src,
-                target = prj_nuts.dst
+          const source = prj_nuts.src
+          const target = prj_nuts.dst
           const ds_orgs = d3.set()
           for (const org in d.PJDPP) {
-            if (d.PJDPP[org].nuts === source)
-              ds_orgs.add(org)
+            if (d.PJDPP[org].nuts === source) { ds_orgs.add(org) }
           }
           const bs_orgs = d3.set()
-          for ( const org in d.PJPT) {
-            if (d.PJPT[org].nuts === target)
-              bs_orgs.add(org)
+          for (const org in d.PJPT) {
+            if (d.PJPT[org].nuts === target) { bs_orgs.add(org) }
           }
 
           _setData(type, source, target, ds_orgs, bs_orgs, d)
         }
-
       }
 
       // flatten the connections data
@@ -313,10 +309,10 @@ export default BaseMap.extend({
         connections[type] = collection
       }
 
-      return {regions, connections}
+      return { regions, connections }
     },
 
-    data() {
+    data () {
       const datasets = this.aggregated.regions
       // merge the regions together
       // NOTE: if we want to filter by type this is where we can do it
@@ -327,9 +323,11 @@ export default BaseMap.extend({
 
         for (const id in dataset) {
           let region = out[id]
-          if (region === undefined) region = out[id] = {
-            id: id,
-            fms: d3.set(),
+          if (region === undefined) {
+            region = out[id] = {
+              id: id,
+              fms: d3.set()
+            }
           }
           if (region[type] === undefined) {
             region[type] = {
@@ -337,7 +335,7 @@ export default BaseMap.extend({
               ds_orgs: d3.set(),
               bs_orgs: d3.set(),
               programmes: d3.set(),
-              projects: d3.set(),
+              projects: d3.set()
             }
           }
 
@@ -351,10 +349,10 @@ export default BaseMap.extend({
       }
 
       return d3.values(out)
-    },
+    }
   },
 
-  mounted() {
+  mounted () {
     // make remote territories visible
     // this is very ugly. TODO: fix... somehow.. better
     this.chart.attr('transform', 'translate(60,0)')
@@ -362,14 +360,13 @@ export default BaseMap.extend({
 
   methods: {
 
-
-    tooltipTemplate(d) {
+    tooltipTemplate (d) {
       const country = this.getAncestorRegion(d.id, 0)
 
       const is_ds = (this.COUNTRIES[country].type !== 'beneficiary')
       let details = ''
-      let _plm = (prefix, word, count) => `${count} ${prefix} ${this.pluralize(word, count)}`
-      let _line = (src_text, dst_text, in_text, is_ds) => {
+      const _plm = (prefix, word, count) => `${count} ${prefix} ${this.pluralize(word, count)}`
+      const _line = (src_text, dst_text, in_text, is_ds) => {
         if (is_ds) [src_text, dst_text] = [dst_text, src_text]
         return `<li>${src_text} working with ${dst_text} in ${in_text}</li>`
       }
@@ -393,16 +390,16 @@ export default BaseMap.extend({
       return `
         <div class="title-container">
           <svg>
-            <use xlink:href="#${ this.get_flag_name(country) }" />
+            <use xlink:href="#${this.get_flag_name(country)}" />
           </svg>
-          <span class="name">${ this.getRegionName(d.id) } (${ d.id })</span>
+          <span class="name">${this.getRegionName(d.id)} (${d.id})</span>
         </div>
         <ul>
-          ${ details }
+          ${details}
         </ul>`
     },
 
-    renderChart() {
+    renderChart () {
       const t = this.getTransition()
 
       this.renderDonorColours(t)
@@ -411,21 +408,21 @@ export default BaseMap.extend({
       this.renderVisibleLayers(t)
     },
 
-    renderRegionData(t) {
+    renderRegionData (t) {
       // "render". this only updates the data so the tooltip works.
       // TODO: transition the zero <-> non-zero beneficiaries
       const regions = this.chart.selectAll('.regions > g > path')
-                          .data(this.data, d => d.id)
+        .data(this.data, d => d.id)
 
       regions
-        .classed("zero", false)
+        .classed('zero', false)
 
       regions
         .exit()
-        .classed("zero", true)
+        .classed('zero', true)
     },
 
-    renderConnections(t) {
+    renderConnections (t) {
       // don't transition connections in IE. not nice, but necessary.
       const is_ie = !!document.documentMode
       if (is_ie) t = this.getTransition(0)
@@ -438,32 +435,28 @@ export default BaseMap.extend({
       }
     },
 
-    _renderConnections(type, data, t) {
-      const container = this.chart.select(`.partnerships > .base.${ type }`),
-            regions = container.selectAll('g')
-                               .data(data, d => d.country)
+    _renderConnections (type, data, t) {
+      const container = this.chart.select(`.partnerships > .base.${type}`)
+      const regions = container.selectAll('g')
+        .data(data, d => d.country)
 
       const getColour = d => {
         const colour = this.colours[type]
 
-        if (!this.filters.fm)
-          return colour
+        if (!this.filters.fm) { return colour }
 
-        const country = d.country,
-              fms = this.COUNTRIES[country].fms
+        const country = d.country
+        const fms = this.COUNTRIES[country].fms
 
-        if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1)
-          return this.weak_colours[type]
-        else
-          return colour
+        if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1) { return this.weak_colours[type] } else { return colour }
       }
 
       // connections are grouped by source state. will help us transition
       // to grayscale when filtering by fm
       const rentered = regions.enter()
-                              .append('g')
-                              .attr('class', d => d.country)
-                              .attr('stroke', getColour)
+        .append('g')
+        .attr('class', d => d.country)
+        .attr('stroke', getColour)
 
       regions
         .transition(t)
@@ -472,10 +465,10 @@ export default BaseMap.extend({
       const rexit = regions.exit().remove()
 
       const connections = regions.merge(rentered).selectAll('path')
-                                 .data(
-                                   d => d.connections,
-                                   d => d.source + '-' + d.target
-                                 )
+        .data(
+          d => d.connections,
+          d => d.source + '-' + d.target
+        )
 
       const _badids = d3.set()
 
@@ -488,60 +481,59 @@ export default BaseMap.extend({
 
         const geodetails = this.map.geodetails
 
-        const o0 = geodetails[source],
-              o1 = geodetails[target]
+        const o0 = geodetails[source]
+        const o1 = geodetails[target]
 
-        if (o0 === undefined) _badids.add(i0);
-        if (o1 === undefined) _badids.add(i1);
+        if (o0 === undefined) _badids.add(i0)
+        if (o1 === undefined) _badids.add(i1)
         if (o0 === undefined || o1 === undefined) return
 
         const k = 1 // this.scale if drawing into a canvas
 
-        const p0 = o0.centroid,
-              p1 = o1.centroid,
+        const p0 = o0.centroid
+        const p1 = o1.centroid
 
-              x0 = p0.x * k,
-              y0 = p0.y * k,
+        const x0 = p0.x * k
+        const y0 = p0.y * k
 
-              x1 = p1.x * k,
-              y1 = p1.y * k,
+        const x1 = p1.x * k
+        const y1 = p1.y * k
 
-              // distance between points
-              _dx = x1 - x0,
-              _dy = y1 - y0,
+        // distance between points
+        const _dx = x1 - x0
+        const _dy = y1 - y0
 
-              // radius
-              r = Math.sqrt(_dx * _dx + _dy * _dy),
+        // radius
+        const r = Math.sqrt(_dx * _dx + _dy * _dy)
 
-              // sign
-              s = (x1 >= x0) ? 1 : -1,
+        // sign
+        const s = (x1 >= x0) ? 1 : -1
 
-              // midpoint
-              _mx = (x0 + x1) / 2,
-              _my = (y0 + y1) / 2,
+        // midpoint
+        const _mx = (x0 + x1) / 2
+        const _my = (y0 + y1) / 2
 
-              // distance from midpoint (perpendicular)
-              _d = r * (1 - Math.sqrt(3) / 2) * 2,
+        // distance from midpoint (perpendicular)
+        const _d = r * (1 - Math.sqrt(3) / 2) * 2
 
-              // actual offsets from midpont
-              _ox = _dy * (_d / (r)),
-              _oy = _dx * (_d / (r));
+        // actual offsets from midpont
+        const _ox = _dy * (_d / (r))
+        const _oy = _dx * (_d / (r))
 
         // the control point
-        let x = _mx + s * _ox,
-            y = _my - s * _oy;
+        let x = _mx + s * _ox
+        let y = _my - s * _oy
 
         // a little hack for iceland - portugal links §
         if (x < 0) {
-          x = _mx + s * _ox / 2;
-          y = _my - s * _oy / 2;
+          x = _mx + s * _ox / 2
+          y = _my - s * _oy / 2
         }
 
+        // return `M ${ x0 },${ y0 } A ${ r },${ r } 0 0,${ (s + 1) / 2 } ${ x1 },${ y1 }`
+        return `M ${x0},${y0} Q ${x},${y} ${x1},${y1}`
 
-        //return `M ${ x0 },${ y0 } A ${ r },${ r } 0 0,${ (s + 1) / 2 } ${ x1 },${ y1 }`
-        return `M ${ x0 },${ y0 } Q ${ x },${ y } ${ x1 },${ y1 }`
-
-        ctx.quadraticCurveTo(x, y, x1, y1)
+        ctx.quadraticCurveTo(x, y, x1, y1) // unreachable code!! potential bug?
       }
 
       // because performing transitions on hundreds of paths kills rendering,
@@ -554,29 +546,28 @@ export default BaseMap.extend({
         .attr('d', d => getArc(d.source, d.target))
 
       // (some error checking)
-      if (!_badids.empty())
-        console.error("Unknown NUTS codes:", _badids.values());
+      if (!_badids.empty()) { console.error('Unknown NUTS codes:', _badids.values()) }
 
       const connexit = connections.exit().remove()
 
       // buuut don't go through the craziness if there's nothing to transition
-      if (t.duration() == 0) return
+      if (t.duration() === 0) return
 
       const transitionConnections = (selection, newstuff) => {
         if (selection.empty()) return
 
         // shallow clone the container
-        const baselayer = container.node(),
-              newlayer = baselayer.cloneNode(false)
+        const baselayer = container.node()
+        const newlayer = baselayer.cloneNode(false)
 
         // insert the clone before the original if pending removal,
         // or after if the stuff is new
         baselayer.parentNode.insertBefore(newlayer,
-                                          newstuff ? baselayer.nextSibling : baselayer)
+          newstuff ? baselayer.nextSibling : baselayer)
 
         // if exiting, this is a good time to add the fully-removed regions
         if (!newstuff) {
-          rexit.each(function() {
+          rexit.each(function () {
             newlayer.appendChild(this)
           })
         }
@@ -589,13 +580,13 @@ export default BaseMap.extend({
         // we'll using d3's beautifulous internals, which are structured
         // exactly the way we want them
 
-        selection._groups.forEach(function(group, i) {
+        selection._groups.forEach(function (group, i) {
           // filter out empty elements
           group = group.filter(x => true)
           if (!group.length) return
 
-          const parent = selection._parents[i],
-                newparent = parent.cloneNode(false)
+          const parent = selection._parents[i]
+          const newparent = parent.cloneNode(false)
           newlayer.appendChild(newparent)
 
           for (const connection of group) {
@@ -603,16 +594,16 @@ export default BaseMap.extend({
           }
         })
 
-        const exitfunc = function() {
+        const exitfunc = function () {
           this.remove()
         }
 
-        const enterfunc = function() {
+        const enterfunc = function () {
           const parents = this.querySelectorAll('g')
 
           for (const parent of parents) {
-            const selector = parent.getAttribute("class")
-                                   .split(" ").map(c => "." + c).join("")
+            const selector = parent.getAttribute('class')
+              .split(' ').map(c => '.' + c).join('')
 
             const baseparent = baselayer.querySelector('g' + selector)
             // also bring the parent to front, avoids some flicker
@@ -627,10 +618,10 @@ export default BaseMap.extend({
         }
 
         // we need to delay things a bit or d3 gets very confused
-        this.$nextTick( () =>
+        this.$nextTick(() =>
           d3.select(newlayer)
-            .classed("base", false)
-            .classed(newstuff ? "new" : "old", true)
+            .classed('base', false)
+            .classed(newstuff ? 'new' : 'old', true)
             .transition(t)
             .attr('opacity', newstuff ? this.default_opacity : 0)
             .on('end', newstuff ? enterfunc : exitfunc)
@@ -638,14 +629,14 @@ export default BaseMap.extend({
       }
 
       // FIXME: there's something broken with the enter, leaving as is for now
-      //transitionConnections(connentered, true)
+      // transitionConnections(connentered, true)
       transitionConnections(connexit, false)
     },
 
-    _domouse(over, d, i, group) {
+    _domouse (over, d, i, group) {
       const self = this.$super._domouse(over, d, i, group)
       if (!self) return
-      if (self.classed("zero")) return
+      if (self.classed('zero')) return
 
       const t = this.getTransition(this.short_duration)
       const root = this.chart.select('.partnerships')
@@ -666,18 +657,18 @@ export default BaseMap.extend({
 
             if (connections.empty()) continue
 
-            const baselayer = base.node(),
-                  newlayer = baselayer.cloneNode(false)
+            const baselayer = base.node()
+            const newlayer = baselayer.cloneNode(false)
 
             newlayer.classList.remove('base')
             newlayer.classList.add(d.id)
             baselayer.parentNode.appendChild(newlayer)
 
-            connections._groups.forEach(function(group, i) {
+            connections._groups.forEach(function (group, i) {
               if (!group.length) return
 
-              const parent = connections._parents[i],
-                    newparent = parent.cloneNode(false)
+              const parent = connections._parents[i]
+              const newparent = parent.cloneNode(false)
 
               newlayer.appendChild(newparent)
 
@@ -697,51 +688,52 @@ export default BaseMap.extend({
           .attr('opacity', this.highlighted_opacity)
 
         // fade out the base layers
-        for (const type of this.visible_layers)
-          root.select(`g.base.${ type }`)
+        for (const type of this.visible_layers) {
+          root.select(`g.base.${type}`)
             .transition(t)
             .attr('opacity', this.faded_opacity)
-
+        }
       } else { // (mouse out)
-
         // fade them out
         containers
           .transition(t)
           .attr('opacity', 0)
-          .on('end', function() {
+          .on('end', function () {
             this.remove()
           })
 
         // fade in the base layers
-        for (const type of this.visible_layers)
-          root.select(`g.base.${ type }`)
+        for (const type of this.visible_layers) {
+          root.select(`g.base.${type}`)
             .transition(t)
             .attr('opacity', this.default_opacity)
+        }
       }
     },
 
-    renderVisibleLayers(t) {
+    renderVisibleLayers (t) {
       if (t === undefined) t = this.getTransition()
 
       for (const layer of this.layers) {
-        this.chart.select(`.partnerships > .${ layer }`)
+        this.chart.select(`.partnerships > .${layer}`)
           .transition(t)
-          .attr('opacity', this.visible_layers.indexOf(layer) === -1 ?
-                0 : this.default_opacity)
+          .attr('opacity', this.visible_layers.indexOf(layer) === -1
+            ? 0
+            : this.default_opacity)
       }
     },
 
-    handleLayers() {
+    handleLayers () {
       this.renderVisibleLayers()
     },
 
-    handleFilter() {
-      this.render();
-    },
+    handleFilter () {
+      this.render()
+    }
   },
 
   watch: {
-    visible_layers: "handleLayers",
-  },
-});
+    visible_layers: 'handleLayers'
+  }
+})
 </script>

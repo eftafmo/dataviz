@@ -1,33 +1,33 @@
 <template>
 <div :class="classNames">
- <slot name="title" v-if="!this.embedded"></slot>
- <dropdown v-if="isReady" filter="DPP" title="No filter selected" :items="dropdown_items"></dropdown>
- <table>
-   <thead>
-     <th>Donor state</th>
-     <th>Organisations</th>
-     <th>Countries</th>
-     <th>Programmes</th>
-   </thead>
-   <tbody v-for="item in data">
-     <tr @click="show_items($event)" class="section_header">
-       <td>{{get_country_name(item.donor)}}</td>
-       <td>{{item.organizations.length}}</td>
-       <td>{{item.countries.size()}}</td>
-       <td>{{item.programmes.size()}}</td>
-     </tr>
-     <tr
-      class="section_item"
-      v-for="organization in item.organizations"
-      :class="{active_filter : filters.DPP == organization.name}"
-      @click="toggleDPP($event, organization.name)"
-     >
-      <td colspan="2">{{organization.name}}</td>
-      <td>{{organization.countries.size()}}</td>
-      <td>{{organization.programmes.size()}}</td>
-     </tr>
-   </tbody>
- </table>
+  <slot name="title" v-if="!this.embedded"></slot>
+  <dropdown v-if="isReady" filter="DPP" title="No filter selected" :items="dropdown_items"></dropdown>
+  <table>
+    <thead>
+      <th>Donor state</th>
+      <th>Organisations</th>
+      <th>Countries</th>
+      <th>Programmes</th>
+    </thead>
+    <tbody v-for="item in data">
+      <tr @click="show_items($event)" class="section_header">
+        <td>{{get_country_name(item.donor)}}</td>
+        <td>{{item.organizations.length}}</td>
+        <td>{{item.countries.size()}}</td>
+        <td>{{item.programmes.size()}}</td>
+      </tr>
+      <tr
+        class="section_item"
+        v-for="organization in item.organizations"
+        :class="{active_filter : filters.DPP == organization.name}"
+        @click="toggleDPP($event, organization.name)"
+      >
+        <td colspan="2">{{organization.name}}</td>
+        <td>{{organization.countries.size()}}</td>
+        <td>{{organization.programmes.size()}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 </template>
 
@@ -38,7 +38,6 @@
     overflow: auto;
   }
 
-
   .active {
     th:first-of-type:before {
       transform: rotate(90deg);
@@ -48,7 +47,6 @@
   .active_filter {
     background: #eee;
   }
-
 
   table  {
     border-collapse: collapse;
@@ -131,7 +129,6 @@
     thead {
        border-spacing: 4px;
 
-
       th{
         //TODO: Make this work
         // border-bottom: 2px solid #eee;
@@ -149,118 +146,117 @@
 
 <script>
 
-import Vue from 'vue';
-import * as d3 from 'd3';
-import Component from './Component';
-import PartnersMixin from './mixins/Partners';
-import CountriesMixin from './mixins/WithCountries';
-import Dropdown from './includes/DropdownFilter';
+import Vue from 'vue'
+import * as d3 from 'd3'
+import Component from './Component'
+import PartnersMixin from './mixins/Partners'
+import CountriesMixin from './mixins/WithCountries'
+import Dropdown from './includes/DropdownFilter'
 
 export default Component.extend({
-  type: "donor-programmes",
+  type: 'donor-programmes',
 
   mixins: [
     PartnersMixin,
-    CountriesMixin,
+    CountriesMixin
   ],
 
   components: {
-    'dropdown': Dropdown,
+    dropdown: Dropdown
   },
 
-  data(){
+  data () {
     return {
     }
   },
 
-  created() {
+  created () {
     // need to re-remove dpp from filters, because it's re-added
     // by PartnersMixin. silly.
-    const col = "DPP"
+    const col = 'DPP'
     const idx = this.filter_by.indexOf(col)
-    if (idx !== -1)
-      this.filter_by.splice(idx, 1)
+    if (idx !== -1) { this.filter_by.splice(idx, 1) }
   },
 
   computed: {
-    data() {
+    data () {
       if (!this.hasData) return []
 
-      const dataset = this.filtered;
+      const dataset = this.filtered
       const out = {}
 
-      for (let d of dataset) {
+      for (const d of dataset) {
         // only count rows having donor programme partners
-        if (!d.DPP) continue;
-        let item = out[d.donor];
-        if (item === undefined ) {
+        if (!d.DPP) continue
+        let item = out[d.donor]
+        if (item === undefined) {
           item = out[d.donor] = {
             donor: d.donor,
             countries: d3.set(),
             programmes: d3.set(),
-            organizations: {},
+            organizations: {}
           }
         }
-        item.countries.add(d.beneficiary);
-        item.programmes.add(d.programme);
+        item.countries.add(d.beneficiary)
+        item.programmes.add(d.programme)
         if (item.organizations[d.DPP] == undefined) {
           item.organizations[d.DPP] = {
-              name: d.DPP,
-              countries: d3.set(),
-              programmes: d3.set()
+            name: d.DPP,
+            countries: d3.set(),
+            programmes: d3.set()
           }
         }
-        item.organizations[d.DPP].countries.add(d.beneficiary);
-        item.organizations[d.DPP].programmes.add(d.programme);
+        item.organizations[d.DPP].countries.add(d.beneficiary)
+        item.organizations[d.DPP].programmes.add(d.programme)
       }
 
-      const donors = [];
-      for (let donor in out) {
+      const donors = []
+      for (const donor in out) {
         // convert organisations dict to array and sort
         const orgs = []
         const partners = Object.keys(out[donor].organizations).sort()
-        for (let partner of partners) {
+        for (const partner of partners) {
           orgs.push(out[donor].organizations[partner])
         }
-        out[donor].organizations = orgs;
-        donors.push(out[donor]);
+        out[donor].organizations = orgs
+        donors.push(out[donor])
       }
-      const $this = this;
-      donors.sort((a,b) => d3.ascending(
-          $this.get_sort_order(a.donor),
-          $this.get_sort_order(b.donor)
-      ));
+      const $this = this
+      donors.sort((a, b) => d3.ascending(
+        $this.get_sort_order(a.donor),
+        $this.get_sort_order(b.donor)
+      ))
       return donors
     },
 
-    dropdown_items(){
-    let organizations = {};
-      for (let items of this.data){
-        for(let org of items.organizations){
-           let item = organizations[org.name] = {
+    dropdown_items () {
+      const organizations = {}
+      for (const items of this.data) {
+        for (const org of items.organizations) {
+          organizations[org.name] = {
             name: org.name
           }
         }
       }
       return organizations
-    },
-  },
-
-  methods: {
-    handleFilterDPP(organisation) {
-      this.filters.DPP == organisation ? false : true
-    },
-
-    toggleDPP(e, organisation) {
-      this.filters.DPP = this.filters.DPP == organisation ? null : organisation;
-    },
-
-    show_items(e){
-      let target = e.target.parentNode.parentNode
-      target.classList.toggle('active')
     }
   },
 
-});
+  methods: {
+    handleFilterDPP (organisation) {
+      this.filters.DPP != organisation // what does this do? potential bug?
+    },
+
+    toggleDPP (e, organisation) {
+      this.filters.DPP = this.filters.DPP === organisation ? null : organisation
+    },
+
+    show_items (e) {
+      const target = e.target.parentNode.parentNode
+      target.classList.toggle('active')
+    }
+  }
+
+})
 
 </script>

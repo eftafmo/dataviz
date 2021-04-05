@@ -13,7 +13,6 @@
 </programmes>
 </template>
 
-
 <style lang="less">
 .dataviz .viz.programmes.projects {
   .programme-item {
@@ -28,33 +27,31 @@
 }
 </style>
 
-
 <script>
 import Component from './Component'
 
 import Programmes from './Programmes'
 import Projects from './includes/Projects'
-import ProjectsMixin from './mixins/Projects';
-
+import ProjectsMixin from './mixins/Projects'
 
 export default Component.extend({
   mixins: [
-    ProjectsMixin,
+    ProjectsMixin
   ],
 
   components: {
     programmes: Programmes,
-    projects: Projects,
+    projects: Projects
   },
 
   props: {
-    detailsDatasource: String,
+    detailsDatasource: String
   },
 
-  data() {
+  data () {
     return {
-      extra: null,
+      extra: null
     }
-  },
+  }
 })
 </script>

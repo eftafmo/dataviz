@@ -1,31 +1,31 @@
 // for use with StatesBarChart components
 
 export default {
-  type: "beneficiaries",
+  type: 'beneficiaries',
 
-  data() {
+  data () {
     return {
-      state_type: "beneficiary",
+      state_type: 'beneficiary'
     }
   },
 
   computed: {
-    STATES() {
+    STATES () {
       return this.BENEFICIARIES
     },
 
-    longestText() {
+    longestText () {
       return this.longestBeneficiary
     },
 
-    clickFunc() {
+    clickFunc () {
       return this.toggleBeneficiary
-    },
+    }
   },
 
   methods: {
-    handleFilterBeneficiary() {
+    handleFilterBeneficiary () {
       this.handleStateFilter()
-    },
-  },
-};
+    }
+  }
+}

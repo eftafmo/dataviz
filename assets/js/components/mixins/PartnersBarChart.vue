@@ -1,17 +1,17 @@
 <!-- for use with StatesBarChart components -->
 <script>
-import * as d3 from 'd3';
+import * as d3 from 'd3'
 
 export default {
 
-  created() {
+  created () {
     for (const k in this.columns) {
       this.aggregate_on.push(this.columns[k])
     }
   },
 
   computed: {
-    types() {
+    types () {
       const types = {}
 
       for (const k in this.columns) {
@@ -19,32 +19,32 @@ export default {
 
         types[k] = Object.assign({
           id: k,
-          colour: this.colours[k],
+          colour: this.colours[k]
         }, col)
       }
 
       return types
     },
 
-    div_types() {
+    div_types () {
       return d3.values(this.types)
-    },
+    }
   },
 
   methods: {
-    valuefunc(item, type) {
+    valuefunc (item, type) {
       const orgs = item[this.types[type].source] // this is a set
       return orgs ? orgs.size() : 0
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate (d) {
       const data = d.data
-                    .filter( (x) => x.value != 0 );
+        .filter((x) => x.value !== 0)
       const datatxt = data
-        .map( (x) => `
-            <li>${ this.number(x.value) } ${ this.singularize(x.name, x.value) }</li>
-        ` )
-        .join("");
+        .map((x) => `
+            <li>${this.number(x.value)} ${this.singularize(x.name, x.value)}</li>
+        `)
+        .join('')
 
       return `
         <div class="title-container">
@@ -53,9 +53,9 @@ export default {
           </svg>
           <span class="name">${d.name}</span>
         </div>
-        <ul> ${ datatxt } </ul>
-        <span class="action">Click to filter by ${ this.state_type } state</span>`;
-    },
-  },
-};
+        <ul> ${datatxt} </ul>
+        <span class="action">Click to filter by ${this.state_type} state</span>`
+    }
+  }
+}
 </script>

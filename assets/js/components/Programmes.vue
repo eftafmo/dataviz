@@ -25,7 +25,6 @@
 </ul>
 </template>
 
-
 <style lang="less">
 .dataviz .viz.programmes {
   li {
@@ -113,7 +112,6 @@
     display: block;
   }
 
-
   .title-wrapper > * {
     display: inline-block;
     margin-right: .5rem;
@@ -135,63 +133,58 @@
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
+import * as d3 from 'd3'
 
-import Component from './Component';
-import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountries';
-import WithRegionsMixin from './mixins/WithRegions';
-
+import Component from './Component'
+import WithCountriesMixin, { COUNTRIES, get_flag_name } from './mixins/WithCountries'
+import WithRegionsMixin from './mixins/WithRegions'
 
 export default Component.extend({
-  type: "programmes",
+  type: 'programmes',
 
   mixins: [
     WithCountriesMixin,
-    WithRegionsMixin,
+    WithRegionsMixin
   ],
 
-
-  updated() {
-    //TODO: this can be done a lot better
-    if (window.matchMedia("(max-width: 800px)").matches) {
-      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]');
-      if (!parent_nav) return;
-      parent_nav.innerHTML = 'Programmes ('+this.data.projectcount+')'
+  updated () {
+    // TODO: this can be done a lot better
+    if (window.matchMedia('(max-width: 800px)').matches) {
+      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#programmes"]')
+      if (!parent_nav) return
+      parent_nav.innerHTML = 'Programmes (' + this.data.projectcount + ')'
     }
   },
 
-
   computed: {
-    data() {
+    data () {
       if (!this.hasData) return []
 
-      const dataset = this.filtered;
-      const beneficiaries = {};
-      let programmes_array = [];
+      const dataset = this.filtered
+      const beneficiaries = {}
+      const programmes_array = []
 
       for (const d of dataset) {
-        const programmes = d.programmes;
+        const programmes = d.programmes
 
-        if (!programmes || !Object.keys(programmes).length) continue;
+        if (!programmes || !Object.keys(programmes).length) continue
 
-        let beneficiary = beneficiaries[d.beneficiary];
-        if (beneficiary === undefined)
-          beneficiary = beneficiaries[d.beneficiary] = {};
+        let beneficiary = beneficiaries[d.beneficiary]
+        if (beneficiary === undefined) { beneficiary = beneficiaries[d.beneficiary] = {} }
 
         for (const p in programmes) {
-          let programme = beneficiary[p];
-          if (programme === undefined)
+          let programme = beneficiary[p]
+          if (programme === undefined) {
             programme = beneficiary[p] = {
               sector: d.sector,
               // TODO: programmes may have multiple sectors, see CZ02
               programme_code: p,
               programme_name: programmes[p].name,
               programme_url: programmes[p].url,
-              nuts: programmes[p].nuts ? Object.keys(programmes[p].nuts) : null,
-            };
-          else if (programme.nuts) {
+              nuts: programmes[p].nuts ? Object.keys(programmes[p].nuts) : null
+            }
+          } else if (programme.nuts) {
             // need to merge their nuts
             programme.nuts = Array.from(new Set(
               programme.nuts.concat(Object.keys(programmes[p].nuts))
@@ -202,43 +195,41 @@ export default Component.extend({
 
       const out = {
         beneficiaries: [],
-        projectcount: 0,
-      };
+        projectcount: 0
+      }
 
       for (const b in beneficiaries) {
-        const programmes = beneficiaries[b],
-              beneficiary = {
-                id: b,
-                programmes: [],
-              };
-        out.beneficiaries.push(beneficiary);
+        const programmes = beneficiaries[b]
+        const beneficiary = {
+          id: b,
+          programmes: []
+        }
+        out.beneficiaries.push(beneficiary)
 
         for (const p in programmes) {
-          if(programmes[p].programme_code)
-            out.projectcount += 1;
-          const programme = programmes[p];
-          if(this.isRelevantForSelectedRegion(programme)) {
-            beneficiary.programmes.push(programme);
+          if (programmes[p].programme_code) { out.projectcount += 1 }
+          const programme = programmes[p]
+          if (this.isRelevantForSelectedRegion(programme)) {
+            beneficiary.programmes.push(programme)
           }
         }
         // Sort by programme code, the Tripartite programme always last
-        beneficiary.programmes.sort((a,b) => d3.ascending(
+        beneficiary.programmes.sort((a, b) => d3.ascending(
           a.programme_code.replace('IN22', 'ZZZZ'),
           b.programme_code.replace('IN22', 'ZZZZ')
-        ));
+        ))
       }
 
-      //Sort by country
-      out.beneficiaries.sort((a,b) => d3.ascending(this.get_country_name(a.id),this.get_country_name(b.id)));
+      // Sort by country
+      out.beneficiaries.sort((a, b) => d3.ascending(this.get_country_name(a.id), this.get_country_name(b.id)))
 
-      return out;
-    },
+      return out
+    }
   },
 
-
   methods: {
-    toggleContent(e) {
-      //remove comment if you want to toggle between elements
+    toggleContent (e) {
+      // remove comment if you want to toggle between elements
 
       // let all_programe_items = this.$el.querySelectorAll('.programme-item');
       // for (let item of all_programe_items){
@@ -246,16 +237,12 @@ export default Component.extend({
       //         item.classList.remove('active')
       // }
 
-      //TODO : get rid of the parenNode logic
-      let target;
-      if (e.target.parentNode.classList.contains('flag'))
-        target = e.target.parentNode.parentNode.parentNode.querySelector('.programme-list');
-      else
-         target = e.target.parentNode.parentNode.querySelector('.programme-list');
-      if(target.classList.contains('active')){
+      // TODO : get rid of the parenNode logic
+      let target
+      if (e.target.parentNode.classList.contains('flag')) { target = e.target.parentNode.parentNode.parentNode.querySelector('.programme-list') } else { target = e.target.parentNode.parentNode.querySelector('.programme-list') }
+      if (target.classList.contains('active')) {
         target.classList.remove('active')
-      }
-      else {
+      } else {
         target.classList.add('active')
       }
     },
@@ -263,17 +250,17 @@ export default Component.extend({
      * will consider relevant if at least one nuts from the programme is contained in the selected region or its children
      * ex: for RO31: RO31, RO312 will be relevant, but not RO, RO3, RO4 nor RO32
      */
-    isRelevantForSelectedRegion(programme) {
-      const region = this.filters.region;
-      if (!region) return true;
+    isRelevantForSelectedRegion (programme) {
+      const region = this.filters.region
+      if (!region) return true
 
       for (const nutsItem of programme.nuts) {
         if (this.isAncestorRegion(region, nutsItem)) {
-          return true;
+          return true
         }
       }
-      return false;
-    },
+      return false
+    }
   }
-});
+})
 </script>

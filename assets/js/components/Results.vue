@@ -1,6 +1,6 @@
 <template>
-    <ul :class="classNames">
-     <div v-for="items in data">
+  <ul :class="classNames">
+    <div v-for="items in data">
       <li v-for="(sectors, outcome) in items">
         <div class="content-item results_content">
           <div class="body">
@@ -8,19 +8,18 @@
             <div v-for="(indicators, sector) in sectors">
               <small v-show="!filters.sector">{{ sector }}</small>
               <ul class="indicators">
-                 <li v-for="(value, indicator) in indicators" class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
-                    <div class="indicator-achievement"> {{ number(value) }}</div>
-                    <div class="indicator-name"> {{ indicator }} </div>
-                 </li>
+                <li v-for="(value, indicator) in indicators" class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
+                  <div class="indicator-achievement"> {{ number(value) }}</div>
+                  <div class="indicator-name"> {{ indicator }} </div>
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </li>
-     </div>
-    </ul>
+    </div>
+  </ul>
 </template>
-
 
 <style lang="less">
 .dataviz .viz.results {
@@ -61,52 +60,50 @@
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
+import * as d3 from 'd3'
 
-import Component from './Component';
+import Component from './Component'
 
-import WithSectorsMixin from './mixins/WithSectors';
-
+import WithSectorsMixin from './mixins/WithSectors'
 
 export default Component.extend({
-  type: "results",
+  type: 'results',
 
   mixins: [
-    WithSectorsMixin,
+    WithSectorsMixin
   ],
 
-  updated() {
-  //TODO: this can be done a lot better
-    if (window.matchMedia("(max-width: 800px)").matches) {
+  updated () {
+  // TODO: this can be done a lot better
+    if (window.matchMedia('(max-width: 800px)').matches) {
       const results_count = Object.keys(this.data[0]).length
-      if (!results_count) return;
-      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#results"]');
-      if (!parent_nav) return;
-      parent_nav.innerHTML = 'Results ('+results_count+')'
+      if (!results_count) return
+      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#results"]')
+      if (!parent_nav) return
+      parent_nav.innerHTML = 'Results (' + results_count + ')'
     }
   },
 
   computed: {
-    data() {
+    data () {
       if (!this.hasData) return []
 
-      const dataset = this.filtered;
-      const results = {};
+      const dataset = this.filtered
+      const results = {}
 
       for (const d of dataset) {
-        const sector = d.sector;
+        const sector = d.sector
         for (const o in d.results) {
-          const values = d.results[o];
+          const values = d.results[o]
 
-          if (!values) continue;
+          if (!values) continue
 
           for (let indicator in values) {
-            const value = +values[indicator]['achievement'];
-            if (value === 0) continue;
+            const value = +values[indicator].achievement
+            if (value === 0) continue
 
-            const priority = values[indicator]['order'];
+            const priority = values[indicator].order
             if (results[priority] === undefined) {
               results[priority] = {}
             }
@@ -116,30 +113,30 @@ export default Component.extend({
             if (results[priority][o][sector] === undefined) {
               results[priority][o][sector] = {}
             }
-            let outcome = results[priority][o][sector];
+            const outcome = results[priority][o][sector]
 
-            indicator = indicator.replace(/^Number of /, '');
+            indicator = indicator.replace(/^Number of /, '')
 
-            let sum = outcome[indicator] || 0;
-            outcome[indicator] = sum + value;
+            const sum = outcome[indicator] || 0
+            outcome[indicator] = sum + value
           }
         }
       }
 
       // remove all SortOrder 3 indicators from results if higher priority indicators are available
       if (Object.keys(results).length > 1) {
-        delete results['3'];
+        delete results['3']
       }
 
-      const flattened = [];
+      const flattened = []
       // now flatten, hopefully ordered by priority *unguaranteed*
       for (const priority in results) {
-        flattened.push(results[priority]);
+        flattened.push(results[priority])
       }
       // TODO: check sorting order when adding priority=1 indicators
-      return flattened;
-    },
-  },
+      return flattened
+    }
+  }
 
-});
+})
 </script>

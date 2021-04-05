@@ -15,36 +15,34 @@
     </div>
 </template>
 
-
 <script>
-import Summary from './Summary';
-import PartnersMixin from './mixins/Partners';
-
+import Summary from './Summary'
+import PartnersMixin from './mixins/Partners'
 
 export default Summary.extend({
   mixins: [PartnersMixin],
 
   computed: {
-    data() {
+    data () {
       if (!this.hasData) return {}
 
       const out = this.aggregate(
         this.filtered,
         [],
         [
-          {source: "DPP", destination: "DPP", type: String},
-          {source: "PJDPP", destination: "dpp", type: Object}
+          { source: 'DPP', destination: 'DPP', type: String },
+          { source: 'PJDPP', destination: 'dpp', type: Object }
         ],
         false
-      );
+      )
 
       // we'll compute these here,
       // so we don't have to use v-if in the template
-      out.DPP_count = out.DPP?out.DPP.size():0
-      out.dpp_count = out.dpp?out.dpp.size():0
+      out.DPP_count = out.DPP ? out.DPP.size() : 0
+      out.dpp_count = out.dpp ? out.dpp.size() : 0
 
-      return out;
-    },
-  },
-});
+      return out
+    }
+  }
+})
 </script>

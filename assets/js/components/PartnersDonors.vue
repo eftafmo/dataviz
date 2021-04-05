@@ -1,64 +1,62 @@
 <script>
-import StatesBarChart from './StatesBarChart';
+import StatesBarChart from './StatesBarChart'
 
-import PartnersMixin from './mixins/Partners';
-import PartnersBarChartMixin from './mixins/PartnersBarChart';
-
+import PartnersMixin from './mixins/Partners'
+import PartnersBarChartMixin from './mixins/PartnersBarChart'
 
 export default StatesBarChart.extend({
-  type: "donors",
+  type: 'donors',
 
   mixins: [
     PartnersMixin,
-    PartnersBarChartMixin,
+    PartnersBarChartMixin
   ],
 
-  data() {
+  data () {
     return {
-      state_type: "donor",
+      state_type: 'donor',
 
       columns: {
         programmes: {
-          source: "DPP",
-          name: "Donor programme partners",
-          type: String,
+          source: 'DPP',
+          name: 'Donor programme partners',
+          type: String
         },
         projects: {
-          source: "PJDPP",
-          name: "Donor project partners",
-          type: Object,
-        },
-      },
+          source: 'PJDPP',
+          name: 'Donor project partners',
+          type: Object
+        }
+      }
     }
   },
 
-  created() {
+  created () {
     // need to re-remove donors from filters, because it's re-added
     // by PartnersMixin. silly.
-    const col = "donor"
+    const col = 'donor'
     const idx = this.filter_by.indexOf(col)
-    if (idx !== -1)
-      this.filter_by.splice(idx, 1)
+    if (idx !== -1) { this.filter_by.splice(idx, 1) }
   },
 
   computed: {
-    STATES() {
+    STATES () {
       return this.DONORS
     },
 
-    longestText() {
+    longestText () {
       return this.longestDonor
     },
 
-    clickFunc() {
+    clickFunc () {
       return this.toggleDonor
-    },
+    }
   },
 
   methods: {
-    handleFilterDonor() {
+    handleFilterDonor () {
       this.handleStateFilter()
-    },
+    }
   }
-});
+})
 </script>

@@ -160,35 +160,33 @@
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
-import {slugify} from 'js/lib/util';
+import * as d3 from 'd3'
+import { slugify } from 'js/lib/util'
 
 import BaseMap from './BaseMap'
 
-import WithCountriesMixin from './mixins/WithCountries';
-import WithFMsMixin from './mixins/WithFMs';
-
+import WithCountriesMixin from './mixins/WithCountries'
+import WithFMsMixin from './mixins/WithFMs'
 
 const AllocationMap = BaseMap.extend({
-  type: "allocation",
+  type: 'allocation',
 
   mixins: [
-    WithCountriesMixin, WithFMsMixin,
+    WithCountriesMixin, WithFMsMixin
   ],
 
   components: {
-    regionDetails: { render(c) { return c() } },
+    regionDetails: { render (c) { return c() } }
   },
 
   props: {
     // this is a "template" with the string 'XX' meant to be replaced
     // with the country code
-    detailsDatasource: String,
+    detailsDatasource: String
   },
 
-  data() {
+  data () {
     return {
       zoomed_nuts_level: 3,
 
@@ -196,37 +194,36 @@ const AllocationMap = BaseMap.extend({
       // restrict rendering to donors and beneficiaries
       all_states: Object.keys(this.COUNTRIES).filter(
         id => (
-          ["donor", "beneficiary"].indexOf(this.COUNTRIES[id].type) !== -1 &&
-          id != "Intl" // let's not forget about that :)
+          ['donor', 'beneficiary'].indexOf(this.COUNTRIES[id].type) !== -1 &&
+          id !== 'Intl' // let's not forget about that :)
         )
       ),
 
       current_region: null,
       hovered_region: null,
 
-      current_region_data: null,
+      current_region_data: null
     }
   },
 
-  created() {
+  created () {
     // don't filter / aggregate by beneficiary, group by it
     // (TODO: this smells like a pattern already)
-    let idx;
+    let idx
 
-    idx = this.filter_by.indexOf("beneficiary");
-    if (idx !== -1)
-      this.filter_by.splice(idx, 1);
+    idx = this.filter_by.indexOf('beneficiary')
+    if (idx !== -1) { this.filter_by.splice(idx, 1) }
 
     this.aggregate_by.push(
-        { source: "beneficiary", destination: "id" }
-    );
+      { source: 'beneficiary', destination: 'id' }
+    )
 
-    idx = this.aggregate_on.findIndex(x => x.source == "beneficiary");
-    if (idx !== -1) this.aggregate_on.splice(idx, 1);
+    idx = this.aggregate_on.findIndex(x => x.source === 'beneficiary')
+    if (idx !== -1) this.aggregate_on.splice(idx, 1)
 
     // aggreggate on fm, we'll need that for donor colours
     this.aggregate_on.push(
-      { source: "fm", destination: "fms", type: String }
+      { source: 'fm', destination: 'fms', type: String }
     )
 
     // cache for raw region-level data
@@ -241,56 +238,56 @@ const AllocationMap = BaseMap.extend({
   },
 
   computed: {
-    initial_regions() {
-      if (this.is_standalone)
+    initial_regions () {
+      if (this.is_standalone) {
         return [{
           states: this.filters.beneficiary,
-          levels: [0, this.zoomed_nuts_level],
+          levels: [0, this.zoomed_nuts_level]
         }]
+      }
 
       // otherwise, we always want level0 stuff, even when ready-zoomed
-      const initials = [ { levels: 0 } ]
+      const initials = [{ levels: 0 }]
 
-      if (this.filters.beneficiary)
+      if (this.filters.beneficiary) {
         initials.push({
           states: this.filters.beneficiary,
-          levels: this.zoomed_nuts_level,
+          levels: this.zoomed_nuts_level
         })
+      }
 
       return initials
     },
 
-    data() {
-      const aggregated = d3.values(this.aggregated);
+    data () {
+      const aggregated = d3.values(this.aggregated)
 
       for (const item of aggregated) {
-        item.name = this.BENEFICIARIES[item.id].name;
+        item.name = this.BENEFICIARIES[item.id].name
       }
-      return aggregated.sort((a, b) => d3.ascending(a.name, b.name));
-    },
+      return aggregated.sort((a, b) => d3.ascending(a.name, b.name))
+    }
   },
 
   methods: {
-    getParentRegion(id) {
+    getParentRegion (id) {
       if (!id) return
 
       const level = this.getRegionLevel(id)
-      if (level == 0)
-        return null // for consistency with filter values
-      if (level == this.zoomed_nuts_level)
-        return this.getAncestorRegion(id, 0)
+      if (level === 0) { return null } // for consistency with filter values
+      if (level == this.zoomed_nuts_level) { return this.getAncestorRegion(id, 0) }
       return this.getAncestorRegion(id, level - 1)
     },
 
-    zoomOut() {
+    zoomOut () {
       this.filters.beneficiary = null
     },
 
-    opacityfunc(parentid) {
-      return parentid == "" ? 1 : 0
+    opacityfunc (parentid) {
+      return parentid === '' ? 1 : 0
     },
 
-    renderChart() {
+    renderChart () {
       const t = this.getTransition()
 
       this.renderDonorColours(t)
@@ -301,18 +298,18 @@ const AllocationMap = BaseMap.extend({
       // ... this should normally be updated at this point,
       // but renderRegionData will be called async the first time,
       // so doing it there
-      //this._prev_region = this.current_region
+      // this._prev_region = this.current_region
     },
 
-    renderData(t) {
-      throw new Error("Not implemented");
+    renderData (t) {
+      throw new Error('Not implemented')
     },
 
-    renderRegionData(region, regiondata, t) {
-      throw new Error("Not implemented");
+    renderRegionData (region, regiondata, t) {
+      throw new Error('Not implemented')
     },
 
-    doRenderRegionData(t) {
+    doRenderRegionData (t) {
       const region = this.current_region
       if (region === null) {
         // nothing to do, but don't forget to reset the prev region
@@ -322,13 +319,13 @@ const AllocationMap = BaseMap.extend({
 
       const state = region.substr(0, 2)
 
-      let dataset = this._region_data[state];
+      let dataset = this._region_data[state]
 
       const renderRegionData = (dataset, t) => {
         // we want to "render" the data for all ancestors of the given region.
         // (the local implementation will decide what rendering actually means)
         let r = region
-        while(r) {
+        while (r) {
           this.renderRegionData(r, this.computeRegionData(dataset), t)
           r = this.getParentRegion(r)
         }
@@ -341,68 +338,66 @@ const AllocationMap = BaseMap.extend({
         // so prepare to reset it if necessary
         let t_expired = false
         const t_duration = t.duration() // so we can replicate a similar transition
-        t.on("end", () => t_expired = true)
+        t.on('end', () => t_expired = true)
         // TODO: run a throbber / suggest data loading somehow?
 
         // fetch the data, fill the cache, render
-        const url = this.detailsDatasource.replace('XX', state);
+        const url = this.detailsDatasource.replace('XX', state)
 
         d3.json(url, (error, data) => {
-          if (error) throw error;
+          if (error) throw error
 
-          dataset = this._region_data[state] = data;
-          if(t_expired) t = this.getTransition(t_duration)
+          dataset = this._region_data[state] = data
+          if (t_expired) t = this.getTransition(t_duration)
           renderRegionData(dataset, t)
-        } );
+        })
       } else {
         renderRegionData(dataset, t)
       }
     },
 
-    computeRegionData(regiondataset) {
+    computeRegionData (regiondataset) {
       const filtered = this.filter(regiondataset, this.filter_by)
       return this.aggregate(filtered, ['id'], this.aggregate_on, true)
     },
 
-    _domouse(over, d, i, group) {
+    _domouse (over, d, i, group) {
       // disable mouseover events while transitioning
       if (this.transitioning) return
 
       // avoid strangeness, disable events for the current region
       // (it should always be covered by its children)
-      if (this.current_region && d.id == this.current_region)
-        return
+      if (this.current_region && d.id === this.current_region) { return }
 
       // disable mouseover events on mobile because of iphone quirks
       // TODO: fix this, it's too broad
       // (and events should be handled specifically for mobile as needed)
-      if (window.matchMedia("(max-width: 767px)").matches) return
+      if (window.matchMedia('(max-width: 767px)').matches) return
 
       const self = this.$super(AllocationMap, this)._domouse(over, d, i, group)
       if (!self) return
 
-      if (this.getRegionLevel(d.id) == 0 && this.isDonor(d))
-        return
+      if (this.getRegionLevel(d.id) === 0 && this.isDonor(d)) { return }
 
       return self
     },
 
-    clickfunc(d, i, group) {
-      if(d.id.length === 2 && this.COUNTRIES[d.id].type !== "beneficiary") return;
+    clickfunc (d, i, group) {
+      if (d.id.length === 2 && this.COUNTRIES[d.id].type !== 'beneficiary') return
 
       const self = d3.select(group[i])
-      if (self.classed("zero")) return
+      if (self.classed('zero')) return
 
-      if (d.id.length == 2) this.toggleBeneficiary(d)
+      if (d.id.length === 2) this.toggleBeneficiary(d)
 
       return self
     },
 
-    doZoom(t) {
-      const newid = this.current_region,
-            oldid = this._prev_region;
+    doZoom (t) {
+      const newid = this.current_region
+      const oldid = this._prev_region
 
-      if (newid == oldid) return
+      if (newid === oldid) return
 
       const $this = this
 
@@ -411,26 +406,29 @@ const AllocationMap = BaseMap.extend({
         // otherwise hide all descendant regions
         let selector = `.regions > .${id}`
         if (yes) {
-          const level = id.length == 2 ? this.zoomed_nuts_level
-                                       : id.length - 2 + 1
+          const level = id.length === 2
+            ? this.zoomed_nuts_level
+            : id.length - 2 + 1
           selector += `.level${level}`
         }
 
         const parent = this.chart.selectAll(selector)
-          //.raise()
-          .classed("transitioning", true)
-          .style("display", null)
+          // .raise()
+          .classed('transitioning', true)
+          .style('display', null)
           .transition(t)
-          .attr("opacity", Number(yes))
-          .on("end", function() {
+          .attr('opacity', Number(yes))
+          .on('end', function () {
             const s = d3.select(this)
-              .classed("transitioning", false)
+              .classed('transitioning', false)
 
-            if (!yes) s
-              .style("display", "none")
+            if (!yes) {
+              s
+                .style('display', 'none')
               // also reset regions to default colour
-              .selectAll("path")
-              .attr("fill", $this.fillfunc)
+                .selectAll('path')
+                .attr('fill', $this.fillfunc)
+            }
           })
       }
 
@@ -441,22 +439,22 @@ const AllocationMap = BaseMap.extend({
           // must selectAll, or else data goes poof
           .selectAll(`.regions > .level${level} > .${id}`)
           .transition(t)
-          .attr("fill", this.fillfunc)
+          .attr('fill', this.fillfunc)
 
-          .on("start", function() {
+          .on('start', function () {
             $this.transitioning = true
           })
-          .on("end", function() {
+          .on('end', function () {
             $this.transitioning = false
           })
-          .on("interrupt", function(d) {
+          .on('interrupt', function (d) {
             // watch out for the impossible "double interrupt":
             // a previous country was supposed to be faded back in,
             // but that got interrupted too
             // (that's a real fast triple click in at least 2 different places)
-            if (oldid && oldid != d.id && !yes) {
-              $this.chart.select(".regions > .level0").selectAll(`.${oldid}`)
-                .attr("fill", $this.fillfunc)
+            if (oldid && oldid !== d.id && !yes) {
+              $this.chart.select('.regions > .level0').selectAll(`.${oldid}`)
+                .attr('fill', $this.fillfunc)
             }
           })
       }
@@ -486,14 +484,14 @@ const AllocationMap = BaseMap.extend({
       this.map.zoomTo(newid, t)
     },
 
-    handleFilterBeneficiary(v) {
+    handleFilterBeneficiary (v) {
       this.current_region = v
       if (v) this.map.renderRegions(v, this.zoomed_nuts_level)
       if (!v) this.current_region_data = null
       this.tip.hide()
       this.render()
-    },
-  },
+    }
+  }
 })
 
 export default AllocationMap

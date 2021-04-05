@@ -23,13 +23,13 @@
         </div>
       </transition>
       <div class="data-wrapper">
-        <ul :style="{ 
-        fontSize: fonts.middle_text + 'px', 
+        <ul :style="{
+        fontSize: fonts.middle_text + 'px',
         paddingTop: circle_dimensions.padding_top + 'px',
         paddingBottom: circle_dimensions.padding_top + 'px',
         paddingLeft: circle_dimensions.padding_left + 'px',
         paddingRight: circle_dimensions.padding_left + 'px'
-        }" 
+        }"
          class="data">
           <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
           <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
@@ -40,7 +40,6 @@
       </div>
     </div>
 
-
     <div v-if="!hasData || !aggregated.allocation" class="info">
       <transition name="fade">
         <div :style="{fontSize: fonts.top_text + 'px'}" class="heading" :key="changed">
@@ -48,8 +47,8 @@
         </div>
       </transition>
       <div class="data-wrapper">
-          <ul :style="{ 
-          fontSize: fonts.middle_text + 'px', 
+          <ul :style="{
+          fontSize: fonts.middle_text + 'px',
           paddingTop: circle_dimensions.padding_top + 'px',
           paddingBottom: circle_dimensions.padding_top + 'px',
           paddingLeft: circle_dimensions.padding_left + 'px',
@@ -64,7 +63,6 @@
   </chart-container>
 </div>
 </template>
-
 
 <style lang="less">
 // defs. shared with js below.
@@ -232,12 +230,10 @@
     }
   }
 
-
   .legend {
     position: absolute;
     left: 0;
     top: 0;
-   
 
     .fm span {
       width: 10px; height: 10px;
@@ -308,194 +304,191 @@
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
-import xchord from 'js/lib/x-chord';
-import {slugify} from 'js/lib/util';
+import * as d3 from 'd3'
+import xchord from 'js/lib/x-chord'
+import { slugify } from 'js/lib/util'
 
-import Chart from './Chart';
+import Chart from './Chart'
 
-import WithFMsMixin from './mixins/WithFMs';
-import WithCountriesMixin from './mixins/WithCountries';
-
+import WithFMsMixin from './mixins/WithFMs'
+import WithCountriesMixin from './mixins/WithCountries'
 
 export default Chart.extend({
-  type: "overview",
+  type: 'overview',
 
   mixins: [
     WithFMsMixin, WithCountriesMixin
   ],
 
-  data() {
+  data () {
     return {
-      filter_by: ["fm", "beneficiary"],
+      filter_by: ['fm', 'beneficiary'],
 
       width: 500,
 
       padding: Math.PI / 2, // padding between main groups, in radians
-      //itemPadding: 0,
+      // itemPadding: 0,
       itemPadding: Math.PI / 180 / 3, // padding between items, in radians
-      text_padding: .01, // percentage of width/height
+      text_padding: 0.01, // percentage of width/height
 
       text_spacing: 2, // vertical spacing, in text-height units
 
-      inner_radius: .85, // percentage of outer radius
+      inner_radius: 0.85, // percentage of outer radius
 
-      beneficiary_colour: "#ccc",
+      beneficiary_colour: '#ccc',
 
-      source_stroke_opacity: .1,
-      target_stroke_opacity: .5,
+      source_stroke_opacity: 0.1,
+      target_stroke_opacity: 0.5,
 
       // css properties that need to scale with the component container size
       fonts: {
         bottom_text: 0,
         top_text: 0,
-        middle_text: 0,
+        middle_text: 0
       },
 
       circle_dimensions: {
-        padding_left : 0,
-        padding_top: 0,
+        padding_left: 0,
+        padding_top: 0
       }
-    };
+    }
   },
 
   computed: {
-    height() {
-      return this.width * Math.sin(Math.PI / 2 - this.padding / 2);
+    height () {
+      return this.width * Math.sin(Math.PI / 2 - this.padding / 2)
     },
 
-    textDimensions() {
+    textDimensions () {
       // calculate maximum text width.
       // (fms group shows country names as well and uses the same font.)
-      const fakeB = this.chart.select(".beneficiaries")
-                        .append("g").attr("class", "item");
-      const txt = fakeB.append("g").attr("class", "text")
-                       .append("text").attr("visibility", "hidden");
+      const fakeB = this.chart.select('.beneficiaries')
+        .append('g').attr('class', 'item')
+      const txt = fakeB.append('g').attr('class', 'text')
+        .append('text').attr('visibility', 'hidden')
 
-      txt.text(this.longestCountry);
-      const bounds = txt.node().getBBox();
-      fakeB.remove();
+      txt.text(this.longestCountry)
+      const bounds = txt.node().getBBox()
+      fakeB.remove()
 
-      return {width: bounds.width, height: bounds.height};
+      return { width: bounds.width, height: bounds.height }
     },
 
-    textPadding() {
-      return this.text_padding * this.width;
+    textPadding () {
+      return this.text_padding * this.width
     },
 
-    margin() {
-      if (!this.isReady) return 0;
-      return this.textDimensions.width + this.textPadding;
+    margin () {
+      if (!this.isReady) return 0
+      return this.textDimensions.width + this.textPadding
     },
 
-    radius() {
-      return this.width / 2 - this.margin;
+    radius () {
+      return this.width / 2 - this.margin
     },
 
-    innerRadius() {
-      return this.radius * this.inner_radius;
+    innerRadius () {
+      return this.radius * this.inner_radius
     },
 
-    linksRadius() {
+    linksRadius () {
       // links should be exactly itemPadding away from the arcs
-      return this.innerRadius - this.radius * this.itemPadding;
+      return this.innerRadius - this.radius * this.itemPadding
     },
 
-    textHeight() {
-      return this.textDimensions.height;
+    textHeight () {
+      return this.textDimensions.height
     },
 
-    textRadians() {
-      return this.textHeight / this.radius;
+    textRadians () {
+      return this.textHeight / this.radius
     },
 
-    textDegrees() {
-      return this.textRadians / Math.PI * 180;
+    textDegrees () {
+      return this.textRadians / Math.PI * 180
     },
 
-    arc() {
+    arc () {
       return d3.arc()
         .outerRadius(this.radius)
-        .innerRadius(this.innerRadius);
+        .innerRadius(this.innerRadius)
     },
 
-
-    blank() {
-      const outerRadius = this.radius + this.margin,
-            innerRadius = this.radius,
-            txtheight = this.textHeight,
-            txtrads = this.textRadians;
+    blank () {
+      const outerRadius = this.radius + this.margin
+      const innerRadius = this.radius
+      const txtheight = this.textHeight
+      const txtrads = this.textRadians
 
       const arcfunc = d3.arc()
         .outerRadius(outerRadius)
-        .innerRadius(innerRadius);
+        .innerRadius(innerRadius)
 
-      return function(d) {
-        const coords = {startAngle: d.startAngle, endAngle: d.endAngle},
-              height = (d.endAngle - d.startAngle) * innerRadius;
+      return function (d) {
+        const coords = { startAngle: d.startAngle, endAngle: d.endAngle }
+        const height = (d.endAngle - d.startAngle) * innerRadius
 
         if (height > txtheight) {
           // shave off a few pixels so this doesn't cover sibling cramped texts
-          const center = (d.startAngle + d.endAngle) / 2;
+          const center = (d.startAngle + d.endAngle) / 2
           coords.startAngle = Math.min(
             d.startAngle + txtrads / 2, center - txtrads / 2
-          );
+          )
           coords.endAngle = Math.max(
             d.endAngle - txtrads / 2, center + txtrads / 2
-          );
+          )
         }
-        return arcfunc(coords);
+        return arcfunc(coords)
       }
     },
 
-    link() {
+    link () {
       return d3.ribbon()
-        .radius(this.linksRadius);
+        .radius(this.linksRadius)
     },
 
-    chord() {
+    chord () {
       return xchord()
         .padding(this.padding)
-        .itemPadding(this.itemPadding);
+        .itemPadding(this.itemPadding)
     },
 
-    aggregated() {
+    aggregated () {
       return this.aggregate(
         this.filtered,
         [],
         [
           'allocation', 'project_count',
-          {source: 'programmes', type: Array},
+          { source: 'programmes', type: Array }
         ],
         false
-      );
+      )
     },
 
-    data() {
-      const matrix = [],
-            dataset = this.aggregate(
-              this.filtered, ['fm', 'beneficiary'], ['allocation'], false
-            );
+    data () {
+      const matrix = []
+      const dataset = this.aggregate(
+        this.filtered, ['fm', 'beneficiary'], ['allocation'], false
+      )
 
       // base the dataset on the constant list of FMs and beneficiaries,
       // to ensure 0-valued items exist regardless of filtering
       for (const fm of this.FM_ARRAY) {
-        const fmdata = dataset[fm.name],
-              allocations = Array();
+        const fmdata = dataset[fm.name]
+        const allocations = Array()
 
-        matrix.push(allocations);
+        matrix.push(allocations)
 
         if (fmdata === undefined) {
-          allocations.length = this.BENEFICIARY_ARRAY.length;
-          allocations.fill(0);
-          continue;
+          allocations.length = this.BENEFICIARY_ARRAY.length
+          allocations.fill(0)
+          continue
         }
 
         for (const bnf of this.BENEFICIARY_ARRAY) {
-          const bnfdata = fmdata[bnf.id];
-          allocations.push(bnfdata !== undefined ? bnfdata.allocation : 0);
+          const bnfdata = fmdata[bnf.id]
+          allocations.push(bnfdata !== undefined ? bnfdata.allocation : 0)
         }
       }
 
@@ -517,325 +510,324 @@ export default Chart.extend({
       // for avg / stdev calculations we skip zeroes
       const _totals = totals.filter(x => x != 0)
 
-      const sum = _totals.reduce((a, b) => a + b, 0),
-            permitted = sum * MIN,
-            minval = Math.min.apply(Math, _totals)
+      const sum = _totals.reduce((a, b) => a + b, 0)
+      const permitted = sum * MIN
+      const minval = Math.min.apply(Math, _totals)
 
-      if (sum == 0) return;
+      if (sum === 0) return
 
       // maybe there's nothing to do?
       if (minval >= permitted) return this.chord(matrix)
 
-      const basedelta = permitted - minval,
-            avg = sum / _totals.length
+      const basedelta = permitted - minval
+      const avg = sum / _totals.length
 
       const stdev = Math.sqrt(
         _totals.map(x => (x - avg) * (x - avg))
-               .reduce((a, b) => a + b)
+          .reduce((a, b) => a + b) /
 
-        / (_totals.length - 1)
+        (_totals.length - 1)
       )
 
       // this is where the magic happens:
-      const weights = totals.map(x => x == 0 ? 0 : (x - avg) / stdev)
+      const weights = totals.map(x => x === 0 ? 0 : (x - avg) / stdev)
 
       const minweight = Math.min.apply(Math, weights) // this corresponds to minval
 
-      const deltas = totals.map((x, i) => x == 0 ? 0 : weights[i] * basedelta / minweight)
+      const deltas = totals.map((x, i) => x === 0 ? 0 : weights[i] * basedelta / minweight)
 
       for (const row of matrix) {
         row.forEach((x, i) => {
-          if (x == 0) return 0
+          if (x === 0) return 0
 
           row[i] = x + x / totals[i] * deltas[i]
         })
       }
 
       return this.chord(matrix)
-    },
+    }
   },
 
   methods: {
-    computeDimensions(event) {
+    computeDimensions (event) {
       this.$super.computeDimensions(event)
 
-      //the constants used for the calculations are the ideal sizes of the element's css properties for maxWidth
+      // the constants used for the calculations are the ideal sizes of the element's css properties for maxWidth
 
       let baseWidth = Math.max(this.$el.offsetWidth, 1000)
 
-      //different behaviour for embedded 
-      if(this.$el.classList.contains("embedded")){
-        baseWidth = Math.max(this.$el.offsetWidth, 1200) 
+      // different behaviour for embedded
+      if (this.$el.classList.contains('embedded')) {
+        baseWidth = Math.max(this.$el.offsetWidth, 1200)
         if (this.$el.offsetWidth > 1199) {
           baseWidth = Math.max(this.$el.offsetWidth, 1400)
-        } 
+        }
       }
-      //different behaviour for mobile and tablet
+      // different behaviour for mobile and tablet
       if (this.$el.offsetWidth < 500) baseWidth = 700
 
       // some very magic numbers
-      const maxWidth = 1360,
-            ratio = baseWidth / maxWidth
+      const maxWidth = 1360
+      const ratio = baseWidth / maxWidth
 
       // FONTS
       this.fonts.bottom_text = 21 * ratio
       this.fonts.top_text = 35 * ratio
-      this.fonts.middle_text = 25 * ratio 
+      this.fonts.middle_text = 25 * ratio
 
       // Paddings used for circle size
       this.circle_dimensions.padding_top = 25 * ratio
       this.circle_dimensions.padding_left = 35 * ratio
     },
-    renderChart() {
-      const $this = this,
-            chords = this.data,
-            t = this.getTransition();
+    renderChart () {
+      const chords = this.data
+      const t = this.getTransition()
 
-      if(!this.data) return;
+      if (!this.data) return
       // avoid other transitions while this runs ¬
       t
-        .on("start",
-            () => this._transitioning = true )
-        .on("end",
-            () => this._transitioning = false );
+        .on('start',
+          () => this._transitioning = true)
+        .on('end',
+          () => this._transitioning = false)
 
-      const fms = this.chart.select("g.fms")
-                      .selectAll("g.item")
-                      .data(chords.sources),
-            beneficiaries = this.chart.select("g.beneficiaries")
-                      .selectAll("g.item")
-                      .data(chords.targets),
-            links = this.chart.select("g.links")
-                      .selectAll("path")
-                      .data(chords);
+      const fms = this.chart.select('g.fms')
+        .selectAll('g.item')
+        .data(chords.sources)
+      const beneficiaries = this.chart.select('g.beneficiaries')
+        .selectAll('g.item')
+        .data(chords.targets)
+      const links = this.chart.select('g.links')
+        .selectAll('path')
+        .data(chords)
 
-      const fmcolour = (d) => this.FM_ARRAY[d.index].colour,
+      const fmcolour = (d) => this.FM_ARRAY[d.index].colour
 
-            extract_coords = (d) => ({
-              startAngle: d.startAngle,
-              endAngle: d.endAngle,
-            }),
-            extract_link_coords = (d) => ({
-              source: extract_coords(d.source),
-              target: extract_coords(d.target),
-            }),
+      const extract_coords = (d) => ({
+        startAngle: d.startAngle,
+        endAngle: d.endAngle
+      })
+      const extract_link_coords = (d) => ({
+        source: extract_coords(d.source),
+        target: extract_coords(d.target)
+      })
 
-            txtTransform = (d, direction) => `rotate(${(
-              (d.startAngle + d.endAngle) / 2
-              / Math.PI * 180
-              - 90 * direction
-            )})`;
+      const txtTransform = (d, direction) => `rotate(${(
+              (d.startAngle + d.endAngle) / 2 /
+              Math.PI * 180 -
+              90 * direction
+      )})`
 
-      function mktweener(tweenfunc, coordsfunc) {
-        return function(d) {
+      function mktweener (tweenfunc, coordsfunc) {
+        return function (d) {
           const interpolate = d3.interpolate(
             this._prev, coordsfunc(d)
-          );
-          this._prev = interpolate(0);
+          )
+          this._prev = interpolate(0)
 
-          return function(x) {
-            return tweenfunc(interpolate(x));
+          return function (x) {
+            return tweenfunc(interpolate(x))
           }
         }
       }
 
       const fentered = fms.enter()
-        .append("g")
-        .style("fill", fmcolour)
-        .style("stroke", fmcolour);
+        .append('g')
+        .style('fill', fmcolour)
+        .style('stroke', fmcolour)
 
       const bentered = beneficiaries.enter()
-        .append("g");
+        .append('g')
 
       const _options = {
         source: {
           items: this.FM_ARRAY,
           filterfunc: this.toggleFm,
-          direction: -1,
+          direction: -1
         },
         target: {
           items: this.BENEFICIARY_ARRAY,
           filterfunc: this.toggleBeneficiary,
-          direction: 1,
+          direction: 1
         }
-      };
+      }
 
       const setUp = (sel, type) => {
-        const opts = _options[type];
-        const item = (i) => opts.items[i];
+        const opts = _options[type]
+        const item = (i) => opts.items[i]
 
         sel
-          .attr("class", (d, i) => "item " + item(i).id )
-          .on("click", (d, i) => opts.filterfunc(item(i)) )
-          .on("mouseenter", this.mkhighlight(type))
-          .on("mouseleave", this.mkunhighlight(type));
+          .attr('class', (d, i) => 'item ' + item(i).id)
+          .on('click', (d, i) => opts.filterfunc(item(i)))
+          .on('mouseenter', this.mkhighlight(type))
+          .on('mouseleave', this.mkunhighlight(type))
 
         const arc = sel
-          .append("path")
-          .attr("class", "arc")
-          .each(function(d) {
-            this._prev = extract_coords(d);
+          .append('path')
+          .attr('class', 'arc')
+          .each(function (d) {
+            this._prev = extract_coords(d)
           })
-          .attr("d", this.arc)
-          .attr("stroke-opacity", d => d.value === 0 ? 0 : this[type + "_stroke_opacity"])
+          .attr('d', this.arc)
+          .attr('stroke-opacity', d => d.value === 0 ? 0 : this[type + '_stroke_opacity'])
 
         // blank stuff so the area behind the text reacts to mouse events
         const blank = sel
-          .append("path")
-          .attr("class", "blank")
-          .each(function(d) {
-            this._prev = extract_coords(d);
+          .append('path')
+          .attr('class', 'blank')
+          .each(function (d) {
+            this._prev = extract_coords(d)
           })
-          .attr("d", this.blank);
+          .attr('d', this.blank)
 
         const txt = sel
-          .append("g")
-          .attr("class", "text")
-          .attr("transform", (d) => txtTransform(d, opts.direction) )
-          .attr("opacity", (d) => d.value == 0 ? 0 : 1 )
-          .call(itemText, type);
-      };
+          .append('g')
+          .attr('class', 'text')
+          .attr('transform', (d) => txtTransform(d, opts.direction))
+          .attr('opacity', (d) => d.value === 0 ? 0 : 1)
+          .call(itemText, type)
+      }
 
       const _textProps = (sel, opts) => {
         sel
-          .attr("x", this.radius * opts.direction )
-          .attr("dx", this.textPadding * opts.direction)
-          .attr("dy", ".33em");
+          .attr('x', this.radius * opts.direction)
+          .attr('dx', this.textPadding * opts.direction)
+          .attr('dy', '.33em')
       }
 
       const itemText = (sel, type) => {
-        const opts = _options[type];
+        const opts = _options[type]
 
-        if (type == "target") {
+        if (type === 'target') {
           sel
-            .append("text")
-            .text( (d, i) => opts.items[i].name )
-            .call(_textProps, opts);
+            .append('text')
+            .text((d, i) => opts.items[i].name)
+            .call(_textProps, opts)
 
-          return;
+          return
         }
 
         sel
-          .filter( (d, i) => opts.items[i].id == "norway-grants" )
-          .append("text")
-          .text("Norway")
-          .call(_textProps, opts);
+          .filter((d, i) => opts.items[i].id === 'norway-grants')
+          .append('text')
+          .text('Norway')
+          .call(_textProps, opts)
 
         sel
-          .filter( (d, i) => opts.items[i].id == "eea-grants" )
-          .selectAll("text").data(
-            ["Iceland", "Liechtenstein", "Norway"]
+          .filter((d, i) => opts.items[i].id === 'eea-grants')
+          .selectAll('text').data(
+            ['Iceland', 'Liechtenstein', 'Norway']
           )
           .enter()
-          .append("text")
-          .attr("transform", (d, i, data) => `rotate(${
-            this.textDegrees * this.text_spacing
-            * (i - (data.length - 1) / 2) * opts.direction
-          })` )
-          .text( (d) => d )
-          .call(_textProps, opts);
+          .append('text')
+          .attr('transform', (d, i, data) => `rotate(${
+            this.textDegrees * this.text_spacing *
+            (i - (data.length - 1) / 2) * opts.direction
+          })`)
+          .text((d) => d)
+          .call(_textProps, opts)
       }
 
-      fentered.call(setUp, "source");
-      bentered.call(setUp, "target");
+      fentered.call(setUp, 'source')
+      bentered.call(setUp, 'target')
 
       const _objs = {
         source: fms,
-        target: beneficiaries,
+        target: beneficiaries
       }
 
       for (const type in _objs) {
         const sel = _objs[type]
 
-        sel.select("path.arc")
+        sel.select('path.arc')
           .transition(t)
           .attrTween('d', mktweener(this.arc, extract_coords))
           // show / hide the items at the beginning / end of transitions
           // (because even if 0-width their stroke keeps them visible)
-          .attr("stroke-opacity", d => d.value === 0 ? 0 : this[type + "_stroke_opacity"])
-          .on("start", function(d) {
-            if (d.value != 0) d3.select(this).style("display", null)
+          .attr('stroke-opacity', d => d.value === 0 ? 0 : this[type + '_stroke_opacity'])
+          .on('start', function (d) {
+            if (d.value !== 0) d3.select(this).style('display', null)
           })
-          .on("end", function(d) {
-            if (d.value == 0) d3.select(this).style("display", "none")
+          .on('end', function (d) {
+            if (d.value === 0) d3.select(this).style('display', 'none')
           })
 
-        sel.select("path.blank")
+        sel.select('path.blank')
           // don't tween this, save some cpu cycles
-          //.transition(t)
-          //.attrTween('d', mktweener(this.blank, extract_coords));
-          .attr('d', this.blank);
+          // .transition(t)
+          // .attrTween('d', mktweener(this.blank, extract_coords));
+          .attr('d', this.blank)
 
-        sel.select("g.text")
+        sel.select('g.text')
           .transition(t)
-          .attr("transform", (d) => txtTransform(d, sel === fms ? -1 : 1) )
-          .attr("opacity", (d) => d.value == 0 ? 0 : 1);
+          .attr('transform', (d) => txtTransform(d, sel === fms ? -1 : 1))
+          .attr('opacity', (d) => d.value === 0 ? 0 : 1)
       }
 
       links.enter()
-        .append("path")
-        .on("mouseenter", this.highlight)
-        .on("mouseleave", this.unhighlight)
-        .each(function(d) {
-          this._prev = extract_link_coords(d);
+        .append('path')
+        .on('mouseenter', this.highlight)
+        .on('mouseleave', this.unhighlight)
+        .each(function (d) {
+          this._prev = extract_link_coords(d)
         })
-        .attr("d", this.link);
+        .attr('d', this.link)
 
       links
         .transition(t)
-        .attrTween('d', mktweener(this.link, extract_link_coords));
+        .attrTween('d', mktweener(this.link, extract_link_coords))
     },
 
-    _highlight(index, yes) {
-      //// avoid funny race conditions ¬
+    _highlight (index, yes) {
+      /// / avoid funny race conditions ¬
       // (to be enabled if mouse-over gets transitioned)
-      //if(this._transitioning) return;
+      // if(this._transitioning) return;
 
-      //const t = this.getTransition(this.short_duration);
+      // const t = this.getTransition(this.short_duration);
 
-      const links = this.chart.select("g.links").selectAll("path");
+      const links = this.chart.select('g.links').selectAll('path')
 
-      links.filter( (d, i) => i == index )
-           .classed("highlighted", yes);
-      links.filter( (d, i) => i != index)
-           .classed("non-highlighted", yes);
+      links.filter((d, i) => i === index)
+        .classed('highlighted', yes)
+      links.filter((d, i) => i !== index)
+        .classed('non-highlighted', yes)
     },
 
-    _grouphighlight(index, type, yes) {
-      //// avoid funny race conditions ¬
-      //if(this._transitioning) return;
+    _grouphighlight (index, type, yes) {
+      /// / avoid funny race conditions ¬
+      // if(this._transitioning) return;
 
-      //const t = this.getTransition(this.short_duration);
+      // const t = this.getTransition(this.short_duration);
 
-      const links = this.chart.select("g.links").selectAll("path");
+      const links = this.chart.select('g.links').selectAll('path')
 
-      links.filter( (d) => d[type].index == index )
-           .classed("highlighted", yes);
-      links.filter( (d) => d[type].index != index )
-           .classed("non-highlighted", yes);
+      links.filter((d) => d[type].index === index)
+        .classed('highlighted', yes)
+      links.filter((d) => d[type].index !== index)
+        .classed('non-highlighted', yes)
     },
 
-    highlight(d, i) {
-      this._highlight(i, true);
+    highlight (d, i) {
+      this._highlight(i, true)
     },
 
-    unhighlight(d, i) {
-      this._highlight(i, false);
+    unhighlight (d, i) {
+      this._highlight(i, false)
     },
 
-    mkhighlight(type) {
-      const $this = this;
-      return function(d, i) {
-        $this._grouphighlight(i, type, true);
-      };
+    mkhighlight (type) {
+      const $this = this
+      return function (d, i) {
+        $this._grouphighlight(i, type, true)
+      }
     },
 
-    mkunhighlight(type) {
-      const $this = this;
-      return function(d, i) {
-        $this._grouphighlight(i, type, false);
-      };
+    mkunhighlight (type) {
+      const $this = this
+      return function (d, i) {
+        $this._grouphighlight(i, type, false)
+      }
     }
-  },
-});
+  }
+})
 </script>
