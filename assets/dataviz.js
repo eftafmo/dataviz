@@ -10,13 +10,13 @@ import VueSuper from 'vue-super';
 import './js/lib/polyfills';
 
 Vue.use(VueSuper)
-
 if (process.env.NODE_ENV === "production") {
   console.info("Running in production mode! Enabling Sentry.");
 
   Sentry.init({
     Vue: Vue,
     dsn: window._dv_sentry_config.dsn,
+    enviroment: window._dv_sentry_config.environment
   })
 
 }
