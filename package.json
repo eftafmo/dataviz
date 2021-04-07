@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.17",
-    "webpack-dev-server": "^2.4.2"
+    "webpack-dev-server": "^3.1.11"
   },
   "config": {
     "dev-server-host": "0.0.0.0",
