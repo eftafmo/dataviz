@@ -20,7 +20,7 @@ services:
 
 
   web:
-    image: eftafmo/dataviz:latest
+    image: eftafmo/dataviz:20210408
     environment:
       - NUM_WORKERS=3
     env_file:
@@ -34,25 +34,19 @@ services:
 
   nginx:
     domainname: we-p-fmo-docker-dataeeagrantsorg-rg
-    # TODO use version tag when they are available
-    # https://github.com/staticfloat/docker-nginx-certbot/issues/29
-    image: staticfloat/nginx-certbot:latest
+    image: nginx:1.17
     depends_on:
       - web
     volumes:
       - webroot:/var/local/webroot:ro
-      - nginxconfig:/nginxconfig
-    environment:
-      - ENVSUBST_VARS=FQDN
-    env_file:
-      - docker/azure-nginx.env
+      - nginxconfig:/etc/nginx/conf.d
     deploy:
       resources:
         limits:
           cpus: "0.2"
           memory: 100M
     restart: unless-stopped
-    command: ["/bin/bash", "/nginxconfig/entrypoint.sh"]
+    command: ["/bin/bash", "/etc/nginx/conf.d/entrypoint.sh"]
     ports:
       - 80:80
       - 443:443

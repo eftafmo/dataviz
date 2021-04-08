@@ -3,6 +3,9 @@
 These instructions assume you're deploying to Azure Containers, and have already set up an account on the Azure portal.
 
 1. Install Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+    ```shell
+    az login --tenant fdf06eeb-4370-4758-bad3-26541c642925
+    ```
 
 1. Log into Azure
     ```shell
