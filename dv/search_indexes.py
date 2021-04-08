@@ -272,9 +272,9 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             ProgrammeOutcome.objects.all().select_related(
                 'programme',
                 'outcome',
-                'outcome__programe_area__financial_mechanism',
-                'outcome__programe_area__priority_sector',
-                'outcome__programe_area',
+                'outcome__programme_area__financial_mechanism',
+                'outcome__programme_area__priority_sector',
+                'outcome__programme_area',
                 'state',
             ).exclude(programme__isnull=True)
             .exclude(programme__is_tap=True)
@@ -313,7 +313,7 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
             Project.objects.all().select_related(
                 'financial_mechanism',
                 'priority_sector',
-                'programe_area',
+                'programme_area',
                 'state',
             ).annotate(**_fields)
             .values(*_fields.keys())

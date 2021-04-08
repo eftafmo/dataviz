@@ -2,15 +2,12 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 =========================================
 
 
-[![Docker build](https://img.shields.io/docker/build/eftafmo/dataviz.svg)](https://hub.docker.com/r/eftafmo/dataviz/builds) [![Updates](https://pyup.io/repos/github/eftafmo/dataviz/shield.svg)](https://pyup.io/repos/github/eftafmo/dataviz/)
-
-
+[![Docker build](https://img.shields.io/docker/cloud/build/eftafmo/dataviz)](https://hub.docker.com/r/eftafmo/dataviz/builds) [![Updates](https://pyup.io/repos/github/eftafmo/dataviz/shield.svg)](https://pyup.io/repos/github/eftafmo/dataviz/)
 
 ## Development installation guide
 
 ### Prerequisites
 
-* Obtain access to [Eeag gitlab](https://gitlab.com/eftafmo/eeag.docker)
 * Install [Docker](https://docs.docker.com/engine/installation/)
 * Install [Docker Compose](https://docs.docker.com/compose/install/)
 
