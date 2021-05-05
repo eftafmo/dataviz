@@ -93,7 +93,7 @@
 <script>
 import * as d3 from 'd3';
 import d3tip from 'd3-tip';
-import {colour2gray, slugify} from 'js/lib/util';
+import {colour2gray, slugify} from '@js/lib/util';
 
 import Chart from './Chart';
 
@@ -101,7 +101,8 @@ import WithFMsMixin from './mixins/WithFMs';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
-export default Chart.extend({
+export default {
+  extends: Chart,
   type: "fms",
 
   mixins: [
@@ -262,5 +263,5 @@ export default Chart.extend({
           .call(this.renderColours);
     },
   },
-});
+}
 </script>

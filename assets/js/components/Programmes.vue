@@ -144,7 +144,8 @@ import WithCountriesMixin, {COUNTRIES, get_flag_name} from './mixins/WithCountri
 import WithRegionsMixin from './mixins/WithRegions';
 
 
-export default Component.extend({
+export default {
+  extends: Component,
   type: "programmes",
 
   mixins: [
@@ -275,5 +276,5 @@ export default Component.extend({
       return false;
     },
   }
-});
+}
 </script>

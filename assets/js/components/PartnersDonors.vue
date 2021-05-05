@@ -5,7 +5,8 @@ import PartnersMixin from './mixins/Partners';
 import PartnersBarChartMixin from './mixins/PartnersBarChart';
 
 
-export default StatesBarChart.extend({
+export default {
+  extends: StatesBarChart,
   type: "donors",
 
   mixins: [
@@ -60,5 +61,5 @@ export default StatesBarChart.extend({
       this.handleStateFilter()
     },
   }
-});
+}
 </script>

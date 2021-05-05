@@ -39,7 +39,8 @@ import PartnersMixin from './mixins/Partners';
 import FMLegendComponent from './includes/FMLegend';
 
 
-const Mechanisms = BaseMechanisms.extend({
+const Mechanisms = {
+  extends: BaseMechanisms,
   mixins: [
     PartnersMixin,
   ],
@@ -89,13 +90,14 @@ const Mechanisms = BaseMechanisms.extend({
       `;
     },
   },
-});
+}
 
 
-export default Component.extend({
+export default {
+  extends: Component,
   components: {
     fms: Mechanisms,
     'fm-legend': FMLegendComponent,
   },
-});
+}
 </script>

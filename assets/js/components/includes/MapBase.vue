@@ -150,7 +150,6 @@
 </style>
 
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 
@@ -181,7 +180,7 @@ function _mk_topo_funcs(data) {
 }
 
 
-export default Vue.extend({
+export default {
   mixins: [
     BaseMixin, ChartMixin,
     WithCountriesMixin,
@@ -773,5 +772,5 @@ export default Vue.extend({
       }
     },
   },
-});
+}
 </script>

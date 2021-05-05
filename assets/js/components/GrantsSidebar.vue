@@ -33,11 +33,12 @@ import Results from './Results'
 import Programmes from './Programmes'
 
 
-export default BaseSidebar.extend({
+export default {
+  extends: BaseSidebar,
   components: {
     xsummary: Summary,
     results: Results,
     programmes: Programmes,
   },
-})
+}
 </script>

@@ -37,7 +37,8 @@ import Projects from './includes/Projects'
 import ProjectsMixin from './mixins/Projects';
 
 
-export default Component.extend({
+export default {
+  extends: Component,
   mixins: [
     ProjectsMixin,
   ],
@@ -56,5 +57,5 @@ export default Component.extend({
       extra: null,
     }
   },
-})
+}
 </script>

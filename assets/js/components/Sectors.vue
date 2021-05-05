@@ -323,14 +323,15 @@ import * as d3 from 'd3';
 import d3tip from 'd3-tip';
 import debounce from 'lodash.debounce';
 import merge from 'lodash.merge';
-import {colour2gray, slugify} from 'js/lib/util';
+import {colour2gray, slugify} from '@js/lib/util';
 
 import Chart from './Chart';
 import WithSectors from './mixins/WithSectors';
 import WithTooltipMixin from './mixins/WithTooltip';
 
 
-export default Chart.extend({
+export default {
+  extends: Chart,
   type: "sectors",
 
   mixins: [
@@ -984,5 +985,5 @@ export default Chart.extend({
       }
   }
 
-});
+}
 </script>

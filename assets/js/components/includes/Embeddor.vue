@@ -62,14 +62,13 @@
 
 
 <script>
-import Vue from 'vue'
 import {default as Popper} from 'popper.js'
 import {default as Clipboard} from 'clipboard'
 
 import {FILTERS} from '../mixins/WithFilters'
 
 
-export default Vue.extend({
+export default {
   props: {
     // all target components
     components: {
@@ -287,5 +286,5 @@ export default Vue.extend({
       })
     },
   },
-})
+}
 </script>

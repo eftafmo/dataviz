@@ -39,7 +39,8 @@ import Component from './Component';
 import PartnersMixin from './mixins/Partners';
 
 
-export default Component.extend({
+export default {
+  extends: Component,
   type: "results",
 
   mixins: [
@@ -132,5 +133,5 @@ export default Component.extend({
     },
   },
 
-});
+}
 </script>

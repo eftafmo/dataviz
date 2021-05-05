@@ -34,7 +34,8 @@ import News from './ProjectsNews'
 import Projects from './Projects'
 
 
-export default BaseSidebar.extend({
+export default {
+  extends: BaseSidebar,
   components: {
     xsummary: Summary,
     news: News,
@@ -44,5 +45,5 @@ export default BaseSidebar.extend({
   props: {
     projectsDatasource: String,
   },
-})
+}
 </script>

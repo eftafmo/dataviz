@@ -4,7 +4,8 @@ import BaseNews from './BaseNews';
 import ProjectsMixin from './mixins/Projects';
 import WithRegionsMixin from './mixins/WithRegions';
 
-export default BaseNews.extend({
+export default {
+  extends: BaseNews,
 
   mixins: [
     ProjectsMixin,
@@ -63,5 +64,5 @@ export default BaseNews.extend({
     },
   }
 
-});
+}
 </script>

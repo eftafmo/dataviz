@@ -4,14 +4,16 @@ import Programmes from './Programmes'
 import PartnersMixin from './mixins/Partners'
 
 
-const PartnersProgrammes = Programmes.extend({
+const PartnersProgrammes = {
+  extends: Programmes,
   mixins: [
     PartnersMixin,
   ],
-})
+}
 
 
-export default Projects.extend({
+export default {
+  extends: Projects,
   components: {
     programmes: PartnersProgrammes,
   },
@@ -21,5 +23,5 @@ export default Projects.extend({
       extra: "is_dpp=True",
     }
   },
-})
+}
 </script>

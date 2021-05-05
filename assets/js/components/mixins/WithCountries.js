@@ -5,7 +5,7 @@
 
 import * as d3 from 'd3';
 
-import _COUNTRIES from 'js/constants/countries.json5';
+import _COUNTRIES from '@js/constants/countries.json5';
 
 export const COUNTRIES = {};
 export const DONORS = _COUNTRIES.donors;
@@ -56,9 +56,10 @@ export function get_sort_order(code) {
 }
 
 // force-load all flags so they get bundled as sprites
-for (const code in COUNTRIES) {
-  require(`sprites/flags/${get_flag_name(code)}.png`);
-}
+// TODO: !!! fix this !!!
+//for (const code in COUNTRIES) {
+//  require(`sprites/flags/${get_flag_name(code)}.png`);
+//}
 
 
 function get_longest_name(obj) {

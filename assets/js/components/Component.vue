@@ -27,7 +27,6 @@
 
 
 <script>
-import Vue from 'vue'
 import Base from './Base'
 
 import ComponentMixin from './mixins/Component'
@@ -35,7 +34,9 @@ import ComponentMixin from './mixins/Component'
 import {FILTERS} from './mixins/WithFilters'
 
 
-export default Base.extend({
+export default {
+  extends: Base,
+
   // set this on a derived component to build a "type tree".
   // useful for component class names.
   type: "viz",
@@ -61,6 +62,9 @@ export default Base.extend({
   },
 
   beforeCreate() {
+    // !!! TODO: FIXME !!!
+    return
+
     // set filter values from opts.
     // do it before filters get bound, to avoid triggering handlers.
     const opts = this.$options.propsData.opts
@@ -88,9 +92,10 @@ export default Base.extend({
       return names
     },
   },
-})
+}
 
 
+/** !!! TODO !!!
 // concatenate the type values
 Vue.config.optionMergeStrategies.type = function (previous, current) {
   if (!previous) return current
@@ -98,4 +103,5 @@ Vue.config.optionMergeStrategies.type = function (previous, current) {
 
   return previous + " " + current
 }
+**/
 </script>

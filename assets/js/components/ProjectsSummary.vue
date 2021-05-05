@@ -24,7 +24,8 @@ import Summary from './Summary';
 import ProjectsMixin from './mixins/Projects';
 
 
-export default Summary.extend({
+export default {
+  extends: Summary,
   mixins: [
     ProjectsMixin,
   ],
@@ -62,5 +63,5 @@ export default Summary.extend({
       return out;
     },
   },
-});
+}
 </script>

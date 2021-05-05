@@ -5,7 +5,8 @@ import ProjectsMixin from './mixins/Projects';
 import Legend from './includes/Legend';
 
 
-export default Beneficiaries.extend({
+export default {
+  extends: Beneficiaries,
   mixins: [
     ProjectsMixin,
   ],
@@ -52,5 +53,5 @@ export default Beneficiaries.extend({
         <span class="action">Click to filter by beneficiary state</span>`;
     },
   }
-});
+}
 </script>

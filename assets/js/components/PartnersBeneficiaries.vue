@@ -6,7 +6,8 @@ import BeneficiariesBarChartMixin from './mixins/BeneficiariesBarChart';
 import PartnersBarChartMixin from './mixins/PartnersBarChart';
 
 
-export default StatesBarChart.extend({
+export default {
+  extends: StatesBarChart,
   mixins: [
     PartnersMixin,
     BeneficiariesBarChartMixin,
@@ -75,5 +76,5 @@ export default StatesBarChart.extend({
         <span class="action">Click to filter by ${ this.state_type } state</span>`;
     },
   }
-});
+}
 </script>

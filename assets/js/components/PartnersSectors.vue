@@ -1,13 +1,14 @@
 <script>
 import * as d3 from 'd3';
-import {slugify} from 'js/lib/util'
+import {slugify} from '@js/lib/util'
 
 import Sectors from './Sectors';
 import PartnersMixin from './mixins/Partners';
 import {COUNTRIES} from './mixins/WithCountries';
 
 
-export default Sectors.extend({
+export default {
+  extends: Sectors,
   mixins: [PartnersMixin],
 
   data(){
@@ -126,5 +127,5 @@ export default Sectors.extend({
       `;
     },
   }
-});
+}
 </script>

@@ -134,7 +134,7 @@
 <script>
 import * as d3 from 'd3';
 import debounce from 'lodash.debounce';
-import {slugify} from 'js/lib/util'
+import {slugify} from '@js/lib/util'
 
 import BaseMap from './BaseMap'
 
@@ -143,7 +143,8 @@ import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
 
 
-export default BaseMap.extend({
+export default {
+  extends: BaseMap,
   mixins: [
     PartnersMixin,
     WithFMsMixin, WithCountriesMixin,
@@ -743,5 +744,5 @@ export default BaseMap.extend({
   watch: {
     visible_layers: "handleLayers",
   },
-});
+}
 </script>

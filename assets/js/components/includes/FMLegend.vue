@@ -55,8 +55,7 @@
 
 
 <script>
-import Vue from 'vue';
-export default Vue.extend({
+export default {
   props: ['fms'],
 
   methods: {
@@ -82,5 +81,5 @@ export default Vue.extend({
       return func(fm, etarget);
     },
   },
-});
+}
 </script>

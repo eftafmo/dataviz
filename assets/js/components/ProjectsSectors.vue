@@ -5,7 +5,8 @@ import Sectors from './Sectors';
 import ProjectsMixin from './mixins/Projects';
 
 
-export default Sectors.extend({
+export default {
+  extends: Sectors,
   mixins: [
     ProjectsMixin,
   ],
@@ -68,5 +69,5 @@ export default Sectors.extend({
       `;
     },
   }
-});
+}
 </script>

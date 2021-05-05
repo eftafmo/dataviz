@@ -311,8 +311,8 @@
 
 <script>
 import * as d3 from 'd3';
-import xchord from 'js/lib/x-chord';
-import {slugify} from 'js/lib/util';
+import xchord from '@js/lib/x-chord';
+import {slugify} from '@js/lib/util';
 
 import Chart from './Chart';
 
@@ -320,7 +320,8 @@ import WithFMsMixin from './mixins/WithFMs';
 import WithCountriesMixin from './mixins/WithCountries';
 
 
-export default Chart.extend({
+export default {
+  extends: Chart,
   type: "overview",
 
   mixins: [
@@ -837,5 +838,5 @@ export default Chart.extend({
       };
     }
   },
-});
+}
 </script>

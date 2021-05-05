@@ -69,7 +69,8 @@
 import Component from './Component';
 
 
-export default Component.extend({
+export default {
+  extends: Component,
   type: "summary",
 
   data() {
@@ -95,5 +96,5 @@ export default Component.extend({
       return out;
     },
   },
-});
+}
 </script>

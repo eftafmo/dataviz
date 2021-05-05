@@ -57,7 +57,8 @@
 import Component from './Component';
 
 
-export default Component.extend({
+export default {
+  extends: Component,
   type: "news",
 
   computed: {
@@ -95,5 +96,5 @@ export default Component.extend({
       return new_date
     },
   },
-});
+}
 </script>

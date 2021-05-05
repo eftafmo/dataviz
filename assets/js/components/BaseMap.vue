@@ -58,7 +58,8 @@ const PijamaDefs = {
   },
 }
 
-export default Chart.extend({
+export default {
+  extends: Chart,
   type: "map",
 
   mixins: [
@@ -283,5 +284,5 @@ export default Chart.extend({
       return this.region_colour
     },
   },
-})
+}
 </script>

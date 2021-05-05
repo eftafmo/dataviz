@@ -7,7 +7,8 @@ import BeneficiariesBarChartMixin from './mixins/BeneficiariesBarChart';
 import WithFMsMixin from './mixins/WithFMs';
 
 
-export default StatesBarChart.extend({
+export default {
+  extends: StatesBarChart,
   mixins: [
     BeneficiariesBarChartMixin,
     WithFMsMixin,
@@ -110,5 +111,5 @@ export default StatesBarChart.extend({
       `;
     },
   },
-});
+}
 </script>

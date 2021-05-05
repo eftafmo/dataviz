@@ -161,7 +161,8 @@ const RegionDetails = {
 }
 
 
-export default AllocationMap.extend({
+export default {
+  extends: AllocationMap,
   mixins: [
     ProjectsMixin,
   ],
@@ -663,5 +664,5 @@ export default AllocationMap.extend({
       this.render()
     },
   },
-});
+}
 </script>

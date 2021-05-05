@@ -24,7 +24,9 @@ import ChartMixin from './mixins/Chart';
 import Dropdown from './includes/DropdownFilter';
 
 
-const Chart = Component.extend({
+export default {
+  extends: Component,
+
   mixins: [
     ChartMixin,
   ],
@@ -93,7 +95,5 @@ const Chart = Component.extend({
       this.render();
     },
   },
-})
-
-export default Chart
+}
 </script>

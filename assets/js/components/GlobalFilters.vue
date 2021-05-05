@@ -136,16 +136,15 @@
 
 
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
-import {truncate} from 'js/lib/util';
-import _programme_areas from 'js/constants/programme-areas.json5';
+import {truncate} from '@js/lib/util';
+import _programme_areas from '@js/constants/programme-areas.json5';
 import {COUNTRIES} from './mixins/WithCountries';
 
 import WithFiltersMixin from './mixins/WithFilters'
 
 
-export default Vue.extend({
+export default {
   mixins: [
     WithFiltersMixin,
   ],
@@ -253,6 +252,5 @@ export default Vue.extend({
       if (val) this.filters_stack.push(type);
     },
   },
-});
-
+}
 </script>

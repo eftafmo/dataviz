@@ -148,15 +148,14 @@
 </style>
 
 <script>
-
-import Vue from 'vue';
 import * as d3 from 'd3';
 import Component from './Component';
 import PartnersMixin from './mixins/Partners';
 import CountriesMixin from './mixins/WithCountries';
 import Dropdown from './includes/DropdownFilter';
 
-export default Component.extend({
+export default {
+  extends: Component,
   type: "donor-programmes",
 
   mixins: [
@@ -261,6 +260,5 @@ export default Component.extend({
     }
   },
 
-});
-
+}
 </script>

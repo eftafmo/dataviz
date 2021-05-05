@@ -1,7 +1,7 @@
 "use strict";
 
 // load styles
-require("./css/dataviz.less")
+import "./css/dataviz.less";
 
 // register polyfills
 import * as Sentry from '@sentry/vue';
@@ -10,7 +10,7 @@ import VueSuper from 'vue-super';
 import './js/lib/polyfills';
 
 Vue.use(VueSuper)
-if (process.env.NODE_ENV === "production" && window._dv_sentry_config) {
+if (import.meta.env.NODE_ENV === "production" && window._dv_sentry_config) {
   console.info("Running in production mode! Enabling Sentry.");
 
   Sentry.init({
@@ -25,4 +25,6 @@ else {
 }
 
 // and expose components, because embedding
-require("expose-loader?$dataviz!./js/components/index")
+// !! // require("expose-loader?$dataviz!./js/components/index")
+
+import './js/components/index'

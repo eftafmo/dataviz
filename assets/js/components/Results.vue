@@ -70,7 +70,8 @@ import Component from './Component';
 import WithSectorsMixin from './mixins/WithSectors';
 
 
-export default Component.extend({
+export default {
+  extends: Component,
   type: "results",
 
   mixins: [
@@ -141,5 +142,5 @@ export default Component.extend({
     },
   },
 
-});
+}
 </script>

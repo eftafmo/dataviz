@@ -46,7 +46,7 @@ export default {
     window.addEventListener('resize', this.computeDimensions);
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.computeDimensions);
   },
 

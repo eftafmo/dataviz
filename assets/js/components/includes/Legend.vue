@@ -84,12 +84,10 @@
 
 
 <script>
-import Vue from 'vue';
-
 import ComponentMixin from '../mixins/Component.js'
 
 
-export default Vue.extend({
+export default {
   mixins: [ComponentMixin],
 
   props: {
@@ -130,5 +128,5 @@ export default Vue.extend({
       return this.formatFunc ? this.formatFunc(v) : this.number(v)
     },
   },
-})
+}
 </script>

@@ -30,7 +30,9 @@ function getScenario(url) {
 }
 
 
-export default Base.extend({
+export default {
+  extends: Base,
+
   components: {
     embeddor: Embeddor,
   },
@@ -65,6 +67,9 @@ export default Base.extend({
   },
 
   mounted() {
+    /** !!! WARNING, TODO !!! **/
+    return;
+
     const vizcomps = []
     // recurse through all children to find those that are dataviz
     let parent = this
@@ -137,4 +142,4 @@ export default Base.extend({
       this.updateAnchors();
     },
   },
-});
+}

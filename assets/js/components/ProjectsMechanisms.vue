@@ -3,7 +3,8 @@ import Mechanisms from './Mechanisms';
 import ProjectsMixin from './mixins/Projects';
 
 
-export default Mechanisms.extend({
+export default {
+  extends: Mechanisms,
   mixins: [
     ProjectsMixin,
   ],
@@ -35,5 +36,5 @@ export default Mechanisms.extend({
       `;
     },
   }
-});
+}
 </script>

@@ -130,7 +130,7 @@
 <script>
 import * as d3 from 'd3';
 import d3tip from 'd3-tip';
-import {slugify} from 'js/lib/util';
+import {slugify} from '@js/lib/util';
 
 import Chart from './Chart';
 
@@ -140,7 +140,8 @@ import WithTooltipMixin from './mixins/WithTooltip';
 import Legend from './includes/Legend';
 
 
-export default Chart.extend({
+export default {
+  extends: Chart,
   type: "states",
 
   mixins: [
@@ -677,6 +678,5 @@ export default Chart.extend({
     chartWidth: "changedDimension",
     fontSize: "changedDimension",
   },
-});
-
+}
 </script>

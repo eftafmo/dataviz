@@ -87,13 +87,12 @@
 </style>
 
 <script>
-import Vue from 'vue';
 import axios from 'axios';
 
 import WithFiltersMixin from '../mixins/WithFilters';
 import ComponentMixin from '../mixins/Component'
 
-export default Vue.extend({
+export default {
   mixins: [
     WithFiltersMixin,
     ComponentMixin,
@@ -201,7 +200,5 @@ export default Vue.extend({
       },
     },
   },
-
-});
-
+}
 </script>

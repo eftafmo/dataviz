@@ -20,7 +20,8 @@ import {interpolateYlGn} from 'd3-scale-chromatic';
 import AllocationMap from './AllocationMap'
 
 
-export default AllocationMap.extend({
+export default {
+  extends: AllocationMap,
   type: "grants",
 
   data() {
@@ -149,5 +150,5 @@ export default AllocationMap.extend({
       // TODO: and reset data to 0 ?
     },
   },
-});
+}
 </script>

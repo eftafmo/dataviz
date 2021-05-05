@@ -1,5 +1,5 @@
-import {slugify} from 'js/lib/util';
-import _SECTORS from 'js/constants/priority-sectors.json5';
+import {slugify} from '@js/lib/util';
+import _SECTORS from '@js/constants/priority-sectors.json5';
 
 const SECTORS = {};
 for (const sector of _SECTORS) {

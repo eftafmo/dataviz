@@ -163,7 +163,7 @@
 
 <script>
 import * as d3 from 'd3';
-import {slugify} from 'js/lib/util';
+import {slugify} from '@js/lib/util';
 
 import BaseMap from './BaseMap'
 
@@ -171,7 +171,8 @@ import WithCountriesMixin from './mixins/WithCountries';
 import WithFMsMixin from './mixins/WithFMs';
 
 
-const AllocationMap = BaseMap.extend({
+const AllocationMap = {
+  extends: BaseMap,
   type: "allocation",
 
   mixins: [
@@ -494,7 +495,7 @@ const AllocationMap = BaseMap.extend({
       this.render()
     },
   },
-})
+}
 
 export default AllocationMap
 </script>

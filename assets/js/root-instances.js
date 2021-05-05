@@ -8,23 +8,27 @@ import {default as Root} from './components/Root';
 import * as components from './components';
 
 
-const Base = Root.extend({
+const _Base = {
+  extends: Root,
+
   components: {
     globalfilters: components.GlobalFilters,
   },
-});
+}
 
 
-export const Index = Base.extend({
+export const Index = {
+  extends: _Base,
   name: "Index",
 
   components: {
     overview: components.Overview,
   },
-});
+};
 
 
-export const Grants = Base.extend({
+export const Grants = {
+  extends: _Base,
   name: "Grants",
 
   components: {
@@ -37,9 +41,10 @@ export const Grants = Base.extend({
     results: components.Results,
     sidebar: components.GrantsSidebar,
   },
-});
+}
 
-export const Partners = Base.extend({
+export const Partners = {
+  extends: _Base,
   name: "Partners",
 
   components: {
@@ -56,9 +61,10 @@ export const Partners = Base.extend({
     projects: components.PartnersProjects,
     sidebar: components.PartnersSidebar,
   },
-});
+}
 
-export const Projects = Base.extend({
+export const Projects = {
+  extends: _Base,
   name: "Projects",
 
   components: {
@@ -71,4 +77,4 @@ export const Projects = Base.extend({
     projects: components.Projects,
     sidebar: components.ProjectsSidebar,
   },
-});
+}

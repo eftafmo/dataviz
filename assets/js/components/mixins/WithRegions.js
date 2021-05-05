@@ -1,4 +1,4 @@
-import NUTS from 'js/constants/nuts.json';
+import NUTS from '@js/constants/nuts.json';
 
 
 export function getRegionName(id) {

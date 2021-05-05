@@ -4,14 +4,13 @@
  -->
 
 <script>
-import Vue from 'vue';
 import * as d3 from 'd3';
 
 import BaseMixin from './mixins/Base'
 import WithFiltersMixin from './mixins/WithFilters'
 
 
-export default Vue.extend({
+export default {
   mixins: [
     BaseMixin,
     WithFiltersMixin,
@@ -347,5 +346,5 @@ export default Vue.extend({
       },
     },
   },
-});
+};
 </script>

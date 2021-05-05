@@ -1,5 +1,6 @@
-export {default as Overview} from './Overview';
+export {default as Overview} from './Overview.vue';
 
+/*
 export {default as Mechanisms} from './Mechanisms';
 export {default as PartnersMechanisms} from './PartnersMechanisms';
 export {default as ProjectsMechanisms} from './ProjectsMechanisms';
@@ -38,3 +39,4 @@ export {default as PartnersProjects} from './PartnersProjects';
 export {default as GrantsSidebar} from './GrantsSidebar'
 export {default as PartnersSidebar} from './PartnersSidebar'
 export {default as ProjectsSidebar} from './ProjectsSidebar'
+*/

@@ -5,7 +5,8 @@ import BaseNews from './BaseNews';
 import PartnersMixin from './mixins/Partners';
 
 
-export default BaseNews.extend({
+export default {
+  extends: BaseNews,
   mixins: [
     PartnersMixin,
   ],
@@ -24,5 +25,5 @@ export default BaseNews.extend({
       return news;
     },
   }
-});
+}
 </script>

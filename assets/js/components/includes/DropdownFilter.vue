@@ -41,11 +41,9 @@
 </style>
 
 <script>
-import Vue from 'vue';
-
 import WithFiltersMixin from '../mixins/WithFilters'
 
-export default Vue.extend({
+export default {
   mixins: [
     WithFiltersMixin,
   ],
@@ -82,6 +80,6 @@ export default Vue.extend({
     },
 
   },
-});
+}
 
 </script>
