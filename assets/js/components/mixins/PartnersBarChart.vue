@@ -27,7 +27,7 @@ export default {
     },
 
     div_types() {
-      return d3.values(this.types)
+      return Object.values(this.types)
     },
   },
 

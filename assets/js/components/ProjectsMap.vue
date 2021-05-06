@@ -562,13 +562,13 @@ export default {
     },
 
     renderData(t) {
-      const dataset = d3.values(this.data)
+      const dataset = Object.values(this.data)
       this._renderRegionData(null, dataset, t)
     },
 
     renderRegionData(region, regiondata, t) {
       const aggregated = this._mkLevelData(region, regiondata)
-      const dataset = d3.values(aggregated)
+      const dataset = Object.values(aggregated)
 
       this._renderRegionData(region, dataset, t)
 

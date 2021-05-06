@@ -409,7 +409,7 @@ export default {
     },
 
     filtered_dataset() {
-      return d3.values(this.filtered_sectors);
+      return Object.values(this.filtered_sectors);
     },
 
     data() {
@@ -450,7 +450,7 @@ export default {
         for (const sid in sectortree) {
           const sector = sectortree[sid],
                 colour = sector.colour,
-                areas = d3.values(sector.children);
+                areas = Object.values(sector.children);
 
           // add a backreference to the parent sector for all areas
           // and generate area colors
@@ -473,7 +473,7 @@ export default {
         { children: sectors },
         // the default accessor function looks for arrays of children,
         // but we have an object tree
-        (d) => d3.values(d.children)
+        (d) => Object.values(d.children)
       );
 
       // tell the hierarchy object how to calculate sums

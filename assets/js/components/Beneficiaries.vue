@@ -55,7 +55,7 @@ export default {
     },
 
     div_types() {
-      return d3.values(this.FMS);
+      return Object.values(this.FMS);
     },
 
     totals() {

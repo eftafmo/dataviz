@@ -262,7 +262,7 @@ const AllocationMap = {
     },
 
     data() {
-      const aggregated = d3.values(this.aggregated);
+      const aggregated = Object.values(this.aggregated);
 
       for (const item of aggregated) {
         item.name = this.BENEFICIARIES[item.id].name;

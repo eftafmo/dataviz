@@ -87,7 +87,7 @@ export default {
 
     renderData(t) {
       if (t === undefined) t = this.getTransition();
-      const dataset = d3.values(this.data);
+      const dataset = Object.values(this.data);
 
       const beneficiaries = this.chart.selectAll('.regions > .level0 > path.beneficiary')
                                 .data(dataset, (d) => d.id );

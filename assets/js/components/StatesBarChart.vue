@@ -384,7 +384,7 @@ export default {
       }
 
       // return an array though
-      return d3.values(out)
+      return Object.values(out)
     },
   },
 

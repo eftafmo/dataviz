@@ -63,7 +63,7 @@ export function get_sort_order(code) {
 
 
 function get_longest_name(obj) {
-  return d3.values(obj).reduce( (longest, item) => (
+  return Object.values(obj).reduce( (longest, item) => (
     longest.length > item.name.length ? longest : item.name
   ) );
 }
@@ -86,10 +86,10 @@ export default {
   computed: {
     // TODO: make the constants arrays, and the objects pre-computed
     COUNTRY_ARRAY() {
-      return d3.values(this.COUNTRIES);
+      return Object.values(this.COUNTRIES);
     },
     BENEFICIARY_ARRAY() {
-      return d3.values(this.BENEFICIARIES);
+      return Object.values(this.BENEFICIARIES);
     },
   },
 

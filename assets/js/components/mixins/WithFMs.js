@@ -21,7 +21,7 @@ export default {
   computed: {
     // TODO: make the constants arrays, and the objects pre-computed
     FM_ARRAY() {
-      return d3.values(this.FMS);
+      return Object.values(this.FMS);
     },
   },
 

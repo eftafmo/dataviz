@@ -149,7 +149,7 @@ export default {
         if (item === undefined) {
           // mirror an existing object
           item = {};
-          const sample = d3.values(aggregated)[0];
+          const sample = Object.values(aggregated)[0];
           for (var k in sample) {
             item[k] = sample[k].constructor();
           }

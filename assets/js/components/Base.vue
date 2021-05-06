@@ -99,7 +99,7 @@ export default {
     _mkfilterfuncs(filters) {
       // returns an array of filtering functions, given a set of filter names
       // and considering the filters currently set
-      if (!filters) filters = d3.keys(this.filters);
+      if (!filters) filters = Object.keys(this.filters);
 
       const filterfuncs = [];
       for (const f of filters) {

@@ -308,7 +308,7 @@ export default {
         for (const country in connections[type]) {
           collection.push({
             country: country,
-            connections: d3.values(connections[type][country])
+            connections: Object.values(connections[type][country])
           })
         }
         connections[type] = collection
@@ -351,7 +351,7 @@ export default {
         }
       }
 
-      return d3.values(out)
+      return Object.values(out)
     },
   },
 
@@ -435,7 +435,7 @@ export default {
       const conndata = this.aggregated.connections
 
       for (const type in conndata) {
-        this._renderConnections(type, d3.values(conndata[type]), t)
+        this._renderConnections(type, Object.values(conndata[type]), t)
       }
     },
 
