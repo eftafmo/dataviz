@@ -294,7 +294,7 @@ export default {
     },
 
     _domouse(over, d, i, group) {
-      const self = this.$super._domouse(over, d, i, group)
+      const self = this.$super()._domouse(over, d, i, group)
       if (!self) return
 
       // (de)highlight the bubble
@@ -318,7 +318,7 @@ export default {
     },
 
     clickfunc(d, i, group) {
-      const self = this.$super.clickfunc(d, i, group)
+      const self = this.$super().clickfunc(d, i, group)
 
       if (!self) return
 
@@ -641,7 +641,7 @@ export default {
     },
 
     handleFilterBeneficiary(newid, oldid) {
-      this.$super.handleFilterBeneficiary(newid, oldid)
+      this.$super().handleFilterBeneficiary(newid, oldid)
       // unset the region filter
       this.filters.region = null
     },

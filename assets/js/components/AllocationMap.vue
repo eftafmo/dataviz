@@ -379,7 +379,7 @@ const AllocationMap = {
       // (and events should be handled specifically for mobile as needed)
       if (window.matchMedia("(max-width: 767px)").matches) return
 
-      const self = this.$super(AllocationMap, this)._domouse(over, d, i, group)
+      const self = this.$super()._domouse(over, d, i, group)
       if (!self) return
 
       if (this.getRegionLevel(d.id) == 0 && this.isDonor(d))

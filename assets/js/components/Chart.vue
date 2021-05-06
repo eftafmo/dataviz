@@ -56,7 +56,7 @@ export default {
 
   methods: {
     _getClassNames() {
-      const names = this.$super(Chart, this)._getClassNames()
+      const names = this.$super()._getClassNames()
       if (!this.rendered) names.push("rendering")
 
       return names

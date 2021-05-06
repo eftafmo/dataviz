@@ -558,7 +558,7 @@ export default {
 
   methods: {
     computeDimensions(event) {
-      this.$super.computeDimensions(event)
+      this.$super().computeDimensions(event)
 
       //the constants used for the calculations are the ideal sizes of the element's css properties for maxWidth
 

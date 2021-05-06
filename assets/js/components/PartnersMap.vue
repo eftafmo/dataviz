@@ -644,7 +644,7 @@ export default {
     },
 
     _domouse(over, d, i, group) {
-      const self = this.$super._domouse(over, d, i, group)
+      const self = this.$super()._domouse(over, d, i, group)
       if (!self) return
       if (self.classed("zero")) return
 
