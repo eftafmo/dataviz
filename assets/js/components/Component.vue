@@ -62,7 +62,8 @@ export default {
   },
 
   beforeCreate() {
-    // !!! TODO: FIXME !!!
+    // !!! TODO: FIXME
+    // propsData doesn't exist anymore. but this was used for embeds with filters
     return
 
     // set filter values from opts.
@@ -86,7 +87,7 @@ export default {
 
   methods: {
     _getClassNames() {
-      const names = this.$options.type.split()
+      const names = this.$options.type.split(" ")
       if (this.embedded) names.push("embedded")
 
       return names
@@ -94,14 +95,14 @@ export default {
   },
 }
 
+// NOTE: this needs to be called during app registration
+export function setMergeStrategy(app) {
+  app.config.optionMergeStrategies.type = function (previous, current) {
+    // concatenate the type values
+    if (!previous) return current
+    if (!current) return previous
 
-/** !!! TODO !!!
-// concatenate the type values
-Vue.config.optionMergeStrategies.type = function (previous, current) {
-  if (!previous) return current
-  if (!current) return previous
-
-  return previous + " " + current
+    return previous + " " + current
+  }
 }
-**/
 </script>

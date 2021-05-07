@@ -37,11 +37,17 @@ export default {
     embeddor: Embeddor,
   },
 
+  /*
   data() {
     return {
       datasource: null,
       vizcomponents: [],
     };
+  },
+  */
+
+  props: {
+    datasource: String,
   },
 
   beforeCreate() {
@@ -69,6 +75,12 @@ export default {
   mounted() {
     /** !!! WARNING, TODO !!! **/
     return;
+
+    /*
+    // TODO: this was used to register the embedding widget
+    // with all child components, and doesn't work anymore.
+    // ($children was removed in vue 3)
+    */
 
     const vizcomps = []
     // recurse through all children to find those that are dataviz

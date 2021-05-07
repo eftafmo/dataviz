@@ -15,20 +15,27 @@
     <link rel="stylesheet" type="text/css" href="/main.css">
   </head>
 
-  <body>
+  <body class="dataviz">
     <blockquote>— Hmm, ok!</blockquote>
 
     <div id="app">
       Hello,
 
-      <overview></overview>
+      <overview
+        :initial="dataset"
+      ></overview>
 
       Good Bye.
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-      _createApp(Dataviz.Index).mount('#app')
+      _createApp(
+        Dataviz.Index,
+        {
+          datasource: "/api/overview.json",
+        },
+      ).mount('#app')
     })
     </script>
 

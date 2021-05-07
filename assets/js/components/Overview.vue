@@ -31,7 +31,7 @@
         paddingRight: circle_dimensions.padding_left + 'px'
         }" 
          class="data">
-          <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size()) }}</span> Programmes</li>
+          <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size) }}</span> Programmes</li>
           <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
         </ul>
       </div>

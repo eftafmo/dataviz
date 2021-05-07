@@ -56,7 +56,10 @@ export default {
 
   methods: {
     _getClassNames() {
-      const names = this.$super()._getClassNames()
+      // simulate super()
+      const $super = Component.methods._getClassNames.bind(this)
+      const names = $super()
+
       if (!this.rendered) names.push("rendering")
 
       return names

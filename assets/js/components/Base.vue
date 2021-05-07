@@ -4,8 +4,6 @@
  -->
 
 <script>
-import * as d3 from 'd3';
-
 import BaseMixin from './mixins/Base'
 import WithFiltersMixin from './mixins/WithFilters'
 
@@ -268,7 +266,7 @@ export default {
           else if (type === String || type === Array || type === Object) {
             // strings, arrays items and object keys are consolidated into sets
             if (current === undefined)
-              current = row[dstcol] = d3.set();
+              current = row[dstcol] = new Set()
 
             if (exclude && item[exclude]) {
               continue;
@@ -329,11 +327,15 @@ export default {
     fetchData() {
       if (!this.datasource) throw "Base.fetchData(): Missing datasource."
 
-      d3.json(this.datasource, (error, ds) => {
-        if (error) throw error;
-        Object.freeze(ds)
-        this.dataset = ds;
-      });
+      fetch(this.datasource).then(response => {
+        if (!response.ok)
+          throw new Error(`${response.status} ${response.statusText}`)
+
+        response.json().then(data => {
+          Object.freeze(data)
+          this.dataset = data
+        })
+      })
     },
   },
   watch: {
