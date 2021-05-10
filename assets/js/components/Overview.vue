@@ -664,7 +664,7 @@ export default {
 
         sel
           .attr("class", (d, i) => "item " + item(i).id )
-          .on("click", (d, i) => opts.filterfunc(item(i)) )
+          .on("click", (ev, d) => opts.filterfunc(item(d.index)) )
           .on("mouseenter", this.mkhighlight(type))
           .on("mouseleave", this.mkunhighlight(type));
 
@@ -784,7 +784,7 @@ export default {
         .attrTween('d', mktweener(this.link, extract_link_coords));
     },
 
-    _highlight(index, yes) {
+    _highlight(el, yes) {
       //// avoid funny race conditions ¬
       // (to be enabled if mouse-over gets transitioned)
       //if(this._transitioning) return;
@@ -793,9 +793,9 @@ export default {
 
       const links = this.chart.select("g.links").selectAll("path");
 
-      links.filter( (d, i) => i == index )
+      links.filter( function() { return el === this } )
            .classed("highlighted", yes);
-      links.filter( (d, i) => i != index)
+      links.filter( function() { return el !== this } )
            .classed("non-highlighted", yes);
     },
 
@@ -813,25 +813,25 @@ export default {
            .classed("non-highlighted", yes);
     },
 
-    highlight(d, i) {
-      this._highlight(i, true);
+    highlight(ev, d) {
+      this._highlight(ev.target, true);
     },
 
-    unhighlight(d, i) {
-      this._highlight(i, false);
+    unhighlight(ev, d) {
+      this._highlight(ev.target, false);
     },
 
     mkhighlight(type) {
       const $this = this;
-      return function(d, i) {
-        $this._grouphighlight(i, type, true);
+      return function(ev, d) {
+        $this._grouphighlight(d.index, type, true);
       };
     },
 
     mkunhighlight(type) {
       const $this = this;
-      return function(d, i) {
-        $this._grouphighlight(i, type, false);
+      return function(ev, d) {
+        $this._grouphighlight(d.index, type, false);
       };
     }
   },

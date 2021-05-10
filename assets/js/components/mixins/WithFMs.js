@@ -1,5 +1,3 @@
-import * as d3 from 'd3';
-
 import FMLegendComponent from '../includes/FMLegend';
 import FMS from '@js/constants/financial-mechanisms.json5';
 

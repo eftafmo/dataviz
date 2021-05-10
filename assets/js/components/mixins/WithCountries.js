@@ -3,8 +3,6 @@
  * using webpack's svg-sprite-loader.
  */
 
-import * as d3 from 'd3';
-
 import _COUNTRIES from '@js/constants/countries.json5';
 
 export const COUNTRIES = {};
