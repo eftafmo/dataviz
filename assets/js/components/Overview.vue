@@ -23,14 +23,7 @@
         </div>
       </transition>
       <div class="data-wrapper">
-        <ul :style="{ 
-        fontSize: fonts.middle_text + 'px', 
-        paddingTop: circle_dimensions.padding_top + 'px',
-        paddingBottom: circle_dimensions.padding_top + 'px',
-        paddingLeft: circle_dimensions.padding_left + 'px',
-        paddingRight: circle_dimensions.padding_left + 'px'
-        }" 
-         class="data">
+        <ul :style="compoundCircleStyle" class="data">
           <li class="programmes"><span class="amount">{{ number(aggregated.programmes.size) }}</span> Programmes</li>
           <li class="projects"><span class="amount">{{ number(aggregated.project_count) }}</span> Projects</li>
         </ul>
@@ -40,24 +33,17 @@
       </div>
     </div>
 
-
-    <div v-if="!hasData || !aggregated.allocation" class="info">
+    <div v-else class="info">
       <transition name="fade">
         <div :style="{fontSize: fonts.top_text + 'px'}" class="heading" :key="changed">
           <p><span class="amount">No allocation available</span></p>
         </div>
       </transition>
       <div class="data-wrapper">
-          <ul :style="{ 
-          fontSize: fonts.middle_text + 'px', 
-          paddingTop: circle_dimensions.padding_top + 'px',
-          paddingBottom: circle_dimensions.padding_top + 'px',
-          paddingLeft: circle_dimensions.padding_left + 'px',
-          paddingRight: circle_dimensions.padding_left + 'px'
-          }"  class="data">
-            <li class="programmes"><span class="amount"></span>No programmes available</li>
-            <li class="projects"><span class="amount"></span>No projects available</li>
-          </ul>
+        <ul :style="compoundCircleStyle" class="data">
+          <li class="programmes"><span class="amount"></span>No programmes available</li>
+          <li class="projects"><span class="amount"></span>No projects available</li>
+        </ul>
       </div>
     </div>
 
@@ -213,15 +199,15 @@
     .ending {
       bottom: 0%;
       font-size: 1.2em;
-      @media(max-width: 800px){
-      bottom: -19px;
-      font-size: 59%;
-      width: 100%;
-      left: 0;
+      @media (max-width: 800px) {
+        bottom: -19px;
+        font-size: 59%;
+        width: 100%;
+        left: 0;
       }
     }
 
-     @media(min-width:800px)and(max-width:1400px){
+    @media (min-width:800px) and (max-width:1400px) {
       .heading,
       .ending {
       }
@@ -237,7 +223,7 @@
     position: absolute;
     left: 0;
     top: 0;
-   
+
 
     .fm span {
       width: 10px; height: 10px;
@@ -252,13 +238,13 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 3rem;
-    @media(max-width: 800px){
-     margin-top: 1rem;
-     margin-left: -1.5rem;
-     margin-right: 0;
-     width: calc(~"100% + 2.8rem")
+    @media (max-width: 800px) {
+      margin-top: 1rem;
+      margin-left: -1.5rem;
+      margin-right: 0;
+      width: calc(~"100% + 2.8rem")
     }
-    @media (min-width: 800px)and (max-width:1000px){
+    @media (min-width: 800px) and (max-width:1000px) {
       width: 84%;
     }
     @media (min-width:1000px) {
@@ -266,9 +252,9 @@
     }
   }
   &:not(.embedded){
-      @media(min-width: 800px){
-        margin-top: -5rem;
-      }
+    @media (min-width: 800px) {
+      margin-top: -5rem;
+    }
 
     .ending {
       br {
@@ -293,11 +279,11 @@
       }
     }
 
-      margin-top: 1rem!important;
+    margin-top: 1rem!important;
     .chart-container {
       padding-bottom: 2rem;
 
-      @media (min-width: 800px)and (max-width:1000px){
+      @media (min-width: 800px) and (max-width:1000px) {
         width: 100%!important;
       }
       @media (min-width:1000px) {
@@ -349,6 +335,7 @@ export default {
       target_stroke_opacity: .5,
 
       // css properties that need to scale with the component container size
+      // TODO: move these to computed?
       fonts: {
         bottom_text: 0,
         top_text: 0,
@@ -358,7 +345,7 @@ export default {
       circle_dimensions: {
         padding_left : 0,
         padding_top: 0,
-      }
+      },
     };
   },
 
@@ -416,12 +403,22 @@ export default {
       return this.textRadians / Math.PI * 180;
     },
 
+    compoundCircleStyle() {
+      return {
+        fontSize: this.fonts.middle_text + 'px',
+        paddingTop: this.circle_dimensions.padding_top + 'px',
+        paddingBottom: this.circle_dimensions.padding_top + 'px',
+        paddingLeft: this.circle_dimensions.padding_left + 'px',
+        paddingRight: this.circle_dimensions.padding_left + 'px'
+      }
+    },
+
+
     arc() {
       return d3.arc()
         .outerRadius(this.radius)
         .innerRadius(this.innerRadius);
     },
-
 
     blank() {
       const outerRadius = this.radius + this.margin,
@@ -564,12 +561,12 @@ export default {
 
       let baseWidth = Math.max(this.$el.offsetWidth, 1000)
 
-      //different behaviour for embedded 
+      //different behaviour for embedded
       if(this.$el.classList.contains("embedded")){
-        baseWidth = Math.max(this.$el.offsetWidth, 1200) 
+        baseWidth = Math.max(this.$el.offsetWidth, 1200)
         if (this.$el.offsetWidth > 1199) {
           baseWidth = Math.max(this.$el.offsetWidth, 1400)
-        } 
+        }
       }
       //different behaviour for mobile and tablet
       if (this.$el.offsetWidth < 500) baseWidth = 700
@@ -581,7 +578,7 @@ export default {
       // FONTS
       this.fonts.bottom_text = 21 * ratio
       this.fonts.top_text = 35 * ratio
-      this.fonts.middle_text = 25 * ratio 
+      this.fonts.middle_text = 25 * ratio
 
       // Paddings used for circle size
       this.circle_dimensions.padding_top = 25 * ratio
