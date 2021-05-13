@@ -27,9 +27,9 @@
             :id="getLabelID(sector)"
             :class="{selected: isSelectedSector(sector)}"
         >
-          <a @click="click(sector)"
-             @mouseenter="isSelectedSector(sector) ? null : highlight(sector)"
-             @mouseleave="isSelectedSector(sector) ? null : unhighlight(sector)"
+          <a @click="click({}, sector)"
+             @mouseenter="isSelectedSector(sector) ? null : highlight({}, sector)"
+             @mouseleave="isSelectedSector(sector) ? null : unhighlight({}, sector)"
           >
             <span :style="{background: sector.data.colour}"></span>
             <span>
@@ -67,9 +67,9 @@
                   :id="getLabelID(area)"
                   :class="{ inactive: !isActiveArea(area) }"
               >
-                <a @click="click(area)"
-                   @mouseenter="highlight(area)"
-                   @mouseleave="unhighlight(area)"
+                <a @click="click({}, area)"
+                   @mouseenter="highlight({}, area)"
+                   @mouseleave="unhighlight({}, area)"
                 >
                   <span :style="{background: area.data.colour}"></span>
                   <span>
