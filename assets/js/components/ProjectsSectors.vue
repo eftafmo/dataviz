@@ -39,8 +39,8 @@ export default {
 
       if(d.depth == 1) {
         thing = "sector";
-        bss = d3.set();
-        prgs = d3.set();
+        bss = new Set();
+        prgs = new Set();
 
         for (const c of d.children) {
           if (c.data.beneficiaries)
@@ -52,8 +52,8 @@ export default {
         }
       }
 
-      const num_bs = bss.size();
-      const num_prg = prgs.size();
+      const num_bs = bss.size;
+      const num_prg = prgs.size;
 
       return `
         <div class="title-container">

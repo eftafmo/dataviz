@@ -248,9 +248,9 @@ export default {
       if (num_projects) {
         details += `
           <li>${ this.currency(allocation) }</li>
-          <li>${d.sectors.size()} `+  this.singularize(`sectors`, d.sectors.size()) + `</li>
-          <li>${d.areas.size()} `+  this.singularize(`programme areas`, d.areas.size()) + `</li>
-          <li>${(d.programmes && d.programmes.size()) ? d.programmes.size() + " " + this.singularize(`programmes`, d.programmes.size()) : "TODO: programme count"}</li>
+          <li>${d.sectors.size} `+  this.singularize(`sectors`, d.sectors.size) + `</li>
+          <li>${d.areas.size} `+  this.singularize(`programme areas`, d.areas.size) + `</li>
+          <li>${(d.programmes && d.programmes.size) ? d.programmes.size + " " + this.singularize(`programmes`, d.programmes.size) : "TODO: programme count"}</li>
         `;
       }
 

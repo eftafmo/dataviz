@@ -34,7 +34,7 @@ export default {
   methods: {
     valuefunc(item, type) {
       const orgs = item[this.types[type].source] // this is a set
-      return orgs ? orgs.size() : 0
+      return orgs ? orgs.size : 0
     },
 
     tooltipTemplate(d) {

@@ -223,12 +223,12 @@ export default {
         let region = regions[type][id]
         if (region === undefined) region = regions[type][id] = {
           //id: id, // skipping this because data() reaggregates anyway
-          fms: d3.set(),
-          states: d3.set(),
-          bs_orgs: d3.set(),
-          ds_orgs: d3.set(),
-          programmes: d3.set(),
-          projects: d3.set(),
+          fms: new Set(),
+          states: new Set(),
+          bs_orgs: new Set(),
+          ds_orgs: new Set(),
+          programmes: new Set(),
+          projects: new Set(),
           // add here anything else you might want to aggregate on
         }
         return region
@@ -237,7 +237,7 @@ export default {
       const _setData = (type, source, target, ds_orgs, bs_orgs, d) => {
         const conngroup = _getConnectionGroup(type, source)
         conngroup[`${source}-${target}`] = {source, target}
-        const projects = d3.set()
+        const projects = new Set()
         for (const prj in d.projects) {
           if ( d.projects[prj]['src_nuts'].indexOf(source) !== -1 &&
                d.projects[prj]['dst_nuts'].indexOf(target) !== -1 ) {
@@ -273,8 +273,8 @@ export default {
           // we can have rows with PO but not DPP (only projects)
           const source = d.DPP_nuts,
                 target = d.PO[po_code].nuts,
-                ds_orgs = d3.set().add(d.DPP),
-                bs_orgs = d3.set().add(po_code)
+                ds_orgs = new Set().add(d.DPP),
+                bs_orgs = new Set().add(po_code)
 
           _setData(type, source, target, ds_orgs, bs_orgs, d)
         }
@@ -286,12 +286,12 @@ export default {
           // we do want to see donor project partners with no nuts, though
           const source = prj_nuts.src,
                 target = prj_nuts.dst
-          const ds_orgs = d3.set()
+          const ds_orgs = new Set()
           for (const org in d.PJDPP) {
             if (d.PJDPP[org].nuts === source)
               ds_orgs.add(org)
           }
-          const bs_orgs = d3.set()
+          const bs_orgs = new Set()
           for ( const org in d.PJPT) {
             if (d.PJPT[org].nuts === target)
               bs_orgs.add(org)
@@ -330,15 +330,15 @@ export default {
           let region = out[id]
           if (region === undefined) region = out[id] = {
             id: id,
-            fms: d3.set(),
+            fms: new Set(),
           }
           if (region[type] === undefined) {
             region[type] = {
-              states: d3.set(),
-              ds_orgs: d3.set(),
-              bs_orgs: d3.set(),
-              programmes: d3.set(),
-              projects: d3.set(),
+              states: new Set(),
+              ds_orgs: new Set(),
+              bs_orgs: new Set(),
+              programmes: new Set(),
+              projects: new Set(),
             }
           }
 
@@ -376,17 +376,17 @@ export default {
       }
       if (d.programmes) {
         details += _line(
-          _plm('programme', 'operator', d.programmes.bs_orgs.size()),
-          _plm('donor', 'partner', d.programmes.ds_orgs.size()),
-          _plm('', 'programme', d.programmes.programmes.size()),
+          _plm('programme', 'operator', d.programmes.bs_orgs.size),
+          _plm('donor', 'partner', d.programmes.ds_orgs.size),
+          _plm('', 'programme', d.programmes.programmes.size),
           is_ds
         )
       }
       if (d.projects) {
         details += _line(
-          _plm('project', 'promoter', d.projects.bs_orgs.size()),
-          _plm('donor', 'partner', d.projects.ds_orgs.size()),
-          _plm('', 'project', d.projects.projects.size()),
+          _plm('project', 'promoter', d.projects.bs_orgs.size),
+          _plm('donor', 'partner', d.projects.ds_orgs.size),
+          _plm('', 'project', d.projects.projects.size),
           is_ds
         )
       }
@@ -478,7 +478,7 @@ export default {
                                    d => d.source + '-' + d.target
                                  )
 
-      const _badids = d3.set()
+      const _badids = new Set()
 
       const getArc = (source, target) => { // TODO: memoize this
         // the simple approach would be to draw an arc with the same radius

@@ -53,12 +53,12 @@ export default {
 
       const dataset = this.filtered;
       const aggregated = {
-        DPP_programmes: d3.set(),
-        dpp_programmes: d3.set(),
-        dpp_projects: d3.set(),
-        dpp_projects_ended: d3.set(),
-        dpp_projects_coop: d3.set(),
-        dpp_projects_improved: d3.set(),
+        DPP_programmes: new Set(),
+        dpp_programmes: new Set(),
+        dpp_projects: new Set(),
+        dpp_projects_ended: new Set(),
+        dpp_projects_coop: new Set(),
+        dpp_projects_improved: new Set(),
       };
 
       for (const d of dataset) {
@@ -83,7 +83,7 @@ export default {
         }
       }
       const results = [];
-      const num_DPP = aggregated.DPP_programmes.size();
+      const num_DPP = aggregated.DPP_programmes.size;
       if (num_DPP > 0) {
         results.push(
           {
@@ -92,7 +92,7 @@ export default {
           }
         );
       }
-      const num_dpp = aggregated.dpp_projects.size();
+      const num_dpp = aggregated.dpp_projects.size;
       if (num_dpp > 0) {
         results.push(
           {
@@ -101,7 +101,7 @@ export default {
           }
         )
       }
-      const num_prg_dpp = aggregated.dpp_programmes.size();
+      const num_prg_dpp = aggregated.dpp_programmes.size;
       if (num_prg_dpp > 0) {
         results.push(
           {
@@ -110,15 +110,15 @@ export default {
           }
         );
       }
-      const num_prj_ended = aggregated.dpp_projects_ended.size();
+      const num_prj_ended = aggregated.dpp_projects_ended.size;
       if (num_prj_ended) {
         results.push({
-          achievement: Math.round(100 * aggregated.dpp_projects_coop.size() / num_prj_ended),
+          achievement: Math.round(100 * aggregated.dpp_projects_coop.size / num_prj_ended),
           unit: '%',
           indicator: "of partnership projects will continue the cooperation."
         });
         results.push({
-          achievement: Math.round(100 * aggregated.dpp_projects_improved.size() / num_prj_ended),
+          achievement: Math.round(100 * aggregated.dpp_projects_improved.size / num_prj_ended),
           unit: '%',
           indicator: "of partnership projects have resulted in improved knowledge and mutual understanding between the partners."
         });

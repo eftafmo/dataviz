@@ -13,8 +13,8 @@
      <tr @click="show_items($event)" class="section_header">
        <td>{{get_country_name(item.donor)}}</td>
        <td>{{item.organizations.length}}</td>
-       <td>{{item.countries.size()}}</td>
-       <td>{{item.programmes.size()}}</td>
+       <td>{{item.countries.size}}</td>
+       <td>{{item.programmes.size}}</td>
      </tr>
      <tr
       class="section_item"
@@ -23,8 +23,8 @@
       @click="toggleDPP($event, organization.name)"
      >
       <td colspan="2">{{organization.name}}</td>
-      <td>{{organization.countries.size()}}</td>
-      <td>{{organization.programmes.size()}}</td>
+      <td>{{organization.countries.size}}</td>
+      <td>{{organization.programmes.size}}</td>
      </tr>
    </tbody>
  </table>
@@ -195,8 +195,8 @@ export default {
         if (item === undefined ) {
           item = out[d.donor] = {
             donor: d.donor,
-            countries: d3.set(),
-            programmes: d3.set(),
+            countries: new Set(),
+            programmes: new Set(),
             organizations: {},
           }
         }
@@ -205,8 +205,8 @@ export default {
         if (item.organizations[d.DPP] == undefined) {
           item.organizations[d.DPP] = {
               name: d.DPP,
-              countries: d3.set(),
-              programmes: d3.set()
+              countries: new Set(),
+              programmes: new Set()
           }
         }
         item.organizations[d.DPP].countries.add(d.beneficiary);

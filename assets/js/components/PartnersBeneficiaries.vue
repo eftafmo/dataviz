@@ -44,14 +44,13 @@ export default {
   methods: {
     tooltipTemplate(d) {
       let datatxt = '';
-      const num_PO = d.PO === undefined ? 0 : d.PO.size();
-      const num_DPP = d.DPP === undefined ? 0 : d.DPP.size();
-      // size instead of size() is not a bug. Maybe should replace all d3.set() with Set ?
-      const num_prg_DPP = d.DPP_programmes === undefined ? 0 : d.DPP_programmes.size();
+      const num_PO = d.PO === undefined ? 0 : d.PO.size;
+      const num_DPP = d.DPP === undefined ? 0 : d.DPP.size;
+      const num_prg_DPP = d.DPP_programmes === undefined ? 0 : d.DPP_programmes.size;
 
-      const num_PJPT = d.PJPT === undefined ? 0 : d.PJPT.size();
-      const num_dpp = d.PJDPP === undefined ? 0 : d.PJDPP.size();
-      const num_prj_dpp = d.projects === undefined ? 0 : d.projects.size();
+      const num_PJPT = d.PJPT === undefined ? 0 : d.PJPT.size;
+      const num_dpp = d.PJDPP === undefined ? 0 : d.PJDPP.size;
+      const num_prj_dpp = d.projects === undefined ? 0 : d.projects.size;
 
       if ( num_PO ) {
         datatxt += `<li>${num_PO} programme ` +

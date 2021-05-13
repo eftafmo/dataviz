@@ -13,15 +13,15 @@
      <tr @click="show_items($event)" class="section_header">
        <td>{{get_country_name(item.donor)}}</td>
        <td>{{item.organizations.length}}</td>
-       <td>{{item.countries.size()}}</td>
-       <td>{{item.programmes.size()}}</td>
-       <td>{{item.projects.size()}}</td>
+       <td>{{item.countries.size}}</td>
+       <td>{{item.programmes.size}}</td>
+       <td>{{item.projects.size}}</td>
      </tr>
      <tr class="section_item" v-for="organizations in item.organizations">
       <td colspan="2">{{organizations.name}}</td>
       <!-- <td>  </td> -->
-      <td>{{organizations.countries.size()}}</td>
-      <td>{{organizations.programmes.size()}}</td>
+      <td>{{organizations.countries.size}}</td>
+      <td>{{organizations.programmes.size}}</td>
       <td>{{organizations.projects}}</td>
      </tr>
    </tbody>
@@ -167,9 +167,9 @@ export default {
         if (item === undefined ) {
           item = out[d.donor] = {
             donor: d.donor,
-            countries: d3.set(),
-            programmes: d3.set(),
-            projects: d3.set(),
+            countries: new Set(),
+            programmes: new Set(),
+            projects: new Set(),
             organizations: {},
           }
         }
@@ -182,8 +182,8 @@ export default {
           let org = item.organizations[org_id];
           if (org == undefined) {
             org = item.organizations[org_id] = {
-              countries: d3.set(),
-              programmes: d3.set(),
+              countries: new Set(),
+              programmes: new Set(),
               projects: 0,
               name: d.PJDPP[org_id]['name']
             }

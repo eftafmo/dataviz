@@ -51,7 +51,7 @@ export default {
       }
 
       // get a set's amount
-      const get_amount = s => (s === undefined) ? 0 : s.size(),
+      const get_amount = s => (s === undefined) ? 0 : s.size,
             country_details = country_is_donor ? '' : `
               <ul>
                 ${ extra }

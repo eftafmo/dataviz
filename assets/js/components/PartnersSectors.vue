@@ -29,21 +29,21 @@ export default {
         // take into account the difference caused by duplicate programmes
         // and condense all areas proportionally
 
-        const programmeset = d3.set(),
+        const programmeset = new Set(),
               values = {}
         let sum = 0
 
         for (const aname in sector) {
           const area = sector[aname],
                 aid = area.id,
-                value = area.programmes.size()
+                value = area.programmes.size
 
           values[aid] = value
           sum += value
           area.programmes.each(p => programmeset.add(p))
         }
 
-        const count = programmeset.size()
+        const count = programmeset.size
 
         if (count !== sum) {
           const ratio = count / sum
@@ -91,8 +91,8 @@ export default {
       if(d.depth == 1) {
         thing = "sector";
         value = this.programme_counts[d.data.id].value
-        dss = d3.set()
-        bss = d3.set();
+        dss = new Set()
+        bss = new Set();
 
         for (const c of d.children) {
           if (c.data.donors)
@@ -103,10 +103,10 @@ export default {
               bss.add(bs);
         }
       } else {
-        value = d.data.programmes.size()
+        value = d.data.programmes.size
       }
 
-      const num_bs = bss.size();
+      const num_bs = bss.size;
       // sort donor states
       const ds_sorted = dss.values().sort(
         (a,b) => d3.ascending(COUNTRIES[a].sort_order, COUNTRIES[b].sort_order)
