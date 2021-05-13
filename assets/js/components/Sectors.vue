@@ -16,15 +16,13 @@
   </chart-container>
     <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: minHeight + 'px'}">
       <!-- much repetition here, but not worth doing a recursive component -->
-<!-- !!
       <transition-group
           tag="ul"
           class="sectors"
           name="item"
       >
         <li
-            v-for="sector in data.children"
-            v-if="sector.value"
+            v-for="sector in data.children.filter(d => d.value)"
             :key="getLabelID(sector)"
             :id="getLabelID(sector)"
             :class="{selected: isSelectedSector(sector)}"
@@ -64,8 +62,7 @@
                 name="item"
             >
               <li
-                  v-for="area in sector.children"
-                  v-if="area.value"
+                  v-for="area in sector.children.filter(d => d.value)"
                   :key="getLabelID(area)"
                   :id="getLabelID(area)"
                   :class="{ inactive: !isActiveArea(area) }"
@@ -87,7 +84,6 @@
           </transition>
         </li>
       </transition-group>
-!! -->
     </div>
 </div>
 </div>
