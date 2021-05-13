@@ -7,7 +7,7 @@ export {default as ProjectsMechanisms} from './ProjectsMechanisms';
 export {default as Sectors} from './Sectors';
 export {default as PartnersSectors} from './PartnersSectors';
 export {default as ProjectsSectors} from './ProjectsSectors';
-/*
+
 export {default as GrantsMap} from './GrantsMap';
 export {default as PartnersMap} from './PartnersMap';
 export {default as ProjectsMap} from './ProjectsMap';
@@ -15,7 +15,7 @@ export {default as ProjectsMap} from './ProjectsMap';
 export {default as Beneficiaries} from './Beneficiaries';
 export {default as PartnersBeneficiaries} from './PartnersBeneficiaries';
 export {default as ProjectsBeneficiaries} from './ProjectsBeneficiaries';
-
+/*
 export {default as PartnersDonors} from './PartnersDonors';
 
 export {default as Summary} from './Summary';

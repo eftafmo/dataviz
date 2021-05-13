@@ -223,13 +223,14 @@ export default {
     flagPadding() { return Math.round(this.fontSize * this.layout.flagPadding); },
 
     barPadding() {
-      const padding = (this.itemHeight - this.barHeight) / 2;
-      // we really, really want this to be an int
+      const _padding = () => (this.itemHeight - this.barHeight) / 2
 
-      if (parseInt(padding) != padding) {
+      let padding = _padding()
+      // we really, really want this to be an int
+      while(parseInt(padding) != padding) {
         // uh'oh. use some brute force
         this.layout.itemHeight = (Math.ceil(padding) * 2 + this.barHeight) / this.fontSize;
-        return this.barPadding;
+        padding = _padding()
       }
       return padding;
     },
@@ -443,7 +444,7 @@ export default {
           .attr('class', 'dataviz-tooltip state')
           .html(this.tooltipTemplate)
           .direction('n')
-          .offset(function(d) {
+          .offset(function(ev, d) {
             const zeroed = (-this.getBBox().width / 2
                             -this.getBBox().x);
 
@@ -451,7 +452,7 @@ export default {
               -$this.itemHeight * 0.9,
               Math.max(zeroed,
                        // an amazing way to calculate the mouse position for dataviz-tooltip
-                       d3.event.clientX
+                       ev.clientX
                        -$this.chart.node().getBoundingClientRect().left
                        + zeroed
                        -$this.legendWidth
@@ -562,7 +563,7 @@ export default {
        * and finally, events
        */
       sentered
-        .on("click", function (d) {
+        .on("click", function (ev, d) {
           $this.clickFunc(d, this);
         })
         // tooltip events
