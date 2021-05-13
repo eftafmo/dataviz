@@ -7,11 +7,12 @@ for (const sector of _SECTORS) {
   SECTORS[sid] = Object.assign({id: sid}, sector);
 }
 
+/* !!! TODO !!!
 // force-load all sector icons so they get bundled as sprites
 for (const sector in SECTORS) {
   require(`sprites/sectors/${SECTORS[sector].icon}`)
 }
-
+*/
 
 export default {
   beforeCreate() {

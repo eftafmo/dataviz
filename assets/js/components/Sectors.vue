@@ -16,6 +16,7 @@
   </chart-container>
     <div ref="legend" class="legend" v-if="hasData" :style="{minHeight: minHeight + 'px'}">
       <!-- much repetition here, but not worth doing a recursive component -->
+<!-- !!
       <transition-group
           tag="ul"
           class="sectors"
@@ -86,6 +87,7 @@
           </transition>
         </li>
       </transition-group>
+!! -->
     </div>
 </div>
 </div>
@@ -450,7 +452,8 @@ export default {
         for (const sid in sectortree) {
           const sector = sectortree[sid],
                 colour = sector.colour,
-                areas = Object.values(sector.children);
+                areas = sector.children === undefined ? [] :
+                        Object.values(sector.children);
 
           // add a backreference to the parent sector for all areas
           // and generate area colors
@@ -473,7 +476,7 @@ export default {
         { children: sectors },
         // the default accessor function looks for arrays of children,
         // but we have an object tree
-        (d) => Object.values(d.children)
+        (d) => d.children === undefined ? [] : Object.values(d.children),
       );
 
       // tell the hierarchy object how to calculate sums
@@ -872,7 +875,7 @@ export default {
       }
     },
 
-    click(d) {
+    click(ev, d) {
       const func = d.depth == 1 ? this.toggleSector : this.toggleArea;
       func(d, this);
     },
@@ -894,11 +897,11 @@ export default {
         .attr("d", arcfunc)
     },
 
-    highlight(d) {
+    highlight(ev, d) {
       this._highlight(d, true);
     },
 
-    unhighlight(d) {
+    unhighlight(ev, d) {
       this._highlight(d, false);
     },
 

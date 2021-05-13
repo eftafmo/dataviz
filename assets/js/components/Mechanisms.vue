@@ -151,7 +151,7 @@ export default {
           item = {};
           const sample = Object.values(aggregated)[0];
           for (var k in sample) {
-            item[k] = sample[k].constructor();
+            item[k] = new sample[k].constructor();
           }
         }
 
