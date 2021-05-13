@@ -232,7 +232,7 @@ export default {
             `scale(-1,1) translate(-${width},0)`
           );
         })
-        .on("click", function (d) {
+        .on("click", function (ev, d) {
           $this.toggleFm(d, this);
         })
         .on("mouseenter", this.tip.show)
