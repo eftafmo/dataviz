@@ -37,7 +37,7 @@ export default {
       return orgs ? orgs.size : 0
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       const data = d.data
                     .filter( (x) => x.value != 0 );
       const datatxt = data

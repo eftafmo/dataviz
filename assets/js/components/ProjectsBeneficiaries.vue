@@ -32,7 +32,7 @@ export default {
       return v ? v.project_count : 0
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       // TODO: oh my, the copy-paste. it hurts.
       const data = d.data
                     .filter( (x) => x.value != 0 );

@@ -15,7 +15,7 @@ export default {
   },
 
   methods: {
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       // TODO: this is silly. turn this into a component.
       return `
         <div class="title-container">

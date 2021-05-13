@@ -234,7 +234,7 @@ export default {
       }
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       const level = this.getRegionLevel(d.id)
       const allocation = d.allocation || 0,
             num_projects = this.getprojectcount(d),

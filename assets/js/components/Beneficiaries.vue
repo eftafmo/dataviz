@@ -89,7 +89,7 @@ export default {
       return this._valuefunc(v)
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       // TODO: this is getting beyond silly.
       const data = d.data
                     .filter( (x) => x.value != 0 );

@@ -31,7 +31,7 @@ export default {
              this.singularize("projects", count);
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       // TODO: such horribleness. sad face.
       let thing = "programme area",
           bss = d.data.beneficiaries,

@@ -42,7 +42,7 @@ export default {
 
 
   methods: {
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       let datatxt = '';
       const num_PO = d.PO === undefined ? 0 : d.PO.size;
       const num_DPP = d.DPP === undefined ? 0 : d.DPP.size;

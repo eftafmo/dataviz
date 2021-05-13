@@ -34,7 +34,7 @@ export default {
   },
 
   methods: {
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       const allocation = d.allocation || 0,
             country_is_donor = d.id.length === 2 && this.COUNTRIES[d.id].type === "donor",
             state_type = country_is_donor ? 'donor-tooltip' : '';

@@ -364,7 +364,7 @@ export default {
   methods: {
 
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       const country = this.getAncestorRegion(d.id, 0)
 
       const is_ds = (this.COUNTRIES[country].type !== 'beneficiary')

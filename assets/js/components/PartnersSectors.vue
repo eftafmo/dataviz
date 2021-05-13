@@ -81,7 +81,7 @@ export default {
       return "";
     },
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       // TODO: such horribleness. sad face.
       let thing = "programme area",
           value,

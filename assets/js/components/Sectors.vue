@@ -654,7 +654,7 @@ export default {
     getArcID(node) { return "a-" + this._getID(node); },
     getLabelID(node) { return "l-" + this._getID(node); },
 
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       // TODO: such horribleness.
       let thing = "programme area",
           bss = d.data.beneficiaries,

@@ -75,7 +75,7 @@ const Mechanisms = {
   },
 
   methods: {
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       return `
         <div class="title-container">
           <span class="name">${d.name}</span>
