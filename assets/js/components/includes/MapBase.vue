@@ -327,24 +327,31 @@ export default {
     })
 
     // aaand we can start fetching data already
-    d3.json(this.LAYERS_URL, (error, data) => {
-      if (error) throw error;
-      this.geodata.layers = data;
-      this.base_loaded = true
+    fetch(this.LAYERS_URL).then(response => {
+      if (!response.ok)
+          throw new Error(`${response.status} ${response.statusText}`)
+
+      response.json().then(data => {
+        this.geodata.layers = data;
+        this.base_loaded = true
+      })
     });
 
-    d3.json(this.REGIONS_URL, (error, data) => {
-      if (error) throw error;
+    fetch(this.REGIONS_URL).then(response => {
+      if (!response.ok)
+          throw new Error(`${response.status} ${response.statusText}`)
 
-      // discard unused level data
-      Object.keys(data.objects).filter(
-        x => this.all_levels.indexOf(Number(x.substr(-1))) === -1
-      ).forEach(
-        x => delete data.objects[x]
-      )
+      response.json().then(data => {
+        // discard unused level data
+        Object.keys(data.objects).filter(
+          x => this.all_levels.indexOf(Number(x.substr(-1))) === -1
+        ).forEach(
+          x => delete data.objects[x]
+        )
 
-      this.geodata.regions = data
-      this.regions_loaded = true
+        this.geodata.regions = data
+        this.regions_loaded = true
+      })
     });
   },
 
