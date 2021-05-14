@@ -349,13 +349,16 @@ const AllocationMap = {
         // fetch the data, fill the cache, render
         const url = this.detailsDatasource.replace('XX', state);
 
-        d3.json(url, (error, data) => {
-          if (error) throw error;
+        fetch(url).then(response => {
+          if (!response.ok)
+            throw new Error(`${response.status} ${response.statusText}`)
 
-          dataset = this._region_data[state] = data;
-          if(t_expired) t = this.getTransition(t_duration)
-          renderRegionData(dataset, t)
-        } );
+          response.json().then(data => {
+            dataset = this._region_data[state] = data;
+            if(t_expired) t = this.getTransition(t_duration)
+            renderRegionData(dataset, t)
+          })
+        })
       } else {
         renderRegionData(dataset, t)
       }
