@@ -15,7 +15,7 @@ export {default as ProjectsMap} from './ProjectsMap';
 export {default as Beneficiaries} from './Beneficiaries';
 export {default as PartnersBeneficiaries} from './PartnersBeneficiaries';
 export {default as ProjectsBeneficiaries} from './ProjectsBeneficiaries';
-/*
+
 export {default as PartnersDonors} from './PartnersDonors';
 
 export {default as Summary} from './Summary';
@@ -38,4 +38,3 @@ export {default as PartnersProjects} from './PartnersProjects';
 export {default as GrantsSidebar} from './GrantsSidebar'
 export {default as PartnersSidebar} from './PartnersSidebar'
 export {default as ProjectsSidebar} from './ProjectsSidebar'
-*/

@@ -6,7 +6,7 @@
           <small v-if="data.dpp_count > 0">{{ data.dpp_count }} donor project {{ singularize('partners', data.dpp_count) }}</small>
           <small v-if="data.dpp_count == 0">No donor project partners</small>
         </div>
-        <div class="allocation" :key="changed" v-if="data.DPP_count == 0">
+        <div class="allocation" v-else-if="data.DPP_count == 0">
           <strong>No donor programme partners</strong>
           <small v-if="data.dpp_count > 0"> {{ data.dpp_count }} donor project {{ singularize('partners', data.dpp_count) }}</small>
           <small v-if="data.dpp_count == 0">No donor project partners</small>
