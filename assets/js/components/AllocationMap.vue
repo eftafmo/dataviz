@@ -180,7 +180,8 @@ const AllocationMap = {
   ],
 
   components: {
-    regionDetails: { render(c) { return c() } },
+    // !!! TODO: fixme. Does this work for projects? !!!
+    regionDetails: { render() { return } },
   },
 
   props: {
@@ -365,7 +366,7 @@ const AllocationMap = {
       return this.aggregate(filtered, ['id'], this.aggregate_on, true)
     },
 
-    _domouse(over, d, i, group) {
+    _domouse(over, ev, d) {
       // disable mouseover events while transitioning
       if (this.transitioning) return
 
@@ -379,7 +380,8 @@ const AllocationMap = {
       // (and events should be handled specifically for mobile as needed)
       if (window.matchMedia("(max-width: 767px)").matches) return
 
-      const self = this.$super()._domouse(over, d, i, group)
+      const $super = BaseMap.methods._domouse.bind(this)
+      const self = $super(over, ev, d)
       if (!self) return
 
       if (this.getRegionLevel(d.id) == 0 && this.isDonor(d))
@@ -388,10 +390,10 @@ const AllocationMap = {
       return self
     },
 
-    clickfunc(d, i, group) {
+    clickfunc(ev, d) {
       if(d.id.length === 2 && this.COUNTRIES[d.id].type !== "beneficiary") return;
 
-      const self = d3.select(group[i])
+      const self = d3.select(ev.currentTarget)
       if (self.classed("zero")) return
 
       if (d.id.length == 2) this.toggleBeneficiary(d)

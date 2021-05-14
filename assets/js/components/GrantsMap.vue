@@ -70,8 +70,9 @@ export default {
         </div>` + country_details;
     },
 
-    _domouse(over, d, i, group) {
-      const self = this.$super()._domouse(over, d, i, group)
+    _domouse(over, ev, d) {
+      const $super = AllocationMap.methods._domouse.bind(this)
+      const self = $super(over, ev, d)
       if (!self) return
 
       if (this.hovered_region_colour &&

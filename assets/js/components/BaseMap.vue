@@ -149,16 +149,16 @@ export default {
       return
     },
 
-    mouseenterfunc(d, i, group) {
-      return this._domouse(true, d, i, group)
+    mouseenterfunc(ev, d) {
+      return this._domouse(true, ev, d)
     },
 
-    mouseleavefunc(d, i, group) {
-      return this._domouse(false, d, i, group)
+    mouseleavefunc(ev, d) {
+      return this._domouse(false, ev, d)
     },
 
-    _domouse(over, d, i, group) {
-      const thisnode = group[i]
+    _domouse(over, ev, d) {
+      const thisnode = ev.currentTarget
       const self = d3.select(thisnode)
 
       // disable mouse-over when zeroed
@@ -171,10 +171,10 @@ export default {
         // visible (currently) and it would cover its children
         //d3.select(thisnode.parentNode).raise()
 
-        this.tip.show.call(self.node(), d, i)
+        this.tip.show.call(ev.currentTarget, ev, d)
         this.hovered_region = d
       } else {
-        this.tip.hide.call(self.node(), d, i)
+        this.tip.hide.call(ev.currentTarget, ev, d)
         this.hovered_region = null
       }
 

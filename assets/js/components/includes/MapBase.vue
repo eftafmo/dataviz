@@ -699,9 +699,9 @@ export default {
       }
 
       const zoom = d3.zoom()
-                     .on("zoom", () => {
-                       this.chart.attr("transform", d3.event.transform);
-                       this.current_zoom = d3.event.transform.k;
+                     .on("zoom", (ev) => {
+                       this.chart.attr("transform", ev.transform);
+                       this.current_zoom = ev.transform.k;
                        this.updateStyle();
                        if (zoomFunc) zoomFunc();
                      });
