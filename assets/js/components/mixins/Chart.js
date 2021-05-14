@@ -34,7 +34,7 @@ export default {
 
     // do that to computeDimensions as well, because why not
     // (but allow it to be delayed indefinitely)
-    this.computeDimensions = debounce(this.computeDimensions, 100);
+    this.computeDimensions = debounce(this.computeDimensions, this.renderWait.min);
   },
 
   mounted() {
