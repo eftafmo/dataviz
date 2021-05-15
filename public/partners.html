@@ -10,7 +10,6 @@
 
     <title>Test za App</title>
 
-
     <link type="text/css" href="https://data.eeagrants.org/assets/site.d5f187aa.css" rel="stylesheet" />
 
     <script type="module" src="/assets/entry.js"></script>
@@ -39,11 +38,11 @@
         <nav class="header-menu">
           <ul>
             <li><a href="/grants.html?">Grants</a></li>
-            <li><a href="/partners.html?">Partners</a></li>
+            <li><a href="/partners.html?" class="active">Partners</a></li>
             <li><a href="/projects.html?">Projects</a></li>
           </ul>
         </nav>
-        <form action="/search/programme/" class="header-search">
+        <form action="/search/organisation/" class="header-search">
 
           <input type="search" placeholder="Search" name="q">
           <button type="submit" title="Search" name="page" value="1">
@@ -59,6 +58,7 @@
 
 
 
+
   <div id="content" class="page-body">
       <globalfilters>
       </globalfilters>
@@ -66,43 +66,92 @@
       <div class="page-body-inner">
 
 
-  <main class="main">
+<main class="main">
 
-  <div class="homepage_content_wrapper">
-    <overview
-        :initial="dataset"
-    ></overview>
+
+<h1 class="page-title">Our Partners</h1>
+
+<div class="lg-column">
+
+  <div class="grant-dataviz" id="financial-mechanisms">
+    <mechanisms :initial="dataset">
+      <h2 slot="title">Financial mechanisms <span style="white-space:nowrap;">2009-2014</span></h2>
+    </mechanisms>
   </div>
 
-  <section class="section homepage-section align-center">
+  <div class="grant-dataviz" id="priority-sectors">
+    <sectors :initial="dataset">
+      <h2 slot="title">Donor partner programmes by sector</h2>
+    </sectors>
+  </div>
 
-    <h2 class="homepage-subtitle">Find out more about our ...</h2>
+  <div class="grant-dataviz" id="donor-programme-partners">
+    <programme_partners
+        :initial="dataset"
+    >
+      <h2 slot="title">Donor programme partners</h2>
+    </programme_partners>
+  </div>
 
-    <nav class="homepage-nav">
-      <a href="/grants.html">Grants</a>
-      <a href="/partners.html">Partners</a>
-      <a href="/projects.html">Projects</a>
-    </nav>
+  <div class="grant-dataviz" id="donor-project-partners">
+    <project_partners
+        :initial="dataset"
+    >
+      <h2 slot="title">Donor project partners</h2>
+    </project_partners>
+  </div>
 
-    <div class="homepage-search-wrapper">
-      <div class="small-screen">
-        or search programmes, projects, organisations:
-      </div>
-      <form class="homepage-search" action="/search/programme/">
-        <input  id="search_request_input" type="search" name="q"
-                placeholder="Programmes, Projects, Organisations, etc.">
-        <a id="search_request" href="/search/programme/">Search</a>
-      </form>
-    </div>
-
-  </section>
+</div>
 
 
-  </main>
-<!-- !!!TODO!!!
+<div class="lg-column">
+
+  <div class="grant-dataviz" id="network-map">
+    <xmap
+        :initial="dataset"
+    >
+      <h2 slot="title">Network map</h2>
+    </xmap>
+  </div>
+
+  <div class="grant-dataviz" id="donor-states">
+    <donors
+        :initial="dataset"
+    >
+      <h2 slot="title">Partners by donor state</h2>
+    </donors>
+  </div>
+
+ <div class="grant-dataviz" id="beneficiary-states">
+    <beneficiaries
+        :initial="dataset"
+    >
+      <h2 slot="title">Organisations with donor partner by beneficiary state</h2>
+    </beneficiaries>
+  </div>
+
+</div>
+
+
+
+
+
+</main>
+
+<aside class="aside">
+
+
+<sidebar class="sticky"
+         :initial="dataset"
+         projects-datasource="/api/projects/"
+>
+</sidebar>
+
+
+</aside>
+<!--
 <embeddor :components="vizcomponents"></embeddor>
  -->
-
       </div>
     </div>
   </div>
@@ -120,16 +169,17 @@
         </div>
       </div>
   </footer>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       _createApp(
-        Dataviz.Index,
+        Dataviz.Partners,
         {
-          datasource: "/api/overview.json",
+          datasource: "/api/partners.json",
         },
       ).mount('#content')
     })
   </script>
 
-  </body>
+</body>
 </html>

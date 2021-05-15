@@ -10,7 +10,6 @@
 
     <title>Test za App</title>
 
-
     <link type="text/css" href="https://data.eeagrants.org/assets/site.d5f187aa.css" rel="stylesheet" />
 
     <script type="module" src="/assets/entry.js"></script>
@@ -38,7 +37,7 @@
 
         <nav class="header-menu">
           <ul>
-            <li><a href="/grants.html?">Grants</a></li>
+            <li><a href="/grants.html?" class="active">Grants</a></li>
             <li><a href="/partners.html?">Partners</a></li>
             <li><a href="/projects.html?">Projects</a></li>
           </ul>
@@ -57,8 +56,6 @@
     </div>
   </header>
 
-
-
   <div id="content" class="page-body">
       <globalfilters>
       </globalfilters>
@@ -66,43 +63,66 @@
       <div class="page-body-inner">
 
 
-  <main class="main">
+<main class="main">
 
-  <div class="homepage_content_wrapper">
-    <overview
-        :initial="dataset"
-    ></overview>
+
+<h1 class="page-title">Our Grants</h1>
+
+<div class="lg-column">
+
+  <div class="grant-dataviz" id="financial-mechanisms">
+    <mechanisms :initial="dataset">
+      <h2 slot="title">Funding by financial mechanism <span style="white-space:nowrap;">2009-2014</span></h2>
+    </mechanisms>
   </div>
 
-  <section class="section homepage-section align-center">
+  <div class="grant-dataviz" id="priority-sectors">
+    <sectors
+        :initial="dataset"
+    >
+      <h2 slot="title">Allocation by sector</h2>
+    </sectors>
+  </div>
 
-    <h2 class="homepage-subtitle">Find out more about our ...</h2>
-
-    <nav class="homepage-nav">
-      <a href="/grants.html">Grants</a>
-      <a href="/partners.html">Partners</a>
-      <a href="/projects.html">Projects</a>
-    </nav>
-
-    <div class="homepage-search-wrapper">
-      <div class="small-screen">
-        or search programmes, projects, organisations:
-      </div>
-      <form class="homepage-search" action="/search/programme/">
-        <input  id="search_request_input" type="search" name="q"
-                placeholder="Programmes, Projects, Organisations, etc.">
-        <a id="search_request" href="/search/programme/">Search</a>
-      </form>
-    </div>
-
-  </section>
+</div>
 
 
-  </main>
+<div class="lg-column">
+
+  <div class="grant-dataviz" id="funding-map">
+    <xmap
+        :initial="dataset"
+        details-datasource="/api/grants/XX.json"
+    >
+      <h2 slot="title">Funding map</h2>
+    </xmap>
+  </div>
+
+  <div class="grant-dataviz" id="beneficiary-states">
+    <beneficiaries
+        :initial="dataset"
+    >
+      <h2 slot="title">Funding across beneficiary states</h2>
+    </beneficiaries>
+  </div>
+
+</div>
+
+
+</main>
+
+<aside class="aside">
+
+
+<sidebar class="sticky"
+         :initial="dataset">
+</sidebar>
+
+
+</aside>
 <!-- !!!TODO!!!
 <embeddor :components="vizcomponents"></embeddor>
  -->
-
       </div>
     </div>
   </div>
@@ -120,12 +140,14 @@
         </div>
       </div>
   </footer>
+
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       _createApp(
-        Dataviz.Index,
+        Dataviz.Grants,
         {
-          datasource: "/api/overview.json",
+          datasource: "/api/grants.json",
         },
       ).mount('#content')
     })
