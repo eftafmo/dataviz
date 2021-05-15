@@ -40,7 +40,7 @@ export default {
 
           values[aid] = value
           sum += value
-          area.programmes.each(p => programmeset.add(p))
+          area.programmes.forEach(p => programmeset.add(p))
         }
 
         const count = programmeset.size
@@ -108,7 +108,7 @@ export default {
 
       const num_bs = bss.size;
       // sort donor states
-      const ds_sorted = dss.values().sort(
+      const ds_sorted = Array.from(dss.values()).sort(
         (a,b) => d3.ascending(COUNTRIES[a].sort_order, COUNTRIES[b].sort_order)
       ).map(
         code => COUNTRIES[code].name
