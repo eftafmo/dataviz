@@ -145,7 +145,7 @@ export default {
         .on("mouseleave", this.mouseleavefunc)
     },
 
-    clickfunc(d, i, group) {
+    clickfunc(ev, d) {
       return
     },
 

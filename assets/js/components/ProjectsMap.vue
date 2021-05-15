@@ -293,8 +293,9 @@ export default {
       return d.project_count || 0;
     },
 
-    _domouse(over, d, i, group) {
-      const self = this.$super()._domouse(over, d, i, group)
+    _domouse(over, ev, d) {
+      const $super = AllocationMap.methods._domouse.bind(this)
+      const self = $super(over, ev, d)
       if (!self) return
 
       // (de)highlight the bubble
@@ -317,9 +318,9 @@ export default {
                               this.fillfunc)
     },
 
-    clickfunc(d, i, group) {
-      const self = this.$super().clickfunc(d, i, group)
-
+    clickfunc(ev, d) {
+      const $super = AllocationMap.methods.clickfunc.bind(this)
+      const self = $super(ev, d)
       if (!self) return
 
       if (d.id.length != 2)
@@ -329,7 +330,7 @@ export default {
                                    .classed("selected", false)
 
       if (d.id.length > 4) {
-        d3.select(group[i]).classed("selected", true);
+        d3.select(ev.currentTarget).classed("selected", true);
       }
     },
 
@@ -592,8 +593,8 @@ export default {
             // can't simply Object.assign, because of sets
             const v = row[k];
 
-            if (v instanceof d3.set)
-              item[k] = d3.set(v.values())
+            if (v instanceof Set)
+              item[k] = new Set(v.values())
             else
               item[k] = v
 
@@ -608,8 +609,8 @@ export default {
               continue
             else if (typeof v == 'number')
               item[k] += v
-            else if (v instanceof d3.set)
-              v.each(x => item[k].add(x))
+            else if (v instanceof Set)
+              v.forEach(x => item[k].add(x))
               else
                 console.error("Unhandled key / value", k, v)
           }
