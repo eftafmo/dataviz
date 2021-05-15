@@ -1,0 +1,717 @@
+[
+  {
+    "allocation": "140358.00",
+    "project_count": 1,
+    "programmes": {
+      "LT03": "LT03"
+    },
+    "id": "LT",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4898484.00",
+    "project_count": 11,
+    "programmes": {
+      "LT03": "LT03"
+    },
+    "id": "LT",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3803703.00",
+    "project_count": 13,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "734325.00",
+    "project_count": 1,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "454951.00",
+    "project_count": 1,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2659579.00",
+    "project_count": 4,
+    "programmes": {
+      "LT14": "LT14"
+    },
+    "id": "LT",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2753130.00",
+    "project_count": 1,
+    "programmes": {
+      "LT02": "LT02"
+    },
+    "id": "LT",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3863098.00",
+    "project_count": 49,
+    "programmes": {
+      "LT04": "LT04"
+    },
+    "id": "LT",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "439226.00",
+    "project_count": 6,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "LT",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1347458.00",
+    "project_count": 1,
+    "programmes": {
+      "LT02": "LT02"
+    },
+    "id": "LT",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6946884.00",
+    "project_count": 3,
+    "programmes": {
+      "LT13": "LT13"
+    },
+    "id": "LT",
+    "area": "Judicial capacity-building and cooperation",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "353982.00",
+    "project_count": 6,
+    "programmes": {
+      "LT07": "LT07"
+    },
+    "id": "LT",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3560427.00",
+    "project_count": 9,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2995937.00",
+    "project_count": 2,
+    "programmes": {
+      "LT12": "LT12"
+    },
+    "id": "LT",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "151030.00",
+    "project_count": 2,
+    "programmes": {
+      "LT08": "LT08"
+    },
+    "id": "LT",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "120222.00",
+    "project_count": 1,
+    "programmes": {
+      "LT03": "LT03"
+    },
+    "id": "LT00",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139651.00",
+    "project_count": 1,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT00",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "234655.00",
+    "project_count": 2,
+    "programmes": {
+      "LT07": "LT07"
+    },
+    "id": "LT00",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "470760.00",
+    "project_count": 8,
+    "programmes": {
+      "LT08": "LT08"
+    },
+    "id": "LT00",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "391915.00",
+    "project_count": 1,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT001",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "717801.00",
+    "project_count": 4,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT001",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "824396.00",
+    "project_count": 2,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT001",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "114690.00",
+    "project_count": 1,
+    "programmes": {
+      "LT04": "LT04"
+    },
+    "id": "LT001",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2290231.00",
+    "project_count": 4,
+    "programmes": {
+      "LT09": "LT09"
+    },
+    "id": "LT001",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "258256.00",
+    "project_count": 2,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT001",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "246602.00",
+    "project_count": 2,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT002",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "714373.00",
+    "project_count": 4,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT002",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "934260.00",
+    "project_count": 2,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT002",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3782425.00",
+    "project_count": 2,
+    "programmes": {
+      "LT14": "LT14"
+    },
+    "id": "LT002",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "122968.00",
+    "project_count": 1,
+    "programmes": {
+      "LT04": "LT04"
+    },
+    "id": "LT002",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "37358.00",
+    "project_count": 1,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT002",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "189034.00",
+    "project_count": 4,
+    "programmes": {
+      "LT08": "LT08"
+    },
+    "id": "LT002",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "527542.00",
+    "project_count": 3,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT003",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1724703.00",
+    "project_count": 4,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT003",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1029578.00",
+    "project_count": 2,
+    "programmes": {
+      "LT09": "LT09"
+    },
+    "id": "LT003",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "72056.00",
+    "project_count": 1,
+    "programmes": {
+      "LT07": "LT07"
+    },
+    "id": "LT003",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "140433.00",
+    "project_count": 2,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT003",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "47636.00",
+    "project_count": 1,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT004",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "179161.00",
+    "project_count": 1,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT004",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "630628.00",
+    "project_count": 1,
+    "programmes": {
+      "LT09": "LT09"
+    },
+    "id": "LT004",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "253860.00",
+    "project_count": 2,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT004",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "119539.00",
+    "project_count": 2,
+    "programmes": {
+      "LT08": "LT08"
+    },
+    "id": "LT004",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "573364.00",
+    "project_count": 3,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT005",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "339867.00",
+    "project_count": 3,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT005",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "19759.00",
+    "project_count": 1,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT006",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "453191.00",
+    "project_count": 3,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT006",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "854818.00",
+    "project_count": 2,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT006",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260291.00",
+    "project_count": 1,
+    "programmes": {
+      "LT09": "LT09"
+    },
+    "id": "LT006",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "185605.00",
+    "project_count": 1,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT007",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "657831.00",
+    "project_count": 2,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT007",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "546315.00",
+    "project_count": 1,
+    "programmes": {
+      "LT03": "LT03"
+    },
+    "id": "LT008",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "15144.00",
+    "project_count": 1,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT008",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "769856.00",
+    "project_count": 2,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT008",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "70030.00",
+    "project_count": 1,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT008",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "753158.00",
+    "project_count": 4,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT009",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "427492.00",
+    "project_count": 1,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT009",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "89693.00",
+    "project_count": 1,
+    "programmes": {
+      "LT07": "LT07"
+    },
+    "id": "LT009",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "407585.00",
+    "project_count": 1,
+    "programmes": {
+      "LT10": "LT10"
+    },
+    "id": "LT00A",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "520923.00",
+    "project_count": 3,
+    "programmes": {
+      "LT05": "LT05"
+    },
+    "id": "LT00A",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1293181.00",
+    "project_count": 3,
+    "programmes": {
+      "LT06": "LT06"
+    },
+    "id": "LT00A",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "228109.00",
+    "project_count": 5,
+    "programmes": {
+      "LT04": "LT04"
+    },
+    "id": "LT00A",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2494426.00",
+    "project_count": 5,
+    "programmes": {
+      "LT09": "LT09"
+    },
+    "id": "LT00A",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "83854.00",
+    "project_count": 1,
+    "programmes": {
+      "LT07": "LT07"
+    },
+    "id": "LT00A",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "401841.00",
+    "project_count": 4,
+    "programmes": {
+      "LT11": "LT11"
+    },
+    "id": "LT00A",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "192863.00",
+    "project_count": 3,
+    "programmes": {
+      "LT08": "LT08"
+    },
+    "id": "LT00A",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  }
+]

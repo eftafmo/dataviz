@@ -1,0 +1,860 @@
+[
+  {
+    "allocation": "548887.33",
+    "project_count": 18,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV003",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "428120.33",
+    "project_count": 17,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV005",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "428120.33",
+    "project_count": 17,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV006",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "428120.33",
+    "project_count": 17,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV007",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "428120.33",
+    "project_count": 17,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV008",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "428120.33",
+    "project_count": 17,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV009",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "721585.67",
+    "project_count": 4,
+    "programmes": {
+      "LV07": "LV07"
+    },
+    "id": "LV003",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "721585.67",
+    "project_count": 4,
+    "programmes": {
+      "LV07": "LV07"
+    },
+    "id": "LV005",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "721585.67",
+    "project_count": 4,
+    "programmes": {
+      "LV07": "LV07"
+    },
+    "id": "LV006",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "721585.67",
+    "project_count": 4,
+    "programmes": {
+      "LV07": "LV07"
+    },
+    "id": "LV007",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "721585.67",
+    "project_count": 4,
+    "programmes": {
+      "LV07": "LV07"
+    },
+    "id": "LV008",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "721585.67",
+    "project_count": 4,
+    "programmes": {
+      "LV07": "LV07"
+    },
+    "id": "LV009",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "467466.17",
+    "project_count": 4,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV003",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1235645.17",
+    "project_count": 6,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV005",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "806752.17",
+    "project_count": 7,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV006",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "467466.17",
+    "project_count": 4,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV007",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "467466.17",
+    "project_count": 4,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV008",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "635744.17",
+    "project_count": 5,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV009",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1948306.50",
+    "project_count": 3,
+    "programmes": {
+      "LV08": "LV08"
+    },
+    "id": "LV003",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1948306.50",
+    "project_count": 3,
+    "programmes": {
+      "LV08": "LV08"
+    },
+    "id": "LV005",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1948306.50",
+    "project_count": 3,
+    "programmes": {
+      "LV08": "LV08"
+    },
+    "id": "LV006",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1948306.50",
+    "project_count": 3,
+    "programmes": {
+      "LV08": "LV08"
+    },
+    "id": "LV007",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1948306.50",
+    "project_count": 3,
+    "programmes": {
+      "LV08": "LV08"
+    },
+    "id": "LV008",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1948306.50",
+    "project_count": 3,
+    "programmes": {
+      "LV08": "LV08"
+    },
+    "id": "LV009",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "260006.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV003",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260006.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV005",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260006.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV006",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260006.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV007",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260006.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV008",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260006.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV009",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1462972.00",
+    "project_count": 105,
+    "programmes": {
+      "LV03": "LV03"
+    },
+    "id": "LV003",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1711935.00",
+    "project_count": 112,
+    "programmes": {
+      "LV03": "LV03"
+    },
+    "id": "LV005",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1735618.00",
+    "project_count": 113,
+    "programmes": {
+      "LV03": "LV03"
+    },
+    "id": "LV006",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1012642.00",
+    "project_count": 94,
+    "programmes": {
+      "LV03": "LV03"
+    },
+    "id": "LV007",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1490285.00",
+    "project_count": 102,
+    "programmes": {
+      "LV03": "LV03"
+    },
+    "id": "LV008",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1276380.00",
+    "project_count": 98,
+    "programmes": {
+      "LV03": "LV03"
+    },
+    "id": "LV009",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "61190.83",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "LV003",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "61190.83",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "LV005",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "61190.83",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "LV006",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "61190.83",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "LV007",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "61190.83",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "LV008",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "61190.83",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "LV009",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1112035.83",
+    "project_count": 6,
+    "programmes": {
+      "LV06": "LV06"
+    },
+    "id": "LV003",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "295726.83",
+    "project_count": 4,
+    "programmes": {
+      "LV06": "LV06"
+    },
+    "id": "LV005",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2770361.83",
+    "project_count": 19,
+    "programmes": {
+      "LV06": "LV06"
+    },
+    "id": "LV006",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "884882.83",
+    "project_count": 7,
+    "programmes": {
+      "LV06": "LV06"
+    },
+    "id": "LV007",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1599201.83",
+    "project_count": 8,
+    "programmes": {
+      "LV06": "LV06"
+    },
+    "id": "LV008",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "779395.83",
+    "project_count": 6,
+    "programmes": {
+      "LV06": "LV06"
+    },
+    "id": "LV009",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "116193.67",
+    "project_count": 7,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV003",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54263.67",
+    "project_count": 6,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV005",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "217095.67",
+    "project_count": 9,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV006",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54263.67",
+    "project_count": 6,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV007",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "99694.67",
+    "project_count": 7,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV008",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54263.67",
+    "project_count": 6,
+    "programmes": {
+      "LV04": "LV04"
+    },
+    "id": "LV009",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1663892.17",
+    "project_count": 4,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV003",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "84155.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV005",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "84155.17",
+    "project_count": 2,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV006",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "988955.17",
+    "project_count": 3,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV007",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "698919.17",
+    "project_count": 3,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV008",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "910913.17",
+    "project_count": 3,
+    "programmes": {
+      "LV02": "LV02"
+    },
+    "id": "LV009",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "461301.17",
+    "project_count": 8,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV003",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "461301.17",
+    "project_count": 8,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV005",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1453327.17",
+    "project_count": 11,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV006",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "461301.17",
+    "project_count": 8,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV007",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "461301.17",
+    "project_count": 8,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV008",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "461301.17",
+    "project_count": 8,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV009",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "19164.33",
+    "project_count": 6,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV003",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59441.33",
+    "project_count": 8,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV005",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "87037.33",
+    "project_count": 11,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV006",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19164.33",
+    "project_count": 6,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV007",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19164.33",
+    "project_count": 6,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV008",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19164.33",
+    "project_count": 6,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV009",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "15167.50",
+    "project_count": 1,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV003",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "97022.50",
+    "project_count": 2,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV005",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "241487.50",
+    "project_count": 8,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV006",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "15167.50",
+    "project_count": 1,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV007",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "28228.50",
+    "project_count": 3,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV008",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "52840.50",
+    "project_count": 5,
+    "programmes": {
+      "LV05": "LV05"
+    },
+    "id": "LV009",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  }
+]

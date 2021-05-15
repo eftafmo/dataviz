@@ -1,0 +1,321 @@
+[
+  {
+    "allocation": "2501125.00",
+    "project_count": 8,
+    "programmes": {
+      "PT04": "PT04"
+    },
+    "id": "PT",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3471477.00",
+    "project_count": 1,
+    "programmes": {
+      "PT08": "PT08"
+    },
+    "id": "PT",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5769969.00",
+    "project_count": 75,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "14664502.00",
+    "project_count": 22,
+    "programmes": {
+      "PT02": "PT02"
+    },
+    "id": "PT",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2029854.00",
+    "project_count": 12,
+    "programmes": {
+      "PT07": "PT07"
+    },
+    "id": "PT",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "640658.00",
+    "project_count": 6,
+    "programmes": {
+      "PT09": "PT09"
+    },
+    "id": "PT",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "8358923.00",
+    "project_count": 27,
+    "programmes": {
+      "PT06": "PT06"
+    },
+    "id": "PT",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1240138.00",
+    "project_count": 6,
+    "programmes": {
+      "PT02": "PT02"
+    },
+    "id": "PT1",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "184185.00",
+    "project_count": 1,
+    "programmes": {
+      "PT02": "PT02"
+    },
+    "id": "PT11",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "20808.00",
+    "project_count": 1,
+    "programmes": {
+      "PT09": "PT09"
+    },
+    "id": "PT11",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "71224.00",
+    "project_count": 4,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT111",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "127880.00",
+    "project_count": 3,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT114",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "26901.00",
+    "project_count": 2,
+    "programmes": {
+      "PT02": "PT02"
+    },
+    "id": "PT114",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "83129.00",
+    "project_count": 2,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT116",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "23120.00",
+    "project_count": 1,
+    "programmes": {
+      "PT09": "PT09"
+    },
+    "id": "PT150",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "116245.00",
+    "project_count": 3,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT16",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "23120.00",
+    "project_count": 1,
+    "programmes": {
+      "PT09": "PT09"
+    },
+    "id": "PT16",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "96764.00",
+    "project_count": 2,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT162",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "21070.00",
+    "project_count": 1,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT16A",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "398418.00",
+    "project_count": 13,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT171",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "223065.00",
+    "project_count": 3,
+    "programmes": {
+      "PT02": "PT02"
+    },
+    "id": "PT171",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "23120.00",
+    "project_count": 1,
+    "programmes": {
+      "PT09": "PT09"
+    },
+    "id": "PT171",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "104074.00",
+    "project_count": 3,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT172",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "41077.00",
+    "project_count": 3,
+    "programmes": {
+      "PT02": "PT02"
+    },
+    "id": "PT172",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19993.00",
+    "project_count": 1,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT181",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57480.00",
+    "project_count": 3,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT183",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54940.00",
+    "project_count": 1,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT2",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3816436.00",
+    "project_count": 4,
+    "programmes": {
+      "PT03": "PT03"
+    },
+    "id": "PT20",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30463.00",
+    "project_count": 2,
+    "programmes": {
+      "PT05": "PT05"
+    },
+    "id": "PT200",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  }
+]

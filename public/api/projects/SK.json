@@ -1,0 +1,682 @@
+[
+  {
+    "allocation": "1773174.00",
+    "project_count": 63,
+    "programmes": {
+      "SK02": "SK02"
+    },
+    "id": "SK",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2426231.00",
+    "project_count": 5,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3123562.00",
+    "project_count": 10,
+    "programmes": {
+      "SK08": "SK08"
+    },
+    "id": "SK",
+    "area": "Cross-border cooperation",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1514216.00",
+    "project_count": 1,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "4030498.00",
+    "project_count": 93,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "389826.00",
+    "project_count": 6,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SK",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5461519.00",
+    "project_count": 3,
+    "programmes": {
+      "SK07": "SK07"
+    },
+    "id": "SK",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "468609.00",
+    "project_count": 18,
+    "programmes": {
+      "SK04": "SK04"
+    },
+    "id": "SK",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "465678.00",
+    "project_count": 1,
+    "programmes": {
+      "SK08": "SK08"
+    },
+    "id": "SK0",
+    "area": "Cross-border cooperation",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "174337.00",
+    "project_count": 2,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK0",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "89410.00",
+    "project_count": 4,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK0",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4174672.00",
+    "project_count": 1,
+    "programmes": {
+      "SK07": "SK07"
+    },
+    "id": "SK0",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "321269.00",
+    "project_count": 1,
+    "programmes": {
+      "SK04": "SK04"
+    },
+    "id": "SK0",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "256328.00",
+    "project_count": 3,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK01",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "250691.00",
+    "project_count": 9,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK01",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "611621.00",
+    "project_count": 7,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK01",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2013323.00",
+    "project_count": 1,
+    "programmes": {
+      "SK02": "SK02"
+    },
+    "id": "SK010",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "850375.00",
+    "project_count": 2,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK010",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "486833.00",
+    "project_count": 2,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK010",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "281506.00",
+    "project_count": 7,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK010",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "643948.00",
+    "project_count": 12,
+    "programmes": {
+      "SK06": "SK06"
+    },
+    "id": "SK010",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "198191.00",
+    "project_count": 2,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK02",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "460570.00",
+    "project_count": 3,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK021",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "25547.00",
+    "project_count": 1,
+    "programmes": {
+      "SK10": "SK10"
+    },
+    "id": "SK021",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "81881.00",
+    "project_count": 1,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK021",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "45893.00",
+    "project_count": 1,
+    "programmes": {
+      "SK06": "SK06"
+    },
+    "id": "SK021",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1840182.00",
+    "project_count": 1,
+    "programmes": {
+      "SK02": "SK02"
+    },
+    "id": "SK022",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "548139.00",
+    "project_count": 2,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK022",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "12490.00",
+    "project_count": 2,
+    "programmes": {
+      "SK03": "SK03"
+    },
+    "id": "SK022",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "662338.00",
+    "project_count": 1,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK023",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "450388.00",
+    "project_count": 2,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK023",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "69723.00",
+    "project_count": 3,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK023",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "124009.00",
+    "project_count": 2,
+    "programmes": {
+      "SK06": "SK06"
+    },
+    "id": "SK023",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1385984.00",
+    "project_count": 3,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK031",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "746993.00",
+    "project_count": 3,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK031",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "167657.00",
+    "project_count": 5,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK031",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "91338.00",
+    "project_count": 1,
+    "programmes": {
+      "SK06": "SK06"
+    },
+    "id": "SK031",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "820209.00",
+    "project_count": 2,
+    "programmes": {
+      "SK02": "SK02"
+    },
+    "id": "SK032",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1470038.00",
+    "project_count": 4,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK032",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "67578.00",
+    "project_count": 1,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK032",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "475840.00",
+    "project_count": 10,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK032",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "SK07": "SK07"
+    },
+    "id": "SK032",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "171536.00",
+    "project_count": 4,
+    "programmes": {
+      "SK06": "SK06"
+    },
+    "id": "SK032",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1087221.00",
+    "project_count": 1,
+    "programmes": {
+      "SK02": "SK02"
+    },
+    "id": "SK04",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "543464.00",
+    "project_count": 1,
+    "programmes": {
+      "SK08": "SK08"
+    },
+    "id": "SK04",
+    "area": "Cross-border cooperation",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "9000.00",
+    "project_count": 1,
+    "programmes": {
+      "SK03": "SK03"
+    },
+    "id": "SK04",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "550083.00",
+    "project_count": 2,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK041",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "394487.00",
+    "project_count": 3,
+    "programmes": {
+      "SK08": "SK08"
+    },
+    "id": "SK041",
+    "area": "Cross-border cooperation",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1002789.00",
+    "project_count": 4,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK041",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "191058.00",
+    "project_count": 9,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK041",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "SK07": "SK07"
+    },
+    "id": "SK041",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "155183.00",
+    "project_count": 3,
+    "programmes": {
+      "SK06": "SK06"
+    },
+    "id": "SK041",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1164077.00",
+    "project_count": 1,
+    "programmes": {
+      "SK02": "SK02"
+    },
+    "id": "SK042",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1270016.00",
+    "project_count": 4,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK042",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3127117.00",
+    "project_count": 10,
+    "programmes": {
+      "SK08": "SK08"
+    },
+    "id": "SK042",
+    "area": "Cross-border cooperation",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "518597.00",
+    "project_count": 3,
+    "programmes": {
+      "SK09": "SK09"
+    },
+    "id": "SK042",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "265600.00",
+    "project_count": 12,
+    "programmes": {
+      "SK03": "SK03",
+      "SK10": "SK10"
+    },
+    "id": "SK042",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "383211.00",
+    "project_count": 3,
+    "programmes": {
+      "SK05": "SK05"
+    },
+    "id": "SK042",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "106925.00",
+    "project_count": 2,
+    "programmes": {
+      "SK06": "SK06"
+    },
+    "id": "SK042",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1392951.00",
+    "project_count": 15,
+    "programmes": {
+      "SK08": "SK08"
+    },
+    "id": "SKZ",
+    "area": "Cross-border cooperation",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "125387.00",
+    "project_count": 1,
+    "programmes": {
+      "SK08": "SK08"
+    },
+    "id": "SKZZ",
+    "area": "Cross-border cooperation",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  }
+]

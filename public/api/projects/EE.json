@@ -1,0 +1,497 @@
+[
+  {
+    "allocation": "857655.00",
+    "project_count": 3,
+    "programmes": {
+      "EE02": "EE02"
+    },
+    "id": "EE",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5476983.00",
+    "project_count": 17,
+    "programmes": {
+      "EE04": "EE04"
+    },
+    "id": "EE",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3872952.00",
+    "project_count": 18,
+    "programmes": {
+      "EE05": "EE05"
+    },
+    "id": "EE",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1578120.00",
+    "project_count": 9,
+    "programmes": {
+      "EE11": "EE11"
+    },
+    "id": "EE",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "4116797.00",
+    "project_count": 5,
+    "programmes": {
+      "EE02": "EE02"
+    },
+    "id": "EE",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1366254.00",
+    "project_count": 56,
+    "programmes": {
+      "EE03": "EE03"
+    },
+    "id": "EE",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "194496.00",
+    "project_count": 3,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "EE",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "81873.00",
+    "project_count": 5,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EE",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1393937.00",
+    "project_count": 4,
+    "programmes": {
+      "EE02": "EE02"
+    },
+    "id": "EE",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1044114.00",
+    "project_count": 15,
+    "programmes": {
+      "EE09": "EE09"
+    },
+    "id": "EE",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2934653.00",
+    "project_count": 10,
+    "programmes": {
+      "EE08": "EE08"
+    },
+    "id": "EE",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2540876.00",
+    "project_count": 13,
+    "programmes": {
+      "EE06": "EE06"
+    },
+    "id": "EE",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "328913.00",
+    "project_count": 7,
+    "programmes": {
+      "EE10": "EE10"
+    },
+    "id": "EE",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "47028.00",
+    "project_count": 1,
+    "programmes": {
+      "EE10": "EE10"
+    },
+    "id": "EE",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1953817.00",
+    "project_count": 15,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EE0",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "556587.00",
+    "project_count": 1,
+    "programmes": {
+      "EE09": "EE09"
+    },
+    "id": "EE0",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "243086.00",
+    "project_count": 1,
+    "programmes": {
+      "EE02": "EE02"
+    },
+    "id": "EE00",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "90000.00",
+    "project_count": 1,
+    "programmes": {
+      "EE03": "EE03"
+    },
+    "id": "EE00",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "236014.00",
+    "project_count": 7,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EE00",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "12763.00",
+    "project_count": 1,
+    "programmes": {
+      "EE09": "EE09"
+    },
+    "id": "EE00",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "10098.00",
+    "project_count": 1,
+    "programmes": {
+      "EE04": "EE04"
+    },
+    "id": "EE001",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "39574.00",
+    "project_count": 1,
+    "programmes": {
+      "EE05": "EE05"
+    },
+    "id": "EE001",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "190259.00",
+    "project_count": 18,
+    "programmes": {
+      "EE03": "EE03"
+    },
+    "id": "EE001",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "589815.00",
+    "project_count": 15,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EE001",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "3508546.00",
+    "project_count": 1,
+    "programmes": {
+      "EE08": "EE08"
+    },
+    "id": "EE001",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "49316.00",
+    "project_count": 1,
+    "programmes": {
+      "EE10": "EE10"
+    },
+    "id": "EE001",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "244728.00",
+    "project_count": 10,
+    "programmes": {
+      "EE10": "EE10"
+    },
+    "id": "EE001",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "57350.00",
+    "project_count": 2,
+    "programmes": {
+      "EE04": "EE04"
+    },
+    "id": "EE004",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6290.00",
+    "project_count": 1,
+    "programmes": {
+      "EE03": "EE03"
+    },
+    "id": "EE004",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "286831.00",
+    "project_count": 2,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EE004",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "447364.00",
+    "project_count": 1,
+    "programmes": {
+      "EE08": "EE08"
+    },
+    "id": "EE004",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "50681.00",
+    "project_count": 1,
+    "programmes": {
+      "EE10": "EE10"
+    },
+    "id": "EE004",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "44521.00",
+    "project_count": 1,
+    "programmes": {
+      "EE04": "EE04"
+    },
+    "id": "EE006",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "31177.00",
+    "project_count": 5,
+    "programmes": {
+      "EE03": "EE03"
+    },
+    "id": "EE006",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "61185.00",
+    "project_count": 9,
+    "programmes": {
+      "EE03": "EE03"
+    },
+    "id": "EE007",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "449551.00",
+    "project_count": 1,
+    "programmes": {
+      "EE08": "EE08"
+    },
+    "id": "EE007",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "72695.00",
+    "project_count": 2,
+    "programmes": {
+      "EE04": "EE04"
+    },
+    "id": "EE008",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "24261.00",
+    "project_count": 1,
+    "programmes": {
+      "EE11": "EE11"
+    },
+    "id": "EE008",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "90816.00",
+    "project_count": 12,
+    "programmes": {
+      "EE03": "EE03"
+    },
+    "id": "EE008",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "16199.00",
+    "project_count": 1,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EE008",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "505516.00",
+    "project_count": 1,
+    "programmes": {
+      "EE08": "EE08"
+    },
+    "id": "EE008",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "29782.00",
+    "project_count": 1,
+    "programmes": {
+      "EE10": "EE10"
+    },
+    "id": "EE008",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "290930.00",
+    "project_count": 9,
+    "programmes": {
+      "EE10": "EE10"
+    },
+    "id": "EE008",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "391067.00",
+    "project_count": 2,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EEZ",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1443991.00",
+    "project_count": 8,
+    "programmes": {
+      "EE07": "EE07"
+    },
+    "id": "EEZZ",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  }
+]

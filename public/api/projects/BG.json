@@ -1,0 +1,1289 @@
+[
+  {
+    "allocation": "4005044.00",
+    "project_count": 14,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1419622.00",
+    "project_count": 2,
+    "programmes": {
+      "BG11": "BG11"
+    },
+    "id": "BG",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "587005.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7099820.00",
+    "project_count": 12,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1541814.00",
+    "project_count": 19,
+    "programmes": {
+      "BG12": "BG12"
+    },
+    "id": "BG",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5165521.00",
+    "project_count": 24,
+    "programmes": {
+      "BG04": "BG04"
+    },
+    "id": "BG",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5196836.00",
+    "project_count": 186,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "471026.00",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "BG",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5123420.00",
+    "project_count": 15,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "725080.00",
+    "project_count": 1,
+    "programmes": {
+      "BG02": "BG02"
+    },
+    "id": "BG",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1774188.00",
+    "project_count": 4,
+    "programmes": {
+      "BG14": "BG14"
+    },
+    "id": "BG",
+    "area": "Judicial capacity-building and cooperation",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2579868.00",
+    "project_count": 13,
+    "programmes": {
+      "BG07": "BG07"
+    },
+    "id": "BG",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7588494.00",
+    "project_count": 198,
+    "programmes": {
+      "BG07": "BG07"
+    },
+    "id": "BG",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5896066.00",
+    "project_count": 29,
+    "programmes": {
+      "BG04": "BG04"
+    },
+    "id": "BG",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4656231.00",
+    "project_count": 7,
+    "programmes": {
+      "BG13": "BG13"
+    },
+    "id": "BG",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "879417.00",
+    "project_count": 161,
+    "programmes": {
+      "BG09": "BG09"
+    },
+    "id": "BG",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "38068.00",
+    "project_count": 2,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG3",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "160704.00",
+    "project_count": 3,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG3",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1052589.00",
+    "project_count": 1,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG3",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "4378127.00",
+    "project_count": 6,
+    "programmes": {
+      "BG02": "BG02"
+    },
+    "id": "BG3",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "33057.00",
+    "project_count": 3,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG31",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "398938.00",
+    "project_count": 2,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG31",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1445.00",
+    "project_count": 1,
+    "programmes": {
+      "BG09": "BG09"
+    },
+    "id": "BG31",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "368975.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG311",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "31400.00",
+    "project_count": 2,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG311",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "196020.00",
+    "project_count": 1,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG312",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "36267.00",
+    "project_count": 1,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG312",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "86840.00",
+    "project_count": 5,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG312",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1079780.00",
+    "project_count": 2,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG313",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "61844.00",
+    "project_count": 5,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG313",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "65165.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG313",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "196632.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG314",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "83864.00",
+    "project_count": 1,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG314",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "46944.00",
+    "project_count": 5,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG314",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "32875.00",
+    "project_count": 2,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG315",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "106150.00",
+    "project_count": 9,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG315",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "32104.00",
+    "project_count": 3,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG32",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "272174.00",
+    "project_count": 1,
+    "programmes": {
+      "BG02": "BG02"
+    },
+    "id": "BG32",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "183965.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG321",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "933398.00",
+    "project_count": 3,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG321",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "56072.00",
+    "project_count": 8,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG321",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "381980.00",
+    "project_count": 1,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG321",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "133130.00",
+    "project_count": 3,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG321",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "165761.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG322",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7258.00",
+    "project_count": 2,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG322",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "190691.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG323",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "103579.00",
+    "project_count": 10,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG323",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "137812.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG324",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9756.00",
+    "project_count": 2,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG324",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "150620.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG325",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "45133.00",
+    "project_count": 3,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG325",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "149636.00",
+    "project_count": 2,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG33",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59483.00",
+    "project_count": 3,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG33",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "170587.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG331",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "190355.00",
+    "project_count": 13,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG331",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "580435.00",
+    "project_count": 3,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG331",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "152990.00",
+    "project_count": 1,
+    "programmes": {
+      "BG02": "BG02"
+    },
+    "id": "BG331",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3570.00",
+    "project_count": 2,
+    "programmes": {
+      "BG09": "BG09"
+    },
+    "id": "BG331",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1233071.00",
+    "project_count": 2,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG332",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22028.00",
+    "project_count": 2,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG332",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "184353.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG333",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9620.00",
+    "project_count": 1,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG333",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "297977.00",
+    "project_count": 1,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG333",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "168802.00",
+    "project_count": 9,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG334",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "135589.00",
+    "project_count": 8,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG34",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "149984.00",
+    "project_count": 1,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG34",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "164956.00",
+    "project_count": 1,
+    "programmes": {
+      "BG02": "BG02"
+    },
+    "id": "BG34",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "14782.00",
+    "project_count": 1,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG341",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "211006.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG341",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "701096.00",
+    "project_count": 2,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG341",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "146366.00",
+    "project_count": 8,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG341",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "622137.00",
+    "project_count": 1,
+    "programmes": {
+      "BG02": "BG02"
+    },
+    "id": "BG341",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1785.00",
+    "project_count": 1,
+    "programmes": {
+      "BG09": "BG09"
+    },
+    "id": "BG341",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "178598.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG342",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "60052.00",
+    "project_count": 2,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG342",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "62021.00",
+    "project_count": 5,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG342",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57526.00",
+    "project_count": 6,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG343",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1133610.00",
+    "project_count": 1,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG344",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1025603.00",
+    "project_count": 2,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG344",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "87793.00",
+    "project_count": 8,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG344",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12220.00",
+    "project_count": 2,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG4",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "300000.00",
+    "project_count": 1,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG4",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "281194.00",
+    "project_count": 1,
+    "programmes": {
+      "BG02": "BG02"
+    },
+    "id": "BG4",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "11185.00",
+    "project_count": 1,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG41",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "290751.00",
+    "project_count": 17,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG41",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "435553.00",
+    "project_count": 2,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG411",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1865929.00",
+    "project_count": 4,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG411",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "783914.00",
+    "project_count": 43,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG411",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "745070.00",
+    "project_count": 3,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG411",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "580244.00",
+    "project_count": 1,
+    "programmes": {
+      "BG14": "BG14"
+    },
+    "id": "BG411",
+    "area": "Judicial capacity-building and cooperation",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "222965.00",
+    "project_count": 4,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG411",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG412",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "53728.00",
+    "project_count": 1,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG412",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "227156.00",
+    "project_count": 9,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG412",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2028.00",
+    "project_count": 1,
+    "programmes": {
+      "BG09": "BG09"
+    },
+    "id": "BG412",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "171159.00",
+    "project_count": 13,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG413",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "316860.00",
+    "project_count": 2,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG413",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "19263.00",
+    "project_count": 1,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG414",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "37105.00",
+    "project_count": 2,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG415",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "52439.00",
+    "project_count": 1,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG415",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "137002.00",
+    "project_count": 8,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG415",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "206664.00",
+    "project_count": 12,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG42",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1208160.00",
+    "project_count": 2,
+    "programmes": {
+      "BG06": "BG06"
+    },
+    "id": "BG421",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1068672.00",
+    "project_count": 2,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG421",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34526.00",
+    "project_count": 1,
+    "programmes": {
+      "BG15": "BG15"
+    },
+    "id": "BG421",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "262387.00",
+    "project_count": 18,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG421",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "277170.00",
+    "project_count": 1,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG421",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "115867.00",
+    "project_count": 2,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG421",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1366709.00",
+    "project_count": 3,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG422",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "127646.00",
+    "project_count": 5,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG422",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34528.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG422",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "147537.00",
+    "project_count": 10,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG423",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "126739.00",
+    "project_count": 1,
+    "programmes": {
+      "BG03": "BG03"
+    },
+    "id": "BG424",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "224147.00",
+    "project_count": 9,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG424",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "798730.00",
+    "project_count": 2,
+    "programmes": {
+      "BG10": "BG10"
+    },
+    "id": "BG424",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "571822.00",
+    "project_count": 1,
+    "programmes": {
+      "BG08": "BG08"
+    },
+    "id": "BG425",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4904.00",
+    "project_count": 1,
+    "programmes": {
+      "BG05": "BG05"
+    },
+    "id": "BG425",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  }
+]
