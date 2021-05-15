@@ -19,7 +19,7 @@ function getURL(obj) {
 }
 
 function getScenario(url) {
-  const match = url.pathname.match(/^\/(\w+)?\/?$/)
+  const match = url.pathname.match(/^\/(\w+)?(\/|\.html)?$/)
   if (!match) return null
 
   const scenario = match[1]
