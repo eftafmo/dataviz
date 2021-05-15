@@ -247,19 +247,19 @@ export default {
         if (source) {
           const region = _getRegion(type, source)
           region.fms.add(d.fm)
-          ds_orgs.each(x => region.ds_orgs.add(x))
-          bs_orgs.each(x => region.bs_orgs.add(x))
+          ds_orgs.forEach(x => region.ds_orgs.add(x))
+          bs_orgs.forEach(x => region.bs_orgs.add(x))
           region.programmes.add(d.programme)
-          projects.each(x => region.projects.add(x))
+          projects.forEach(x => region.projects.add(x))
           if (target) region.states.add(target.substr(0,2))
         }
         if (target) {
           const region = _getRegion(type, target)
           region.fms.add(d.fm)
-          ds_orgs.each(x => region.ds_orgs.add(x))
-          bs_orgs.each(x => region.bs_orgs.add(x))
+          ds_orgs.forEach(x => region.ds_orgs.add(x))
+          bs_orgs.forEach(x => region.bs_orgs.add(x))
           region.programmes.add(d.programme)
-          projects.each(x => region.projects.add(x))
+          projects.forEach(x => region.projects.add(x))
           if (source) region.states.add(source.substr(0,2))
         }
       }
@@ -342,12 +342,12 @@ export default {
             }
           }
 
-          dataset[id].fms.each(x => region.fms.add(x))
-          dataset[id].states.each(x => region[type].states.add(x))
-          dataset[id].ds_orgs.each(x => region[type].ds_orgs.add(x))
-          dataset[id].bs_orgs.each(x => region[type].bs_orgs.add(x))
-          dataset[id].programmes.each(x => region[type].programmes.add(x))
-          dataset[id].projects.each(x => region[type].projects.add(x))
+          dataset[id].fms.forEach(x => region.fms.add(x))
+          dataset[id].states.forEach(x => region[type].states.add(x))
+          dataset[id].ds_orgs.forEach(x => region[type].ds_orgs.add(x))
+          dataset[id].bs_orgs.forEach(x => region[type].bs_orgs.add(x))
+          dataset[id].programmes.forEach(x => region[type].programmes.add(x))
+          dataset[id].projects.forEach(x => region[type].projects.add(x))
         }
       }
 
@@ -555,7 +555,7 @@ export default {
         .attr('d', d => getArc(d.source, d.target))
 
       // (some error checking)
-      if (!_badids.empty())
+      if (_badids.size !== 0)
         console.error("Unknown NUTS codes:", _badids.values());
 
       const connexit = connections.exit().remove()
