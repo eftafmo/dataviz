@@ -10,10 +10,12 @@
           <ul class="list-filters">
            <transition-group name="list">
               <li class="filter-item"
-                   v-for="(item, key) in data"
-                   v-if="item != null"
-                   @click="removeFilter(key)"
-                   >
+                  v-for="(item, key) in Object.fromEntries(
+                    Object.entries(data).filter(v => v != null)
+                  )"
+                  :key="key"
+                  @click="removeFilter(key)"
+              >
                {{item.name}}: {{item.value}}
               </li>
             </transition-group>
