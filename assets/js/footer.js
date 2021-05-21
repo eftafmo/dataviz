@@ -1,6 +1,3 @@
-import axios from "axios";
-
-
 window.Footer = (function() {
 
   var elFromMarkup = function(markup, selector) {
@@ -82,9 +79,10 @@ window.Footer = (function() {
   var popup = function(evt, el) {
     evt.preventDefault();
 
-    axios.get(el.href)
-      .then(resp => {
-        let content = elFromMarkup(resp.data, '#content .main');
+    fetch(el.href)
+      .then( resp => resp.text() )
+      .then( data => {
+        let content = elFromMarkup(data, '#content .main');
         Popup(document.body, content).show();
       });
 
@@ -96,4 +94,3 @@ window.Footer = (function() {
   }
 
 }());
-

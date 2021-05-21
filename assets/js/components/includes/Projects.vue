@@ -87,8 +87,6 @@
 </style>
 
 <script>
-import axios from 'axios';
-
 import WithFiltersMixin from '../mixins/WithFilters';
 import ComponentMixin from '../mixins/Component'
 
@@ -148,17 +146,17 @@ export default {
           // e.g. isDpp=true
           url = url + '&' + this.extra;
         }
-        axios
-          .get(url)
-          .then(response => {
+        fetch(url).then(response => {
+          if (!response.ok)
+            throw new Error(`${response.status} ${response.statusText}`)
+
+          response.json().then(data => {
             this.posts = response.data;
 
             if(target.classList.contains('spinning'))
               target.classList.remove('spinning')
           })
-          .catch(e => {
-            this.errors.push(e)
-          });
+        })
       }
       else {
         if(target.classList.contains('spinning'))
@@ -168,21 +166,23 @@ export default {
     },
 
     showMore() {
-      let href = this.posts.next;
-      if(href){
-        axios.get(""+href+"")
-          .then(response => {
-            this.posts.next = response.data.next
-            this.posts.count = response.data.count
-            this.posts.previous = response.data.previous
+      let url = this.posts.next;
+      if (!url) return
 
-            this.posts.results.push.apply(this.posts.results, response.data.results);
+      fetch(url).then(response => {
+        if (!response.ok)
+          throw new Error(`${response.status} ${response.statusText}`)
+
+          response.json().then(data => {
+            this.posts.next = data.next
+            this.posts.count = data.count
+            this.posts.previous = data.previous
+
+            this.posts.results.push.apply(this.posts.results, data.results);
           })
-          .catch(e => {
-            this.errors.push(e)
-        });
-      }
+      })
     },
+
     handleFilterRegion() {
       this.posts = [];
       const target = this.$el.querySelector('.programme-item-header')
