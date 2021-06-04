@@ -2,7 +2,10 @@ from django.conf import settings
 
 
 def get_context(request):
-    expose_settings = ['SENTRY_DSN', 'SENTRY_ENVIRONMENT']
+    expose_settings = [
+        'DEBUG',
+        'SENTRY_DSN', 'SENTRY_ENVIRONMENT',
+    ]
     if not settings.DEBUG:
         expose_settings += ['GOOGLE_ANALYTICS_PROPERTY_ID']
 

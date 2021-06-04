@@ -11,9 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 import environ
 
 env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
@@ -50,7 +49,6 @@ INSTALLED_APPS = [
     'django_countries',
     'haystack',
     'rest_framework',
-    'webpack_loader',
     'dv',
     'ckeditor',
     'django.contrib.staticfiles',
@@ -172,16 +170,6 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/',
-        'STATS_FILE': os.path.join(BUILD_DIR, 'webpack-stats.json'),
-        'POLL_INTERVAL': 10,
-        'CACHE': not DEBUG,
-    }
-}
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
@@ -203,12 +191,19 @@ CACHES = {
 
 API_CACHE_SECONDS = 60 * 60 * 24  # 1 day
 
-SENTRY_DSN = env('SENTRY_DSN')
-SENTRY_ENVIRONMENT = env('SENTRY_ENVIRONMENT')
+try:
+    # this is stupid, the settings file is no place for startup code
+    SENTRY_DSN = env('SENTRY_DSN')
+    SENTRY_ENVIRONMENT = env('SENTRY_ENVIRONMENT')
+except ImproperlyConfigured:
+    pass
+else:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
 
-sentry_sdk.init(
-    dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration()],
-)
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+    )
 
 from .localsettings import *

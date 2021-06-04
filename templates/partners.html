@@ -85,11 +85,13 @@
 
 {% block finally %}
 <script>
-new root.Partners({
-  el: '#content',
-  data: {
-    datasource: "{% url "api:partners" %}"
-  },
-});
+document.addEventListener('DOMContentLoaded', () => {
+  _createApp(
+    Dataviz.Partners,
+    {
+      datasource: "/api/partners.json",
+    },
+  ).mount('#content')
+})
 </script>
 {% endblock %}

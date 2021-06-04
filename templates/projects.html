@@ -63,11 +63,13 @@
 
 {% block finally %}
 <script>
-new root.Projects({
-  el: '#content',
-  data: {
-    datasource: "{% url "api:projects" %}"
-  },
-});
+document.addEventListener('DOMContentLoaded', () => {
+  _createApp(
+    Dataviz.Projects,
+    {
+      datasource: "/api/projects.json",
+    },
+  ).mount('#content')
+})
 </script>
 {% endblock %}

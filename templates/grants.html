@@ -59,11 +59,13 @@
 
 {% block finally %}
 <script>
-new root.Grants({
-  el: '#content',
-  data: {
-    datasource: "{% url "api:grants" %}"
-  },
-});
+document.addEventListener('DOMContentLoaded', () => {
+  _createApp(
+    Dataviz.Grants,
+    {
+      datasource: "/api/grants.json",
+    },
+  ).mount('#content')
+})
 </script>
 {% endblock %}

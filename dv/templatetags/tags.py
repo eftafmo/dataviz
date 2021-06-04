@@ -27,6 +27,11 @@ def sort(value):
 
 
 @register.filter
+def split(value, v):
+    return value.split(v)
+
+
+@register.filter
 def keyvalue(dict, key):
     try:
         return dict[key]

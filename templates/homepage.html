@@ -41,12 +41,15 @@
 
 {% block finally %}
 <script>
-new root.Index({
-  el: '#content',
-  data: {
-    datasource: "{% url "api:index" %}",
-  },
-});
+document.addEventListener('DOMContentLoaded', () => {
+  _createApp(
+  Dataviz.Index,
+    {
+    datasource: "/api/overview.json",
+    },
+  ).mount('#content')
+})
+
 
 a_element = document.getElementById("search_request");
 input = document.getElementById("search_request_input");
