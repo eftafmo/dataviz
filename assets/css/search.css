@@ -229,7 +229,9 @@
 
 .search-result .country img {
   vertical-align: middle;
-  // filter: url(#drop-shadow);
+  /*
+  filter: url(#drop-shadow);
+  */
   box-shadow: 0px 0px 1px #aaa;
 }
 

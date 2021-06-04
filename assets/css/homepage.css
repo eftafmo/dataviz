@@ -62,7 +62,9 @@
   align-items: strech;
   justify-content: center;
   max-width: 55rem;
-  // box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  /*
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  */
   border: 1px solid #eee;
 }
 .homepage-search input,
@@ -150,4 +152,3 @@
   }
 
 }
-
