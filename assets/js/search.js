@@ -1,4 +1,4 @@
-import defineComponent from 'vue'
+import { defineComponent } from 'vue'
 
 import Sidebar from './components/includes/Sidebar'
 
