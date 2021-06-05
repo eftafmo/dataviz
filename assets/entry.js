@@ -1,4 +1,3 @@
-// load styles
 import "./css/dataviz.less"
 
 import * as Vue from 'vue/dist/vue.esm-bundler.js'
