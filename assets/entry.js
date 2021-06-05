@@ -1,3 +1,6 @@
+// load styles
+import "./css/dataviz.less"
+
 import * as Vue from 'vue/dist/vue.esm-bundler.js'
 import Tabs from 'vue3-tabs-component/src/components/Tabs.vue';
 import Tab from 'vue3-tabs-component/src/components/Tab.vue';

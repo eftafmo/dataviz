@@ -30,6 +30,9 @@ def sort(value):
 def split(value, v):
     return value.split(v)
 
+@register.filter
+def value(dict, key):
+    return dict[key]
 
 @register.filter
 def keyvalue(dict, key):

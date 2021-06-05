@@ -6,16 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% block title %}{% endblock %}</title>
-<!--
-  {#% render_bundle 'dataviz' 'css' %}
-  {#% render_bundle 'site' 'css' %}
--->
 {% if settings.DEBUG %}
 {% with host=request.META.HTTP_HOST|split:":"|first %}
   <script type="module" src="//{{ host }}:3000/assets/entry.js"></script>
   <script type="module" src="//{{ host }}:3000/assets/site.js"></script>
-  <link type="text/css" rel="stylesheet" href="//{{ host }}:3000/assets/css/main.css">
+  <link rel="stylesheet" href="//{{ host }}:3000/assets/css/main.css">
 {% endwith %}
+{% else %}
+  <script type="module" src="/{{ assets|value:"assets/entry.js" }}"></script>
+  <script type="module" src="/{{ assets|value:"assets/site.js" }}"></script>
+  <link rel="modulepreload" href="/{{ assets|value:"_vendor.js" }}">
+  <link rel="stylesheet" href="/{{ assets|value:"assets/entry.css" }}">
+  <link rel="stylesheet" href="/{{ assets|value:"assets/site.css" }}">
 {% endif %}
 </head>
 <body class="dataviz">
@@ -83,10 +85,6 @@
       environment: "{{ settings.SENTRY_ENVIRONMENT|escapejs }}",
     };
   </script>
-<!--
-  {#% render_bundle 'dataviz' 'js' %}
-  {#% render_bundle 'site' 'js' %}
--->
 {% block finally %}
 {% endblock %}
   {% if settings.GOOGLE_ANALYTICS_PROPERTY_ID %}

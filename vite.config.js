@@ -11,10 +11,29 @@ export default defineConfig({
       vue(),
       json5(),
   ],
+
   resolve: {
     alias: {
-      '@js': path.resolve(__dirname, './assets/js'),
+      '@js': path.resolve(__dirname, 'assets/js'),
     },
     extensions: ['.js', '.vue'],
+  },
+
+  build: {
+    // publish the manifest, django uses it in templates
+    manifest: true,
+    // the build directory
+    outDir: path.resolve(__dirname, '../build'),
+    // don't minify (TODO: only when debugging?)
+    minify: false,
+    emptyOutDir: true,
+    brotliSize: false,
+
+    rollupOptions: {
+      input: [
+        'assets/entry.js',
+        'assets/site.js',
+      ],
+    },
   },
 })

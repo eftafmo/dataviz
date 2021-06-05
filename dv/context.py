@@ -1,7 +1,9 @@
 from django.conf import settings
+from dv.lib.assets import load_manifest
 
 
 def get_context(request):
+    # expose public settings
     expose_settings = [
         'DEBUG',
         'SENTRY_DSN', 'SENTRY_ENVIRONMENT',
@@ -15,5 +17,15 @@ def get_context(request):
 
     out = exposed_settings
     out['settings'] = exposed_settings.copy()
+
+    # add assets
+    try:
+        assets = load_manifest()
+    except FileNotFoundError:
+        if settings.DEBUG:
+            assets = {}
+        else:
+            raise
+    out['assets'] = assets
 
     return out

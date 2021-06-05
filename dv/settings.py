@@ -25,7 +25,7 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 # more useful dirs:
 # the web server's vhost root
 WEBROOT_DIR = os.path.join(ROOT_DIR, 'webroot')
-# used for building webpack bundles for now
+# where asset bundling happens
 BUILD_DIR = os.path.join(ROOT_DIR, 'build')
 
 # TODO: handle this nicely
@@ -149,8 +149,8 @@ STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(WEBROOT_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
-    # include webpack output
-    (os.path.join(BUILD_DIR, 'webpack-bundles')),
+    # include the bundle dir
+    os.path.join(BUILD_DIR, 'assets'),
 )
 
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
