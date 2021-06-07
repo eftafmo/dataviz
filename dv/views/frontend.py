@@ -32,6 +32,7 @@ from dv.views.facets_rules import (
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 
+
 SCENARIOS = (
     'index',
     'grants',
@@ -43,17 +44,6 @@ SCENARIOS = (
 def home(request):
     return render(request, 'homepage.html')
 
-
-def grants(request):
-    return render(request, 'grants.html')
-
-
-def partners(request):
-    return render(request, 'partners.html')
-
-
-def projects(request):
-    return render(request, 'projects.html')
 
 
 def disclaimer(request):

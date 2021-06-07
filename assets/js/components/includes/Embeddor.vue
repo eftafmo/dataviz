@@ -124,6 +124,9 @@ export default {
   },
 
   created() {
+    // !!! TODO: FIXME !!! //
+    return
+
     // cache the current scenario name
     this.scenario = this.$root.$options.name.toLowerCase()
 

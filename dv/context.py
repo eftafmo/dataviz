@@ -1,5 +1,6 @@
 from django.conf import settings
 from dv.lib.assets import load_manifest
+from dv.views.dataviz import get_menu
 
 
 def get_context(request):
@@ -27,5 +28,8 @@ def get_context(request):
         else:
             raise
     out['assets'] = assets
+
+    # constants
+    out['MENU'] = get_menu()
 
     return out

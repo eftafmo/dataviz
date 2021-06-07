@@ -18,15 +18,21 @@ function getURL(obj) {
   return url;
 }
 
-function getScenario(url) {
-  const match = url.pathname.match(/^\/(\w+)?(\/|\.html)?$/)
-  if (!match) return null
+const _scenario_url = new RegExp(
+  '^/(\\d{4}-\\d{4})/(\\w+)?(/|\.html)?$'
+)
 
-  const scenario = match[1]
-  if (scenario === undefined) return "index"
+function getScenario(url) {
+  const match = url.pathname.match(_scenario_url)
+  if (!match) return {}
+
+  const period = match[1]
+  let scenario = match[2]
+  if (scenario === undefined) scenario = "index"
   // test if this is a known scenario
-  if (SCENARIOFILTERS[scenario] === undefined) return null
-  return scenario
+  if (SCENARIOFILTERS[scenario] === undefined) return {}
+
+  return {period, scenario}
 }
 
 
@@ -54,8 +60,10 @@ export default {
     // set filters from querystring.
     const url = getURL(window.location),
           params = url.searchParams,
-          scenario = getScenario(url)
+          {period, scenario} = getScenario(url)
+
     const filters = SCENARIOFILTERS[scenario]
+
     for (const name of filters) {
       let param = params.get(name) || null
       if (param) {
@@ -122,7 +130,7 @@ export default {
 
         const url = getURL(a);
         if (url.origin !== location.origin) continue;
-        const scenario = getScenario(url)
+        const {period, scenario} = getScenario(url)
         if (!scenario) continue
 
         this._updateURL(url, SCENARIOFILTERS[scenario])

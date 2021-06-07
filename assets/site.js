@@ -1,4 +1,4 @@
-import "./css/main.css"
+import "./css/main.less"
 
 import './js/header.js'
 import './js/footer.js'

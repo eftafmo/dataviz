@@ -1,13 +1,26 @@
 from django.conf.urls import url
 from dv.views import frontend as views
+from dv.views import dataviz
+
+
+_periods = '|'.join(dataviz.ALLOCATION_PERIODS.keys())
+# this is imprecise, but it's just a helper to do early 404
+_scenarios = '|'.join({
+    s
+    for slist in dataviz.ALLOCATION_PERIODS.values()
+    for s in slist
+})
 
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
+    url(r'(?P<period>%s)/$' % _periods,
+        dataviz.render,
+        name='period'),
+    url(r'(?P<period>%s)/' % _periods + r'(?P<scenario>%s)/$' % _scenarios,
+        dataviz.render,
+        name='scenario'),
 
-    url(r'^grants/$', views.grants, name='grants'),
-    url(r'^partners/$', views.partners, name='partners'),
-    url(r'^projects/$', views.projects, name='projects'),
     url(r'^disclaimer/$', views.disclaimer, name='disclaimer'),
 
     url(r'^search/$',
