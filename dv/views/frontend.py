@@ -41,11 +41,6 @@ SCENARIOS = (
 )
 
 
-def home(request):
-    return render(request, 'homepage.html')
-
-
-
 def disclaimer(request):
     content = StaticContent.objects.filter(name='Disclaimer')
     context = dict(body=content[0].body if content else None)

@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.shortcuts import redirect
 from dv.views import frontend as views
 from dv.views import dataviz
 
@@ -13,7 +14,14 @@ _scenarios = '|'.join({
 
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
+    # redirect homepage to latest allocation period
+    url(r'^$',
+        lambda request: redirect('frontend:period',
+                                 next(iter(
+                                     dataviz.ALLOCATION_PERIODS.keys()
+                                 )))
+        ),
+
     url(r'(?P<period>%s)/$' % _periods,
         dataviz.render,
         name='period'),
