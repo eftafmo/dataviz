@@ -152,8 +152,12 @@ class ProgrammeArea(_MainModel):
     order = models.SmallIntegerField()
     objective = models.TextField()
 
-    priority_sector = models.ForeignKey(PrioritySector)
-    financial_mechanism = models.ForeignKey(FinancialMechanism)
+    priority_sector = models.ForeignKey(PrioritySector,
+                                        on_delete=models.CASCADE,
+                                        )
+    financial_mechanism = models.ForeignKey(FinancialMechanism,
+                                            on_delete=models.CASCADE,
+                                            )
     # Allocation also branches off towards FM
     allocations = models.ManyToManyField(State, through="Allocation")
 
@@ -186,10 +190,16 @@ class Allocation(_MainModel):
         return obj
 
     code = models.CharField(max_length=6, primary_key=True)
-    state = models.ForeignKey(State)
-    programme_area = models.ForeignKey(ProgrammeArea)
+    state = models.ForeignKey(State,
+                              on_delete=models.CASCADE,
+                              )
+    programme_area = models.ForeignKey(ProgrammeArea,
+                                       on_delete=models.CASCADE,
+                                       )
     # PA is already including FM, but add this so we have more data traversal paths
-    financial_mechanism = models.ForeignKey(FinancialMechanism)
+    financial_mechanism = models.ForeignKey(FinancialMechanism,
+                                            on_delete=models.CASCADE,
+                                            )
 
     gross_allocation = models.DecimalField(max_digits=15, decimal_places=2)
     net_allocation = models.DecimalField(max_digits=15, decimal_places=2)
@@ -258,7 +268,9 @@ class Programme(_MainModel):
 
         return super().from_data(data, src_idx)
 
-    state = models.ForeignKey(State)
+    state = models.ForeignKey(State,
+                              on_delete=models.CASCADE,
+                              )
     programme_areas = models.ManyToManyField(ProgrammeArea,
                                              through="Programme_ProgrammeArea")
 
@@ -336,8 +348,12 @@ class Programme_ProgrammeArea(_BaseModel):
         return ( super(cls, cls).from_data(subdata, src_idx) for subdata in _generate_data())
 
     code = models.CharField(max_length=9, primary_key=True)
-    programme = models.ForeignKey(Programme)
-    programme_area = models.ForeignKey(ProgrammeArea)
+    programme = models.ForeignKey(Programme,
+                                  on_delete=models.CASCADE,
+                                  )
+    programme_area = models.ForeignKey(ProgrammeArea,
+                                       on_delete=models.CASCADE,
+                                       )
 
     class Meta(_MainModel.Meta):
         unique_together = ('programme', 'programme_area')
@@ -374,7 +390,10 @@ class Outcome(_FussyOutcomeCode, _MainModel):
         },
     ]
 
-    programme_area = models.ForeignKey(ProgrammeArea, related_name='outcomes')
+    programme_area = models.ForeignKey(ProgrammeArea,
+                                       related_name='outcomes',
+                                       on_delete=models.CASCADE,
+                                       )
 
     code = models.CharField(max_length=12, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
@@ -420,9 +439,18 @@ class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
 
     code = models.CharField(max_length=20, primary_key=True)
     # programme can be null, e.g. "Reserve FM2004-09"
-    programme = models.ForeignKey(Programme, null=True, related_name='outcomes')
-    outcome = models.ForeignKey(Outcome, related_name='programmes')
-    state = models.ForeignKey(State)
+    programme = models.ForeignKey(Programme,
+                                  null=True,
+                                  related_name='outcomes',
+                                  on_delete=models.CASCADE,
+                                  )
+    outcome = models.ForeignKey(Outcome,
+                                related_name='programmes',
+                                on_delete=models.CASCADE,
+                                )
+    state = models.ForeignKey(State,
+                              on_delete=models.CASCADE,
+                              )
 
     allocation = models.FloatField()
     co_financing = models.FloatField()
@@ -503,12 +531,24 @@ class Project(_MainModel):
 
         return super().from_data(data, src_idx)
 
-    state = models.ForeignKey(State)
-    programme = models.ForeignKey(Programme)
-    programme_area = models.ForeignKey(ProgrammeArea)
-    outcome = models.ForeignKey(Outcome)
-    financial_mechanism = models.ForeignKey(FinancialMechanism)
-    priority_sector = models.ForeignKey(PrioritySector)
+    state = models.ForeignKey(State,
+                              on_delete=models.CASCADE,
+                              )
+    programme = models.ForeignKey(Programme,
+                                  on_delete=models.CASCADE,
+                                  )
+    programme_area = models.ForeignKey(ProgrammeArea,
+                                       on_delete=models.CASCADE,
+                                       )
+    outcome = models.ForeignKey(Outcome,
+                                on_delete=models.CASCADE,
+                                )
+    financial_mechanism = models.ForeignKey(FinancialMechanism,
+                                            on_delete=models.CASCADE,
+                                            )
+    priority_sector = models.ForeignKey(PrioritySector,
+                                        on_delete=models.CASCADE,
+                                        )
 
     status = EnumField(ProjectStatus, max_length=11)
 
@@ -551,7 +591,10 @@ class ProjectTheme(_BaseModel):
         return obj
 
     code = models.CharField(max_length=512, primary_key=True)
-    project = models.ForeignKey(Project, related_name='themes')
+    project = models.ForeignKey(Project,
+                                related_name='themes',
+                                on_delete=models.CASCADE,
+                                )
     name = models.CharField(max_length=512)  # not unique
 
     def __str__(self):
@@ -611,12 +654,23 @@ class ProgrammeIndicator(_BaseModel):
 
     code = models.CharField(max_length=255, primary_key=True)
 
-    indicator = models.ForeignKey(Indicator)
+    indicator = models.ForeignKey(Indicator,
+                                  on_delete=models.CASCADE,
+                                  )
 
-    programme = models.ForeignKey(Programme)
-    programme_area = models.ForeignKey(ProgrammeArea)
-    outcome = models.ForeignKey(Outcome)
-    state = models.ForeignKey(State, null=True)
+    programme = models.ForeignKey(Programme,
+                                  on_delete=models.CASCADE,
+                                  )
+    programme_area = models.ForeignKey(ProgrammeArea,
+                                       on_delete=models.CASCADE,
+                                       )
+    outcome = models.ForeignKey(Outcome,
+                                on_delete=models.CASCADE,
+                                )
+    state = models.ForeignKey(State,
+                              null=True,
+                              on_delete=models.CASCADE,
+                              )
     # this is also on ProgrammeOutcome...
     result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
 
@@ -727,12 +781,26 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
         return super().from_data(data, src_idx)
 
     code = models.CharField(max_length=64, primary_key=True)
-    organisation = models.ForeignKey(Organisation, related_name='roles')
-    organisation_role = models.ForeignKey(OrganisationRole, related_name='organisations')
+    organisation = models.ForeignKey(Organisation,
+                                     on_delete=models.CASCADE,
+                                     related_name='roles',
+                                     )
+    organisation_role = models.ForeignKey(OrganisationRole,
+                                          related_name='organisations',
+                                          on_delete=models.CASCADE,
+                                          )
 
     # programme and project are denormalised to include BS
-    programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles')
-    project = models.ForeignKey(Project, null=True, related_name='organisation_roles')
+    programme = models.ForeignKey(Programme,
+                                  null=True,
+                                  related_name='organisation_roles',
+                                  on_delete=models.CASCADE,
+                                  )
+    project = models.ForeignKey(Project,
+                                null=True,
+                                related_name='organisation_roles',
+                                on_delete=models.CASCADE,
+                                )
     is_programme = models.NullBooleanField(default=None)
 
     class Meta(_BaseModel.Meta):
@@ -754,7 +822,11 @@ class News(models.Model):
     updated = models.DateTimeField(null=True)
 
     programmes = models.ManyToManyField(Programme, related_name='news')
-    project = models.ForeignKey(Project, null=True, related_name='news')
+    project = models.ForeignKey(Project,
+                                null=True,
+                                related_name='news',
+                                on_delete=models.CASCADE,
+                                )
     summary = models.TextField(null=True)
     image = models.URLField(max_length=2000)
     is_partnership = models.BooleanField(default=False)

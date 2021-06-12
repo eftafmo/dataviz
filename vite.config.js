@@ -15,6 +15,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@js': path.resolve(__dirname, 'assets/js'),
+      '@css': path.resolve(__dirname, 'assets/css'),
     },
     extensions: ['.js', '.vue'],
   },

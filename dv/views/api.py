@@ -657,12 +657,12 @@ def project_nuts(beneficiary, force_nuts3):
         'area': F('programme_area__name'),
         'sector': F('programme_area__priority_sector__name'),
         'fm': F('programme_area__financial_mechanism__grant_name'),
-        'programme_id': F('programme_id'),
     }
+    select_fields = list(fields.keys()) + ['programme_id']
     data = (
         Project.objects.filter(state=state)
         .annotate(**fields)
-        .values(*fields.keys())
+        .values(*select_fields)
         .annotate(
             allocation=Sum('allocation'),
             project_count=Count('code'),

@@ -10,7 +10,6 @@
 {% with host=request.META.HTTP_HOST|split:":"|first %}
   <script type="module" src="//{{ host }}:3000/assets/entry.js"></script>
   <script type="module" src="//{{ host }}:3000/assets/site.js"></script>
-  <link rel="stylesheet" href="//{{ host }}:3000/assets/css/main.css">
 {% endwith %}
 {% else %}
   <script type="module" src="/{{ assets|value:"assets/entry.js" }}"></script>

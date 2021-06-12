@@ -50,19 +50,19 @@ def facet_count(facets, facet_name):
     return ''
 
 
-@register.assignment_tag
+@register.simple_tag
 def build_filter_template(filter):
     if filter:
         return "search/filters/{}.html".format(filter)
     return ''
 
 
-@register.assignment_tag
+@register.simple_tag
 def active(expected_kind, current_kind):
     return 'active' if expected_kind == current_kind else ''
 
 
-@register.assignment_tag
+@register.simple_tag
 def assign(value):
     return value
 

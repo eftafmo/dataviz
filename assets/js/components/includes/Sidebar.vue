@@ -287,6 +287,9 @@ export default {
 
   watch: {
     onMobile (matches) {
+      /** !!! WARNING, TODO !!! **/
+      return
+
       if (this.embedded) return
 
       if (matches) {

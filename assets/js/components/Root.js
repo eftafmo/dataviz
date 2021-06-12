@@ -82,6 +82,7 @@ export default {
 
   mounted() {
     /** !!! WARNING, TODO !!! **/
+    this.vizcomponents = []
     return;
 
     /*
