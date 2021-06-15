@@ -1,5 +1,7 @@
 @import url('open-sans-fonts.css');
 
+@import 'style.less';
+
 @import url('layout.css');
 @import 'header.less';
 @import url('footer.css');
@@ -26,8 +28,8 @@ body {
   margin: 0;
   font-size: 1.5rem;
   line-height: 1.3334;
-  background-color: #fff;
-  color: #444;
+  background-color: @bg_color;
+  color: @fg_color;
 }
 
 hr {
@@ -149,4 +151,12 @@ h2 {
     -webkit-border-radius: 0!important;
     border-radius: 0;
   }
+}
+
+
+/* dark theme */
+
+body.dark {
+  background-color: @dark_bg_color;
+  color: @dark_fg_color;
 }

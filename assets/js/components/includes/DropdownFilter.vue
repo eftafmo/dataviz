@@ -14,9 +14,11 @@
 </template>
 
 <style lang="less">
+@import "@css/style";
+
 .dataviz .viz-select {
-    border-color: #fff;
-    background: #fff;
+    border-color: @bg_color;
+    background: @bg_color;
     color: #aaa;
     font-family: inherit;
     max-width: 100%;
@@ -30,13 +32,23 @@
     @media(min-width: 780px) and (max-width: 1000px){
       width: 100%;
     }
-  }
+}
 
   .dropdown {
     @media (max-width: 950px) {
       width: 100%;
     }
   }
+
+body.dark.dataviz .viz-select {
+  border-color: @dark_bg_color;
+  background: @dark_bg_color;
+  color: #555;
+
+  option {
+    color: white;
+  }
+}
 
 </style>
 

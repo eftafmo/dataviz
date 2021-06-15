@@ -1,4 +1,6 @@
 <style lang="less">
+@import "@css/style";
+
 .dataviz-tooltip {
   font-family: Arial;
  li {
@@ -12,8 +14,8 @@
   min-width: 320px;
   max-width: 420px;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, .85);
-  box-shadow: 0px 0px 3px #aaa;
+  background-color: fadeout(@bg_color, 85);
+  box-shadow: 0px 0px 3px @shadow_color;
   .btn {
     position: absolute;
     top: 10px;
@@ -37,7 +39,7 @@
     width: 0;
     height: 0;
     color: white;
-    text-shadow: 0px 2px 3px #aaa;
+    text-shadow: 0px 2px 3px @shadow_color;
     font-size: 2em;
     clear: both;
     pointer-events: none;
@@ -96,11 +98,21 @@
   }
 }
 
+
+body.dark .dataviz-tooltip {
+  background-color: fadeout(@dark_bg_color, 85);
+  box-shadow: 0px 0px 3px @dark_shadow_color;
+
+  &:after {
+    text-shadow: 0px 2px 3px @dark_shadow_color;
+  }
+}
 </style>
 
 <script>
 //import * as d3 from 'd3';
 //import d3tip from 'd3-tip';
+
 
 export default {
 

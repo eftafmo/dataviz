@@ -12,10 +12,12 @@
 
 
 <style lang="less">
+@import "@css/style";
+
 .dataviz .sidebar {
   border: 1px solid #ddd;
   box-shadow: 0 1px 5px rgba(0,0,0,.2);
-  background: #fff;
+  background: @bg_color;
 
   /* Sidebar results Tabs */
   .sidebar-tabs {
@@ -225,6 +227,14 @@
   position: relative;
   height: 100%;
   position: fixed;
+}
+
+
+body.dataviz.dark .sidebar {
+  background-color: @dark_bg_color;
+  border: 1px solid #222;
+  box-shadow: 0 1px 5px rgba(255,255,255,.2);
+
 }
 
 </style>
