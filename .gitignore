@@ -8,11 +8,10 @@ docker/azure-nginx.env
 __pycache__/
 node_modules/
 
-provisioning/salt-config/minion
-provisioning/salt-pillar/settings.sls
-
 docker-compose.override.yml
 schema.xml
 
-### sublime
+### dev stuff
 *.sublime-*
+.env
+.vscode
