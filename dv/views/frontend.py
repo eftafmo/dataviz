@@ -15,7 +15,7 @@ from django.views.generic import TemplateView
 from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.generic_views import FacetedSearchMixin as BaseFacetedSearchMixin
 from pyexcel import Sheet
-from webpack_loader import utils as webpack
+#from webpack_loader import utils as webpack
 from dv.lib import utils
 from dv.models import (
     StaticContent,
@@ -505,9 +505,10 @@ class EmbedComponent(TemplateView):
         except KeyError:
             raise Http404
 
-
-        jsfiles = webpack.get_files('dataviz', 'js')
-        cssfiles = webpack.get_files('dataviz', 'css')
+        # jsfiles = webpack.get_files('dataviz', 'js')
+        # cssfiles = webpack.get_files('dataviz', 'css')
+        # TODO: replace webpack loader for embed feature
+        jsfiles = cssfiles = list()
 
         def geturl(f):
             url = f['url']
