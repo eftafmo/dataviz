@@ -1,0 +1,15 @@
+# Docker-compose override for https://eeagrants.edw.ro/
+version: '2'
+services:
+  solr:
+    ports:
+      - "127.0.0.1:8983:8983"  # XXX Why is this needed?
+  nginx:
+    ports:
+      - "127.0.0.1:8888:8888"
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /home/dataviz/upload:/var/local/upload
