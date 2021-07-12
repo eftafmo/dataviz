@@ -2,7 +2,8 @@ from collections import defaultdict
 from functools import reduce
 
 from django.db.models import F
-from haystack import indexes
+from haystack.indexes import SearchIndex, Indexable
+from haystack import fields
 from haystack import exceptions
 from django_countries import countries
 
@@ -18,28 +19,28 @@ from dv.models import (
 STATES = dict(countries)
 
 
-class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
+class ProgrammeIndex(SearchIndex, Indexable):
     # common facets
-    state_name = indexes.FacetMultiValueField()
-    programme_area_ss = indexes.FacetMultiValueField()
-    priority_sector_ss = indexes.FacetMultiValueField()
-    financial_mechanism_ss = indexes.FacetMultiValueField()
-    outcome_ss = indexes.FacetMultiValueField()
-    outcome_ss_auto = indexes.EdgeNgramField()
-    programme_name = indexes.FacetMultiValueField()
-    programme_status = indexes.FacetMultiValueField(model_attr='status')
+    state_name = fields.FacetMultiValueField()
+    programme_area_ss = fields.FacetMultiValueField()
+    priority_sector_ss = fields.FacetMultiValueField()
+    financial_mechanism_ss = fields.FacetMultiValueField()
+    outcome_ss = fields.FacetMultiValueField()
+    outcome_ss_auto = fields.EdgeNgramField()
+    programme_name = fields.FacetMultiValueField()
+    programme_status = fields.FacetMultiValueField(model_attr='status')
 
-    kind = indexes.FacetCharField()
+    kind = fields.FacetCharField()
 
     # specific facets
-    code = indexes.FacetCharField(model_attr='code')
+    code = fields.FacetCharField(model_attr='code')
 
     # specific fields
-    text = indexes.CharField(document=True, use_template=True)
-    url = indexes.CharField(model_attr='url', indexed=False, null=True)
-    summary = indexes.CharField(model_attr='summary', indexed=False)
-    name = indexes.CharField(model_attr='name', indexed=False)
-    grant = indexes.DecimalField()
+    text = fields.CharField(document=True, use_template=True)
+    url = fields.CharField(model_attr='url', indexed=False, null=True)
+    summary = fields.CharField(model_attr='summary', indexed=False)
+    name = fields.CharField(model_attr='name', indexed=False)
+    grant = fields.DecimalField()
 
     def get_model(self):
         return Programme
@@ -113,33 +114,33 @@ class ProgrammeIndex(indexes.SearchIndex, indexes.Indexable):
         return self.prepared_data
 
 
-class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
+class ProjectIndex(SearchIndex, Indexable):
     # common facets
-    state_name = indexes.FacetMultiValueField(model_attr='state__name')
-    financial_mechanism_ss = indexes.FacetMultiValueField()
-    programme_area_ss = indexes.FacetMultiValueField()
-    priority_sector_ss = indexes.FacetMultiValueField()
-    programme_name = indexes.FacetMultiValueField()
-    programme_status = indexes.FacetMultiValueField(model_attr='programme__status')
-    outcome_ss = indexes.FacetMultiValueField()
-    outcome_ss_auto = indexes.EdgeNgramField()
+    state_name = fields.FacetMultiValueField(model_attr='state__name')
+    financial_mechanism_ss = fields.FacetMultiValueField()
+    programme_area_ss = fields.FacetMultiValueField()
+    priority_sector_ss = fields.FacetMultiValueField()
+    programme_name = fields.FacetMultiValueField()
+    programme_status = fields.FacetMultiValueField(model_attr='programme__status')
+    outcome_ss = fields.FacetMultiValueField()
+    outcome_ss_auto = fields.EdgeNgramField()
 
-    kind = indexes.FacetCharField()
+    kind = fields.FacetCharField()
 
     # specific facets
-    code = indexes.FacetCharField(model_attr='code')
-    project_status = indexes.FacetMultiValueField(model_attr='status')
-    geotarget = indexes.FacetCharField(model_attr='geotarget')
-    geotarget_auto = indexes.EdgeNgramField(model_attr='geotarget')
-    theme_ss = indexes.FacetMultiValueField()
+    code = fields.FacetCharField(model_attr='code')
+    project_status = fields.FacetMultiValueField(model_attr='status')
+    geotarget = fields.FacetCharField(model_attr='geotarget')
+    geotarget_auto = fields.EdgeNgramField(model_attr='geotarget')
+    theme_ss = fields.FacetMultiValueField()
 
     # specific fields
-    text = indexes.CharField(document=True, use_template=True)
-    summary = indexes.CharField(model_attr='summary', indexed=False)
-    actual_summary = indexes.CharField(model_attr='actual_summary', indexed=False)
-    url = indexes.CharField(model_attr='url', indexed=False, null=True)
-    name = indexes.CharField(model_attr='name', indexed=False)
-    grant = indexes.DecimalField(model_attr='allocation')
+    text = fields.CharField(document=True, use_template=True)
+    summary = fields.CharField(model_attr='summary', indexed=False)
+    actual_summary = fields.CharField(model_attr='actual_summary', indexed=False)
+    url = fields.CharField(model_attr='url', indexed=False, null=True)
+    name = fields.CharField(model_attr='name', indexed=False)
+    grant = fields.DecimalField(model_attr='allocation')
 
     def index_queryset(self, using=None):
         return (
@@ -202,38 +203,38 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return self.prepared_data
 
 
-class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
+class OrganisationIndex(SearchIndex, Indexable):
     # common facets
-    state_name = indexes.FacetMultiValueField()
-    programme_status = indexes.FacetMultiValueField()
-    financial_mechanism_ss = indexes.FacetMultiValueField()
-    programme_name = indexes.FacetMultiValueField()
-    programme_name_auto = indexes.EdgeNgramField()
-    project_name = indexes.FacetMultiValueField()
-    project_name_auto = indexes.EdgeNgramField()
-    programme_area_ss = indexes.FacetMultiValueField()
-    priority_sector_ss = indexes.FacetMultiValueField()
+    state_name = fields.FacetMultiValueField()
+    programme_status = fields.FacetMultiValueField()
+    financial_mechanism_ss = fields.FacetMultiValueField()
+    programme_name = fields.FacetMultiValueField()
+    programme_name_auto = fields.EdgeNgramField()
+    project_name = fields.FacetMultiValueField()
+    project_name_auto = fields.EdgeNgramField()
+    programme_area_ss = fields.FacetMultiValueField()
+    priority_sector_ss = fields.FacetMultiValueField()
 
-    text = indexes.CharField(document=True, use_template=True)
+    text = fields.CharField(document=True, use_template=True)
 
-    kind = indexes.FacetCharField()
+    kind = fields.FacetCharField()
 
     # specific facets
-    project_status = indexes.FacetMultiValueField()
-    org_type_category = indexes.FacetCharField(model_attr='orgtypecateg')
-    org_type = indexes.FacetCharField(model_attr='orgtype')
-    country = indexes.FacetCharField(model_attr='country')
-    city = indexes.FacetCharField(model_attr='city')
-    city_auto = indexes.EdgeNgramField(model_attr='city')
-    geotarget = indexes.FacetCharField(null=True)
-    geotarget_auto = indexes.EdgeNgramField(null=True)
-    role_ss = indexes.FacetMultiValueField()
-    role_max_priority_code = indexes.IntegerField()
+    project_status = fields.FacetMultiValueField()
+    org_type_category = fields.FacetCharField(model_attr='orgtypecateg')
+    org_type = fields.FacetCharField(model_attr='orgtype')
+    country = fields.FacetCharField(model_attr='country')
+    city = fields.FacetCharField(model_attr='city')
+    city_auto = fields.EdgeNgramField(model_attr='city')
+    geotarget = fields.FacetCharField(null=True)
+    geotarget_auto = fields.EdgeNgramField(null=True)
+    role_ss = fields.FacetMultiValueField()
+    role_max_priority_code = fields.IntegerField()
 
     # extra data; avoid db hit
-    org_name = indexes.FacetCharField()
-    org_name_auto = indexes.EdgeNgramField()
-    domestic_name = indexes.CharField(model_attr='domestic_name', null=True)
+    org_name = fields.FacetCharField()
+    org_name_auto = fields.EdgeNgramField()
+    domestic_name = fields.CharField(model_attr='domestic_name', null=True)
 
     # Highest number = max priority for role. Others default to priority 0.
     ROLE_PRIORITIES = {
@@ -490,33 +491,33 @@ class OrganisationIndex(indexes.SearchIndex, indexes.Indexable):
         return self.prepared_data
 
 
-class NewsIndex(indexes.SearchIndex, indexes.Indexable):
+class NewsIndex(SearchIndex, Indexable):
     # common facets;
-    state_name = indexes.FacetMultiValueField()
-    financial_mechanism_ss = indexes.FacetMultiValueField()
-    programme_area_ss = indexes.FacetMultiValueField()
-    priority_sector_ss = indexes.FacetMultiValueField()
-    programme_name = indexes.FacetMultiValueField()
-    programme_status = indexes.FacetMultiValueField()
-    outcome_ss = indexes.FacetMultiValueField()
+    state_name = fields.FacetMultiValueField()
+    financial_mechanism_ss = fields.FacetMultiValueField()
+    programme_area_ss = fields.FacetMultiValueField()
+    priority_sector_ss = fields.FacetMultiValueField()
+    programme_name = fields.FacetMultiValueField()
+    programme_status = fields.FacetMultiValueField()
+    outcome_ss = fields.FacetMultiValueField()
 
-    kind = indexes.FacetCharField()
+    kind = fields.FacetCharField()
 
     # specific facets
-    project_name = indexes.FacetMultiValueField()
-    project_name_auto = indexes.EdgeNgramField()
-    project_status = indexes.FacetMultiValueField()
-    geotarget = indexes.FacetCharField()
-    geotarget_auto = indexes.EdgeNgramField()
-    theme_ss = indexes.FacetMultiValueField()
+    project_name = fields.FacetMultiValueField()
+    project_name_auto = fields.EdgeNgramField()
+    project_status = fields.FacetMultiValueField()
+    geotarget = fields.FacetCharField()
+    geotarget_auto = fields.EdgeNgramField()
+    theme_ss = fields.FacetMultiValueField()
 
     # specific fields
-    text = indexes.CharField(document=True, use_template=True)
-    summary = indexes.CharField(model_attr='summary', indexed=False)
-    name = indexes.CharField(model_attr='title', indexed=False)
-    url = indexes.CharField(model_attr='link', indexed=False)
-    image = indexes.CharField(model_attr='image', indexed=False)
-    created_dt = indexes.DateTimeField(model_attr='created', indexed=False, null=True)
+    text = fields.CharField(document=True, use_template=True)
+    summary = fields.CharField(model_attr='summary', indexed=False)
+    name = fields.CharField(model_attr='title', indexed=False)
+    url = fields.CharField(model_attr='link', indexed=False)
+    image = fields.CharField(model_attr='image', indexed=False)
+    created_dt = fields.DateTimeField(model_attr='created', indexed=False, null=True)
 
     def get_model(self):
         return News
