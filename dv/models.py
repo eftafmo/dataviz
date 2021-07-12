@@ -42,6 +42,7 @@ class _MainModel(_BaseModel):
         return getattr(self, self.NATURAL_KEY_FIELD)
 
     __ENDING_STR_RE = re.compile(r'[^\w]+$')
+
     def __str__(self):
         # output the code, and shorten long names
         _MINW, _MAXW = 5, 7
@@ -550,7 +551,7 @@ class Project(_MainModel):
                                         on_delete=models.CASCADE,
                                         )
 
-    status = EnumField(ProjectStatus, max_length=11)
+    status = EnumField(ProjectStatus, max_length=64)
 
     code = models.CharField(max_length=9, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
@@ -801,7 +802,7 @@ class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
                                 related_name='organisation_roles',
                                 on_delete=models.CASCADE,
                                 )
-    is_programme = models.NullBooleanField(default=None)
+    is_programme = models.BooleanField(default=None, null=True)
 
     class Meta(_BaseModel.Meta):
         unique_together = (
@@ -824,8 +825,10 @@ class News(models.Model):
     programmes = models.ManyToManyField(Programme, related_name='news')
     project = models.ForeignKey(Project,
                                 null=True,
+                                default=None,
                                 related_name='news',
                                 on_delete=models.CASCADE,
+                                db_constraint=False,
                                 )
     summary = models.TextField(null=True)
     image = models.URLField(max_length=2000)

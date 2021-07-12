@@ -191,6 +191,8 @@ CACHES = {
 
 API_CACHE_SECONDS = 60 * 60 * 24  # 1 day
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 try:
     # this is stupid, the settings file is no place for startup code
     SENTRY_DSN = env('SENTRY_DSN')
