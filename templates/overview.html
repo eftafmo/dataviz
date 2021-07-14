@@ -2,8 +2,8 @@
 
 
 {% block content %}
-{{ block.super }}
-<embeddor :components="vizcomponents"></embeddor>
+  {{ block.super }}
+  <embeddor :components="vizcomponents"></embeddor>
 {% endblock %}
 
 
@@ -15,49 +15,34 @@
     ></overview>
   </div>
 
-  <section class="section homepage-section align-center">
-
-    <h2 class="homepage-subtitle">Find out more about our ...</h2>
-
-    <nav class="homepage-nav">
-      <a href="{ % url 'frontend:grants' % }">Grants</a>
-      <a href="{ % url 'frontend:partners' % }">Partners</a>
-      <a href="{ % url 'frontend:projects' % }">Projects</a>
-    </nav>
-
-    <div class="homepage-search-wrapper">
-      <div class="small-screen">
-        or search programmes, projects, organisations:
-      </div>
-      <form class="homepage-search" action="{% url 'frontend:search_programme' %}">
-        <input  id="search_request_input" type="search" name="q"
-                placeholder="Programmes, Projects, Organisations, etc.">
-        <a id="search_request" href="{% url 'frontend:search_programme' %}">Search</a>
-      </form>
-    </div>
-
-  </section>
+  <form class="homepage-search" action="{% url 'frontend:search_programme' %}">
+    <input
+        id="search_request_input" type="search" name="q"
+        placeholder="Search"
+    >
+    <a id="search_request" href="{% url 'frontend:search_programme' %}" class="icon icon-search"></a>
+  </form>
 
 {% endblock %}
 
 {% block finally %}
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  _createApp(
-  Dataviz.Index,
-    {
-    datasource: "/api/overview.json",
-    },
-  ).mount('#content')
-})
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.Index,
+      {
+        datasource: "/api/overview.json"
+      }
+    ).mount("#content");
+  });
 
 
-a_element = document.getElementById("search_request");
-input = document.getElementById("search_request_input");
-a_element.addEventListener("click", function(){
+  a_element = document.getElementById("search_request");
+  input = document.getElementById("search_request_input");
+  a_element.addEventListener("click", function () {
 
-  a_element.href = a_element.href + "?q=" + input.value;
+    a_element.href = a_element.href + "?q=" + input.value;
 
-});
-</script>
+  });
+  </script>
 {% endblock %}

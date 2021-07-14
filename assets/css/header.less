@@ -1,7 +1,7 @@
 .header {
   position: relative;
   z-index: 200;
-  background: #F5F5F5;
+  background: @background-solid;
   padding-top: 0.7rem;
 
   .header-logo {
@@ -53,6 +53,7 @@
     border-bottom-style: solid;
     border-color: transparent;
     text-decoration: none;
+    line-height: 1;
 
     &:hover,
     &:active {
@@ -62,12 +63,12 @@
 
   .period-item {
     font-size: 2.4rem;
-    color: #A4A3A2;
+    color: @color-muted;
 
     &:hover,
     &.active {
-      color: #DC4844;
-      border-color: #DC4844;
+      color: @color-red;
+      border-color: @color-red;
     }
   }
 
@@ -78,8 +79,8 @@
 
     &:hover,
     &.active {
-      border-color: #3B5998;
-      color: #3B5998;
+      border-color: @color-blue;
+      color: @color-blue;
     }
   }
 
@@ -88,7 +89,7 @@
     grid-row: 2;
     grid-column-start: 1;
     grid-column-end: 4;
-    border-top: 1px solid #CCCCCC;
+    border-top: 1px solid @border-normal;
     margin-top: -1px;
     padding-top: 1.9rem;
     width: 100%;
