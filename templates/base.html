@@ -1,104 +1,106 @@
 <!doctype html>
 {% load tags %}
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% block title %}{% endblock %}</title>
-{% if settings.DEBUG %}
-{% with host=request.META.HTTP_HOST|split:":"|first %}
-  <script type="module" src="//{{ host }}:3000/assets/entry.js"></script>
-  <script type="module" src="//{{ host }}:3000/assets/site.js"></script>
-{% endwith %}
-{% else %}
-  <script type="module" src="/{{ assets|value:"assets/entry.js" }}"></script>
-  <script type="module" src="/{{ assets|value:"assets/site.js" }}"></script>
-  <link rel="modulepreload" href="/{{ assets|value:"_vendor.js" }}">
-  <link rel="stylesheet" href="/{{ assets|value:"assets/entry.css" }}">
-  <link rel="stylesheet" href="/{{ assets|value:"assets/site.css" }}">
-{% endif %}
+  {% if settings.DEBUG %}
+    {% with host=request.META.HTTP_HOST|split:":"|first %}
+      <script type="module" src="//{{ host }}:3000/assets/entry.js"></script>
+      <script type="module" src="//{{ host }}:3000/assets/site.js"></script>
+    {% endwith %}
+  {% else %}
+    <script type="module" src="/{{ assets|value:"assets/entry.js" }}"></script>
+    <script type="module" src="/{{ assets|value:"assets/site.js" }}"></script>
+    <link rel="modulepreload" href="/{{ assets|value:"_vendor.js" }}">
+    <link rel="stylesheet" href="/{{ assets|value:"assets/entry.css" }}">
+    <link rel="stylesheet" href="/{{ assets|value:"assets/site.css" }}">
+  {% endif %}
 </head>
 <body class="dataviz">
-  <header class="header sticky">
-    <div class="container">
-      <div class="header-inner">
+<header class="header sticky">
+  <div class="container">
+    <div class="header-inner">
 
-        <div class="header-logo">
-          <a href="/">
-            <img src="/assets/imgs/eeaglogo.svg" alt="EEA Grants logo" width="139">
-          </a>
-        </div>
-
-{% with current_view=request.resolver_match.view_name %}
-        <nav class="header-menu">
-          <ul>
-            {% for period in MENU %}
-            <li{% if period.id == PERIOD %} class="active"{% endif %}>
-              <a href="{{ period.url }}">{{ period.id }}</a>
-              <ul>
-                {% for scenario in period.scenarios %}
-                <li{% if period.id == PERIOD and scenario.id == SCENARIO %} class="active"{% endif %}>
-                  <a href="{{ scenario.url }}">{{ scenario.name }}</a>
-                </li>
-                {% endfor %}
-              </ul>
-            </li>
-            {% endfor %}
-
-          </ul>
-        </nav>
-
-        <form action="{% url view|search_view_name:current_view %}" class="header-search">
-{% endwith %}
-          <input type="search" placeholder="Search" name="q">
-          <button type="submit" title="Search" name="page" value="1">
-            <span class="icon icon-search"></span>
-          </button>
-        </form>
-        <button type="button" class="header-toggle header-menu-toggle" title="Menu" onclick="Header.toggle('menu')">
-          <span class="icon icon-menu"></span>
-        </button>
+      <div class="header-logo">
+        <a href="/">
+          <img src="/assets/imgs/eeaglogo.svg" alt="EEA Grants logo" width="175">
+        </a>
       </div>
+
+      <nav class="header-menu">
+        {% with current_view=request.resolver_match.view_name %}
+          {% for period in MENU %}
+            <a href="{{ period.url }}" class="period-item {% if period.id == PERIOD %}active{% endif %}">
+              {{ period.id }}
+            </a>
+            <div class="period-sub-menu {% if period.id == PERIOD %}active{% endif %}">
+              {% for scenario in period.scenarios %}
+                <a
+                    href="{{ scenario.url }}"
+                    class="scenario-item {% if period.id == PERIOD and scenario.id == SCENARIO %}active{% endif %}"
+                >
+                  {{ scenario.name }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <form class="header-search" action="{% url view|search_view_name:current_view %}">
+            <input type="search" placeholder="Search" name="q">
+            <button type="submit" title="Search" name="page" value="1">
+              <span class="icon icon-search"></span>
+            </button>
+          </form>
+        {% endwith %}
+      </nav>
+
+      <button type="button" class="header-toggle header-menu-toggle" title="Menu" onclick="Header.toggle('menu')">
+        <span class="icon icon-menu"></span>
+      </button>
     </div>
-  </header>
+  </div>
+</header>
 
-  {% block top %}{% endblock %}
+{% block top %}{% endblock %}
 
-  <div id="content" class="page-body">
-      <globalfilters>
-      </globalfilters>
-    <div class="container">
-      <div class="page-body-inner">
-{% block content %}
-{% endblock %}
+<div id="content" class="page-body">
+  <globalfilters>
+  </globalfilters>
+  <div class="container">
+    <div class="page-body-inner">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="small muted">
+        <p>EEA Grants - Norway Grants, Financial Mechanism Office, Tel: +32 (0) 2 286 1701, Fax: +32 (0) 2 286 1889,
+           Email: <a href="mailto:info-fmo@efta.int" target="_self">info-fmo@efta.int</a></p>
+        <p>Postal address: 12-16 Rue Joseph II, 1000 Brussels, Belgium, Visiting address: 47-48, Boulevard du Régent
+           1000 Brussels, Belgium</p>
+        <p>
+          <a href="{% url 'frontend:disclaimer' %}" onclick="Footer.popup(event, this)">Disclaimer</a>
+          <a href="http://eeagrants.org/cookies" target="_blank">Cookie policy</a>
+        </p>
       </div>
     </div>
   </div>
-  <footer class="footer">
-    <div class="container">
-        <div class="footer-inner">
-          <div class="small muted">
-            <p>EEA Grants - Norway Grants, Financial Mechanism Office, Tel: +32 (0) 2 286 1701, Fax: +32 (0) 2 286 1889, Email: <a href="mailto:info-fmo@efta.int" target="_self">info-fmo@efta.int</a></p>
-            <p>Postal address: 12-16 Rue Joseph II, 1000 Brussels, Belgium, Visiting address: 47-48, Boulevard du Régent 1000 Brussels, Belgium</p>
-            <p>
-                <a href="{% url 'frontend:disclaimer' %}" onclick="Footer.popup(event, this)">Disclaimer</a>
-                <a href="http://eeagrants.org/cookies" target="_blank">Cookie policy</a>
-            </p>
-          </div>
-        </div>
-      </div>
-  </footer>
-  <script>
-    window._dv_sentry_config = {
-      dsn: "{{ settings.SENTRY_DSN|escapejs }}",
-      environment: "{{ settings.SENTRY_ENVIRONMENT|escapejs }}",
-    };
-  </script>
+</footer>
+<script>
+window._dv_sentry_config = {
+  dsn: "{{ settings.SENTRY_DSN|escapejs }}",
+  environment: "{{ settings.SENTRY_ENVIRONMENT|escapejs }}"
+};
+</script>
 {% block finally %}
 {% endblock %}
-  {% if settings.GOOGLE_ANALYTICS_PROPERTY_ID %}
-    {% include "ga.html" %}
-  {% endif %}
+{% if settings.GOOGLE_ANALYTICS_PROPERTY_ID %}
+  {% include "ga.html" %}
+{% endif %}
 </body>
 </html>
