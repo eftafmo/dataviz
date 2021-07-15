@@ -17,6 +17,10 @@ ALLOCATION_PERIODS = {
         'partners',
         'projects',
     ],
+    "compare": [
+        'beneficiary',
+        'sectors',
+    ]
     #"2004-2009": [
     #
     #],
