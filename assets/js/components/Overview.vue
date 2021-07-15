@@ -160,9 +160,9 @@
     }
 
     .data-wrapper {
-      background: rgba(251, 251, 251, 0.8);
-      background: linear-gradient(rgba(252, 252, 252, .75), rgba(227, 227, 227, .95));
-      border: .2em solid white;
+      background: rgb(255,255,255);
+      background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(240,240,240,1) 100%);
+      border: 2px solid white;
       border-radius: 100%;
       width: auto;
       transform: translate(-50%, -50%);
