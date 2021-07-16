@@ -32,3 +32,35 @@
     }
   }
 }
+
+.overview-heading {
+  font-size: 3.6rem;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rem;
+
+  .muted {
+    color: #444444;
+  }
+
+  .viz-select-overview {
+    margin: 0 1rem !important;
+    font-size: 3.6rem;
+    font-weight: bold;
+    background: none;
+    border: none;
+    outline: none;
+    color: #222222;
+
+    option {
+      font-size: 1.6rem;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    display: none;
+  }
+}

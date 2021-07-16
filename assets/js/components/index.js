@@ -1,5 +1,6 @@
 export { default as Overview } from "./Overview.vue";
 export { default as OverviewFunding } from "./OverviewFunding";
+export { default as OverviewResults } from "./OverviewResults";
 
 export { default as Mechanisms } from "./Mechanisms";
 export { default as PartnersMechanisms } from "./PartnersMechanisms";

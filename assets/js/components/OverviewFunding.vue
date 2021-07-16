@@ -173,34 +173,6 @@ export default {
   padding: 6rem 0;
 }
 
-.overview-heading {
-  font-size: 3.6rem;
-  font-weight: bold;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10rem;
-
-  .muted {
-    color: #444444;
-  }
-
-  .viz-select-overview::v-deep {
-    margin: 0 1rem !important;
-    font-size: 3.6rem;
-    font-weight: bold;
-    background: none;
-    border: none;
-    outline: none;
-    color: #222222;
-
-    option {
-      font-size: 1.6rem;
-    }
-  }
-}
-
 .overview-grid {
   display: grid;
   grid-row-gap: 10rem;
@@ -232,6 +204,7 @@ export default {
 
   .row-item {
     max-width: 23rem;
+    line-height: 1;
 
     .amount {
       color: #dc4844;
@@ -246,12 +219,6 @@ export default {
       font-weight: bold;
       text-transform: uppercase;
     }
-  }
-}
-
-@media (max-width: 1200px) {
-  .overview-heading {
-    display: none;
   }
 }
 

@@ -22,6 +22,7 @@ export const Index = {
   components: {
     overview: components.Overview,
     overview_funding: components.OverviewFunding,
+    overview_results: components.OverviewResults,
   },
 };
 
