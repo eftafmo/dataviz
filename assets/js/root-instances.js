@@ -4,9 +4,8 @@
  *          embedding code still works.
  */
 
-import {default as Root} from './components/Root';
-import * as components from './components';
-
+import { default as Root } from "./components/Root";
+import * as components from "./components";
 
 const _Base = {
   extends: Root,
@@ -14,8 +13,7 @@ const _Base = {
   components: {
     globalfilters: components.GlobalFilters,
   },
-}
-
+};
 
 export const Index = {
   extends: _Base,
@@ -23,9 +21,9 @@ export const Index = {
 
   components: {
     overview: components.Overview,
+    overview_funding: components.OverviewFunding,
   },
 };
-
 
 export const Grants = {
   extends: _Base,
@@ -41,7 +39,7 @@ export const Grants = {
     results: components.Results,
     sidebar: components.GrantsSidebar,
   },
-}
+};
 
 export const Partners = {
   extends: _Base,
@@ -61,7 +59,7 @@ export const Partners = {
     projects: components.PartnersProjects,
     sidebar: components.PartnersSidebar,
   },
-}
+};
 
 export const Projects = {
   extends: _Base,
@@ -77,4 +75,4 @@ export const Projects = {
     projects: components.Projects,
     sidebar: components.ProjectsSidebar,
   },
-}
+};

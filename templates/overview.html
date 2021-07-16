@@ -22,8 +22,14 @@
     >
     <a id="search_request" href="{% url 'frontend:search_programme' %}" class="icon icon-search"></a>
   </form>
-
 {% endblock %}
+
+{% block after_content %}
+  <overview_funding
+      :initial="dataset"
+      period="{{ PERIOD }}"
+  ></overview_funding>
+{% endblock after_content %}
 
 {% block finally %}
   <script>
