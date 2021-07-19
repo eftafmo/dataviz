@@ -7,11 +7,11 @@ const shortCurrency = [
   },
   {
     value: Math.pow(10, 6),
-    suffix: "m",
+    suffix: "M",
   },
   {
     value: Math.pow(10, 3),
-    suffix: "k",
+    suffix: "K",
   },
 ];
 
@@ -35,8 +35,12 @@ export default {
     shortCurrency(value) {
       const short = shortCurrency.find((short) => value >= short.value);
       if (short) {
-        // TODO: How do we want to round these numbers?
-        return this.currency(Math.round(value / short.value)) + short.suffix;
+        value = value / short.value;
+        if (value >= 100) {
+          return util.formatCurrency(value) + short.suffix;
+        } else {
+          return util.formatCurrencyFloat(value) + short.suffix;
+        }
       }
       return this.currency(value);
     },

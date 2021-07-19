@@ -24,21 +24,6 @@
         <div class="description">{{ item.description }}</div>
       </div>
     </div>
-    <!--    <div class="overview-grid">-->
-    <!--      <template v-for="category in gridItems" :key="category.id">-->
-    <!--        <div class="row-header">-->
-    <!--          <div class="name">-->
-    <!--            <span>{{ category.name }}</span>-->
-    <!--            <span>&nbsp;&rightarrow;</span>-->
-    <!--          </div>-->
-    <!--          <div class="description">{{ category.description }}</div>-->
-    <!--        </div>-->
-    <!--        <div v-for="item in category.items" :key="item.id" class="row-item">-->
-    <!--          <div class="amount">{{ item.amount }}</div>-->
-    <!--          <div class="name">{{ item.name }}</div>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--    </div>-->
   </div>
 </template>
 
@@ -96,9 +81,6 @@ export default {
         },
       ];
     },
-  },
-  methods: {
-    getImageUrl(imgPath) {},
   },
 };
 </script>
