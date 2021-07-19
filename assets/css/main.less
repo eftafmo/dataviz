@@ -12,9 +12,7 @@
 @import url('pagination.css');
 @import url('select2.css');
 
-
 @import url('homepage.less');
-
 
 @import url('buttons.css');
 @import url('forms.css');
@@ -51,6 +49,7 @@ small,
 a {
   color: #3D90F3;
 }
+
 a.muted:hover {
   color: #3D90F3;
 }
@@ -59,19 +58,22 @@ a.muted:hover {
   list-style: none;
   padding-left: 0;
 }
+
 .no-margin {
   margin: 0;
 }
 
-.align-center { text-align: center; }
+.align-center {
+  text-align: center;
+}
 
 /* page sections */
 .page-title {
-  margin-top: 0!important;
-  margin-bottom: 2rem!important;
+  margin-top: 0 !important;
+  margin-bottom: 2rem !important;
   color: rgb(0, 117, 188);
   font-weight: normal;
-  font-size: 2.4rem!important;
+  font-size: 2.4rem !important;
 }
 
 .section {
@@ -83,6 +85,7 @@ a.muted:hover {
 .section-header {
   margin-bottom: 2rem;
 }
+
 .section-title {
   margin-top: 0;
   margin-bottom: 0;
@@ -111,7 +114,7 @@ a.muted:hover {
 }
 
 
-@media (max-width: 950px){
+@media (max-width: 950px) {
   .grant-dataviz h2 {
     margin-bottom: .5rem;
   }
@@ -121,7 +124,7 @@ h2 {
   font-size: 2rem;
 }
 
-@media (max-width: 600px){
+@media (max-width: 600px) {
   #funding-map {
     /* display: none;*/
   }
@@ -129,28 +132,31 @@ h2 {
 
 @media (min-width: 764px) {
   .sticky {
-      position: -webkit-sticky;
-      position: sticky;
+    position: -webkit-sticky;
+    position: sticky;
   }
 }
 
 #global-filters.sticky {
-    position: -webkit-sticky;
-    position: sticky;
+  position: -webkit-sticky;
+  position: sticky;
 }
 
 @media (max-width: 764px) {
   .header.sticky {
-      position: -webkit-sticky;
-      position: sticky;
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    right: 0;
+    top: 0;
   }
 }
 
 /*iphone stuff*/
-@media (max-width: 760px){
+@media (max-width: 760px) {
   input {
-    -webkit-appearance: none!important;
-    -webkit-border-radius: 0!important;
+    -webkit-appearance: none !important;
+    -webkit-border-radius: 0 !important;
     border-radius: 0;
   }
 }
