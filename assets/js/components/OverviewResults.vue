@@ -135,13 +135,36 @@ export default {
   }
 }
 
+@media (max-width: 800px) {
+  .overview-results {
+    padding: 2rem 0;
+  }
+
+  .overview-results-grid {
+    .grid-item {
+      flex-wrap: wrap;
+
+      .amount {
+        flex-grow: 1;
+      }
+
+      .description {
+        flex-grow: 1;
+        flex-basis: 100%;
+        margin-left: 0;
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
 @media (max-width: 600px) {
   .overview-results-grid {
     grid-template-columns: 1fr;
     grid-row-gap: 4rem;
 
     .grid-item {
-      align-items: flex-start;
+      align-items: center;
     }
   }
 }
