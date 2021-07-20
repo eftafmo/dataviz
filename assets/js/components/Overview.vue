@@ -16,22 +16,20 @@
         </g>
       </svg>
 
-      <div v-if="hasData && aggregated.allocation" class="info">
-        <transition name="fade">
-          <div
-            :key="changed"
-            :style="{ fontSize: fonts.top_text + 'px' }"
-            class="heading"
-          ></div>
-        </transition>
+      <div class="info">
         <div class="data-wrapper">
           <div :style="compoundCircleStyle" class="data">
-            <p class="amount">
-              {{ shortCurrency(aggregated.allocation) }}
-            </p>
-            <p class="period">
-              {{ period }}
-            </p>
+            <template v-if="hasData && aggregated.allocation">
+              <p class="amount">
+                {{ shortCurrency(aggregated.allocation) }}
+              </p>
+              <p class="period">
+                {{ period }}
+              </p>
+            </template>
+            <template v-else>
+              <p class="no-data">No allocation available</p>
+            </template>
           </div>
         </div>
         <div :style="{ fontSize: fonts.bottom_text + 'px' }" class="ending">
@@ -39,28 +37,6 @@
             to reduce social and economic disparities across Europe and <br />to
             strengthen bilateral relations
           </p>
-        </div>
-      </div>
-
-      <div v-else class="info">
-        <transition name="fade">
-          <div
-            :key="changed"
-            :style="{ fontSize: fonts.top_text + 'px' }"
-            class="heading"
-          >
-            <p><span class="amount">No allocation available</span></p>
-          </div>
-        </transition>
-        <div class="data-wrapper">
-          <ul :style="compoundCircleStyle" class="data">
-            <li class="programmes">
-              <span class="amount"></span>No programmes available
-            </li>
-            <li class="projects">
-              <span class="amount"></span>No projects available
-            </li>
-          </ul>
         </div>
       </div>
     </chart-container>
@@ -176,7 +152,11 @@ export default {
       const size = Math.min(this.baseWidth / 4, 250);
       return {
         width: size + "px",
+        "min-width": size + "px",
+        "max-width": size + "px",
         height: size + "px",
+        "min-height": size + "px",
+        "max-height": size + "px",
       };
     },
 
@@ -754,6 +734,12 @@ export default {
       .period {
         color: #444444;
         font-size: 3rem;
+        line-height: 1;
+      }
+
+      .no-data {
+        color: #444444;
+        font-size: 2rem;
         line-height: 1;
       }
     }
