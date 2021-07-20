@@ -26,7 +26,12 @@
           </div>
           <div class="description">{{ category.description }}</div>
         </div>
-        <div v-for="item in category.items" :key="item.id" class="row-item">
+        <div
+          v-for="item in category.items"
+          :key="item.id"
+          class="row-item"
+          :class="{ hidden: !!item.hidden }"
+        >
           <div class="amount">{{ item.amount }}</div>
           <div class="name">{{ item.name }}</div>
         </div>
@@ -70,13 +75,10 @@ export default {
           name: fm.name,
           allocation,
           amount: this.shortCurrency(allocation),
+          // Hide funding methods with no allocation in the currently filtered data.
+          hidden: allocation <= 0,
         };
       });
-    },
-    nonZeroAllocationsFm() {
-      return this.allocationByFm.filter(
-        (fmAllocation) => fmAllocation.allocation > 0
-      );
     },
     beneficiaryStatesCount() {
       return new Set(this.filtered.map((item) => item.beneficiary)).size;
@@ -90,8 +92,7 @@ export default {
             "Donec bibendum eros a velit ullamcorper ullamcorper. Sed eu temporquam. " +
             "Praesent imperdiet felis vitae pretium eleifend.",
           items: [
-            // Hide funding methods with no allocation in the currently filtered data.
-            ...this.nonZeroAllocationsFm,
+            ...this.allocationByFm,
             {
               id: "programmes",
               amount: this.number(this.aggregated.programmes.size),
@@ -152,6 +153,7 @@ export default {
               id: "bs",
               name: "Beneficiary states",
               amount: this.beneficiaryStatesCount,
+              hidden: this.beneficiaryStatesCount <= 1,
             },
             {
               id: "proj-pos",
@@ -205,6 +207,10 @@ export default {
   .row-item {
     max-width: 23rem;
     line-height: 1;
+
+    &.hidden {
+      display: none;
+    }
 
     .amount {
       color: #dc4844;

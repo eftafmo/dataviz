@@ -8,7 +8,7 @@
         :items="FM_ARRAY"
         class="viz-select-overview"
       />
-      <span class="muted">funding for</span>
+      <span class="muted">results in</span>
       <dropdown-filter
         filter="beneficiary"
         title="all Beneficiary States"
@@ -18,7 +18,12 @@
       <span class="muted">at a glance</span>
     </div>
     <div class="overview-results-grid">
-      <div v-for="item in gridItems" :key="item.id" class="grid-item">
+      <div
+        v-for="item in gridItems"
+        :key="item.id"
+        class="grid-item"
+        :class="{ hidden: !!item.hidden }"
+      >
         <img :src="`/assets/sprites/${item.image}`" alt="" />
         <div class="amount">{{ item.amount }}</div>
         <div class="description">{{ item.description }}</div>
@@ -115,6 +120,10 @@ export default {
   .grid-item {
     display: flex;
     align-items: center;
+
+    &.hidden {
+      display: none;
+    }
 
     .amount {
       color: #ffffff;
