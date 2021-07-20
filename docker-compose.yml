@@ -34,7 +34,7 @@ services:
     restart: "always"
 
   nginx:
-    image: nginx:1.13-alpine
+    image: nginx:1.21.1-alpine
     container_name: eeag_nginx
     environment:
       NGINX_CONF: |-

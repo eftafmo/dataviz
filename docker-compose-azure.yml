@@ -34,7 +34,7 @@ services:
 
   nginx:
     domainname: we-p-fmo-docker-dataeeagrantsorg-rg
-    image: nginx:1.17
+    image: nginx:1.21.1
     depends_on:
       - web
     volumes:
