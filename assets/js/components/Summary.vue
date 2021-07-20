@@ -41,13 +41,13 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .dataviz .viz.summary {
   position: relative;
 
   padding: 1rem;
   text-align: center;
-  height: 45px;
+  height: 60px;
 
   strong {
     color: #3b5998;

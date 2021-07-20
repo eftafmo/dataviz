@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar" @click="mobileExpand">
     <button
       v-if="isMobileExpanded"
       id="close-sidebar"
@@ -13,6 +13,71 @@
     <slot></slot>
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    embedded: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data() {
+    return {
+      // these are only used on the local site
+      onMobile: false,
+      isMobileExpanded: false,
+    };
+  },
+
+  watch: {
+    onMobile(matches) {
+      if (this.embedded) return;
+      if (!matches) this.mobileCollapse();
+    },
+  },
+
+  created() {
+    if (this.embedded) return;
+
+    // Add a media query listener handle mobile events
+    var mq = window.matchMedia("(max-width: 768px)");
+    var self = this;
+    mq.addListener(function (mq) {
+      self.onMobile = mq.matches;
+    });
+    this.onMobile = mq.matches; // initial check;
+  },
+
+  methods: {
+    mobileExpand() {
+      if (this.embedded || !this.onMobile) return;
+
+      if (!this.isMobileExpanded) {
+        this.isMobileExpanded = true;
+        this.$el.classList.add("is-expanded-on-mobile");
+        document.querySelector("body").classList.add("sidebar-open");
+        document.querySelector("html").classList.add("sidebar-open");
+      }
+    },
+
+    mobileCollapse(e) {
+      if (this.embedded) return;
+
+      e = e || window.event;
+      if (e) e.stopPropagation(); // event will trigger expand and cancel collapse
+      if (this.isMobileExpanded) {
+        this.isMobileExpanded = false;
+        var el = this.$el;
+        el.classList.remove("is-expanded-on-mobile");
+        document.querySelector("body").classList.remove("sidebar-open");
+        document.querySelector("html").classList.remove("sidebar-open");
+      }
+    },
+  },
+};
+</script>
 
 <style lang="less">
 @import "@css/style";
@@ -111,8 +176,7 @@
   .sidebar-content {
     list-style: none;
     padding-left: 0;
-    margin: 0;
-    margin-bottom: 1rem;
+    margin: 0 0 1rem;
     overflow: auto;
   }
 
@@ -147,10 +211,6 @@
   }
 
   &:not(.embedded) {
-    .sidebar-content {
-      max-height: ~"calc(100vh - 30rem)";
-    }
-
     @media (max-width: 768px) {
       position: fixed;
       bottom: 1rem;
@@ -164,8 +224,11 @@
       height: 10rem;
 
       &.is-expanded-on-mobile {
-        height: ~"calc(100% - 8rem)";
-        width: ~"calc(100% - 2rem)";
+        height: 100vh;
+        width: 100vw;
+        bottom: 0;
+        right: 0;
+        border: none;
       }
 
       .tabs-component-tab {
@@ -230,77 +293,3 @@
   position: fixed;
 }
 </style>
-
-<script>
-export default {
-  props: {
-    embedded: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
-  data() {
-    return {
-      // these are only used on the local site
-      onMobile: false,
-      isMobileExpanded: false,
-    };
-  },
-
-  watch: {
-    onMobile(matches) {
-      /** !!! WARNING, TODO !!! **/
-      return;
-
-      if (this.embedded) return;
-
-      if (matches) {
-        this.$el.addEventListener("click", this.mobileExpand, false);
-      } else {
-        this.$el.removeEventListener("click", this.mobileExpand, false);
-        this.mobileCollapse();
-      }
-    },
-  },
-
-  created() {
-    if (this.embedded) return;
-
-    // Add a media query listener handle mobile events
-    var mq = window.matchMedia("(max-width: 768px)");
-    var self = this;
-    mq.addListener(function (mq) {
-      self.onMobile = mq.matches;
-    });
-    this.onMobile = mq.matches; // initial check;
-  },
-
-  methods: {
-    mobileExpand() {
-      if (this.embedded) return;
-
-      if (!this.isMobileExpanded) {
-        this.isMobileExpanded = true;
-        this.$el.classList.add("is-expanded-on-mobile");
-        document.querySelector("body").classList.add("sidebar-open");
-        document.querySelector("html").classList.add("sidebar-open");
-      }
-    },
-
-    mobileCollapse(e) {
-      if (this.embedded) return;
-
-      e = e || window.event;
-      if (e) e.stopPropagation(); // event will trigger expand and cancel collapse
-      if (this.isMobileExpanded) {
-        this.isMobileExpanded = false;
-        var el = this.$el;
-        el.classList.remove("is-expanded-on-mobile");
-        document.querySelector("body").classList.remove("sidebar-open");
-        document.querySelector("html").classList.remove("sidebar-open");
-      }
-    },
-  },
-};
-</script>
