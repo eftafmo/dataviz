@@ -1,6 +1,6 @@
 <template>
-    <ul :class="classNames">
-     <div v-for="items in data">
+  <ul :class="classNames">
+    <div v-for="items in data">
       <li v-for="(sectors, outcome) in items">
         <div class="content-item results_content">
           <div class="body">
@@ -8,19 +8,22 @@
             <div v-for="(indicators, sector) in sectors">
               <small v-show="!filters.sector">{{ sector }}</small>
               <ul class="indicators">
-                 <li v-for="(value, indicator) in indicators" class="indicator clearfix" :style="{borderColor: sectorcolour(sector)}">
-                    <div class="indicator-achievement"> {{ number(value) }}</div>
-                    <div class="indicator-name"> {{ indicator }} </div>
-                 </li>
+                <li
+                  v-for="(value, indicator) in indicators"
+                  class="indicator clearfix"
+                  :style="{ borderColor: sectorcolour(sector) }"
+                >
+                  <div class="indicator-achievement">{{ number(value) }}</div>
+                  <div class="indicator-name">{{ indicator }}</div>
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </li>
-     </div>
-    </ul>
+    </div>
+  </ul>
 </template>
-
 
 <style lang="less">
 .dataviz .viz.results {
@@ -42,56 +45,38 @@
 
   .indicator {
     border-left: 3px solid red;
-    margin-bottom: .5rem;
-    padding-left: .5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
   }
 
   .indicator-achievement {
     display: inline;
     font-size: 2rem;
     color: black;
+    margin-right: 0.2rem;
   }
 
   .indicator-name {
     display: inline;
     font-size: 1.2rem;
-
   }
-
 }
 </style>
 
-
 <script>
-import * as d3 from 'd3';
+import Component from "./Component";
 
-import Component from './Component';
-
-import WithSectorsMixin from './mixins/WithSectors';
-
+import WithSectorsMixin from "./mixins/WithSectors";
 
 export default {
   extends: Component,
   type: "results",
 
-  mixins: [
-    WithSectorsMixin,
-  ],
-
-  updated() {
-  //TODO: this can be done a lot better
-    if (window.matchMedia("(max-width: 800px)").matches) {
-      const results_count = Object.keys(this.data[0]).length
-      if (!results_count) return;
-      const parent_nav = this.$el.parentNode.parentNode.parentNode.querySelector('[aria-controls="#results"]');
-      if (!parent_nav) return;
-      parent_nav.innerHTML = 'Results ('+results_count+')'
-    }
-  },
+  mixins: [WithSectorsMixin],
 
   computed: {
     data() {
-      if (!this.hasData) return []
+      if (!this.hasData) return [];
 
       const dataset = this.filtered;
       const results = {};
@@ -104,22 +89,22 @@ export default {
           if (!values) continue;
 
           for (let indicator in values) {
-            const value = +values[indicator]['achievement'];
+            const value = +values[indicator]["achievement"];
             if (value === 0) continue;
 
-            const priority = values[indicator]['order'];
+            const priority = values[indicator]["order"];
             if (results[priority] === undefined) {
-              results[priority] = {}
+              results[priority] = {};
             }
             if (results[priority][o] === undefined) {
-              results[priority][o] = {}
+              results[priority][o] = {};
             }
             if (results[priority][o][sector] === undefined) {
-              results[priority][o][sector] = {}
+              results[priority][o][sector] = {};
             }
             let outcome = results[priority][o][sector];
 
-            indicator = indicator.replace(/^Number of /, '');
+            indicator = indicator.replace(/^Number of /, "");
 
             let sum = outcome[indicator] || 0;
             outcome[indicator] = sum + value;
@@ -129,7 +114,7 @@ export default {
 
       // remove all SortOrder 3 indicators from results if higher priority indicators are available
       if (Object.keys(results).length > 1) {
-        delete results['3'];
+        delete results["3"];
       }
 
       const flattened = [];
@@ -142,5 +127,18 @@ export default {
     },
   },
 
-}
+  updated() {
+    //TODO: this can be done a lot better
+    if (window.matchMedia("(max-width: 800px)").matches) {
+      const results_count = Object.keys(this.data[0]).length;
+      if (!results_count) return;
+      const parent_nav =
+        this.$el.parentNode.parentNode.parentNode.querySelector(
+          '[aria-controls="#results"]'
+        );
+      if (!parent_nav) return;
+      parent_nav.innerHTML = "Results (" + results_count + ")";
+    }
+  },
+};
 </script>

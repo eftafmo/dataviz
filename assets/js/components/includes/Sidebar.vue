@@ -1,22 +1,24 @@
 <template>
   <div class="sidebar">
-    <button type="button" id="close-sidebar" class="no-btn"
-                  title="Close results"
-                v-if="isMobileExpanded"
-                v-on:click="mobileCollapse">
-          <span class="icon icon-cross"></span>
-  </button>
+    <button
+      v-if="isMobileExpanded"
+      id="close-sidebar"
+      type="button"
+      class="no-btn"
+      title="Close results"
+      @click="mobileCollapse"
+    >
+      <span class="icon icon-cross"></span>
+    </button>
     <slot></slot>
   </div>
 </template>
-
 
 <style lang="less">
 @import "@css/style";
 
 .dataviz .sidebar {
   border: 1px solid #ddd;
-  box-shadow: 0 1px 5px rgba(0,0,0,.2);
   background: @bg_color;
 
   /* Sidebar results Tabs */
@@ -25,15 +27,15 @@
   }
 
   .is-loading .sidebar-tabs::after {
-    content: ''; /* loading spinner */
+    content: ""; /* loading spinner */
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(100, 100, 100, .8);
+    background: rgba(100, 100, 100, 0.8);
   }
-  .tabs-component-tabs{
+  .tabs-component-tabs {
     border-bottom: 1px solid #ddd;
     position: relative;
     padding-left: 0;
@@ -42,19 +44,19 @@
     display: flex;
   }
   .sidebar-tab-menu::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 50%;
-    top: .6667em;
-    bottom: .6667em;
+    top: 0.6667em;
+    bottom: 0.6667em;
     border-left: 1px solid #ddd;
   }
   .sidebar-tab-menu::after {
-    content: '';
+    content: "";
     display: block;
     clear: both;
   }
-  .tabs-component-tab{
+  .tabs-component-tab {
     box-sizing: border-box;
     display: inline-block;
     width: 50%;
@@ -68,10 +70,12 @@
   .tabs-component-tab a {
     display: block;
     line-height: 3;
+    text-decoration: none;
+    color: #777777;
   }
 
   .tabs-component-tab::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     bottom: -1px;
@@ -80,29 +84,28 @@
     height: 3px;
     background: transparent;
   }
-  @media (min-width: 768px){
-    .tabs-component-tab:hover a{
+  @media (min-width: 768px) {
+    .tabs-component-tab:hover a {
       text-decoration: none;
-      color: #50B9FF;
+      color: #3b5998;
     }
     .tabs-component-tab:hover::after {
-      background: #50B9FF;
+      background: #3b5998;
     }
   }
   .tabs-component-tab.is-active a {
-    color: rgb(0, 117, 188);
+    color: #3b5998;
     font-weight: 600;
   }
   .tabs-component-tab.is-active::after {
-    background: rgb(0, 117, 188);
+    background: #3b5998;
   }
 
   /* Sidebar tab pane */
   .sidebar-content {
     position: relative;
     overflow: auto;
-    padding: 1.5rem!important;
-    padding-right: 0;
+    padding: 1.5rem !important;
   }
 
   .sidebar-content {
@@ -113,18 +116,18 @@
     overflow: auto;
   }
 
-  .content-item .title{
+  .content-item .title {
     margin: 0;
     font-size: 1.4rem;
     font-weight: inherit;
-    color: rgb(0, 117, 188);
+    color: #000000;
   }
 
   .content-item {
     margin-top: 2rem;
   }
 
-  .sidebar-content li:first-of-type .content-item{
+  .sidebar-content li:first-of-type .content-item {
     margin-top: 0;
   }
 
@@ -132,8 +135,8 @@
   #close-sidebar {
     position: absolute;
     z-index: 1;
-    top: .5rem;
-    right: .5rem;
+    top: 0.5rem;
+    right: 0.5rem;
     font-size: 2rem;
     color: #898989;
 
@@ -156,7 +159,7 @@
 
       width: 220px;
       /*min-width: 200px;*/
-      transition: width .3s, height .3s;
+      transition: width 0.3s, height 0.3s;
       overflow: hidden;
       height: 10rem;
 
@@ -214,31 +217,19 @@
         display: none;
       }
     }
-    @media(min-width: 769px) and (max-width: 1000px) {
+    @media (min-width: 769px) and (max-width: 1000px) {
       width: auto;
     }
-
   }
 }
 
 // this style is to be applied on body. meh.
 .sidebar-open {
   overflow: hidden;
-  position: relative;
   height: 100%;
   position: fixed;
 }
-
-
-body.dataviz.dark .sidebar {
-  background-color: @dark_bg_color;
-  border: 1px solid #222;
-  box-shadow: 0 1px 5px rgba(255,255,255,.2);
-
-}
-
 </style>
-
 
 <script>
 export default {
@@ -254,61 +245,62 @@ export default {
       // these are only used on the local site
       onMobile: false,
       isMobileExpanded: false,
-    }
+    };
+  },
+
+  watch: {
+    onMobile(matches) {
+      /** !!! WARNING, TODO !!! **/
+      return;
+
+      if (this.embedded) return;
+
+      if (matches) {
+        this.$el.addEventListener("click", this.mobileExpand, false);
+      } else {
+        this.$el.removeEventListener("click", this.mobileExpand, false);
+        this.mobileCollapse();
+      }
+    },
   },
 
   created() {
-    if (this.embedded) return
+    if (this.embedded) return;
 
     // Add a media query listener handle mobile events
-    var mq = window.matchMedia ('(max-width: 768px)');
+    var mq = window.matchMedia("(max-width: 768px)");
     var self = this;
-    mq.addListener(function(mq) { self.onMobile = mq.matches; });
+    mq.addListener(function (mq) {
+      self.onMobile = mq.matches;
+    });
     this.onMobile = mq.matches; // initial check;
   },
 
   methods: {
     mobileExpand() {
-      if(this.embedded) return
+      if (this.embedded) return;
 
       if (!this.isMobileExpanded) {
         this.isMobileExpanded = true;
-        this.$el.classList.add('is-expanded-on-mobile');
-        document.querySelector('body').classList.add('sidebar-open');
-        document.querySelector('html').classList.add('sidebar-open');
+        this.$el.classList.add("is-expanded-on-mobile");
+        document.querySelector("body").classList.add("sidebar-open");
+        document.querySelector("html").classList.add("sidebar-open");
       }
     },
 
     mobileCollapse(e) {
-      if(this.embedded) return
+      if (this.embedded) return;
 
       e = e || window.event;
-      if(e)
-      e.stopPropagation(); // event will trigger expand and cancel collapse
+      if (e) e.stopPropagation(); // event will trigger expand and cancel collapse
       if (this.isMobileExpanded) {
         this.isMobileExpanded = false;
         var el = this.$el;
-        el.classList.remove('is-expanded-on-mobile');
-        document.querySelector('body').classList.remove('sidebar-open')
-        document.querySelector('html').classList.remove('sidebar-open')
+        el.classList.remove("is-expanded-on-mobile");
+        document.querySelector("body").classList.remove("sidebar-open");
+        document.querySelector("html").classList.remove("sidebar-open");
       }
     },
   },
-
-  watch: {
-    onMobile (matches) {
-      /** !!! WARNING, TODO !!! **/
-      return
-
-      if (this.embedded) return
-
-      if (matches) {
-        this.$el.addEventListener('click', this.mobileExpand, false);
-      } else {
-        this.$el.removeEventListener('click', this.mobileExpand, false);
-        this.mobileCollapse();
-      }
-    },
-  },
-}
+};
 </script>

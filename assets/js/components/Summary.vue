@@ -1,34 +1,62 @@
 <template>
-<div :class="classNames" v-show="hasData">
+  <div v-show="hasData" :class="classNames">
     <transition name="fade">
-      <div class="allocation" :key="changed" v-if="data.allocation > 0">
+      <div v-if="data.allocation > 0" :key="changed" class="allocation">
         <strong>{{ currency(data.allocation) }}</strong>
-        <small>{{ currency(data.bilateral_allocation) }} for bilateral fund</small>
+        <small>
+          {{ currency(data.bilateral_allocation) }} for bilateral fund
+        </small>
       </div>
-      <div class="allocation" v-else-if="!data.allocation">
+      <div v-else-if="!data.allocation" class="allocation">
         <strong>No allocation available</strong>
       </div>
     </transition>
   </div>
 </template>
 
+<script>
+import Component from "./Component";
 
-<style lang="less">
+export default {
+  extends: Component,
+  type: "summary",
+
+  data() {
+    return {
+      transitioned: false,
+    };
+  },
+
+  computed: {
+    data() {
+      if (!this.hasData) return {};
+      return this.aggregate(
+        this.filtered,
+        [],
+        ["allocation", "bilateral_allocation"],
+        false
+      );
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
 .dataviz .viz.summary {
   position: relative;
 
   padding: 1rem;
   text-align: center;
-  height: 60px;
+  height: 45px;
 
   strong {
-    color: rgb(0, 117, 188);
+    color: #3b5998;
     font-size: larger;
   }
 
   small {
     display: block;
-    color: #2FB82A;
+    color: #abb447;
   }
 
   .allocation {
@@ -61,40 +89,4 @@
 .sidebar-tab-content .active {
   display: block;
 }
-
 </style>
-
-
-<script>
-import Component from './Component';
-
-
-export default {
-  extends: Component,
-  type: "summary",
-
-  data() {
-    return {
-      transitioned: false,
-    }
-  },
-
-  computed: {
-    data() {
-      if (!this.hasData) return {}
-
-      const out = this.aggregate(
-        this.filtered,
-        [],
-        [
-          'allocation',
-          'bilateral_allocation',
-        ],
-        false
-      );
-
-      return out;
-    },
-  },
-}
-</script>
