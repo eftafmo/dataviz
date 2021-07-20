@@ -292,4 +292,9 @@ export default {
   height: 100%;
   position: fixed;
 }
+
+// Put the sidebar while the menu is opened on mobile.
+.dataviz.menu-is-open .sidebar {
+  z-index: 10;
+}
 </style>
