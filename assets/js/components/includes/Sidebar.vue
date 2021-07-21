@@ -178,10 +178,11 @@ export default {
     padding-left: 0;
     margin: 0 0 1rem;
     overflow: auto;
+    max-height: calc(100vh - 40rem);
   }
 
   .content-item .title {
-    margin: 0;
+    margin: 0 0.5rem 0 0;
     font-size: 1.4rem;
     font-weight: inherit;
     color: #000000;
@@ -255,7 +256,7 @@ export default {
         overflow: auto;
       }
 
-      .sidebar-conent {
+      .sidebar-content {
         max-height: initial;
         overflow: auto;
       }
@@ -268,7 +269,7 @@ export default {
 
     @media (min-width: 769px) {
       position: sticky;
-      top: 40px;
+      top: 26px;
       overflow-x: hidden;
       width: 320px;
 
