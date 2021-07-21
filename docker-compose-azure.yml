@@ -20,7 +20,7 @@ services:
 
 
   web:
-    image: eftafmo/dataviz:20210408
+    image: eftafmo/dataviz:20210721
     environment:
       - NUM_WORKERS=3
     env_file:
