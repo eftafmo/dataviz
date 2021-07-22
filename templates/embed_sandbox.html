@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Embed Sandbox</title>
+</head>
+<body>
+<div style="padding: 20px;">
+  <label>
+    Embed Component:
+    <select onchange="location = this.value;">
+      <option
+          value="{% url 'frontend:embed_sandbox' %}"
+          {% if not selected_component or not selected_scenario %}selected{% endif %}
+      >
+        -- select an option --
+      </option>
+      {% for scenario, components in embed_components.items %}
+        <optgroup label="{{ scenario }}">
+          {% for component in components.keys %}
+            <option
+                value="{% url 'frontend:embed_sandbox' scenario=scenario component=component %}"
+                {% if component == selected_component and scenario == selected_scenario %}selected{% endif %}
+            >
+              {{ component }}
+            </option>
+          {% endfor %}
+        </optgroup>
+      {% endfor %}
+    </select>
+  </label>
+  <div style="display: flex;">
+    {% if selected_scenario and selected_component %}
+      <div style="margin-top: 20px; overflow: hidden; border: 1px solid;">
+        <script src="{% url 'frontend:embed' scenario=selected_scenario component=selected_component %}" async></script>
+      </div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

@@ -1,3 +1,9 @@
+# Embed components
+
+Components can be embedded into third-party pages. As such they must be tested to work
+correctly both in app and in the embed scenario. 
+
+A sandbox to test all available embeddable components is available at `/embed_sandbox/`.
 
 # Assets folders
 

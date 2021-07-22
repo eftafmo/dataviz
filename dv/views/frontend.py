@@ -1,4 +1,6 @@
+import functools
 import io
+import logging
 import os.path
 import re
 from collections import defaultdict
@@ -47,6 +49,46 @@ SCENARIOS = (
     "projects",
 )
 
+logger = logging.getLogger()
+
+
+_COMPONENTS_DEFS_FILE = os.path.join(settings.BASE_DIR, "assets/js/root-instances.js")
+_COMPONENTS_MATCH = re.compile(
+    r"""
+        (?:^|\s) const \s+ (%s) \s* = \s* [^{]+ {
+            (?:.*?,)? \s*
+            components: \s* {
+                \s* ([^}]+) \s*
+            }
+    """
+    % "|".join(map(str.capitalize, SCENARIOS)),
+    flags=re.DOTALL | re.VERBOSE,
+)
+
+
+@functools.lru_cache(maxsize=1)
+def _parse_js_root_instances():
+    scenarios = {}
+    with open(_COMPONENTS_DEFS_FILE) as f:
+        content = f.read()
+
+    for scenario, compstr in _COMPONENTS_MATCH.findall(content):
+        scenario = scenario.lower()
+        components = {}
+
+        for comp in map(str.strip, compstr.split(",")):
+            if comp == "":
+                continue
+
+            name, obj = comp.split(":")
+            name = name.strip().strip("\"'")
+            obj = obj.strip()
+
+            components[name] = obj
+
+        scenarios[scenario] = components
+    return scenarios
+
 
 def disclaimer(request):
     content = StaticContent.objects.filter(name="Disclaimer")
@@ -58,9 +100,24 @@ def sandbox(request):
     return render(request, "sandbox.html")
 
 
-import logging
+def embed_sandbox(request, scenario=None, component=None):
+    components = _parse_js_root_instances()
 
-logger = logging.getLogger()
+    if scenario or component:
+        try:
+            components[scenario][component]
+        except KeyError:
+            raise Http404
+
+    return render(
+        request,
+        "embed_sandbox.html",
+        context={
+            "embed_components": components,
+            "selected_scenario": scenario,
+            "selected_component": component,
+        },
+    )
 
 
 class FacetedSearchView(BaseFacetedSearchView):
@@ -463,20 +520,6 @@ class NewsTypeaheadFacetedSearchView(
     _TypeaheadFacetedSearchView, NewsFacetedSearchView
 ):
     pass
-
-
-_COMPONENTS_DEFS_FILE = os.path.join(settings.BASE_DIR, "assets/js/root-instances.js")
-_COMPONENTS_MATCH = re.compile(
-    r"""
-        (?:^|\s) const \s+ (%s) \s* = \s* [^{]+ {
-            (?:.*?,)? \s*
-            components: \s* {
-                \s* ([^}]+) \s*
-            }
-    """
-    % "|".join(map(str.capitalize, SCENARIOS)),
-    flags=re.DOTALL | re.VERBOSE,
-)
 
 
 class EmbedComponent(TemplateView):
