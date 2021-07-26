@@ -16,24 +16,33 @@
       >
         -- select an option --
       </option>
-      {% for scenario, components in embed_components.items %}
-        <optgroup label="{{ scenario }}">
-          {% for component in components.keys %}
-            <option
-                value="{% url 'frontend:embed_sandbox' scenario=scenario component=component %}"
-                {% if component == selected_component and scenario == selected_scenario %}selected{% endif %}
-            >
-              {{ component }}
-            </option>
-          {% endfor %}
-        </optgroup>
+      {% for period, embed_components in available_periods.items %}
+        {% for scenario, components in embed_components.items %}
+          <optgroup label="{{ scenario }} ({{ period }})">
+            {% for component in components.keys %}
+              <option
+                  value="{% url 'frontend:embed_sandbox' scenario=scenario component=component period=period %}"
+                  {% if component == selected_component and scenario == selected_scenario and period == selected_period %}
+                  selected
+                  {% endif %}
+              >
+                {{ component }}
+              </option>
+            {% endfor %}
+          </optgroup>
+        {% endfor %}
       {% endfor %}
     </select>
   </label>
+  <span>Currently selected:</span>
+  <b>{{ selected_scenario }} ({{ selected_period }}): {{ selected_component }}</b>
   <div style="display: flex;">
     {% if selected_scenario and selected_component %}
       <div style="margin-top: 20px; overflow: hidden; border: 1px solid;">
-        <script src="{% url 'frontend:embed' scenario=selected_scenario component=selected_component %}" async></script>
+        <script
+            src="{% url 'frontend:embed' scenario=selected_scenario component=selected_component period=selected_period %}"
+            async
+        ></script>
       </div>
     {% endif %}
   </div>

@@ -100,7 +100,7 @@ def sandbox(request):
     return render(request, "sandbox.html")
 
 
-def embed_sandbox(request, scenario=None, component=None):
+def embed_sandbox(request, scenario=None, component=None, period="2009-2014"):
     components = _parse_js_root_instances()
 
     if scenario or component:
@@ -113,7 +113,11 @@ def embed_sandbox(request, scenario=None, component=None):
         request,
         "embed_sandbox.html",
         context={
-            "embed_components": components,
+            "available_periods": {
+                "2009-2014": components,
+                "2014-2021": components,
+            },
+            "selected_period": period,
             "selected_scenario": scenario,
             "selected_component": component,
         },
@@ -531,6 +535,7 @@ class EmbedComponent(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        period = kwargs.get("period", "2009-2014")
         scenario = context["scenario"]
         component = context["component"]
 
@@ -553,6 +558,7 @@ class EmbedComponent(TemplateView):
 
         props = {
             "datasource": self.request.build_absolute_uri(reverse("api:" + scenario)),
+            "period": period,
         }
 
         # this is ugly, nasty and not nice

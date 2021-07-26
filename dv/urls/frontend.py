@@ -68,10 +68,20 @@ urlpatterns = [
         views.EmbedComponent.as_view(),
         name="embed",
     ),
+    url(
+        r"^embed/(?P<period>[0-9-]+)/(?P<scenario>[a-z]+)/(?P<component>[a-z][a-z_-]+[a-z]).js$",
+        views.EmbedComponent.as_view(),
+        name="embed",
+    ),
     url(r"^robots.txt$", views.RobotsView.as_view(), name="robots"),
     # [dev-only] sandbox for testing ui components
     url(r"^sandbox/$", views.sandbox, name="sandbox"),
     url(r"^embed_sandbox/$", views.embed_sandbox, name="embed_sandbox"),
+    url(
+        r"^embed_sandbox/(?P<period>[0-9-]+)/(?P<scenario>[a-z]+)/(?P<component>[a-z][a-z_-]+[a-z])$",
+        views.embed_sandbox,
+        name="embed_sandbox",
+    ),
     url(
         r"^embed_sandbox/(?P<scenario>[a-z]+)/(?P<component>[a-z][a-z_-]+[a-z])$",
         views.embed_sandbox,
