@@ -97,7 +97,7 @@ export default {
   padding: 6rem 0;
 }
 
-.overview-heading {
+.dataviz .overview-heading {
   .muted {
     color: #f7c5c4;
   }

@@ -1,7 +1,5 @@
 "use strict";
 
-// load styles
-import "./css/dataviz.less";
 
 // register polyfills
 import * as Sentry from '@sentry/vue';

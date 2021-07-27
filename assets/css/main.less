@@ -1,170 +1,169 @@
 @import url('open-sans-fonts.css');
 @import url('icons.css');
+@import url('style.less');
 
-@import 'style.less';
-
-@import url('layout.css');
-@import 'header.less';
-@import url('footer.css');
-@import url('global-filters.less');
-
-@import url('search.css');
-@import url('pagination.css');
-@import url('select2.css');
-
-@import url('homepage.less');
-
-@import url('buttons.css');
-@import url('forms.css');
-
-@import url('sidebar-filters.css');
-
+// XXX WARNING! This leaks into the parent page whenever
+// XXX a component is embedded.
 :root {
   font-size: 10px;
 }
 
-body {
-  margin: 0;
-  font-family: 'Source Sans Pro', sans-serif;
+body.dataviz {
+  margin: auto;
+  max-width: 200rem;
+}
+
+.dataviz {
   font-size: 1.5rem;
   line-height: 1.3334;
   background-color: @bg_color;
   color: @fg_color;
-}
 
-hr {
-  border: 0;
-  border-top: 1px solid #ddd;
-}
+  font-family: 'Source Sans Pro', sans-serif;
 
-small,
-.small {
-  font-size: 1.2rem;
-}
+  @import url('layout.less');
+  @import url('header.less');
+  @import url('footer.less');
+  @import url('global-filters.less');
 
-.muted {
-  color: #898989;
-}
+  @import url('search.less');
+  @import url('pagination.less');
+  @import url('select2.less');
 
-a {
-  color: #3D90F3;
-}
+  @import url('homepage.less');
 
-a.muted:hover {
-  color: #3D90F3;
-}
+  @import url('buttons.less');
+  @import url('forms.less');
 
-.no-list {
-  list-style: none;
-  padding-left: 0;
-}
+  @import url('sidebar-filters.less');
 
-.no-margin {
-  margin: 0;
-}
+  hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+  }
 
-.align-center {
-  text-align: center;
-}
+  small,
+  .small {
+    font-size: 1.2rem;
+  }
 
-/* page sections */
-.page-title {
-  margin-top: 0 !important;
-  margin-bottom: 2rem !important;
-  color: #3B5998;
-  font-weight: bold;
-  font-size: 3rem !important;
-}
+  .muted {
+    color: #898989;
+  }
 
-.section {
-  border-top: 1px solid #ddd;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
+  a {
+    color: #3D90F3;
+  }
 
-.section-header {
-  margin-bottom: 2rem;
-}
+  a.muted:hover {
+    color: #3D90F3;
+  }
 
-.section-title {
-  margin-top: 0;
-  margin-bottom: 0;
-  color: #3B5998;
-  font-weight: normal;
-  font-size: 2.4rem;
-}
+  .no-list {
+    list-style: none;
+    padding-left: 0;
+  }
 
-.grant-dataviz {
-  padding-top: 2rem;
-  border-top: 1px solid #ddd;
-  position: relative;
-}
+  .no-margin {
+    margin: 0;
+  }
 
-.grant-dataviz h2 {
-  text-align: left;
-  font-weight: 400;
-  color: #3B5998;
-  margin-top: 0;
-  margin-bottom: .5rem;
-  display: block;
-}
+  .align-center {
+    text-align: center;
+  }
 
-.link-page-button {
-  text-decoration: none !important;
-}
+  /* page sections */
 
+  .page-title {
+    margin-top: 0 !important;
+    margin-bottom: 2rem !important;
+    color: #3B5998;
+    font-weight: bold;
+    font-size: 3rem !important;
+  }
 
-@media (max-width: 950px) {
+  .section {
+    border-top: 1px solid #ddd;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #3B5998;
+    font-weight: normal;
+    font-size: 2.4rem;
+  }
+
+  .grant-dataviz {
+    padding-top: 2rem;
+    border-top: 1px solid #ddd;
+    position: relative;
+  }
+
   .grant-dataviz h2 {
+    text-align: left;
+    font-weight: 400;
+    color: #3B5998;
+    margin-top: 0;
     margin-bottom: .5rem;
+    display: block;
   }
-}
 
-h2 {
-  font-size: 2rem;
-}
-
-@media (max-width: 600px) {
-  #funding-map {
-    /* display: none;*/
+  .link-page-button {
+    text-decoration: none !important;
   }
-}
 
-@media (min-width: 764px) {
-  .sticky {
+
+  @media (max-width: 950px) {
+    .grant-dataviz h2 {
+      margin-bottom: .5rem;
+    }
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    #funding-map {
+      /* display: none;*/
+    }
+  }
+
+  @media (min-width: 764px) {
+    .sticky {
+      position: -webkit-sticky;
+      position: sticky;
+    }
+  }
+
+  #global-filters.sticky {
     position: -webkit-sticky;
     position: sticky;
   }
-}
 
-#global-filters.sticky {
-  position: -webkit-sticky;
-  position: sticky;
-}
-
-@media (max-width: 764px) {
-  .header.sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    left: 0;
-    right: 0;
-    top: 0;
+  @media (max-width: 764px) {
+    .header.sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
   }
-}
 
-/*iphone stuff*/
-@media (max-width: 760px) {
-  input {
-    -webkit-appearance: none !important;
-    -webkit-border-radius: 0 !important;
-    border-radius: 0;
+  /*iphone stuff*/
+  @media (max-width: 760px) {
+    input {
+      -webkit-appearance: none !important;
+      -webkit-border-radius: 0 !important;
+      border-radius: 0;
+    }
   }
-}
-
-
-/* dark theme */
-
-body.dark {
-  background-color: @dark_bg_color;
-  color: @dark_fg_color;
 }
