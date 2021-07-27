@@ -4,15 +4,12 @@
  -->
 
 <script>
-import BaseMixin from './mixins/Base'
-import WithFiltersMixin from './mixins/WithFilters'
-
+import BaseMixin from "./mixins/Base";
+import WithFiltersMixin from "./mixins/WithFilters";
+import { getAssetUrl } from "../lib/util";
 
 export default {
-  mixins: [
-    BaseMixin,
-    WithFiltersMixin,
-  ],
+  mixins: [BaseMixin, WithFiltersMixin],
 
   props: {
     initial: [Object, Array],
@@ -22,25 +19,33 @@ export default {
     return {
       // what the dataset can be filtered on.
       // default to filters applicable to all scenarios.
-      filter_by: [
-        "fm", "beneficiary",
-        "sector", "area",
-      ],
+      filter_by: ["fm", "beneficiary", "sector", "area"],
 
       // aggregation columns.
       aggregate_by: [],
       // default to columns common to all scenarios.
       aggregate_on: [
-        'allocation',
-        'net_allocation',
-        {source: 'beneficiary', destination: 'beneficiaries',
-         type: String, exclude: 'is_ta'},
-        {source: 'sector', destination: 'sectors',
-         type: String, exclude: 'is_ta'},
-        {source: 'area', destination: 'areas',
-         type: String, exclude: 'is_ta'},
-        {source: 'programmes',
-         type: Object},
+        "allocation",
+        "net_allocation",
+        {
+          source: "beneficiary",
+          destination: "beneficiaries",
+          type: String,
+          exclude: "is_ta",
+        },
+        {
+          source: "sector",
+          destination: "sectors",
+          type: String,
+          exclude: "is_ta",
+        },
+        {
+          source: "area",
+          destination: "areas",
+          type: String,
+          exclude: "is_ta",
+        },
+        { source: "programmes", type: Object },
       ],
 
       // this is only used internally. we can't come up with a nicer name,
@@ -68,7 +73,11 @@ export default {
     },
 
     aggregated() {
-      return this.aggregate(this.filtered, this.aggregate_by, this.aggregate_on);
+      return this.aggregate(
+        this.filtered,
+        this.aggregate_by,
+        this.aggregate_on
+      );
     },
 
     data() {
@@ -77,13 +86,24 @@ export default {
     },
 
     hasData() {
-      return !!(this.dataset
-                // safeguard because empty vue observables evaluate to true
-                && Object.keys(this.dataset).length);
+      return !!(
+        this.dataset &&
+        // safeguard because empty vue observables evaluate to true
+        Object.keys(this.dataset).length
+      );
     },
     isReady() {
-      return !!(this.hasData
-                && this.is_mounted);
+      return !!(this.hasData && this.is_mounted);
+    },
+  },
+  watch: {
+    isReady: "main",
+    // this one is used only for vue transitions
+    filters: {
+      deep: true,
+      handler() {
+        this.changed = Number(!this.changed);
+      },
     },
   },
 
@@ -94,6 +114,9 @@ export default {
   },
 
   methods: {
+    getAssetUrl(path) {
+      return getAssetUrl(path, this.origin || this.$.root.props.origin);
+    },
     _mkfilterfuncs(filters) {
       // returns an array of filtering functions, given a set of filter names
       // and considering the filters currently set
@@ -123,12 +146,12 @@ export default {
           if (!func(item)) return false;
         }
         return true;
-      }
+      };
 
       return data.filter(filterfunc);
     },
 
-    aggregate(data, by, on, flatten=false) {
+    aggregate(data, by, on, flatten = false) {
       /*
          by: array of column specs to aggregate by,
          on: array of column specs to aggregate on,
@@ -158,9 +181,10 @@ export default {
       const bycols = {};
       let finalbycol;
       for (const col of by) {
-        let src, dst,
-            final = false;
-        if (typeof col == 'string') {
+        let src,
+          dst,
+          final = false;
+        if (typeof col == "string") {
           src = dst = col;
         } else {
           src = col.source;
@@ -172,17 +196,15 @@ export default {
 
         if (!src)
           throw new Error(
-            "`by` column source not provided: " +
-            JSON.stringify(col)
-          )
+            "`by` column source not provided: " + JSON.stringify(col)
+          );
 
         if (final) {
-          if (finalbycol)
-            throw new Error("Multiple final `by` columns")
+          if (finalbycol) throw new Error("Multiple final `by` columns");
           finalbycol = {
             source: src,
             destination: dst,
-          }
+          };
         } else {
           bycols[src] = dst;
         }
@@ -192,7 +214,7 @@ export default {
       const oncols = {};
       for (const col of on) {
         let src, dst, type, exclude, exclude_empty;
-        if (typeof col == 'string') {
+        if (typeof col == "string") {
           src = dst = col;
           type = Number;
         } else {
@@ -208,12 +230,16 @@ export default {
 
         if (!src)
           throw new Error(
-            "`on` column source not provided: " +
-            JSON.stringify(col)
-          )
+            "`on` column source not provided: " + JSON.stringify(col)
+          );
 
-        oncols[src] = {destination: dst, type: type, exclude: exclude, exclude_empty: exclude_empty};
-      };
+        oncols[src] = {
+          destination: dst,
+          type: type,
+          exclude: exclude,
+          exclude_empty: exclude_empty,
+        };
+      }
 
       // each aggreggation level is a sub-dictionary,
       // each aggreggation item a key.
@@ -222,84 +248,81 @@ export default {
       for (const item of data) {
         const base = {};
         let row = aggregator;
-        for (let i=0, j=_bycols.length; i<j; i++) {
+        for (let i = 0, j = _bycols.length; i < j; i++) {
           const srccol = _bycols[i],
-                dstcol = bycols[srccol],
-                value = item[srccol];
+            dstcol = bycols[srccol],
+            value = item[srccol];
 
           base[dstcol] = value;
 
-          if (row[value] === undefined)
-            row[value] = i == j - 1 ? base : {};
+          if (row[value] === undefined) row[value] = i == j - 1 ? base : {};
 
           row = row[value];
         }
 
         for (const srccol in oncols) {
           const _col = oncols[srccol],
-                dstcol = _col.destination,
-                type = _col.type,
-                exclude = _col.exclude,
-                exclude_empty = _col.exclude_empty,
-                value = type == Number ? Number(item[srccol]) : item[srccol];
+            dstcol = _col.destination,
+            type = _col.type,
+            exclude = _col.exclude,
+            exclude_empty = _col.exclude_empty,
+            value = type == Number ? Number(item[srccol]) : item[srccol];
 
           if (value == undefined) continue;
           let current = row[dstcol];
 
           if (type === Number) {
             // numbers are added together
-            if (current === undefined)
-              current = row[dstcol] = 0;
+            if (current === undefined) current = row[dstcol] = 0;
 
             if (exclude && item[exclude]) {
               continue;
             }
-            if (exclude_empty && (
-                item[exclude_empty] === undefined ||
-                typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0
-            )) {
+            if (
+              exclude_empty &&
+              (item[exclude_empty] === undefined ||
+                (typeof item[exclude_empty] == "object" &&
+                  Object.keys(item[exclude_empty]).length == 0))
+            ) {
               continue;
             }
 
             row[dstcol] = current + value;
-          }
-          else if (type === String || type === Array || type === Object) {
+          } else if (type === String || type === Array || type === Object) {
             // strings, arrays items and object keys are consolidated into sets
-            if (current === undefined)
-              current = row[dstcol] = new Set()
+            if (current === undefined) current = row[dstcol] = new Set();
 
             if (exclude && item[exclude]) {
               continue;
             }
-            if (exclude_empty && (
-                item[exclude_empty] === undefined ||
-                typeof(item[exclude_empty])=='object' && Object.keys(item[exclude_empty]).length==0
-            )) {
+            if (
+              exclude_empty &&
+              (item[exclude_empty] === undefined ||
+                (typeof item[exclude_empty] == "object" &&
+                  Object.keys(item[exclude_empty]).length == 0))
+            ) {
               continue;
             }
 
             if (type === String) {
               current.add(value);
-            }
-            else if (type === Array) {
+            } else if (type === Array) {
               for (const v of value) {
                 current.add(v);
               }
-            }
-            else if (type === Object) {
+            } else if (type === Object) {
               for (const k in value) {
                 current.add(k);
               }
             }
-          }
-          else console.warn(srccol, ":: unkwown type", type);
+          } else console.warn(srccol, ":: unkwown type", type);
         }
       }
 
       if (!flatten) return aggregator;
 
       const out = [],
-            levels = by.length;
+        levels = by.length;
 
       function recurse(obj, level) {
         if (level == levels) {
@@ -319,33 +342,22 @@ export default {
       /*
        * main entry point, only called on ready
        */
-
       // no need to throw, some components could be Vue-only
       //throw "Base.main(): Not implemented";
     },
 
     fetchData() {
-      if (!this.datasource) throw "Base.fetchData(): Missing datasource."
+      if (!this.datasource) throw "Base.fetchData(): Missing datasource.";
 
-      fetch(this.datasource).then(response => {
+      fetch(this.datasource).then((response) => {
         if (!response.ok)
-          throw new Error(`${response.status} ${response.statusText}`)
+          throw new Error(`${response.status} ${response.statusText}`);
 
-        response.json().then(data => {
-          Object.freeze(data)
-          this.dataset = data
-        })
-      })
-    },
-  },
-  watch: {
-    'isReady': 'main',
-    // this one is used only for vue transitions
-    'filters': {
-      deep: true,
-      handler() {
-        this.changed = Number(!this.changed);
-      },
+        response.json().then((data) => {
+          Object.freeze(data);
+          this.dataset = data;
+        });
+      });
     },
   },
 };

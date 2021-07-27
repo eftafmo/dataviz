@@ -99,10 +99,7 @@ export default {
     },
     // TODO: Refactor to use camelCase here.
     get_flag_url(c) {
-      return getAssetUrl(
-        `sprites/flags/${this.get_flag_name(c)}.png`,
-        this.origin || this.$.root.props.origin
-      );
+      return this.getAssetUrl(`sprites/flags/${this.get_flag_name(c)}.png`);
     },
     get_flag_name(c) {
       return get_flag_name(c);

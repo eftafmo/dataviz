@@ -25,7 +25,7 @@
         class="grid-item"
         :class="{ hidden: !!item.hidden }"
       >
-        <img :src="`/assets/sprites/${item.image}`" alt="" />
+        <img :src="getAssetUrl(item.image)" alt="" />
         <div class="amount">{{ item.amount }}</div>
         <div class="description">{{ item.description }}</div>
       </div>
@@ -63,26 +63,26 @@ export default {
       return [
         {
           id: "civil-soa",
-          image: "placeholder.png",
+          image: "sprites/placeholder.png",
           amount: "N/A",
           description:
             "people involved in civil society organisation activities",
         },
         {
           id: "co2-reduction",
-          image: "placeholder.png",
+          image: "sprites/placeholder.png",
           amount: "N/A",
           description: "tons of est. annual CO2 emissions reduction",
         },
         {
           id: "researchers",
-          image: "placeholder.png",
+          image: "sprites/placeholder.png",
           amount: "N/A",
           description: "supported researchers",
         },
         {
           id: "jobs",
-          image: "placeholder.png",
+          image: "sprites/placeholder.png",
           amount: "N/A",
           description: "jobs created",
         },

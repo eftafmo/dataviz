@@ -9,10 +9,10 @@
       <span class="icon icon-embed" @click="toggleExpanded"></span>
       <div v-show="expanded" class="content">
         <p>
-          <small
-            >Paste the following into your markup where you want the embedded
-            component to appear</small
-          >
+          <small>
+            Paste the following into your markup where you want the embedded
+            component to appear
+          </small>
         </p>
         <p>
           <input ref="txt" type="text" :value="code" readonly />
