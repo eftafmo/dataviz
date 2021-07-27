@@ -1,6 +1,6 @@
 <template>
   <div v-if="hasData && aggregated.allocation" class="overview-results">
-    <embeddor tag="overview_results" />
+    <embeddor :period="period" tag="overview_results" />
     <div class="overview-heading">
       <span class="muted">The</span>
       <dropdown-filter

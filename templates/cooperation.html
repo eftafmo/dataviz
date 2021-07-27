@@ -10,15 +10,15 @@
   <div class="lg-column">
 
     <div class="grant-dataviz" id="financial-mechanisms">
-      <mechanisms :initial="dataset">
+      <mechanisms :initial="dataset" period="{{ PERIOD }}">
         <template #title>
-          <h2>Financial mechanisms <span style="white-space:nowrap;">2009-2014</span></h2>
+          <h2>Financial mechanisms <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
         </template>
       </mechanisms>
     </div>
 
     <div class="grant-dataviz" id="priority-sectors">
-      <sectors :initial="dataset">
+      <sectors :initial="dataset" period="{{ PERIOD }}">
         <template #title>
           <h2>Donor partner programmes by sector</h2>
         </template>
@@ -28,6 +28,7 @@
     <div class="grant-dataviz" id="donor-programme-partners">
       <programme_partners
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
           <h2>Donor programme partners</h2>
@@ -38,6 +39,7 @@
     <div class="grant-dataviz" id="donor-project-partners">
       <project_partners
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
           <h2>Donor project partners</h2>
@@ -53,6 +55,7 @@
     <div class="grant-dataviz" id="network-map">
       <xmap
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
           <h2>Network map</h2>
@@ -63,6 +66,7 @@
     <div class="grant-dataviz" id="donor-states">
       <donors
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
           <h2>Partners by donor state</h2>
@@ -73,6 +77,7 @@
     <div class="grant-dataviz" id="beneficiary-states">
       <beneficiaries
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
           <h2>Organisations with donor partner by beneficiary state</h2>
@@ -87,6 +92,7 @@
   <sidebar
       class="sticky"
       :initial="dataset"
+      period="{{ PERIOD }}"
       projects-datasource="{% url "api:project-list" %}"
   >
   </sidebar>

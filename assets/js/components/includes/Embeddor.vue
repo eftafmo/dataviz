@@ -36,6 +36,10 @@ export default {
       type: String,
       required: true,
     },
+    period: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -57,7 +61,7 @@ export default {
       return !this.isEmbedded && (this.target_hovered || this.popper_hovered);
     },
     path() {
-      return `/embed/${this.scenario}/${this.tag}.js`;
+      return `/embed/${this.period}/${this.scenario}/${this.tag}.js`;
     },
     url() {
       const url = new URL(this.path, window.location.href);

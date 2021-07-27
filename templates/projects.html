@@ -12,9 +12,10 @@
     <div class="grant-dataviz" id="financial-mechanisms">
       <mechanisms
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
-          <h2>Projects by financial mechanism <span style="white-space:nowrap;">2009-2014</span></h2>
+          <h2>Projects by financial mechanism <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
         </template>
       </mechanisms>
     </div>
@@ -22,6 +23,7 @@
     <div class="grant-dataviz" id="priority-sectors">
       <sectors
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
           <h2>Projects by sector</h2>
@@ -37,6 +39,7 @@
     <div class="grant-dataviz" id="funding-map">
       <xmap
           :initial="dataset"
+          period="{{ PERIOD }}"
           details-datasource="{% url "api:projects-beneficiary-detail" "XX" %}"
       >
         <template #title>
@@ -48,6 +51,7 @@
     <div class="grant-dataviz" id="beneficiary-states">
       <beneficiaries
           :initial="dataset"
+          period="{{ PERIOD }}"
       >
         <template #title>
           <h2>Projects across beneficiary states</h2>
@@ -64,6 +68,7 @@
   <sidebar
       class="sticky"
       :initial="dataset"
+      period="{{ PERIOD }}"
       projects-datasource="{% url "api:project-list" %}"
   >
   </sidebar>

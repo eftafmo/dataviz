@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor tag="overview" />
+    <embeddor :period="period" tag="overview" />
     <chart-container :width="width" :height="height">
       <svg :viewBox="`0 0 ${width} ${height}`">
         <defs>

@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor tag="programme_partners"/>
+    <embeddor :period="period" tag="programme_partners"/>
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="isReady"

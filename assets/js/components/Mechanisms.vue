@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor tag="mechanism" />
+    <embeddor :period="period" tag="mechanism" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="rendered"

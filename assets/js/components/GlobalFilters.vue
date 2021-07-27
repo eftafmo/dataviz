@@ -1,26 +1,28 @@
 <template>
-  <div :class="{ on_top: hasFilters() }" id="global-filters">
-    <div v-if="hasFilters()" class="global-filters" :class="{active: hasFilters()}">
+  <div id="global-filters" :class="{ on_top: hasFilters() }">
+    <div
+      v-if="hasFilters()"
+      class="global-filters"
+      :class="{ active: hasFilters() }"
+    >
       <transition name="bounce">
         <div v-if="hasFilters" class="container">
           <div class="global-filters-inner">
-            <div class="filters-label">
-              Showing data for:
-            </div>
+            <div class="filters-label">Showing data for:</div>
             <transition-group name="list">
               <div
-                  class="filter-item"
-                  v-for="(item, key) in Object.fromEntries(
-                  Object.entries(data).filter(v => v != null)
+                v-for="(item, key) in Object.fromEntries(
+                  Object.entries(data).filter((v) => v != null)
                 )"
-                  :key="key"
-                  @click="removeFilter(key)"
+                :key="key"
+                class="filter-item"
+                @click="removeFilter(key)"
               >
                 {{ item.name }}: {{ item.value }}
                 <span class="icon icon-cross"></span>
               </div>
             </transition-group>
-            <button @click="resetFilters" class="no-btn" id="reset-filters">
+            <button id="reset-filters" class="no-btn" @click="resetFilters">
               Reset filters <span class="icon icon-cross"></span>
             </button>
           </div>
@@ -30,143 +32,15 @@
   </div>
 </template>
 
-
-<style lang="less">
-.on_top {
-  z-index: 2;
-}
-
-.filter-item {
-  cursor: pointer;
-  margin-left: .5rem;
-}
-
-.list-filters {
-  overflow: hidden;
-  white-space: normal;
-  @media (max-width: 800px) {
-    margin-left: -2rem;
-  }
-}
-
-#reset-filters {
-  @media (max-width: 800px) {
-    margin-right: -2rem;
-  }
-}
-
-.global-filters {
-  overflow: hidden;
-  padding: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 300ms;
-
-  &.active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .container {
-    padding: .5rem 3rem;
-    text-align: right;
-  }
-}
-
-.global-filters .icon {
-  font-size: 1rem;
-}
-
-.filters-label {
-  @media (max-width: 800px) {
-    display: none;
-  }
-}
-
-.filter-item {
-  display: inline-block;
-
-  @media (max-width: 800px) {
-    display: block;
-  }
-}
-
-.list-enter-active, .list-leave-active {
-  transition: all .3s;
-}
-
-.list-enter, .list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.bounce-enter-active {
-  animation: bounce-in .3s;
-}
-
-.bounce-leave-active {
-  animation: bounce-out .3s;
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.5);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes bounce-out {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.5);
-  }
-  100% {
-    transform: scale(0);
-  }
-}
-
-</style>
-
-
 <script>
-import * as d3 from "d3";
 import { truncate } from "@js/lib/util";
 import _programme_areas from "@js/constants/programme-areas.json5";
 import { COUNTRIES } from "./mixins/WithCountries";
 
 import WithFiltersMixin from "./mixins/WithFilters";
 
-
 export default {
-  mixins: [
-    WithFiltersMixin
-  ],
-
-  beforeCreate() {
-    this.format_pa = function (programme_area) {
-      return _programme_areas[programme_area]["short_name"];
-    };
-    this.get_country = function (country_code) {
-      return COUNTRIES[country_code]["name"];
-    };
-    this.FILTER_SETTINGS = {
-      fm: { name: "FM" },
-      beneficiary: { name: "BS", formatter: this.get_country },
-      region: { name: "Region" },
-      sector: { name: "PS", truncate: 20 },
-      area: { name: "PA", formatter: this.format_pa },
-      donor: { name: "DS", formatter: this.get_country },
-      DPP: { name: "Programme partner", truncate: 60 },
-      dpp: { name: "Project partner", truncate: 60 }
-    };
-  },
+  mixins: [WithFiltersMixin],
 
   computed: {
     data() {
@@ -183,13 +57,32 @@ export default {
           }
           filters[key] = {
             name: settings["name"],
-            value: filter_value
+            value: filter_value,
           };
         }
       }
 
       return filters;
-    }
+    },
+  },
+
+  beforeCreate() {
+    this.format_pa = function (programme_area) {
+      return _programme_areas[programme_area]["short_name"];
+    };
+    this.get_country = function (country_code) {
+      return COUNTRIES[country_code]["name"];
+    };
+    this.FILTER_SETTINGS = {
+      fm: { name: "FM" },
+      beneficiary: { name: "BS", formatter: this.get_country },
+      region: { name: "Region" },
+      sector: { name: "PS", truncate: 20 },
+      area: { name: "PA", formatter: this.format_pa },
+      donor: { name: "DS", formatter: this.get_country },
+      DPP: { name: "Programme partner", truncate: 60 },
+      dpp: { name: "Project partner", truncate: 60 },
+    };
   },
 
   created() {
@@ -210,7 +103,7 @@ export default {
 
     handleEsc() {
       const self = this;
-      window.addEventListener("keyup", e => {
+      window.addEventListener("keyup", (e) => {
         if (e.keyCode == 27) self.removeLastFilter();
       });
     },
@@ -250,7 +143,111 @@ export default {
       const index = this.filters_stack.indexOf(type);
       if (index !== -1) this.filters_stack.splice(index, 1);
       if (val) this.filters_stack.push(type);
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style lang="less">
+.on_top {
+  z-index: 2;
+}
+
+.filter-item {
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.list-filters {
+  overflow: hidden;
+  white-space: normal;
+  @media (max-width: 800px) {
+    margin-left: -2rem;
+  }
+}
+
+#reset-filters {
+  @media (max-width: 800px) {
+    margin-right: -2rem;
+  }
+}
+
+.global-filters {
+  overflow: hidden;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 300ms;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .container {
+    padding: 0.5rem 3rem;
+    text-align: right;
+  }
+}
+
+.global-filters .icon {
+  font-size: 1rem;
+}
+
+.filters-label {
+  @media (max-width: 800px) {
+    display: none;
+  }
+}
+
+.filter-item {
+  display: inline-block;
+
+  @media (max-width: 800px) {
+    display: block;
+  }
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s;
+}
+
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.3s;
+}
+
+.bounce-leave-active {
+  animation: bounce-out 0.3s;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-out {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+</style>

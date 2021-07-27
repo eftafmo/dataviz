@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor tag="xmap" />
+    <embeddor :period="period" tag="xmap" />
     <slot v-if="!embedded" name="title"></slot>
 
     <div class="selector">

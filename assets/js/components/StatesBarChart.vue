@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor :tag="tag" />
+    <embeddor :period="period" :tag="tag" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="hasData"

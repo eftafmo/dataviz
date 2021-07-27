@@ -57,7 +57,7 @@ export default {
     },
     period: {
       type: String,
-      default: "2009–2014",
+      default: "2009-2014",
     },
     embedded: {
       type: Boolean,

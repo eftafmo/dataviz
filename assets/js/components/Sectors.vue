@@ -4,7 +4,7 @@
     class="clearfix"
     :style="{ minHeight: chartWidth + 'px' }"
   >
-    <embeddor tag="sectors" />
+    <embeddor :period="period" tag="sectors" />
     <!-- todo: a better way to preserve container height? -->
     <slot v-if="!embedded" name="title"></slot>
     <dropdown

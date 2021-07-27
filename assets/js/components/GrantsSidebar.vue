@@ -1,6 +1,6 @@
 <template>
   <sidebar :class="classNames" :embedded="embedded">
-    <embeddor tag="sidebar" />
+    <embeddor :period="period" tag="sidebar" />
     <xsummary :initial="dataset" :embedded="embedded"></xsummary>
 
     <tabs cache-lifetime="">

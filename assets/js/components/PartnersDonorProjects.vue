@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor tag="project_partners" />
+    <embeddor :period="period" tag="project_partners" />
     <slot v-if="!embedded" name="title"></slot>
     <table>
       <thead>
