@@ -1,6 +1,4 @@
 <script>
-import * as d3 from "d3";
-
 import StatesBarChart from "./StatesBarChart";
 
 import BeneficiariesBarChartMixin from "./mixins/BeneficiariesBarChart";

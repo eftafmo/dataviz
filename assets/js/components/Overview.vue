@@ -1,5 +1,6 @@
 <template>
   <div :class="classNames">
+    <embeddor tag="overview" />
     <chart-container :width="width" :height="height">
       <svg :viewBox="`0 0 ${width} ${height}`">
         <defs>
@@ -51,8 +52,10 @@ import Chart from "./Chart";
 
 import WithFMsMixin from "./mixins/WithFMs";
 import WithCountriesMixin from "./mixins/WithCountries";
+import Embeddor from "./includes/Embeddor";
 
 export default {
+  components: { Embeddor },
   extends: Chart,
   type: "overview",
 

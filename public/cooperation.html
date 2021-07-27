@@ -1,185 +1,180 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-<!--
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="...">
--->
+<head>
+  <meta charset="utf-8">
+  <!--
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="...">
+  -->
 
-    <title>Test za App</title>
+  <title>Test za App</title>
 
-    <link type="text/css" href="https://data.eeagrants.org/assets/site.d5f187aa.css" rel="stylesheet" />
+  <link type="text/css" href="https://data.eeagrants.org/assets/site.d5f187aa.css" rel="stylesheet"/>
 
-    <script type="module" src="/assets/entry.js"></script>
-    <link rel="stylesheet" type="text/css" href="/main.css">
+  <script type="module" src="/assets/entry.js"></script>
+  <link rel="stylesheet" type="text/css" href="/main.css">
 
-    <style>/*
+  <style>/*
       body {
         background-color: #765;
         color: #d9d0af;
       }
     */</style>
-  </head>
+</head>
 
-  <body class="dataviz">
-  <header class="header sticky">
-    <div class="container">
-      <div class="header-inner">
+<body class="dataviz">
+<header class="header sticky">
+  <div class="container">
+    <div class="header-inner">
 
-        <div class="header-logo">
-          <a href="/">
-            <img src="/assets/imgs/eeaglogo.svg" alt="EEA Grants logo" width="139">
-          </a>
-        </div>
+      <div class="header-logo">
+        <a href="/">
+          <img src="/assets/imgs/eeaglogo.svg" alt="EEA Grants logo" width="139">
+        </a>
+      </div>
 
 
-        <nav class="header-menu">
-          <ul>
-            <li><a href="/grants.html?">Grants</a></li>
-            <li><a href="/partners.html?" class="active">Partners</a></li>
-            <li><a href="/projects.html?">Projects</a></li>
-          </ul>
-        </nav>
-        <form action="/search/organisation/" class="header-search">
+      <nav class="header-menu">
+        <ul>
+          <li><a href="/grants.html?">Grants</a></li>
+          <li><a href="/partners.html?" class="active">Partners</a></li>
+          <li><a href="/projects.html?">Projects</a></li>
+        </ul>
+      </nav>
+      <form action="/search/organisation/" class="header-search">
 
-          <input type="search" placeholder="Search" name="q">
-          <button type="submit" title="Search" name="page" value="1">
-            <span class="icon icon-search"></span>
-          </button>
-        </form>
-        <button type="button" class="header-toggle header-menu-toggle" title="Menu" onclick="Header.toggle('menu')">
-          <span class="icon icon-menu"></span>
+        <input type="search" placeholder="Search" name="q">
+        <button type="submit" title="Search" name="page" value="1">
+          <span class="icon icon-search"></span>
         </button>
-      </div>
-    </div>
-  </header>
-
-
-
-
-  <div id="content" class="page-body">
-      <globalfilters>
-      </globalfilters>
-    <div class="container">
-      <div class="page-body-inner">
-
-
-<main class="main">
-
-
-<h1 class="page-title">Our Partners</h1>
-
-<div class="lg-column">
-
-  <div class="grant-dataviz" id="financial-mechanisms">
-    <mechanisms :initial="dataset">
-      <h2 slot="title">Financial mechanisms <span style="white-space:nowrap;">2009-2014</span></h2>
-    </mechanisms>
-  </div>
-
-  <div class="grant-dataviz" id="priority-sectors">
-    <sectors :initial="dataset">
-      <h2 slot="title">Donor partner programmes by sector</h2>
-    </sectors>
-  </div>
-
-  <div class="grant-dataviz" id="donor-programme-partners">
-    <programme_partners
-        :initial="dataset"
-    >
-      <h2 slot="title">Donor programme partners</h2>
-    </programme_partners>
-  </div>
-
-  <div class="grant-dataviz" id="donor-project-partners">
-    <project_partners
-        :initial="dataset"
-    >
-      <h2 slot="title">Donor project partners</h2>
-    </project_partners>
-  </div>
-
-</div>
-
-
-<div class="lg-column">
-
-  <div class="grant-dataviz" id="network-map">
-    <xmap
-        :initial="dataset"
-    >
-      <h2 slot="title">Network map</h2>
-    </xmap>
-  </div>
-
-  <div class="grant-dataviz" id="donor-states">
-    <donors
-        :initial="dataset"
-    >
-      <h2 slot="title">Partners by donor state</h2>
-    </donors>
-  </div>
-
- <div class="grant-dataviz" id="beneficiary-states">
-    <beneficiaries
-        :initial="dataset"
-    >
-      <h2 slot="title">Organisations with donor partner by beneficiary state</h2>
-    </beneficiaries>
-  </div>
-
-</div>
-
-
-
-
-
-</main>
-
-<aside class="aside">
-
-
-<sidebar class="sticky"
-         :initial="dataset"
-         projects-datasource="/api/projects/"
->
-</sidebar>
-
-
-</aside>
-<!--
-<embeddor :components="vizcomponents"></embeddor>
- -->
-      </div>
+      </form>
+      <button type="button" class="header-toggle header-menu-toggle" title="Menu" onclick="Header.toggle('menu')">
+        <span class="icon icon-menu"></span>
+      </button>
     </div>
   </div>
-  <footer class="footer">
-    <div class="container">
-        <div class="footer-inner">
-          <div class="small muted">
-            <p>EEA Grants - Norway Grants, Financial Mechanism Office, Tel: +32 (0) 2 286 1701, Fax: +32 (0) 2 286 1889, Email: <a href="mailto:info-fmo@efta.int" target="_self">info-fmo@efta.int</a></p>
-            <p>Postal address: 12-16 Rue Joseph II, 1000 Brussels, Belgium, Visiting address: 47-48, Boulevard du Régent 1000 Brussels, Belgium</p>
-            <p>
-                <a href="/disclaimer/" onclick="Footer.popup(event, this)">Disclaimer</a>
-                <a href="http://eeagrants.org/cookies" target="_blank">Cookie policy</a>
-            </p>
+</header>
+
+
+<div id="content" class="page-body">
+  <globalfilters>
+  </globalfilters>
+  <div class="container">
+    <div class="page-body-inner">
+
+
+      <main class="main">
+
+
+        <h1 class="page-title">Our Partners</h1>
+
+        <div class="lg-column">
+
+          <div class="grant-dataviz" id="financial-mechanisms">
+            <mechanisms :initial="dataset">
+              <h2 slot="title">Financial mechanisms <span style="white-space:nowrap;">2009-2014</span></h2>
+            </mechanisms>
           </div>
-        </div>
-      </div>
-  </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      _createApp(
-        Dataviz.Partners,
-        {
-          datasource: "/api/partners.json",
-        },
-      ).mount('#content')
-    })
-  </script>
+          <div class="grant-dataviz" id="priority-sectors">
+            <sectors :initial="dataset">
+              <h2 slot="title">Donor partner programmes by sector</h2>
+            </sectors>
+          </div>
+
+          <div class="grant-dataviz" id="donor-programme-partners">
+            <programme_partners
+                :initial="dataset"
+            >
+              <h2 slot="title">Donor programme partners</h2>
+            </programme_partners>
+          </div>
+
+          <div class="grant-dataviz" id="donor-project-partners">
+            <project_partners
+                :initial="dataset"
+            >
+              <h2 slot="title">Donor project partners</h2>
+            </project_partners>
+          </div>
+
+        </div>
+
+
+        <div class="lg-column">
+
+          <div class="grant-dataviz" id="network-map">
+            <xmap
+                :initial="dataset"
+            >
+              <h2 slot="title">Network map</h2>
+            </xmap>
+          </div>
+
+          <div class="grant-dataviz" id="donor-states">
+            <donors
+                :initial="dataset"
+            >
+              <h2 slot="title">Partners by donor state</h2>
+            </donors>
+          </div>
+
+          <div class="grant-dataviz" id="beneficiary-states">
+            <beneficiaries
+                :initial="dataset"
+            >
+              <h2 slot="title">Organisations with donor partner by beneficiary state</h2>
+            </beneficiaries>
+          </div>
+
+        </div>
+
+
+      </main>
+
+      <aside class="aside">
+
+
+        <sidebar
+            class="sticky"
+            :initial="dataset"
+            projects-datasource="/api/projects/"
+        >
+        </sidebar>
+
+
+      </aside>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="small muted">
+        <p>EEA Grants - Norway Grants, Financial Mechanism Office, Tel: +32 (0) 2 286 1701, Fax: +32 (0) 2 286 1889,
+           Email: <a href="mailto:info-fmo@efta.int" target="_self">info-fmo@efta.int</a></p>
+        <p>Postal address: 12-16 Rue Joseph II, 1000 Brussels, Belgium, Visiting address: 47-48, Boulevard du Régent
+           1000 Brussels, Belgium</p>
+        <p>
+          <a href="/disclaimer/" onclick="Footer.popup(event, this)">Disclaimer</a>
+          <a href="http://eeagrants.org/cookies" target="_blank">Cookie policy</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  _createApp(
+    Dataviz.Partners,
+    {
+      datasource: "/api/partners.json"
+    }
+  ).mount("#content");
+});
+</script>
 
 </body>
 </html>

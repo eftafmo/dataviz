@@ -1,5 +1,6 @@
 <template>
   <div :class="classNames">
+    <embeddor :tag="tag" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="hasData"
@@ -51,100 +52,21 @@
   </div>
 </template>
 
-<style lang="less">
-// defs
-@state_highlight: #e6e6e6;
-
-.dataviz .viz.states {
-  position: relative;
-
-  @media (min-width: 1400px) {
-    max-width: 100%;
-  }
-
-  @media (max-width: 1000px) {
-    max-width: 100%;
-  }
-
-  @media (min-width: 1000px) and (max-width: 1400px) {
-    select {
-      right: -45%;
-    }
-  }
-
-  max-width: 70%;
-
-  svg {
-    width: 100%;
-
-    // NOTE: this influences all inner layout
-    // (the chart is em-based!)
-    font-size: 1.6rem;
-  }
-
-  .legend {
-    .fm {
-      display: inline-block;
-    }
-  }
-
-  .chart {
-    line.domain {
-      stroke: #ccc;
-      shape-rendering: crispEdges;
-      // don't interrupt hovering the items
-      pointer-events: none;
-    }
-
-    // NOTE: if you change the structure of this, you must also change
-    // how legendWidth() is computed
-    .states .state {
-      cursor: pointer;
-      pointer-events: all;
-
-      rect {
-        shape-rendering: crispEdges;
-        stroke: none;
-      }
-
-      rect.bg {
-        fill: none;
-      }
-
-      &:hover {
-        .divs rect.bg {
-          fill: @state_highlight;
-        }
-      }
-
-      text {
-        font-size: 0.8em;
-        font-family: "Arial", "Open sans", sans-serif;
-        text-anchor: end;
-      }
-
-      g.flag {
-        filter: url("#drop-shadow");
-      }
-    }
-  }
-}
-</style>
-
 <script>
 import * as d3 from "d3";
 import d3tip from "d3-tip";
-import { slugify } from "@js/lib/util";
 
 import Chart from "./Chart";
 
-import WithCountriesMixin, { get_flag_name } from "./mixins/WithCountries";
+import WithCountriesMixin from "./mixins/WithCountries";
 import WithTooltipMixin from "./mixins/WithTooltip";
 
 import Legend from "./includes/Legend";
+import Embeddor from "./includes/Embeddor";
 
 export default {
   components: {
+    Embeddor,
     "chart-legend": Legend,
   },
   extends: Chart,
@@ -154,6 +76,7 @@ export default {
 
   data() {
     return {
+      tag: "beneficiaries",
       state_type: undefined, // children must define this (beneficiary / donor)
       //div_types: undefined, // required, an array of dictionaries with {id, colour}
 
@@ -723,3 +646,83 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+// defs
+@state_highlight: #e6e6e6;
+
+.dataviz .viz.states {
+  position: relative;
+
+  @media (min-width: 1400px) {
+    max-width: 100%;
+  }
+
+  @media (max-width: 1000px) {
+    max-width: 100%;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1400px) {
+    select {
+      right: -45%;
+    }
+  }
+
+  max-width: 70%;
+
+  svg {
+    width: 100%;
+
+    // NOTE: this influences all inner layout
+    // (the chart is em-based!)
+    font-size: 1.6rem;
+  }
+
+  .legend {
+    .fm {
+      display: inline-block;
+    }
+  }
+
+  .chart {
+    line.domain {
+      stroke: #ccc;
+      shape-rendering: crispEdges;
+      // don't interrupt hovering the items
+      pointer-events: none;
+    }
+
+    // NOTE: if you change the structure of this, you must also change
+    // how legendWidth() is computed
+    .states .state {
+      cursor: pointer;
+      pointer-events: all;
+
+      rect {
+        shape-rendering: crispEdges;
+        stroke: none;
+      }
+
+      rect.bg {
+        fill: none;
+      }
+
+      &:hover {
+        .divs rect.bg {
+          fill: @state_highlight;
+        }
+      }
+
+      text {
+        font-size: 0.8em;
+        font-family: "Arial", "Open sans", sans-serif;
+        text-anchor: end;
+      }
+
+      g.flag {
+        filter: url("#drop-shadow");
+      }
+    }
+  }
+}
+</style>

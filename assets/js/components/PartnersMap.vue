@@ -1,5 +1,6 @@
 <template>
   <div :class="classNames">
+    <embeddor tag="xmap" />
     <slot v-if="!embedded" name="title"></slot>
 
     <div class="selector">
@@ -151,8 +152,10 @@ import BaseMap from "./BaseMap";
 import PartnersMixin from "./mixins/Partners";
 import WithFMsMixin from "./mixins/WithFMs";
 import WithCountriesMixin from "./mixins/WithCountries";
+import Embeddor from "./includes/Embeddor";
 
 export default {
+  components: { Embeddor },
   extends: BaseMap,
   mixins: [PartnersMixin, WithFMsMixin, WithCountriesMixin],
 

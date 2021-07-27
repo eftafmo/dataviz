@@ -1,5 +1,6 @@
 <template>
   <div v-if="hasData && aggregated.allocation" class="overview-results">
+    <embeddor tag="overview_results" />
     <div class="overview-heading">
       <span class="muted">The</span>
       <dropdown-filter
@@ -37,9 +38,10 @@ import Component from "./Component";
 import WithFMsMixin from "./mixins/WithFMs";
 import WithCountriesMixin from "./mixins/WithCountries";
 import DropdownFilter from "./includes/DropdownFilter";
+import Embeddor from "./includes/Embeddor";
 
 export default {
-  components: { DropdownFilter },
+  components: { Embeddor, DropdownFilter },
   extends: Component,
   type: "overview",
   mixins: [WithFMsMixin, WithCountriesMixin],

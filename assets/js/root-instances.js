@@ -35,9 +35,6 @@ export const Grants = {
     sectors: components.Sectors,
     xmap: components.GrantsMap,
     beneficiaries: components.Beneficiaries,
-    xsummary: components.Summary,
-    programmes: components.Programmes,
-    results: components.Results,
     sidebar: components.GrantsSidebar,
   },
 };
@@ -52,12 +49,8 @@ export const Partners = {
     xmap: components.PartnersMap,
     donors: components.PartnersDonors,
     beneficiaries: components.PartnersBeneficiaries,
-    news: components.PartnersNews,
     programme_partners: components.PartnersDonorProgrammes,
     project_partners: components.PartnersDonorProjects,
-    xsummary: components.PartnersSummary,
-    results: components.PartnersResults,
-    projects: components.PartnersProjects,
     sidebar: components.PartnersSidebar,
   },
 };
@@ -71,9 +64,6 @@ export const Projects = {
     sectors: components.ProjectsSectors,
     xmap: components.ProjectsMap,
     beneficiaries: components.ProjectsBeneficiaries,
-    xsummary: components.ProjectsSummary,
-    news: components.ProjectsNews,
-    projects: components.Projects,
     sidebar: components.ProjectsSidebar,
   },
 };
