@@ -1,7 +1,7 @@
-import "./css/main.less"
+import "./css/main.less";
 
-import './js/header.js'
-import './js/footer.js'
+import "./js/header.js";
+import "./js/footer.js";
 
 //import * as search from './js/search.js'
 

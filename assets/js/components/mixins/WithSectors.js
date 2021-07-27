@@ -1,10 +1,10 @@
-import {slugify} from '@js/lib/util';
-import _SECTORS from '@js/constants/priority-sectors.json5';
+import { slugify } from "@js/lib/util";
+import _SECTORS from "@js/constants/priority-sectors.json5";
 
 const SECTORS = {};
 for (const sector of _SECTORS) {
-  const sid = slugify(sector.name)
-  SECTORS[sid] = Object.assign({id: sid}, sector);
+  const sid = slugify(sector.name);
+  SECTORS[sid] = Object.assign({ id: sid }, sector);
 }
 
 /* !!! TODO !!!
@@ -21,8 +21,7 @@ export default {
   },
 
   data() {
-    return {
-    };
+    return {};
   },
 
   methods: {

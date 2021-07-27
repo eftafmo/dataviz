@@ -1,11 +1,9 @@
-import FMLegendComponent from '../includes/FMLegend';
-import FMS from '@js/constants/financial-mechanisms.json5';
-
+import FMLegendComponent from "../includes/FMLegend";
+import FMS from "@js/constants/financial-mechanisms.json5";
 
 export function fmcolour(fmid) {
   return FMS[fmid].colour;
 }
-
 
 export default {
   beforeCreate() {
@@ -13,7 +11,7 @@ export default {
   },
 
   components: {
-    'fm-legend': FMLegendComponent,
+    "fm-legend": FMLegendComponent,
   },
 
   computed: {
@@ -27,14 +25,11 @@ export default {
     fmcolour,
 
     getFilterClassFm(fm) {
-      if (!this.filters.fm)
-        return;
+      if (!this.filters.fm) return;
 
-      if (this.isSelectedFm(fm))
-        return "selected";
+      if (this.isSelectedFm(fm)) return "selected";
 
-      if (this.isDisabledFm(fm))
-        return "disabled";
+      if (this.isDisabledFm(fm)) return "disabled";
     },
 
     isSelectedFm(fm) {
@@ -51,8 +46,7 @@ export default {
       if (fm.value == 0) return;
 
       const fmname = fm.name;
-      this.filters.fm = this.filters.fm == fmname ?
-                        null : fmname;
+      this.filters.fm = this.filters.fm == fmname ? null : fmname;
     },
   },
 };
