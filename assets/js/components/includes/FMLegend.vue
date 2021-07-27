@@ -6,6 +6,7 @@
   <ul class="fms">
     <li
       v-for="fm in fms"
+      :key="fm.id"
       class="fm"
       :class="[fm.id, getFilterClassFm(fm), { zero: fm.allocation == 0 }]"
       @click="toggleFm(fm, $event.target)"
@@ -20,8 +21,12 @@
 
 <script>
 export default {
-  props: ["fms"],
-
+  props: {
+    fms: {
+      type: Array,
+      required: true,
+    },
+  },
   methods: {
     _findAncestorProperty(name) {
       let current = this,

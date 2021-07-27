@@ -31,15 +31,14 @@
 
     <map-base
       ref="map"
-      :origin="origin"
-      :all_levels="[3]"
+      :all-levels="[3]"
       :fillfunc="fillfunc"
       :zoomable="false"
       @rendered="handleMapRendered"
       @regions-rendered="registerEvents"
     >
       <g class="partnerships">
-        <g v-for="layer in layers" :class="layer" class="base"></g>
+        <g v-for="layer in layers" :key="layer" :class="layer" class="base"></g>
       </g>
     </map-base>
   </div>

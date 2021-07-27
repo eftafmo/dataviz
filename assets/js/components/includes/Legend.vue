@@ -5,19 +5,20 @@
     <ul :class="{ active: clickFunc }">
       <li
         v-for="item in items"
+        :key="item.id"
         :class="{
           selected: item.selected,
           disabled: item.disabled,
-          zero: item.value == 0,
+          zero: item.value === 0,
         }"
         @click="clickFunc && clickFunc(item, $event.target)"
       >
         <slot name="item" :item="item">
           <span class="fill" :style="{ backgroundColor: item.colour }"></span>
           {{ item.name }}
-          <sup v-if="showValues && item.value !== undefined" class="value">{{
-            format(item.value)
-          }}</sup>
+          <sup v-if="showValues && item.value !== undefined" class="value">
+            {{ format(item.value) }}
+          </sup>
         </slot>
       </li>
     </ul>
@@ -39,10 +40,12 @@ export default {
     clickFunc: {
       // if provided, the legend is clickable
       type: Function,
+      default: null,
     },
 
     formatFunc: {
       type: Function,
+      default: null,
     },
 
     showValues: {
@@ -54,6 +57,7 @@ export default {
       // what this legend deals with.
       // considered a confirmation to show the things count.
       type: String,
+      default: null,
     },
   },
 

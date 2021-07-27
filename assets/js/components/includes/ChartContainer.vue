@@ -20,8 +20,14 @@
 <script>
 export default {
   props: {
-    width: Number,
-    height: Number,
+    width: {
+      type: Number,
+      required: true,
+    },
+    height: {
+      type: Number,
+      required: true,
+    },
   },
 };
 </script>

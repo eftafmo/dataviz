@@ -47,10 +47,10 @@ import {
 } from "../mixins/WithCountries";
 
 import ChartContainer from "./ChartContainer";
+import Base from "../Base";
 
-// TODO: pass these through webpack maybe?
-const LAYERS_URL = "/assets/data/layers.topojson";
-const REGIONS_URL = "/assets/data/nuts2006.topojson";
+const LAYERS_URL = "data/layers.topojson";
+const REGIONS_URL = "data/nuts2006.topojson";
 
 function _mk_topo_funcs(data) {
   const layers = data.objects;
@@ -67,30 +67,25 @@ function _mk_topo_funcs(data) {
 }
 
 export default {
-  mixins: [BaseMixin, ChartMixin, WithCountriesMixin],
-
+  extends: Base,
+  mixins: [ChartMixin, WithCountriesMixin],
   props: {
-    origin: {
-      type: String,
-      default: "",
-    },
-
     // a combination of states / levels that should be rendered by default.
     // must be an array of {states, levels} objects.
     // a missing key will cause all_states / all_levels to get rendered
-    initial_regions: {
+    initialRegions: {
       type: Array,
       default: () => [{}],
     },
 
     // all states used by this. set it to discard unused data.
-    all_states: {
+    allStates: {
       type: Array,
       default: () => Object.keys(COUNTRIES).filter((x) => x != "Intl"),
     },
 
     // all nuts levels used by this. set it to discard unused data.
-    all_levels: {
+    allLevels: {
       type: Array,
       default: () => [0, 1, 2, 3],
     },
@@ -110,6 +105,7 @@ export default {
       default: true,
     },
   },
+  emits: ["rendered", "base-rendered", "regions-rendered"],
 
   data() {
     return {
@@ -134,10 +130,10 @@ export default {
 
   computed: {
     LAYERS_URL() {
-      return this.origin + LAYERS_URL;
+      return this.getAssetUrl(LAYERS_URL);
     },
     REGIONS_URL() {
-      return this.origin + REGIONS_URL;
+      return this.getAssetUrl(REGIONS_URL);
     },
 
     rendered() {
@@ -216,7 +212,7 @@ export default {
     });
 
     const _regions_unwatch = this.$watch("can_render_regions", (v) => {
-      for (const x of this.initial_regions) {
+      for (const x of this.initialRegions) {
         this.renderRegions(x.states, x.levels);
       }
       _regions_unwatch();
@@ -240,7 +236,7 @@ export default {
       response.json().then((data) => {
         // discard unused level data
         Object.keys(data.objects)
-          .filter((x) => this.all_levels.indexOf(Number(x.substr(-1))) === -1)
+          .filter((x) => this.allLevels.indexOf(Number(x.substr(-1))) === -1)
           .forEach((x) => delete data.objects[x]);
 
         this.geodata.regions = data;
@@ -436,9 +432,9 @@ export default {
       }
 
       if (typeof regions === "string") regions = [regions];
-      else if (!regions || regions.length === 0) regions = this.all_states;
+      else if (!regions || regions.length === 0) regions = this.allStates;
       if (typeof levels === "number") levels = [levels];
-      else if (!levels || levels.length === 0) levels = this.all_levels;
+      else if (!levels || levels.length === 0) levels = this.allLevels;
 
       // skip everything already rendered
       // (the simpleton version: look only at the arguments)
@@ -478,8 +474,8 @@ export default {
           if (regions.map((x) => x.substr(0, 2)).indexOf(state) === -1) {
             // clean up stuff that's never gonna be needed
             if (
-              regions === this.all_states ||
-              this.all_states.indexOf(state) === -1
+              regions === this.allStates ||
+              this.allStates.indexOf(state) === -1
             )
               _gc.push(i);
 

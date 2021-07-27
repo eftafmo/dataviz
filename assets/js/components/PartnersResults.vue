@@ -1,6 +1,10 @@
 <template>
   <div :class="classNames">
-    <dl v-for="item in data" class="partner-result clearfix">
+    <dl
+      v-for="item in data"
+      :key="item.indicator"
+      class="partner-result clearfix"
+    >
       <dt class="partner-result-achievement">
         {{ number(item.achievement) }}{{ item.unit }}
       </dt>

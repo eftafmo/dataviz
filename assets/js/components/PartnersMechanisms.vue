@@ -1,6 +1,9 @@
 <template>
   <fms :datasource="datasource" :initial="initial" :period="period">
     <template #title><slot name="title"></slot></template>
+    <template #legend="x">
+      <fm-legend :fms="x && x.data"></fm-legend>
+    </template>
   </fms>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <ul :class="classNames">
-    <li v-for="news in data" class="content-item news_content">
+    <li v-for="news in data" :key="news.link" class="content-item news_content">
       <a class="body clearfix" :href="`${news.link}`" target="_blank">
         <img :src="`${news.image}`" />
         <div :class="{ no_img: !news.image }" class="pull-right news_text">

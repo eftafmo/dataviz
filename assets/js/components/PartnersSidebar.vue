@@ -48,7 +48,10 @@ export default {
   },
   extends: BaseSidebar,
   props: {
-    projectsDatasource: String,
+    projectsDatasource: {
+      type: String,
+      default: null,
+    },
   },
 };
 </script>

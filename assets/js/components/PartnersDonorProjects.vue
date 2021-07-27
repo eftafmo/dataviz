@@ -4,13 +4,15 @@
     <slot v-if="!embedded" name="title"></slot>
     <table>
       <thead>
-        <th>Donor state</th>
-        <th>Organisations</th>
-        <th>Countries</th>
-        <th>Programmes</th>
-        <th>Projects</th>
+        <tr>
+          <th>Donor state</th>
+          <th>Organisations</th>
+          <th>Countries</th>
+          <th>Programmes</th>
+          <th>Projects</th>
+        </tr>
       </thead>
-      <tbody v-for="item in data">
+      <tbody v-for="item in data" :key="item.donor">
         <tr class="section_header" @click="show_items($event)">
           <td>{{ get_country_name(item.donor) }}</td>
           <td>{{ item.organizations.length }}</td>
@@ -18,12 +20,16 @@
           <td>{{ item.programmes.size }}</td>
           <td>{{ item.projects.size }}</td>
         </tr>
-        <tr v-for="organizations in item.organizations" class="section_item">
-          <td colspan="2">{{ organizations.name }}</td>
+        <tr
+          v-for="organization in item.organizations"
+          :key="organization.id"
+          class="section_item"
+        >
+          <td colspan="2">{{ organization.name }}</td>
           <!-- <td>  </td> -->
-          <td>{{ organizations.countries.size }}</td>
-          <td>{{ organizations.programmes.size }}</td>
-          <td>{{ organizations.projects }}</td>
+          <td>{{ organization.countries.size }}</td>
+          <td>{{ organization.programmes.size }}</td>
+          <td>{{ organization.projects }}</td>
         </tr>
       </tbody>
     </table>
@@ -77,6 +83,7 @@ export default {
           let org = item.organizations[org_id];
           if (org == undefined) {
             org = item.organizations[org_id] = {
+              id: org_id,
               countries: new Set(),
               programmes: new Set(),
               projects: 0,

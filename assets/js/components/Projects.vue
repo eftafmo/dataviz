@@ -1,6 +1,6 @@
 <template>
   <programmes :datasource="datasource" :initial="initial" class="projects">
-    <template slot="programme-content" slot-scope="x">
+    <template #programme-content="x">
       <projects
         :id="x.programme.programme_code"
         :details-datasource="detailsDatasource"
@@ -29,7 +29,10 @@ export default {
   mixins: [ProjectsMixin],
 
   props: {
-    detailsDatasource: String,
+    detailsDatasource: {
+      type: String,
+      default: null,
+    },
   },
 
   data() {

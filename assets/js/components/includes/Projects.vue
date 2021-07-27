@@ -1,16 +1,22 @@
 <template>
   <div class="projects">
     <div class="programme-item-header" @click="getProjects">{{ name }}</div>
-    <div v-if="posts.length != 0" class="programme-sublist-wrapper">
-      <small class="programme-sublist-header"
-        >{{ sector }} ({{ posts.count }}
-        {{ pluralize("project", posts.count) }})</small
-      >
+    <div
+      v-if="posts && posts.results && posts.results.length !== 0"
+      class="programme-sublist-wrapper"
+    >
+      <small class="programme-sublist-header">
+        {{ sector }} ({{ posts.count }} {{ pluralize("project", posts.count) }})
+      </small>
       <ul class="programme-sublist">
-        <li v-for="value of posts.results" class="programme-sublist-item">
-          <a v-if="value.url" :href="value.url" target="_blank">{{
-            value.name
-          }}</a>
+        <li
+          v-for="value of posts.results"
+          :key="value.code"
+          class="programme-sublist-item"
+        >
+          <a v-if="value.url" :href="value.url" target="_blank">
+            {{ value.name }}
+          </a>
           <span v-if="!value.url">{{ value.name }}</span>
         </li>
       </ul>
@@ -31,12 +37,12 @@ export default {
   mixins: [WithFiltersMixin, ComponentMixin],
 
   props: {
-    detailsDatasource: String,
-    id: String,
-    country: String,
-    sector: String,
-    name: String,
-    extra: String,
+    detailsDatasource: { type: String, default: null },
+    id: { type: String, default: null },
+    country: { type: String, default: null },
+    sector: { type: String, default: null },
+    name: { type: String, default: null },
+    extra: { type: String, default: null },
   },
 
   data() {
@@ -48,6 +54,7 @@ export default {
 
   computed: {
     show_more_count() {
+      if (!this.posts || !this.posts.results) return 0;
       const count = this.posts.count - this.posts.results.length;
       return count < 10 ? count : 10;
     },
@@ -66,11 +73,12 @@ export default {
 
   methods: {
     getProjects() {
+      // TODO: this is not working correctly, posts are now displayed.
       let target = this.$el.querySelector(".programme-item-header");
       target.classList.add("spinning");
       target.classList.toggle("active");
 
-      if (this.posts.length == 0) {
+      if (!this.posts || this.posts.results.length === 0) {
         let url = `${this.detailsDatasource}?beneficiary=${this.country}&programme=${this.id}`;
         if (this.filters.donor) {
           url = url + "&donor=" + this.filters.donor;

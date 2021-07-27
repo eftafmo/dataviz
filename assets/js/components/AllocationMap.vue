@@ -13,16 +13,15 @@
 
     <map-base
       ref="map"
-      :origin="origin"
-      :initial_regions="initial_regions"
-      :all_states="all_states"
-      :all_levels="all_nuts_levels"
+      :initial-regions="initial_regions"
+      :all-states="all_states"
+      :all-levels="all_nuts_levels"
       :fillfunc="fillfunc"
       :opacityfunc="opacityfunc"
       @rendered="handleMapRendered"
       @regions-rendered="registerEvents"
     >
-      <template slot="after-map">
+      <template #after-map>
         <region-details :region="current_region_data"></region-details>
 
         <transition appear name="fade">
@@ -106,7 +105,10 @@ const AllocationMap = {
   props: {
     // this is a "template" with the string 'XX' meant to be replaced
     // with the country code
-    detailsDatasource: String,
+    detailsDatasource: {
+      type: String,
+      default: true,
+    },
   },
 
   data() {

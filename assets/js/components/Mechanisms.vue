@@ -14,7 +14,7 @@
     <div v-if="hasData" class="legend">
       <slot name="legend" :data="data">
         <fm-legend :fms="data" class="clearfix">
-          <template slot="fm-content" slot-scope="x">
+          <template #fm-content="x">
             <span class="value" :style="{ color: x.fm.colour }">{{
               currency(x.fm.allocation || 0)
             }}</span>

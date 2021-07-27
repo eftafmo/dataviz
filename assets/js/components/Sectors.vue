@@ -180,7 +180,7 @@ export default {
       let sectortree = this._sectortree;
       if (sectortree === null) {
         // pre-generate the tree, without any allocation data
-        sectortree = this._sectortree = Object.assign({}, this.SECTORS);
+        sectortree = Object.assign({}, this.SECTORS);
 
         for (const d of this.dataset) {
           const s = d.sector,

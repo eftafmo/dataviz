@@ -124,6 +124,7 @@ export default {
       let padding = _padding();
       // we really, really want this to be an int
       while (parseInt(padding) != padding) {
+        // TODO: The component state MUST NEVER be modified while computing a property!
         // uh'oh. use some brute force
         this.layout.itemHeight =
           (Math.ceil(padding) * 2 + this.barHeight) / this.fontSize;
@@ -161,6 +162,7 @@ export default {
     height() {
       // only resize the chart if there's not enough drawing room
       // (prevents the footer from dancing around during filtering)
+      // TODO: The component state MUST NEVER be modified while computing a property!
       this._height = Math.max(this._height, this.itemsHeight);
       return this._height;
     },
@@ -191,11 +193,6 @@ export default {
       // add a tiny bit of leeway, because custom font might not load so fast
       return txtwidth * 1.1 + this.flagBoundingWidth;
     },
-
-    types() {
-      throw new Error("Not implemented");
-    },
-
     x() {
       return d3
         .scaleLinear()

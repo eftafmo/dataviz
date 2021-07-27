@@ -54,18 +54,14 @@ export default {
   mixins: [WithRegionsMixin, WithTooltipMixin],
 
   data() {
-    let origin = "";
     if (this.datasource) {
       const host = this.datasource.replace(
         /^(https?:)?\/\/([^\/]+)\/.*$/,
         "$2"
       );
-      origin = location.protocol + "//" + host;
     }
 
     return {
-      origin: origin,
-
       beneficiary_colour: "rgba(221, 221, 221, 1)",
       beneficiary_colour_zero: "rgba(238, 238, 238, 1)",
       region_colour: "rgba(221, 221, 221, 0.5)",
@@ -127,9 +123,7 @@ export default {
         .on("mouseleave", this.mouseleavefunc);
     },
 
-    clickfunc(ev, d) {
-      return;
-    },
+    clickfunc(ev, d) {},
 
     mouseenterfunc(ev, d) {
       return this._domouse(true, ev, d);

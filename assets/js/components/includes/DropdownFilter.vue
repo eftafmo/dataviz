@@ -4,7 +4,8 @@
       {{ title }}
     </option>
     <option
-      v-for="(item, id, index) in items"
+      v-for="item in items"
+      :key="item.id"
       :value="getFilterName(item)"
       :selected="getFilterName(item) == current"
     >
@@ -21,11 +22,17 @@ export default {
 
   props: {
     items: {
-      id: String,
-      name: String,
+      type: Object,
+      required: true,
     },
-    title: String,
-    filter: String,
+    title: {
+      type: String,
+      required: true,
+    },
+    filter: {
+      type: String,
+      required: true,
+    },
   },
 
   computed: {

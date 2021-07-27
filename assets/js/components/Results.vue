@@ -1,15 +1,16 @@
 <template>
-  <ul :class="classNames">
-    <div v-for="items in data">
-      <li v-for="(sectors, outcome) in items">
+  <div :class="classNames">
+    <ul v-for="(items, index) in data" :key="index">
+      <li v-for="(sectors, outcome) in items" :key="outcome">
         <div class="content-item results_content">
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
-            <div v-for="(indicators, sector) in sectors">
+            <div v-for="(indicators, sector) in sectors" :key="sector">
               <small v-show="!filters.sector">{{ sector }}</small>
               <ul class="indicators">
                 <li
                   v-for="(value, indicator) in indicators"
+                  :key="indicator"
                   class="indicator clearfix"
                   :style="{ borderColor: sectorcolour(sector) }"
                 >
@@ -21,8 +22,8 @@
           </div>
         </div>
       </li>
-    </div>
-  </ul>
+    </ul>
+  </div>
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template>
   <ul :class="classNames">
-    <li v-for="beneficiary in data.beneficiaries">
+    <li v-for="beneficiary in data.beneficiaries" :key="beneficiary.id">
       <div class="content-item programmes_content">
         <div class="body">
           <div class="title-wrapper" @click="toggleContent($event)">
@@ -13,6 +13,7 @@
           <ul class="programme-list" :class="[{ active: filters.beneficiary }]">
             <li
               v-for="programme in beneficiary.programmes"
+              :key="programme.programme_code"
               class="programme-item"
             >
               <slot

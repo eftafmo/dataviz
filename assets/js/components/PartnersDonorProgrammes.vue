@@ -10,12 +10,14 @@
     ></dropdown>
     <table>
       <thead>
-        <th>Donor state</th>
-        <th>Organisations</th>
-        <th>Countries</th>
-        <th>Programmes</th>
+        <tr>
+          <th>Donor state</th>
+          <th>Organisations</th>
+          <th>Countries</th>
+          <th>Programmes</th>
+        </tr>
       </thead>
-      <tbody v-for="item in data">
+      <tbody v-for="item in data" :key="item.donor">
         <tr class="section_header" @click="show_items($event)">
           <td>{{ get_country_name(item.donor) }}</td>
           <td>{{ item.organizations.length }}</td>
@@ -24,6 +26,7 @@
         </tr>
         <tr
           v-for="organization in item.organizations"
+          :key="organization.name"
           class="section_item"
           :class="{ active_filter: filters.DPP == organization.name }"
           @click="toggleDPP($event, organization.name)"
