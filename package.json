@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "run-s lint:css lint:js",
-    "lint:js": "eslint --fix assets/",
+    "lint:js": "eslint --fix \"assets/**/*.js\" \"assets/**/*.vue\"",
     "lint:css": "prettier --write -c assets/css/",
     "build": "vite build",
     "serve": "vite preview"
