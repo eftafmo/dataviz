@@ -15,7 +15,7 @@ RUN runDeps="curl gnupg" \
 
 WORKDIR $APP_HOME
 ADD package.json package-lock.json postcss.config.js ./
-RUN npm install
+RUN npm install --no-optional
 ADD . $APP_HOME
 RUN NODE_ENV=production npm run build
 
