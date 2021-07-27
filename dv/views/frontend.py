@@ -547,7 +547,7 @@ class EmbedComponent(TemplateView):
         if settings.DEBUG:
             origin = "http://localhost:3000"
         else:
-            origin = f"{self.request.scheme}/{self.request.get_host()}"
+            origin = f"{self.request.scheme}://{self.request.get_host()}"
 
         for name, asset in assets.items():
             if settings.DEBUG:
