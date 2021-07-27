@@ -73,6 +73,9 @@ export function pluralize(str, value, suffix) {
   return str + suffix;
 }
 
-export function getAssetUrl(path) {
-  return new URL(`/assets/${path}`, import.meta.url).href;
+export function getAssetUrl(path, origin = null) {
+  return new URL(
+    `/assets/${path}`,
+    origin || (import.meta && import.meta.url) || window.location.origin
+  ).href;
 }

@@ -544,12 +544,16 @@ class EmbedComponent(TemplateView):
         jsfiles = []
         cssfiles = []
         assets = load_manifest()
+        if settings.DEBUG:
+            origin = "http://localhost:3000"
+        else:
+            origin = f"{self.request.scheme}/{self.request.get_host()}"
 
         for name, asset in assets.items():
             if settings.DEBUG:
-                url = f"//localhost:3000/{name}"
+                url = f"{origin}/{name}"
             else:
-                url = f"//{self.request.get_host()}/{asset}"
+                url = f"{origin}/{asset}"
 
             if name.endswith(".js"):
                 jsfiles.append(url)
@@ -559,6 +563,7 @@ class EmbedComponent(TemplateView):
         props = {
             "datasource": self.request.build_absolute_uri(reverse("api:" + scenario)),
             "period": period,
+            "origin": origin,
         }
 
         # this is ugly, nasty and not nice
