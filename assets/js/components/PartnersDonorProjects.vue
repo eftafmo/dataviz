@@ -30,6 +30,97 @@
   </div>
 </template>
 
+<script>
+import * as d3 from "d3";
+import Component from "./Component";
+import PartnersMixin from "./mixins/Partners";
+import CountriesMixin from "./mixins/WithCountries";
+import Embeddor from "./includes/Embeddor";
+
+export default {
+  components: { Embeddor },
+  extends: Component,
+  type: "donor-projects",
+
+  mixins: [PartnersMixin, CountriesMixin],
+
+  data() {
+    return {};
+  },
+
+  computed: {
+    data() {
+      if (!this.hasData) return [];
+
+      const dataset = this.filtered;
+      const out = {};
+
+      for (let d of dataset) {
+        // only count rows having donor project partners
+        if (Object.keys(d.PJDPP).length == 0) continue;
+        let item = out[d.donor];
+        if (item === undefined) {
+          item = out[d.donor] = {
+            donor: d.donor,
+            countries: new Set(),
+            programmes: new Set(),
+            projects: new Set(),
+            organizations: {},
+          };
+        }
+        item.countries.add(d.beneficiary);
+        item.programmes.add(d.programme);
+        for (const prj_code in d.projects) {
+          item.projects.add(prj_code);
+        }
+        for (let org_id in d.PJDPP) {
+          let org = item.organizations[org_id];
+          if (org == undefined) {
+            org = item.organizations[org_id] = {
+              countries: new Set(),
+              programmes: new Set(),
+              projects: 0,
+              name: d.PJDPP[org_id]["name"],
+            };
+          }
+          org.countries.add(d.beneficiary);
+          org.programmes.add(d.programme);
+          org.projects += d.PJDPP[org_id]["prj"];
+        }
+      }
+
+      const donors = [];
+      for (let donor in out) {
+        // convert main dict to array
+        const orgs = [];
+        for (let org_id in out[donor].organizations) {
+          // convert organisations dict to array and sort
+          orgs.push(out[donor].organizations[org_id]);
+        }
+        out[donor].organizations = orgs;
+        orgs.sort((a, b) => d3.ascending(a.name, b.name));
+        donors.push(out[donor]);
+      }
+      const $this = this;
+      donors.sort((a, b) =>
+        d3.ascending(
+          $this.get_sort_order(a.donor),
+          $this.get_sort_order(b.donor)
+        )
+      );
+      return donors;
+    },
+  },
+
+  methods: {
+    show_items(e) {
+      let target = e.target.parentNode.parentNode;
+      target.classList.toggle("active");
+    },
+  },
+};
+</script>
+
 <style lang="less">
 .dataviz .viz.donor-projects {
   width: 100%;
@@ -129,94 +220,3 @@
   }
 }
 </style>
-
-<script>
-import * as d3 from "d3";
-import Component from "./Component";
-import PartnersMixin from "./mixins/Partners";
-import CountriesMixin from "./mixins/WithCountries";
-import Embeddor from "./includes/Embeddor";
-
-export default {
-  components: { Embeddor },
-  extends: Component,
-  type: "donor-projects",
-
-  mixins: [PartnersMixin, CountriesMixin],
-
-  data() {
-    return {};
-  },
-
-  computed: {
-    data() {
-      if (!this.hasData) return [];
-
-      const dataset = this.filtered;
-      const out = {};
-
-      for (let d of dataset) {
-        // only count rows having donor project partners
-        if (Object.keys(d.PJDPP).length == 0) continue;
-        let item = out[d.donor];
-        if (item === undefined) {
-          item = out[d.donor] = {
-            donor: d.donor,
-            countries: new Set(),
-            programmes: new Set(),
-            projects: new Set(),
-            organizations: {},
-          };
-        }
-        item.countries.add(d.beneficiary);
-        item.programmes.add(d.programme);
-        for (const prj_code in d.projects) {
-          item.projects.add(prj_code);
-        }
-        for (let org_id in d.PJDPP) {
-          let org = item.organizations[org_id];
-          if (org == undefined) {
-            org = item.organizations[org_id] = {
-              countries: new Set(),
-              programmes: new Set(),
-              projects: 0,
-              name: d.PJDPP[org_id]["name"],
-            };
-          }
-          org.countries.add(d.beneficiary);
-          org.programmes.add(d.programme);
-          org.projects += d.PJDPP[org_id]["prj"];
-        }
-      }
-
-      const donors = [];
-      for (let donor in out) {
-        // convert main dict to array
-        const orgs = [];
-        for (let org_id in out[donor].organizations) {
-          // convert organisations dict to array and sort
-          orgs.push(out[donor].organizations[org_id]);
-        }
-        out[donor].organizations = orgs;
-        orgs.sort((a, b) => d3.ascending(a.name, b.name));
-        donors.push(out[donor]);
-      }
-      const $this = this;
-      donors.sort((a, b) =>
-        d3.ascending(
-          $this.get_sort_order(a.donor),
-          $this.get_sort_order(b.donor)
-        )
-      );
-      return donors;
-    },
-  },
-
-  methods: {
-    show_items(e) {
-      let target = e.target.parentNode.parentNode;
-      target.classList.toggle("active");
-    },
-  },
-};
-</script>

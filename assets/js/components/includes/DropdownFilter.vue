@@ -4,61 +4,20 @@
       {{ title }}
     </option>
     <option
-        v-for="(item, id, index) in items"
-        :value="getFilterName(item)"
-        :selected="getFilterName(item) == current"
+      v-for="(item, id, index) in items"
+      :value="getFilterName(item)"
+      :selected="getFilterName(item) == current"
     >
-      {{item.name}}
+      {{ item.name }}
     </option>
   </select>
 </template>
 
-<style lang="less">
-@import "@css/style";
-
-.dataviz .viz-select {
-    border-color: @bg_color;
-    background: @bg_color;
-    color: #aaa;
-    font-family: inherit;
-    max-width: 100%;
-    margin-bottom: 2rem!important;
-    &:focus {
-      outline: none;
-    }
-    option {
-      color: black;
-    }
-    @media(min-width: 780px) and (max-width: 1000px){
-      width: 100%;
-    }
-}
-
-  .dropdown {
-    @media (max-width: 950px) {
-      width: 100%;
-    }
-  }
-
-body.dark.dataviz .viz-select {
-  border-color: @dark_bg_color;
-  background: @dark_bg_color;
-  color: #555;
-
-  option {
-    color: white;
-  }
-}
-
-</style>
-
 <script>
-import WithFiltersMixin from '../mixins/WithFilters'
+import WithFiltersMixin from "../mixins/WithFilters";
 
 export default {
-  mixins: [
-    WithFiltersMixin,
-  ],
+  mixins: [WithFiltersMixin],
 
   props: {
     items: {
@@ -69,7 +28,7 @@ export default {
     filter: String,
   },
 
-  computed : {
+  computed: {
     current() {
       return this.filters[this.filter];
     },
@@ -81,17 +40,53 @@ export default {
       this.filters[this.filter] = select.value || null;
     },
 
-    getFilterName(item){
+    getFilterName(item) {
       // special case for country filters
-      if (this.filter == 'beneficiary' || this.filter == 'donor'){
-        return item.id
-      }
-      else {
-        return item.name
+      if (this.filter == "beneficiary" || this.filter == "donor") {
+        return item.id;
+      } else {
+        return item.name;
       }
     },
-
   },
+};
+</script>
+
+<style lang="less">
+@import "@css/style";
+
+.dataviz .viz-select {
+  border-color: @bg_color;
+  background: @bg_color;
+  color: #aaa;
+  font-family: inherit;
+  max-width: 100%;
+  margin-bottom: 2rem !important;
+  &:focus {
+    outline: none;
+  }
+  option {
+    color: black;
+  }
+  @media (min-width: 780px) and (max-width: 1000px) {
+    width: 100%;
+  }
 }
 
-</script>
+.dropdown {
+  @media (max-width: 950px) {
+    width: 100%;
+  }
+}
+
+body.dark.dataviz .viz-select {
+  border-color: @dark_bg_color;
+  background: @dark_bg_color;
+  color: #555;
+
+  option {
+    color: white;
+  }
+}
+</style>
+

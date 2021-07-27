@@ -9,29 +9,6 @@
   </div>
 </template>
 
-<style lang="less">
-.dataviz .viz.results {
-  dl dt {
-    font-weight: bold;
-    display: inline;
-    text-align: center;
-    border-left: 3px solid #3b5998;
-    padding-left: 1rem;
-    font-size: 1.6rem;
-  }
-
-  dl dd {
-    margin: 2px 0;
-    font-size: 1.4rem;
-    display: inline;
-  }
-
-  small {
-    color: #898989;
-  }
-}
-</style>
-
 <script>
 import Component from "./Component";
 import PartnersMixin from "./mixins/Partners";
@@ -134,3 +111,27 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+.dataviz .viz.results {
+  dl dt {
+    font-weight: bold;
+    display: inline;
+    text-align: center;
+    border-left: 3px solid #3b5998;
+    padding-left: 1rem;
+    font-size: 1.6rem;
+  }
+
+  dl dd {
+    margin: 2px 0;
+    font-size: 1.4rem;
+    display: inline;
+  }
+
+  small {
+    color: #898989;
+  }
+}
+</style>
+

@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="programme_partners"/>
+    <embeddor :period="period" tag="programme_partners" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="isReady"
@@ -36,118 +36,6 @@
     </table>
   </div>
 </template>
-
-<style lang="less">
-.dataviz .viz.donor-programmes {
-  width: 100%;
-  @media (max-width: 800px) {
-    overflow: auto;
-  }
-
-  .active {
-    th:first-of-type:before {
-      transform: rotate(90deg);
-    }
-  }
-
-  .active_filter {
-    background: #eee;
-  }
-
-  table {
-    border-collapse: collapse;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    width: 100%;
-    * {
-      text-align: left;
-    }
-    thead th,
-    tbody td {
-      width: 21%;
-      text-align: right;
-      padding: 5px;
-    }
-    th {
-      color: #333;
-      font-size: 14px;
-      white-space: nowrap;
-      font-weight: normal;
-    }
-    td {
-      color: #666;
-      font-size: 13px;
-    }
-
-    tr {
-      border: 1px solid transparent;
-      cursor: pointer;
-    }
-
-    tr.section_item:hover td {
-      border-top: 1px solid #50b9ff;
-      border-bottom: 1px solid #50b9ff;
-      &:first-of-type {
-        border-left: 1px solid #50b9ff;
-      }
-      &:last-of-type {
-        border-right: 1px solid #50b9ff;
-      }
-    }
-
-    .section_item {
-      display: none;
-    }
-
-    .active {
-      td {
-        &:before {
-          transform: rotate(90deg);
-        }
-      }
-      .section_item {
-        display: table-row;
-      }
-    }
-
-    .section_header {
-      font-weight: bold;
-      cursor: pointer;
-      color: black;
-      td {
-        position: relative;
-        &:first-of-type {
-          padding-left: 13px !important;
-          &:before {
-            content: "\25BA";
-            margin-right: 0.5rem;
-            transition: all 300ms;
-            font-size: 1.1rem;
-            position: absolute;
-            left: 0;
-            top: 6px;
-          }
-        }
-      }
-    }
-
-    thead {
-      border-spacing: 4px;
-
-      th {
-        //TODO: Make this work
-        // border-bottom: 2px solid #eee;
-      }
-    }
-
-    thead th:first-of-type,
-    tbody tr td:first-of-type {
-      width: 58%;
-      text-align: left;
-    }
-  }
-}
-</style>
 
 <script>
 import * as d3 from "d3";
@@ -261,3 +149,115 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+.dataviz .viz.donor-programmes {
+  width: 100%;
+  @media (max-width: 800px) {
+    overflow: auto;
+  }
+
+  .active {
+    th:first-of-type:before {
+      transform: rotate(90deg);
+    }
+  }
+
+  .active_filter {
+    background: #eee;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    * {
+      text-align: left;
+    }
+    thead th,
+    tbody td {
+      width: 21%;
+      text-align: right;
+      padding: 5px;
+    }
+    th {
+      color: #333;
+      font-size: 14px;
+      white-space: nowrap;
+      font-weight: normal;
+    }
+    td {
+      color: #666;
+      font-size: 13px;
+    }
+
+    tr {
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    tr.section_item:hover td {
+      border-top: 1px solid #50b9ff;
+      border-bottom: 1px solid #50b9ff;
+      &:first-of-type {
+        border-left: 1px solid #50b9ff;
+      }
+      &:last-of-type {
+        border-right: 1px solid #50b9ff;
+      }
+    }
+
+    .section_item {
+      display: none;
+    }
+
+    .active {
+      td {
+        &:before {
+          transform: rotate(90deg);
+        }
+      }
+      .section_item {
+        display: table-row;
+      }
+    }
+
+    .section_header {
+      font-weight: bold;
+      cursor: pointer;
+      color: black;
+      td {
+        position: relative;
+        &:first-of-type {
+          padding-left: 13px !important;
+          &:before {
+            content: "\25BA";
+            margin-right: 0.5rem;
+            transition: all 300ms;
+            font-size: 1.1rem;
+            position: absolute;
+            left: 0;
+            top: 6px;
+          }
+        }
+      }
+    }
+
+    thead {
+      border-spacing: 4px;
+
+      th {
+        //TODO: Make this work
+        // border-bottom: 2px solid #eee;
+      }
+    }
+
+    thead th:first-of-type,
+    tbody tr td:first-of-type {
+      width: 58%;
+      text-align: left;
+    }
+  }
+}
+</style>

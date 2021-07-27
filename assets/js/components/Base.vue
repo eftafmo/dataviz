@@ -12,7 +12,7 @@ export default {
   mixins: [BaseMixin, WithFiltersMixin],
 
   props: {
-    initial: [Object, Array],
+    initial: { type: [Object, Array], default: null },
   },
 
   data() {

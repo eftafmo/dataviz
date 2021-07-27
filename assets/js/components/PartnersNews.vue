@@ -1,15 +1,12 @@
 <script>
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
-import BaseNews from './BaseNews';
-import PartnersMixin from './mixins/Partners';
-
+import BaseNews from "./BaseNews";
+import PartnersMixin from "./mixins/Partners";
 
 export default {
   extends: BaseNews,
-  mixins: [
-    PartnersMixin,
-  ],
+  mixins: [PartnersMixin],
 
   methods: {
     /**
@@ -20,10 +17,10 @@ export default {
       const news = Object.values(all_news);
 
       // sort by created date
-      news.sort((a,b) => d3.descending(a.created,b.created));
+      news.sort((a, b) => d3.descending(a.created, b.created));
 
       return news;
     },
-  }
-}
+  },
+};
 </script>

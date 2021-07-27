@@ -25,44 +25,6 @@
   </ul>
 </template>
 
-<style lang="less">
-.dataviz .viz.results {
-  li {
-    list-style-type: none;
-  }
-
-  ul {
-    padding-left: 0;
-  }
-
-  small {
-    color: #898989;
-  }
-
-  .title {
-    color: #444;
-  }
-
-  .indicator {
-    border-left: 3px solid red;
-    margin-bottom: 0.5rem;
-    padding-left: 0.5rem;
-  }
-
-  .indicator-achievement {
-    display: inline;
-    font-size: 2rem;
-    color: black;
-    margin-right: 0.2rem;
-  }
-
-  .indicator-name {
-    display: inline;
-    font-size: 1.2rem;
-  }
-}
-</style>
-
 <script>
 import Component from "./Component";
 
@@ -142,3 +104,42 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+.dataviz .viz.results {
+  li {
+    list-style-type: none;
+  }
+
+  ul {
+    padding-left: 0;
+  }
+
+  small {
+    color: #898989;
+  }
+
+  .title {
+    color: #444;
+  }
+
+  .indicator {
+    border-left: 3px solid red;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  .indicator-achievement {
+    display: inline;
+    font-size: 2rem;
+    color: black;
+    margin-right: 0.2rem;
+  }
+
+  .indicator-name {
+    display: inline;
+    font-size: 1.2rem;
+  }
+}
+</style>
+

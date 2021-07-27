@@ -1,16 +1,13 @@
 <script>
-import orderBy from 'lodash.orderby';
-import BaseNews from './BaseNews';
-import ProjectsMixin from './mixins/Projects';
-import WithRegionsMixin from './mixins/WithRegions';
+import orderBy from "lodash.orderby";
+import BaseNews from "./BaseNews";
+import ProjectsMixin from "./mixins/Projects";
+import WithRegionsMixin from "./mixins/WithRegions";
 
 export default {
   extends: BaseNews,
 
-  mixins: [
-    ProjectsMixin,
-    WithRegionsMixin,
-  ],
+  mixins: [ProjectsMixin, WithRegionsMixin],
   methods: {
     /**
      * @param {Object} all_news
@@ -18,8 +15,12 @@ export default {
      */
     getSortedNews(all_news) {
       const deep_search = true;
-       // sometimes this.filters.region is null (filtering by country or removing filters)
-      const news_for_nuts = this.getSortedNewsForRegion(all_news, this.filters.region || "", deep_search);
+      // sometimes this.filters.region is null (filtering by country or removing filters)
+      const news_for_nuts = this.getSortedNewsForRegion(
+        all_news,
+        this.filters.region || "",
+        deep_search
+      );
 
       return news_for_nuts;
     },
@@ -38,14 +39,14 @@ export default {
 
       for (const link in all_news) {
         const nuts = all_news[link].nuts;
-        if(deep_search) {
+        if (deep_search) {
           // if region is "RO31" it will include "RO31" and "RO31x"
-          if(region === "" || this.isAncestorRegion(region, nuts)) {
+          if (region === "" || this.isAncestorRegion(region, nuts)) {
             filtered_news.push(all_news[link]);
           }
         } else {
           // if region is "RO31" it will only take nuts = "RO31"
-          if(nuts === region || !region) {
+          if (nuts === region || !region) {
             filtered_news.push(all_news[link]);
           }
         }
@@ -53,16 +54,18 @@ export default {
       deep_search = false;
       filtered_news = orderBy(filtered_news, ["created"], ["desc"]);
       // search for parent news if region news are less than 3, stop at country code ex: "RO"
-      if(region.length >= 2) {
+      if (region.length >= 2) {
         filtered_news = [
           ...filtered_news,
-          ...this.getSortedNewsForRegion(all_news, region.substr(0, region.length-1, deep_search))
+          ...this.getSortedNewsForRegion(
+            all_news,
+            region.substr(0, region.length - 1, deep_search)
+          ),
         ];
       }
 
       return filtered_news;
     },
-  }
-
-}
+  },
+};
 </script>

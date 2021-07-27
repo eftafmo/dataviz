@@ -1,85 +1,3 @@
-<style lang="less">
-.dataviz .viz.map.is-projects {
-  @bubble_color: rgb(196, 17, 48);
-  @nuts3_selected_color: rgb(3, 152, 251);
-
-  .bubble {
-    circle {
-      fill: @bubble_color;
-      transform-origin: 50% 50%;
-    }
-
-    text {
-      font-size: 1.2em;
-      font-family: "Open sans", sans-serif;
-      font-weight: 600;
-      text-anchor: middle;
-      fill: #fff;
-
-      user-select: none;
-    }
-  }
-
-  .chart {
-    .regions .beneficiary {
-      cursor: pointer;
-
-      &.zero {
-        cursor: not-allowed;
-      }
-    }
-
-    .projects > g > g {
-      pointer-events: none;
-
-      .bubble;
-
-      circle {
-        fill-opacity: 0.4;
-      }
-
-      &.hovered circle {
-        fill-opacity: 1;
-      }
-    }
-  }
-
-  .current-region {
-    position: absolute;
-    left: 3em;
-    top: 1em;
-
-    width: ~"calc(100% - 4em)";
-
-    div {
-      position: absolute;
-      top: 0;
-      padding: 0.5em 0.7em 0.5em 1.5em;
-      background-color: rgba(238, 238, 238, 0.2);
-      color: black;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: 2px;
-
-      svg {
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        box-shadow: none;
-
-        .bubble;
-      }
-    }
-  }
-
-  .selected {
-    fill: @nuts3_selected_color;
-    fill-opacity: 0.5;
-    transition: fill 0.4s ease;
-  }
-}
-</style>
-
 <script>
 import * as d3 from "d3";
 
@@ -684,3 +602,85 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+.dataviz .viz.map.is-projects {
+  @bubble_color: rgb(196, 17, 48);
+  @nuts3_selected_color: rgb(3, 152, 251);
+
+  .bubble {
+    circle {
+      fill: @bubble_color;
+      transform-origin: 50% 50%;
+    }
+
+    text {
+      font-size: 1.2em;
+      font-family: "Open sans", sans-serif;
+      font-weight: 600;
+      text-anchor: middle;
+      fill: #fff;
+
+      user-select: none;
+    }
+  }
+
+  .chart {
+    .regions .beneficiary {
+      cursor: pointer;
+
+      &.zero {
+        cursor: not-allowed;
+      }
+    }
+
+    .projects > g > g {
+      pointer-events: none;
+
+      .bubble;
+
+      circle {
+        fill-opacity: 0.4;
+      }
+
+      &.hovered circle {
+        fill-opacity: 1;
+      }
+    }
+  }
+
+  .current-region {
+    position: absolute;
+    left: 3em;
+    top: 1em;
+
+    width: ~"calc(100% - 4em)";
+
+    div {
+      position: absolute;
+      top: 0;
+      padding: 0.5em 0.7em 0.5em 1.5em;
+      background-color: rgba(238, 238, 238, 0.2);
+      color: black;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 2px;
+
+      svg {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: none;
+
+        .bubble;
+      }
+    }
+  }
+
+  .selected {
+    fill: @nuts3_selected_color;
+    fill-opacity: 0.5;
+    transition: fill 0.4s ease;
+  }
+}
+</style>

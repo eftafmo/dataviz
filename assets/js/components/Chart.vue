@@ -1,41 +1,21 @@
-<style lang="less">
-/*
-  // use this in conjunction with the `rendered` property. for example
-
-  <div :class="{ rendering: !rendered }">
-    ...
-  </div>
-
-  note that "rendering" is automatically added to `this.classNames`
-*/
-.dataviz .rendering {
-  // (TODO: transition this?)
-  visibility: hidden;
-}
-</style>
-
 <script>
-import * as d3 from 'd3';
-import debounce from 'lodash.debounce';
+import * as d3 from "d3";
+import debounce from "lodash.debounce";
 
-import Component from './Component';
-import ChartMixin from './mixins/Chart';
+import Component from "./Component";
+import ChartMixin from "./mixins/Chart";
 
-import Dropdown from './includes/DropdownFilter';
-
+import Dropdown from "./includes/DropdownFilter";
 
 export default {
+  components: {
+    dropdown: Dropdown,
+  },
   extends: Component,
 
-  mixins: [
-    ChartMixin,
-  ],
+  mixins: [ChartMixin],
 
-  components: {
-    'dropdown': Dropdown,
-  },
-
-  data: function() {
+  data: function () {
     return {
       // these need to be synced with each component's css
       // TODO: load them from a common json / less-file?
@@ -57,12 +37,12 @@ export default {
   methods: {
     _getClassNames() {
       // simulate super()
-      const $super = Component.methods._getClassNames.bind(this)
-      const names = $super()
+      const $super = Component.methods._getClassNames.bind(this);
+      const names = $super();
 
-      if (!this.rendered) names.push("rendering")
+      if (!this.rendered) names.push("rendering");
 
-      return names
+      return names;
     },
 
     main() {
@@ -85,12 +65,10 @@ export default {
 
     getTransition(duration) {
       // returns a transition that has 0 duration during first render
-      if (!this.rendered) duration = 0
+      if (!this.rendered) duration = 0;
       else if (duration === undefined) duration = this.duration;
 
-      return d3.transition()
-               .duration(duration)
-               .ease(d3.easeCubicOut)
+      return d3.transition().duration(duration).ease(d3.easeCubicOut);
     },
 
     // filters should re-render by default, unless specifically handled
@@ -98,5 +76,22 @@ export default {
       this.render();
     },
   },
-}
+};
 </script>
+
+<style lang="less">
+/*
+  // use this in conjunction with the `rendered` property. for example
+
+  <div :class="{ rendering: !rendered }">
+    ...
+  </div>
+
+  note that "rendering" is automatically added to `this.classNames`
+*/
+.dataviz .rendering {
+  // (TODO: transition this?)
+  visibility: hidden;
+}
+</style>
+

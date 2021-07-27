@@ -3,31 +3,6 @@
      :class="classNames" on the template's root element
 -->
 
-<style lang="less">
-@duration: 0.5s;
-@short_duration: 0.2s;
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity @duration;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-fast-enter-active,
-.fade-fast-leave-active {
-  transition: opacity @duration;
-}
-
-.fade-fast-enter,
-.fade-fast-leave-to {
-  opacity: 0;
-}
-</style>
-
 <script>
 import Base from "./Base";
 
@@ -114,3 +89,28 @@ export function setMergeStrategy(app) {
   };
 }
 </script>
+
+<style lang="less">
+@duration: 0.5s;
+@short_duration: 0.2s;
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity @duration;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-fast-enter-active,
+.fade-fast-leave-active {
+  transition: opacity @duration;
+}
+
+.fade-fast-enter,
+.fade-fast-leave-to {
+  opacity: 0;
+}
+</style>

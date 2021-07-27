@@ -1,24 +1,63 @@
 <template>
-<div class="nuts-selector">
-  <label>NUTS level</label>
-  <div>
-    <input type="range"
-           :min="min" :max="max" :step="step"
-           v-model.number="level"
-    >
-    <label
-        v-for="l in levels"
-        @click="level = l"
-    >{{ l }}</label>
+  <div class="nuts-selector">
+    <label>NUTS level</label>
+    <div>
+      <input
+        v-model.number="level"
+        type="range"
+        :min="min"
+        :max="max"
+        :step="step"
+      />
+      <label v-for="l in levels" @click="level = l">{{ l }}</label>
+    </div>
   </div>
-</div>
 </template>
 
+<script>
+export default {
+  props: {
+    levels: {
+      type: Array,
+      default: () => [1, 2, 3],
+    },
+
+    value: {
+      type: Number,
+      default: 3,
+    },
+  },
+
+  data() {
+    return {
+      level: this.value,
+    };
+  },
+
+  computed: {
+    min() {
+      return this.levels[0];
+    },
+    max() {
+      return this.levels[this.levels.length - 1];
+    },
+    step() {
+      return this.levels[1] - this.levels[0];
+    },
+  },
+
+  watch: {
+    level(v) {
+      this.$emit("input", v);
+    },
+  },
+};
+</script>
 
 <style lang="less">
 .dataviz .nuts-selector {
   padding: 7px 10px;
-  background-color: rgba(249, 249, 249, .7);
+  background-color: rgba(249, 249, 249, 0.7);
 
   border: 1px solid #bbc;
   border-radius: 2px;
@@ -32,7 +71,7 @@
 
   &:hover {
     opacity: 1;
-    background-color: rgba(255, 255, 255, .9);
+    background-color: rgba(255, 255, 255, 0.9);
     border-color: #aab;
   }
 
@@ -79,44 +118,3 @@
   }
 }
 </style>
-
-
-<script>
-export default {
-  props: {
-    levels: {
-      type: Array,
-      default: () => [1, 2, 3],
-    },
-
-    value: {
-      type: Number,
-      default: 3,
-    },
-  },
-
-  data() {
-    return {
-      level: this.value,
-    };
-  },
-
-  computed: {
-    min() {
-      return this.levels[0];
-    },
-    max() {
-      return this.levels[this.levels.length - 1];
-    },
-    step() {
-      return this.levels[1] - this.levels[0];
-    },
-  },
-
-  watch: {
-    level(v) {
-      this.$emit("input", v);
-    },
-  },
-};
-</script>

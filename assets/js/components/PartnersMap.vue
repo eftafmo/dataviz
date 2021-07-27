@@ -45,103 +45,6 @@
   </div>
 </template>
 
-<style lang="less">
-@duration: 0.5s;
-@short_duration: 0.2s;
-
-.dataviz .viz.map.is-partners {
-  .chart .regions {
-    path {
-      stroke-opacity: 0.5;
-      pointer-events: all;
-    }
-
-    path.donor {
-      &:not(.zero):hover {
-        stroke: #fff;
-        stroke-opacity: 1;
-      }
-    }
-
-    path.beneficiary,
-    path.partner {
-      &.zero {
-        fill: none;
-        stroke: none;
-      }
-
-      &:not(.zero):hover {
-        stroke: #000;
-        stroke-opacity: 1;
-      }
-    }
-  }
-
-  .partnerships {
-    stroke-width: 1.5; // TODO: make it dynamic
-    fill: none;
-    pointer-events: none;
-  }
-
-  .selector {
-    margin-bottom: 1rem;
-    -js-display: flex;
-    display: flex;
-    @media (max-width: 800px) {
-      display: block;
-    }
-    > label {
-      display: inline-flex;
-      @media (max-width: 800px) {
-        -js-display: flex;
-        display: flex;
-      }
-      margin-left: 1rem;
-    }
-  }
-
-  input[type="checkbox"] {
-    display: none;
-  } /* to hide the checkbox itself */
-  input[type="checkbox"] + label:before {
-    display: inline-block;
-  }
-
-  input[type="checkbox"] + label {
-    display: inline-block;
-    border: solid #ddd;
-    height: 19px;
-    width: 19px;
-    margin-right: 0.4rem;
-    margin-top: -2px;
-    position: relative;
-  }
-
-  input[type="checkbox"] + label:before {
-    content: "" "";
-    font-size: 2.5rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  input[type="checkbox"]:checked + label:before {
-    content: "✔\fe0e";
-  } /* checked icon */
-  #programmes {
-    + label:before {
-      color: #089900;
-    }
-  }
-
-  #projects {
-    + label:before {
-      color: #e68a00;
-    }
-  }
-}
-</style>
-
 <script>
 import * as d3 from "d3";
 import debounce from "lodash.debounce";
@@ -751,3 +654,101 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+@duration: 0.5s;
+@short_duration: 0.2s;
+
+.dataviz .viz.map.is-partners {
+  .chart .regions {
+    path {
+      stroke-opacity: 0.5;
+      pointer-events: all;
+    }
+
+    path.donor {
+      &:not(.zero):hover {
+        stroke: #fff;
+        stroke-opacity: 1;
+      }
+    }
+
+    path.beneficiary,
+    path.partner {
+      &.zero {
+        fill: none;
+        stroke: none;
+      }
+
+      &:not(.zero):hover {
+        stroke: #000;
+        stroke-opacity: 1;
+      }
+    }
+  }
+
+  .partnerships {
+    stroke-width: 1.5; // TODO: make it dynamic
+    fill: none;
+    pointer-events: none;
+  }
+
+  .selector {
+    margin-bottom: 1rem;
+    -js-display: flex;
+    display: flex;
+    @media (max-width: 800px) {
+      display: block;
+    }
+    > label {
+      display: inline-flex;
+      @media (max-width: 800px) {
+        -js-display: flex;
+        display: flex;
+      }
+      margin-left: 1rem;
+    }
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  } /* to hide the checkbox itself */
+  input[type="checkbox"] + label:before {
+    display: inline-block;
+  }
+
+  input[type="checkbox"] + label {
+    display: inline-block;
+    border: solid #ddd;
+    height: 19px;
+    width: 19px;
+    margin-right: 0.4rem;
+    margin-top: -2px;
+    position: relative;
+  }
+
+  input[type="checkbox"] + label:before {
+    content: "" "";
+    font-size: 2.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  input[type="checkbox"]:checked + label:before {
+    content: "✔\fe0e";
+  } /* checked icon */
+  #programmes {
+    + label:before {
+      color: #089900;
+    }
+  }
+
+  #projects {
+    + label:before {
+      color: #e68a00;
+    }
+  }
+}
+</style>
+
