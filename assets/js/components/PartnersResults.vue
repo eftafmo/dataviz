@@ -127,6 +127,10 @@ export default {
     font-size: 1.6rem;
   }
 
+  dt {
+    margin-right: 0.2rem;
+  }
+
   dl dd {
     margin: 2px 0;
     font-size: 1.4rem;

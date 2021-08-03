@@ -1,9 +1,9 @@
 <template>
   <ul :class="classNames">
-    <li v-for="news in data" :key="news.link" class="content-item news_content">
-      <a class="body clearfix" :href="`${news.link}`" target="_blank">
+    <li v-for="news in data" :key="news.link" class="content-item">
+      <a class="news-content" :href="`${news.link}`" target="_blank">
         <img :src="`${news.image}`" />
-        <div :class="{ no_img: !news.image }" class="pull-right news_text">
+        <div :class="{ no_img: !news.image }">
           <h4 class="title">{{ news.title }}</h4>
           <small>{{ formatDate(news.created) }}</small>
         </div>
@@ -70,21 +70,12 @@ export default {
     color: #898989;
   }
 
-  .pull-right {
-    float: right;
-  }
-
-  .news_text {
-    width: calc(~"60% - 1rem");
-    &.no_img {
-      float: initial;
-      width: 100%;
-    }
+  .news-content {
+    display: flex;
+    text-decoration: none;
   }
 
   img {
-    float: left;
-    width: 40%;
     margin-right: 1rem;
   }
 
