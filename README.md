@@ -52,7 +52,6 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 
 1. Install npm and start webpack dev server(*leave this container open*):
 
-        $ export NODE_ENV=debug
         $ npm install
         $ npm run dev
 
