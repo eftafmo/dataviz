@@ -1,3 +1,4 @@
+import html
 import re
 
 from collections import defaultdict
@@ -258,7 +259,7 @@ def projects(request):
             item.project.state_id
         )
         news[key].append({
-            'title': item.title,
+            'title': html.unescape(item.title or ""),
             'link': item.link,
             'created': item.created,
             'summary': item.summary,
@@ -554,7 +555,7 @@ def partners(request):
     ).distinct()
     for item in news_raw:
         partnership_programmes[item['programme_id']]['news'].append({
-            'title': item['programme__news__title'],
+            'title': html.unescape(item['programme__news__title'] or ""),
             'link': item['programme__news__link'],
             'created': item['programme__news__created'],
             'summary': item['programme__news__summary'],
