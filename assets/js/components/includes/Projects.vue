@@ -47,7 +47,7 @@ export default {
 
   data() {
     return {
-      posts: [],
+      posts: null,
       errors: [],
     };
   },
@@ -64,7 +64,7 @@ export default {
     filters: {
       deep: true,
       handler() {
-        this.posts = [];
+        this.posts = null;
         const target = this.$el.querySelector(".programme-item-header");
         target.classList.remove("active");
       },
@@ -78,7 +78,13 @@ export default {
       target.classList.add("spinning");
       target.classList.toggle("active");
 
-      if (!this.posts || this.posts.results.length === 0) {
+      console.log(this.posts);
+
+      if (
+        !this.posts ||
+        !this.posts.results ||
+        this.posts.results.length === 0
+      ) {
         let url = `${this.detailsDatasource}?beneficiary=${this.country}&programme=${this.id}`;
         if (this.filters.donor) {
           url = url + "&donor=" + this.filters.donor;
@@ -104,7 +110,7 @@ export default {
             throw new Error(`${response.status} ${response.statusText}`);
 
           response.json().then((data) => {
-            this.posts = response.data;
+            this.posts = data;
 
             if (target.classList.contains("spinning"))
               target.classList.remove("spinning");
