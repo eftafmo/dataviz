@@ -8,7 +8,7 @@
       v-for="fm in fms"
       :key="fm.id"
       class="fm"
-      :class="[fm.id, getFilterClassFm(fm), { zero: fm.allocation == 0 }]"
+      :class="[fm.id, getFilterClassFm(fm), { zero: fm.allocation === 0 }]"
       @click="toggleFm(fm, $event.target)"
     >
       <slot name="fm-content" :fm="fm">
@@ -24,7 +24,7 @@ export default {
   props: {
     fms: {
       type: Array,
-      required: true,
+      required: false,
     },
   },
   methods: {

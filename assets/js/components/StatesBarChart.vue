@@ -18,6 +18,23 @@
 
     <svg width="100%" :height="height + 'px'" class="chart">
       <defs>
+        <pattern
+          id="stripes-pattern-bar-chart"
+          width="3"
+          height="10"
+          patternTransform="rotate(30 0 0)"
+          patternUnits="userSpaceOnUse"
+        >
+          <line
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="10"
+            stroke-width="0.5"
+            stroke="rgba(204, 204, 204, 1)"
+          />
+        </pattern>
+
         <filter id="drop-shadow">
           <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
           <feOffset dx="0" dy="0" result="offsetblur" />
@@ -124,8 +141,9 @@ export default {
       let padding = _padding();
       // we really, really want this to be an int
       while (parseInt(padding) != padding) {
-        // TODO: The component state MUST NEVER be modified while computing a property!
         // uh'oh. use some brute force
+        // TODO: The component state MUST NEVER be modified while computing a property!
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.layout.itemHeight =
           (Math.ceil(padding) * 2 + this.barHeight) / this.fontSize;
         padding = _padding();
@@ -153,16 +171,15 @@ export default {
       // before ready
       if (!this.isReady) return 0;
 
-      const count = this.data.filter((d) => d.total != 0).length,
-        height = this.itemHeight * count + this.itemPadding * (count - 1);
-
-      return height;
+      const count = this.data.filter((d) => d.total != 0).length;
+      return this.itemHeight * count + this.itemPadding * (count - 1);
     },
 
     height() {
       // only resize the chart if there's not enough drawing room
       // (prevents the footer from dancing around during filtering)
       // TODO: The component state MUST NEVER be modified while computing a property!
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this._height = Math.max(this._height, this.itemsHeight);
       return this._height;
     },
@@ -360,7 +377,7 @@ export default {
         (d) => d.id
       );
 
-      divs
+      const g = divs
         .enter() // ENTER-only
         .append("g")
         .attr("class", (d) => "div " + d.id)
@@ -369,19 +386,24 @@ export default {
           this.filters[this.state_type] == d[this.state_type]
             ? d.colour
             : this.inactivecolour(d.colour)
-        )
-        // adding a stroke as well prevents what looks like a sub-pixel gap
-        // between divs. but needs to be done for background too, so, TODO
-        //.attr("stroke", (d) => d.colour )
-        .append("rect")
-        .attr("y", this.barPadding)
-        .attr("height", this.barHeight)
-        .attr("x", (d) => this.x(d.d[0]))
-        .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]));
+        );
+      this.createStateFmRect(g);
+      this.createStateFmRect(g).attr("class", "bg-pattern");
 
       divs
         .select("rect") // UPDATE
         .transition(t)
+        .attr("x", (d) => this.x(d.d[0]))
+        .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]));
+    },
+    createStateFmRect(el) {
+      // adding a stroke as well prevents what looks like a sub-pixel gap
+      // between divs. but needs to be done for background too, so, TODO
+      //.attr("stroke", (d) => d.colour )
+      return el
+        .append("rect")
+        .attr("y", this.barPadding)
+        .attr("height", this.barHeight)
         .attr("x", (d) => this.x(d.d[0]))
         .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]));
     },
@@ -702,6 +724,10 @@ export default {
 
       rect.bg {
         fill: none;
+      }
+
+      rect.bg-pattern {
+        fill: url("#stripes-pattern-bar-chart");
       }
 
       &:hover {

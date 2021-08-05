@@ -9,15 +9,42 @@
       :items="nonzero"
     ></dropdown>
     <svg viewBox="0 0 100 10" preserveAspectRatio="none">
+      <defs>
+        <pattern
+          id="stripes-pattern-mechanism"
+          width="1.5"
+          height="10"
+          patternTransform="rotate(30 0 0)"
+          patternUnits="userSpaceOnUse"
+        >
+          <line
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="10"
+            stroke-width="0.5"
+            stroke="rgba(204, 204, 204, 1)"
+          />
+        </pattern>
+      </defs>
       <g class="chart"></g>
+      <rect
+        v-if="!filters.fm"
+        x="0"
+        y="0"
+        width="100"
+        height="10"
+        fill="url(#stripes-pattern-mechanism)"
+        style="pointer-events: none"
+      ></rect>
     </svg>
     <div v-if="hasData" class="legend">
-      <slot name="legend" :data="data">
+      <slot name="legend">
         <fm-legend :fms="data" class="clearfix">
           <template #fm-content="x">
-            <span class="value" :style="{ color: x.fm.colour }">{{
-              currency(x.fm.allocation || 0)
-            }}</span>
+            <span class="value" :style="{ color: x.fm.colour }">
+              {{ currency(x.fm.allocation || 0) }}
+            </span>
             <span class="name">{{ x.fm.name }}</span>
           </template>
         </fm-legend>
@@ -87,7 +114,7 @@ export default {
     },
 
     nonzero() {
-      return this.data.filter((d) => d.allocation != 0);
+      return this.data.filter((d) => d.allocation !== 0);
     },
   },
 
@@ -131,13 +158,11 @@ export default {
     createTooltip() {
       const $this = this;
 
-      let tip = d3tip()
+      this.tip = d3tip()
         .attr("class", "dataviz-tooltip fms")
         .html(this.tooltipTemplate)
         .direction("s")
         .offset([0, 0]);
-
-      this.tip = tip;
       this.chart.call(this.tip);
     },
 
@@ -171,7 +196,7 @@ export default {
         .attr("width", 0)
         .attr("transform", (d, i) => {
           // draw the second bar from right to left
-          if (i == 1) return `scale(-1,1) translate(-${width},0)`;
+          if (i === 1) return `scale(-1,1) translate(-${width},0)`;
         })
         .on("click", function (ev, d) {
           $this.toggleFm(d, this);
@@ -189,11 +214,15 @@ export default {
     },
 
     renderColours(selection) {
-      selection.attr("fill", (d) =>
-        this.isDisabledFm(d)
-          ? colour2gray(d.colour, this.inactive_opacity)
-          : d.colour
-      );
+      selection
+        .attr("fill", (d) =>
+          this.isDisabledFm(d)
+            ? colour2gray(d.colour, this.inactive_opacity)
+            : d.colour
+        )
+        .attr("fill-opacity", (d) =>
+          this.isSelectedFm(d) || this.isDisabledFm(d) ? 1 : 0.75
+        );
     },
 
     handleFilterFm(val, old) {
