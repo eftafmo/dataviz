@@ -34,5 +34,10 @@ export default {
       // see other.png
       return slugify(sectorname);
     },
+    sectorUrl(sectorname) {
+      return this.getAssetUrl(
+        `sprites/sectors/${this.SECTORS[slugify(sectorname)].icon}`
+      );
+    },
   },
 };

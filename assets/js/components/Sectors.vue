@@ -22,9 +22,13 @@
           ></g>
         </svg>
         <transition appear>
-          <svg v-if="filters.sector" :key="filters.sector" class="sector-icon">
-            <use :xlink:href="`#${sectoricon(filters.sector)}`" />
-          </svg>
+          <img
+            v-if="filters.sector"
+            :key="filters.sector"
+            class="sector-icon"
+            :src="sectorUrl(filters.sector)"
+            alt=""
+          />
         </transition>
       </chart-container>
       <div
