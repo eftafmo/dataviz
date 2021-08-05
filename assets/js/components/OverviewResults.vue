@@ -7,14 +7,14 @@
         filter="fm"
         title="EEA and Norway Grants"
         :items="FM_ARRAY"
-        class="viz-select-overview"
+        class="viz-select-heading"
       />
       <span class="muted">results in</span>
       <dropdown-filter
         filter="beneficiary"
         title="all Beneficiary States"
         :items="BENEFICIARY_ARRAY"
-        class="viz-select-overview"
+        class="viz-select-heading"
       />
       <span class="muted">at a glance</span>
     </div>
@@ -104,7 +104,7 @@ export default {
     color: #f7c5c4;
   }
 
-  .viz-select-overview::v-deep {
+  .viz-select-heading {
     color: #ffffff;
   }
 }
