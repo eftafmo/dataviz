@@ -74,6 +74,7 @@ export function pluralize(str, value, suffix) {
 }
 
 export function getAssetUrl(path, origin = null) {
+  // Convoluted logic here so it works in: debug, prod and embed.
   return new URL(
     `/assets/${path}`,
     origin || (import.meta && import.meta.url) || window.location.origin
