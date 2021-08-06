@@ -43,7 +43,7 @@ const _locale = {
   decimal: ",", // that's the european way
   thousands: "\u00a0", // nbsp
   grouping: [3],
-  currency: ["€", ""],
+  currency: ["€\xa0", ""],
   percent: "%",
 };
 // currency, separators, float
