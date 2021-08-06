@@ -36,7 +36,7 @@ export default {
       const short = shortCurrency.find((short) => value >= short.value);
       if (short) {
         value = value / short.value;
-        if (value >= 100) {
+        if (value >= 100 || Number.isInteger(value)) {
           return util.formatCurrency(value) + short.suffix;
         } else {
           return util.formatCurrencyFloat(value) + short.suffix;
