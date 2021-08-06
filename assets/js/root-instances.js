@@ -67,3 +67,12 @@ export const Projects = {
     sidebar: components.ProjectsSidebar,
   },
 };
+
+export const CompareSectors = {
+  extends: _Base,
+  name: "CompareSectors",
+
+  components: {
+    funding_by_sector_chart: components.FundingBySectorChart,
+  },
+};

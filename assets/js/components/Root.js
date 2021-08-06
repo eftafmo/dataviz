@@ -15,7 +15,9 @@ function getURL(obj) {
   return url;
 }
 
-const _scenario_url = new RegExp("^/(\\d{4}-\\d{4})/(\\w+)?(/|.html)?$");
+const _scenario_url = new RegExp(
+  "^/(\\d{4}-\\d{4}|compare)/(\\w+)?(/|.html)?$"
+);
 
 function getScenario(url) {
   const match = url.pathname.match(_scenario_url);

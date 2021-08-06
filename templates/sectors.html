@@ -1,8 +1,14 @@
-{% extends "dataviz.html" %}
-
-{% block top %}
-{% endblock %}
-
-{% block main %}
-  {{ PERIOD }} - {{ SCENARIO }}
+{% extends "dataviz.html" %} {% block top %} {% endblock %} {% block main %}
+<funding_by_sector_chart
+  :initial="dataset"
+  period="2009-2014"
+></funding_by_sector_chart>
+{% endblock %} {% block finally %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(Dataviz.CompareSectors, {
+      datasource: "/api/grants.json",
+    }).mount("#content");
+  });
+</script>
 {% endblock %}

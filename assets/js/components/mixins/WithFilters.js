@@ -16,6 +16,7 @@ export const SCENARIOFILTERS = {
   cooperation: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
   projects: ["fm", "beneficiary", "region", "sector", "area"],
   search: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
+  sectors: ["fm", "beneficiary"],
 };
 
 export default {
@@ -39,7 +40,6 @@ export default {
   methods: {
     handleFilter(type, val, old) {
       // this should be handled by each component specifically
-      return;
       //throw "Unhandled filter: " + type;
       //console.log(`» [${type}] filter:`, old,'→', val);
     },

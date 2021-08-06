@@ -61,7 +61,7 @@ export default {
     dataset: {
       // make dataset a settable computed
       get() {
-        return this.dataset__ || this.initial;
+        return this.dataset__ || this.initial || [];
       },
       set(val) {
         this.dataset__ = val;
