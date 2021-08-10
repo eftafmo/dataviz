@@ -73,6 +73,7 @@ export const CompareSectors = {
   name: "CompareSectors",
 
   components: {
+    compare_sectors_view: components.CompareSectorsView,
     funding_by_sector_chart: components.FundingBySectorChart,
   },
 };

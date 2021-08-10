@@ -1,9 +1,6 @@
 {% extends "base.html" %} {% block content %}
 <main class="main">
-  <funding_by_sector_chart
-    :initial="dataset"
-    period="2009-2014"
-  ></funding_by_sector_chart>
+  <compare_sectors_view :initial="dataset"></compare_sectors_view>
 </main>
 {% endblock %} {% block finally %}
 <script>
