@@ -1,23 +1,52 @@
 <template>
   <div :class="classNames" class="funding-by-sector-chart">
     <embeddor :period="period" tag="sectors" />
-    <div>
-      <span>Funding by sectors in</span>
-      <dropdown-filter
-        filter="beneficiary"
-        title="all Beneficiary States"
-        :items="BENEFICIARY_ARRAY"
-      />
-    </div>
     <chart-container
       :width="svgWidth"
       :height="svgHeight"
       class="funding-chart-container"
     >
-      <svg :viewBox="`0 0 ${svgWidth} ${svgHeight}`">
+      <svg
+        :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
         <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
+        <image
+          v-if="filters.beneficiary"
+          x="20"
+          y="20"
+          width="36"
+          height="26"
+          :xlink:href="get_flag_url(filters.beneficiary)"
+        ></image>
+        <text
+          :x="filters.beneficiary ? 70 : 20"
+          y="20"
+          font-size="26"
+          dominant-baseline="hanging"
+        >
+          <template v-if="!filters.beneficiary">
+            All beneficiary states
+          </template>
+          <template v-else>
+            {{ get_country_name(filters.beneficiary) }}
+          </template>
+          {{ period }}
+        </text>
         <g class="chart"></g>
       </svg>
+      <div class="funding-legend">
+        <div v-for="item in data" :key="item.id" class="legend-item">
+          <div
+            class="legend-item-square"
+            :style="{
+              'background-color': item.sector.colour,
+            }"
+          ></div>
+          <div class="legend-item-name">{{ item.sector.name }}</div>
+        </div>
+      </div>
     </chart-container>
   </div>
 </template>
@@ -27,7 +56,6 @@ import * as d3 from "d3";
 import Chart from "./Chart";
 import WithCountriesMixin from "./mixins/WithCountries";
 import Embeddor from "./includes/Embeddor";
-import DropdownFilter from "./includes/DropdownFilter";
 import WithTooltipMixin from "./mixins/WithTooltip";
 import WithSectors from "./mixins/WithSectors";
 import { slugify } from "../lib/util";
@@ -35,9 +63,9 @@ import d3tip from "d3-tip";
 
 export default {
   name: "FundingBySectorChart",
-  components: { DropdownFilter, Embeddor },
+  components: { Embeddor },
   extends: Chart,
-  type: "overview",
+  type: "",
 
   mixins: [WithCountriesMixin, WithSectors, WithTooltipMixin],
   data() {
@@ -47,9 +75,9 @@ export default {
       svgWidth: 560,
       svgHeight: 360,
       margin: {
-        top: 30,
+        top: 70,
         right: 30,
-        bottom: 30,
+        bottom: 20,
         left: 60,
       },
     };
@@ -162,10 +190,39 @@ export default {
 }
 
 .funding-by-sector-chart {
-  padding: 2rem 0;
-
   g.sector:hover {
     filter: drop-shadow(0px -2px 6px #3d3d3d);
+  }
+
+  .funding-legend {
+    border: 4px solid #f5f5f5;
+    padding: 3rem;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .legend-item + .legend-item {
+      margin-top: 1.5rem;
+    }
+
+    .legend-item-square {
+      display: block;
+      min-width: 1.8rem;
+      max-width: 1.8rem;
+      max-height: 1.8rem;
+      min-height: 1.8rem;
+      margin-right: 1.2rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .funding-legend {
+      padding: 1rem;
+    }
   }
 }
 </style>
