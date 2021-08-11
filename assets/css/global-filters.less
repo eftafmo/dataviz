@@ -74,6 +74,11 @@ button#reset-filters {
   top: 0;
   min-height: 40px;
   overflow-x: hidden;
+  pointer-events: none;
+
+  .global-filters-inner {
+    pointer-events: all;
+  }
 }
 
 #global-filters.visible {
