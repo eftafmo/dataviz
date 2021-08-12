@@ -14,7 +14,17 @@
         @click="clickFunc && clickFunc(item, $event.target)"
       >
         <slot name="item" :item="item">
-          <span class="fill" :style="{ backgroundColor: item.colour }"></span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10 10"
+            class="fill"
+          >
+            <rect
+              width="10"
+              height="10"
+              :fill="item.stripesFill || item.colour"
+            ></rect>
+          </svg>
           {{ item.name }}
           <sup v-if="showValues && item.value !== undefined" class="value">
             {{ format(item.value) }}
@@ -92,7 +102,7 @@ export default {
 
       transition: all 0.5s ease;
 
-      span.fill {
+      .fill {
         display: inline-block;
         vertical-align: text-bottom;
         width: 1.2em;

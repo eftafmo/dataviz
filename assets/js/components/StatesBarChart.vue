@@ -17,24 +17,8 @@
     ></chart-legend>
 
     <svg width="100%" :height="height + 'px'" class="chart">
+      <chart-patterns />
       <defs>
-        <pattern
-          id="stripes-pattern-bar-chart"
-          width="3"
-          height="10"
-          patternTransform="rotate(30 0 0)"
-          patternUnits="userSpaceOnUse"
-        >
-          <line
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="10"
-            stroke-width="0.5"
-            stroke="rgba(204, 204, 204, 1)"
-          />
-        </pattern>
-
         <filter id="drop-shadow">
           <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
           <feOffset dx="0" dy="0" result="offsetblur" />
@@ -80,9 +64,11 @@ import WithTooltipMixin from "./mixins/WithTooltip";
 
 import Legend from "./includes/Legend";
 import Embeddor from "./includes/Embeddor";
+import ChartPatterns from "./ChartPatterns";
 
 export default {
   components: {
+    ChartPatterns,
     Embeddor,
     "chart-legend": Legend,
   },
@@ -390,11 +376,10 @@ export default {
         .attr("fill", (d) =>
           this.filters[this.state_type] === null ||
           this.filters[this.state_type] == d[this.state_type]
-            ? d.colour
+            ? d.stripesFill
             : this.inactivecolour(d.colour)
         );
       this.createStateFmRect(g);
-      this.createStateFmRect(g).attr("class", "bg-pattern");
 
       divs
         .select("rect") // UPDATE
@@ -639,7 +624,7 @@ export default {
           .selectAll(".div")
           .transition(t)
           .attr("fill", (d) =>
-            yes ? d.colour : this.inactivecolour(d.colour)
+            yes ? d.stripesFill : this.inactivecolour(d.colour)
           );
       };
 
@@ -730,10 +715,6 @@ export default {
 
       rect.bg {
         fill: none;
-      }
-
-      rect.bg-pattern {
-        fill: url("#stripes-pattern-bar-chart");
       }
 
       &:hover {

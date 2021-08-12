@@ -12,7 +12,9 @@
       @click="toggleFm(fm, $event.target)"
     >
       <slot name="fm-content" :fm="fm">
-        <span class="fill" :style="{ backgroundColor: fm.colour }"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+          <rect width="10" height="10" :fill="fm.stripesFill"></rect>
+        </svg>
         {{ fm.name }}
       </slot>
     </li>
@@ -61,13 +63,14 @@ export default {
       margin-right: 2rem;
     }
 
-    span.fill {
+    .fill {
       display: inline-block;
       width: 10px;
       height: 10px;
     }
 
     cursor: pointer;
+
     &.zero {
       cursor: not-allowed;
       pointer-events: none;

@@ -17,7 +17,7 @@
           y="20"
           width="36"
           height="26"
-          :xlink:href="get_flag_url(filters.beneficiary)"
+          :href="get_flag_url(filters.beneficiary)"
         ></image>
         <text
           :x="filters.beneficiary ? 70 : 20"

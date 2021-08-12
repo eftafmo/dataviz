@@ -10,29 +10,7 @@
         :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <defs>
-          <pattern
-            v-for="fmData in FM_ARRAY"
-            :id="`stripes-pattern-${fmData.id}`"
-            :key="fmData.id"
-            width="6"
-            height="20"
-            patternTransform="rotate(45 0 0)"
-            patternUnits="userSpaceOnUse"
-          >
-            <rect width="6" height="20" :fill="fmData.colour"></rect>
-            <line
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="20"
-              stroke-width="1"
-              vector-effect="non-scaling-stroke"
-              :stroke="fmData.pattern"
-            />
-          </pattern>
-        </defs>
-
+        <chart-patterns />
         <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
         <image
           v-if="filters.beneficiary"
@@ -40,7 +18,7 @@
           y="20"
           width="36"
           height="26"
-          :xlink:href="get_flag_url(filters.beneficiary)"
+          :href="get_flag_url(filters.beneficiary)"
         ></image>
         <text
           :x="filters.beneficiary ? 70 : 20"
@@ -72,10 +50,11 @@ import WithFMs from "./mixins/WithFMs";
 import * as d3 from "d3";
 import WithTooltip from "./mixins/WithTooltip";
 import d3tip from "d3-tip";
+import ChartPatterns from "./ChartPatterns";
 
 export default {
   name: "FundingByPeriodChart",
-  components: { Embeddor },
+  components: { ChartPatterns, Embeddor },
   extends: Chart,
   type: "",
 
@@ -130,7 +109,7 @@ export default {
               drawnAllocation: yOffset + net_allocation,
               period,
               details,
-              fill: `url(#stripes-pattern-${fm.id})`,
+              stripesFill: fm.stripesFill,
             });
             // Keep track of the offset for this period, as the bars
             // as stacked on top of each other.
@@ -242,7 +221,7 @@ export default {
         .attr("width", this.xScale.bandwidth())
         .attr("height", (d) => this.height - this.yScale(d.net_allocation))
         .attr("stroke", "none")
-        .attr("fill", (d) => d.fill);
+        .attr("fill", (d) => d.stripesFill);
 
       const periodBars = this.chart
         .selectAll("rect.period-bar")
@@ -295,7 +274,7 @@ export default {
         const allocation = (data[fm.name] && data[fm.name].net_allocation) || 0;
         return `
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
-            <rect width="12" height="12" fill="url(#stripes-pattern-${fm.id})">
+            <rect width="12" height="12" fill="${fm.stripesFill}">
           </svg>
           <span>
              ${fm.name}
