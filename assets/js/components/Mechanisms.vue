@@ -8,35 +8,13 @@
       title="No filter selected"
       :items="nonzero"
     ></dropdown>
-    <svg viewBox="0 0 100 10" preserveAspectRatio="none">
-      <defs>
-        <pattern
-          id="stripes-pattern-mechanism"
-          width="1.5"
-          height="10"
-          patternTransform="rotate(30 0 0)"
-          patternUnits="userSpaceOnUse"
-        >
-          <line
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="10"
-            stroke-width="0.5"
-            stroke="rgba(204, 204, 204, 1)"
-          />
-        </pattern>
-      </defs>
+    <chart-patterns />
+    <svg
+      :viewBox="`0 0 ${width} ${height}`"
+      xmlns="http://www.w3.org/2000/svg"
+      class="mechanism"
+    >
       <g class="chart"></g>
-      <rect
-        v-if="!filters.fm"
-        x="0"
-        y="0"
-        width="100"
-        height="10"
-        fill="url(#stripes-pattern-mechanism)"
-        style="pointer-events: none"
-      ></rect>
     </svg>
     <div v-if="hasData" class="legend">
       <slot name="legend">
@@ -63,9 +41,10 @@ import Chart from "./Chart";
 import WithFMsMixin from "./mixins/WithFMs";
 import WithTooltipMixin from "./mixins/WithTooltip";
 import Embeddor from "./includes/Embeddor";
+import ChartPatterns from "./ChartPatterns";
 
 export default {
-  components: { Embeddor },
+  components: { ChartPatterns, Embeddor },
   extends: Chart,
   type: "fms",
 
@@ -80,41 +59,46 @@ export default {
 
   data() {
     return {
+      width: 500,
+      height: 30,
       aggregate_by: [{ source: "fm", destination: "name" }],
-
-      inactive_opacity: 0.7,
+      inactiveOpacity: 0.7,
     };
   },
 
   computed: {
     data() {
-      const aggregated = this.aggregated;
+      const out = [];
+      let xOffset = 0;
 
       // base the data on the FM list from constants,
       // so even non-existing FMs get a 0 entry
-      const out = [];
-      for (const fm in this.FMS) {
-        const basefm = this.FMS[fm];
-        let item = aggregated[basefm.name];
+      this.FM_ARRAY.forEach((fm) => {
+        const item = this.aggregated[fm.name];
+        const allocation = (item && item.allocation) || 0;
 
-        if (item === undefined) {
-          // mirror an existing object
-          item = {};
-          const sample = Object.values(aggregated)[0];
-          for (var k in sample) {
-            item[k] = new sample[k].constructor();
-          }
-        }
-
-        Object.assign(item, basefm);
-        out.push(item);
-      }
+        out.push({
+          ...fm,
+          ...item,
+          xOffset,
+          allocation,
+        });
+        xOffset += allocation;
+      });
 
       return out;
     },
-
+    totalAllocation() {
+      return this.data.reduce((total, item) => total + item.allocation, 0);
+    },
     nonzero() {
       return this.data.filter((d) => d.allocation !== 0);
+    },
+    xScale() {
+      return d3
+        .scaleLinear()
+        .rangeRound([0, this.width])
+        .domain([0, this.totalAllocation]);
     },
   },
 
@@ -126,6 +110,30 @@ export default {
   },
 
   methods: {
+    renderChart() {
+      const t = this.getTransition();
+      const fmSlices = this.chart.selectAll("rect.fm-slice").data(this.data);
+      fmSlices
+        .enter()
+        .append("rect")
+        .attr("class", "fm-slice")
+        .merge(fmSlices)
+        .transition(t)
+        .attr("x", (d) => this.xScale(d.xOffset))
+        .attr("y", 0)
+        .attr("width", (d) => this.xScale(d.allocation))
+        .attr("height", this.height)
+        .attr("fill", (d) =>
+          this.isDisabledFm(d)
+            ? colour2gray(d.colour, this.inactiveOpacity)
+            : d.stripesFill
+        );
+      this.chart
+        .selectAll("rect.fm-slice")
+        .on("mouseenter", this.tip.show)
+        .on("mouseleave", this.tip.hide)
+        .on("click", (ev, d) => this.toggleFm(d));
+    },
     tooltipTemplate(ev, d) {
       return (
         `
@@ -154,84 +162,13 @@ export default {
       `
       );
     },
-
     createTooltip() {
-      const $this = this;
-
       this.tip = d3tip()
         .attr("class", "dataviz-tooltip fms")
         .html(this.tooltipTemplate)
         .direction("s")
         .offset([0, 0]);
       this.chart.call(this.tip);
-    },
-
-    renderChart() {
-      const $this = this,
-        chart = this.chart;
-
-      const t = this.getTransition();
-
-      // we always use width 100, because viewBox and preserveAspectRatio=none
-      const width = 100;
-
-      const x = d3
-        .scaleLinear()
-        .rangeRound([0, width])
-        .domain([0, d3.sum(this.data.map((d) => d.allocation))]);
-
-      const fms = chart.selectAll("g.fm").data(this.data, (d) => d.id);
-      const fentered = fms
-        .enter()
-        .append("g")
-        .attr("class", (d) => "fm " + d.id);
-      fentered
-        .call(this.renderColours)
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("height", "100%")
-        // start with a 0-width so we transition this during enter too
-        //.attr("width", (d) => x(d.allocation) )
-        .attr("width", 0)
-        .attr("transform", (d, i) => {
-          // draw the second bar from right to left
-          if (i === 1) return `scale(-1,1) translate(-${width},0)`;
-        })
-        .on("click", function (ev, d) {
-          $this.toggleFm(d, this);
-        })
-        .on("mouseenter", this.tip.show)
-        .on("mouseleave", this.tip.hide)
-
-        .transition(t)
-        .attr("width", (d) => x(d.allocation));
-
-      fms
-        .select("rect")
-        .transition(t)
-        .attr("width", (d) => x(d.allocation));
-    },
-
-    renderColours(selection) {
-      selection
-        .attr("fill", (d) =>
-          this.isDisabledFm(d)
-            ? colour2gray(d.colour, this.inactive_opacity)
-            : d.colour
-        )
-        .attr("fill-opacity", (d) =>
-          this.isSelectedFm(d) || this.isDisabledFm(d) ? 1 : 0.75
-        );
-    },
-
-    handleFilterFm(val, old) {
-      // transition the chart to disabled / selected.
-      // (the legend is handled by vue.)
-      this.chart
-        .selectAll("g.fm")
-        .transition(this.getTransition())
-        .call(this.renderColours);
     },
   },
 };
@@ -241,29 +178,15 @@ export default {
 .dataviz .viz.fms {
   position: relative;
 
-  svg {
-    width: 100%;
-    height: 3rem;
-
-    @media (min-width: 600px) and(max-width: 1400px) {
-      width: 90%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-
   .fms {
     text-align: center;
     padding-left: 0;
   }
 
   .chart {
-    .fm {
+    rect.fm-slice {
       cursor: pointer;
-
-      rect {
-        shape-rendering: crispEdges;
-      }
+      shape-rendering: crispEdges;
     }
   }
 

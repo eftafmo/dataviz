@@ -34,19 +34,19 @@ export default {
 
     isSelectedFm(fm) {
       if (!this.filters.fm) return;
-      return this.filters.fm == fm.name;
+      return this.filters.fm === fm.name;
     },
     isDisabledFm(fm) {
       if (!this.filters.fm) return;
-      return this.filters.fm != fm.name;
+      return this.filters.fm !== fm.name;
     },
 
-    toggleFm(fm, etarget) {
+    toggleFm(fm) {
       // don't filter by zero-valued items
-      if (fm.value == 0) return;
+      if (fm.value === 0) return;
 
       const fmname = fm.name;
-      this.filters.fm = this.filters.fm == fmname ? null : fmname;
+      this.filters.fm = this.filters.fm === fmname ? null : fmname;
     },
   },
 };
