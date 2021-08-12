@@ -9,6 +9,8 @@
       :items="nonzero"
     ></dropdown>
 
+    <chart-patterns />
+
     <chart-legend
       class="inline"
       :items="legend_items"
@@ -17,7 +19,6 @@
     ></chart-legend>
 
     <svg width="100%" :height="height + 'px'" class="chart">
-      <chart-patterns />
       <defs>
         <filter id="drop-shadow">
           <feGaussianBlur in="SourceAlpha" stdDeviation="1" />

@@ -1,6 +1,7 @@
 <template>
   <div :class="classNames" class="funding-by-period-chart">
     <embeddor :period="period" tag="beneficiary_states" />
+    <chart-patterns />
     <chart-container
       :width="svgWidth"
       :height="svgHeight"
@@ -10,7 +11,6 @@
         :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <chart-patterns />
         <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
         <image
           v-if="filters.beneficiary"
