@@ -147,6 +147,8 @@ def grants(request):
             'is_ta': not a.programme_area.is_not_ta,
             'allocation': a.gross_allocation,
             'net_allocation': a.net_allocation,
+            # TODO: only hardcoded ATM
+            'period': '2009-2014',
 
             'bilateral_allocation': sum(p.allocation
                 for o in a.programme_area.outcomes.all() if o.name == 'Fund for bilateral relations'

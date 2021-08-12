@@ -17,6 +17,7 @@ export const SCENARIOFILTERS = {
   projects: ["fm", "beneficiary", "region", "sector", "area"],
   search: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
   sectors: ["fm", "beneficiary"],
+  beneficiary_states: ["fm", "beneficiary"],
 };
 
 export default {

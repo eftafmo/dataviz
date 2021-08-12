@@ -4,11 +4,13 @@
     name: "EEA Grants",
     donor_list: "Iceland 3.03%, Liechtenstein 1.12%, Norway 95.85%",
     colour: "rgb(59, 89, 152)",
+    pattern: "rgb(29, 59, 122)",
   },
   "norway-grants": {
     id: "norway-grants",
     donor_list: "Norway 100%",
     name: "Norway Grants",
     colour: "rgb(220, 72, 68)",
+    pattern: "rgb(190, 42, 38)",
   },
 }

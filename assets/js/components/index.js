@@ -35,5 +35,7 @@ export { default as GrantsSidebar } from "./GrantsSidebar";
 export { default as PartnersSidebar } from "./PartnersSidebar";
 export { default as ProjectsSidebar } from "./ProjectsSidebar";
 
+export { default as CompareBeneficiariesView } from "./views/CompareBeneficiariesView";
+export { default as FundingByPeriodChart } from "./FundingByPeriodChart";
 export { default as CompareSectorsView } from "./views/CompareSectorsView";
 export { default as FundingBySectorChart } from "./FundingBySectorChart";

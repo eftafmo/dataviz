@@ -9,7 +9,6 @@
       <svg
         :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
       >
         <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
         <image
@@ -101,10 +100,6 @@ export default {
     },
     maxAllocation() {
       return Math.max(...this.data.map((item) => item.allocation));
-    },
-    maxYValue() {
-      const stepSize = Math.pow(10, 8);
-      return Math.ceil(this.maxAllocation / stepSize) * stepSize;
     },
   },
   methods: {

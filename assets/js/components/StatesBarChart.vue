@@ -3,7 +3,7 @@
     <embeddor :period="period" :tag="tag" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
-      v-if="hasData"
+      v-if="hasData && !noDropdown"
       :filter="state_type"
       title="No filter selected"
       :items="nonzero"
@@ -90,7 +90,13 @@ export default {
   type: "states",
 
   mixins: [WithCountriesMixin, WithTooltipMixin],
-
+  props: {
+    noDropdown: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+  },
   data() {
     return {
       tag: "beneficiaries",

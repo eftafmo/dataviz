@@ -1,8 +1,13 @@
-{% extends "dataviz.html" %}
-
-{% block top %}
-{% endblock %}
-
-{% block main %}
-  {{ PERIOD }} - {{ SCENARIO }}
+{% extends "base.html" %} {% block content %}
+<main class="main">
+  <compare_beneficiaries_view :initial="dataset"></compare_beneficiaries_view>
+</main>
+{% endblock %} {% block finally %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(Dataviz.CompareBeneficiaries, {
+      datasource: "/api/grants.json",
+    }).mount("#content");
+  });
+</script>
 {% endblock %}

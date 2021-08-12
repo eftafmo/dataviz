@@ -22,12 +22,13 @@ export default {
 
   ul {
     padding-left: 0;
+    margin: 0.5rem 0.5rem 1rem;
   }
   z-index: 2;
   min-width: 320px;
   max-width: 420px;
   padding: 1rem 2rem;
-  background-color: fadeout(@bg_color, 10);
+  background-color: fadeout(@bg_color, 0);
   box-shadow: 0 0 3px @shadow_color;
   .btn {
     position: absolute;
@@ -79,11 +80,8 @@ export default {
     justify-content: flex-start;
     align-items: center;
     padding-bottom: 1rem;
-    margin-bottom: 1rem;
-    margin-top: 0.5rem;
     font-weight: 600;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    margin: 0.5rem 0.5rem 1rem;
     border-bottom: 1px solid #eee;
     &.donor-tooltip {
       border-bottom: none;
@@ -107,6 +105,18 @@ export default {
   .name {
     margin: 0 0.5rem;
     font-size: 1.8rem;
+  }
+
+  .legend-container {
+    display: grid;
+    grid-gap: 1rem;
+    font-size: 1.5rem;
+    grid-template-columns: min-content 1fr 1fr;
+    font-weight: normal;
+  }
+
+  .muted {
+    color: #666666;
   }
 }
 </style>

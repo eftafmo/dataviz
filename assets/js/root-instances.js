@@ -77,3 +77,13 @@ export const CompareSectors = {
     funding_by_sector_chart: components.FundingBySectorChart,
   },
 };
+
+export const CompareBeneficiaries = {
+  extends: _Base,
+  name: "CompareBeneficiaries",
+
+  components: {
+    compare_beneficiaries_view: components.CompareBeneficiariesView,
+    funding_by_period_chart: components.FundingByPeriodChart,
+  },
+};

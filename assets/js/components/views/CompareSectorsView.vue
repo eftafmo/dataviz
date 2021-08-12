@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div>
-      <span class="legend-heading">Funding by sectors in</span>
+    <h1 class="page-title">
+      <span>Funding by sectors in</span>
       <dropdown-filter
         filter="beneficiary"
         title="all Beneficiary States"
         :items="BENEFICIARY_ARRAY"
         class="viz-select-heading"
       />
-    </div>
-    <div class="compare-sector-wrapper">
+    </h1>
+    <div class="compare-sector-wrapper grant-dataviz">
       <funding-by-sector-chart
         :initial="dataset"
         period="2009-2014"
@@ -37,18 +37,13 @@ export default {
 </script>
 
 <style scoped lang="less">
-.legend-heading {
-  color: #3b5998;
-  font-size: 3.6rem;
-}
-
 .compare-sector-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 2rem 5rem;
   margin: 3rem 0;
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 }
