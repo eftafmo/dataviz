@@ -1,9 +1,6 @@
 <template>
   <fms :datasource="datasource" :initial="initial" :period="period">
     <template #title><slot name="title"></slot></template>
-    <template #legend="x">
-      <fm-legend :fms="x && x.data"></fm-legend>
-    </template>
   </fms>
 </template>
 
@@ -12,7 +9,6 @@ import Component from "./Component";
 import BaseMechanisms from "./Mechanisms";
 
 import PartnersMixin from "./mixins/Partners";
-import FMLegendComponent from "./includes/FMLegend";
 
 const Mechanisms = {
   extends: BaseMechanisms,
@@ -81,7 +77,6 @@ const Mechanisms = {
 export default {
   components: {
     fms: Mechanisms,
-    "fm-legend": FMLegendComponent,
   },
   extends: Component,
 };
@@ -91,7 +86,7 @@ export default {
 .dataviz .viz.fms.is-partners {
   .legend {
     .fms {
-      text-align: left;
+      text-align: center;
     }
     .fm {
       border: none;

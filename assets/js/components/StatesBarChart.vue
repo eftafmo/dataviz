@@ -383,7 +383,7 @@ export default {
         .attr("fill", (d) =>
           this.filters[this.state_type] === null ||
           this.filters[this.state_type] == d[this.state_type]
-            ? d.stripesFill
+            ? d.stripesFill || d.colour
             : this.inactivecolour(d.colour)
         );
       this.createStateFmRect(g);
@@ -631,7 +631,7 @@ export default {
           .selectAll(".div")
           .transition(t)
           .attr("fill", (d) =>
-            yes ? d.stripesFill : this.inactivecolour(d.colour)
+            yes ? d.stripesFill || d.colour : this.inactivecolour(d.colour)
           );
       };
 
