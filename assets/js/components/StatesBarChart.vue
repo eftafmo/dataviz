@@ -12,6 +12,7 @@
     <chart-patterns />
 
     <chart-legend
+      v-if="!noLegend"
       class="inline"
       :items="legend_items"
       :click-func="legendClickFunc"
@@ -79,6 +80,11 @@ export default {
   mixins: [WithCountriesMixin, WithTooltipMixin],
   props: {
     noDropdown: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    noLegend: {
       type: Boolean,
       default: false,
       required: false,
@@ -682,6 +688,8 @@ export default {
   max-width: 70%;
 
   svg {
+    margin-top: 0.5em;
+
     width: 100%;
 
     // NOTE: this influences all inner layout

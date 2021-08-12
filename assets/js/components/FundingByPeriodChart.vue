@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       aggregate_by: ["period", "fm"],
-      filter_by: ["fm", "beneficiary"],
+      filter_by: ["beneficiary"],
       svgWidth: 600,
       svgHeight: 600,
       margin: {

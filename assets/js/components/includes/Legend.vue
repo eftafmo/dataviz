@@ -87,8 +87,6 @@ export default {
 
 <style lang="less">
 .dataviz .viz .chart-legend {
-  margin-bottom: 0.5em;
-
   ul {
     li {
       list-style-type: none;
