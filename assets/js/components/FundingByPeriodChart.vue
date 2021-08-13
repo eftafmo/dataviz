@@ -222,6 +222,7 @@ export default {
         .attr("height", (d) => this.height - this.yScale(d.net_allocation))
         .attr("stroke", "none")
         .attr("fill", (d) => d.stripesFill);
+      fmBars.exit().remove();
 
       const periodBars = this.chart
         .selectAll("rect.period-bar")
@@ -238,6 +239,7 @@ export default {
         .attr("height", (d) => this.height - this.yScale(d.net_allocation))
         .attr("fill", "transparent")
         .attr("opacity", 0);
+      periodBars.exit().remove();
     },
     tooltipTemplate(ev, d) {
       return `

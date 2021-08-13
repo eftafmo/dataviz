@@ -33,18 +33,22 @@
           </template>
           {{ period }}
         </text>
-        <g class="chart"></g>
+        <g class="chart">
+          <g class="y-axis"></g>
+        </g>
       </svg>
       <div class="funding-legend">
-        <div v-for="item in data" :key="item.id" class="legend-item">
-          <div
-            class="legend-item-square"
-            :style="{
-              'background-color': item.sector.colour,
-            }"
-          ></div>
-          <div class="legend-item-name">{{ item.sector.name }}</div>
-        </div>
+        <transition-group name="legend-item">
+          <div v-for="item in data" :key="item.id" class="legend-item">
+            <div
+              class="legend-item-square"
+              :style="{
+                'background-color': item.sector.colour,
+              }"
+            ></div>
+            <div class="legend-item-name">{{ item.sector.name }}</div>
+          </div>
+        </transition-group>
       </div>
     </chart-container>
   </div>
@@ -101,30 +105,44 @@ export default {
     maxAllocation() {
       return Math.max(...this.data.map((item) => item.allocation));
     },
-  },
-  methods: {
-    renderChart() {
-      const t = this.getTransition();
-      this.chart.selectAll("*").remove();
-      this.chart.attr(
-        "transform",
-        "translate(" + this.margin.left + "," + this.margin.top + ")"
-      );
-      const xScale = d3
-        .scaleBand()
-        .range([0, this.width])
-        .domain(this.data.map((item) => item.id))
-        .padding(0);
-
-      const yScale = d3
+    yScale() {
+      return d3
         .scaleLinear()
         .domain([0, this.maxAllocation])
         .range([this.height, 0])
         .nice();
+    },
+    xScale() {
+      return d3
+        .scaleBand()
+        .range([0, this.width])
+        .domain(this.data.map((item) => item.id))
+        .padding(0);
+    },
+  },
+  methods: {
+    renderChart() {
+      this.chart.attr(
+        "transform",
+        "translate(" + this.margin.left + "," + this.margin.top + ")"
+      );
+
+      this.renderYAxis();
+      this.renderBars();
+
+      this.chart
+        .selectAll("rect.sector")
+        .on("mouseover", this.tip.show)
+        .on("mouseout", this.tip.hide);
+    },
+    renderYAxis() {
+      const t = this.getTransition();
 
       const yAxis = this.chart
-        .append("g")
-        .call(d3.axisLeft(yScale).tickFormat(this.shortCurrency));
+        .select(".y-axis")
+        .transition(t)
+        .call(d3.axisLeft(this.yScale).tickFormat(this.shortCurrency));
+
       yAxis.select(".domain").remove();
       yAxis
         .selectAll(".tick line")
@@ -135,27 +153,24 @@ export default {
         .selectAll(".tick text")
         .attr("font-weight", "bold")
         .attr("color", "#666666");
+    },
+    renderBars() {
+      const t = this.getTransition();
+      const sectorsGroups = this.chart.selectAll("rect.sector").data(this.data);
 
-      const sectorsGroups = this.chart
-        .selectAll("g.sector")
-        .data(this.data, (d) => d.id)
-        .enter()
-        .append("g")
-        .attr("class", "sector")
-        .attr("transform-origin", `0 ${this.height}`)
-        .attr("transform", "scale(1, 0)");
       sectorsGroups
+        .enter()
         .append("rect")
-        .attr("x", (d) => xScale(d.id))
-        .attr("y", (d) => yScale(d.allocation))
-        .attr("width", xScale.bandwidth())
-        .attr("height", (d) => this.height - yScale(d.allocation))
+        .attr("class", "sector")
+        .merge(sectorsGroups)
+        .transition(t)
+        .attr("x", (d) => this.xScale(d.id))
+        .attr("y", (d) => this.yScale(d.allocation))
+        .attr("width", this.xScale.bandwidth())
+        .attr("height", (d) => this.height - this.yScale(d.allocation))
         .attr("fill", (d) => d.sector.colour)
-        .attr("stroke", "none")
-        .on("mouseover", this.tip.show)
-        .on("mouseout", this.tip.hide);
-
-      sectorsGroups.transition(t).attr("transform", "scale(1, 1)");
+        .attr("stroke", "none");
+      sectorsGroups.exit().remove();
     },
     tooltipTemplate(ev, d) {
       return `
@@ -185,7 +200,12 @@ export default {
 }
 
 .funding-by-sector-chart {
-  g.sector:hover {
+  // Hide these during transitions before we get to remove them
+  .y-axis .domain {
+    opacity: 0;
+  }
+
+  .sector:hover {
     filter: drop-shadow(0px -2px 6px #3d3d3d);
   }
 
@@ -219,5 +239,20 @@ export default {
       padding: 1rem;
     }
   }
+}
+
+.legend-item-enter-active,
+.legend-item-leave-active {
+  transition: opacity 0.5s;
+}
+.legend-item-enter,
+.legend-item-leave-to {
+  opacity: 0;
+}
+.legend-item-move {
+  transition: transform 0.5s;
+}
+.legend-item-leave-active {
+  position: absolute;
 }
 </style>
