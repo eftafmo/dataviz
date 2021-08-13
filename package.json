@@ -69,7 +69,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{less,css,scss,html}": [
+    "*.{less,css,scss}": [
       "prettier -c --write"
     ],
     "*.{js,jsx,vue}": [

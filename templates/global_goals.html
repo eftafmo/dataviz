@@ -4,5 +4,74 @@
 {% endblock %}
 
 {% block main %}
-  {{ PERIOD }} - {{ SCENARIO }}
+
+  <h1 class="page-title">Our Grants</h1>
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="financial-mechanisms">
+      <mechanisms :initial="dataset" period="{{ PERIOD }}">
+        <template #title>
+          <h2>Funding by Financial Mechanism <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
+        </template>
+      </mechanisms>
+    </div>
+
+    <div class="grant-dataviz" id="priority-sectors">
+
+    </div>
+
+  </div>
+
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="funding-map">
+      <xmap
+          :initial="dataset"
+          period="{{ PERIOD }}"
+          details-datasource="{% url "api:grants-beneficiary-detail" "XX" %}"
+      >
+        <template #title>
+          <h2>Funding map</h2>
+        </template>
+      </xmap>
+    </div>
+
+    <div class="grant-dataviz" id="beneficiary-states">
+      <beneficiaries
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Funding across beneficiary states</h2>
+        </template>
+      </beneficiaries>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block aside %}
+
+  <sidebar
+      class="sticky"
+      :initial="dataset"
+      period="{{ PERIOD }}"
+  >
+  </sidebar>
+
+{% endblock %}
+
+{% block finally %}
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.Grants,
+      {
+        datasource: "/api/grants.json"
+      }
+    ).mount("#content");
+  });
+  </script>
 {% endblock %}

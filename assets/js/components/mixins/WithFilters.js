@@ -13,6 +13,7 @@ export const FILTERS = {
 export const SCENARIOFILTERS = {
   index: ["fm", "beneficiary"],
   funding: ["fm", "beneficiary", "sector", "area"],
+  global_goals: ["fm", "beneficiary", "sector", "area"],
   cooperation: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
   projects: ["fm", "beneficiary", "region", "sector", "area"],
   search: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
