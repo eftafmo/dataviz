@@ -100,20 +100,20 @@ export default {
             const details = periodData[fm.name];
             // These can be zero for specific beneficiaries. However we still
             // need to draw them in order for them to be animated when filters change.
-            const net_allocation = (details && details.net_allocation) || 0;
+            const allocation = (details && details.allocation) || 0;
 
             result.push({
               id: `${period}-${fm.id}`,
               fmId: fm.id,
-              net_allocation,
-              drawnAllocation: yOffset + net_allocation,
+              allocation,
+              drawnAllocation: yOffset + allocation,
               period,
               details,
               stripesFill: fm.stripesFill,
             });
             // Keep track of the offset for this period, as the bars
             // as stacked on top of each other.
-            yOffset += net_allocation;
+            yOffset += allocation;
           });
         }
       );
@@ -219,7 +219,7 @@ export default {
         .attr("x", (d) => this.xScale(d.period))
         .attr("y", (d) => this.yScale(d.drawnAllocation))
         .attr("width", this.xScale.bandwidth())
-        .attr("height", (d) => this.height - this.yScale(d.net_allocation))
+        .attr("height", (d) => this.height - this.yScale(d.allocation))
         .attr("stroke", "none")
         .attr("fill", (d) => d.stripesFill);
       fmBars.exit().remove();
@@ -234,9 +234,9 @@ export default {
         .merge(periodBars)
         .transition(t)
         .attr("x", (d) => this.xScale(d.period))
-        .attr("y", (d) => this.yScale(d.net_allocation))
+        .attr("y", (d) => this.yScale(d.allocation))
         .attr("width", this.xScale.bandwidth())
-        .attr("height", (d) => this.height - this.yScale(d.net_allocation))
+        .attr("height", (d) => this.height - this.yScale(d.allocation))
         .attr("fill", "transparent")
         .attr("opacity", 0);
       periodBars.exit().remove();
@@ -273,7 +273,7 @@ export default {
       const data = this.aggregatedByPeriodAndFm[d.period];
 
       return this.FM_ARRAY.map((fm) => {
-        const allocation = (data[fm.name] && data[fm.name].net_allocation) || 0;
+        const allocation = (data[fm.name] && data[fm.name].allocation) || 0;
         return `
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
             <rect width="12" height="12" fill="${fm.stripesFill}">

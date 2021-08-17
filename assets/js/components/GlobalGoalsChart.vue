@@ -107,7 +107,7 @@ export default {
       ];
     },
     maxAllocation() {
-      return Math.max(...this.data.map((item) => item.net_allocation));
+      return Math.max(...this.data.map((item) => item.allocation));
     },
     xScale() {
       // Leave room for the numbers on the right side
@@ -179,7 +179,7 @@ export default {
         .transition(t)
         .attr("x", this.barHeight)
         .attr("y", (d) => this.yScale(d))
-        .attr("width", (d) => this.barHeight + this.xScale(d.net_allocation))
+        .attr("width", (d) => this.barHeight + this.xScale(d.allocation))
         .attr("height", this.barHeight)
         .attr("stroke", (d) =>
           this.isDisabledSector(d) ? this.disabledColor : d.color
@@ -229,7 +229,7 @@ export default {
         )
         .attr("dominant-baseline", "middle")
         .attr("text-anchor", "end")
-        .text((d) => this.currency(d.net_allocation));
+        .text((d) => this.currency(d.allocation));
       goalValues.exit().remove();
     },
     updateHoverBars() {

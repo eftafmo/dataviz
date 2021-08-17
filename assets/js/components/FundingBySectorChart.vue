@@ -92,7 +92,7 @@ export default {
         return {
           id,
           sector: this.SECTORS[id],
-          allocation: item.net_allocation,
+          allocation: item.allocation,
         };
       });
     },
