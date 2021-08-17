@@ -3,17 +3,29 @@
     <embeddor :period="period" tag="global_goals" />
     <h2>Allocation by sector</h2>
     <dropdown-filter filter="sector" :items="dropDownItems" title="Sector" />
+    <transition name="fade">
+      <div
+        v-if="currentGoal"
+        class="current-goal"
+        :style="{ 'background-color': currentGoal.color }"
+      >
+        <div class="current-goal-title">
+          <div class="current-goal-index">
+            {{ currentGoal.index + 1 }}
+          </div>
+          <div class="current-goal-name">
+            {{ currentGoal.name }}
+          </div>
+        </div>
+        <img :src="currentGoal.imgURL" alt="" />
+      </div>
+    </transition>
     <chart-container
       :width="width"
       :height="height"
       class="global-goals-chart-container"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="patterns-def"
-        width="6"
-        height="20"
-      >
+      <svg ref="svgContainer" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern
             v-for="patternData in patternArray"
@@ -41,11 +53,6 @@
             />
           </pattern>
         </defs>
-      </svg>
-      <svg
-        :viewBox="`0 0 ${width} ${height}`"
-        xmlns="http://www.w3.org/2000/svg"
-      >
         <g class="chart"></g>
       </svg>
     </chart-container>
@@ -90,9 +97,15 @@ export default {
           name: key,
           color: this.sectorcolour(key),
           stripesFill: `url(#stripes-pattern-${id})`,
+          imgURL: this.sectorUrl(key),
           ...item,
         };
       });
+    },
+    currentGoal() {
+      if (!this.filters.sector) return null;
+      const idToFind = slugify(this.filters.sector);
+      return this.data.find((item) => idToFind === item.id);
     },
     dropDownItems() {
       return Array.from(new Set(this.dataset.map((item) => item.sector)));
@@ -138,7 +151,16 @@ export default {
     yScale(d) {
       return d.index * (this.barHeight + this.barHeight * this.barPadding);
     },
+    yScaleMiddle(d) {
+      // Middle of the bar. Add 1 point extra to account for the stroke size
+      return this.yScale(d) + Math.floor(this.barHeight / 2) + 1;
+    },
     renderChart() {
+      const t = this.getTransition();
+      d3.select(this.$refs.svgContainer)
+        .transition(t)
+        .attr("viewBox", `0 0 ${this.width} ${this.height}`);
+
       this.updateSquares();
       this.updateBars();
       this.updateText();
@@ -167,6 +189,25 @@ export default {
         .attr("stroke-width", 1)
         .attr("fill", (d) => d.color);
       barSquares.exit().remove();
+
+      const barSquaresText = this.chart
+        .selectAll("text.index-label")
+        .data(this.data);
+      barSquaresText
+        .enter()
+        .append("text")
+        .attr("class", "index-label")
+        .merge(barSquaresText)
+        .transition(t)
+        .attr("x", this.barHeight / 2)
+        .attr("y", (d) => this.yScaleMiddle(d))
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "middle")
+        .attr("stroke", "none")
+        .attr("fill", "white")
+        .attr("font-weight", "bold")
+        .text((d) => (d.index + 1).toString());
+      barSquaresText.exit().remove();
     },
     updateBars() {
       const t = this.getTransition();
@@ -202,7 +243,7 @@ export default {
         .merge(barLabels)
         .transition(t)
         .attr("x", this.barHeight + 10)
-        .attr("y", (d) => this.yScale(d) + Math.floor(this.barHeight / 2))
+        .attr("y", (d) => this.yScaleMiddle(d))
         .attr("font-size", "14px")
         .attr("font-weight", (d) =>
           this.isSelectedSector(d) ? "bold" : "normal"
@@ -222,7 +263,7 @@ export default {
         .merge(goalValues)
         .transition(t)
         .attr("x", this.width - 10)
-        .attr("y", (d) => this.yScale(d) + Math.floor(this.barHeight / 2))
+        .attr("y", (d) => this.yScaleMiddle(d))
         .attr("font-size", "14px")
         .attr("font-weight", (d) =>
           this.isSelectedSector(d) ? "bold" : "normal"
@@ -257,11 +298,51 @@ export default {
 </script>
 
 <style lang="less">
+.current-goal {
+  width: 19rem;
+  height: 19rem;
+  margin: 5rem auto 7rem auto;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  .current-goal-title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+
+    .current-goal-index {
+      font-size: 40px;
+      margin-right: 1rem;
+    }
+
+    .current-goal-name {
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+  }
+
+  img {
+    filter: invert(1);
+    display: block;
+    width: 12rem;
+  }
+}
+
 .global-goals-chart-container {
-  rect.hover-bar:hover {
+  rect.hover-bar {
     cursor: pointer;
-    fill-opacity: 0.1;
-    stroke-opacity: 0.1;
+
+    &:hover {
+      fill-opacity: 0.1;
+      stroke-opacity: 0.1;
+    }
   }
 }
 </style>
