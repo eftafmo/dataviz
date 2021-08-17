@@ -1,298 +1,127 @@
-# -*- coding: utf-8 -*-
-import bleach
-import re
-from django.db import models
-from enumfields import EnumField, Enum
 from ckeditor.fields import RichTextField
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from dv.lib.models import ImportableModelMixin
-from dv.lib import utils
 
-
-class _BaseManager(models.Manager):
-    pass
-
-
-class _BaseModel(ImportableModelMixin, models.Model):
-    objects = _BaseManager()
-
-    class Meta:
-        abstract = True
-
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-
-class _MainManager(_BaseManager):
-    def get_by_natural_key(self, nkey):
-        return self.get(**{self.model.NATURAL_KEY_FIELD: nkey})
-
-    def filter_by_natural_keys(self, nkeys):
-        lookup = "%s__in" % self.model.NATURAL_KEY_FIELD
-        return self.filter(**{lookup: nkeys})
-
-
-class _MainModel(_BaseModel):
-    # all main models have a unique code
-    NATURAL_KEY_FIELD = 'code'
-
-    objects = _MainManager()
-
-    @property
-    def natural_key(self):
-        return getattr(self, self.NATURAL_KEY_FIELD)
-
-    __ENDING_STR_RE = re.compile(r'[^\w]+$')
-
-    def __str__(self):
-        # output the code, and shorten long names
-        _MINW, _MAXW = 5, 7
-
-        words = self.name.split()
-        if len(words) <= _MAXW:
-            short_name = self.name
-        else:
-            short_name = "%s …" % (
-                self.__ENDING_STR_RE.sub("", " ".join(words[:_MINW])))
-
-        return "%s - %s" % (self.natural_key, short_name)
-
-    class Meta(_BaseModel.Meta):
-        abstract = True
-
-
-class FinancialMechanism(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'BeneficiaryStatePrioritySector',
-            'map': {
-                'code': 'FMCode',
-                'name': 'FinancialMechanism',
-                'grant_name': 'GrantName',
-            }
-        },
-    ]
-
-    code = models.CharField(max_length=16, primary_key=True)
-    name = models.CharField(max_length=128, unique=True)
-    grant_name = models.CharField(max_length=128, unique=True)
+FM_EEA = 'EEA'
+FM_NORWAY = 'NOR'
+FINANCIAL_MECHANISMS = [
+    (FM_EEA, 'EEA Grants'),
+    (FM_NORWAY, 'Norway Grants'),
+]
+FINANCIAL_MECHANISMS_DICT = dict(FINANCIAL_MECHANISMS)
+# TODO add table for financing periods?
+FUNDING_PERIODS = [
+    (1, '2004-2009'),
+    (2, '2009-2014'),
+    (3, '2014-2021'),
+]
+FUNDING_PERIODS_DICT = dict(FUNDING_PERIODS)
 
 
 class NUTS(models.Model):
-
     code = models.CharField(max_length=2, primary_key=True)
     label = models.CharField(max_length=128)
+    # TODO field to differentiate between NUTS in different periods?
+
+    class Meta:
+        ordering = ['code']
+        verbose_name_plural = "NUTS"
 
     @property
     def level(self):
         """The NUTS level."""
         return len(self.code) - 2
 
-    class Meta(_BaseModel.Meta):
-        ordering = ['code']
-        verbose_name_plural = "NUTS"
-
     def __str__(self):
         return self.code
 
 
-class State(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'BeneficiaryState',
-            'map': {
-                'code': 'Abbreviation',
-                'name': 'BeneficiaryState',
-                'url': 'UrlBSPage',
-            }
-        },
-    ]
-
+class State(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=64, unique=True)
     url = models.TextField()
 
+    def __str__(self):
+        return self.name
 
-class PrioritySector(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'BeneficiaryStatePrioritySector',
-            'map': {
-                'code': 'PSCode',
-                'name': 'PrioritySector',
-            }
-        },
-    ]
 
+# TODO have priority sectors changed between periods? i.e. same code, different names
+class PrioritySector(models.Model):
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=64)  # not unique
 
 
-class ProgrammeArea(_MainModel):
-    # programme areas are defined in the same sheet with priority sectors
-    IMPORT_SOURCES = [
-        {
-            'src': 'BeneficiaryStatePrioritySector',
-            'map': {
-                'financial_mechanism': 'FMCode',
-                'priority_sector': 'PSCode',
-                'code': 'PACode',
-                'name': 'ProgrammeArea',
-                'short_name': 'ProgrammeAreaShortName',
-                'order': 'SortOrder',
-                'objective': 'ProgrammeAreaObjective',
-                'url': 'UrlPAPage',
-                'is_not_ta': 'IsProgrammeArea',
-            }
-        },
-    ]
-
+class ProgrammeArea(models.Model):
     # each PA code is duplicated for the 2 FM present now
+    # TODO what are slogan elements?
     code = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=256)  # not unique because of FM
     short_name = models.CharField(max_length=32)  # not unique
-    order = models.SmallIntegerField()
+    # order = models.SmallIntegerField()  # TODO where from?
     objective = models.TextField()
 
-    priority_sector = models.ForeignKey(PrioritySector,
-                                        on_delete=models.CASCADE,
-                                        )
-    financial_mechanism = models.ForeignKey(FinancialMechanism,
-                                            on_delete=models.CASCADE,
-                                            )
-    # Allocation also branches off towards FM
-    allocations = models.ManyToManyField(State, through="Allocation")
-
-    # Technical assistance sectors and programme areas are not always displayed
-    is_not_ta = models.BooleanField()
-    url = models.CharField(max_length=256, null=True)
+    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
 
-class Allocation(_MainModel):
-    NATURAL_KEY_FIELD = None
-    IMPORT_SOURCES = [
-        {
-            'src': 'BeneficiaryStatePrioritySector',
-            'map': {
-                'state': ('name', 'BeneficiaryState'),
-                'programme_area': 'PACode',
-                'financial_mechanism': 'FMCode',
-                'gross_allocation': 'GrossAllocation',
-                'net_allocation': 'NetAllocation',
-                'order': 'SortOrder',
-            }
-        },
-    ]
+class Allocation(models.Model):
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+    financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
 
-    @classmethod
-    def from_data(cls, data, src_idx):
-        """ add fake code field """
-        obj = super().from_data(data, src_idx)
-        obj.code = obj.state_id + obj.programme_area_id
-        return obj
-
-    code = models.CharField(max_length=6, primary_key=True)
-    state = models.ForeignKey(State,
-                              on_delete=models.CASCADE,
-                              )
-    programme_area = models.ForeignKey(ProgrammeArea,
-                                       on_delete=models.CASCADE,
-                                       )
-    # PA is already including FM, but add this so we have more data traversal paths
-    financial_mechanism = models.ForeignKey(FinancialMechanism,
-                                            on_delete=models.CASCADE,
-                                            )
+    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
+    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE, null=True)
 
     gross_allocation = models.DecimalField(max_digits=15, decimal_places=2)
     net_allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
-    order = models.SmallIntegerField()
-
-    def __str__(self):
-        return "{} / {} / {} gross: {}".format(
-            self.financial_mechanism_id,
-            self.state_id,
-            self.programme_area_id,
-            self.gross_allocation,
-        )
-
-    class Meta(_MainModel.Meta):
-        unique_together = ('state', 'programme_area', 'financial_mechanism')
+    class Meta:
+        unique_together = ('state', 'programme_area', 'financial_mechanism', 'funding_period')
 
 
-class ProgrammeStatus(Enum):
-    APPROVED = 'approved'
-    IMPLEMENTATION = 'implementation'
-    COMPLETED = 'completed'
-    CLOSED = 'closed'
-    WITHDRAWN = 'withdrawn'
-    RETURNED = 'returned'
+class Programme(models.Model):
+    class Status:
+        APPROVED = 'approved'
+        IMPLEMENTATION = 'implementation'
+        COMPLETED = 'completed'
+        CLOSED = 'closed'
+        WITHDRAWN = 'withdrawn'
+        RETURNED = 'returned'
+        CANCELLED = 'cancelled'
 
-    class Labels:
-        APPROVED = _('Approved')
-        IMPLEMENTATION = _('Implementation')
-        COMPLETED = _('Completed')
-        CLOSED = _('Closed')
-        WITHDRAWN = _('Withdrawn')
-        RETURNED = _('Returned to po')
+    STATUS_CHOICES = (
+        (Status.APPROVED, _('Approved')),
+        (Status.IMPLEMENTATION, _('Implementation')),
+        (Status.COMPLETED, _('Completed')),
+        (Status.CLOSED, _('Closed')),
+        (Status.WITHDRAWN, _('Withdrawn')),
+        (Status.RETURNED, _('Returned to po')),
+        (Status.CANCELLED, _('Cancelled')),
+    )
 
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
-class Programme(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'Programme',
-            'map': {
-                'state': ('name', 'BeneficiaryState'),
-                # skipping this, as we can't import m2ms before the instance is saved
-                #'programme_areas': 'PAListWithShortName', # this needs special massaging
-                'code': 'ProgrammeCode',
-                'name': 'Programme',
-                'summary': 'ProgrammeSummary',
-                'allocation_eea': 'AllocatedProgrammeGrantEEA',
-                'allocation_norway': 'AllocatedProgrammeGrantNorway',
-                'co_financing': 'ProgrammeCoFinancing',
-                'status': 'ProgrammeStatus',
-                'url': 'UrlProgrammePage',
-                'is_tap': 'IsTAProgramme'
-            }
-        },
-    ]
+    states = models.ManyToManyField(State)
+    # TODO see if we need to declare the m2m table explicitly
+    programme_areas = models.ManyToManyField(ProgrammeArea)
 
-    __post_bleach_comments_re = re.compile(r'&lt;!--.*--&gt;')
-
-    @classmethod
-    def from_data(cls, data, src_idx):
-        """ Mutates its data! """
-        mapping = cls.IMPORT_SOURCES[src_idx]['map']
-        data[mapping['summary']] = bleach.clean(
-            data[mapping['summary']] or '', strip=True, strip_comments=True)
-        data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
-
-        return super().from_data(data, src_idx)
-
-    state = models.ForeignKey(State,
-                              on_delete=models.CASCADE,
-                              )
-    programme_areas = models.ManyToManyField(ProgrammeArea,
-                                             through="Programme_ProgrammeArea")
-
-    code = models.CharField(max_length=5, primary_key=True)
+    short_name = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=256)  # not unique
 
-    status = EnumField(ProgrammeStatus, max_length=14)
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES)
 
     url = models.CharField(max_length=256, null=True)
     summary = models.TextField()
 
     allocation_eea = models.DecimalField(max_digits=15, decimal_places=2)
     allocation_norway = models.DecimalField(max_digits=15, decimal_places=2)
+    co_financing = models.DecimalField(max_digits=15, decimal_places=2)
 
-    is_tap = models.BooleanField()
+    is_tap = models.BooleanField(help_text='Technical Assistance Programme')
+    is_bfp = models.BooleanField(help_text='Bilateral Fund Programme')
 
     @property
     def allocation(self):
         return self.allocation_eea + self.allocation_norway
-
-    co_financing = models.DecimalField(max_digits=15, decimal_places=2)
 
     @property
     def is_eea(self):
@@ -303,255 +132,31 @@ class Programme(_MainModel):
         return self.allocation_norway != 0
 
 
-class Programme_ProgrammeArea(_BaseModel):
-    """
-    A m2m-through table, defined explicitly only so it can be used during import
-    """
-    IMPORT_SOURCES = [
-        {
-            'src': 'Programme',
-            'map': {
-                'programme': 'programme',
-                'programme_area': 'programme_area',
-                'code': ['programme', 'programme_area']
-            },
-            # note the leading underscore, this won't hit ImportableModelMixin.from_data
-            '_map': {
-                'programme': 'ProgrammeCode',
-                'programme_area': 'PAListWithShortName',
-            }
-        },
-    ]
+class Project(models.Model):
+    class Status:
+        IN_PROGRESS = 'in progress'
+        COMPLETED = 'completed'
+        TERMINATED = 'terminated'
+        NON_COMPLETED = 'non completed'
+        PARTIALLY_COMPLETED = 'partially completed'
 
-    __PA_RE = re.compile(r'(?:^|,)([A-Z]{2}[0-9]{2}) - ')
+    STATUS_CHOICES = (
+        (Status.IN_PROGRESS, _('In Progress')),
+        (Status.COMPLETED, _('Completed')),
+        (Status.TERMINATED, _('Terminated')),
+        (Status.NON_COMPLETED, _('Non Completed')),
+        (Status.PARTIALLY_COMPLETED, _('Partially Completed')),
+    )
 
-    @classmethod
-    def from_data(cls, data, src_idx):
-        # this isn't a regular from_data() method, because
-        # it returns multiple instances!
+    # financial_mechanism = models.CharField(choices=FINANCIAL_MECHANISMS)
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
-        private_mapping = cls.IMPORT_SOURCES[src_idx]['_map']
-        p_column = private_mapping['programme']
-        programme = data[p_column]
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
+    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
+    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
 
-        pa_column = private_mapping['programme_area']
-        # we need to extract the programme area codes from the input
-        programme_areas = re.findall(cls.__PA_RE, data[pa_column])
-
-        def _generate_data():
-            for pa in programme_areas:
-                yield {
-                    'programme': programme,
-                    'programme_area': pa,
-                }
-
-        # weird - we can't get away with bare super()...
-        return ( super(cls, cls).from_data(subdata, src_idx) for subdata in _generate_data())
-
-    code = models.CharField(max_length=9, primary_key=True)
-    programme = models.ForeignKey(Programme,
-                                  on_delete=models.CASCADE,
-                                  )
-    programme_area = models.ForeignKey(ProgrammeArea,
-                                       on_delete=models.CASCADE,
-                                       )
-
-    class Meta(_MainModel.Meta):
-        unique_together = ('programme', 'programme_area')
-
-    def __str__(self):
-        return "%s _ %s" % (self.programme.code, self.programme_area.code)
-
-
-class _FussyOutcomeCode(object):
-    @classmethod
-    def from_data(cls, data, src_idx):
-        # fix non-unique FBL outcome codes
-        # FBL = Fund for bilateral cooperation
-        data = data.copy()
-        if data['OutcomeCode'] == 'FBL':
-            # derive a unique key from the outcome name
-            uniq = utils.uniq_hash(data['Outcome'])[:5]
-            code = '%sFBL%s' % (data['PACode'], uniq)
-            data['OutcomeCode'] = code
-
-        return super().from_data(data, src_idx)
-
-
-class Outcome(_FussyOutcomeCode, _MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'ProgrammeOutcome',
-            'map': {
-                'programme_area': 'PACode',
-                'code': 'OutcomeCode',
-                'name': 'Outcome',
-                'fixed_budget_line': 'IsFixedBudgetline',
-            }
-        },
-    ]
-
-    programme_area = models.ForeignKey(ProgrammeArea,
-                                       related_name='outcomes',
-                                       on_delete=models.CASCADE,
-                                       )
-
-    code = models.CharField(max_length=12, primary_key=True)
-    name = models.CharField(max_length=512)  # not unique
-
-    fixed_budget_line = models.BooleanField()
-
-
-class ProgrammeOutcome(_FussyOutcomeCode, _BaseModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'ProgrammeOutcome',
-            'map': {
-                'programme': 'ProgrammeCode',
-                'outcome': 'OutcomeCode',
-                'state': ('name', 'BeneficiaryState'),
-                'allocation': 'GrantAmount',
-                'co_financing': 'ProgrammeCoFinancing',
-            }
-        },
-        # Update ProgrammeOutcome based on info from ProgrammeIndicators
-        # make sure you identify same row (all uniq constraints present)
-        {
-            'src': 'ProgrammeIndicators',
-            'map': {
-                'programme': 'ProgrammeCode',
-                'outcome': 'OutcomeCode',
-                'result_text': 'ResultText',
-            }
-        },
-    ]
-
-    @classmethod
-    def from_data(cls, data, src_idx):
-        """ add fake code field """
-        obj = super(cls, cls).from_data(data, src_idx)
-        if obj is not None:
-            obj.code = (
-                obj.state_id +
-                (obj.programme_id if obj.programme_id else '') +
-                obj.outcome_id
-            )
-        return obj
-
-    code = models.CharField(max_length=20, primary_key=True)
-    # programme can be null, e.g. "Reserve FM2004-09"
-    programme = models.ForeignKey(Programme,
-                                  null=True,
-                                  related_name='outcomes',
-                                  on_delete=models.CASCADE,
-                                  )
-    outcome = models.ForeignKey(Outcome,
-                                related_name='programmes',
-                                on_delete=models.CASCADE,
-                                )
-    state = models.ForeignKey(State,
-                              on_delete=models.CASCADE,
-                              )
-
-    allocation = models.FloatField()
-    co_financing = models.FloatField()
-    result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
-
-    class Meta:
-        unique_together = ('programme', 'outcome', 'state')
-
-    def __str__(self):
-        return "%s _ %s" % (self.programme.code, self.outcome.code)
-
-
-class ProjectStatus(Enum):
-    IN_PROGRESS = 'in progress'
-    COMPLETED = 'completed'
-    TERMINATED = 'terminated'
-    NON_COMPLETED = 'non completed'
-    PARTIALLY_COMPLETED = 'partially completed'
-
-    class Labels:
-        IN_PROGRESS = _('In Progress')
-        COMPLETED = _('Completed')
-        TERMINATED = _('Terminated')
-        NON_COMPLETED = _('Non Completed')
-        PARTIALLY_COMPLETED = _('Partially Completed')
-
-
-class Project(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'Project',
-            'map': {
-                'state': ('name', 'BeneficiaryState'),
-                'programme': 'ProgrammeCode',
-                'outcome': 'OutcomeCode',
-                'financial_mechanism': 'FMCode',
-                'priority_sector': 'PSCode',
-                'programme_area': 'PACode',
-                'status': 'ProjectStatus',
-                'code': 'ProjectCode',
-                'name': 'Project',
-                'allocation': 'GrantAmount',
-                'geotarget': 'GeographicalTarget',
-                'nuts': 'NUTSCode',
-                'programme_co_financing': 'ProgrammeCoFinancing',
-                'project_co_financing': 'ProjectCoFinancing',
-                'is_eea': 'IsEEA',
-                'is_norway': 'IsNorway',
-                'url': 'UrlProjectPage',
-                'has_ended': 'HasEnded',
-                'is_dpp': 'HasDpp',
-                'is_positive_fx': 'ResultPositiveEffects',
-                'is_improved_knowledge': 'ResultImprovedKnowledge',
-                'is_continued_coop': 'ResultContinuedCooperation',
-                'is_published': 'IsPublished',
-                'summary': 'PlannedSummary',
-                'actual_summary': 'ActualSummary',
-            }
-        },
-    ]
-
-    __post_bleach_comments_re = re.compile(r'&lt;!--.*--&gt;')
-
-    @classmethod
-    def from_data(cls, data, src_idx):
-        """ Mutates its data! """
-        mapping = cls.IMPORT_SOURCES[src_idx]['map']
-        data[mapping['summary']] = bleach.clean(
-            data[mapping['summary']] or '', strip=True, strip_comments=True)
-        data[mapping['summary']] = cls.__post_bleach_comments_re.sub('', data[mapping['summary']])
-
-        data[mapping['actual_summary']] = bleach.clean(
-            data[mapping['actual_summary']] or '', strip=True, strip_comments=True)
-        data[mapping['actual_summary']] = cls.__post_bleach_comments_re.sub(
-            '',
-            data[mapping['actual_summary']]
-        )
-
-        return super().from_data(data, src_idx)
-
-    state = models.ForeignKey(State,
-                              on_delete=models.CASCADE,
-                              )
-    programme = models.ForeignKey(Programme,
-                                  on_delete=models.CASCADE,
-                                  )
-    programme_area = models.ForeignKey(ProgrammeArea,
-                                       on_delete=models.CASCADE,
-                                       )
-    outcome = models.ForeignKey(Outcome,
-                                on_delete=models.CASCADE,
-                                )
-    financial_mechanism = models.ForeignKey(FinancialMechanism,
-                                            on_delete=models.CASCADE,
-                                            )
-    priority_sector = models.ForeignKey(PrioritySector,
-                                        on_delete=models.CASCADE,
-                                        )
-
-    status = EnumField(ProjectStatus, max_length=64)
+    status = models.CharField(max_length=19, choices=STATUS_CHOICES)
 
     code = models.CharField(max_length=9, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
@@ -573,247 +178,45 @@ class Project(_MainModel):
     actual_summary = models.TextField()
 
 
-class ProjectTheme(_BaseModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'ProjectThemes',
-            'map': {
-                'project': 'ProjectCode',
-                'name': 'Theme',
-            }
-        },
-    ]
-
-    @classmethod
-    def from_data(cls, data, src_idx):
-        """ add fake code field """
-        obj = super().from_data(data, src_idx)
-        obj.code = obj.project_id + obj.name
-        return obj
-
-    code = models.CharField(max_length=512, primary_key=True)
-    project = models.ForeignKey(Project,
-                                related_name='themes',
-                                on_delete=models.CASCADE,
-                                )
+class ProjectTheme(models.Model):
+    project = models.ForeignKey(Project, related_name='themes', on_delete=models.CASCADE)
     name = models.CharField(max_length=512)  # not unique
 
-    def __str__(self):
-        return "%s - %s" % (self.project_id, self.name)
 
+class ProgrammeIndicator(models.Model):
+    # TODO refine this
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
+    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
 
-class Indicator(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'ProgrammeIndicators',
-            'map': {
-                'code': 'IndicatorCode',
-                'name': 'Indicator',
-            }
-        },
-    ]
+    indicator = models.CharField(max_length=256)
+    outcome = models.CharField(max_length=256)
 
-    code = models.CharField(max_length=64, primary_key=True)
-    name = models.CharField(max_length=256)
-
-
-class ProgrammeIndicator(_BaseModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'ProgrammeIndicators',
-            'map': {
-                'indicator': 'IndicatorCode',
-                'programme': 'ProgrammeCode',
-                'programme_area': 'ProgrammeAreaCode',
-                'outcome': 'OutcomeCode',
-                'result_text': 'ResultText',
-                'state': ('name', 'BeneficiaryState'),
-                'achievement': 'Achievement',
-                'order': 'SortOrder',
-            }
-        },
-    ]
-
-    # TODO: assess linking (all 3? of) these to ProgrammeOutcome
-    #'ProgrammeCode',
-    #'ProgrammeAreaCode',
-    #'OutcomeCode',
-
-
-    @classmethod
-    def from_data(cls, data, src_idx):
-        """ add fake code field """
-        obj = super().from_data(data, src_idx)
-        if obj is not None:
-            obj.code = (
-                obj.state_id +
-                (obj.programme_id if obj.programme_id else '') +
-                obj.outcome_id +
-                obj.indicator_id
-            )
-        return obj
-
-    code = models.CharField(max_length=255, primary_key=True)
-
-    indicator = models.ForeignKey(Indicator,
-                                  on_delete=models.CASCADE,
-                                  )
-
-    programme = models.ForeignKey(Programme,
-                                  on_delete=models.CASCADE,
-                                  )
-    programme_area = models.ForeignKey(ProgrammeArea,
-                                       on_delete=models.CASCADE,
-                                       )
-    outcome = models.ForeignKey(Outcome,
-                                on_delete=models.CASCADE,
-                                )
-    state = models.ForeignKey(State,
-                              null=True,
-                              on_delete=models.CASCADE,
-                              )
-    # this is also on ProgrammeOutcome...
     result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
 
     achievement = models.IntegerField()
     order = models.SmallIntegerField()
 
     def __str__(self):
-        return "%s - %s" % (self.programme.code, self.indicator.code)
+        return "%s - %s" % (self.programme.code, self.indicator)
 
 
-class OrganisationRole(_MainModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'OrganisationRoles',
-            'map': {
-                'code': 'OrganisationRoleCode',
-                'role': 'OrganisationRole',
-            }
-        },
-    ]
+class OrganisationRole(models.Model):
+    organisation_country = models.CharField(max_length=64)
+    organisation_name = models.CharField(max_length=256)
+    nuts_code = models.CharField(max_length=5)
 
-    code = models.CharField(max_length=8, primary_key=True)
-    role = models.CharField(max_length=64)
-
-    def __str__(self):
-        return "%s _ %s" % (self.code, self.role)
-
-
-class OrganisationPType(Enum):
-    PROGRAMME = 'programme'
-    PROJECT = 'project'
-
-    class Labels:
-        PROGRAMME = _('Programme')
-        PROJECT = _('Project')
-
-
-class Organisation(_BaseModel):
-    IMPORT_SOURCES = [
-        {
-            'src': 'Organisation',
-            'map': {
-                'id': 'IdOrganisation',
-                'name': 'Organisation',
-                'domestic_name': 'OrganisationDomesticName',
-                'ptype': 'IsProgrammeOrProjectOrg',
-                'orgtype': 'OrganisationType',
-                'orgtypecateg': 'OrganisationTypeCategory',
-                'nuts': 'NUTSCode',
-                'country': 'Country',
-                'city': 'City',
-                'geotarget': 'GeographicalTarget',
-            }
-        },
-    ]
-
-    ptype = EnumField(OrganisationPType, max_length=9)
-    # the countries can be different from member states; that's why we don't use FK
-    country = models.CharField(max_length=64)
-    city = models.CharField(max_length=64)
-    name = models.CharField(max_length=256)
-    domestic_name = models.CharField(max_length=256, null=True)
-    geotarget = models.CharField(max_length=256)
-    nuts = models.CharField(max_length=5)
-    orgtype = models.CharField(max_length=256)
-    orgtypecateg = models.CharField(max_length=256)
-
-    role = models.ManyToManyField(OrganisationRole, through="Organisation_OrganisationRole")
-
-    # TODO: can't unique, as organisations are duplicate if they're both programme & project level.
-
-    def __str__(self):
-        return "%s _ %s" % (self.country, self.name)
-
-
-class Organisation_OrganisationRole(_MainModel, ImportableModelMixin):
-    IMPORT_SOURCES = [
-        {
-            'src': 'OrganisationRoles',
-            'map': {
-                'code': ['IdOrganisation', 'OrganisationRoleCode', 'ProgrammeCode', 'ProjectCode'],
-                'organisation': ('id', 'IdOrganisation'),
-                'organisation_role': 'OrganisationRoleCode',
-                'programme': 'ProgrammeCode',
-                'project': 'ProjectCode',
-                'is_programme': 'IsProgrammeOrProjectOrg',
-            }
-        },
-    ]
-
-    @classmethod
-    def from_data(cls, data, src_idx):
-        """ Warning: mutates its input data"""
-
-        mapping = cls.IMPORT_SOURCES[src_idx]['map']
-        excel_value = data[mapping['is_programme']].lower()
-
-        # If not str then perheps we somehow already processed this.
-        # If bad, non-str data, let Field exception tell us
-        if isinstance(excel_value, str):
-            model_value = None
-            if excel_value == 'programme':
-                model_value = True
-            elif excel_value == 'project':
-                model_value = False
-            data[mapping['is_programme']] = model_value
-
-        return super().from_data(data, src_idx)
-
-    code = models.CharField(max_length=64, primary_key=True)
-    organisation = models.ForeignKey(Organisation,
-                                     on_delete=models.CASCADE,
-                                     related_name='roles',
-                                     )
-    organisation_role = models.ForeignKey(OrganisationRole,
-                                          related_name='organisations',
-                                          on_delete=models.CASCADE,
-                                          )
+    role_code = models.CharField(max_length=8)
+    role_name = models.CharField(max_length=64)
 
     # programme and project are denormalised to include BS
-    programme = models.ForeignKey(Programme,
-                                  null=True,
-                                  related_name='organisation_roles',
-                                  on_delete=models.CASCADE,
-                                  )
-    project = models.ForeignKey(Project,
-                                null=True,
-                                related_name='organisation_roles',
-                                on_delete=models.CASCADE,
-                                )
-    is_programme = models.BooleanField(default=None, null=True)
-
-    class Meta(_BaseModel.Meta):
-        unique_together = (
-            'organisation',
-            'organisation_role',
-            'programme',
-            'project',
-        )
-
-    def __str__(self):
-        return "{} - {}".format(self.organisation_id, self.organisation_role_id)
+    programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles',
+                                  on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, null=True, related_name='organisation_roles',
+                                on_delete=models.CASCADE)
+    # is_programme = models.BooleanField(default=None, null=True)
+    # TODO should we include a FK to State?
 
 
 class News(models.Model):
@@ -823,13 +226,8 @@ class News(models.Model):
     updated = models.DateTimeField(null=True)
 
     programmes = models.ManyToManyField(Programme, related_name='news')
-    project = models.ForeignKey(Project,
-                                null=True,
-                                default=None,
-                                related_name='news',
-                                on_delete=models.CASCADE,
-                                db_constraint=False,
-                                )
+    project = models.ForeignKey(Project, null=True, default=None, related_name='news',
+                                on_delete=models.CASCADE, db_constraint=False)
     summary = models.TextField(null=True)
     image = models.URLField(max_length=2000)
     is_partnership = models.BooleanField(default=False)
@@ -843,19 +241,8 @@ class News(models.Model):
 
 
 class StaticContent(models.Model):
-
-    name = models.CharField(
-        max_length=64, null=False, blank=False, unique=True)
-
+    name = models.CharField(max_length=64, null=False, blank=False, unique=True)
     body = RichTextField(null=False, blank=False)
 
     def __str__(self):
         return self.name
-
-
-class ImportLog(models.Model):
-
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-    data = models.TextField()
-    status = models.TextField()

@@ -41,3 +41,9 @@ HAYSTACK_CONNECTIONS = {
         'SILENTLY_FAIL': False,
     },
 }
+
+# TODO use env variables instead of localsettings.py
+MSSQL_SERVER = ''
+MSSQL_USERNAME = ''
+MSSQL_PASSWORD = ''
+MSSQL_DATABASE = ''
