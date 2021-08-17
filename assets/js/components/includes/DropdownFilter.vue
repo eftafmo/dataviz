@@ -5,11 +5,11 @@
     </option>
     <option
       v-for="item in items"
-      :key="item.id"
+      :key="getFilterName(item)"
       :value="getFilterName(item)"
-      :selected="getFilterName(item) == current"
+      :selected="getFilterName(item) === current"
     >
-      {{ item.name }}
+      {{ getFilterDisplayName(item) }}
     </option>
   </select>
 </template>
@@ -46,10 +46,18 @@ export default {
       const select = e.target;
       this.filters[this.filter] = select.value || null;
     },
-
+    getFilterDisplayName(item) {
+      if (typeof item === "string") {
+        return item;
+      } else {
+        return item.name;
+      }
+    },
     getFilterName(item) {
-      // special case for country filters
-      if (this.filter == "beneficiary" || this.filter == "donor") {
+      if (typeof item === "string") {
+        return item;
+      } else if (this.filter === "beneficiary" || this.filter === "donor") {
+        // special case for country filters
         return item.id;
       } else {
         return item.name;
