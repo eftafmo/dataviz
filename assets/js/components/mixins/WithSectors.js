@@ -7,23 +7,19 @@ for (const sector of _SECTORS) {
   SECTORS[sid] = Object.assign({ id: sid }, sector);
 }
 
-/* !!! TODO !!!
-// force-load all sector icons so they get bundled as sprites
-for (const sector in SECTORS) {
-  require(`sprites/sectors/${SECTORS[sector].icon}`)
-}
-*/
-
 export default {
   beforeCreate() {
     // no point in this being observable
     this.SECTORS = SECTORS;
   },
-
   data() {
     return {};
   },
-
+  computed: {
+    SECTORS_ARRAY() {
+      return Object.values(this.SECTORS);
+    },
+  },
   methods: {
     sectorcolour(sectorname) {
       // using sector's name because we're mostly dealing with that

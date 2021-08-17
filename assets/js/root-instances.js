@@ -39,6 +39,20 @@ export const Grants = {
   },
 };
 
+export const GlobalGoals = {
+  extends: _Base,
+  name: "GlobalGoals",
+
+  components: {
+    mechanisms: components.Mechanisms,
+    global_goals_chart: components.GlobalGoalsChart,
+    sectors: components.Sectors,
+    xmap: components.GrantsMap,
+    beneficiaries: components.Beneficiaries,
+    sidebar: components.GrantsSidebar,
+  },
+};
+
 export const Partners = {
   extends: _Base,
   name: "Partners",

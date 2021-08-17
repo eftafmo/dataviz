@@ -18,7 +18,7 @@
     </div>
 
     <div class="grant-dataviz" id="priority-sectors">
-
+      <global_goals_chart :initial="dataset" period="{{ PERIOD }}"></global_goals_chart>
     </div>
 
   </div>
@@ -67,7 +67,7 @@
   <script>
   document.addEventListener("DOMContentLoaded", () => {
     _createApp(
-      Dataviz.Grants,
+      Dataviz.GlobalGoals,
       {
         datasource: "/api/grants.json"
       }
