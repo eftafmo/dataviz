@@ -1,5 +1,3 @@
-import html
-import re
 from collections import defaultdict
 from decimal import Decimal
 
@@ -14,13 +12,13 @@ from dv.lib.http import JsonResponse
 from dv.models import Allocation, State, Programme, Project, NUTS
 from dv.models import FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY
 from dv.serializers import ProjectSerializer
-from dv.lib.utils import EEA_DONOR_STATES, DONOR_STATES, DONOR_STATES_REVERSED
+from dv.lib.utils import EEA_DONOR_STATES, DONOR_STATES_REVERSED
 
 CharField.register_lookup(Length, 'length')
 
 
 def test_sentry(request):
-    division_by_zero = 1 / 0
+    raise Exception('Testing sentry...')
 
 
 @require_GET

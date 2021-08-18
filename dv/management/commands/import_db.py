@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from dv.models import Allocation, OrganisationRole, PrioritySector, Programme, ProgrammeArea, Project, State
-from dv.models import FM_EEA_FULL_NAME, FM_NORWAY_FULL_NAME
 
 
 FUNDING_PERIOD = 3  # 2014-2021
@@ -15,6 +14,7 @@ GRANT_SHORT_NAME_TO_FM = {
     'Norway': 'NOR',
 }
 COMMENTS_PATTERN = re.compile(r'&lt;!--.*--&gt;')
+
 
 def sanitize_html(text):
     cleaned_text = bleach.clean(text or '', strip=True, strip_comments=True)

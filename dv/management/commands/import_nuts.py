@@ -8,7 +8,7 @@ from functools import partial
 from itertools import cycle
 from urllib.parse import urlparse
 from urllib.request import urlopen
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 
 from dv.models import NUTS
@@ -41,11 +41,12 @@ class Command(BaseCommand):
             with open(cname, 'wb') as cached:
                 pickle.dump(nuts_book, cached)
 
-
         self.stderr.style_func = None
+
         def _write(*args, **kwargs):
             self.stderr.write(*args, **kwargs)
             self.stderr.flush()
+
         _inline = partial(_write, ending='')
         _back = chr(8)
         throbber = cycle(_back + c for c in r'\|/-')

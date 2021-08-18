@@ -34,6 +34,7 @@ def main(vault_name, service):
         value = get_secret(vault_name, name)
         print(f'{env_var}={value}')
 
+
 if __name__ == "__main__":
     [vault_name, service] = sys.argv[1:]
     main(vault_name, service)

@@ -5,11 +5,12 @@ helper stuff for handling vite manifest
 import json
 import re
 import os.path
-#from functools import lru_cache
+# from functools import lru_cache
 from django.conf import settings
 
+
 # TODO: cache in production, don't cache during debug
-#@lru_cache(maxsize=None)
+# @lru_cache(maxsize=None)
 def load_manifest():
     manifest = os.path.join(settings.BUILD_DIR, 'manifest.json')
 
@@ -32,7 +33,7 @@ def load_manifest():
             pass
         else:
             assets[
-                re.sub('\.js$', '.css', k)
+                re.sub(r'\.js$', '.css', k)
             ] = css
 
         # register deps

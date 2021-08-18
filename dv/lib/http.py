@@ -26,7 +26,7 @@ class CsvResponse(HttpResponse):
     """
     def __init__(self, data, fieldnames=None, csv_writer_params=None, **kwargs):
         # TODO: set this as default
-        #kwargs.setdefault('content_type', 'text/csv')
+        # kwargs.setdefault('content_type', 'text/csv')
         kwargs.setdefault('content_type', 'text/plain')
         output = io.StringIO()
 

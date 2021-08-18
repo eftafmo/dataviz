@@ -14,7 +14,7 @@ register = template.Library()
 @stringfilter
 def currency(value):
     orig = force_text(value)
-    new = re.sub("^(-?\d+)(\d{3})", '\g<1>\xa0\g<2>', orig)
+    new = re.sub(r"^(-?\d+)(\d{3})", r'\g<1>\xa0\g<2>', orig)
     if orig == new:
         return new
     else:
@@ -30,9 +30,11 @@ def sort(value):
 def split(value, v):
     return value.split(v)
 
+
 @register.filter
 def value(dict, key):
     return dict[key]
+
 
 @register.filter
 def keyvalue(dict, key):

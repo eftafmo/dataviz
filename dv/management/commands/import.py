@@ -110,7 +110,6 @@ class Command(BaseCommand):
         for file in files:
             _write('Loading %s\n' % (file))
             file_path = os.path.join(directory_path, file)
-            #import pdb; pdb.set_trace()
             book = pyexcel.get_book(file_name=file_path)
             name = file.split('.')[0]
             name = next(f for f in EXCEL_FILES if f.lower() == name.lower())
@@ -152,7 +151,7 @@ class Command(BaseCommand):
                         obj.save()
                         pk_cache.add(obj.pk)
                         updated += 1
-                    except IntegrityError as e:
+                    except IntegrityError:
                         failed += 1
                         raise
                         # NOTE This is backend specific; might change on switch, say, postgres
