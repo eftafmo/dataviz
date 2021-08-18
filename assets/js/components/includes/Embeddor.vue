@@ -50,7 +50,7 @@ export default {
       required: true,
     },
     svgNode: {
-      type: Object,
+      type: Element,
       required: false,
       default: null,
     },
@@ -162,19 +162,25 @@ export default {
 
   methods: {
     downloadChart() {
+      // XXX Apple is being a dingus as usual.
       const URL = window.URL || window.webkitURL || window;
 
+      const svgStyle = window.getComputedStyle(this.svgNode);
       let { width, height } = this.svgNode.getBBox();
       width *= this.scaleDownload;
       height *= this.scaleDownload;
 
+      // Clone the node and make several required adjustments
+      const clonedSVGNode = this.svgNode.cloneNode(true);
       // Must set width and height. See Firefox bug:
       // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
-      const clonedSVGNode = this.svgNode.cloneNode(true);
       clonedSVGNode.setAttribute("width", width);
       clonedSVGNode.setAttribute("height", height);
       // Ensure the xmlns is set, otherwise it cannot be drawn
       clonedSVGNode.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      // Ensure we use the same font when drawing the image into the canvas.
+      // CSS styles don't cascade into image drawn into the canvas.
+      clonedSVGNode.setAttribute("font-family", svgStyle.fontFamily);
 
       const outerHTML = clonedSVGNode.outerHTML.replaceAll("&nbsp;", "&#160;");
       const blob = new Blob([outerHTML], {
