@@ -4,7 +4,7 @@
     class="clearfix"
     :style="{ minHeight: chartWidth + 'px' }"
   >
-    <embeddor :period="period" tag="sectors" />
+    <embeddor :period="period" tag="sectors" :svg-node="$refs.svgEl" />
     <!-- todo: a better way to preserve container height? -->
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
@@ -15,7 +15,7 @@
     ></dropdown>
     <div class="chart-wrapper">
       <chart-container :width="width" :height="height">
-        <svg :viewBox="`0 0 ${width} ${height}`">
+        <svg ref="svgEl" :viewBox="`0 0 ${width} ${height}`">
           <g
             class="chart"
             :transform="`translate(${margin + radius},${margin + radius})`"

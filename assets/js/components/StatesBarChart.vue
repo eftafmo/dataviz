@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" :tag="tag" />
+    <embeddor :period="period" :tag="tag" :svg-node="$refs.svgEl" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="hasData && !noDropdown"
@@ -8,8 +8,6 @@
       title="No filter selected"
       :items="nonzero"
     ></dropdown>
-
-    <chart-patterns />
 
     <chart-legend
       v-if="!noLegend"
@@ -19,7 +17,9 @@
       :format-func="legendFormatFunc"
     ></chart-legend>
 
-    <svg width="100%" :height="height + 'px'" class="chart">
+    <svg ref="svgEl" width="100%" :height="height + 'px'" class="chart">
+      <chart-patterns />
+
       <defs>
         <filter id="drop-shadow">
           <feGaussianBlur in="SourceAlpha" stdDeviation="1" />

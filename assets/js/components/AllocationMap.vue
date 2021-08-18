@@ -1,6 +1,5 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="xmap" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="hasData"
@@ -13,6 +12,7 @@
 
     <map-base
       ref="map"
+      :period="period"
       :initial-regions="initial_regions"
       :all-states="all_states"
       :all-levels="all_nuts_levels"

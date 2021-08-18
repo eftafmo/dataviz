@@ -1,6 +1,7 @@
 <template>
   <chart-container :width="width" :height="height">
-    <svg :viewBox="`0 0 ${width} ${height}`">
+    <embeddor :period="period" tag="xmap" :svg-node="svgEl" />
+    <svg :viewBox="`0 0 ${width} ${height}`" class="map-svg">
       <g class="chart">
         <g class="base">
           <path class="sphere" />
@@ -48,6 +49,7 @@ import {
 
 import ChartContainer from "./ChartContainer";
 import Base from "../Base";
+import Embeddor from "./Embeddor";
 
 const LAYERS_URL = "data/layers.topojson";
 const REGIONS_URL = "data/nuts2006.topojson";
@@ -67,6 +69,7 @@ function _mk_topo_funcs(data) {
 }
 
 export default {
+  components: { Embeddor },
   extends: Base,
   mixins: [ChartMixin, WithCountriesMixin],
   props: {
@@ -104,11 +107,17 @@ export default {
       type: Boolean,
       default: true,
     },
+
+    period: {
+      type: String,
+      required: true,
+    },
   },
   emits: ["rendered", "base-rendered", "regions-rendered"],
 
   data() {
     return {
+      svgEl: null,
       base_loaded: false,
       regions_loaded: false,
 
@@ -249,6 +258,7 @@ export default {
     // create a stylesheet for dynamic changes
     this.stylesheet = document.createElement("style");
     this.$el.appendChild(this.stylesheet);
+    this.svgEl = this.$el.querySelector("svg.map-svg");
 
     //this.updateStyle(); // this is already triggered by the watched chartWidth
   },

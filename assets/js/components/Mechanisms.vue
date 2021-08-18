@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="mechanism" />
+    <embeddor :period="period" tag="mechanism" :svg-node="$refs.svgEl" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="rendered"
@@ -8,12 +8,13 @@
       title="No filter selected"
       :items="nonzero"
     ></dropdown>
-    <chart-patterns />
     <svg
+      ref="svgEl"
       :viewBox="`0 0 ${width} ${height}`"
       xmlns="http://www.w3.org/2000/svg"
       class="mechanism"
     >
+      <chart-patterns />
       <g class="chart"></g>
     </svg>
     <div v-if="hasData" class="legend">

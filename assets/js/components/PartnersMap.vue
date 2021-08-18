@@ -1,6 +1,5 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="xmap" />
     <slot v-if="!embedded" name="title"></slot>
 
     <div class="selector">
@@ -31,6 +30,7 @@
 
     <map-base
       ref="map"
+      :period="period"
       :all-levels="[3]"
       :fillfunc="fillfunc"
       :zoomable="false"
@@ -46,7 +46,6 @@
 
 <script>
 import * as d3 from "d3";
-import debounce from "lodash.debounce";
 import { slugify } from "@js/lib/util";
 
 import BaseMap from "./BaseMap";
@@ -54,10 +53,8 @@ import BaseMap from "./BaseMap";
 import PartnersMixin from "./mixins/Partners";
 import WithFMsMixin from "./mixins/WithFMs";
 import WithCountriesMixin from "./mixins/WithCountries";
-import Embeddor from "./includes/Embeddor";
 
 export default {
-  components: { Embeddor },
   extends: BaseMap,
   mixins: [PartnersMixin, WithFMsMixin, WithCountriesMixin],
 

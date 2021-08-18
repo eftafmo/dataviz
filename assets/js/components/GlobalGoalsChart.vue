@@ -1,6 +1,11 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="global_goals" />
+    <embeddor
+      :period="period"
+      tag="global_goals"
+      :svg-node="$refs.svgContainer"
+      :scale-download="2"
+    />
     <h2>Allocation by sector</h2>
     <dropdown-filter filter="sector" :items="dropDownItems" title="Sector" />
     <transition name="fade">
@@ -53,6 +58,13 @@
             />
           </pattern>
         </defs>
+        <rect
+          :width="width + 20"
+          :height="height + 20"
+          fill="white"
+          x="-10"
+          y="-10"
+        ></rect>
         <g class="chart"></g>
       </svg>
     </chart-container>
