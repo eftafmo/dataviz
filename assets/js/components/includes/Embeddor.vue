@@ -8,6 +8,14 @@
     <div class="x-container">
       <span class="icon icon-embed" @click="toggleExpanded"></span>
       <div v-show="expanded" class="content">
+        <template v-if="svgNode">
+          <p class="title">Download</p>
+          <p>
+            <button @click="downloadChart">Download chart as .png</button>
+          </p>
+          <hr />
+        </template>
+        <p class="title">Embed</p>
         <p>
           <small>
             Paste the following into your markup where you want the embedded
@@ -29,6 +37,7 @@ import { default as Popper } from "popper.js";
 import { default as Clipboard } from "clipboard";
 
 import { FILTERS } from "../mixins/WithFilters";
+import { downloadFile } from "../../lib/util";
 
 export default {
   props: {
@@ -39,6 +48,16 @@ export default {
     period: {
       type: String,
       required: true,
+    },
+    svgNode: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+    scaleDownload: {
+      type: Number,
+      required: false,
+      default: 2,
     },
   },
   data() {
@@ -142,6 +161,47 @@ export default {
   },
 
   methods: {
+    downloadChart() {
+      const URL = window.URL || window.webkitURL || window;
+
+      let { width, height } = this.svgNode.getBBox();
+      width *= this.scaleDownload;
+      height *= this.scaleDownload;
+
+      // Must set width and height. See Firefox bug:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
+      const clonedSVGNode = this.svgNode.cloneNode(true);
+      clonedSVGNode.setAttribute("width", width);
+      clonedSVGNode.setAttribute("height", height);
+
+      const outerHTML = clonedSVGNode.outerHTML.replaceAll("&nbsp;", "&#160;");
+      const blobURL = URL.createObjectURL(
+        new Blob([outerHTML], {
+          type: "image/svg+xml;charset=utf-8",
+        })
+      );
+
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      // TODO: let the user know that this failed? Or maybe log to Sentry?
+      img.onerror = console.log;
+      img.onload = () => {
+        URL.revokeObjectURL(blobURL);
+
+        const canvas = document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+
+        context.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          downloadFile(blob, `${this.period}-${this.scenario}-${this.tag}.png`);
+        }, "image/png");
+      };
+      img.src = blobURL;
+    },
     popperEnter() {
       clearTimeout(this._pleaving);
       this.popper_hovered = true;
@@ -188,6 +248,12 @@ export default {
     background: white;
     border: 1px solid black;
     padding: 5px;
+
+    .title {
+      font-weight: bold;
+      font-size: 16px;
+      margin: 0;
+    }
   }
 
   .ok {
