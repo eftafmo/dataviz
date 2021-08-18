@@ -5,7 +5,8 @@ import pymssql
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from dv.models import Allocation, PrioritySector, Programme, ProgrammeArea, State
+from dv.models import Allocation, OrganisationRole, PrioritySector, Programme, ProgrammeArea, Project, State
+from dv.models import FM_EEA_FULL_NAME, FM_NORWAY_FULL_NAME
 
 
 FUNDING_PERIOD = 3  # 2014-2021
@@ -37,11 +38,13 @@ class Command(BaseCommand):
         programme_area_query = 'SELECT * FROM fmo.TR_RDPProgrammeArea'
         cursor.execute(programme_area_query)
         programme_areas = {}
+        priority_sectors = {}
         for row in cursor.fetchall():
             priority_sector, _ = PrioritySector.objects.get_or_create(
                 code=row['PSCode'],
                 defaults={'name': row['PrioritySector']},
             )
+            priority_sectors[priority_sector.code] = priority_sector
             programme_area = ProgrammeArea.objects.create(
                 funding_period=FUNDING_PERIOD,
                 code=row['PACode'],
@@ -74,35 +77,93 @@ class Command(BaseCommand):
 
         programme_query = 'SELECT * FROM fmo.TR_RDPProgramme'
         cursor.execute(programme_query)
+        programmes = {}
         for row in cursor.fetchall():
             programme = Programme.objects.create(
                 funding_period=FUNDING_PERIOD,
                 short_name=row['ProgrammeShortName'],
                 name=row['Programme'],
                 summary=sanitize_html(row['ProgrammeSummary']),
+                status=(row['ProgrammeStatus'] or '').lower(),
                 allocation_eea=row['ProgrammeGrantEEA'] or 0,
                 allocation_norway=row['ProgrammeGrantNorway'] or 0,
                 co_financing=row['ProgrammeCoFinancing'],
                 is_tap=row['IsTAProgramme'],
                 is_bfp=row['IsBFProgramme'],
             )
+            programmes[programme.short_name] = programme
 
-            for pa_code in (row['ProgrammeAreaList'] or '').split(','):
-                pa_code = pa_code.strip()
-                programme_area = programme_areas.get(pa_code)
-                if not programme_area:
-                    self.stdout.write(self.style.WARNING(f'ProgrammeArea {pa_code} not found.'))
-                    continue
-                programme.programme_areas.add(programme_area)
+            self._add_m2m_entries(programme, row, 'ProgrammeAreaList', 'programme_areas',
+                                  'ProgrammeArea', programme_areas)
 
             # For the moment, all programmes have one or zero (NULL/Non-country specific) states
-            for state_name in (row['Country'] or '').split(','):
-                state_name = state_name.strip()
-                state = states.get(state_name)
-                if not state:
-                    self.stdout.write(self.style.WARNING(f'State {state_name} not found.'))
-                    continue
-                programme.states.add(state)
+            self._add_m2m_entries(programme, row, 'Country', 'states',
+                                  'State', states)
 
         self.stdout.write(self.style.SUCCESS(
             f'Imported {Programme.objects.count()} Programme objects.'))
+
+        # Remove duplicate entries
+        project_query = (
+            'SELECT * FROM '
+            '(SELECT ROW_NUMBER() OVER(PARTITION BY ProjectCode ORDER BY ProjectCode DESC) '
+            'AS RowNum, * '
+            'FROM fmo.TR_RDPProject) n WHERE RowNum = 1;'
+        )
+        cursor.execute(project_query)
+        projects = {}
+        for row in cursor.fetchall():
+            project = Project.objects.create(
+                funding_period=FUNDING_PERIOD,
+                code=row['ProjectCode'],
+                name=row['Project'],
+                status=row['ProjectContractStatus'].lower(),
+                state=states.get(row['Country']),
+                programme=programmes.get(row['ProgrammeShortName']),
+                nuts_code=row['ProjectLocation'] or '',
+                url=row['ProjectURL'],
+                allocation=row['ProjectGrant'],
+                is_eea=bool(row['IdFinancialMechanismEEA']),
+                is_norway=bool(row['IdFinancialMechanismNorway']),
+                has_ended=row['Hasended'],
+                is_dpp=row['isdpp'],
+                is_positive_fx=bool(row['ResultPositiveEffects']),
+                is_improved_knowledge=bool(row['ResultsImprovedKnowledge']),
+                initial_description=sanitize_html(row['ProjectInitialDescriptionHtml']),
+                results_description=sanitize_html(row['ProjectResultsDescriptionHtml']),
+            )
+            projects[project.code] = project
+
+            self._add_m2m_entries(project, row, 'ProgrammeAreaCodesList', 'programme_areas',
+                                  'ProgrammeArea', programme_areas)
+            self._add_m2m_entries(project, row, 'PrioritySectorCodesList', 'priority_sectors',
+                                  'PrioritySector', priority_sectors)
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Imported {Project.objects.count()} Project objects.'))
+
+        organisation_role_query = 'SELECT * FROM fmo.TR_RDPOrganisationRole'
+        cursor.execute(organisation_role_query)
+        for row in cursor.fetchall():
+            OrganisationRole.objects.create(
+                funding_period=FUNDING_PERIOD,
+                organisation_country=row['CountryOrganisation'],
+                organisation_name=row['Organisation'],
+                nuts_code=row['NUTSCode'] or '',
+                role_code=row['OrganisationRoleCode'],
+                role_name=row['OrganisationRole'],
+                programme=programmes.get(row['ProgrammeCode']),
+                project=projects.get(row['ProjectCode']),
+                state=states.get(row['CountryRole']),
+            )
+        self.stdout.write(self.style.SUCCESS(
+            f'Imported {OrganisationRole.objects.count()} OrganisationRole objects.'))
+
+    def _add_m2m_entries(self, obj, row, key, m2m_attr, m2m_attr_type, m2m_list):
+        for code in (row[key] or '').split(','):
+            code = code.strip()
+            m2m_obj = m2m_list.get(code)
+            if code and not m2m_obj:
+                self.stdout.write(self.style.WARNING(f'{m2m_attr_type} {code} not found.'))
+                continue
+            getattr(obj, m2m_attr).add(m2m_obj)

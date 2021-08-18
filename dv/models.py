@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 FM_EEA = 'EEA'
 FM_NORWAY = 'NOR'
+FM_EEA_FULL_NAME = 'EEA Grants'
+FM_NORWAY_FULL_NAME = 'Norway Grants'
 FINANCIAL_MECHANISMS = [
     (FM_EEA, 'EEA Grants'),
     (FM_NORWAY, 'Norway Grants'),
@@ -134,6 +136,8 @@ class Programme(models.Model):
 
 class Project(models.Model):
     class Status:
+        SIGNED = 'signed'
+        PLANNED = 'planned'
         IN_PROGRESS = 'in progress'
         COMPLETED = 'completed'
         TERMINATED = 'terminated'
@@ -141,6 +145,8 @@ class Project(models.Model):
         PARTIALLY_COMPLETED = 'partially completed'
 
     STATUS_CHOICES = (
+        (Status.SIGNED, _('Signed')),
+        (Status.PLANNED, _('Planned')),
         (Status.IN_PROGRESS, _('In Progress')),
         (Status.COMPLETED, _('Completed')),
         (Status.TERMINATED, _('Terminated')),
@@ -151,31 +157,26 @@ class Project(models.Model):
     # financial_mechanism = models.CharField(choices=FINANCIAL_MECHANISMS)
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
-    state = models.ForeignKey(State, on_delete=models.CASCADE)
-    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
-    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
-    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
-
+    code = models.CharField(max_length=32, primary_key=True)
+    name = models.CharField(max_length=512)  # not unique
     status = models.CharField(max_length=19, choices=STATUS_CHOICES)
 
-    code = models.CharField(max_length=9, primary_key=True)
-    name = models.CharField(max_length=512)  # not unique
-    nuts = models.CharField(max_length=5)
-    geotarget = models.CharField(max_length=256)
+    state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
+    programme_areas = models.ManyToManyField(ProgrammeArea)
+    priority_sectors = models.ManyToManyField(PrioritySector)
+
+    nuts_code = models.CharField(max_length=5)
     url = models.CharField(max_length=256, null=True)
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
-    programme_co_financing = models.DecimalField(max_digits=15, decimal_places=2)
-    project_co_financing = models.DecimalField(max_digits=15, decimal_places=2)
     is_eea = models.BooleanField()
     is_norway = models.BooleanField()
     has_ended = models.BooleanField()
     is_dpp = models.BooleanField()
     is_positive_fx = models.BooleanField()
     is_improved_knowledge = models.BooleanField()
-    is_continued_coop = models.BooleanField()
-    is_published = models.BooleanField()
-    summary = models.TextField()
-    actual_summary = models.TextField()
+    initial_description = models.TextField()
+    results_description = models.TextField()
 
 
 class ProjectTheme(models.Model):
@@ -203,20 +204,23 @@ class ProgrammeIndicator(models.Model):
 
 
 class OrganisationRole(models.Model):
-    organisation_country = models.CharField(max_length=64)
-    organisation_name = models.CharField(max_length=256)
-    nuts_code = models.CharField(max_length=5)
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
     role_code = models.CharField(max_length=8)
     role_name = models.CharField(max_length=64)
+
+    organisation_country = models.CharField(max_length=64)
+    organisation_name = models.CharField(max_length=256)
+
+    nuts_code = models.CharField(max_length=5)  # FK to NUTS table?
 
     # programme and project are denormalised to include BS
     programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles',
                                   on_delete=models.CASCADE)
     project = models.ForeignKey(Project, null=True, related_name='organisation_roles',
                                 on_delete=models.CASCADE)
+    state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)  # TODO see if we need this
     # is_programme = models.BooleanField(default=None, null=True)
-    # TODO should we include a FK to State?
 
 
 class News(models.Model):

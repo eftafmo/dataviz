@@ -45,15 +45,34 @@ def overview(request):
         funding_period=period,
         is_tap=False,
         is_bfp=False,
-    )
-    programmes = defaultdict(set)
+    ).order_by('short_name')
+    programmes = defaultdict(list)
     for programme in programme_query:
         if programme.is_eea:
+            if not programme.states.exists():
+                programmes[(None, FM_EEA)].append(programme.short_name)
             for state in programme.states.all():
-                programmes[(state.pk, FM_EEA)].add(programme.short_name)
+                programmes[(state.pk, FM_EEA)].append(programme.short_name)
         if programme.is_norway:
+            if not programme.states.exists():
+                programmes[(None, FM_NORWAY)].append(programme.short_name)
             for state in programme.states.all():
-                programmes[(state.pk, FM_NORWAY)].add(programme.short_name)
+                programmes[(state.pk, FM_NORWAY)].append(programme.short_name)
+
+    project_query = Project.objects.filter(
+        funding_period=period
+    ).values(
+        'code',
+        'is_eea',
+        'is_norway',
+        'state',
+    ).order_by('code')
+    projects = defaultdict(list)
+    for project in project_query:
+        if project['is_eea']:
+            projects[(project['state'], FM_EEA)].append(project['code'])
+        if project['is_norway']:
+            projects[(project['state'], FM_NORWAY)].append(project['code'])
 
     out = []
     for allocation in allocations:
@@ -65,11 +84,11 @@ def overview(request):
             'beneficiary': state,
             'allocation': allocation['allocation'],
             'bilateral_fund': bilateral_fund.get((state, financial_mechanism), 0),
-            "programmes": list(programmes.get((state, financial_mechanism), ())),
+            "programmes": programmes.get((state, financial_mechanism), []),
             "DPP_programmes": (),
             "dpp_projects": (),
             "continued_coop": (),
-            "projects": (),
+            "projects": projects.get((state, financial_mechanism), []),
             "bilateral_initiatives": (),
             "positive": (),
         })
