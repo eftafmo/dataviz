@@ -57,7 +57,7 @@ export default {
     scaleDownload: {
       type: Number,
       required: false,
-      default: 2,
+      default: 1,
     },
   },
   data() {
@@ -173,14 +173,19 @@ export default {
       const clonedSVGNode = this.svgNode.cloneNode(true);
       clonedSVGNode.setAttribute("width", width);
       clonedSVGNode.setAttribute("height", height);
+      // Ensure the xmlns is set, otherwise it cannot be drawn
+      clonedSVGNode.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 
       const outerHTML = clonedSVGNode.outerHTML.replaceAll("&nbsp;", "&#160;");
-      const blobURL = URL.createObjectURL(
-        new Blob([outerHTML], {
-          type: "image/svg+xml;charset=utf-8",
-        })
-      );
+      const blob = new Blob([outerHTML], {
+        type: "image/svg+xml;charset=utf-8",
+      });
 
+      // XXX Use to debug SVG issues. The browser WILL not show any details
+      // XXX about errors while drawing the SVG into the canvas.
+      // return downloadFile(blob, "test.svg");
+
+      const blobURL = URL.createObjectURL(blob);
       const img = new Image();
       img.crossOrigin = "Anonymous";
       // TODO: let the user know that this failed? Or maybe log to Sentry?

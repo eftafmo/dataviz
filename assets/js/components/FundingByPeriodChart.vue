@@ -4,6 +4,7 @@
       :period="period"
       tag="beneficiary_states"
       :svg-node="$refs.svgEl"
+      :scale-download="2"
     />
     <chart-container
       :width="svgWidth"
@@ -18,14 +19,14 @@
         <chart-patterns />
 
         <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
-        <image
+        <embed-svg-image
           v-if="filters.beneficiary"
           x="20"
           y="20"
           width="36"
           height="26"
-          :href="get_flag_url(filters.beneficiary)"
-        ></image>
+          :fetch-url="get_flag_url(filters.beneficiary)"
+        ></embed-svg-image>
         <text
           :x="filters.beneficiary ? 70 : 20"
           y="20"
@@ -57,10 +58,11 @@ import * as d3 from "d3";
 import WithTooltip from "./mixins/WithTooltip";
 import d3tip from "d3-tip";
 import ChartPatterns from "./ChartPatterns";
+import EmbedSvgImage from "./includes/EmbedSvgImage";
 
 export default {
   name: "FundingByPeriodChart",
-  components: { ChartPatterns, Embeddor },
+  components: { EmbedSvgImage, ChartPatterns, Embeddor },
   extends: Chart,
   type: "",
 
@@ -74,7 +76,7 @@ export default {
       margin: {
         top: 70,
         right: 30,
-        bottom: 60,
+        bottom: 120,
         left: 60,
       },
     };
@@ -178,6 +180,7 @@ export default {
       this.renderYAxis();
       this.renderBars();
       this.renderXAxis();
+      this.renderLegend();
     },
     renderXAxis() {
       const t = this.getTransition();
@@ -246,6 +249,42 @@ export default {
         .attr("fill", "transparent")
         .attr("opacity", 0);
       periodBars.exit().remove();
+    },
+    renderLegend() {
+      const t = this.getTransition();
+      const squareSize = 16;
+      const bandwidth = Math.floor(this.svgWidth / (2 * this.FM_ARRAY.length));
+
+      const legendSquare = this.chart
+        .selectAll("rect.legend-square")
+        .data(this.FM_ARRAY);
+      legendSquare
+        .enter()
+        .append("rect")
+        .attr("class", "legend-square")
+        .merge(legendSquare)
+        .transition(t)
+        .attr("x", (d, i) => i * bandwidth - 30)
+        .attr("y", this.svgHeight - this.margin.bottom)
+        .attr("width", squareSize)
+        .attr("height", squareSize)
+        .attr("stroke", "none")
+        .attr("fill", (d) => d.stripesFill);
+
+      const legendText = this.chart
+        .selectAll("text.legend-text")
+        .data(this.FM_ARRAY);
+      legendText
+        .enter()
+        .append("text")
+        .attr("class", "legend-text")
+        .merge(legendText)
+        .transition(t)
+        .attr("x", (d, i) => i * bandwidth - 5)
+        .attr("y", this.svgHeight - this.margin.bottom + squareSize / 2 + 1)
+        .attr("dominant-baseline", "middle")
+        .attr("font-size", 15)
+        .text((d) => d.name);
     },
     tooltipTemplate(ev, d) {
       return `
