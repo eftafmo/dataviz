@@ -198,7 +198,7 @@ export default {
         return (
           `
           <div class="title-container ${state_type}">
-            <img src="${this.get_flag_url(d.id)}" alt="" />
+            <img src="${this.get_flag(d.id)}" alt="" />
             <span class="name">${this.COUNTRIES[d.id].name}</span>
           </div>` + country_details
         );
@@ -219,7 +219,7 @@ export default {
         return (
           `
           <div class="title-container ${state_type}">
-            <img src="${this.get_flag_url(d.id)}" alt="" />
+            <img src="${this.get_flag(d.id)}" alt="" />
             <span class="name">${this.getRegionName(d.id)} (${d.id})</span>
           </div>` + country_details
         );

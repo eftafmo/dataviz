@@ -305,7 +305,7 @@ export default {
 
       return `
         <div class="title-container">
-          <img src="${this.get_flag_url(country)}" alt="" />
+          <img src="${this.get_flag(country)}" alt="" />
           <span class="name">${this.getRegionName(d.id)} (${d.id})</span>
         </div>
         <ul>

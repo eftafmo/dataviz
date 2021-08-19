@@ -21,14 +21,14 @@
           :width="svgWidth"
           :height="barChartHeight + margin.top + margin.bottom"
         ></rect>
-        <embed-svg-image
+        <image
           v-if="filters.beneficiary"
           x="20"
           y="20"
           width="36"
           height="26"
-          :fetch-url="get_flag_url(filters.beneficiary)"
-        ></embed-svg-image>
+          :href="get_flag(filters.beneficiary)"
+        ></image>
         <text
           :x="filters.beneficiary ? 70 : 20"
           y="20"
@@ -61,11 +61,10 @@ import WithTooltipMixin from "./mixins/WithTooltip";
 import WithSectors from "./mixins/WithSectors";
 import { slugify } from "../lib/util";
 import d3tip from "d3-tip";
-import EmbedSvgImage from "./includes/EmbedSvgImage";
 
 export default {
   name: "FundingBySectorChart",
-  components: { EmbedSvgImage, Embeddor },
+  components: { Embeddor },
   extends: Chart,
   type: "",
 

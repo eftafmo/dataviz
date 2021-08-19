@@ -19,14 +19,14 @@
         <chart-patterns />
 
         <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
-        <embed-svg-image
+        <image
           v-if="filters.beneficiary"
           x="20"
           y="20"
           width="36"
           height="26"
-          :fetch-url="get_flag_url(filters.beneficiary)"
-        ></embed-svg-image>
+          :href="get_flag(filters.beneficiary)"
+        ></image>
         <text
           :x="filters.beneficiary ? 70 : 20"
           y="20"
@@ -58,11 +58,10 @@ import * as d3 from "d3";
 import WithTooltip from "./mixins/WithTooltip";
 import d3tip from "d3-tip";
 import ChartPatterns from "./ChartPatterns";
-import EmbedSvgImage from "./includes/EmbedSvgImage";
 
 export default {
   name: "FundingByPeriodChart",
-  components: { EmbedSvgImage, ChartPatterns, Embeddor },
+  components: { ChartPatterns, Embeddor },
   extends: Chart,
   type: "",
 

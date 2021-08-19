@@ -510,7 +510,7 @@ export default {
         .append("g")
         .attr("class", "flag")
         .append("image")
-        .attr("href", (d) => `${this.get_flag_url(d.id)}`)
+        .attr("href", (d) => this.get_flag(d.id))
         .attr("x", this.flagPadding)
         .attr("y", (this.itemHeight - this.flagHeight) / 2)
         .attr("width", this.flagWidth)
