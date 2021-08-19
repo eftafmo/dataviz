@@ -1,6 +1,11 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="mechanism" :svg-node="$refs.svgEl" />
+    <embeddor
+      :period="period"
+      tag="mechanism"
+      :svg-node="$refs.svgEl"
+      :scale-download="2"
+    />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="rendered"
@@ -10,25 +15,43 @@
     ></dropdown>
     <svg
       ref="svgEl"
-      :viewBox="`0 0 ${width} ${height}`"
+      :viewBox="`0 0 ${width} ${height + legendHeight}`"
       xmlns="http://www.w3.org/2000/svg"
       class="mechanism"
     >
       <chart-patterns />
+      <rect
+        x="-10"
+        y="-10"
+        :width="width + 20"
+        :height="height + legendHeight + 20"
+        fill="white"
+      ></rect>
       <g class="chart"></g>
+      <g v-for="(fm, index) in data" :key="fm.id">
+        <text
+          :x="(width / 2) * index + width / 4"
+          :y="height + 10"
+          :fill="isDisabledFm(fm) ? disabledColor : fm.colour"
+          dominant-baseline="hanging"
+          text-anchor="middle"
+          font-size="18"
+          font-weight="bold"
+        >
+          {{ currency(fm.allocation) }}
+        </text>
+        <text
+          :x="(width / 2) * index + width / 4"
+          :y="height + legendHeight - 5"
+          :fill="isDisabledFm(fm) ? disabledColor : '#000'"
+          dominant-baseline="auto"
+          text-anchor="middle"
+          font-size="15"
+        >
+          {{ fm.name }}
+        </text>
+      </g>
     </svg>
-    <div v-if="hasData" class="legend">
-      <slot name="legend">
-        <fm-legend :fms="data" class="clearfix">
-          <template #fm-content="x">
-            <span class="value" :style="{ color: x.fm.colour }">
-              {{ currency(x.fm.allocation || 0) }}
-            </span>
-            <span class="name">{{ x.fm.name }}</span>
-          </template>
-        </fm-legend>
-      </slot>
-    </div>
   </div>
 </template>
 
@@ -62,6 +85,7 @@ export default {
     return {
       width: 500,
       height: 30,
+      legendHeight: 50,
       aggregate_by: [{ source: "fm", destination: "name" }],
       inactiveOpacity: 0.7,
     };
