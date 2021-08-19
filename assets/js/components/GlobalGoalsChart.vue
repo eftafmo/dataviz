@@ -145,7 +145,7 @@ export default {
     },
     height() {
       return (
-        this.SECTORS_ARRAY.length *
+        (this.SECTORS_ARRAY.length - 1) *
         (this.barHeight + this.barHeight * this.barPadding)
       );
     },
