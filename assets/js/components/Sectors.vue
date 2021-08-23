@@ -15,21 +15,29 @@
     ></dropdown>
     <div class="chart-wrapper">
       <chart-container :width="width" :height="height">
-        <svg ref="svgEl" :viewBox="`0 0 ${width} ${height}`">
+        <svg
+          ref="svgEl"
+          :viewBox="`0 0 ${width} ${height}`"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <g
             class="chart"
             :transform="`translate(${margin + radius},${margin + radius})`"
           ></g>
+
+          <transition appear>
+            <image
+              v-if="filters.sector"
+              :key="filters.sector"
+              :x="width / 4"
+              :y="height / 4"
+              :width="width / 2"
+              :height="height / 2"
+              class="sector-icon"
+              :href="sectorImage(filters.sector)"
+            />
+          </transition>
         </svg>
-        <transition appear>
-          <img
-            v-if="filters.sector"
-            :key="filters.sector"
-            class="sector-icon"
-            :src="sectorUrl(filters.sector)"
-            alt=""
-          />
-        </transition>
       </chart-container>
       <div
         v-if="hasData"
@@ -831,13 +839,6 @@ export default {
   }
 
   .sector-icon {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 50%;
-    height: 50%;
-    display: block;
     &.v-enter-active,
     &.v-leave-active {
       transition: opacity @duration;
