@@ -47,7 +47,7 @@
           <svg v-if="rendered" class="square" height="20" width="20">
             <rect height="20" width="20" fill="url(#multi-fm)" />
           </svg>
-          Donor state(s)
+          Donor State(s)
         </li>
         <li
           v-if="

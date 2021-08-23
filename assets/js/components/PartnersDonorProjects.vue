@@ -5,7 +5,7 @@
     <table>
       <thead>
         <tr>
-          <th>Donor state</th>
+          <th>Donor State</th>
           <th>Organisations</th>
           <th>Countries</th>
           <th>Programmes</th>
