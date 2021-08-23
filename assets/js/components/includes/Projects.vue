@@ -78,8 +78,6 @@ export default {
       target.classList.add("spinning");
       target.classList.toggle("active");
 
-      console.log(this.posts);
-
       if (
         !this.posts ||
         !this.posts.results ||
