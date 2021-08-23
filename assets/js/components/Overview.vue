@@ -1,7 +1,8 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="overview" :svg-node="$refs.svgEl" />
     <chart-container :width="width" :height="height">
+      <embeddor :period="period" tag="overview" :svg-node="$refs.svgEl" />
+
       <svg ref="svgEl" :viewBox="`0 0 ${width} ${height}`">
         <defs>
           <linearGradient id="link-gradient">

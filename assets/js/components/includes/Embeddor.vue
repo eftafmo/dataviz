@@ -6,7 +6,7 @@
     @mouseleave="popperLeave"
   >
     <div class="x-container">
-      <span class="icon icon-embed" @click="toggleExpanded"></span>
+      <span class="icon icon-menu" @click="toggleExpanded"></span>
       <div v-show="expanded" class="content">
         <template v-if="svgNode">
           <p class="title">Download</p>
@@ -110,11 +110,11 @@ export default {
       if (!this.visible) this._popper.destroy();
       else
         this._popper = new Popper(this.target, this.$el, {
-          placement: "left-start",
+          placement: "right-start",
 
           modifiers: {
             offset: {
-              offset: "0px,0px",
+              offset: "10px,-25px",
             },
 
             preventOverflow: { enabled: false },
@@ -215,9 +215,7 @@ export default {
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.drawImage(img, this.padding, this.padding, width, height);
 
-        canvas.toBlob((blob) => {
-          downloadFile(blob, `${this.period}-${this.scenario}-${this.tag}.png`);
-        }, "image/png");
+        canvas.toBlob((blob) => downloadFile(blob, filename), "image/png");
       };
       img.src = blobURL;
     },
@@ -264,6 +262,7 @@ export default {
 
   .content {
     position: absolute;
+    right: 0;
     background: white;
     border: 1px solid black;
     padding: 5px;
