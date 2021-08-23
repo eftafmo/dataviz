@@ -34,7 +34,7 @@
           dominant-baseline="hanging"
         >
           <template v-if="!filters.beneficiary">
-            All beneficiary states
+            All Beneficiary States
           </template>
           <template v-else>
             {{ get_country_name(filters.beneficiary) }}
@@ -296,7 +296,7 @@ export default {
         <ul class="muted">
           <li>
             ${d.beneficiaries.size}
-            ${this.singularize("beneficiary states", d.beneficiaries.size)}
+            ${this.singularize("Beneficiary States", d.beneficiaries.size)}
           </li>
           <li>
             ${d.sectors.size}

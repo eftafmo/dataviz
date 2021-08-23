@@ -58,7 +58,7 @@ const Mechanisms = {
         this.singularize(`programmes`, d.programmes.size) +
         `</li>
           <li>${d.beneficiaries.size} ` +
-        this.singularize(`beneficiary states`, d.beneficiaries.size) +
+        this.singularize(`Beneficiary States`, d.beneficiaries.size) +
         `</li>
           <li>${d.sectors.size} ` +
         this.singularize(`sectors`, d.sectors.size) +

@@ -18,7 +18,7 @@ export default {
       columns: {
         programmes: {
           source: "DPP",
-          name: "Donor programme partners",
+          name: "Donor Programme Partners",
           type: String,
         },
         projects: {

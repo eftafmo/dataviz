@@ -3,22 +3,22 @@
     <transition name="fade">
       <div v-if="data.DPP_count > 0" :key="changed" class="allocation">
         <strong
-          >{{ data.DPP_count }} donor programme
+          >{{ data.DPP_count }} Donor Programme
           {{ singularize("partners", data.DPP_count) }}</strong
         >
         <small v-if="data.dpp_count > 0"
-          >{{ data.dpp_count }} donor project
+          >{{ data.dpp_count }} Donor project
           {{ singularize("partners", data.dpp_count) }}</small
         >
-        <small v-if="data.dpp_count == 0">No donor project partners</small>
+        <small v-if="data.dpp_count == 0">No Donor project partners</small>
       </div>
       <div v-else-if="data.DPP_count == 0" class="allocation">
-        <strong>No donor programme partners</strong>
+        <strong>No Donor Programme Partners</strong>
         <small v-if="data.dpp_count > 0">
           {{ data.dpp_count }} donor project
           {{ singularize("partners", data.dpp_count) }}</small
         >
-        <small v-if="data.dpp_count == 0">No donor project partners</small>
+        <small v-if="data.dpp_count == 0">No Donor project partners</small>
       </div>
     </transition>
   </div>

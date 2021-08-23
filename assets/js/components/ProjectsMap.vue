@@ -192,7 +192,7 @@ export default {
                 <ul>
                   ${details}
                 </ul>
-                <span class="action">Click to filter by beneficiary state</span>
+                <span class="action">Click to filter by Beneficiary State</span>
               `;
 
         return (

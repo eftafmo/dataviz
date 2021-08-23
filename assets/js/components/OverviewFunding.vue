@@ -120,7 +120,7 @@ export default {
           items: [
             {
               id: "prg-part",
-              name: "Donor programme partners",
+              name: "Donor Programme Partners",
               amount: "N/A",
             },
             {
@@ -156,7 +156,7 @@ export default {
             },
             {
               id: "bs",
-              name: "Beneficiary states",
+              name: "Beneficiary States",
               amount: this.beneficiaryStatesCount,
               hidden: this.beneficiaryStatesCount <= 1,
             },

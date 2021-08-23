@@ -58,7 +58,7 @@
           "
         >
           <span class="square"></span>
-          Beneficiary states
+          Beneficiary States
         </li>
         <li v-if="$options.type == 'viz map allocation is-projects'">
           <span class="bubble_circle"></span>

@@ -12,7 +12,7 @@
           value="programmes"
         />
         <label for="programmes"></label>
-        Donor programme partners
+        Donor Programme partners
       </label>
       <label>
         <input

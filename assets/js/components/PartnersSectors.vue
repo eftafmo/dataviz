@@ -116,12 +116,12 @@ export default {
           <span>${d.data.name}</span>
         </div>
         <ul>
-          <li>Donor states: ${ds_sorted}</li>
+          <li>Donor States: ${ds_sorted}</li>
           <li>${value}\u00a0` +
         this.singularize("programmes", value) +
         `</li>
           <li>${num_bs} ` +
-        this.singularize(`beneficiary states`, num_bs) +
+        this.singularize(`Beneficiary States`, num_bs) +
         `</li>
         </ul>
         <span class="action">Click to filter by ${thing}</span>
