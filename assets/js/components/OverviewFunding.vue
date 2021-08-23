@@ -21,10 +21,10 @@
     <div class="overview-grid">
       <template v-for="category in gridItems" :key="category.id">
         <div class="row-header">
-          <div class="name">
+          <a :href="category.link" class="name">
             <span>{{ category.name }}</span>
             <span>&nbsp;&rightarrow;</span>
-          </div>
+          </a>
           <div class="description">{{ category.description }}</div>
         </div>
         <div
@@ -90,6 +90,7 @@ export default {
         {
           id: "funding",
           name: "Funding",
+          link: `/${this.period}/funding/`,
           description:
             "Donec bibendum eros a velit ullamcorper ullamcorper. Sed eu temporquam. " +
             "Praesent imperdiet felis vitae pretium eleifend.",
@@ -110,6 +111,7 @@ export default {
         {
           id: "cooperation",
           name: "Cooperation",
+          link: `/${this.period}/cooperation/`,
           description:
             "Quisque volutpat diam orci, ut dignissim elit cursus sit amet. " +
             "Donec euismod quam eget ipsum accumsan congue. Nulla tempus elit sed maximus elementum. " +
@@ -141,6 +143,7 @@ export default {
         {
           id: "projects",
           name: "Projects",
+          link: `/${this.period}/projects/`,
           description:
             "Vestibulum purus turpis, ultrices sed metus bibendum, faucibus tempor tortor. " +
             "Vivamus auctor est dui, eget sodales tellus tempus in. " +
