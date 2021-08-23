@@ -62,6 +62,7 @@ export default {
   },
   data() {
     return {
+      padding: 10,
       target: null,
       timeout: 400,
 
@@ -201,11 +202,13 @@ export default {
 
         const canvas = document.createElement("canvas");
 
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width + this.padding * 2;
+        canvas.height = height + this.padding * 2;
         const context = canvas.getContext("2d");
 
-        context.drawImage(img, 0, 0, width, height);
+        context.fillStyle = "white";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, this.padding, this.padding, width, height);
 
         canvas.toBlob((blob) => {
           downloadFile(blob, `${this.period}-${this.scenario}-${this.tag}.png`);
