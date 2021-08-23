@@ -40,10 +40,10 @@ const _locale = {
   // see https://github.com/d3/d3-format/blob/master/locale/
   // TODO: derive and extend the browser locale?
   // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
-  decimal: ",", // that's the european way
+  decimal: ".",
   thousands: "\u00a0", // nbsp
   grouping: [3],
-  currency: ["€\xa0", ""],
+  currency: ["€", ""],
   percent: "%",
 };
 // currency, separators, float
