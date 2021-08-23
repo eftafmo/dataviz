@@ -37,7 +37,7 @@ import { default as Popper } from "popper.js";
 import { default as Clipboard } from "clipboard";
 
 import { FILTERS } from "../mixins/WithFilters";
-import { downloadFile } from "../../lib/util";
+import { downloadDataUrl, downloadFile } from "../../lib/util";
 
 export default {
   props: {
@@ -71,6 +71,9 @@ export default {
 
       expanded: false,
       copied: false,
+      // See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
+      // Don't push this to the limit, set something more sensible here.
+      maxCanvasSize: 1280,
     };
   },
   computed: {
@@ -168,8 +171,8 @@ export default {
 
       const svgStyle = window.getComputedStyle(this.svgNode);
       let { width, height } = this.svgNode.getBBox();
-      width *= this.scaleDownload;
-      height *= this.scaleDownload;
+      width = Math.min(width * this.scaleDownload, this.maxCanvasSize);
+      height = Math.min(height * this.scaleDownload, this.maxCanvasSize);
 
       // Clone the node and make several required adjustments
       const clonedSVGNode = this.svgNode.cloneNode(true);
@@ -191,6 +194,8 @@ export default {
       // XXX Use to debug SVG issues. The browser WILL not show any details
       // XXX about errors while drawing the SVG into the canvas.
       // return downloadFile(blob, "test.svg");
+
+      const filename = `${this.period}-${this.scenario}-${this.tag}.png`;
 
       const blobURL = URL.createObjectURL(blob);
       const img = new Image();
