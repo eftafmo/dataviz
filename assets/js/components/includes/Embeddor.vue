@@ -59,6 +59,16 @@ export default {
       required: false,
       default: 1,
     },
+    offsetY: {
+      type: Number,
+      required: false,
+      default: 10,
+    },
+    offsetX: {
+      type: Number,
+      required: false,
+      default: -25,
+    },
   },
   data() {
     return {
@@ -114,7 +124,7 @@ export default {
 
           modifiers: {
             offset: {
-              offset: "10px,-25px",
+              offset: `${this.offsetY}px,${this.offsetX}px`,
             },
 
             preventOverflow: { enabled: false },

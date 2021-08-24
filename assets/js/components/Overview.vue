@@ -1,7 +1,12 @@
 <template>
   <div :class="classNames">
     <chart-container :width="width" :height="height">
-      <embeddor :period="period" tag="overview" :svg-node="$refs.svgEl" />
+      <embeddor
+        :period="period"
+        tag="overview"
+        :svg-node="$refs.svgEl"
+        :offset-y="50"
+      />
 
       <svg ref="svgEl" :viewBox="`0 0 ${width} ${height}`">
         <defs>
@@ -9,31 +14,66 @@
             <stop offset="10%" stop-color="#ccc" />
             <stop offset="90%" stop-color="#eee" />
           </linearGradient>
+          <radialGradient id="info-gradient">
+            <stop offset="0%" stop-color="#FFFFFF" />
+            <stop offset="80%" stop-color="#FFFFFF" />
+            <stop offset="100%" stop-color="#F0F0F0" />
+          </radialGradient>
         </defs>
 
         <g class="chart" :transform="`translate(${width / 2},${height / 2})`">
           <g class="fms"></g>
           <g class="beneficiaries"></g>
           <g class="links"></g>
+          <g class="info-circle">
+            <circle
+              :r="width / 6"
+              :cx="0"
+              :cy="0"
+              fill="url(#info-gradient)"
+              stroke="white"
+            ></circle>
+            <template v-if="hasData && aggregated.allocation">
+              <text
+                text-anchor="middle"
+                dominant-baseline="auto"
+                x="0"
+                y="-10"
+                fill="#dc4844"
+                font-size="65"
+                font-weight="bold"
+              >
+                {{ shortCurrency(aggregated.allocation) }}
+              </text>
+              <text
+                text-anchor="middle"
+                dominant-baseline="hanging"
+                x="0"
+                y="30"
+                fill="#444444"
+                font-size="30"
+                font-weight="bold"
+              >
+                {{ period }}
+              </text>
+            </template>
+            <text
+              v-else
+              text-anchor="middle"
+              dominant-baseline="middle"
+              x="0"
+              y="0"
+              fill="#444444"
+              font-size="20"
+              font-weight="bold"
+            >
+              No allocation available
+            </text>
+          </g>
         </g>
       </svg>
 
       <div class="info">
-        <div class="data-wrapper">
-          <div :style="compoundCircleStyle" class="data">
-            <template v-if="hasData && aggregated.allocation">
-              <p class="amount">
-                {{ shortCurrency(aggregated.allocation) }}
-              </p>
-              <p class="period">
-                {{ period }}
-              </p>
-            </template>
-            <template v-else>
-              <p class="no-data">No allocation available</p>
-            </template>
-          </div>
-        </div>
         <div :style="{ fontSize: fonts.bottom_text + 'px' }" class="ending">
           <p>
             to reduce social and economic disparities across Europe and <br />to
@@ -66,8 +106,8 @@ export default {
     return {
       filter_by: ["fm", "beneficiary"],
 
-      width: 500,
-      baseWidth: 500,
+      width: 800,
+      baseWidth: 800,
 
       padding: Math.PI / 2, // padding between main groups, in radians
       //itemPadding: 0,
@@ -259,13 +299,13 @@ export default {
 
       const totals = matrix.reduce((row, a) => row.map((b, i) => a[i] + b));
       // for avg / stdev calculations we skip zeroes
-      const _totals = totals.filter((x) => x != 0);
+      const _totals = totals.filter((x) => x !== 0);
 
       const sum = _totals.reduce((a, b) => a + b, 0),
         permitted = sum * MIN,
         minval = Math.min.apply(Math, _totals);
 
-      if (sum == 0) return;
+      if (sum === 0) return;
 
       // maybe there's nothing to do?
       if (minval >= permitted) return this.chord(matrix);
@@ -279,17 +319,17 @@ export default {
       );
 
       // this is where the magic happens:
-      const weights = totals.map((x) => (x == 0 ? 0 : (x - avg) / stdev));
+      const weights = totals.map((x) => (x === 0 ? 0 : (x - avg) / stdev));
 
       const minweight = Math.min.apply(Math, weights); // this corresponds to minval
 
       const deltas = totals.map((x, i) =>
-        x == 0 ? 0 : (weights[i] * basedelta) / minweight
+        x === 0 ? 0 : (weights[i] * basedelta) / minweight
       );
 
       for (const row of matrix) {
         row.forEach((x, i) => {
-          if (x == 0) return 0;
+          if (x === 0) return 0;
 
           row[i] = x + (x / totals[i]) * deltas[i];
         });
@@ -348,7 +388,12 @@ export default {
           .select("g.beneficiaries")
           .selectAll("g.item")
           .data(chords.targets),
-        links = this.chart.select("g.links").selectAll("path").data(chords);
+        links = this.chart
+          .select("g.links")
+          .attr("fill", 'url("#link-gradient")')
+          .attr("fill-opacity", "0.75")
+          .selectAll("path")
+          .data(chords);
 
       const fmcolour = (d) => this.FM_ARRAY[d.index].colour,
         extract_coords = (d) => ({
@@ -405,10 +450,12 @@ export default {
           .on("click", (ev, d) => opts.filterfunc(item(d.index)))
           .on("mouseenter", this.mkhighlight(type))
           .on("mouseleave", this.mkunhighlight(type));
-
         const arc = sel
           .append("path")
           .attr("class", "arc")
+          .attr("fill", type === "target" ? "#ccc" : "inherit")
+          .attr("stroke", type === "target" ? "#ccc" : "inherit")
+          .attr("stroke-width", 1.34)
           .each(function (d) {
             this._prev = extract_coords(d);
           })
@@ -421,6 +468,8 @@ export default {
         const blank = sel
           .append("path")
           .attr("class", "blank")
+          .attr("fill", "none")
+          .attr("stroke", "none")
           .each(function (d) {
             this._prev = extract_coords(d);
           })
@@ -430,7 +479,7 @@ export default {
           .append("g")
           .attr("class", "text")
           .attr("transform", (d) => txtTransform(d, opts.direction))
-          .attr("opacity", (d) => (d.value == 0 ? 0 : 1))
+          .attr("opacity", (d) => (d.value === 0 ? 0 : 1))
           .call(itemText, type);
       };
 
@@ -444,9 +493,13 @@ export default {
       const itemText = (sel, type) => {
         const opts = _options[type];
 
-        if (type == "target") {
+        if (type === "target") {
           sel
             .append("text")
+            .attr("text-anchor", "start")
+            .attr("fill", "#333")
+            .attr("stroke", "none")
+            .attr("font-size", "12")
             .text((d, i) => opts.items[i].name)
             .call(_textProps, opts);
 
@@ -454,17 +507,25 @@ export default {
         }
 
         sel
-          .filter((d, i) => opts.items[i].id == "norway-grants")
+          .filter((d, i) => opts.items[i].id === "norway-grants")
           .append("text")
+          .attr("text-anchor", "end")
+          .attr("fill", "#333")
+          .attr("stroke", "none")
+          .attr("font-size", "12")
           .text("Norway")
           .call(_textProps, opts);
 
         sel
-          .filter((d, i) => opts.items[i].id == "eea-grants")
+          .filter((d, i) => opts.items[i].id === "eea-grants")
           .selectAll("text")
           .data(["Iceland", "Liechtenstein", "Norway"])
           .enter()
           .append("text")
+          .attr("text-anchor", "end")
+          .attr("fill", "#333")
+          .attr("stroke", "none")
+          .attr("font-size", "12")
           .attr(
             "transform",
             (d, i, data) =>
@@ -500,10 +561,10 @@ export default {
             d.value === 0 ? 0 : this[type + "_stroke_opacity"]
           )
           .on("start", function (d) {
-            if (d.value != 0) d3.select(this).style("display", null);
+            if (d.value !== 0) d3.select(this).style("display", null);
           })
           .on("end", function (d) {
-            if (d.value == 0) d3.select(this).style("display", "none");
+            if (d.value === 0) d3.select(this).style("display", "none");
           });
 
         sel
@@ -517,7 +578,7 @@ export default {
           .select("g.text")
           .transition(t)
           .attr("transform", (d) => txtTransform(d, sel === fms ? -1 : 1))
-          .attr("opacity", (d) => (d.value == 0 ? 0 : 1));
+          .attr("opacity", (d) => (d.value === 0 ? 0 : 1));
       }
 
       links
@@ -564,9 +625,9 @@ export default {
 
       const links = this.chart.select("g.links").selectAll("path");
 
-      links.filter((d) => d[type].index == index).classed("highlighted", yes);
+      links.filter((d) => d[type].index === index).classed("highlighted", yes);
       links
-        .filter((d) => d[type].index != index)
+        .filter((d) => d[type].index !== index)
         .classed("non-highlighted", yes);
     },
 
@@ -607,26 +668,8 @@ export default {
       cursor: pointer;
       pointer-events: all;
 
-      path.arc {
-        fill: inherit;
-        stroke: inherit;
-        stroke-width: 1.34; // this should be equal to itemPadding
-      }
-
       &:hover path.arc {
         stroke-opacity: 1;
-      }
-
-      path.blank {
-        fill: none;
-        //fill: palegoldenrod;
-        stroke: none;
-      }
-
-      text {
-        fill: #333;
-        stroke: none;
-        font-size: 0.5em;
       }
 
       &:hover text {
@@ -637,30 +680,7 @@ export default {
       }
     }
 
-    .fms > g.item path.arc {
-      // this is set as attribute
-      //stroke-opacity: @source_stroke_opacity;
-    }
-
-    .beneficiaries > g.item path.arc {
-      fill: #ccc;
-      stroke: #ccc;
-      // this is set as attribute
-      //stroke-opacity: @target_stroke_opacity;
-    }
-
-    .fms text {
-      text-anchor: end;
-    }
-
-    .beneficiaries text {
-      text-anchor: start;
-    }
-
     .links {
-      fill: url("#link-gradient");
-      fill-opacity: 0.75;
-
       .highlighted {
         fill-opacity: 1;
       }
@@ -682,43 +702,11 @@ export default {
     text-align: center;
     font-size: 2rem;
 
-    p,
-    ul,
-    li {
-      margin: 0;
-    }
-
-    span.amount {
-      display: block;
-      font-weight: bold;
-    }
-
     & > div {
       position: absolute;
       width: 50%;
       left: 25%;
       pointer-events: initial;
-    }
-
-    .heading {
-      top: 5%;
-      font-size: 1.5em;
-    }
-
-    .data-wrapper {
-      background: rgb(255, 255, 255);
-      background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 1) 50%,
-        rgba(240, 240, 240, 1) 100%
-      );
-      border: 2px solid white;
-      border-radius: 100%;
-      width: auto;
-      transform: translate(-50%, -50%);
-      top: 50%;
-      left: 50%;
     }
 
     .data {
