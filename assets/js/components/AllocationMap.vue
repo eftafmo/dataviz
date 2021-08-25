@@ -423,7 +423,7 @@ export default AllocationMap;
 
 <style lang="less">
 .dataviz .viz.map.allocation {
-  @beneficiary: #ddd;
+  @beneficiary: #b3dae4;
   @bubble_color: rgb(196, 17, 48);
 
   .chart {

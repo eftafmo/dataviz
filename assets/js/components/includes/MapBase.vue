@@ -666,8 +666,8 @@ export default {
 .dataviz .viz.map {
   // defs
   // - fills
-  @water: #cbe9f6;
-  @terrain: #fff;
+  @water: #f6f6f6;
+  @terrain: #dbf0f4;
   @donor_inactive: #85adcb;
 
   // - stroke widths. these are all overriden dynamically,
@@ -678,7 +678,7 @@ export default {
 
   // - strokes
   .with-boundary {
-    stroke: #7f9fc8;
+    stroke: #87c3d5;
     stroke-linejoin: round;
   }
 

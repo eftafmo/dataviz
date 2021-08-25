@@ -62,8 +62,8 @@ export default {
     }
 
     return {
-      beneficiary_colour: "rgba(221, 221, 221, 1)",
-      beneficiary_colour_zero: "rgba(238, 238, 238, 1)",
+      beneficiary_colour: "#b3dae4",
+      beneficiary_colour_zero: "#c2cdd3",
       region_colour: "rgba(221, 221, 221, 0.5)",
       region_colour_zero: "rgba(238, 238, 238, 0.9)",
 
