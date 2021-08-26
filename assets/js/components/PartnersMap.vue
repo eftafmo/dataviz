@@ -26,8 +26,6 @@
       </label>
     </div>
 
-    <pijama-defs ref="defs"></pijama-defs>
-
     <map-base
       ref="map"
       :period="period"
@@ -37,6 +35,7 @@
       @rendered="handleMapRendered"
       @regions-rendered="registerEvents"
     >
+      <pijama-defs ref="defs"></pijama-defs>
       <g class="partnerships">
         <g v-for="layer in layers" :key="layer" :class="layer" class="base"></g>
       </g>
@@ -320,6 +319,14 @@ export default {
       this.renderRegionData(t);
       this.renderConnections(t);
       this.renderVisibleLayers(t);
+
+      d3.selectAll(".chart .regions").attr("stroke-opacity", 0.5);
+      d3.selectAll(".chart .regions path.zero")
+        .attr("fill", "none")
+        .attr("stroke", "none");
+      d3.selectAll(".dataviz .viz.map .partnerships")
+        .attr("stroke-width", 1.5)
+        .attr("fill", "none");
     },
 
     renderRegionData(t) {
@@ -658,7 +665,6 @@ export default {
 .dataviz .viz.map.is-partners {
   .chart .regions {
     path {
-      stroke-opacity: 0.5;
       pointer-events: all;
     }
 
@@ -671,11 +677,6 @@ export default {
 
     path.beneficiary,
     path.partner {
-      &.zero {
-        fill: none;
-        stroke: none;
-      }
-
       &:not(.zero):hover {
         stroke: #000;
         stroke-opacity: 1;
@@ -684,8 +685,6 @@ export default {
   }
 
   .partnerships {
-    stroke-width: 1.5; // TODO: make it dynamic
-    fill: none;
     pointer-events: none;
   }
 

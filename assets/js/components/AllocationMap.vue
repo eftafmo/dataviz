@@ -8,8 +8,6 @@
       :items="data"
     ></dropdown>
 
-    <pijama-defs ref="defs"></pijama-defs>
-
     <map-base
       ref="map"
       :period="period"
@@ -21,6 +19,9 @@
       @rendered="handleMapRendered"
       @regions-rendered="registerEvents"
     >
+      <template #default>
+        <pijama-defs ref="defs"></pijama-defs>
+      </template>
       <template #after-map>
         <region-details :region="current_region_data"></region-details>
 

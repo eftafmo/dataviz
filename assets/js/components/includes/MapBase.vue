@@ -331,9 +331,22 @@ export default {
         top = this.chart.select(".top"),
         path = this.path;
 
-      base.select(".sphere").datum({ type: "Sphere" }).attr("d", path);
+      terrain.attr("stroke", "#87c3d5").attr("stroke-linejoin", "round");
 
-      base.select(".graticule").datum(d3.geoGraticule()).attr("d", path);
+      base
+        .select(".sphere")
+        .datum({ type: "Sphere" })
+        .attr("d", path)
+        .attr("fill", "#f6f6f6")
+        .attr("stroke", "none");
+
+      base
+        .select(".graticule")
+        .datum(d3.geoGraticule())
+        .attr("d", path)
+        .attr("stroke", "#333")
+        .attr("stroke-opacity", 0.5)
+        .attr("fill", "none");
 
       // handle the layers. they are:
       // - framemalta
@@ -348,6 +361,8 @@ export default {
       for (const sel of [base, top]) {
         sel
           .select(".frames")
+          .attr("fill", "none")
+          .attr("stroke", "none")
           .selectAll("path")
           .data(_framedata)
           .enter()
@@ -356,7 +371,11 @@ export default {
       }
 
       // coastlines get drawn as a mesh
-      terrain.select(".coastline").datum(topo.mesh("coasts")).attr("d", path);
+      terrain
+        .select(".coastline")
+        .datum(topo.mesh("coasts"))
+        .attr("d", path)
+        .attr("fill", "none");
 
       // countries are filled
       // TODO: it's useless to use countries here, because the real remote
@@ -370,7 +389,8 @@ export default {
           .data(topo.features(layer))
           .enter()
           .append("path")
-          .attr("d", path);
+          .attr("d", path)
+          .attr("fill", "#dbf0f4");
       }
 
       // we can delete the base layers at this point, save some memory
@@ -407,6 +427,17 @@ export default {
           "r",
           (Math.max(geo.width, geo.height) / 2) * scale * frame_padding
         );
+
+      d3.selectAll(".base .frames").attr("fill", "#d9f1f6");
+
+      d3.selectAll(".middle .frames")
+        .attr("fill", "#dde")
+        .attr("fill-opacity", 0.3);
+
+      d3.selectAll(".top .frames")
+        .attr("fill", "none")
+        .attr("stroke", "#666")
+        .attr("stroke-width", 0.5);
 
       this._li_setup = true;
     },
@@ -459,11 +490,11 @@ export default {
       // and group data by its parent region
 
       function _getParent(id) {
-        return id.length == 2 ? "" : id.substr(0, id.length - 1);
+        return id.length === 2 ? "" : id.substr(0, id.length - 1);
       }
 
       function _getChildrenLevel(id) {
-        return id == "" ? 0 : id.length - 2 + 1;
+        return id === "" ? 0 : id.length - 2 + 1;
       }
 
       const collection = {};
@@ -492,7 +523,7 @@ export default {
             return;
           }
 
-          if (regions.find((r) => g.id.substr(0, r.length) == r) === undefined)
+          if (regions.find((r) => g.id.substr(0, r.length) === r) === undefined)
             return;
 
           // always cleanup what gets rendered
@@ -508,6 +539,8 @@ export default {
 
       const containers = this.chart
         .select(".regions")
+        .attr("stroke", "#87c3d5")
+        .attr("stroke-linejoin", "round")
         .selectAll("g")
         .data(Object.keys(collection), (d) => d);
 
@@ -551,6 +584,11 @@ export default {
         .attr("d", this.path)
         .attr("fill", this.fillfunc)
         .attr("opacity", 1)
+        .attr("stroke", (d) =>
+          this.COUNTRIES[d.id.substr(0, 2)].type === "donor"
+            ? "#111"
+            : "inherit"
+        )
 
         /*
         .on("mouseenter", () => this.$emit("enter", ...arguments))
@@ -564,7 +602,7 @@ export default {
 
           const sel = d3.select(this);
           // handle liechtenstein if needed
-          if (d.id.substr(0, 2) == "LI") $this.setupLI(sel);
+          if (d.id.substr(0, 2) === "LI") $this.setupLI(sel);
 
           // and clear the geo-data, we don't need it
           sel.datum({
@@ -576,6 +614,7 @@ export default {
       this._cleanupGeoData(_gcs);
 
       this.regions_rendered = true;
+      this.updateStyle();
       if (!shapes.empty()) this.$emit("regions-rendered", shapes);
     },
 
@@ -594,8 +633,8 @@ export default {
       const zoom = d3.zoom().on("zoom", (ev) => {
         this.chart.attr("transform", ev.transform);
         this.current_zoom = ev.transform.k;
-        this.updateStyle();
         if (zoomFunc) zoomFunc();
+        this.updateStyle();
       });
       for (const event in eventfuncs) {
         zoom.on(event, eventfuncs[event]);
@@ -614,7 +653,33 @@ export default {
     },
 
     updateStyle() {
-      this.stylesheet.innerHTML = this.mkStyle();
+      const k = this.getScaleFactor();
+      const terrain_stroke = this.terrain_stroke_width / k;
+      const region_stroke = this.region_stroke_width / k;
+      const graticule_stroke = this.graticule_stroke_width / k;
+      const LI_stroke = terrain_stroke / this.LI_zoom_factor;
+
+      d3.selectAll(".dataviz .viz.map .chart .terrain").attr(
+        "stroke-width",
+        terrain_stroke
+      );
+      d3.selectAll(".dataviz .viz.map .chart .regions").attr(
+        "stroke-width",
+        region_stroke
+      );
+      d3.selectAll(".dataviz .viz.map .chart .regions .level0").attr(
+        "stroke-width",
+        terrain_stroke
+      );
+      console.log(
+        d3
+          .selectAll(".dataviz .viz.map .chart .regions .LI")
+          .attr("stroke-width", LI_stroke)
+      );
+      d3.selectAll(".dataviz .viz.map .chart .base .graticule").attr(
+        "stroke-width",
+        graticule_stroke
+      );
     },
 
     getScaleFactor() {
@@ -628,35 +693,6 @@ export default {
 
       return k / modificator;
     },
-
-    mkStyle() {
-      const k = this.getScaleFactor(),
-        terrain_stroke = this.terrain_stroke_width / k,
-        region_stroke = this.region_stroke_width / k,
-        graticule_stroke = this.graticule_stroke_width / k,
-        LI_stroke = terrain_stroke / this.LI_zoom_factor;
-
-      return `
-        .dataviz .viz.map .chart .terrain {
-          stroke-width: ${terrain_stroke};
-        }
-
-        .dataviz .viz.map .chart .regions {
-          stroke-width: ${region_stroke};
-        }
-
-        .dataviz .viz.map .chart .regions .level0 {
-          stroke-width: ${terrain_stroke};
-        }
-        .dataviz .viz.map .chart .regions .LI {
-          stroke-width: ${LI_stroke};
-        }
-
-        .dataviz .viz.map .chart .base .graticule {
-          stroke-width: ${graticule_stroke};
-        }
-      `;
-    },
   },
 };
 </script>
@@ -664,45 +700,6 @@ export default {
 <style lang="less">
 // this is to be included only by the Map mixin, which uses this selector
 .dataviz .viz.map {
-  // defs
-  // - fills
-  @water: #f6f6f6;
-  @terrain: #dbf0f4;
-  @donor_inactive: #85adcb;
-
-  // - stroke widths. these are all overriden dynamically,
-  //   but left here for reference
-  @terrain_stroke_width: 0.7;
-  @region_stroke_width: 0.4;
-  @graticule_stroke_width: 0.2;
-
-  // - strokes
-  .with-boundary {
-    stroke: #87c3d5;
-    stroke-linejoin: round;
-  }
-
-  .with-terrain-boundary {
-    .with-boundary;
-    //stroke-width: @terrain_stroke_width;
-  }
-
-  .with-region-boundary {
-    .with-boundary;
-    //stroke-width: @region_stroke_width;
-  }
-
-  @donor_stroke: #111;
-
-  // - and others
-  .frame-filled {
-    fill: #d9f1f6;
-  }
-  .frame-stroked {
-    stroke: #666;
-    stroke-width: 0.5;
-  }
-
   // styles
   .chart-container {
     // don't let the map overflow the available height
@@ -710,65 +707,7 @@ export default {
     max-width: 100vh;
 
     svg {
-      box-shadow: 0px 0px 2px #aaa;
-    }
-  }
-
-  .chart {
-    .base {
-      .sphere {
-        fill: @water;
-        stroke: none;
-      }
-      .graticule {
-        stroke: #333;
-        //stroke-width: @graticule_stroke_width;
-        stroke-opacity: 0.5;
-        fill: none;
-      }
-
-      .frames {
-        .frame-filled;
-        stroke: none;
-      }
-    }
-
-    .middle {
-      .frames {
-        //.frame-filled;
-        fill: #dde;
-        fill-opacity: 0.3;
-      }
-    }
-
-    .top {
-      .frames {
-        fill: none;
-        .frame-stroked;
-      }
-    }
-
-    .terrain {
-      .with-terrain-boundary;
-
-      .coastline {
-        fill: none;
-      }
-      .countries {
-        fill: @terrain;
-      }
-    }
-
-    .regions {
-      .with-region-boundary;
-
-      &.level0 {
-        .with-terrain-boundary;
-      }
-
-      .donor {
-        stroke: @donor_stroke;
-      }
+      box-shadow: 0 0 2px #aaa;
     }
   }
 }
