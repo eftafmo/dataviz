@@ -671,10 +671,9 @@ export default {
         "stroke-width",
         terrain_stroke
       );
-      console.log(
-        d3
-          .selectAll(".dataviz .viz.map .chart .regions .LI")
-          .attr("stroke-width", LI_stroke)
+      d3.selectAll(".dataviz .viz.map .chart .regions .LI").attr(
+        "stroke-width",
+        LI_stroke
       );
       d3.selectAll(".dataviz .viz.map .chart .base .graticule").attr(
         "stroke-width",
