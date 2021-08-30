@@ -51,8 +51,16 @@ import ChartContainer from "./ChartContainer";
 import Base from "../Base";
 import Embeddor from "./Embeddor";
 
-const LAYERS_URL = "data/layers.topojson";
-const REGIONS_URL = "data/nuts2006.topojson";
+const URLS = {
+  "2009-2014": {
+    layersUrl: "data/layers2006.topojson",
+    regionsUrl: "data/nuts2006.topojson",
+  },
+  "2014-2021": {
+    layersUrl: "data/layers2016.topojson",
+    regionsUrl: "data/nuts2016.topojson",
+  },
+};
 
 function _mk_topo_funcs(data) {
   const layers = data.objects;
@@ -139,10 +147,10 @@ export default {
 
   computed: {
     LAYERS_URL() {
-      return this.getAssetUrl(LAYERS_URL);
+      return this.getAssetUrl(URLS[this.period].layersUrl);
     },
     REGIONS_URL() {
-      return this.getAssetUrl(REGIONS_URL);
+      return this.getAssetUrl(URLS[this.period].regionsUrl);
     },
 
     rendered() {
@@ -379,7 +387,7 @@ export default {
 
       // countries are filled
       // TODO: it's useless to use countries here, because the real remote
-      // territories are fillless. so we'll need to use NUTS-0 anyway.
+      // territories are fill-less. so we'll need to use NUTS-0 anyway.
       // but we still need the terrain for non-EU countries, which is
       // provided here, yet the layers topojson doesn't have country names,
       // so we can't filter on those. meh. fix this?
