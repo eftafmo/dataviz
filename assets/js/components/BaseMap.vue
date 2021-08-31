@@ -228,7 +228,7 @@ export default {
 
     fillfunc(d, i, group) {
       // returns the fill colour of a country or region
-      const id = d.id,
+      const id = d.id || d.properties.id,
         level = this.getRegionLevel(id),
         country = this.getAncestorRegion(id, 0),
         type = this.COUNTRIES[country].type;

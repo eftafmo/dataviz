@@ -278,6 +278,7 @@ export default {
     },
 
     cacheGeoDetails(d) {
+      const dId = d.id || d.properties.id;
       const path = this.path;
 
       const centroid = path.centroid(d),
@@ -293,7 +294,7 @@ export default {
         cx = (x1 + x2) / 2,
         cy = (y1 + y2) / 2;
 
-      this.geodetails[d.id] = {
+      this.geodetails[dId] = {
         name: d.properties.name,
 
         width: dx,
@@ -314,12 +315,12 @@ export default {
       // since we're at this, let's calculate the zoom transform data too
       const w = this.width,
         h = this.height,
-        spacing = Math.min(w, h) * this.getZoomPadding(d.id),
+        spacing = Math.min(w, h) * this.getZoomPadding(dId),
         k = Math.min((w - spacing) / dx, (h - spacing) / dy),
         x = w / 2 - cx * k,
         y = h / 2 - cy * k;
 
-      this.geodetails[d.id].transform = {
+      this.geodetails[dId].transform = {
         x: x,
         y: y,
         k: k,
@@ -413,7 +414,8 @@ export default {
       const scale = this.LI_zoom_factor,
         frame_padding = 1.7;
 
-      const geo = this.geodetails[sel.datum().id];
+      const gId = sel.datum().id || sel.datum().properties.id;
+      const geo = this.geodetails[gId];
 
       sel.attr("transform", (d) => {
         // though incorrect, centroid looks better than center
@@ -518,8 +520,9 @@ export default {
         // we could simply filter, but since we're iterating anyway,
         // let's clean up unneeded data
         source.geometries.forEach((g, i) => {
+          const gId = g.id || g.properties.id;
           // we use the index for gc
-          const state = g.id.substr(0, 2);
+          const state = gId.substr(0, 2);
           if (regions.map((x) => x.substr(0, 2)).indexOf(state) === -1) {
             // clean up stuff that's never gonna be needed
             if (
@@ -531,13 +534,13 @@ export default {
             return;
           }
 
-          if (regions.find((r) => g.id.substr(0, r.length) === r) === undefined)
+          if (regions.find((r) => gId.substr(0, r.length) === r) === undefined)
             return;
 
           // always cleanup what gets rendered
           _gc.push(i);
 
-          const parent = _getParent(g.id);
+          const parent = _getParent(gId);
           let geoms = collection[parent];
           if (geoms === undefined) geoms = collection[parent] = [];
 
@@ -581,22 +584,23 @@ export default {
             };
             return topojson.feature(geodata, objects).features;
           },
-          (d) => d.id
+          (d) => d.id || d.properties.id
         )
         .enter()
         .append("path")
-        .attr(
-          "class",
-          (d) => `${this.COUNTRIES[d.id.substr(0, 2)].type} ${d.id}`
-        )
+        .attr("class", (d) => {
+          const dId = d.id || d.properties.id;
+          return `${this.COUNTRIES[dId.substr(0, 2)].type} ${dId}`;
+        })
         .attr("d", this.path)
         .attr("fill", this.fillfunc)
         .attr("opacity", 1)
-        .attr("stroke", (d) =>
-          this.COUNTRIES[d.id.substr(0, 2)].type === "donor"
+        .attr("stroke", (d) => {
+          const dId = d.id || d.properties.id;
+          return this.COUNTRIES[dId.substr(0, 2)].type === "donor"
             ? "#111"
-            : "inherit"
-        )
+            : "inherit";
+        })
 
         /*
         .on("mouseenter", () => this.$emit("enter", ...arguments))
@@ -609,12 +613,14 @@ export default {
           $this.cacheGeoDetails(d);
 
           const sel = d3.select(this);
+          const dId = d.id || d.properties.id;
+
           // handle liechtenstein if needed
-          if (d.id.substr(0, 2) === "LI") $this.setupLI(sel);
+          if (dId.substr(0, 2) === "LI") $this.setupLI(sel);
 
           // and clear the geo-data, we don't need it
           sel.datum({
-            id: d.id,
+            id: dId,
             name: d.properties.name,
           });
         });
