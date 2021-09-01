@@ -462,7 +462,7 @@ export default AllocationMap;
 
   .toolbox {
     position: absolute;
-    right: 1em;
+    left: 1em;
     top: 1em;
 
     font-weight: bold;
