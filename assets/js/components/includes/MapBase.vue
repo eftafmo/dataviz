@@ -362,8 +362,6 @@ export default {
       // - frameremote
       // - coasts
       // - countries
-      // - cyprusnorth
-      // - remoteterritories
 
       // the frames need to be drawn twice, because
       const _framedata = [topo.mesh("framemalta"), topo.mesh("frameremote")];
@@ -393,14 +391,12 @@ export default {
       // provided here, yet the layers topojson doesn't have country names,
       // so we can't filter on those. meh. fix this?
       const countries = terrain.select(".countries").selectAll("path");
-      for (const layer of ["countries", "remoteterritories", "cyprusnorth"]) {
-        countries
-          .data(topo.features(layer))
-          .enter()
-          .append("path")
-          .attr("d", path)
-          .attr("fill", "#dbf0f4");
-      }
+      countries
+        .data(topo.features("countries"))
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("fill", "#dbf0f4");
 
       // we can delete the base layers at this point, save some memory
       delete this.geodata.layers;

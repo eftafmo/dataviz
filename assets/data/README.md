@@ -11,10 +11,8 @@ Current TopoJSON objects:
  - `assets/data/layers{YEAR}.topojson`:
    - frameremote
    - framemalta
-   - cyprusnorth 
    - countries
    - coasts
-   - remoteterritories (XXX this doesn't appear to be used at all 🤷)
  - `assets/data/nuts{YEAR}.topojson`
    - nuts0
    - nuts3
@@ -46,7 +44,7 @@ In all datasets the following must be the same:
 Unpack older layers topojson
 
 ```
-npx topo2geo -i assets/data/layers2016.topojson remoteterritories.geojson frameremote.geojson framemalta.geojson cyprusnorth.geojson countries.geojson coasts.geojson
+npx topo2geo -i assets/data/layers2016.topojson frameremote.geojson framemalta.geojson countries.geojson coasts.geojson
 ```
 
 Identify required files and download them. (**NOTE THAT FILENAME IS IMPORTANT FOR PACKING INTO TOPOJSON LATER**)
@@ -91,7 +89,7 @@ After all modifications are done export each layer them back into GeoJSON.
 Create `.topojson` files with the year specified in the filename. For example:
 
 ```
-npx geo2topo -o assets/data/layers2016.topojson --id-property ID --properties name=name -- remoteterritories.geojson frameremote.geojson framemalta.geojson cyprusnorth.geojson countries.geojson coasts.geojson 
+npx geo2topo -o assets/data/layers2016.topojson --id-property ID --properties name=name -- frameremote.geojson framemalta.geojson countries.geojson coasts.geojson 
 npx geo2topo -o assets/data/nuts2016.topojson --id-property ID --properties name=name -- nuts0.geojson nuts3.geojson
 ```
 
