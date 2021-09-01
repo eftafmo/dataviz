@@ -5,7 +5,10 @@ import pymssql
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from dv.models import Allocation, OrganisationRole, PrioritySector, Programme, ProgrammeArea, Project, State
+from dv.models import (
+    Allocation, BilateralInitiative, OrganisationRole, PrioritySector,
+    Programme, ProgrammeArea, Project, State
+)
 
 
 FUNDING_PERIOD = 3  # 2014-2021
@@ -129,6 +132,7 @@ class Command(BaseCommand):
                 is_dpp=row['isdpp'],
                 is_positive_fx=bool(row['ResultPositiveEffects']),
                 is_improved_knowledge=bool(row['ResultsImprovedKnowledge']),
+                is_continued_coop=bool(row['CooperationContinue']),
                 initial_description=sanitize_html(row['ProjectInitialDescriptionHtml']),
                 results_description=sanitize_html(row['ProjectResultsDescriptionHtml']),
             )
@@ -158,6 +162,33 @@ class Command(BaseCommand):
             )
         self.stdout.write(self.style.SUCCESS(
             f'Imported {OrganisationRole.objects.count()} OrganisationRole objects.'))
+
+        bilateral_initiative_query = 'SELECT * FROM fmo.TR_RDPBilateralinitiative'
+        cursor.execute(bilateral_initiative_query)
+        BI_STATUS_MAPPING = {
+            'Completed': BilateralInitiative.Status.COMPLETED,
+            'Completion under review by FMO': BilateralInitiative.Status.COMPLETION_UNDER_REVIEW_FMO,
+            'Completion under review by NFP': BilateralInitiative.Status.COMPLETION_UNDER_REVIEW_NFP,
+            'Draft Completion': BilateralInitiative.Status.DRAFT_COMPLETION,
+            'On-going': BilateralInitiative.Status.ON_GOING,
+            'Under review by FMO': BilateralInitiative.Status.UNDER_REVIEW_FMO,
+        }
+        for row in cursor.fetchall():
+            bilteral_initiative = BilateralInitiative.objects.create(
+                funding_period=FUNDING_PERIOD,
+                code=row['BICode'],
+                title=row['BITitle'],
+                programme=programmes.get(row['ProgrammeShortName']),
+                project=projects.get(row['ProjectCode']),
+                state=states.get(row['Country']),
+                level=(row['Level'] or '').lower(),
+                status=(BI_STATUS_MAPPING.get(row['BIStatus'], '')),
+            )
+            self._add_m2m_entries(bilteral_initiative, row, 'ProgrammeAreaCodesList', 'programme_areas',
+                                  'ProgrammeArea', programme_areas)
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Imported {BilateralInitiative.objects.count()} BilateralInitiative objects.'))
 
     def _add_m2m_entries(self, obj, row, key, m2m_attr, m2m_attr_type, m2m_list):
         for code in (row[key] or '').split(','):

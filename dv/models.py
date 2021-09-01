@@ -175,6 +175,7 @@ class Project(models.Model):
     is_dpp = models.BooleanField()
     is_positive_fx = models.BooleanField()
     is_improved_knowledge = models.BooleanField()
+    is_continued_coop = models.BooleanField()
     initial_description = models.TextField()
     results_description = models.TextField()
 
@@ -220,7 +221,49 @@ class OrganisationRole(models.Model):
     project = models.ForeignKey(Project, null=True, related_name='organisation_roles',
                                 on_delete=models.CASCADE)
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)  # TODO see if we need this
-    # is_programme = models.BooleanField(default=None, null=True)
+
+
+class BilateralInitiative(models.Model):
+    class Level:
+        COUNTRY = 'country'
+        PROGRAMME = 'programme'
+
+    LEVEL_CHOICES = (
+        (Level.COUNTRY, _('Country')),
+        (Level.PROGRAMME, _('Programme')),
+    )
+
+    class Status:
+        COMPLETED = 'completed'
+        COMPLETION_UNDER_REVIEW_FMO = 'compl review fmo'
+        COMPLETION_UNDER_REVIEW_NFP = 'compl review nfp'
+        DRAFT_COMPLETION = 'draft completion'
+        ON_GOING = 'on-going'
+        UNDER_REVIEW_FMO = 'review fmo'
+
+    STATUS_CHOICES = (
+        (Status.COMPLETED, _('Completed')),
+        (Status.COMPLETION_UNDER_REVIEW_FMO, _('Completion under review by FMO')),
+        (Status.COMPLETION_UNDER_REVIEW_NFP, _('Completion under review by NFP')),
+        (Status.DRAFT_COMPLETION, _('Draft Completion')),
+        (Status.ON_GOING, _('On-going')),
+        (Status.UNDER_REVIEW_FMO, _('Under review by FMO')),
+    )
+
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+
+    code = models.CharField(max_length=32, primary_key=True)
+    title = models.CharField(max_length=512)  # not unique
+
+    programme = models.ForeignKey(Programme, related_name='bilateral_initiatives',
+                                  on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, null=True, related_name='bilateral_initiatives',
+                                on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
+    programme_areas = models.ManyToManyField(ProgrammeArea)
+
+    level = models.CharField(max_length=16, choices=LEVEL_CHOICES)
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES)
 
 
 class News(models.Model):

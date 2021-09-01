@@ -9,8 +9,10 @@ from django.db.models.aggregates import Count, Sum
 from django.db.models.functions import Length
 
 from dv.lib.http import JsonResponse
-from dv.models import Allocation, State, Programme, Project, NUTS
-from dv.models import FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY
+from dv.models import (
+    Allocation, BilateralInitiative, NUTS, OrganisationRole, Programme, Project, State,
+    FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
+)
 from dv.serializers import ProjectSerializer
 from dv.lib.utils import EEA_DONOR_STATES, DONOR_STATES_REVERSED
 
@@ -57,20 +59,67 @@ def overview(request):
             for state in programme.states.all():
                 programmes[(state.pk, FM_NORWAY)].append(programme.short_name)
 
+    dpp_programme_query = programme_query.filter(
+        organisation_roles__role_code__in=('DPP', 'PJDPP'),  # TODO both DPP and PJDPP ?
+    ).distinct()
+    dpp_programmes = defaultdict(list)
+    for programme in dpp_programme_query:
+        if programme.is_eea:
+            if not programme.states.exists():
+                dpp_programmes[(None, FM_EEA)].append(programme.short_name)
+            for state in programme.states.all():
+                dpp_programmes[(state.pk, FM_EEA)].append(programme.short_name)
+        if programme.is_norway:
+            if not programme.states.exists():
+                dpp_programmes[(None, FM_NORWAY)].append(programme.short_name)
+            for state in programme.states.all():
+                dpp_programmes[(state.pk, FM_NORWAY)].append(programme.short_name)
+
     project_query = Project.objects.filter(
-        funding_period=period
+        funding_period=period,
     ).values(
         'code',
         'is_eea',
         'is_norway',
+        'is_dpp',
+        'is_continued_coop',
+        'is_positive_fx',
         'state',
     ).order_by('code')
     projects = defaultdict(list)
+    dpp_projects = defaultdict(list)
+    continued_coop = defaultdict(list)
+    positive_fx = defaultdict(list)
     for project in project_query:
         if project['is_eea']:
             projects[(project['state'], FM_EEA)].append(project['code'])
+            if project['is_dpp']:
+                dpp_projects[(project['state'], FM_EEA)].append(project['code'])
+            if project['is_continued_coop']:
+                continued_coop[(project['state'], FM_EEA)].append(project['code'])
+            if project['is_positive_fx']:
+                positive_fx[(project['state'], FM_EEA)].append(project['code'])
         if project['is_norway']:
             projects[(project['state'], FM_NORWAY)].append(project['code'])
+            if project['is_dpp']:
+                dpp_projects[(project['state'], FM_NORWAY)].append(project['code'])
+            if project['is_continued_coop']:
+                continued_coop[(project['state'], FM_NORWAY)].append(project['code'])
+            if project['is_positive_fx']:
+                positive_fx[(project['state'], FM_NORWAY)].append(project['code'])
+
+    bilateral_initiative_query = BilateralInitiative.objects.filter(
+        funding_period=period,
+    ).select_related(
+        'programme',
+    )
+    bilateral_initiatives = defaultdict(list)
+    # TODO is it ok to decide if BI is EEA/Norway based on programme?
+    for bi in bilateral_initiative_query:
+        if bi.programme.is_eea:
+            bilateral_initiatives[(bi.state.pk, FM_EEA)].append(bi.code)
+        if bi.programme.is_norway:
+            bilateral_initiatives[(bi.state.pk, FM_NORWAY)].append(bi.code)
 
     out = []
     for allocation in allocations:
@@ -83,12 +132,12 @@ def overview(request):
             'allocation': allocation['allocation'],
             'bilateral_fund': bilateral_fund.get((state, financial_mechanism), 0),
             "programmes": programmes.get((state, financial_mechanism), []),
-            "DPP_programmes": (),
-            "dpp_projects": (),
-            "continued_coop": (),
+            "DPP_programmes": dpp_programmes.get((state, financial_mechanism), []),
+            "dpp_projects": dpp_projects.get((state, financial_mechanism), []),
+            "continued_coop": continued_coop.get((state, financial_mechanism), []),
             "projects": projects.get((state, financial_mechanism), []),
-            "bilateral_initiatives": (),
-            "positive": (),
+            "bilateral_initiatives": bilateral_initiatives.get((state, financial_mechanism), []),
+            "positive_fx": positive_fx.get((state, financial_mechanism), []),
         })
     return JsonResponse(out)
 
