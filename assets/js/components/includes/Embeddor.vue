@@ -258,7 +258,7 @@ export default {
 
   width: 1em;
   height: 1em;
-  z-index: 999;
+  z-index: 2;
 
   .x-container {
     position: relative;
