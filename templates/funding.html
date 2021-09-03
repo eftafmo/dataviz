@@ -76,7 +76,8 @@
     _createApp(
       Dataviz.Grants,
       {
-        datasource: "/api/grants.json"
+        datasource: "/api/grants.json",
+        datasourcePeriods: ["{{ PERIOD }}"],
       }
     ).mount("#content");
   });

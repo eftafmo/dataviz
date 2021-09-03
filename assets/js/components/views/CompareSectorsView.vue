@@ -11,12 +11,10 @@
     </h1>
     <div class="compare-sector-wrapper grant-dataviz">
       <funding-by-sector-chart
+        v-for="period in periodsToCompare"
+        :key="period"
         :initial="dataset"
-        period="2009-2014"
-      ></funding-by-sector-chart>
-      <funding-by-sector-chart
-        :initial="dataset"
-        period="2014-2021"
+        :period="period"
       ></funding-by-sector-chart>
     </div>
   </div>
@@ -33,6 +31,11 @@ export default {
   components: { DropdownFilter, FundingBySectorChart },
   extends: Component,
   mixins: [WithCountries],
+  data() {
+    return {
+      periodsToCompare: ["2009-2014", "2014-2021"],
+    };
+  },
 };
 </script>
 

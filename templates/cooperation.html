@@ -105,7 +105,8 @@
     _createApp(
       Dataviz.Partners,
       {
-        datasource: "/api/partners.json"
+        datasource: "/api/partners.json",
+        datasourcePeriods: ["{{ PERIOD }}"],
       }
     ).mount("#content");
   });

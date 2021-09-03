@@ -81,7 +81,8 @@
     _createApp(
       Dataviz.Projects,
       {
-        datasource: "/api/projects.json"
+        datasource: "/api/projects.json",
+        datasourcePeriods: ["{{ PERIOD }}"],
       }
     ).mount("#content");
   });

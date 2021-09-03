@@ -36,7 +36,8 @@
     _createApp(
       Dataviz.Index,
       {
-        datasource: "/api/overview.json"
+        datasource: "/api/overview.json",
+        datasourcePeriods: ["{{ PERIOD }}"]
       }
     ).mount("#content");
   });

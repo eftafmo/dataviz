@@ -82,48 +82,32 @@ export default {
   },
   computed: {
     aggregatedByPeriod() {
-      // TODO: testing only
-      const x = this.aggregate(this.filtered, ["period"], this.aggregate_on);
-      return {
-        "2004-2009": x["2009-2014"],
-        "2009-2014": x["2009-2014"],
-        "2014-2021": x["2009-2014"],
-      };
-    },
-    aggregatedByPeriodAndFm() {
-      // TODO: testing only
-      return {
-        "2004-2009": this.aggregated["2009-2014"],
-        "2009-2014": this.aggregated["2009-2014"],
-        "2014-2021": this.aggregated["2009-2014"],
-      };
+      return this.aggregate(this.filtered, ["period"], this.aggregate_on);
     },
     data() {
       const result = [];
-      Object.entries(this.aggregatedByPeriodAndFm).forEach(
-        ([period, periodData]) => {
-          let yOffset = 0;
-          this.FM_ARRAY.forEach((fm) => {
-            const details = periodData[fm.name];
-            // These can be zero for specific beneficiaries. However we still
-            // need to draw them in order for them to be animated when filters change.
-            const allocation = (details && details.allocation) || 0;
+      Object.entries(this.aggregated).forEach(([period, periodData]) => {
+        let yOffset = 0;
+        this.FM_ARRAY.forEach((fm) => {
+          const details = periodData[fm.name];
+          // These can be zero for specific beneficiaries. However we still
+          // need to draw them in order for them to be animated when filters change.
+          const allocation = (details && details.allocation) || 0;
 
-            result.push({
-              id: `${period}-${fm.id}`,
-              fmId: fm.id,
-              allocation,
-              drawnAllocation: yOffset + allocation,
-              period,
-              details,
-              stripesFill: fm.stripesFill,
-            });
-            // Keep track of the offset for this period, as the bars
-            // as stacked on top of each other.
-            yOffset += allocation;
+          result.push({
+            id: `${period}-${fm.id}`,
+            fmId: fm.id,
+            allocation,
+            drawnAllocation: yOffset + allocation,
+            period,
+            details,
+            stripesFill: fm.stripesFill,
           });
-        }
-      );
+          // Keep track of the offset for this period, as the bars
+          // as stacked on top of each other.
+          yOffset += allocation;
+        });
+      });
       return result;
     },
     totalData() {
@@ -314,7 +298,7 @@ export default {
       `;
     },
     tooltipLegendTemplate(d) {
-      const data = this.aggregatedByPeriodAndFm[d.period];
+      const data = this.aggregated[d.period];
 
       return this.FM_ARRAY.map((fm) => {
         const allocation = (data[fm.name] && data[fm.name].allocation) || 0;

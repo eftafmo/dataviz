@@ -71,7 +71,7 @@ export default {
   mixins: [WithCountriesMixin, WithSectors, WithTooltipMixin],
   data() {
     return {
-      aggregate_by: ["sector"],
+      aggregate_by: ["period", "sector"],
       filter_by: ["beneficiary"],
       svgWidth: 560,
       barChartHeight: 250,
@@ -90,7 +90,10 @@ export default {
   },
   computed: {
     data() {
-      return Object.values(this.aggregated).map((item) => {
+      const periodData = this.aggregated[this.period];
+      if (!periodData) return [];
+
+      return Object.values(periodData).map((item) => {
         const id = slugify(item.sector);
         return {
           id,
