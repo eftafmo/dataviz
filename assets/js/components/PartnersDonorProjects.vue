@@ -32,6 +32,23 @@
           <td>{{ organization.projects }}</td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>
+            {{ sum(data.map((item) => item.organizations.length)) }}
+          </th>
+          <th>
+            {{ sum(data.map((item) => item.countries.size)) }}
+          </th>
+          <th>
+            {{ sum(data.map((item) => item.programmes.size)) }}
+          </th>
+          <th>
+            {{ sum(data.map((item) => item.projects.size)) }}
+          </th>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
@@ -42,6 +59,7 @@ import Component from "./Component";
 import PartnersMixin from "./mixins/Partners";
 import CountriesMixin from "./mixins/WithCountries";
 import Embeddor from "./includes/Embeddor";
+import { sum } from "../lib/util";
 
 export default {
   components: { Embeddor },
@@ -120,6 +138,7 @@ export default {
   },
 
   methods: {
+    sum,
     show_items(e) {
       let target = e.target.parentNode.parentNode;
       target.classList.toggle("active");
@@ -141,6 +160,7 @@ export default {
     * {
       text-align: left;
     }
+    tfoot th,
     thead th,
     tbody td {
       width: 21%;
@@ -211,6 +231,7 @@ export default {
       }
     }
 
+    tfoot,
     thead {
       border-spacing: 4px;
 
@@ -219,6 +240,7 @@ export default {
       }
     }
 
+    tfoot th:first-of-type,
     thead th:first-of-type,
     tbody tr td:first-of-type {
       width: 58%;

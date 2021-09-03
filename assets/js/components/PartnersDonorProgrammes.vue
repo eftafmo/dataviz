@@ -36,6 +36,20 @@
           <td>{{ organization.programmes.size }}</td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>
+            {{ sum(data.map((item) => item.organizations.length)) }}
+          </th>
+          <th>
+            {{ sum(data.map((item) => item.countries.size)) }}
+          </th>
+          <th>
+            {{ sum(data.map((item) => item.programmes.size)) }}
+          </th>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
@@ -47,6 +61,7 @@ import PartnersMixin from "./mixins/Partners";
 import CountriesMixin from "./mixins/WithCountries";
 import Dropdown from "./includes/DropdownFilter";
 import Embeddor from "./includes/Embeddor";
+import { sum } from "../lib/util";
 
 export default {
   components: {
@@ -137,6 +152,7 @@ export default {
   },
 
   methods: {
+    sum,
     handleFilterDPP(organisation) {
       this.filters.DPP == organisation ? false : true;
     },
@@ -178,6 +194,8 @@ export default {
     * {
       text-align: left;
     }
+
+    tfoot th,
     thead th,
     tbody td {
       width: 21%;
@@ -247,6 +265,7 @@ export default {
       }
     }
 
+    tfoot,
     thead {
       border-spacing: 4px;
 
@@ -256,6 +275,7 @@ export default {
       }
     }
 
+    tfoot th:first-of-type,
     thead th:first-of-type,
     tbody tr td:first-of-type {
       width: 58%;

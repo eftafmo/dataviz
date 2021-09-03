@@ -113,3 +113,15 @@ export function downloadFile(blob, filename) {
     windowURL.revokeObjectURL(blobURL);
   }
 }
+
+/**
+ * Sums start and the items of an iterable from left to right and
+ * returns the total.
+ *
+ * @param values {Number[]}
+ * @param start {Number}
+ * @return {Number}
+ */
+export function sum(values, start = 0) {
+  return values.reduce((collector, item) => collector + item, start);
+}
