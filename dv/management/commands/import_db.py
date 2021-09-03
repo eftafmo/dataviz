@@ -53,6 +53,7 @@ class Command(BaseCommand):
                 code=row['PACode'],
                 name=row['ProgrammeArea'],
                 short_name=row['ProgrammeAreaShortName'],
+                order=row['idPA'],
                 priority_sector=priority_sector,
                 objective=row['Objective'] or '',
             )
@@ -73,7 +74,7 @@ class Command(BaseCommand):
                 programme_area=programme_areas.get(row['PACode']),
                 gross_allocation=row['GrossAllocation'],
                 net_allocation=row['NetAllocation'],
-                thematic=(row['Thematic'] or '').lower(),
+                thematic=row['Thematic'] or '',
             )
 
         self.stdout.write(self.style.SUCCESS(
@@ -88,7 +89,7 @@ class Command(BaseCommand):
                 short_name=row['ProgrammeShortName'],
                 name=row['Programme'],
                 summary=sanitize_html(row['ProgrammeSummary']),
-                status=(row['ProgrammeStatus'] or '').lower(),
+                status=row['ProgrammeStatus'] or '',
                 allocation_eea=row['ProgrammeGrantEEA'] or 0,
                 allocation_norway=row['ProgrammeGrantNorway'] or 0,
                 co_financing=row['ProgrammeCoFinancing'],
@@ -121,7 +122,7 @@ class Command(BaseCommand):
                 funding_period=FUNDING_PERIOD,
                 code=row['ProjectCode'],
                 name=row['Project'],
-                status=row['ProjectContractStatus'].lower(),
+                status=row['ProjectContractStatus'],
                 state=states.get(row['Country']),
                 programme=programmes.get(row['ProgrammeShortName']),
                 nuts_code=row['ProjectLocation'] or '',
@@ -149,10 +150,6 @@ class Command(BaseCommand):
 
         indicator_query = 'SELECT * FROM fmo.TR_RDPIndicators'
         cursor.execute(indicator_query)
-        INDICATOR_UOM_MAPPING = {
-            'Annual number': Indicator.UnitOfMeasurement.ANNUAL_NUMBER,
-            'Number': Indicator.UnitOfMeasurement.NUMBER,
-        }
         for row in cursor.fetchall():
             Indicator.objects.create(
                 funding_period=FUNDING_PERIOD,
@@ -162,7 +159,7 @@ class Command(BaseCommand):
                 indicator=row['CoreCommonIndicator'],
                 outcome=row['Outcome'],
                 header=row['Header'],
-                unit_of_measurement=(INDICATOR_UOM_MAPPING.get(row['UnitOfMeasurement'], '')),
+                unit_of_measurement=row['UnitOfMeasurement'],
                 achievement_eea=row['Achievement_EEA'] or 0,
                 achievement_norway=row['Achievement_Norway'] or 0,
                 is_core=bool(row['IsCore']),
@@ -191,14 +188,6 @@ class Command(BaseCommand):
 
         bilateral_initiative_query = 'SELECT * FROM fmo.TR_RDPBilateralinitiative'
         cursor.execute(bilateral_initiative_query)
-        BI_STATUS_MAPPING = {
-            'Completed': BilateralInitiative.Status.COMPLETED,
-            'Completion under review by FMO': BilateralInitiative.Status.COMPLETION_UNDER_REVIEW_FMO,
-            'Completion under review by NFP': BilateralInitiative.Status.COMPLETION_UNDER_REVIEW_NFP,
-            'Draft Completion': BilateralInitiative.Status.DRAFT_COMPLETION,
-            'On-going': BilateralInitiative.Status.ON_GOING,
-            'Under review by FMO': BilateralInitiative.Status.UNDER_REVIEW_FMO,
-        }
         for row in cursor.fetchall():
             bilateral_initiative = BilateralInitiative.objects.create(
                 funding_period=FUNDING_PERIOD,
@@ -207,8 +196,8 @@ class Command(BaseCommand):
                 programme=programmes.get(row['ProgrammeShortName']),
                 project=projects.get(row['ProjectCode']),
                 state=states.get(row['Country']),
-                level=(row['Level'] or '').lower(),
-                status=(BI_STATUS_MAPPING.get(row['BIStatus'], '')),
+                level=row['Level'] or '',
+                status=row['BIStatus'],
             )
             self._add_m2m_entries(bilateral_initiative, row, 'ProgrammeAreaCodesList', 'programme_areas',
                                   'ProgrammeArea', programme_areas)

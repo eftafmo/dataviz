@@ -4,26 +4,23 @@ from django.utils.translation import ugettext_lazy as _
 
 FM_EEA = 'EEA'
 FM_NORWAY = 'NOR'
-FM_EEA_FULL_NAME = 'EEA Grants'
-FM_NORWAY_FULL_NAME = 'Norway Grants'
 FINANCIAL_MECHANISMS = [
     (FM_EEA, 'EEA Grants'),
     (FM_NORWAY, 'Norway Grants'),
 ]
 FINANCIAL_MECHANISMS_DICT = dict(FINANCIAL_MECHANISMS)
-# TODO add table for financing periods?
 FUNDING_PERIODS = [
     (1, '2004-2009'),
     (2, '2009-2014'),
     (3, '2014-2021'),
 ]
-FUNDING_PERIODS_DICT = dict(FUNDING_PERIODS)
+FUNDING_PERIODS_DICT = {val: key for key, val in FUNDING_PERIODS}
+DEFAULT_PERIOD = '2014-2021'
 
 
 class NUTS(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
     label = models.CharField(max_length=128)
-    # TODO field to differentiate between NUTS in different periods?
 
     class Meta:
         ordering = ['code']
@@ -47,18 +44,16 @@ class State(models.Model):
         return self.name
 
 
-# TODO have priority sectors changed between periods? i.e. same code, different names
 class PrioritySector(models.Model):
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=64)  # not unique
 
 
 class ProgrammeArea(models.Model):
-    # each PA code is duplicated for the 2 FM present now
     code = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=256)  # not unique because of FM
     short_name = models.CharField(max_length=32)  # not unique
-    # order = models.SmallIntegerField()  # TODO where from?
+    order = models.SmallIntegerField(null=True)
     objective = models.TextField()
 
     priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
@@ -66,11 +61,6 @@ class ProgrammeArea(models.Model):
 
 
 class Allocation(models.Model):
-    class Thematic(models.TextChoices):
-        COMPETITIVE = 'competitive', _('Competitive')
-        GREEN = 'green', _('Green')
-        INCLUSIVE = 'inclusive', _('Inclusive')
-
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
     financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
 
@@ -80,32 +70,22 @@ class Allocation(models.Model):
     gross_allocation = models.DecimalField(max_digits=15, decimal_places=2)
     net_allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
-    thematic = models.CharField(max_length=16, choices=Thematic.choices, blank=True)
+    thematic = models.CharField(max_length=16, blank=True)
 
     class Meta:
         unique_together = ('state', 'programme_area', 'financial_mechanism', 'funding_period')
 
 
 class Programme(models.Model):
-    class Status(models.TextChoices):
-        APPROVED = 'approved', _('Approved')
-        IMPLEMENTATION = 'implementation', _('Implementation')
-        COMPLETED = 'completed', _('Completed')
-        CLOSED = 'closed', _('Closed')
-        WITHDRAWN = 'withdrawn', _('Withdrawn')
-        RETURNED = 'returned', _('Returned to po')
-        CANCELLED = 'cancelled', _('Cancelled')
-
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
     states = models.ManyToManyField(State)
-    # TODO see if we need to declare the m2m table explicitly
     programme_areas = models.ManyToManyField(ProgrammeArea)
 
     short_name = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=256)  # not unique
 
-    status = models.CharField(max_length=16, choices=Status.choices)
+    status = models.CharField(max_length=16)
 
     url = models.CharField(max_length=256, null=True)
     summary = models.TextField()
@@ -131,20 +111,11 @@ class Programme(models.Model):
 
 
 class Project(models.Model):
-    class Status(models.TextChoices):
-        SIGNED = 'signed', _('Signed')
-        PLANNED = 'planned', _('Planned')
-        IN_PROGRESS = 'in progress', _('In Progress')
-        COMPLETED = 'completed', _('Completed')
-        TERMINATED = 'terminated', _('Terminated')
-        NON_COMPLETED = 'non completed', _('Non Completed')
-        PARTIALLY_COMPLETED = 'partially completed', _('Partially Completed')
-
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
-    status = models.CharField(max_length=19, choices=Status.choices)
+    status = models.CharField(max_length=19)
 
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
@@ -171,10 +142,6 @@ class ProjectTheme(models.Model):
 
 
 class Indicator(models.Model):
-    class UnitOfMeasurement(models.TextChoices):
-        ANNUAL_NUMBER = 'annual', _('Annual number')
-        NUMBER = 'number', _('Number')
-
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
     programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
@@ -184,7 +151,7 @@ class Indicator(models.Model):
     outcome = models.CharField(max_length=256)
     header = models.CharField(max_length=256)
 
-    unit_of_measurement = models.CharField(choices=UnitOfMeasurement.choices, max_length=8)
+    unit_of_measurement = models.CharField(max_length=8)
 
     achievement_eea = models.DecimalField(max_digits=9, decimal_places=2)
     achievement_norway = models.DecimalField(max_digits=9, decimal_places=2)
@@ -214,29 +181,17 @@ class OrganisationRole(models.Model):
     organisation_country = models.CharField(max_length=64)
     organisation_name = models.CharField(max_length=256)
 
-    nuts_code = models.CharField(max_length=5)  # FK to NUTS table?
+    nuts_code = models.CharField(max_length=5)  # TODO FK to NUTS table?
 
     # programme and project are denormalised to include BS
     programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles',
                                   on_delete=models.CASCADE)
     project = models.ForeignKey(Project, null=True, related_name='organisation_roles',
                                 on_delete=models.CASCADE)
-    state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)  # TODO see if we need this
+    state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
 
 
 class BilateralInitiative(models.Model):
-    class Level(models.TextChoices):
-        COUNTRY = 'country', _('Country')
-        PROGRAMME = 'programme', _('Programme')
-
-    class Status(models.TextChoices):
-        COMPLETED = 'completed', _('Completed')
-        COMPLETION_UNDER_REVIEW_FMO = 'compl review fmo', _('Completion under review by FMO')
-        COMPLETION_UNDER_REVIEW_NFP = 'compl review nfp', _('Completion under review by NFP')
-        DRAFT_COMPLETION = 'draft completion', _('Draft Completion')
-        ON_GOING = 'on-going', _('On-going')
-        UNDER_REVIEW_FMO = 'review fmo', _('Under review by FMO')
-
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
     code = models.CharField(max_length=32, primary_key=True)
@@ -249,8 +204,8 @@ class BilateralInitiative(models.Model):
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
     programme_areas = models.ManyToManyField(ProgrammeArea)
 
-    level = models.CharField(max_length=16, choices=Level.choices)
-    status = models.CharField(max_length=16, choices=Status.choices)
+    level = models.CharField(max_length=16)
+    status = models.CharField(max_length=16)
 
 
 class News(models.Model):

@@ -12,7 +12,7 @@ from dv.lib.http import JsonResponse
 from dv.models import (
     Allocation, BilateralInitiative, Indicator, NUTS, OrganisationRole,
     Programme, Project, State,
-    FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
+    DEFAULT_PERIOD, FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
 )
 from dv.serializers import ProjectSerializer
 from dv.lib.utils import EEA_DONOR_STATES, DONOR_STATES_REVERSED
@@ -26,10 +26,11 @@ def test_sentry(request):
 
 @require_GET
 def overview(request):
-    # TODO see if FE will send value in db (3) or human-readable value (2014-2021)
-    period = request.GET.get('period', 3)
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
     allocations = Allocation.objects.filter(
-        funding_period=period,
+        funding_period=period_id,
     ).values(
         'financial_mechanism',
         'state'
@@ -43,7 +44,7 @@ def overview(request):
     }
 
     programme_query = Programme.objects.filter(
-        funding_period=period,
+        funding_period=period_id,
         is_tap=False,
         is_bfp=False,
     ).order_by('short_name')
@@ -61,7 +62,7 @@ def overview(request):
                 programmes[(state.pk, FM_NORWAY)].append(programme.short_name)
 
     dpp_programme_query = programme_query.filter(
-        organisation_roles__role_code__in=('DPP', 'PJDPP'),  # TODO both DPP and PJDPP ?
+        organisation_roles__role_code='DPP',
     ).distinct()
     dpp_programmes = defaultdict(list)
     for programme in dpp_programme_query:
@@ -77,7 +78,7 @@ def overview(request):
                 dpp_programmes[(state.pk, FM_NORWAY)].append(programme.short_name)
 
     project_query = Project.objects.filter(
-        funding_period=period,
+        funding_period=period_id,
     ).values(
         'code',
         'is_eea',
@@ -110,7 +111,7 @@ def overview(request):
                 positive_fx[(project['state'], FM_NORWAY)].append(project['code'])
 
     bilateral_initiative_query = BilateralInitiative.objects.filter(
-        funding_period=period,
+        funding_period=period_id,
     ).select_related(
         'programme',
     )
@@ -127,7 +128,7 @@ def overview(request):
         state = allocation['state']
         financial_mechanism = allocation['financial_mechanism']
         out.append({
-            'period': FUNDING_PERIODS_DICT[period],
+            'period': period,
             'fm': FINANCIAL_MECHANISMS_DICT[financial_mechanism],
             'beneficiary': state,
             'allocation': allocation['allocation'],
@@ -145,9 +146,11 @@ def overview(request):
 
 @require_GET
 def grants(request):
-    period = request.GET.get('period', 3)
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
     allocations = Allocation.objects.filter(
-        funding_period=period,
+        funding_period=period_id,
         programme_area__isnull=False,
     ).exclude(
         gross_allocation=0,  # TODO should we still exclude this?
@@ -162,7 +165,7 @@ def grants(request):
     }
 
     indicators = Indicator.objects.filter(
-        funding_period=period,
+        funding_period=period_id,
         programme__is_tap=False,
     ).select_related(
         'programme',
@@ -200,12 +203,12 @@ def grants(request):
         financial_mechanism = allocation.financial_mechanism
         programme_area = allocation.programme_area_id
         out.append({
-            'period': FUNDING_PERIODS_DICT[period],
+            'period': period,
             'fm': FINANCIAL_MECHANISMS_DICT[financial_mechanism],
             'sector': allocation.programme_area.priority_sector.name,
             'area': allocation.programme_area.name,
             'beneficiary': state,
-            # 'is_ta': a.programme_area.is_not_ta,  # TODO TA info only available on programme
+            'is_ta': True,  # TODO TA info only available on programme for the moment
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),  # TODO this doesn't look right
