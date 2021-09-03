@@ -49,6 +49,7 @@
           {% endfor %}
           <form class="header-search" action="{% url view|search_view_name:current_view %}">
             <input type="search" placeholder="Search" name="q">
+            <input type="text" name="period" hidden value="{{ PERIOD }}" />
             <button type="submit" title="Search" name="page" value="1">
               <span class="icon icon-search"></span>
             </button>
