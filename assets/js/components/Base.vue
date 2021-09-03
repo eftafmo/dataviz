@@ -123,8 +123,7 @@ export default {
 
   methods: {
     async fetchData() {
-      if (!this.datasource || this.datasource.length === 0)
-        throw "Base.fetchData(): Missing datasource.";
+      if (!this.datasource) throw "Base.fetchData(): Missing datasource.";
 
       const responses = await Promise.all(
         this.datasourcePeriods.map(this.loadPeriod)

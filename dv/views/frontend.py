@@ -528,7 +528,7 @@ class NewsTypeaheadFacetedSearchView(
 
 class EmbedComponent(TemplateView):
     content_type = "text/javascript"
-    template_name = "embed.js"
+    template_name = "embed.js.jinja"
     template_engine = "jinja2"
     # TODO: must not cache
 
@@ -560,6 +560,7 @@ class EmbedComponent(TemplateView):
             elif name.endswith(".css"):
                 cssfiles.append(url)
 
+        datasourcePeriods = [period]
         props = {
             "datasource": self.request.build_absolute_uri(reverse("api:" + scenario)),
             "period": period,
@@ -586,6 +587,7 @@ class EmbedComponent(TemplateView):
                 "cssfiles": cssfiles,
                 "object": obj,
                 "props": props,
+                "datasourcePeriods": datasourcePeriods,
                 "opts": {k: v for k, v in self.request.GET.items()},
                 "embedurl": self.request.build_absolute_uri(),
                 "randomness": utils.mkrandstr(),
