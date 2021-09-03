@@ -10,7 +10,8 @@ from django.db.models.functions import Length
 
 from dv.lib.http import JsonResponse
 from dv.models import (
-    Allocation, BilateralInitiative, NUTS, OrganisationRole, Programme, Project, State,
+    Allocation, BilateralInitiative, Indicator, NUTS, OrganisationRole,
+    Programme, Project, State,
     FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
 )
 from dv.serializers import ProjectSerializer
@@ -144,7 +145,75 @@ def overview(request):
 
 @require_GET
 def grants(request):
+    period = request.GET.get('period', 3)
+    allocations = Allocation.objects.filter(
+        funding_period=period,
+        programme_area__isnull=False,
+    ).exclude(
+        gross_allocation=0,  # TODO should we still exclude this?
+    ).select_related(
+        'programme_area',
+        'programme_area__priority_sector',
+    ).order_by('state', 'financial_mechanism')
+
+    bilateral_fund = {
+        (bf.financial_mechanism, bf.state_id, bf.programme_area_id): bf.gross_allocation
+        for bf in allocations.filter(programme_area__code='OTBF')
+    }
+
+    indicators = Indicator.objects.filter(
+        funding_period=period,
+        programme__is_tap=False,
+    ).select_related(
+        'programme',
+    )
+    results = defaultdict(lambda: defaultdict(dict))
+    programmes = defaultdict(dict)
+    for indicator in indicators:
+        if indicator.is_eea:
+            results[(FM_EEA, indicator.state_id, indicator.programme_area_id)][indicator.header].update({
+                indicator.indicator: {
+                "achievement": indicator.achievement_eea,
+            }})
+            programmes[(FM_EEA, indicator.state_id, indicator.programme_area_id)].update({
+                indicator.programme.short_name: {
+                    'name': indicator.programme.name,
+                    'url': indicator.programme.url,
+                }
+            })
+        if indicator.is_norway:
+            results[(FM_NORWAY, indicator.state_id, indicator.programme_area_id)][indicator.header].update({
+                indicator.indicator: {
+                "achievement": indicator.achievement_norway,
+            }})
+            programmes[(FM_NORWAY, indicator.state_id, indicator.programme_area_id)].update({
+                indicator.programme.short_name: {
+                    'name': indicator.programme.name,
+                    'url': indicator.programme.url,
+                }
+            })
+
+
     out = []
+    for allocation in allocations:
+        state = allocation.state_id
+        financial_mechanism = allocation.financial_mechanism
+        programme_area = allocation.programme_area_id
+        out.append({
+            'period': FUNDING_PERIODS_DICT[period],
+            'fm': FINANCIAL_MECHANISMS_DICT[financial_mechanism],
+            'sector': allocation.programme_area.priority_sector.name,
+            'area': allocation.programme_area.name,
+            'beneficiary': state,
+            # 'is_ta': a.programme_area.is_not_ta,  # TODO TA info only available on programme
+            'allocation': allocation.gross_allocation,
+            'net_allocation': allocation.net_allocation,
+            'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),  # TODO this doesn't look right
+            'results': results[(financial_mechanism, state, programme_area)],
+            'programmes': programmes[(financial_mechanism, state, programme_area)],
+            'thematic': allocation.thematic,
+        })
+
     return JsonResponse(out)
 
 

@@ -55,7 +55,6 @@ class PrioritySector(models.Model):
 
 class ProgrammeArea(models.Model):
     # each PA code is duplicated for the 2 FM present now
-    # TODO what are slogan elements?
     code = models.CharField(max_length=4, primary_key=True)
     name = models.CharField(max_length=256)  # not unique because of FM
     short_name = models.CharField(max_length=32)  # not unique
@@ -67,6 +66,11 @@ class ProgrammeArea(models.Model):
 
 
 class Allocation(models.Model):
+    class Thematic(models.TextChoices):
+        COMPETITIVE = 'competitive', _('Competitive')
+        GREEN = 'green', _('Green')
+        INCLUSIVE = 'inclusive', _('Inclusive')
+
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
     financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
 
@@ -76,29 +80,21 @@ class Allocation(models.Model):
     gross_allocation = models.DecimalField(max_digits=15, decimal_places=2)
     net_allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
+    thematic = models.CharField(max_length=16, choices=Thematic.choices, blank=True)
+
     class Meta:
         unique_together = ('state', 'programme_area', 'financial_mechanism', 'funding_period')
 
 
 class Programme(models.Model):
-    class Status:
-        APPROVED = 'approved'
-        IMPLEMENTATION = 'implementation'
-        COMPLETED = 'completed'
-        CLOSED = 'closed'
-        WITHDRAWN = 'withdrawn'
-        RETURNED = 'returned'
-        CANCELLED = 'cancelled'
-
-    STATUS_CHOICES = (
-        (Status.APPROVED, _('Approved')),
-        (Status.IMPLEMENTATION, _('Implementation')),
-        (Status.COMPLETED, _('Completed')),
-        (Status.CLOSED, _('Closed')),
-        (Status.WITHDRAWN, _('Withdrawn')),
-        (Status.RETURNED, _('Returned to po')),
-        (Status.CANCELLED, _('Cancelled')),
-    )
+    class Status(models.TextChoices):
+        APPROVED = 'approved', _('Approved')
+        IMPLEMENTATION = 'implementation', _('Implementation')
+        COMPLETED = 'completed', _('Completed')
+        CLOSED = 'closed', _('Closed')
+        WITHDRAWN = 'withdrawn', _('Withdrawn')
+        RETURNED = 'returned', _('Returned to po')
+        CANCELLED = 'cancelled', _('Cancelled')
 
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
@@ -109,7 +105,7 @@ class Programme(models.Model):
     short_name = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=256)  # not unique
 
-    status = models.CharField(max_length=16, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=16, choices=Status.choices)
 
     url = models.CharField(max_length=256, null=True)
     summary = models.TextField()
@@ -135,31 +131,20 @@ class Programme(models.Model):
 
 
 class Project(models.Model):
-    class Status:
-        SIGNED = 'signed'
-        PLANNED = 'planned'
-        IN_PROGRESS = 'in progress'
-        COMPLETED = 'completed'
-        TERMINATED = 'terminated'
-        NON_COMPLETED = 'non completed'
-        PARTIALLY_COMPLETED = 'partially completed'
+    class Status(models.TextChoices):
+        SIGNED = 'signed', _('Signed')
+        PLANNED = 'planned', _('Planned')
+        IN_PROGRESS = 'in progress', _('In Progress')
+        COMPLETED = 'completed', _('Completed')
+        TERMINATED = 'terminated', _('Terminated')
+        NON_COMPLETED = 'non completed', _('Non Completed')
+        PARTIALLY_COMPLETED = 'partially completed', _('Partially Completed')
 
-    STATUS_CHOICES = (
-        (Status.SIGNED, _('Signed')),
-        (Status.PLANNED, _('Planned')),
-        (Status.IN_PROGRESS, _('In Progress')),
-        (Status.COMPLETED, _('Completed')),
-        (Status.TERMINATED, _('Terminated')),
-        (Status.NON_COMPLETED, _('Non Completed')),
-        (Status.PARTIALLY_COMPLETED, _('Partially Completed')),
-    )
-
-    # financial_mechanism = models.CharField(choices=FINANCIAL_MECHANISMS)
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
-    status = models.CharField(max_length=19, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=19, choices=Status.choices)
 
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
@@ -185,8 +170,11 @@ class ProjectTheme(models.Model):
     name = models.CharField(max_length=512)  # not unique
 
 
-class ProgrammeIndicator(models.Model):
-    # TODO refine this
+class Indicator(models.Model):
+    class UnitOfMeasurement(models.TextChoices):
+        ANNUAL_NUMBER = 'annual', _('Annual number')
+        NUMBER = 'number', _('Number')
+
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
     programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
@@ -194,14 +182,27 @@ class ProgrammeIndicator(models.Model):
 
     indicator = models.CharField(max_length=256)
     outcome = models.CharField(max_length=256)
+    header = models.CharField(max_length=256)
 
-    result_text = models.CharField(max_length=300, default='')  # see "Well-functioning..."
+    unit_of_measurement = models.CharField(choices=UnitOfMeasurement.choices, max_length=8)
 
-    achievement = models.IntegerField()
-    order = models.SmallIntegerField()
+    achievement_eea = models.DecimalField(max_digits=9, decimal_places=2)
+    achievement_norway = models.DecimalField(max_digits=9, decimal_places=2)
+    # order = models.SmallIntegerField()  # TODO order doesn't exist in Indicator table
+
+    is_core = models.BooleanField()
+    is_common = models.BooleanField()
 
     def __str__(self):
         return "%s - %s" % (self.programme.code, self.indicator)
+
+    @property
+    def is_eea(self):
+        return self.achievement_eea != 0
+
+    @property
+    def is_norway(self):
+        return self.achievement_norway != 0
 
 
 class OrganisationRole(models.Model):
@@ -224,31 +225,17 @@ class OrganisationRole(models.Model):
 
 
 class BilateralInitiative(models.Model):
-    class Level:
-        COUNTRY = 'country'
-        PROGRAMME = 'programme'
+    class Level(models.TextChoices):
+        COUNTRY = 'country', _('Country')
+        PROGRAMME = 'programme', _('Programme')
 
-    LEVEL_CHOICES = (
-        (Level.COUNTRY, _('Country')),
-        (Level.PROGRAMME, _('Programme')),
-    )
-
-    class Status:
-        COMPLETED = 'completed'
-        COMPLETION_UNDER_REVIEW_FMO = 'compl review fmo'
-        COMPLETION_UNDER_REVIEW_NFP = 'compl review nfp'
-        DRAFT_COMPLETION = 'draft completion'
-        ON_GOING = 'on-going'
-        UNDER_REVIEW_FMO = 'review fmo'
-
-    STATUS_CHOICES = (
-        (Status.COMPLETED, _('Completed')),
-        (Status.COMPLETION_UNDER_REVIEW_FMO, _('Completion under review by FMO')),
-        (Status.COMPLETION_UNDER_REVIEW_NFP, _('Completion under review by NFP')),
-        (Status.DRAFT_COMPLETION, _('Draft Completion')),
-        (Status.ON_GOING, _('On-going')),
-        (Status.UNDER_REVIEW_FMO, _('Under review by FMO')),
-    )
+    class Status(models.TextChoices):
+        COMPLETED = 'completed', _('Completed')
+        COMPLETION_UNDER_REVIEW_FMO = 'compl review fmo', _('Completion under review by FMO')
+        COMPLETION_UNDER_REVIEW_NFP = 'compl review nfp', _('Completion under review by NFP')
+        DRAFT_COMPLETION = 'draft completion', _('Draft Completion')
+        ON_GOING = 'on-going', _('On-going')
+        UNDER_REVIEW_FMO = 'review fmo', _('Under review by FMO')
 
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
@@ -262,8 +249,8 @@ class BilateralInitiative(models.Model):
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
     programme_areas = models.ManyToManyField(ProgrammeArea)
 
-    level = models.CharField(max_length=16, choices=LEVEL_CHOICES)
-    status = models.CharField(max_length=16, choices=STATUS_CHOICES)
+    level = models.CharField(max_length=16, choices=Level.choices)
+    status = models.CharField(max_length=16, choices=Status.choices)
 
 
 class News(models.Model):

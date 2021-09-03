@@ -6,8 +6,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from dv.models import (
-    Allocation, BilateralInitiative, OrganisationRole, PrioritySector,
-    Programme, ProgrammeArea, Project, State
+    Allocation, BilateralInitiative, Indicator, OrganisationRole,
+    PrioritySector, Programme, ProgrammeArea, Project, State
 )
 
 
@@ -73,6 +73,7 @@ class Command(BaseCommand):
                 programme_area=programme_areas.get(row['PACode']),
                 gross_allocation=row['GrossAllocation'],
                 net_allocation=row['NetAllocation'],
+                thematic=(row['Thematic'] or '').lower(),
             )
 
         self.stdout.write(self.style.SUCCESS(
@@ -146,6 +147,31 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f'Imported {Project.objects.count()} Project objects.'))
 
+        indicator_query = 'SELECT * FROM fmo.TR_RDPIndicators'
+        cursor.execute(indicator_query)
+        INDICATOR_UOM_MAPPING = {
+            'Annual number': Indicator.UnitOfMeasurement.ANNUAL_NUMBER,
+            'Number': Indicator.UnitOfMeasurement.NUMBER,
+        }
+        for row in cursor.fetchall():
+            Indicator.objects.create(
+                funding_period=FUNDING_PERIOD,
+                programme=programmes.get(row['ProgrammeShortName']),
+                programme_area=programme_areas.get(row['PACode']),
+                state=states.get(row['Country']),
+                indicator=row['CoreCommonIndicator'],
+                outcome=row['Outcome'],
+                header=row['Header'],
+                unit_of_measurement=(INDICATOR_UOM_MAPPING.get(row['UnitOfMeasurement'], '')),
+                achievement_eea=row['Achievement_EEA'] or 0,
+                achievement_norway=row['Achievement_Norway'] or 0,
+                is_core=bool(row['IsCore']),
+                is_common=bool(row['IsCommon']),
+            )
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Imported {Indicator.objects.count()} Indicator objects.'))
+
         organisation_role_query = 'SELECT * FROM fmo.TR_RDPOrganisationRole'
         cursor.execute(organisation_role_query)
         for row in cursor.fetchall():
@@ -174,7 +200,7 @@ class Command(BaseCommand):
             'Under review by FMO': BilateralInitiative.Status.UNDER_REVIEW_FMO,
         }
         for row in cursor.fetchall():
-            bilteral_initiative = BilateralInitiative.objects.create(
+            bilateral_initiative = BilateralInitiative.objects.create(
                 funding_period=FUNDING_PERIOD,
                 code=row['BICode'],
                 title=row['BITitle'],
@@ -184,7 +210,7 @@ class Command(BaseCommand):
                 level=(row['Level'] or '').lower(),
                 status=(BI_STATUS_MAPPING.get(row['BIStatus'], '')),
             )
-            self._add_m2m_entries(bilteral_initiative, row, 'ProgrammeAreaCodesList', 'programme_areas',
+            self._add_m2m_entries(bilateral_initiative, row, 'ProgrammeAreaCodesList', 'programme_areas',
                                   'ProgrammeArea', programme_areas)
 
         self.stdout.write(self.style.SUCCESS(
