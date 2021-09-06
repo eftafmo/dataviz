@@ -1,5 +1,10 @@
 <template>
-  <fms :datasource="datasource" :initial="initial" :period="period">
+  <fms
+    :datasource="datasource"
+    :initial="initial"
+    :period="period"
+    :show-totals="false"
+  >
     <template #title><slot name="title"></slot></template>
   </fms>
 </template>

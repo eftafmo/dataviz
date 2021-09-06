@@ -28,29 +28,52 @@
         fill="white"
       ></rect>
       <g class="chart"></g>
-      <g v-for="(fm, index) in data" :key="fm.id">
-        <text
-          :x="(width / 2) * index + width / 4"
-          :y="height + 10"
-          :fill="isDisabledFm(fm) ? disabledColor : fm.colour"
-          dominant-baseline="hanging"
-          text-anchor="middle"
-          font-size="18"
-          font-weight="bold"
-        >
-          {{ currency(fm.allocation) }}
-        </text>
-        <text
-          :x="(width / 2) * index + width / 4"
-          :y="height + legendHeight - 5"
-          :fill="isDisabledFm(fm) ? disabledColor : '#000'"
-          dominant-baseline="auto"
-          text-anchor="middle"
-          font-size="15"
-        >
-          {{ fm.name }}
-        </text>
-      </g>
+      <template v-if="showTotals">
+        <g v-for="(fm, index) in data" :key="fm.id">
+          <text
+            :x="(width / 2) * index + width / 4"
+            :y="height + 10"
+            :fill="isDisabledFm(fm) ? disabledColor : fm.colour"
+            dominant-baseline="hanging"
+            text-anchor="middle"
+            font-size="18"
+            font-weight="bold"
+          >
+            {{ currency(fm.allocation) }}
+          </text>
+          <text
+            :x="(width / 2) * index + width / 4"
+            :y="height + legendHeight - 5"
+            :fill="isDisabledFm(fm) ? disabledColor : '#000'"
+            dominant-baseline="auto"
+            text-anchor="middle"
+            font-size="15"
+          >
+            {{ fm.name }}
+          </text>
+        </g>
+      </template>
+      <template v-else>
+        <g v-for="(fm, index) in data" :key="`${fm.id}-legend-only`">
+          <rect
+            :x="index * (width / 4)"
+            :y="height + legendHeight / 3"
+            :fill="fm.stripesFill"
+            :height="legendHeight / 4"
+            :width="legendHeight / 4"
+          />
+          <text
+            :x="index * (width / 4) + legendHeight / 4 + 10"
+            :y="height + legendHeight / 3"
+            :fill="isDisabledFm(fm) ? disabledColor : '#000'"
+            dominant-baseline="hanging"
+            text-anchor="start"
+            font-size="15"
+          >
+            {{ fm.name }}
+          </text>
+        </g>
+      </template>
     </svg>
   </div>
 </template>
@@ -78,6 +101,11 @@ export default {
     disabledColor: {
       type: String,
       default: "#ccc",
+    },
+    showTotals: {
+      type: Boolean,
+      default: true,
+      required: false,
     },
   },
 
