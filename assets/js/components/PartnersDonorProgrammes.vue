@@ -40,13 +40,13 @@
         <tr>
           <th>Total</th>
           <th>
-            {{ sum(data.map((item) => item.organizations.length)) }}
+            {{ allOrganizations.size }}
           </th>
           <th>
-            {{ sum(data.map((item) => item.countries.size)) }}
+            {{ allCountries.size }}
           </th>
           <th>
-            {{ sum(data.map((item) => item.programmes.size)) }}
+            {{ allProgrammes.size }}
           </th>
         </tr>
       </tfoot>
@@ -129,7 +129,6 @@ export default {
       );
       return donors;
     },
-
     dropdown_items() {
       let organizations = {};
       for (let items of this.data) {
@@ -140,6 +139,23 @@ export default {
         }
       }
       return organizations;
+    },
+    allOrganizations() {
+      return new Set(
+        this.data
+          .map((item) => item.organizations.map((org) => org.name))
+          .flat()
+      );
+    },
+    allCountries() {
+      return new Set(
+        this.data.map((item) => Array.from(item.countries)).flat()
+      );
+    },
+    allProgrammes() {
+      return new Set(
+        this.data.map((item) => Array.from(item.programmes)).flat()
+      );
     },
   },
 

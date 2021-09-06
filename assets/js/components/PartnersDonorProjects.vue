@@ -26,7 +26,6 @@
           class="section_item"
         >
           <td colspan="2">{{ organization.name }}</td>
-          <!-- <td>  </td> -->
           <td>{{ organization.countries.size }}</td>
           <td>{{ organization.programmes.size }}</td>
           <td>{{ organization.projects }}</td>
@@ -36,16 +35,16 @@
         <tr>
           <th>Total</th>
           <th>
-            {{ sum(data.map((item) => item.organizations.length)) }}
+            {{ allOrganizations.size }}
           </th>
           <th>
-            {{ sum(data.map((item) => item.countries.size)) }}
+            {{ allCountries.size }}
           </th>
           <th>
-            {{ sum(data.map((item) => item.programmes.size)) }}
+            {{ allProgrammes.size }}
           </th>
           <th>
-            {{ sum(data.map((item) => item.projects.size)) }}
+            {{ allProjects.size }}
           </th>
         </tr>
       </tfoot>
@@ -134,6 +133,26 @@ export default {
         )
       );
       return donors;
+    },
+    allOrganizations() {
+      return new Set(
+        this.data
+          .map((item) => item.organizations.map((org) => org.name))
+          .flat()
+      );
+    },
+    allCountries() {
+      return new Set(
+        this.data.map((item) => Array.from(item.countries)).flat()
+      );
+    },
+    allProgrammes() {
+      return new Set(
+        this.data.map((item) => Array.from(item.programmes)).flat()
+      );
+    },
+    allProjects() {
+      return new Set(this.data.map((item) => Array.from(item.projects)).flat());
     },
   },
 
