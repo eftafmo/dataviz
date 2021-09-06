@@ -50,14 +50,17 @@ class PrioritySector(models.Model):
 
 
 class ProgrammeArea(models.Model):
-    code = models.CharField(max_length=4, primary_key=True)
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
+
+    code = models.CharField(max_length=4)  # not unique because of period
     name = models.CharField(max_length=256)  # not unique because of FM
     short_name = models.CharField(max_length=32)  # not unique
     order = models.SmallIntegerField(null=True)
     objective = models.TextField()
 
-    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
-    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+    class Meta:
+        unique_together = ('code', 'funding_period')
 
 
 class Allocation(models.Model):
