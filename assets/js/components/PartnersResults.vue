@@ -65,7 +65,7 @@ export default {
           achievement: num_DPP,
           indicator:
             this.singularize("programmes", num_DPP) +
-            " with donor programme partners",
+            " with Donor Programme Partners",
         });
       }
       const num_dpp = aggregated.dpp_projects.size;
@@ -74,7 +74,7 @@ export default {
           achievement: num_dpp,
           indicator:
             this.singularize("projects", num_dpp) +
-            " with donor project partners",
+            " with Donor project partners",
         });
       }
       const num_prg_dpp = aggregated.dpp_programmes.size;
@@ -83,7 +83,7 @@ export default {
           achievement: num_prg_dpp,
           indicator:
             this.singularize("programmes", num_prg_dpp) +
-            " with donor project partners",
+            " with Donor project partners",
         });
       }
       const num_prj_ended = aggregated.dpp_projects_ended.size;

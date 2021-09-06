@@ -20,7 +20,7 @@ services:
 
 
   web:
-    image: eftafmo/dataviz:20210408
+    image: eftafmo/dataviz:20210721
     environment:
       - NUM_WORKERS=3
     env_file:
@@ -34,7 +34,7 @@ services:
 
   nginx:
     domainname: we-p-fmo-docker-dataeeagrantsorg-rg
-    image: nginx:1.17
+    image: nginx:1.21.1
     depends_on:
       - web
     volumes:

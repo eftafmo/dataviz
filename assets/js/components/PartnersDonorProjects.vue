@@ -5,7 +5,7 @@
     <table>
       <thead>
         <tr>
-          <th>Donor state</th>
+          <th>Donor State</th>
           <th>Organisations</th>
           <th>Countries</th>
           <th>Programmes</th>
@@ -26,12 +26,28 @@
           class="section_item"
         >
           <td colspan="2">{{ organization.name }}</td>
-          <!-- <td>  </td> -->
           <td>{{ organization.countries.size }}</td>
           <td>{{ organization.programmes.size }}</td>
           <td>{{ organization.projects }}</td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>
+            {{ allOrganizations.size }}
+          </th>
+          <th>
+            {{ allCountries.size }}
+          </th>
+          <th>
+            {{ allProgrammes.size }}
+          </th>
+          <th>
+            {{ allProjects.size }}
+          </th>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
@@ -42,6 +58,7 @@ import Component from "./Component";
 import PartnersMixin from "./mixins/Partners";
 import CountriesMixin from "./mixins/WithCountries";
 import Embeddor from "./includes/Embeddor";
+import { sum } from "../lib/util";
 
 export default {
   components: { Embeddor },
@@ -117,9 +134,30 @@ export default {
       );
       return donors;
     },
+    allOrganizations() {
+      return new Set(
+        this.data
+          .map((item) => item.organizations.map((org) => org.name))
+          .flat()
+      );
+    },
+    allCountries() {
+      return new Set(
+        this.data.map((item) => Array.from(item.countries)).flat()
+      );
+    },
+    allProgrammes() {
+      return new Set(
+        this.data.map((item) => Array.from(item.programmes)).flat()
+      );
+    },
+    allProjects() {
+      return new Set(this.data.map((item) => Array.from(item.projects)).flat());
+    },
   },
 
   methods: {
+    sum,
     show_items(e) {
       let target = e.target.parentNode.parentNode;
       target.classList.toggle("active");
@@ -141,6 +179,7 @@ export default {
     * {
       text-align: left;
     }
+    tfoot th,
     thead th,
     tbody td {
       width: 21%;
@@ -211,6 +250,7 @@ export default {
       }
     }
 
+    tfoot,
     thead {
       border-spacing: 4px;
 
@@ -219,6 +259,7 @@ export default {
       }
     }
 
+    tfoot th:first-of-type,
     thead th:first-of-type,
     tbody tr td:first-of-type {
       width: 58%;

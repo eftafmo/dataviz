@@ -31,36 +31,37 @@
   },
   "dependencies": {
     "clipboard": "^2.0.8",
-    "d3": "^6.7.0",
+    "d3": "^7.0.1",
     "d3-tip": "^0.9.1",
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.2",
     "lodash.orderby": "^4.6.0",
     "normalize.css": "^8.0.1",
     "popper.js": "^1.16.1",
-    "vue": "^3.0.11",
-    "vue3-tabs-component": "^1.0.0"
+    "vue": "^3.2.8",
+    "vue3-tabs-component": "^1.0.3"
   },
   "devDependencies": {
-    "@rollup/pluginutils": "^4.1.0",
-    "@vitejs/plugin-vue": "^1.2.2",
-    "@vue/compiler-sfc": "^3.0.11",
-    "autoprefixer": "^10.2.5",
+    "@rollup/pluginutils": "^4.1.1",
+    "@vitejs/plugin-vue": "^1.6.0",
+    "@vue/compiler-sfc": "^3.2.8",
+    "autoprefixer": "^10.3.4",
     "classlist-polyfill": "^1.2.0",
     "es6-promise": "^4.2.8",
     "form-association-polyfill": "^2.0.3",
+    "glob": "^7.1.7",
     "json5": "^2.2.0",
     "less": "^4.1.1",
     "topojson-client": "^3.1.0",
     "url-polyfill": "^1.1.12",
-    "vite": "^2.2.4"
+    "vite": "^2.5.3"
   },
   "optionalDependencies": {
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier-vue": "^3.1.0",
-    "eslint-plugin-vue": "^7.14.0",
-    "lint-staged": "^11.1.1",
+    "eslint-plugin-vue": "^7.17.0",
+    "lint-staged": "^11.1.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2",
     "yorkie": "^2.0.0"

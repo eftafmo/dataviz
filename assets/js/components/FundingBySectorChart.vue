@@ -1,23 +1,33 @@
 <template>
   <div :class="classNames" class="funding-by-sector-chart">
-    <embeddor :period="period" tag="sectors" />
+    <embeddor
+      :period="period"
+      tag="sectors"
+      :svg-node="$refs.svgEl"
+      :scale-download="2"
+    />
     <chart-container
       :width="svgWidth"
       :height="svgHeight"
       class="funding-chart-container"
     >
       <svg
+        ref="svgEl"
         :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
+        <rect
+          :fill="bgColor"
+          :width="svgWidth"
+          :height="barChartHeight + margin.top + margin.bottom"
+        ></rect>
         <image
           v-if="filters.beneficiary"
           x="20"
           y="20"
           width="36"
           height="26"
-          :href="get_flag_url(filters.beneficiary)"
+          :href="get_flag(filters.beneficiary)"
         ></image>
         <text
           :x="filters.beneficiary ? 70 : 20"
@@ -26,7 +36,7 @@
           dominant-baseline="hanging"
         >
           <template v-if="!filters.beneficiary">
-            All beneficiary states
+            All Beneficiary States
           </template>
           <template v-else>
             {{ get_country_name(filters.beneficiary) }}
@@ -35,21 +45,9 @@
         </text>
         <g class="chart">
           <g class="y-axis"></g>
+          <g class="bar-chart"></g>
         </g>
       </svg>
-      <div class="funding-legend">
-        <transition-group name="legend-item">
-          <div v-for="item in data" :key="item.id" class="legend-item">
-            <div
-              class="legend-item-square"
-              :style="{
-                'background-color': item.sector.colour,
-              }"
-            ></div>
-            <div class="legend-item-name">{{ item.sector.name }}</div>
-          </div>
-        </transition-group>
-      </div>
     </chart-container>
   </div>
 </template>
@@ -73,21 +71,29 @@ export default {
   mixins: [WithCountriesMixin, WithSectors, WithTooltipMixin],
   data() {
     return {
-      aggregate_by: ["sector"],
+      aggregate_by: ["period", "sector"],
       filter_by: ["beneficiary"],
       svgWidth: 560,
-      svgHeight: 360,
+      barChartHeight: 250,
       margin: {
         top: 70,
         right: 30,
         bottom: 20,
         left: 60,
       },
+      legendPadding: 10,
+      legendSquareSize: 16,
+      legendItemHeight: 36,
+      legendBorder: 4,
+      bgColor: "#F5F5F5",
     };
   },
   computed: {
     data() {
-      return Object.values(this.aggregated).map((item) => {
+      const periodData = this.aggregated[this.period];
+      if (!periodData) return [];
+
+      return Object.values(periodData).map((item) => {
         const id = slugify(item.sector);
         return {
           id,
@@ -99,8 +105,16 @@ export default {
     width() {
       return this.svgWidth - this.margin.left - this.margin.right;
     },
-    height() {
-      return this.svgHeight - this.margin.top - this.margin.bottom;
+    legendHeight() {
+      return this.data.length * this.legendItemHeight + this.legendPadding * 2;
+    },
+    svgHeight() {
+      return (
+        this.barChartHeight +
+        this.margin.top +
+        this.margin.bottom +
+        this.legendHeight
+      );
     },
     maxAllocation() {
       return Math.max(...this.data.map((item) => item.allocation));
@@ -109,7 +123,7 @@ export default {
       return d3
         .scaleLinear()
         .domain([0, this.maxAllocation])
-        .range([this.height, 0])
+        .range([this.barChartHeight, 0])
         .nice();
     },
     xScale() {
@@ -122,13 +136,16 @@ export default {
   },
   methods: {
     renderChart() {
-      this.chart.attr(
-        "transform",
-        "translate(" + this.margin.left + "," + this.margin.top + ")"
-      );
+      this.chart
+        .selectAll("g.bar-chart, g.y-axis")
+        .attr(
+          "transform",
+          "translate(" + this.margin.left + "," + this.margin.top + ")"
+        );
 
       this.renderYAxis();
       this.renderBars();
+      this.renderLegend();
 
       this.chart
         .selectAll("rect.sector")
@@ -156,7 +173,10 @@ export default {
     },
     renderBars() {
       const t = this.getTransition();
-      const sectorsGroups = this.chart.selectAll("rect.sector").data(this.data);
+      const sectorsGroups = this.chart
+        .select("g.bar-chart")
+        .selectAll("rect.sector")
+        .data(this.data);
 
       sectorsGroups
         .enter()
@@ -167,10 +187,82 @@ export default {
         .attr("x", (d) => this.xScale(d.id))
         .attr("y", (d) => this.yScale(d.allocation))
         .attr("width", this.xScale.bandwidth())
-        .attr("height", (d) => this.height - this.yScale(d.allocation))
+        .attr("height", (d) => this.barChartHeight - this.yScale(d.allocation))
         .attr("fill", (d) => d.sector.colour)
         .attr("stroke", "none");
       sectorsGroups.exit().remove();
+    },
+    renderLegend() {
+      const t = this.getTransition();
+      const xOffset = this.legendBorder / 2;
+      const yOffset =
+        this.barChartHeight + this.margin.top + this.margin.bottom;
+      const legendBg = this.chart
+        .selectAll("rect.legend-bg")
+        .data([this.data.length]);
+
+      legendBg
+        .enter()
+        .append("rect")
+        .attr("class", "legend-bg")
+        .merge(legendBg)
+        .attr("x", xOffset)
+        .attr("y", yOffset)
+        .attr("width", this.svgWidth - this.legendBorder)
+        .attr("height", this.legendHeight - this.legendBorder)
+        .attr("fill", "white")
+        .attr("stroke", this.bgColor)
+        .attr("stroke-width", this.legendBorder);
+
+      const legendSquare = this.chart
+        .selectAll("rect.legend-square")
+        .data(this.data);
+      legendSquare
+        .enter()
+        .append("rect")
+        .attr("class", "legend-square")
+        .merge(legendSquare)
+        .transition(t)
+        .attr("x", xOffset + this.legendPadding)
+        .attr(
+          "y",
+          (d, i) => yOffset + i * this.legendItemHeight + this.legendPadding
+        )
+        .attr("width", this.legendSquareSize)
+        .attr("height", this.legendSquareSize)
+        .attr("fill", (d) => d.sector.colour);
+      legendSquare.exit().remove();
+
+      const legendLabels = this.chart
+        .selectAll("text.legend-text")
+        .data(this.data);
+      legendLabels
+        .enter()
+        .append("text")
+        .attr("class", "legend-text")
+        .merge(legendLabels)
+        .transition(t)
+        .attr(
+          "x",
+          xOffset +
+            this.legendPadding +
+            this.legendSquareSize +
+            this.legendPadding
+        )
+        .attr(
+          "y",
+          (d, i) =>
+            yOffset +
+            i * this.legendItemHeight +
+            this.legendPadding +
+            this.legendSquareSize / 2 +
+            1
+        )
+        .attr("line-height", 1)
+        .attr("font-size", 16)
+        .attr("dominant-baseline", "middle")
+        .text((d) => d.sector.name);
+      legendLabels.exit().remove();
     },
     tooltipTemplate(ev, d) {
       return `
@@ -208,51 +300,5 @@ export default {
   .sector:hover {
     filter: drop-shadow(0px -2px 6px #3d3d3d);
   }
-
-  .funding-legend {
-    border: 4px solid #f5f5f5;
-    padding: 3rem;
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      font-size: 1.6rem;
-      line-height: 1;
-    }
-
-    .legend-item + .legend-item {
-      margin-top: 1.5rem;
-    }
-
-    .legend-item-square {
-      display: block;
-      min-width: 1.8rem;
-      max-width: 1.8rem;
-      max-height: 1.8rem;
-      min-height: 1.8rem;
-      margin-right: 1.2rem;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .funding-legend {
-      padding: 1rem;
-    }
-  }
-}
-
-.legend-item-enter-active,
-.legend-item-leave-active {
-  transition: opacity 0.5s;
-}
-.legend-item-enter,
-.legend-item-leave-to {
-  opacity: 0;
-}
-.legend-item-move {
-  transition: transform 0.5s;
-}
-.legend-item-leave-active {
-  position: absolute;
 }
 </style>

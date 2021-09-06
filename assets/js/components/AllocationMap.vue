@@ -1,6 +1,5 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="xmap" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="hasData"
@@ -9,10 +8,9 @@
       :items="data"
     ></dropdown>
 
-    <pijama-defs ref="defs"></pijama-defs>
-
     <map-base
       ref="map"
+      :period="period"
       :initial-regions="initial_regions"
       :all-states="all_states"
       :all-levels="all_nuts_levels"
@@ -21,6 +19,9 @@
       @rendered="handleMapRendered"
       @regions-rendered="registerEvents"
     >
+      <template #default>
+        <pijama-defs ref="defs"></pijama-defs>
+      </template>
       <template #after-map>
         <region-details :region="current_region_data"></region-details>
 
@@ -47,7 +48,7 @@
           <svg v-if="rendered" class="square" height="20" width="20">
             <rect height="20" width="20" fill="url(#multi-fm)" />
           </svg>
-          Donor state(s)
+          Donor State(s)
         </li>
         <li
           v-if="
@@ -58,7 +59,7 @@
           "
         >
           <span class="square"></span>
-          Beneficiary states
+          Beneficiary States
         </li>
         <li v-if="$options.type == 'viz map allocation is-projects'">
           <span class="bubble_circle"></span>
@@ -423,7 +424,7 @@ export default AllocationMap;
 
 <style lang="less">
 .dataviz .viz.map.allocation {
-  @beneficiary: #ddd;
+  @beneficiary: #b3dae4;
   @bubble_color: rgb(196, 17, 48);
 
   .chart {
@@ -461,7 +462,7 @@ export default AllocationMap;
 
   .toolbox {
     position: absolute;
-    right: 1em;
+    left: 1em;
     top: 1em;
 
     font-weight: bold;

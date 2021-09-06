@@ -1,6 +1,5 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="xmap" />
     <slot v-if="!embedded" name="title"></slot>
 
     <div class="selector">
@@ -13,7 +12,7 @@
           value="programmes"
         />
         <label for="programmes"></label>
-        Donor programme partners
+        Donor Programme Partners
       </label>
       <label>
         <input
@@ -27,16 +26,16 @@
       </label>
     </div>
 
-    <pijama-defs ref="defs"></pijama-defs>
-
     <map-base
       ref="map"
+      :period="period"
       :all-levels="[3]"
       :fillfunc="fillfunc"
       :zoomable="false"
       @rendered="handleMapRendered"
       @regions-rendered="registerEvents"
     >
+      <pijama-defs ref="defs"></pijama-defs>
       <g class="partnerships">
         <g v-for="layer in layers" :key="layer" :class="layer" class="base"></g>
       </g>
@@ -46,7 +45,6 @@
 
 <script>
 import * as d3 from "d3";
-import debounce from "lodash.debounce";
 import { slugify } from "@js/lib/util";
 
 import BaseMap from "./BaseMap";
@@ -54,10 +52,8 @@ import BaseMap from "./BaseMap";
 import PartnersMixin from "./mixins/Partners";
 import WithFMsMixin from "./mixins/WithFMs";
 import WithCountriesMixin from "./mixins/WithCountries";
-import Embeddor from "./includes/Embeddor";
 
 export default {
-  components: { Embeddor },
   extends: BaseMap,
   mixins: [PartnersMixin, WithFMsMixin, WithCountriesMixin],
 
@@ -279,7 +275,8 @@ export default {
 
   methods: {
     tooltipTemplate(ev, d) {
-      const country = this.getAncestorRegion(d.id, 0);
+      const dId = d.id || d.properties.id;
+      const country = this.getAncestorRegion(dId, 0);
 
       const is_ds = this.COUNTRIES[country].type !== "beneficiary";
       let details = "";
@@ -308,8 +305,8 @@ export default {
 
       return `
         <div class="title-container">
-          <img src="${this.get_flag_url(country)}" alt="" />
-          <span class="name">${this.getRegionName(d.id)} (${d.id})</span>
+          <img src="${this.get_flag(country)}" alt="" />
+          <span class="name">${this.getRegionName(dId)} (${dId})</span>
         </div>
         <ul>
           ${details}
@@ -323,6 +320,14 @@ export default {
       this.renderRegionData(t);
       this.renderConnections(t);
       this.renderVisibleLayers(t);
+
+      d3.selectAll(".chart .regions").attr("stroke-opacity", 0.5);
+      d3.selectAll(".chart .regions path.zero")
+        .attr("fill", "none")
+        .attr("stroke", "none");
+      d3.selectAll(".dataviz .viz.map .partnerships")
+        .attr("stroke-width", 1.5)
+        .attr("fill", "none");
     },
 
     renderRegionData(t) {
@@ -330,7 +335,7 @@ export default {
       // TODO: transition the zero <-> non-zero beneficiaries
       const regions = this.chart
         .selectAll(".regions > g > path")
-        .data(this.data, (d) => d.id);
+        .data(this.data, (d) => d.id || d.properties.id);
 
       regions.classed("zero", false);
 
@@ -394,16 +399,14 @@ export default {
         // the simple approach would be to draw an arc with the same radius
         // as the distance between points, but we're gonna use a quadratic
         // curve instead, which allows us to mess with the arc's radius
-        // programatically §
+        // programmatically §
         // (also, we can use the same calculations to draw into a canvas)
 
-        const geodetails = this.map.geodetails;
+        const o0 = this.map.geodetails[source];
+        const o1 = this.map.geodetails[target];
 
-        const o0 = geodetails[source],
-          o1 = geodetails[target];
-
-        if (o0 === undefined) _badids.add(i0);
-        if (o1 === undefined) _badids.add(i1);
+        if (o0 === undefined) _badids.add(source);
+        if (o1 === undefined) _badids.add(target);
         if (o0 === undefined || o1 === undefined) return;
 
         const k = 1; // this.scale if drawing into a canvas
@@ -443,7 +446,7 @@ export default {
         //return `M ${ x0 },${ y0 } A ${ r },${ r } 0 0,${ (s + 1) / 2 } ${ x1 },${ y1 }`
         return `M ${x0},${y0} Q ${x},${y} ${x1},${y1}`;
 
-        ctx.quadraticCurveTo(x, y, x1, y1);
+        // ctx.quadraticCurveTo(x, y, x1, y1);
       };
 
       // because performing transitions on hundreds of paths kills rendering,
@@ -458,12 +461,12 @@ export default {
 
       // (some error checking)
       if (_badids.size !== 0)
-        console.error("Unknown NUTS codes:", _badids.values());
+        console.error("Unknown NUTS codes:", Array.from(_badids));
 
       const connexit = connections.exit().remove();
 
       // buuut don't go through the craziness if there's nothing to transition
-      if (t.duration() == 0) return;
+      if (t.duration() === 0) return;
 
       const transitionConnections = (selection, newstuff) => {
         if (selection.empty()) return;
@@ -558,7 +561,6 @@ export default {
 
       const t = this.getTransition(this.short_duration);
       const root = this.chart.select(".partnerships");
-
       // these will hold the region's connections, one per type
       let containers = root.selectAll(`g.${d.id}`);
 
@@ -661,7 +663,6 @@ export default {
 .dataviz .viz.map.is-partners {
   .chart .regions {
     path {
-      stroke-opacity: 0.5;
       pointer-events: all;
     }
 
@@ -674,11 +675,6 @@ export default {
 
     path.beneficiary,
     path.partner {
-      &.zero {
-        fill: none;
-        stroke: none;
-      }
-
       &:not(.zero):hover {
         stroke: #000;
         stroke-opacity: 1;
@@ -687,8 +683,6 @@ export default {
   }
 
   .partnerships {
-    stroke-width: 1.5; // TODO: make it dynamic
-    fill: none;
     pointer-events: none;
   }
 

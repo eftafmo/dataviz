@@ -11,7 +11,7 @@
     <table>
       <thead>
         <tr>
-          <th>Donor state</th>
+          <th>Donor State</th>
           <th>Organisations</th>
           <th>Countries</th>
           <th>Programmes</th>
@@ -36,6 +36,20 @@
           <td>{{ organization.programmes.size }}</td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>
+            {{ allOrganizations.size }}
+          </th>
+          <th>
+            {{ allCountries.size }}
+          </th>
+          <th>
+            {{ allProgrammes.size }}
+          </th>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
@@ -47,6 +61,7 @@ import PartnersMixin from "./mixins/Partners";
 import CountriesMixin from "./mixins/WithCountries";
 import Dropdown from "./includes/DropdownFilter";
 import Embeddor from "./includes/Embeddor";
+import { sum } from "../lib/util";
 
 export default {
   components: {
@@ -114,7 +129,6 @@ export default {
       );
       return donors;
     },
-
     dropdown_items() {
       let organizations = {};
       for (let items of this.data) {
@@ -125,6 +139,23 @@ export default {
         }
       }
       return organizations;
+    },
+    allOrganizations() {
+      return new Set(
+        this.data
+          .map((item) => item.organizations.map((org) => org.name))
+          .flat()
+      );
+    },
+    allCountries() {
+      return new Set(
+        this.data.map((item) => Array.from(item.countries)).flat()
+      );
+    },
+    allProgrammes() {
+      return new Set(
+        this.data.map((item) => Array.from(item.programmes)).flat()
+      );
     },
   },
 
@@ -137,6 +168,7 @@ export default {
   },
 
   methods: {
+    sum,
     handleFilterDPP(organisation) {
       this.filters.DPP == organisation ? false : true;
     },
@@ -178,6 +210,8 @@ export default {
     * {
       text-align: left;
     }
+
+    tfoot th,
     thead th,
     tbody td {
       width: 21%;
@@ -247,6 +281,7 @@ export default {
       }
     }
 
+    tfoot,
     thead {
       border-spacing: 4px;
 
@@ -256,6 +291,7 @@ export default {
       }
     }
 
+    tfoot th:first-of-type,
     thead th:first-of-type,
     tbody tr td:first-of-type {
       width: 58%;

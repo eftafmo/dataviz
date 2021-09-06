@@ -1,6 +1,11 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" tag="mechanism" />
+    <embeddor
+      :period="period"
+      tag="mechanism"
+      :svg-node="$refs.svgEl"
+      :scale-download="2"
+    />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="rendered"
@@ -8,26 +13,68 @@
       title="No filter selected"
       :items="nonzero"
     ></dropdown>
-    <chart-patterns />
     <svg
-      :viewBox="`0 0 ${width} ${height}`"
+      ref="svgEl"
+      :viewBox="`0 0 ${width} ${height + legendHeight}`"
       xmlns="http://www.w3.org/2000/svg"
       class="mechanism"
     >
+      <chart-patterns />
+      <rect
+        x="-10"
+        y="-10"
+        :width="width + 20"
+        :height="height + legendHeight + 20"
+        fill="white"
+      ></rect>
       <g class="chart"></g>
+      <template v-if="showTotals">
+        <g v-for="(fm, index) in data" :key="fm.id">
+          <text
+            :x="(width / 2) * index + width / 4"
+            :y="height + 10"
+            :fill="isDisabledFm(fm) ? disabledColor : fm.colour"
+            dominant-baseline="hanging"
+            text-anchor="middle"
+            font-size="18"
+            font-weight="bold"
+          >
+            {{ currency(fm.allocation) }}
+          </text>
+          <text
+            :x="(width / 2) * index + width / 4"
+            :y="height + legendHeight - 5"
+            :fill="isDisabledFm(fm) ? disabledColor : '#000'"
+            dominant-baseline="auto"
+            text-anchor="middle"
+            font-size="15"
+          >
+            {{ fm.name }}
+          </text>
+        </g>
+      </template>
+      <template v-else>
+        <g v-for="(fm, index) in data" :key="`${fm.id}-legend-only`">
+          <rect
+            :x="index * (width / 4)"
+            :y="height + legendHeight / 3"
+            :fill="fm.stripesFill"
+            :height="legendHeight / 4"
+            :width="legendHeight / 4"
+          />
+          <text
+            :x="index * (width / 4) + legendHeight / 4 + 10"
+            :y="height + legendHeight / 3"
+            :fill="isDisabledFm(fm) ? disabledColor : '#000'"
+            dominant-baseline="hanging"
+            text-anchor="start"
+            font-size="15"
+          >
+            {{ fm.name }}
+          </text>
+        </g>
+      </template>
     </svg>
-    <div v-if="hasData" class="legend">
-      <slot name="legend">
-        <fm-legend :fms="data" class="clearfix">
-          <template #fm-content="x">
-            <span class="value" :style="{ color: x.fm.colour }">
-              {{ currency(x.fm.allocation || 0) }}
-            </span>
-            <span class="name">{{ x.fm.name }}</span>
-          </template>
-        </fm-legend>
-      </slot>
-    </div>
   </div>
 </template>
 
@@ -55,12 +102,18 @@ export default {
       type: String,
       default: "#ccc",
     },
+    showTotals: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
   },
 
   data() {
     return {
       width: 500,
       height: 30,
+      legendHeight: 50,
       aggregate_by: [{ source: "fm", destination: "name" }],
       inactiveOpacity: 0.7,
     };
@@ -146,7 +199,7 @@ export default {
         <ul>
           <li>${this.currency(d.allocation)}</li>
           <li>${d.beneficiaries.size} ` +
-        this.singularize(`beneficiary states`, d.beneficiaries.size) +
+        this.singularize(`Beneficiary States`, d.beneficiaries.size) +
         `</li>
           <li>${d.sectors.size} ` +
         this.singularize(`sectors`, d.sectors.size) +

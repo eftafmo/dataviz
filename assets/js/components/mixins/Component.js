@@ -3,15 +3,15 @@ import * as util from "../../lib/util.js";
 const shortCurrency = [
   {
     value: Math.pow(10, 9),
-    suffix: "B",
+    suffix: "\xa0bn",
   },
   {
     value: Math.pow(10, 6),
-    suffix: "M",
+    suffix: "\xa0m",
   },
   {
     value: Math.pow(10, 3),
-    suffix: "K",
+    suffix: "\xa0K",
   },
 ];
 

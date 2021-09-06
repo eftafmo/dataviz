@@ -192,13 +192,13 @@ export default {
                 <ul>
                   ${details}
                 </ul>
-                <span class="action">Click to filter by beneficiary state</span>
+                <span class="action">Click to filter by Beneficiary State</span>
               `;
 
         return (
           `
           <div class="title-container ${state_type}">
-            <img src="${this.get_flag_url(d.id)}" alt="" />
+            <img src="${this.get_flag(d.id)}" alt="" />
             <span class="name">${this.COUNTRIES[d.id].name}</span>
           </div>` + country_details
         );
@@ -219,7 +219,7 @@ export default {
         return (
           `
           <div class="title-container ${state_type}">
-            <img src="${this.get_flag_url(d.id)}" alt="" />
+            <img src="${this.get_flag(d.id)}" alt="" />
             <span class="name">${this.getRegionName(d.id)} (${d.id})</span>
           </div>` + country_details
         );
@@ -336,12 +336,19 @@ export default {
       containers
         .append("circle")
         .attr("cx", (d) => _c(d).x)
-        .attr("cy", (d) => _c(d).y);
+        .attr("cy", (d) => _c(d).y)
+        .attr("fill", "rgb(196, 17, 48)")
+        .attr("fill-opacity", 0.4)
+        .attr("transform-origin", "50% 50%");
 
       containers
         .append("text")
         .attr("x", (d) => _c(d).x)
         .attr("y", (d) => _c(d).y)
+        .attr("font-size", "1.2em")
+        .attr("text-anchor", "middle")
+        .attr("fill", "#fff")
+        .attr("font-weight", "bold")
         .attr("dy", ".33em"); // magical self-centering offset
 
       this._rendered_bubbles[parentid] = true;
@@ -609,18 +616,7 @@ export default {
   @nuts3_selected_color: rgb(3, 152, 251);
 
   .bubble {
-    circle {
-      fill: @bubble_color;
-      transform-origin: 50% 50%;
-    }
-
     text {
-      font-size: 1.2em;
-      font-family: "Open sans", sans-serif;
-      font-weight: 600;
-      text-anchor: middle;
-      fill: #fff;
-
       user-select: none;
     }
   }
@@ -638,10 +634,6 @@ export default {
       pointer-events: none;
 
       .bubble;
-
-      circle {
-        fill-opacity: 0.4;
-      }
 
       &.hovered circle {
         fill-opacity: 1;

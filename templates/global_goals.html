@@ -44,7 +44,7 @@
           period="{{ PERIOD }}"
       >
         <template #title>
-          <h2>Funding across beneficiary states</h2>
+          <h2>Funding across Beneficiary States</h2>
         </template>
       </beneficiaries>
     </div>
@@ -69,7 +69,8 @@
     _createApp(
       Dataviz.GlobalGoals,
       {
-        datasource: "/api/grants.json"
+        datasource: "/api/grants.json",
+        datasourcePeriods: ["{{ PERIOD }}"],
       }
     ).mount("#content");
   });

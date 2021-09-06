@@ -1,11 +1,17 @@
 import { slugify } from "@js/lib/util";
 import _SECTORS from "@js/constants/priority-sectors.json5";
 
+const sectorImages = import.meta.globEager("../../../sprites/sectors/*.png");
+
 const SECTORS = {};
-for (const sector of _SECTORS) {
+_SECTORS.forEach((sector) => {
   const sid = slugify(sector.name);
-  SECTORS[sid] = Object.assign({ id: sid }, sector);
-}
+  SECTORS[sid] = {
+    id: sid,
+    img: sectorImages[`../../../sprites/sectors/${sector.icon}`].default,
+    ...sector,
+  };
+});
 
 export default {
   beforeCreate() {
@@ -34,6 +40,9 @@ export default {
       return this.getAssetUrl(
         `sprites/sectors/${this.SECTORS[slugify(sectorname)].icon}`
       );
+    },
+    sectorImage(sectorname) {
+      return this.SECTORS[slugify(sectorname)].img;
     },
   },
 };

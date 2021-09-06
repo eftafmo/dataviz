@@ -1,6 +1,7 @@
 <template>
   <chart-container :width="width" :height="height">
-    <svg :viewBox="`0 0 ${width} ${height}`">
+    <embeddor :period="period" tag="xmap" :svg-node="svgEl" />
+    <svg :viewBox="`0 0 ${width} ${height}`" class="map-svg">
       <g class="chart">
         <g class="base">
           <path class="sphere" />
@@ -48,9 +49,18 @@ import {
 
 import ChartContainer from "./ChartContainer";
 import Base from "../Base";
+import Embeddor from "./Embeddor";
 
-const LAYERS_URL = "data/layers.topojson";
-const REGIONS_URL = "data/nuts2006.topojson";
+const URLS = {
+  "2009-2014": {
+    layersUrl: "data/layers2006.topojson",
+    regionsUrl: "data/nuts2006.topojson",
+  },
+  "2014-2021": {
+    layersUrl: "data/layers2016.topojson",
+    regionsUrl: "data/nuts2016.topojson",
+  },
+};
 
 function _mk_topo_funcs(data) {
   const layers = data.objects;
@@ -67,6 +77,7 @@ function _mk_topo_funcs(data) {
 }
 
 export default {
+  components: { Embeddor },
   extends: Base,
   mixins: [ChartMixin, WithCountriesMixin],
   props: {
@@ -104,11 +115,17 @@ export default {
       type: Boolean,
       default: true,
     },
+
+    period: {
+      type: String,
+      required: true,
+    },
   },
   emits: ["rendered", "base-rendered", "regions-rendered"],
 
   data() {
     return {
+      svgEl: null,
       base_loaded: false,
       regions_loaded: false,
 
@@ -130,10 +147,10 @@ export default {
 
   computed: {
     LAYERS_URL() {
-      return this.getAssetUrl(LAYERS_URL);
+      return this.getAssetUrl(URLS[this.period].layersUrl);
     },
     REGIONS_URL() {
-      return this.getAssetUrl(REGIONS_URL);
+      return this.getAssetUrl(URLS[this.period].regionsUrl);
     },
 
     rendered() {
@@ -249,6 +266,7 @@ export default {
     // create a stylesheet for dynamic changes
     this.stylesheet = document.createElement("style");
     this.$el.appendChild(this.stylesheet);
+    this.svgEl = this.$el.querySelector("svg.map-svg");
 
     //this.updateStyle(); // this is already triggered by the watched chartWidth
   },
@@ -260,6 +278,7 @@ export default {
     },
 
     cacheGeoDetails(d) {
+      const dId = d.id || d.properties.id;
       const path = this.path;
 
       const centroid = path.centroid(d),
@@ -275,7 +294,7 @@ export default {
         cx = (x1 + x2) / 2,
         cy = (y1 + y2) / 2;
 
-      this.geodetails[d.id] = {
+      this.geodetails[dId] = {
         name: d.properties.name,
 
         width: dx,
@@ -296,12 +315,12 @@ export default {
       // since we're at this, let's calculate the zoom transform data too
       const w = this.width,
         h = this.height,
-        spacing = Math.min(w, h) * this.getZoomPadding(d.id),
+        spacing = Math.min(w, h) * this.getZoomPadding(dId),
         k = Math.min((w - spacing) / dx, (h - spacing) / dy),
         x = w / 2 - cx * k,
         y = h / 2 - cy * k;
 
-      this.geodetails[d.id].transform = {
+      this.geodetails[dId].transform = {
         x: x,
         y: y,
         k: k,
@@ -321,23 +340,36 @@ export default {
         top = this.chart.select(".top"),
         path = this.path;
 
-      base.select(".sphere").datum({ type: "Sphere" }).attr("d", path);
+      terrain.attr("stroke", "#87c3d5").attr("stroke-linejoin", "round");
 
-      base.select(".graticule").datum(d3.geoGraticule()).attr("d", path);
+      base
+        .select(".sphere")
+        .datum({ type: "Sphere" })
+        .attr("d", path)
+        .attr("fill", "#f6f6f6")
+        .attr("stroke", "none");
+
+      base
+        .select(".graticule")
+        .datum(d3.geoGraticule())
+        .attr("d", path)
+        .attr("stroke", "#333")
+        .attr("stroke-opacity", 0.5)
+        .attr("fill", "none");
 
       // handle the layers. they are:
       // - framemalta
       // - frameremote
       // - coasts
       // - countries
-      // - cyprusnorth
-      // - remoteterritories
 
       // the frames need to be drawn twice, because
       const _framedata = [topo.mesh("framemalta"), topo.mesh("frameremote")];
       for (const sel of [base, top]) {
         sel
           .select(".frames")
+          .attr("fill", "none")
+          .attr("stroke", "none")
           .selectAll("path")
           .data(_framedata)
           .enter()
@@ -346,22 +378,25 @@ export default {
       }
 
       // coastlines get drawn as a mesh
-      terrain.select(".coastline").datum(topo.mesh("coasts")).attr("d", path);
+      terrain
+        .select(".coastline")
+        .datum(topo.mesh("coasts"))
+        .attr("d", path)
+        .attr("fill", "none");
 
       // countries are filled
       // TODO: it's useless to use countries here, because the real remote
-      // territories are fillless. so we'll need to use NUTS-0 anyway.
+      // territories are fill-less. so we'll need to use NUTS-0 anyway.
       // but we still need the terrain for non-EU countries, which is
       // provided here, yet the layers topojson doesn't have country names,
       // so we can't filter on those. meh. fix this?
       const countries = terrain.select(".countries").selectAll("path");
-      for (const layer of ["countries", "remoteterritories", "cyprusnorth"]) {
-        countries
-          .data(topo.features(layer))
-          .enter()
-          .append("path")
-          .attr("d", path);
-      }
+      countries
+        .data(topo.features("countries"))
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("fill", "#dbf0f4");
 
       // we can delete the base layers at this point, save some memory
       delete this.geodata.layers;
@@ -375,7 +410,8 @@ export default {
       const scale = this.LI_zoom_factor,
         frame_padding = 1.7;
 
-      const geo = this.geodetails[sel.datum().id];
+      const gId = sel.datum().id || sel.datum().properties.id;
+      const geo = this.geodetails[gId];
 
       sel.attr("transform", (d) => {
         // though incorrect, centroid looks better than center
@@ -397,6 +433,17 @@ export default {
           "r",
           (Math.max(geo.width, geo.height) / 2) * scale * frame_padding
         );
+
+      d3.selectAll(".base .frames").attr("fill", "#d9f1f6");
+
+      d3.selectAll(".middle .frames")
+        .attr("fill", "#dde")
+        .attr("fill-opacity", 0.3);
+
+      d3.selectAll(".top .frames")
+        .attr("fill", "none")
+        .attr("stroke", "#666")
+        .attr("stroke-width", 0.5);
 
       this._li_setup = true;
     },
@@ -449,11 +496,11 @@ export default {
       // and group data by its parent region
 
       function _getParent(id) {
-        return id.length == 2 ? "" : id.substr(0, id.length - 1);
+        return id.length === 2 ? "" : id.substr(0, id.length - 1);
       }
 
       function _getChildrenLevel(id) {
-        return id == "" ? 0 : id.length - 2 + 1;
+        return id === "" ? 0 : id.length - 2 + 1;
       }
 
       const collection = {};
@@ -469,8 +516,9 @@ export default {
         // we could simply filter, but since we're iterating anyway,
         // let's clean up unneeded data
         source.geometries.forEach((g, i) => {
+          const gId = g.id || g.properties.id;
           // we use the index for gc
-          const state = g.id.substr(0, 2);
+          const state = gId.substr(0, 2);
           if (regions.map((x) => x.substr(0, 2)).indexOf(state) === -1) {
             // clean up stuff that's never gonna be needed
             if (
@@ -482,13 +530,13 @@ export default {
             return;
           }
 
-          if (regions.find((r) => g.id.substr(0, r.length) == r) === undefined)
+          if (regions.find((r) => gId.substr(0, r.length) === r) === undefined)
             return;
 
           // always cleanup what gets rendered
           _gc.push(i);
 
-          const parent = _getParent(g.id);
+          const parent = _getParent(gId);
           let geoms = collection[parent];
           if (geoms === undefined) geoms = collection[parent] = [];
 
@@ -498,6 +546,8 @@ export default {
 
       const containers = this.chart
         .select(".regions")
+        .attr("stroke", "#87c3d5")
+        .attr("stroke-linejoin", "round")
         .selectAll("g")
         .data(Object.keys(collection), (d) => d);
 
@@ -530,17 +580,23 @@ export default {
             };
             return topojson.feature(geodata, objects).features;
           },
-          (d) => d.id
+          (d) => d.id || d.properties.id
         )
         .enter()
         .append("path")
-        .attr(
-          "class",
-          (d) => `${this.COUNTRIES[d.id.substr(0, 2)].type} ${d.id}`
-        )
+        .attr("class", (d) => {
+          const dId = d.id || d.properties.id;
+          return `${this.COUNTRIES[dId.substr(0, 2)].type} ${dId}`;
+        })
         .attr("d", this.path)
         .attr("fill", this.fillfunc)
         .attr("opacity", 1)
+        .attr("stroke", (d) => {
+          const dId = d.id || d.properties.id;
+          return this.COUNTRIES[dId.substr(0, 2)].type === "donor"
+            ? "#111"
+            : "inherit";
+        })
 
         /*
         .on("mouseenter", () => this.$emit("enter", ...arguments))
@@ -553,12 +609,14 @@ export default {
           $this.cacheGeoDetails(d);
 
           const sel = d3.select(this);
+          const dId = d.id || d.properties.id;
+
           // handle liechtenstein if needed
-          if (d.id.substr(0, 2) == "LI") $this.setupLI(sel);
+          if (dId.substr(0, 2) === "LI") $this.setupLI(sel);
 
           // and clear the geo-data, we don't need it
           sel.datum({
-            id: d.id,
+            id: dId,
             name: d.properties.name,
           });
         });
@@ -566,6 +624,7 @@ export default {
       this._cleanupGeoData(_gcs);
 
       this.regions_rendered = true;
+      this.updateStyle();
       if (!shapes.empty()) this.$emit("regions-rendered", shapes);
     },
 
@@ -584,8 +643,8 @@ export default {
       const zoom = d3.zoom().on("zoom", (ev) => {
         this.chart.attr("transform", ev.transform);
         this.current_zoom = ev.transform.k;
-        this.updateStyle();
         if (zoomFunc) zoomFunc();
+        this.updateStyle();
       });
       for (const event in eventfuncs) {
         zoom.on(event, eventfuncs[event]);
@@ -604,7 +663,32 @@ export default {
     },
 
     updateStyle() {
-      this.stylesheet.innerHTML = this.mkStyle();
+      const k = this.getScaleFactor();
+      const terrain_stroke = this.terrain_stroke_width / k;
+      const region_stroke = this.region_stroke_width / k;
+      const graticule_stroke = this.graticule_stroke_width / k;
+      const LI_stroke = terrain_stroke / this.LI_zoom_factor;
+
+      d3.selectAll(".dataviz .viz.map .chart .terrain").attr(
+        "stroke-width",
+        terrain_stroke
+      );
+      d3.selectAll(".dataviz .viz.map .chart .regions").attr(
+        "stroke-width",
+        region_stroke
+      );
+      d3.selectAll(".dataviz .viz.map .chart .regions .level0").attr(
+        "stroke-width",
+        terrain_stroke
+      );
+      d3.selectAll(".dataviz .viz.map .chart .regions .LI").attr(
+        "stroke-width",
+        LI_stroke
+      );
+      d3.selectAll(".dataviz .viz.map .chart .base .graticule").attr(
+        "stroke-width",
+        graticule_stroke
+      );
     },
 
     getScaleFactor() {
@@ -618,35 +702,6 @@ export default {
 
       return k / modificator;
     },
-
-    mkStyle() {
-      const k = this.getScaleFactor(),
-        terrain_stroke = this.terrain_stroke_width / k,
-        region_stroke = this.region_stroke_width / k,
-        graticule_stroke = this.graticule_stroke_width / k,
-        LI_stroke = terrain_stroke / this.LI_zoom_factor;
-
-      return `
-        .dataviz .viz.map .chart .terrain {
-          stroke-width: ${terrain_stroke};
-        }
-
-        .dataviz .viz.map .chart .regions {
-          stroke-width: ${region_stroke};
-        }
-
-        .dataviz .viz.map .chart .regions .level0 {
-          stroke-width: ${terrain_stroke};
-        }
-        .dataviz .viz.map .chart .regions .LI {
-          stroke-width: ${LI_stroke};
-        }
-
-        .dataviz .viz.map .chart .base .graticule {
-          stroke-width: ${graticule_stroke};
-        }
-      `;
-    },
   },
 };
 </script>
@@ -654,45 +709,6 @@ export default {
 <style lang="less">
 // this is to be included only by the Map mixin, which uses this selector
 .dataviz .viz.map {
-  // defs
-  // - fills
-  @water: #cbe9f6;
-  @terrain: #fff;
-  @donor_inactive: #85adcb;
-
-  // - stroke widths. these are all overriden dynamically,
-  //   but left here for reference
-  @terrain_stroke_width: 0.7;
-  @region_stroke_width: 0.4;
-  @graticule_stroke_width: 0.2;
-
-  // - strokes
-  .with-boundary {
-    stroke: #7f9fc8;
-    stroke-linejoin: round;
-  }
-
-  .with-terrain-boundary {
-    .with-boundary;
-    //stroke-width: @terrain_stroke_width;
-  }
-
-  .with-region-boundary {
-    .with-boundary;
-    //stroke-width: @region_stroke_width;
-  }
-
-  @donor_stroke: #111;
-
-  // - and others
-  .frame-filled {
-    fill: #d9f1f6;
-  }
-  .frame-stroked {
-    stroke: #666;
-    stroke-width: 0.5;
-  }
-
   // styles
   .chart-container {
     // don't let the map overflow the available height
@@ -700,65 +716,7 @@ export default {
     max-width: 100vh;
 
     svg {
-      box-shadow: 0px 0px 2px #aaa;
-    }
-  }
-
-  .chart {
-    .base {
-      .sphere {
-        fill: @water;
-        stroke: none;
-      }
-      .graticule {
-        stroke: #333;
-        //stroke-width: @graticule_stroke_width;
-        stroke-opacity: 0.5;
-        fill: none;
-      }
-
-      .frames {
-        .frame-filled;
-        stroke: none;
-      }
-    }
-
-    .middle {
-      .frames {
-        //.frame-filled;
-        fill: #dde;
-        fill-opacity: 0.3;
-      }
-    }
-
-    .top {
-      .frames {
-        fill: none;
-        .frame-stroked;
-      }
-    }
-
-    .terrain {
-      .with-terrain-boundary;
-
-      .coastline {
-        fill: none;
-      }
-      .countries {
-        fill: @terrain;
-      }
-    }
-
-    .regions {
-      .with-region-boundary;
-
-      &.level0 {
-        .with-terrain-boundary;
-      }
-
-      .donor {
-        stroke: @donor_stroke;
-      }
+      box-shadow: 0 0 2px #aaa;
     }
   }
 }

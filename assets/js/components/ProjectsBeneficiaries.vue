@@ -47,11 +47,11 @@ export default {
 
       return `
         <div class="title-container">
-          <img src="${this.get_flag_url(d.id)}" alt="" />
+          <img src="${this.get_flag(d.id)}" alt="" />
           <span class="name">${d.name}</span>
         </div>
         <ul> ${datatxt} </ul>
-        <span class="action">Click to filter by beneficiary state</span>`;
+        <span class="action">Click to filter by Beneficiary State</span>`;
     },
   },
 };

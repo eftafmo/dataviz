@@ -1,5 +1,4 @@
 import _COUNTRIES from "@js/constants/countries.json5";
-import { getAssetUrl } from "../../lib/util";
 
 export const COUNTRIES = {};
 export const DONORS = _COUNTRIES.donors;
@@ -11,12 +10,38 @@ const _types = {
   beneficiary: BENEFICIARIES,
   partner: PARTNERS,
 };
-for (const t in _types) {
-  const source = _types[t];
 
-  for (const code in source) {
-    COUNTRIES[code] = Object.assign({ type: t }, source[code]);
+const flags = import.meta.globEager("../../../sprites/flags/*.png");
+
+function transformCountryName(name) {
+  return name.toLowerCase().replace(/ /g, "");
+}
+
+Object.entries(_types).forEach(([type, source]) => {
+  Object.entries(source).forEach(([code, country]) => {
+    const flagName = `flag-${transformCountryName(source[code].name)}.png`;
+
+    COUNTRIES[code] = {
+      type,
+      // In dev this will be the URL to the flag, however in prod this will
+      // be a DATA URI string. Making the sprites easily embeddable in SVG
+      // elements.
+      flag: flags["../../../sprites/flags/" + flagName].default,
+      flagName,
+      ...country,
+    };
+  });
+});
+
+export function get_flag(code) {
+  if (code.length > 2 && code != "Intl") {
+    // because Intl is a country and has a flag
+    code = code.substring(0, 2);
   }
+  const country = COUNTRIES[code];
+  if (!country) throw "Country not found: " + code;
+
+  return country.flag;
 }
 
 export function get_flag_name(code) {
@@ -26,7 +51,7 @@ export function get_flag_name(code) {
   }
   const country = COUNTRIES[code];
   if (!country) throw "Country not found: " + code;
-  const flag = country.name.toLowerCase().replace(/ /g, "");
+  const flag = transformCountryName(country.name);
   return `flag-${flag}`;
 }
 
@@ -98,20 +123,8 @@ export default {
       this.filters.donor = this.filters.donor == d.id ? null : d.id;
     },
     // TODO: Refactor to use camelCase here.
-    get_flag_url(c) {
-      return this.getAssetUrl(`sprites/flags/${this.get_flag_name(c)}.png`);
-    },
-    get_flag_name(c) {
-      return get_flag_name(c);
-    },
-    get_country_name(c) {
-      return get_country_name(c);
-    },
-    get_country_alt_name(c) {
-      return get_country_alt_name(c);
-    },
-    get_sort_order(c) {
-      return get_sort_order(c);
-    },
+    get_flag,
+    get_country_name,
+    get_sort_order,
   },
 };

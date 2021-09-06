@@ -62,7 +62,7 @@ export default {
           <li>${this.display(d)}</li>
           <li>${this.currency(d.value)} net allocation</li>
           <li>${num_bs} ` +
-        this.singularize(`beneficiary states`, num_bs) +
+        this.singularize(`Beneficiary States`, num_bs) +
         `</li>
           <li>${num_prg}  ` +
         this.singularize(`programmes`, num_prg) +

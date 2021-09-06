@@ -1,5 +1,5 @@
 <template>
-  <select class="viz-select clearfix" @change="setFilter">
+  <select class="viz-select clearfix" :style="{ width }" @change="setFilter">
     <option value="">
       {{ title }}
     </option>
@@ -34,14 +34,59 @@ export default {
       required: true,
     },
   },
-
+  data() {
+    return {
+      width: "auto",
+    };
+  },
   computed: {
     current() {
       return this.filters[this.filter];
     },
+    currentItem() {
+      return this.items.find(
+        (item) => this.getFilterName(item) === this.current
+      );
+    },
+    currentDisplayName() {
+      return (
+        (this.currentItem && this.getFilterDisplayName(this.currentItem)) ||
+        this.title
+      );
+    },
   },
-
+  mounted() {
+    this.$watch("filters", this.setWidth, {
+      deep: true,
+      initial: true,
+    });
+  },
   methods: {
+    measureText(text) {
+      const computedStyle = window.getComputedStyle(this.$el);
+      const el = document.createElement("span");
+      el.style.opacity = "0";
+      el.style.position = "absolute";
+      el.textContent = text;
+      [
+        "fontSize",
+        "fontFamily",
+        "fontWeight",
+        "fontStyle",
+        "lineHeight",
+      ].forEach((key) => {
+        el.style[key] = computedStyle[key];
+      });
+
+      document.body.appendChild(el);
+      const value = el.clientWidth;
+      document.body.removeChild(el);
+
+      return value;
+    },
+    setWidth() {
+      this.width = this.measureText(this.currentDisplayName) + 25 + "px";
+    },
     setFilter(e) {
       const select = e.target;
       this.filters[this.filter] = select.value || null;

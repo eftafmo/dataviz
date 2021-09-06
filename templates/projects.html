@@ -15,7 +15,7 @@
           period="{{ PERIOD }}"
       >
         <template #title>
-          <h2>Projects by Financial Mechanism <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
+          <h2>Funding by Financial Mechanism <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
         </template>
       </mechanisms>
     </div>
@@ -54,7 +54,7 @@
           period="{{ PERIOD }}"
       >
         <template #title>
-          <h2>Projects across beneficiary states</h2>
+          <h2>Projects across Beneficiary States</h2>
         </template>
       </beneficiaries>
     </div>
@@ -81,7 +81,8 @@
     _createApp(
       Dataviz.Projects,
       {
-        datasource: "/api/projects.json"
+        datasource: "/api/projects.json",
+        datasourcePeriods: ["{{ PERIOD }}"],
       }
     ).mount("#content");
   });

@@ -119,7 +119,7 @@ ORG_ROLE_SORT = {
     'Project Partner': 6,
 }
 
-# Donor states first (incl. France as International), then beneficiary states
+# Donor States first (incl. France as International), then Beneficiary States
 COUNTRY_SORT_BOOST = {
     'Iceland': 0,
     'Liechtenstein': 0,

@@ -40,10 +40,10 @@ const _locale = {
   // see https://github.com/d3/d3-format/blob/master/locale/
   // TODO: derive and extend the browser locale?
   // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
-  decimal: ",", // that's the european way
+  decimal: ".",
   thousands: "\u00a0", // nbsp
   grouping: [3],
-  currency: ["€\xa0", ""],
+  currency: ["€", ""],
   percent: "%",
 };
 // currency, separators, float
@@ -79,4 +79,49 @@ export function getAssetUrl(path, origin = null) {
     `/assets/${path}`,
     origin || (import.meta && import.meta.url) || window.location.origin
   ).href;
+}
+
+export function downloadDataUrl(dataUrl, filename) {
+  const tempLink = document.createElement("a");
+  tempLink.style.display = "none";
+  tempLink.href = dataUrl;
+  tempLink.setAttribute("download", filename);
+
+  // Safari thinks _blank anchor are pop ups. We only want to set _blank
+  // target if the browser does not support the HTML5 download attribute.
+  // This allows you to download files in desktop safari if pop up blocking
+  // is enabled.
+  if (typeof tempLink.download === "undefined") {
+    tempLink.setAttribute("target", "_blank");
+  }
+  document.body.appendChild(tempLink);
+  tempLink.click();
+  document.body.removeChild(tempLink);
+}
+
+export function downloadFile(blob, filename) {
+  if (typeof window.navigator.msSaveBlob !== "undefined") {
+    // IE workaround for "HTML7007: One or more blob URLs were
+    // revoked by closing the blob for which they were created.
+    // These URLs will no longer resolve as the data backing
+    // the URL has been freed."
+    window.navigator.msSaveBlob(blob, filename);
+  } else {
+    const windowURL = window.URL || window.webkitURL || window;
+    const blobURL = windowURL.createObjectURL(blob);
+    downloadDataUrl(blobURL, filename);
+    windowURL.revokeObjectURL(blobURL);
+  }
+}
+
+/**
+ * Sums start and the items of an iterable from left to right and
+ * returns the total.
+ *
+ * @param values {Number[]}
+ * @param start {Number}
+ * @return {Number}
+ */
+export function sum(values, start = 0) {
+  return values.reduce((collector, item) => collector + item, start);
 }

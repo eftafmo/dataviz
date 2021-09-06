@@ -6,8 +6,16 @@
     @mouseleave="popperLeave"
   >
     <div class="x-container">
-      <span class="icon icon-embed" @click="toggleExpanded"></span>
+      <span class="icon icon-menu" @click="toggleExpanded"></span>
       <div v-show="expanded" class="content">
+        <template v-if="svgNode">
+          <p class="title">Download</p>
+          <p>
+            <button @click="downloadChart">Download chart as .png</button>
+          </p>
+          <hr />
+        </template>
+        <p class="title">Embed</p>
         <p>
           <small>
             Paste the following into your markup where you want the embedded
@@ -29,6 +37,7 @@ import { default as Popper } from "popper.js";
 import { default as Clipboard } from "clipboard";
 
 import { FILTERS } from "../mixins/WithFilters";
+import { downloadDataUrl, downloadFile } from "../../lib/util";
 
 export default {
   props: {
@@ -40,9 +49,30 @@ export default {
       type: String,
       required: true,
     },
+    svgNode: {
+      type: Element,
+      required: false,
+      default: null,
+    },
+    scaleDownload: {
+      type: Number,
+      required: false,
+      default: 1,
+    },
+    offsetY: {
+      type: Number,
+      required: false,
+      default: 10,
+    },
+    offsetX: {
+      type: Number,
+      required: false,
+      default: -25,
+    },
   },
   data() {
     return {
+      padding: 10,
       target: null,
       timeout: 400,
 
@@ -51,6 +81,9 @@ export default {
 
       expanded: false,
       copied: false,
+      // See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas#maximum_canvas_size
+      // Don't push this to the limit, set something more sensible here.
+      maxCanvasSize: 1280,
     };
   },
   computed: {
@@ -87,11 +120,11 @@ export default {
       if (!this.visible) this._popper.destroy();
       else
         this._popper = new Popper(this.target, this.$el, {
-          placement: "left-start",
+          placement: "right-start",
 
           modifiers: {
             offset: {
-              offset: "0px,0px",
+              offset: `${this.offsetY}px,${this.offsetX}px`,
             },
 
             preventOverflow: { enabled: false },
@@ -142,6 +175,60 @@ export default {
   },
 
   methods: {
+    downloadChart() {
+      // XXX Apple is being a dingus as usual.
+      const URL = window.URL || window.webkitURL || window;
+
+      const svgStyle = window.getComputedStyle(this.svgNode);
+      let { width, height } = this.svgNode.getBBox();
+      width = Math.min(width * this.scaleDownload, this.maxCanvasSize);
+      height = Math.min(height * this.scaleDownload, this.maxCanvasSize);
+
+      // Clone the node and make several required adjustments
+      const clonedSVGNode = this.svgNode.cloneNode(true);
+      // Must set width and height. See Firefox bug:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
+      clonedSVGNode.setAttribute("width", width);
+      clonedSVGNode.setAttribute("height", height);
+      // Ensure the xmlns is set, otherwise it cannot be drawn
+      clonedSVGNode.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      // Ensure we use the same font when drawing the image into the canvas.
+      // CSS styles don't cascade into image drawn into the canvas.
+      clonedSVGNode.setAttribute("font-family", svgStyle.fontFamily);
+
+      const outerHTML = clonedSVGNode.outerHTML.replaceAll("&nbsp;", "&#160;");
+      const blob = new Blob([outerHTML], {
+        type: "image/svg+xml;charset=utf-8",
+      });
+
+      // XXX Use to debug SVG issues. The browser WILL not show any details
+      // XXX about errors while drawing the SVG into the canvas.
+      // return downloadFile(blob, "test.svg");
+
+      const filename = `${this.period}-${this.scenario}-${this.tag}.png`;
+
+      const blobURL = URL.createObjectURL(blob);
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      // TODO: let the user know that this failed? Or maybe log to Sentry?
+      img.onerror = console.log;
+      img.onload = () => {
+        URL.revokeObjectURL(blobURL);
+
+        const canvas = document.createElement("canvas");
+
+        canvas.width = width + this.padding * 2;
+        canvas.height = height + this.padding * 2;
+        const context = canvas.getContext("2d");
+
+        context.fillStyle = "white";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, this.padding, this.padding, width, height);
+
+        canvas.toBlob((blob) => downloadFile(blob, filename), "image/png");
+      };
+      img.src = blobURL;
+    },
     popperEnter() {
       clearTimeout(this._pleaving);
       this.popper_hovered = true;
@@ -171,7 +258,7 @@ export default {
 
   width: 1em;
   height: 1em;
-  z-index: 999;
+  z-index: 2;
 
   .x-container {
     position: relative;
@@ -185,9 +272,16 @@ export default {
 
   .content {
     position: absolute;
+    right: 0;
     background: white;
     border: 1px solid black;
     padding: 5px;
+
+    .title {
+      font-weight: bold;
+      font-size: 16px;
+      margin: 0;
+    }
   }
 
   .ok {

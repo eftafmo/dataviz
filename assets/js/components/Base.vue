@@ -12,7 +12,15 @@ export default {
   mixins: [BaseMixin, WithFiltersMixin],
 
   props: {
-    initial: { type: [Object, Array], default: null },
+    initial: {
+      type: [Object, Array],
+      default: null,
+    },
+    datasourcePeriods: {
+      type: Array,
+      default: () => [],
+      required: false,
+    },
   },
 
   data() {
@@ -114,6 +122,28 @@ export default {
   },
 
   methods: {
+    async fetchData() {
+      if (!this.datasource) throw "Base.fetchData(): Missing datasource.";
+
+      const responses = await Promise.all(
+        this.datasourcePeriods.map(this.loadPeriod)
+      );
+      const data = [].concat(...responses);
+      this.dataset = Object.freeze(data);
+    },
+    async loadPeriod(period) {
+      const url = new URL(this.datasource, window.location);
+      url.searchParams.append("period", period);
+      const dataset = await (await fetch(url.toString())).json();
+
+      // Set the period for each item, for cases where the backend doesn't
+      // include this information. Makes grouping and filtering easier along
+      // the line.
+      dataset.forEach((item) => {
+        item.period = period;
+      });
+      return dataset;
+    },
     getAssetUrl(path) {
       return getAssetUrl(path, this.origin || this.$.root.props.origin);
     },
@@ -337,27 +367,12 @@ export default {
       recurse(aggregator, 0);
       return out;
     },
-
     main() {
       /*
        * main entry point, only called on ready
        */
       // no need to throw, some components could be Vue-only
       //throw "Base.main(): Not implemented";
-    },
-
-    fetchData() {
-      if (!this.datasource) throw "Base.fetchData(): Missing datasource.";
-
-      fetch(this.datasource).then((response) => {
-        if (!response.ok)
-          throw new Error(`${response.status} ${response.statusText}`);
-
-        response.json().then((data) => {
-          Object.freeze(data);
-          this.dataset = data;
-        });
-      });
     },
   },
 };

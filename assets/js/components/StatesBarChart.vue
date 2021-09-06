@@ -1,6 +1,6 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" :tag="tag" />
+    <embeddor :period="period" :tag="tag" :svg-node="$refs.svgEl" />
     <slot v-if="!embedded" name="title"></slot>
     <dropdown
       v-if="hasData && !noDropdown"
@@ -8,8 +8,6 @@
       title="No filter selected"
       :items="nonzero"
     ></dropdown>
-
-    <chart-patterns />
 
     <chart-legend
       v-if="!noLegend"
@@ -19,7 +17,15 @@
       :format-func="legendFormatFunc"
     ></chart-legend>
 
-    <svg width="100%" :height="height + 'px'" class="chart">
+    <svg
+      ref="svgEl"
+      width="100%"
+      :height="height + 'px'"
+      class="chart"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <chart-patterns />
+
       <defs>
         <filter id="drop-shadow">
           <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
@@ -47,8 +53,8 @@
           <feColorMatrix type="matrix" />
         </filter>
       </defs>
-      <g :transform="`translate(${legendWidth},0)`">
-        <g class="states" />
+      <g :transform="`translate(${legendWidth},0)`" transform-origin="0, 0">
+        <g class="states" transform-origin="0, 0" />
         <line class="domain" />
       </g>
     </svg>
@@ -207,7 +213,7 @@ export default {
       fakeS.remove();
 
       // add a tiny bit of leeway, because custom font might not load so fast
-      return txtwidth * 1.1 + this.flagBoundingWidth;
+      return Math.floor(txtwidth * 1.1 + this.flagBoundingWidth);
     },
     x() {
       return d3
@@ -391,6 +397,8 @@ export default {
       divs
         .select("rect") // UPDATE
         .transition(t)
+        .attr("shape-rendering", "crispEdges")
+        .attr("stroke", "none")
         .attr("x", (d) => this.x(d.d[0]))
         .attr("width", (d) => this.x(d.d[1]) - this.x(d.d[0]));
     },
@@ -400,6 +408,8 @@ export default {
       //.attr("stroke", (d) => d.colour )
       return el
         .append("rect")
+        .attr("shape-rendering", "crispEdges")
+        .attr("stroke", "none")
         .attr("y", this.barPadding)
         .attr("height", this.barHeight)
         .attr("x", (d) => this.x(d.d[0]))
@@ -446,6 +456,8 @@ export default {
       chart
         .select("line.domain")
         .transition(t)
+        .attr("stroke", "#ccc")
+        .attr("shape-rendering", "crispEdges")
         // the line height needs to depend on the data length for the div filtering
         .attr("y2", this.itemsHeight);
 
@@ -467,13 +479,13 @@ export default {
       const sboth = states.merge(sentered).attr("display", null);
 
       sboth
-        .filter((d) => d.total != 0) // entered items can also be 0-ed
+        .filter((d) => d.total !== 0) // entered items can also be 0-ed
         .transition(t)
         .attr("opacity", 1)
         .attr("transform", (d, i) => `translate(0,${this.y(d, i)})`);
 
       sboth
-        .filter((d) => d.total == 0) /* exit substitute */
+        .filter((d) => d.total === 0) /* exit substitute */
         .transition(t)
         .attr("opacity", 0)
         // translate items out of the viewport.
@@ -495,6 +507,9 @@ export default {
       country
         .append("rect")
         .attr("class", "bg")
+        .attr("fill", "none")
+        .attr("shape-rendering", "crispEdges")
+        .attr("stroke", "none")
         .attr("width", this.flagBoundingWidth)
         .attr("height", this.itemHeight);
 
@@ -502,6 +517,8 @@ export default {
         .append("text")
         .text((d) => d.name)
         .attr("fill", this.label_colour)
+        .attr("text-anchor", "end")
+        .attr("font-size", 12)
         // v-align
         .attr("y", this.itemHeight / 2)
         .attr("dy", ".33em"); // magical self-centering offset
@@ -509,8 +526,9 @@ export default {
       country
         .append("g")
         .attr("class", "flag")
+        .attr("filter", 'url("#drop-shadow")')
         .append("image")
-        .attr("href", (d) => `${this.get_flag_url(d.id)}`)
+        .attr("href", (d) => this.get_flag(d.id))
         .attr("x", this.flagPadding)
         .attr("y", (this.itemHeight - this.flagHeight) / 2)
         .attr("width", this.flagWidth)
@@ -525,7 +543,7 @@ export default {
 
       // while here, draw a full-width rectangle used for mouse-over effects.
       // this will look like a border around the divs
-      const bg = divs.append("rect").attr("class", "bg"); // continued in renderStateData
+      const bg = divs.append("rect").attr("class", "bg").attr("fill", "none"); // continued in renderStateData
 
       // we want to run the item rendering both in ENTER and UPDATE
       divs
@@ -583,9 +601,9 @@ export default {
               .style("filter")
               .replace(/url\([\'\"]?#(\w+)[\'\"]?\)/, "$1");
 
-            if (yes && current == "inactive")
+            if (yes && current === "inactive")
               d3.select(this).style("filter", "url('#activating')");
-            else if (!yes && current == "active")
+            else if (!yes && current === "active")
               d3.select(this).style("filter", "url('#inactivating')");
           })
           .on("end", function () {
@@ -640,9 +658,9 @@ export default {
 
       const val = this.filters[this.state_type];
 
-      states.filter((d) => val === null || d.id == val).call(activate);
+      states.filter((d) => val === null || d.id === val).call(activate);
 
-      states.filter((d) => val !== null && d.id != val).call(deactivate);
+      states.filter((d) => val !== null && d.id !== val).call(deactivate);
     },
 
     handleStateFilter() {
@@ -705,8 +723,6 @@ export default {
 
   .chart {
     line.domain {
-      stroke: #ccc;
-      shape-rendering: crispEdges;
       // don't interrupt hovering the items
       pointer-events: none;
     }
@@ -717,29 +733,10 @@ export default {
       cursor: pointer;
       pointer-events: all;
 
-      rect {
-        shape-rendering: crispEdges;
-        stroke: none;
-      }
-
-      rect.bg {
-        fill: none;
-      }
-
       &:hover {
         .divs rect.bg {
           fill: @state_highlight;
         }
-      }
-
-      text {
-        font-size: 0.8em;
-        font-family: "Arial", "Open sans", sans-serif;
-        text-anchor: end;
-      }
-
-      g.flag {
-        filter: url("#drop-shadow");
       }
     }
   }

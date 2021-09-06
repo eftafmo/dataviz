@@ -5,7 +5,7 @@
         <div class="body">
           <div class="title-wrapper" @click="toggleContent($event)">
             <div class="flag">
-              <img :src="`${get_flag_url(beneficiary.id)}`" alt="" />
+              <img :src="`${get_flag(beneficiary.id)}`" alt="" />
             </div>
             <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
             <small>({{ beneficiary.programmes.length }} programmes)</small>
