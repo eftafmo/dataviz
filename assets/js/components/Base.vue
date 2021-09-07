@@ -271,8 +271,8 @@ export default {
         };
       }
 
-      // each aggreggation level is a sub-dictionary,
-      // each aggreggation item a key.
+      // each aggregation level is a sub-dictionary,
+      // each aggregation item a key.
       const aggregator = {};
 
       for (const item of data) {
