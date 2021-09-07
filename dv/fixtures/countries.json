@@ -134,5 +134,13 @@
       "name": "Slovakia",
       "url": "http://eeagrants.org/Where-we-work/Slovakia"
     }
+  },
+  {
+    "model": "dv.state",
+    "pk": "XX",
+    "fields": {
+      "name": "Non-country specific",
+      "url": ""
+    }
   }
 ]
