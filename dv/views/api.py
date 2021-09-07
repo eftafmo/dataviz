@@ -222,7 +222,75 @@ def grants(request):
 
 @require_GET
 def projects(request):
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
+    allocations = Allocation.objects.filter(
+        funding_period=period_id,
+        programme_area__isnull=False,
+    ).exclude(
+        gross_allocation=0,
+    ).select_related(
+        'programme_area',
+        'programme_area__priority_sector',
+    ).order_by('state', 'financial_mechanism')
+
+    project_query = Project.objects.filter(
+        funding_period=period_id,
+    ).select_related(
+        'programme',
+    ).prefetch_related(
+        'programme_areas',
+    )
+
+    programmes = defaultdict(lambda: defaultdict(dict))
+    projects = defaultdict(list)
+    for project in project_query:
+        financial_mechanisms = []
+        if project.is_eea:
+            financial_mechanisms.append(FM_EEA)
+        if project.is_norway:
+            financial_mechanisms.append(FM_NORWAY)
+
+        for financial_mechanism in financial_mechanisms:
+            for programme_area in project.programme_areas.all():
+                key = (financial_mechanism, project.state_id, programme_area.id)
+                projects[key].append(project.code)
+
+                programme = project.programme
+                if not programmes[key][programme.short_name]:
+                    programmes[key][programme.short_name] = {
+                        'name': programme.name,
+                        'url': programme.url,
+                        'nuts': defaultdict(lambda: defaultdict(list)),
+                    }
+                programme_nuts = programmes[key][programme.short_name]['nuts'][project.nuts_code]
+                programme_nuts['total'].append(project.code)
+                if project.has_ended:
+                    programme_nuts['ended'].append(project.code)
+                if project.is_positive_fx:
+                    programme_nuts['positive'].append(project.code)
+
     out = []
+    for allocation in allocations:
+        state = allocation.state_id
+        financial_mechanism = allocation.financial_mechanism
+        programme_area = allocation.programme_area_id
+        key = (financial_mechanism, state, programme_area)
+        out.append({
+            'period': period,
+            'fm': FINANCIAL_MECHANISMS_DICT[financial_mechanism],
+            'sector': allocation.programme_area.priority_sector.name,
+            'area': allocation.programme_area.name,
+            'beneficiary': state,
+            'is_ta': True,  # TODO TA info only available on programme for the moment
+            'allocation': allocation.gross_allocation,
+            'net_allocation': allocation.net_allocation,
+            'programmes': programmes[key],
+            'projects': projects[key],
+            'project_allocation': 0,  # TODO get project allocation split between the two FMs
+            'news': [],  # TODO review news import
+        })
     return JsonResponse(out)
 
 

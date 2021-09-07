@@ -125,7 +125,7 @@ class Project(models.Model):
     programme_areas = models.ManyToManyField(ProgrammeArea)
     priority_sectors = models.ManyToManyField(PrioritySector)
 
-    nuts_code = models.CharField(max_length=5)
+    nuts_code = models.CharField(max_length=5)  # TODO FK to NUTS table?
     url = models.CharField(max_length=256, null=True)
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
     is_eea = models.BooleanField()
