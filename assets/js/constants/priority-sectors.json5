@@ -1,4 +1,5 @@
 [
+  // 2009-2014
   {
     name: "Environmental protection and management",
     colour: "rgb(140, 160, 35)",
@@ -49,6 +50,38 @@
     colour: "rgb(10, 110, 145)",
     icon: "justice-and-home-affairs.png",
   },
+  // 2014-2021
+  {
+    name: "Innovation, research, education and competitiveness",
+    colour: "#F5C600",
+    icon: "innovation-research-education-and-competitiveness.png"
+  },
+  {
+    name: "Social inclusion, youth employment and poverty reduction",
+    colour: "#783F91",
+    icon: "social-inclusion-youth-employment-and-poverty-reduction.png",
+  },
+  {
+    name: "Environment, energy, climate change and low carbon economy",
+    colour: "#9AA400",
+    icon: "environment-energy-climate-change-and-low-carbon-economy.png",
+  },
+  {
+    name: "Culture, civil society, good governance, fundamental rights and freedoms",
+    colour: "#C30064",
+    icon: "culture-civil-society-good-governance-fundamental-rights-and-freedoms.png",
+  },
+  // Other
+  {
+    name: "Regional cooperation",
+    colour: "rgb(179, 179, 179)",
+    icon: "other.png",
+  },
+  {
+    name: "Youth employment",
+    colour: "rgb(179, 179, 179)",
+    icon: "other.png",
+  },
   {
     name: "Technical assistance",
     colour: "rgb(179, 179, 179)",
@@ -64,4 +97,9 @@
     colour: "rgb(179, 179, 179)",
     icon: "other.png",
   },
+  {
+    name: "Other",
+    colour: "rgb(179, 179, 179)",
+    icon: "other.png",
+  }
 ]
