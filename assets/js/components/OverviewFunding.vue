@@ -47,6 +47,7 @@ import WithFMsMixin from "./mixins/WithFMs";
 import WithCountriesMixin from "./mixins/WithCountries";
 import DropdownFilter from "./includes/DropdownFilter";
 import Embeddor from "./includes/Embeddor";
+import { sum } from "../lib/util";
 
 export default {
   components: { Embeddor, DropdownFilter },
@@ -60,18 +61,34 @@ export default {
   },
   computed: {
     aggregated() {
+      // XXX DPP = Donor Programme Partners
+      // XXX dpp = donor project partners
+      // XXX Yes, I know, it's dumb!
       return this.aggregate(
         this.filtered,
         [],
-        ["allocation", "project_count", { source: "programmes", type: Array }],
+        [
+          "allocation",
+          "bilateral_fund",
+          { source: "programmes", type: Array },
+          { source: "projects", type: Array },
+          { source: "positive_fx", type: Array },
+          { source: "DPP_programmes", type: Array },
+          { source: "dpp_projects", type: Array },
+          { source: "bilateral_initiatives", type: Array },
+          { source: "continued_coop", type: Array },
+          { source: "beneficiary", type: String },
+        ],
         false
       );
     },
     allocationByFm() {
       return this.FM_ARRAY.map((fm) => {
-        const allocation = this.filtered
-          .filter((item) => item.fm === fm.name)
-          .reduce((collector, item) => collector + item.allocation, 0);
+        const allocation = sum(
+          this.filtered
+            .filter((item) => item.fm === fm.name)
+            .map((item) => parseFloat(item.allocation))
+        );
         return {
           id: fm.id,
           name: fm.name,
@@ -81,9 +98,6 @@ export default {
           hidden: allocation <= 0,
         };
       });
-    },
-    beneficiaryStatesCount() {
-      return new Set(this.filtered.map((item) => item.beneficiary)).size;
     },
     gridItems() {
       return [
@@ -103,7 +117,7 @@ export default {
             },
             {
               id: "bilateral-fund",
-              amount: "N/A",
+              amount: this.shortCurrency(this.aggregated.bilateral_fund),
               name: "Bilateral fund",
             },
           ],
@@ -121,22 +135,22 @@ export default {
             {
               id: "prg-part",
               name: "Donor Programme Partners",
-              amount: "N/A",
+              amount: this.number(this.aggregated.DPP_programmes.size),
             },
             {
               id: "prj-part",
               name: "Donor project partners",
-              amount: "N/A",
+              amount: this.number(this.aggregated.dpp_projects.size),
             },
             {
               id: "bil-init",
               name: "Bilateral initiatives",
-              amount: "N/A",
+              amount: this.number(this.aggregated.bilateral_initiatives.size),
             },
             {
               id: "part-cont",
               name: "Partnerships likely to continue cooperation",
-              amount: "N/A",
+              amount: this.number(this.aggregated.continued_coop.size),
             },
           ],
         },
@@ -152,18 +166,18 @@ export default {
             {
               id: "proj",
               name: "Projects",
-              amount: this.number(this.aggregated.project_count),
+              amount: this.number(this.aggregated.projects.size),
             },
             {
               id: "bs",
               name: "Beneficiary States",
-              amount: this.beneficiaryStatesCount,
-              hidden: this.beneficiaryStatesCount <= 1,
+              amount: this.number(this.aggregated.beneficiary.size),
+              hidden: this.aggregated.beneficiary.size <= 1,
             },
             {
               id: "proj-pos",
               name: "Projects with positive effects, likely to continue",
-              amount: "N/A",
+              amount: this.number(this.aggregated.positive_fx.size),
             },
           ],
         },

@@ -251,7 +251,7 @@ export default {
       return this.aggregate(
         this.filtered,
         [],
-        ["allocation", "project_count", { source: "programmes", type: Array }],
+        ["allocation", { source: "programmes", type: Array }],
         false
       );
     },
