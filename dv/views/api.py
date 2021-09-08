@@ -208,7 +208,7 @@ def grants(request):
             'sector': allocation.programme_area.priority_sector.name,
             'area': allocation.programme_area.name,
             'beneficiary': state,
-            'is_ta': False,  # TODO TA info only available on programme for the moment
+            'is_ta': allocation.programme_area.priority_sector.code == 'OT',
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),  # TODO this doesn't look right
@@ -283,7 +283,7 @@ def projects(request):
             'sector': allocation.programme_area.priority_sector.name,
             'area': allocation.programme_area.name,
             'beneficiary': state,
-            'is_ta': False,  # TODO TA info only available on programme for the moment
+            'is_ta': allocation.programme_area.priority_sector.code == 'OT',
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'programmes': programmes[key],
