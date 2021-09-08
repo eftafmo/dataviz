@@ -13,7 +13,7 @@ ENDPOINT = 'https://eeagrants.org/rest/articles?page={}'
 
 
 class Command(BaseCommand):
-    help = 'Import news from %s' % ENDPOINT
+    help = f'Import news from {ENDPOINT}'
 
     def handle(self, *args, **options):
         page = 0
@@ -23,12 +23,12 @@ class Command(BaseCommand):
                 data = json.loads(url.read().decode())['posts']
                 if page == 0:
                     News.objects.all().delete()
-                print('Importing {} news from page {}'.format(len(data), page))
+                self.stdout.write(f'Importing {len(data)} news from page {page}')
                 for item in data:
                     self._save(item)
                 page += 1
         cache.clear()
-        print("Cache cleared")
+        self.stdout.write(f'Cache cleared')
 
     def _save(self, item):
         try:
@@ -43,7 +43,7 @@ class Command(BaseCommand):
             news.image = item['image'].replace('http://', 'https://')
             news.is_partnership = item['is_partnership'] == 'yes'
             if item['project_id']:
-                news.project_id = item['project_id'][0:9].upper().strip()
+                news.project_id = item['project_id'].strip()
             news.save()
 
             for prg in item['programme_id'].split(', '):
