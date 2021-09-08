@@ -49,6 +49,14 @@
   },
   {
     "model": "dv.state",
+    "pk": "EL",
+    "fields": {
+      "name": "Greece",
+      "url": "http://eeagrants.org/Where-we-work/Greece"
+    }
+  },
+  {
+    "model": "dv.state",
     "pk": "HR",
     "fields": {
       "name": "Croatia",

@@ -37,7 +37,7 @@ class NUTS(models.Model):
 
 class State(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=64)
     url = models.TextField()
 
     def __str__(self):

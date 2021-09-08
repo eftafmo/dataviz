@@ -45,7 +45,8 @@ class Command(BaseCommand):
     help = 'Import data from grACE db'
 
     def handle(self, *args, **options):
-        states = {state.name: state for state in State.objects.all()}
+        # GR country code used in 2009-2014; for 2014-2021 we use EL
+        states = {state.name: state for state in State.objects.exclude(code='GR')}
 
         programme_area_query = 'SELECT * FROM fmo.TR_RDPProgrammeArea'
         with db_cursor() as cursor:
