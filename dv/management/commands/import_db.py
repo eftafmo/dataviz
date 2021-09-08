@@ -99,7 +99,7 @@ class Command(BaseCommand):
             for row in cursor.fetchall():
                 programme = Programme.objects.create(
                     funding_period=FUNDING_PERIOD,
-                    short_name=row['ProgrammeShortName'],
+                    code=row['ProgrammeShortName'],
                     name=row['Programme'],
                     summary=sanitize_html(row['ProgrammeSummary']),
                     status=row['ProgrammeStatus'] or '',
@@ -109,7 +109,7 @@ class Command(BaseCommand):
                     is_tap=row['IsTAProgramme'],
                     is_bfp=row['IsBFProgramme'],
                 )
-                programmes[programme.short_name] = programme
+                programmes[programme.code] = programme
 
                 self._add_m2m_entries(programme, row, 'ProgrammeAreaList', 'programme_areas',
                                       'ProgrammeArea', programme_areas)

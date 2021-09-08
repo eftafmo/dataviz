@@ -47,19 +47,19 @@ def overview(request):
         funding_period=period_id,
         is_tap=False,
         is_bfp=False,
-    ).order_by('short_name')
+    ).order_by('code')
     programmes = defaultdict(list)
     for programme in programme_query:
         if programme.is_eea:
             if not programme.states.exists():
-                programmes[(None, FM_EEA)].append(programme.short_name)
+                programmes[(None, FM_EEA)].append(programme.code)
             for state in programme.states.all():
-                programmes[(state.pk, FM_EEA)].append(programme.short_name)
+                programmes[(state.pk, FM_EEA)].append(programme.code)
         if programme.is_norway:
             if not programme.states.exists():
-                programmes[(None, FM_NORWAY)].append(programme.short_name)
+                programmes[(None, FM_NORWAY)].append(programme.code)
             for state in programme.states.all():
-                programmes[(state.pk, FM_NORWAY)].append(programme.short_name)
+                programmes[(state.pk, FM_NORWAY)].append(programme.code)
 
     dpp_programme_query = programme_query.filter(
         organisation_roles__role_code='DPP',
@@ -68,14 +68,14 @@ def overview(request):
     for programme in dpp_programme_query:
         if programme.is_eea:
             if not programme.states.exists():
-                dpp_programmes[(None, FM_EEA)].append(programme.short_name)
+                dpp_programmes[(None, FM_EEA)].append(programme.code)
             for state in programme.states.all():
-                dpp_programmes[(state.pk, FM_EEA)].append(programme.short_name)
+                dpp_programmes[(state.pk, FM_EEA)].append(programme.code)
         if programme.is_norway:
             if not programme.states.exists():
-                dpp_programmes[(None, FM_NORWAY)].append(programme.short_name)
+                dpp_programmes[(None, FM_NORWAY)].append(programme.code)
             for state in programme.states.all():
-                dpp_programmes[(state.pk, FM_NORWAY)].append(programme.short_name)
+                dpp_programmes[(state.pk, FM_NORWAY)].append(programme.code)
 
     project_query = Project.objects.filter(
         funding_period=period_id,
@@ -179,7 +179,7 @@ def grants(request):
                 "achievement": indicator.achievement_eea,
             }})
             programmes[(FM_EEA, indicator.state_id, indicator.programme_area_id)].update({
-                indicator.programme.short_name: {
+                indicator.programme.code: {
                     'name': indicator.programme.name,
                     'url': indicator.programme.url,
                 }
@@ -190,7 +190,7 @@ def grants(request):
                 "achievement": indicator.achievement_norway,
             }})
             programmes[(FM_NORWAY, indicator.state_id, indicator.programme_area_id)].update({
-                indicator.programme.short_name: {
+                indicator.programme.code: {
                     'name': indicator.programme.name,
                     'url': indicator.programme.url,
                 }
@@ -258,13 +258,13 @@ def projects(request):
                 projects[key].append(project.code)
 
                 programme = project.programme
-                if not programmes[key][programme.short_name]:
-                    programmes[key][programme.short_name] = {
+                if not programmes[key][programme.code]:
+                    programmes[key][programme.code] = {
                         'name': programme.name,
                         'url': programme.url,
                         'nuts': defaultdict(lambda: defaultdict(list)),
                     }
-                programme_nuts = programmes[key][programme.short_name]['nuts'][project.nuts_code]
+                programme_nuts = programmes[key][programme.code]['nuts'][project.nuts_code]
                 programme_nuts['total'].append(project.code)
                 if project.has_ended:
                     programme_nuts['ended'].append(project.code)

@@ -85,7 +85,7 @@ class Programme(models.Model):
     states = models.ManyToManyField(State)
     programme_areas = models.ManyToManyField(ProgrammeArea)
 
-    short_name = models.CharField(max_length=32, unique=True)
+    code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=256)  # not unique
 
     status = models.CharField(max_length=16)
