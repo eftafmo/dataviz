@@ -92,7 +92,7 @@ export default {
     // all states used by this. set it to discard unused data.
     allStates: {
       type: Array,
-      default: () => Object.keys(COUNTRIES).filter((x) => x != "Intl"),
+      default: () => Object.keys(COUNTRIES).filter((x) => x !== "Intl"),
     },
 
     // all nuts levels used by this. set it to discard unused data.
@@ -164,13 +164,6 @@ export default {
     can_render_regions() {
       return this.regions_loaded && this.is_mounted;
     },
-
-    donor_colour_no() {
-      return this.norway_colour !== undefined
-        ? this.norway_colour
-        : this.donor_colour;
-    },
-
     projection() {
       /*
        * "The European grid is a proposed, multipurpose Pan-European mapping standard.
@@ -519,6 +512,8 @@ export default {
           const gId = g.id || g.properties.id;
           // we use the index for gc
           const state = gId.substr(0, 2);
+          if (!this.allCountries[state]) return;
+
           if (regions.map((x) => x.substr(0, 2)).indexOf(state) === -1) {
             // clean up stuff that's never gonna be needed
             if (

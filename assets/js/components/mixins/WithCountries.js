@@ -96,11 +96,26 @@ export default {
 
   computed: {
     // TODO: make the constants arrays, and the objects pre-computed
+    allCountries() {
+      const result = {};
+      this.COUNTRY_ARRAY.forEach((country) => (result[country.id] = country));
+      return result;
+    },
     COUNTRY_ARRAY() {
-      return Object.values(this.COUNTRIES);
+      return Object.values(this.COUNTRIES).filter(
+        (country) =>
+          !country.periods ||
+          !this.period ||
+          country.periods.indexOf(this.period) !== -1
+      );
     },
     BENEFICIARY_ARRAY() {
-      return Object.values(this.BENEFICIARIES);
+      return Object.values(this.BENEFICIARIES).filter(
+        (country) =>
+          !country.periods ||
+          !this.period ||
+          country.periods.indexOf(this.period) !== -1
+      );
     },
   },
 
@@ -113,14 +128,15 @@ export default {
     },
     toggleBeneficiary(b) {
       // don't filter by zero-valued items
-      if (b.total == 0) return;
+      if (b.total === 0) return;
 
-      this.filters.beneficiary = this.filters.beneficiary == b.id ? null : b.id;
+      this.filters.beneficiary =
+        this.filters.beneficiary === b.id ? null : b.id;
     },
     toggleDonor(d) {
-      if (d.total == 0) return;
+      if (d.total === 0) return;
 
-      this.filters.donor = this.filters.donor == d.id ? null : d.id;
+      this.filters.donor = this.filters.donor === d.id ? null : d.id;
     },
     // TODO: Refactor to use camelCase here.
     get_flag,

@@ -56,9 +56,19 @@
       id: "EE",
       name: "Estonia",
     },
+    EL: {
+      id: "EL",
+      name: "Greece",
+      periods: [
+        "2014-2021"
+      ]
+    },
     GR: {
       id: "GR",
       name: "Greece",
+      periods: [
+        "2009-2014"
+      ]
     },
     HU: {
       id: "HU",
