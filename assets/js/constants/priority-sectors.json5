@@ -1,4 +1,6 @@
 [
+  // XXX Order in this Array, determines the sorting order in which
+  // XXX the sector data is presented.
   // 2009-2014
   {
     name: "Environmental protection and management",

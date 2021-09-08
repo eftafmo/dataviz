@@ -93,14 +93,16 @@ export default {
       const periodData = this.aggregated[this.period];
       if (!periodData) return [];
 
-      return Object.values(periodData).map((item) => {
-        const id = slugify(item.sector);
-        return {
-          id,
-          sector: this.SECTORS[id],
-          allocation: item.allocation,
-        };
-      });
+      return Object.values(periodData)
+        .map((item) => {
+          const id = slugify(item.sector);
+          return {
+            id,
+            sector: this.SECTORS[id],
+            allocation: item.allocation,
+          };
+        })
+        .sort((a, b) => a.sector.sortOrder - b.sector.sortOrder);
     },
     width() {
       return this.svgWidth - this.margin.left - this.margin.right;

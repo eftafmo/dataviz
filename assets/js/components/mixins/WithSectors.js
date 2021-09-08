@@ -4,10 +4,11 @@ import _SECTORS from "@js/constants/priority-sectors.json5";
 const sectorImages = import.meta.globEager("../../../sprites/sectors/*.png");
 
 const SECTORS = {};
-_SECTORS.forEach((sector) => {
+_SECTORS.forEach((sector, index) => {
   const sid = slugify(sector.name);
   SECTORS[sid] = {
     id: sid,
+    sortOrder: index,
     img: sectorImages[`../../../sprites/sectors/${sector.icon}`].default,
     ...sector,
   };
