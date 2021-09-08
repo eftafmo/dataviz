@@ -22,7 +22,7 @@ export default {
           <span class="donor-states">${d.donor_list}</span>
         </div>
         <ul>
-          <li>${this.number(d.project_count)} projects</li>
+          <li>${this.number(d.projects.size)} projects</li>
           <li>${this.currency(d.allocation)}</li>
           <li>${d.beneficiaries.size} ` +
         this.singularize(`Beneficiary States`, d.beneficiaries.size) +

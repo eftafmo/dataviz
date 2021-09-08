@@ -21,10 +21,14 @@ export default {
 
   methods: {
     display(item) {
-      const count =
-        item.depth == 2
-          ? item.data.project_count
-          : d3.sum(item.children, (x) => x.data.project_count);
+      let count;
+      if (item.depth === 2) {
+        count = item.data.projects.size;
+      } else {
+        count = new Set(
+          item.children.map((child) => Array.from(child.data.projects)).flat()
+        ).size;
+      }
 
       return (
         this.number(count) + "\u00a0" + this.singularize("projects", count)
@@ -37,7 +41,7 @@ export default {
         bss = d.data.beneficiaries,
         prgs = d.data.programmes;
 
-      if (d.depth == 1) {
+      if (d.depth === 1) {
         thing = "sector";
         bss = new Set();
         prgs = new Set();

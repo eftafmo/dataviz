@@ -225,11 +225,9 @@ export default {
         );
       }
     },
-
     getprojectcount(d) {
-      return d.project_count || 0;
+      return (d.projects && d.projects.size) || 0;
     },
-
     _domouse(over, ev, d) {
       const $super = AllocationMap.methods._domouse.bind(this);
       const self = $super(over, ev, d);
