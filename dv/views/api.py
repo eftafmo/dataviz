@@ -1,5 +1,7 @@
+import html
 from collections import defaultdict
 from decimal import Decimal
+from itertools import product
 
 from rest_framework.generics import ListAPIView
 from django.views.decorators.http import require_GET
@@ -10,8 +12,8 @@ from django.db.models.functions import Length
 
 from dv.lib.http import JsonResponse
 from dv.models import (
-    Allocation, BilateralInitiative, Indicator, NUTS, OrganisationRole,
-    Programme, Project, State,
+    Allocation, BilateralInitiative, Indicator, News, NUTS,
+    OrganisationRole, Programme, Project, State,
     DEFAULT_PERIOD, FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
 )
 from dv.serializers import ProjectSerializer
@@ -246,13 +248,7 @@ def projects(request):
     programmes = defaultdict(lambda: defaultdict(dict))
     projects = defaultdict(list)
     for project in project_query:
-        financial_mechanisms = []
-        if project.is_eea:
-            financial_mechanisms.append(FM_EEA)
-        if project.is_norway:
-            financial_mechanisms.append(FM_NORWAY)
-
-        for financial_mechanism in financial_mechanisms:
+        for financial_mechanism in project.financial_mechanisms:
             for programme_area in project.programme_areas.all():
                 key = (financial_mechanism, project.state_id, programme_area.id)
                 projects[key].append(project.code)
@@ -270,6 +266,31 @@ def projects(request):
                     programme_nuts['ended'].append(project.code)
                 if project.is_positive_fx:
                     programme_nuts['positive'].append(project.code)
+
+    news_query = News.objects.filter(
+            project__funding_period=period_id,
+        ).exclude(project_id__isnull=True
+        ).select_related(
+            'project',
+        ).prefetch_related(
+            'project__programme_areas',
+        ).order_by('-created')
+    news = defaultdict(list)
+    for item in news_query:
+        keys = product(
+            item.project.financial_mechanisms,
+            (item.project.state_id, ),
+            item.project.programme_areas.values_list('id', flat=True),
+        )
+        for key in keys:
+            news[key].append({
+                'title': html.unescape(item.title or ''),
+                'link': item.link,
+                'created': item.created,
+                'summary': item.summary,
+                'image': item.image,
+                'nuts': item.project.nuts_code,
+            })
 
     out = []
     for allocation in allocations:
@@ -289,7 +310,7 @@ def projects(request):
             'programmes': programmes[key],
             'projects': projects[key],
             'project_allocation': 0,  # TODO get project allocation split between the two FMs
-            'news': [],  # TODO review news import
+            'news': news[key],
         })
     return JsonResponse(out)
 

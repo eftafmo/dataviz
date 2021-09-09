@@ -1,6 +1,8 @@
 from ckeditor.fields import RichTextField
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
+
 
 FM_EEA = 'EEA'
 FM_NORWAY = 'NOR'
@@ -138,6 +140,15 @@ class Project(models.Model):
     initial_description = models.TextField()
     results_description = models.TextField()
 
+    @cached_property
+    def financial_mechanisms(self):
+        financial_mechanisms = []
+        if self.is_eea:
+            financial_mechanisms.append(FM_EEA)
+        if self.is_norway:
+            financial_mechanisms.append(FM_NORWAY)
+        return financial_mechanisms
+
 
 class ProjectTheme(models.Model):
     project = models.ForeignKey(Project, related_name='themes', on_delete=models.CASCADE)
@@ -219,7 +230,7 @@ class News(models.Model):
 
     programmes = models.ManyToManyField(Programme, related_name='news')
     project = models.ForeignKey(Project, null=True, default=None, related_name='news',
-                                on_delete=models.CASCADE, db_constraint=False)
+                                on_delete=models.CASCADE)
     summary = models.TextField(null=True)
     image = models.URLField(max_length=2000)
     is_partnership = models.BooleanField(default=False)
