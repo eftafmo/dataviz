@@ -34,7 +34,7 @@ Object.entries(_types).forEach(([type, source]) => {
 });
 
 export function get_flag(code) {
-  if (code.length > 2 && code != "Intl") {
+  if (code.length > 2 && code !== "Intl") {
     // because Intl is a country and has a flag
     code = code.substring(0, 2);
   }
@@ -45,7 +45,7 @@ export function get_flag(code) {
 }
 
 export function get_flag_name(code) {
-  if (code.length > 2 && code != "Intl") {
+  if (code.length > 2 && code !== "Intl") {
     // because Intl is a country and has a flag
     code = code.substring(0, 2);
   }
@@ -109,6 +109,13 @@ export default {
           country.periods.indexOf(this.period) !== -1
       );
     },
+    allBeneficiaries() {
+      const results = {};
+      Object.values(this.BENEFICIARIES).forEach((country) => {
+        results[country.name] = country;
+      });
+      return Object.values(results);
+    },
     BENEFICIARY_ARRAY() {
       return Object.values(this.BENEFICIARIES).filter(
         (country) =>
@@ -118,7 +125,6 @@ export default {
       );
     },
   },
-
   methods: {
     isBeneficiary(d) {
       return this.BENEFICIARIES[d.id] !== undefined;

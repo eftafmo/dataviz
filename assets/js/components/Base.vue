@@ -154,8 +154,21 @@ export default {
 
       const filterfuncs = [];
       for (const f of filters) {
-        const val = this.filters[f];
+        let val = this.filters[f];
         if (!val) continue;
+
+        if (f === "beneficiary" && (val === "GR" || val === "EL")) {
+          switch (this.period) {
+            case "2009-2014":
+              val = "GR";
+              break;
+            case "2014-2021":
+              val = "EL";
+              break;
+            default:
+              break;
+          }
+        }
 
         filterfuncs.push(
           // NOTE: use lower-case comparison, or things might get messy

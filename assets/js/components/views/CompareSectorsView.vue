@@ -5,7 +5,7 @@
       <dropdown-filter
         filter="beneficiary"
         title="all Beneficiary States"
-        :items="BENEFICIARY_ARRAY"
+        :items="allBeneficiaries"
         class="viz-select-heading"
       />
     </h1>
