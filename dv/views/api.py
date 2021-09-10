@@ -171,7 +171,8 @@ def grants(request):
         programme__is_tap=False,
     ).select_related(
         'programme',
-    )
+    ).order_by(F('order').asc(nulls_last=True))
+
     results = defaultdict(lambda: defaultdict(dict))
     programmes = defaultdict(dict)
     for indicator in indicators:

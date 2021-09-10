@@ -169,7 +169,7 @@ class Indicator(models.Model):
 
     achievement_eea = models.DecimalField(max_digits=9, decimal_places=2)
     achievement_norway = models.DecimalField(max_digits=9, decimal_places=2)
-    # order = models.SmallIntegerField()  # TODO order doesn't exist in Indicator table
+    order = models.SmallIntegerField(null=True)
 
     is_core = models.BooleanField()
     is_common = models.BooleanField()
