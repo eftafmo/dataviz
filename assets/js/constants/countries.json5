@@ -86,13 +86,6 @@
       id: "MT",
       name: "Malta",
     },
-    "XX": {
-      id: "XX",
-      name: "Non-country specific",
-      periods: [
-        "2014-2021",
-      ]
-    },
     PL: {
       id: "PL",
       name: "Poland",
@@ -120,6 +113,13 @@
         "2009-2014",
       ]
     },
+    "XX": {
+      id: "XX",
+      name: "Non-country specific",
+      periods: [
+        "2014-2021",
+      ]
+    }
   },
   partners: {
     BE: {
