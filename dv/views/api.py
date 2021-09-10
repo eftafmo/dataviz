@@ -125,24 +125,48 @@ def overview(request):
         if bi.programme.is_norway:
             bilateral_initiatives[(bi.state.pk, FM_NORWAY)].append(bi.code)
 
+    RELEVANT_INDICATORS = {
+        'Number of people engaged in civil society organisation activities': 'people_civil_society',
+        'Estimated annual CO2 emissions reductions': 'co2_emissions_reduction',
+        'Number of researchers supported': 'supported_researchers',
+        'Number of professional staff trained': 'staff_trained',
+        'Number of jobs created': 'jobs_created',
+    }
+    indicator_query = Indicator.objects.filter(
+        Q(achievement_eea__gt=0) | Q(achievement_norway__gt=0),
+        funding_period=period_id,
+        indicator__in=RELEVANT_INDICATORS.keys(),
+    )
+    indicators = defaultdict(lambda: defaultdict(int))
+    for indicator in indicator_query:
+        key = indicators[RELEVANT_INDICATORS[indicator.indicator]]
+        if indicator.achievement_eea:
+            key[(indicator.state_id, FM_EEA)] += indicator.achievement_eea
+        if indicator.achievement_norway:
+            key[(indicator.state_id, FM_NORWAY)] += indicator.achievement_norway
+
     out = []
     for allocation in allocations:
         state = allocation['state']
         financial_mechanism = allocation['financial_mechanism']
-        out.append({
+        key = (state, financial_mechanism)
+        element = {
             'period': period,
             'fm': FINANCIAL_MECHANISMS_DICT[financial_mechanism],
             'beneficiary': state,
             'allocation': allocation['allocation'],
-            'bilateral_fund': bilateral_fund.get((state, financial_mechanism), 0),
-            "programmes": programmes.get((state, financial_mechanism), []),
-            "DPP_programmes": dpp_programmes.get((state, financial_mechanism), []),
-            "dpp_projects": dpp_projects.get((state, financial_mechanism), []),
-            "continued_coop": continued_coop.get((state, financial_mechanism), []),
-            "projects": projects.get((state, financial_mechanism), []),
-            "bilateral_initiatives": bilateral_initiatives.get((state, financial_mechanism), []),
-            "positive_fx": positive_fx.get((state, financial_mechanism), []),
-        })
+            'bilateral_fund': bilateral_fund.get(key, 0),
+            'programmes': programmes.get(key, []),
+            'DPP_programmes': dpp_programmes.get(key, []),
+            'dpp_projects': dpp_projects.get(key, []),
+            'continued_coop': continued_coop.get(key, []),
+            'projects': projects.get(key, []),
+            'bilateral_initiatives': bilateral_initiatives.get(key, []),
+            'positive_fx': positive_fx.get(key, []),
+        }
+        for indicator in RELEVANT_INDICATORS.values():
+            element[indicator] = indicators[indicator].get(key, 0)
+        out.append(element)
     return JsonResponse(out)
 
 
