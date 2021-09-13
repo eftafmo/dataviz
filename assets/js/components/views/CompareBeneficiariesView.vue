@@ -2,8 +2,8 @@
   <div>
     <h1 class="page-title">Funding periods</h1>
     <div class="compare-beneficiaries-wrapper grant-dataviz">
-      <funding-by-period-chart :initial="dataset" />
-      <beneficiaries :initial="dataset" no-dropdown no-legend>
+      <funding-by-period-chart :initial="dataset" period="none" />
+      <beneficiaries :initial="dataset" no-dropdown no-legend period="none">
         <template #title>
           <h2>Beneficiary States</h2>
         </template>

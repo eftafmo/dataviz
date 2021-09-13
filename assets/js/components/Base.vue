@@ -163,9 +163,8 @@ export default {
               val = "GR";
               break;
             case "2014-2021":
-              val = "EL";
-              break;
             default:
+              val = "EL";
               break;
           }
         }
@@ -298,7 +297,7 @@ export default {
 
           base[dstcol] = value;
 
-          if (row[value] === undefined) row[value] = i == j - 1 ? base : {};
+          if (row[value] === undefined) row[value] = i === j - 1 ? base : {};
 
           row = row[value];
         }
@@ -308,11 +307,24 @@ export default {
             dstcol = _col.destination,
             type = _col.type,
             exclude = _col.exclude,
-            exclude_empty = _col.exclude_empty,
-            value = type == Number ? Number(item[srccol]) : item[srccol];
+            exclude_empty = _col.exclude_empty;
 
-          if (value == undefined) continue;
+          let value = type === Number ? Number(item[srccol]) : item[srccol];
+
+          if (value === undefined) continue;
           let current = row[dstcol];
+
+          if (srccol === "beneficiary" && (value === "GR" || value === "EL")) {
+            switch (this.period) {
+              case "2009-2014":
+                value = "GR";
+                break;
+              case "2014-2021":
+              default:
+                value = "EL";
+                break;
+            }
+          }
 
           if (type === Number) {
             // numbers are added together
@@ -325,7 +337,7 @@ export default {
               exclude_empty &&
               (item[exclude_empty] === undefined ||
                 (typeof item[exclude_empty] == "object" &&
-                  Object.keys(item[exclude_empty]).length == 0))
+                  Object.keys(item[exclude_empty]).length === 0))
             ) {
               continue;
             }
@@ -342,7 +354,7 @@ export default {
               exclude_empty &&
               (item[exclude_empty] === undefined ||
                 (typeof item[exclude_empty] == "object" &&
-                  Object.keys(item[exclude_empty]).length == 0))
+                  Object.keys(item[exclude_empty]).length === 0))
             ) {
               continue;
             }
@@ -358,7 +370,7 @@ export default {
                 current.add(k);
               }
             }
-          } else console.warn(srccol, ":: unkwown type", type);
+          } else console.warn(srccol, ":: unknown type", type);
         }
       }
 
@@ -368,7 +380,7 @@ export default {
         levels = by.length;
 
       function recurse(obj, level) {
-        if (level == levels) {
+        if (level === levels) {
           out.push(obj);
           return;
         }
