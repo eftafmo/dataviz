@@ -129,7 +129,7 @@ export default {
       // for another half a character
       const len = txt.toString().length;
       return (
-        ((len == 1
+        ((len === 1
           ? this.textDimensions.height
           : this.textDimensions.width * (len + 1 / 2)) /
           2) *
@@ -158,31 +158,27 @@ export default {
           d.id.length === 2 && this.COUNTRIES[d.id].type === "donor",
         state_type = country_is_donor ? "donor-tooltip" : "";
 
-      let details =
-        `
-        <li>${this.number(num_projects)} ` +
-        this.singularize(`projects`, num_projects) +
-        `</li>
+      let details = "";
+      if (!country_is_donor) {
+        details = `
+        <li>
+          ${this.number(num_projects)}
+          ${this.singularize("projects", num_projects)}
+        </li>
+        <li>${this.currency(allocation)}</li>
+        <li>
+          ${d.sectors.size}
+          ${this.singularize("sectors", d.sectors.size)}
+        </li>
+        <li>
+          ${d.areas.size}
+          ${this.singularize("programme areas", d.areas.size)}
+        </li>
+        <li>
+          ${d.programmes.size}
+          ${this.singularize("programmes", d.programmes.size)}
+        </li>
       `;
-
-      if (num_projects) {
-        details +=
-          `
-          <li>${this.currency(allocation)}</li>
-          <li>${d.sectors.size} ` +
-          this.singularize(`sectors`, d.sectors.size) +
-          `</li>
-          <li>${d.areas.size} ` +
-          this.singularize(`programme areas`, d.areas.size) +
-          `</li>
-          <li>${
-            d.programmes && d.programmes.size
-              ? d.programmes.size +
-                " " +
-                this.singularize(`programmes`, d.programmes.size)
-              : "TODO: programme count"
-          }</li>
-        `;
       }
 
       if (level === 0) {
@@ -204,7 +200,7 @@ export default {
         );
       } else {
         const action =
-            level == 3
+            level === 3
               ? "Click to filter news by region"
               : `Click to display NUTS${level} regions`,
           country_details = country_is_donor
