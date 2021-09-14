@@ -116,6 +116,19 @@ class Migration(migrations.Migration):
             name='state',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dv.state'),
         ),
+        migrations.CreateModel(
+            name='ProgrammeAllocation',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('funding_period', models.IntegerField(choices=[(1, '2004-2009'), (2, '2009-2014'), (3, '2014-2021')])),
+                ('financial_mechanism', models.CharField(choices=[('EEA', 'EEA Grants'), ('NOR', 'Norway Grants')], max_length=3)),
+                ('allocation', models.DecimalField(decimal_places=2, max_digits=15)),
+                ('priority_sector', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dv.prioritysector')),
+                ('programme', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dv.programme')),
+                ('programme_area', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dv.programmearea')),
+                ('state', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dv.state')),
+            ],
+        ),
         migrations.AddField(
             model_name='programme',
             name='programme_areas',

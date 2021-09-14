@@ -7,8 +7,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from dv.models import (
-    Allocation, BilateralInitiative, Indicator, OrganisationRole,
-    PrioritySector, Programme, ProgrammeArea, Project, State
+    Allocation, BilateralInitiative, Indicator, OrganisationRole, PrioritySector,
+    Programme, ProgrammeAllocation, ProgrammeArea, Project, State
 )
 
 
@@ -120,6 +120,24 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(
             f'Imported {Programme.objects.count()} Programme objects.'))
+
+        programme_allocation_query = 'SELECT * FROM fmo.TR_RDPProgrammeBudgetHeading'
+        with db_cursor() as cursor:
+            cursor.execute(programme_allocation_query)
+            for row in cursor.fetchall():
+                ProgrammeAllocation.objects.create(
+                    funding_period=FUNDING_PERIOD,
+                    financial_mechanism=GRANT_SHORT_NAME_TO_FM[row['GrantShortName']],
+                    state=states[row['Country']],
+                    programme_area=programme_areas.get(row['PACode']),
+                    priority_sector=priority_sectors.get(row['PSCode']),
+                    programme=programmes[row['ProgrammeShortName']],
+                    allocation=row['BudgetHeadingGrant']
+                )
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Imported {ProgrammeAllocation.objects.count()} ProgrammeAllocation objects.'))
+
 
         # Remove duplicate entries
         project_query = (
