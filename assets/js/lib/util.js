@@ -51,6 +51,7 @@ export const formatCurrencyFloat = d3.formatLocale(_locale).format("$,.1f");
 // currency, separators, int
 export const formatCurrency = d3.formatLocale(_locale).format("$,d");
 export const formatNumber = d3.formatLocale(_locale).format(",d");
+export const formatFloat = d3.formatLocale(_locale).format(",.1f");
 
 export function singularize(str, value) {
   // this works only for supposed plural strings ending in "s" or "ies"

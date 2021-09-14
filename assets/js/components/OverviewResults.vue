@@ -55,7 +55,13 @@ export default {
       return this.aggregate(
         this.filtered,
         [],
-        ["allocation", "project_count", { source: "programmes", type: Array }],
+        [
+          "allocation",
+          "people_civil_society",
+          "jobs_created",
+          "supported_researchers",
+          "co2_emissions_reduction",
+        ],
         false
       );
     },
@@ -64,26 +70,26 @@ export default {
         {
           id: "civil-soa",
           image: "sprites/placeholder.png",
-          amount: "N/A",
+          amount: this.shortNumber(this.aggregated.people_civil_society),
           description:
             "people involved in civil society organisation activities",
         },
         {
           id: "co2-reduction",
           image: "sprites/placeholder.png",
-          amount: "N/A",
+          amount: this.shortNumber(this.aggregated.co2_emissions_reduction),
           description: "tons of est. annual CO2 emissions reduction",
         },
         {
           id: "researchers",
           image: "sprites/placeholder.png",
-          amount: "N/A",
+          amount: this.shortNumber(this.aggregated.supported_researchers),
           description: "supported researchers",
         },
         {
           id: "jobs",
           image: "sprites/placeholder.png",
-          amount: "N/A",
+          amount: this.shortNumber(this.aggregated.jobs_created),
           description: "jobs created",
         },
       ];
@@ -132,6 +138,7 @@ export default {
       font-size: 3.6rem;
       margin-left: 3rem;
       font-weight: bold;
+      min-width: 10rem;
     }
 
     .description {
