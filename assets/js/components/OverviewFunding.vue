@@ -134,12 +134,12 @@ export default {
           items: [
             {
               id: "prg-part",
-              name: "Donor Programme Partners",
+              name: "Programmes with a Donor partner",
               amount: this.number(this.aggregated.DPP_programmes.size),
             },
             {
               id: "prj-part",
-              name: "Donor project partners",
+              name: "Projects with a Donor partner",
               amount: this.number(this.aggregated.dpp_projects.size),
             },
             {
@@ -149,7 +149,7 @@ export default {
             },
             {
               id: "part-cont",
-              name: "Partnerships likely to continue cooperation",
+              name: "Partnerships likely to continue",
               amount: this.number(this.aggregated.continued_coop.size),
             },
           ],
@@ -176,7 +176,7 @@ export default {
             },
             {
               id: "proj-pos",
-              name: "Projects with positive effects, likely to continue",
+              name: "Projects with lasting effect",
               amount: this.number(this.aggregated.positive_fx.size),
             },
           ],
