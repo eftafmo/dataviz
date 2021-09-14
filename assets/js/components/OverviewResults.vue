@@ -1,5 +1,8 @@
 <template>
-  <div v-if="hasData && aggregated.allocation" class="overview-results">
+  <div
+    v-if="hasData && aggregated.allocation && gridItems.length > 0"
+    class="overview-results"
+  >
     <embeddor :period="period" tag="overview_results" />
     <div class="overview-heading">
       <span class="muted">The</span>
@@ -26,7 +29,7 @@
         :class="{ hidden: !!item.hidden }"
       >
         <img :src="getAssetUrl(item.image)" alt="" />
-        <div class="amount">{{ item.amount }}</div>
+        <div class="amount">{{ shortNumber(item.amount) }}</div>
         <div class="description">{{ item.description }}</div>
       </div>
     </div>
@@ -60,6 +63,7 @@ export default {
           "people_civil_society",
           "jobs_created",
           "supported_researchers",
+          "staff_trained",
           "co2_emissions_reduction",
         ],
         false
@@ -70,29 +74,36 @@ export default {
         {
           id: "civil-soa",
           image: "sprites/placeholder.png",
-          amount: this.shortNumber(this.aggregated.people_civil_society),
+          amount: this.aggregated.people_civil_society,
           description:
             "people involved in civil society organisation activities",
         },
         {
           id: "co2-reduction",
           image: "sprites/placeholder.png",
-          amount: this.shortNumber(this.aggregated.co2_emissions_reduction),
+          amount: this.aggregated.co2_emissions_reduction,
           description: "tons of est. annual CO2 emissions reduction",
         },
-        {
-          id: "researchers",
-          image: "sprites/placeholder.png",
-          amount: this.shortNumber(this.aggregated.supported_researchers),
-          description: "supported researchers",
-        },
+        this.aggregated.supported_researchers > 0
+          ? {
+              id: "researchers",
+              image: "sprites/placeholder.png",
+              amount: this.aggregated.supported_researchers,
+              description: "supported researchers",
+            }
+          : {
+              id: "staff-trained",
+              image: "sprites/placeholder.png",
+              amount: this.aggregated.staff_trained,
+              description: "professional staff trained",
+            },
         {
           id: "jobs",
           image: "sprites/placeholder.png",
-          amount: this.shortNumber(this.aggregated.jobs_created),
+          amount: this.aggregated.jobs_created,
           description: "jobs created",
         },
-      ];
+      ].filter((item) => item.amount > 0);
     },
   },
 };
