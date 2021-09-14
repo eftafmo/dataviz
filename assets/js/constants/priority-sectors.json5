@@ -73,17 +73,17 @@
     colour: "#C30064",
     icon: "culture-civil-society-good-governance-fundamental-rights-and-freedoms.png",
   },
-  // Other
   {
     name: "Regional cooperation",
-    colour: "rgb(179, 179, 179)",
+    colour: "rgb(245, 130, 70)",
     icon: "other.png",
   },
   {
     name: "Youth employment",
-    colour: "rgb(179, 179, 179)",
+    colour: "rgb(245, 130, 70)",
     icon: "other.png",
   },
+  // Other
   {
     name: "Technical assistance",
     colour: "rgb(179, 179, 179)",
