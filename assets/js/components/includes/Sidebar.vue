@@ -269,7 +269,8 @@ export default {
 
     @media (min-width: 769px) {
       position: sticky;
-      top: 26px;
+      margin-top: 2rem;
+      top: 40px;
       width: 320px;
 
       .tabs-component-tab .counter {

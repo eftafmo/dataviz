@@ -14,8 +14,7 @@
               <span class="country">
               {% for state in programme.state_name|sort %}
                 <img src="/assets/sprites/flags/flag-{{ state|lower|cut:" " }}.png"
-                     alt="{{ state }} flag"
-                     height="20px">
+                     alt="{{ state }} flag">
                 <span>{{ state }}</span>{% if not forloop.last %}, {% endif %}
               {% endfor %}
               </span>
