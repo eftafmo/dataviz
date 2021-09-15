@@ -41,3 +41,5 @@ export { default as CompareBeneficiariesView } from "./views/CompareBeneficiarie
 export { default as FundingByPeriodChart } from "./FundingByPeriodChart";
 export { default as CompareSectorsView } from "./views/CompareSectorsView";
 export { default as FundingBySectorChart } from "./FundingBySectorChart";
+
+export { default as Sidebar } from "./../components/includes/Sidebar";

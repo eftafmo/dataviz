@@ -138,7 +138,7 @@
 {% endblock %}
 
 {% block aside %}
-  <sidebar id="sidebar-filters" class="search sidebar-filters">
+  <sidebar_filters id="sidebar-filters" class="search sidebar-filters">
     <div class="sidebar-header">
       <h3 class="sidebar-title">Search filters</h3>
       <button id="main-reset" class="no-btn small muted" type="reset"
@@ -167,7 +167,7 @@
         {% endif %}
       </form>
     </div>
-  </sidebar>
+  </sidebar_filters>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
@@ -296,8 +296,10 @@
 
 {% block finally %}
   <script>
-    new search.SearchRoot({
-      el: '#sidebar-filters',
+    document.addEventListener("DOMContentLoaded", () => {
+      _createApp(
+        Dataviz.SearchRoot,
+      ).mount("#content");
     });
   </script>
 {% endblock %}

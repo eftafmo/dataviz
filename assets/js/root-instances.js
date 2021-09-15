@@ -6,6 +6,7 @@
 
 import { default as Root } from "./components/Root";
 import * as components from "./components";
+import Sidebar from "./components/includes/Sidebar";
 
 const _Base = {
   extends: Root,
@@ -99,5 +100,12 @@ export const CompareBeneficiaries = {
   components: {
     compare_beneficiaries_view: components.CompareBeneficiariesView,
     funding_by_period_chart: components.FundingByPeriodChart,
+  },
+};
+
+export const SearchRoot = {
+  name: "SearchRoot",
+  components: {
+    sidebar_filters: Sidebar,
   },
 };
