@@ -158,7 +158,9 @@ class FacetedSearchView(BaseFacetedSearchView):
     def reorder_facets(self, facets):
         for facet, order in ModelFacetRules.REORDER_FACETS.items():
             if facet in facets:
-                facets[facet] = sorted(facets[facet], key=lambda x: order.get(x[0], 99))
+                facets[facet] = sorted(
+                    facets[facet], key=lambda x: order.get(x[0]) or 99
+                )
         # Special case for Country, refs #413
         if "country" in facets:
             facets["country"] = sorted(

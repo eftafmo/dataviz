@@ -29,6 +29,7 @@
       {% for fm in programme.financial_mechanism_ss %}
         <span>{{ fm }}</span>{% if not forloop.last %} and {% endif %}
       {% endfor %}
+      ({{ programme.period }})
     </div>
     {% with programme.priority_sector_ss|length as num_sectors %}
       {% if num_sectors == 1 %}

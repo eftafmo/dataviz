@@ -60,7 +60,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
         try:
             q = self.cleaned_data.pop('q')
         except KeyError:
-            pass
+            q = None
         sqs = super().search()
         if q:
             params = {
