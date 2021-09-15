@@ -70,7 +70,7 @@ class Allocation(models.Model):
     financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
 
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
-    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE, null=True)
+    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE, null=True, related_name="allocations")
 
     gross_allocation = models.DecimalField(max_digits=15, decimal_places=2)
     net_allocation = models.DecimalField(max_digits=15, decimal_places=2)
@@ -157,7 +157,7 @@ class ProjectTheme(models.Model):
 
 class Indicator(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
-    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name="indicators")
     programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
 
