@@ -4,6 +4,11 @@
 {% load tags %}
 {% load humanize %}
 
+{% block head %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+{% endblock %}
+
 {% block top %}
   <div class="search-top">
     <div class="container">
@@ -168,10 +173,16 @@
       </form>
     </div>
   </sidebar_filters>
+{% endblock %}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-  <script type="text/javascript">
+{% block finally %}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      _createApp(
+        Dataviz.SearchRoot,
+      ).mount("#content");
+    });
+
     $(document).ready(function () {
       function select2AjaxFactory(kind, facet) {
         return {
@@ -290,16 +301,6 @@
         $("#main-search-form").submit();
       })
 
-    });
-  </script>
-{% endblock %}
-
-{% block finally %}
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      _createApp(
-        Dataviz.SearchRoot,
-      ).mount("#content");
     });
   </script>
 {% endblock %}
