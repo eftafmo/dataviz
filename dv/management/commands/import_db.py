@@ -131,7 +131,7 @@ class Command(BaseCommand):
                     state=states[row['Country']],
                     programme_area=programme_areas.get(row['PACode']),
                     priority_sector=priority_sectors.get(row['PSCode']),
-                    programme=programmes[row['ProgrammeShortName']],
+                    programme=programmes.get(row['ProgrammeShortName']),
                     allocation=row['BudgetHeadingGrant']
                 )
 
@@ -209,8 +209,9 @@ class Command(BaseCommand):
             for row in cursor.fetchall():
                 OrganisationRole.objects.create(
                     funding_period=FUNDING_PERIOD,
-                    organisation_country=row['CountryOrganisation'],
+                    organisation_id=row['IdOrganisation'],
                     organisation_name=row['Organisation'],
+                    organisation_country=row['CountryOrganisation'],
                     nuts_id=row['NUTSCode'] or None,
                     role_code=row['OrganisationRoleCode'],
                     role_name=row['OrganisationRole'],

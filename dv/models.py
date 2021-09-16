@@ -122,7 +122,7 @@ class ProgrammeAllocation(models.Model):
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE, null=True)
     priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE, null=True)
-    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, null=True)
 
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
@@ -204,6 +204,7 @@ class OrganisationRole(models.Model):
     role_code = models.CharField(max_length=8)
     role_name = models.CharField(max_length=64)
 
+    organisation_id = models.IntegerField()
     organisation_country = models.CharField(max_length=64)
     organisation_name = models.CharField(max_length=256)
 
