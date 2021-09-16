@@ -285,7 +285,7 @@ def projects(request):
                         'url': programme.url,
                         'nuts': defaultdict(lambda: defaultdict(list)),
                     }
-                programme_nuts = programmes[key][programme.code]['nuts'][project.nuts_code]
+                programme_nuts = programmes[key][programme.code]['nuts'][project.nuts_id]
                 programme_nuts['total'].append(project.code)
                 if project.has_ended:
                     programme_nuts['ended'].append(project.code)
@@ -314,7 +314,7 @@ def projects(request):
                 'created': item.created,
                 'summary': item.summary,
                 'image': item.image,
-                'nuts': item.project.nuts_code,
+                'nuts': item.project.nuts_id,
             })
 
     out = []

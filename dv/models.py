@@ -21,7 +21,7 @@ DEFAULT_PERIOD = '2014-2021'
 
 
 class NUTS(models.Model):
-    code = models.CharField(max_length=2, primary_key=True)
+    code = models.CharField(max_length=5, primary_key=True)
     label = models.CharField(max_length=128)
 
     class Meta:
@@ -127,7 +127,7 @@ class Project(models.Model):
     programme_areas = models.ManyToManyField(ProgrammeArea)
     priority_sectors = models.ManyToManyField(PrioritySector)
 
-    nuts_code = models.CharField(max_length=5)  # TODO FK to NUTS table?
+    nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
     url = models.CharField(max_length=256, null=True)
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
     is_eea = models.BooleanField()
@@ -195,7 +195,7 @@ class OrganisationRole(models.Model):
     organisation_country = models.CharField(max_length=64)
     organisation_name = models.CharField(max_length=256)
 
-    nuts_code = models.CharField(max_length=5)  # TODO FK to NUTS table?
+    nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
 
     # programme and project are denormalised to include BS
     programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles',
