@@ -50,6 +50,7 @@ def overview(request):
         is_tap=False,
         is_bfp=False,
     ).order_by('code')
+
     programmes = defaultdict(list)
     for programme in programme_query:
         if programme.is_eea:
@@ -81,6 +82,9 @@ def overview(request):
 
     project_query = Project.objects.filter(
         funding_period=period_id,
+    ).exclude(
+        # TODO check if values for 2009-2014 are the same, update tuple below otherwise
+        status__in=('Planned', 'Terminated'),
     ).values(
         'code',
         'is_eea',

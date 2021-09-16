@@ -79,6 +79,10 @@ class Command(BaseCommand):
         with db_cursor() as cursor:
             cursor.execute(allocation_query)
             for row in cursor.fetchall():
+                # Exclude allocations for Hungary in PAs different from HHHH
+                # Will eventually be fixed in the data, this is temporary
+                if row['Country'] == 'Hungary' and row['PACode'] != 'HHHH':
+                    continue
                 Allocation.objects.create(
                     funding_period=FUNDING_PERIOD,
                     financial_mechanism=GRANT_SHORT_NAME_TO_FM[row['GrantShortName']],
@@ -92,7 +96,8 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f'Imported {Allocation.objects.count()} Allocation objects.'))
 
-        programme_query = 'SELECT * FROM fmo.TR_RDPProgramme'
+        # Exclude programmes from Hungary
+        programme_query = "SELECT * FROM fmo.TR_RDPProgramme WHERE Country != 'Hungary'"
         with db_cursor() as cursor:
             cursor.execute(programme_query)
             programmes = {}
