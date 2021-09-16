@@ -20,7 +20,7 @@ STATES = dict(countries)
 
 class ProgrammeIndex(SearchIndex, Indexable):
     # common facets
-    period = fields.FacetCharField()
+    period = fields.FacetMultiValueField()
     state_name = fields.FacetMultiValueField()
     programme_area_ss = fields.FacetMultiValueField()
     priority_sector_ss = fields.FacetMultiValueField()
@@ -68,7 +68,7 @@ class ProgrammeIndex(SearchIndex, Indexable):
         return "Programme"
 
     def prepare_period(self, obj):
-        return obj.get_funding_period_display()
+        return [obj.get_funding_period_display()]
 
     def prepare_state_name(self, obj):
         # Get this from ProgrammeOutcome, because of IN22
@@ -119,7 +119,7 @@ class ProgrammeIndex(SearchIndex, Indexable):
 
 class ProjectIndex(SearchIndex, Indexable):
     # common facets
-    period = fields.FacetCharField()
+    period = fields.FacetMultiValueField()
     state_name = fields.FacetMultiValueField(model_attr="state__name")
     financial_mechanism_ss = fields.FacetMultiValueField()
     programme_area_ss = fields.FacetMultiValueField()
@@ -173,11 +173,17 @@ class ProjectIndex(SearchIndex, Indexable):
     def themes_query(self, obj):
         return obj.themes.all()
 
+    def indicator_query(self, obj):
+        return obj.programme.indicators.all()
+
     def prepare_kind(self, obj):
         return "Project"
 
+    def prepare_geotarget(self, obj):
+        return obj.geotarget
+
     def prepare_period(self, obj):
-        return obj.get_funding_period_display()
+        return [obj.get_funding_period_display()]
 
     def prepare_financial_mechanism_ss(self, obj):
         return [FINANCIAL_MECHANISMS_DICT[fmId] for fmId in obj.financial_mechanisms]
@@ -197,17 +203,9 @@ class ProjectIndex(SearchIndex, Indexable):
         return list(
             set(
                 " ".join(indicator.header.split())
-                for indicator in obj.programme.indicators.all()
+                for indicator in self.indicator_query(obj)
             )
         )
-
-    def prepare_geotarget(self, obj):
-        if not obj.nuts:
-            return []
-        elif len(obj.nuts.code) > 2:
-            return ["{}: {}, {}".format(obj.nuts.code, obj.nuts.label, obj.state.name)]
-        else:
-            return ["{}: {}".format(obj.nuts.code, obj.nuts.label)]
 
     def prepare_theme_ss(self, obj):
         return list(set(theme.name for theme in self.themes_query(obj)))
@@ -222,6 +220,191 @@ class ProjectIndex(SearchIndex, Indexable):
         self.prepared_data["geotarget_auto"] = (
             " ".join(self.prepared_data["geotarget"])
             if self.prepared_data["geotarget"]
+            else None
+        )
+        return self.prepared_data
+
+
+class NewsIndex(SearchIndex, Indexable):
+    # common facets;
+    period = fields.FacetMultiValueField()
+    state_name = fields.FacetMultiValueField()
+    financial_mechanism_ss = fields.FacetMultiValueField()
+    programme_area_ss = fields.FacetMultiValueField()
+    priority_sector_ss = fields.FacetMultiValueField()
+    programme_name = fields.FacetMultiValueField()
+    programme_status = fields.FacetMultiValueField()
+    outcome_ss = fields.FacetMultiValueField()
+
+    kind = fields.FacetCharField()
+
+    # specific facets
+    project_name = fields.FacetMultiValueField()
+    project_name_auto = fields.EdgeNgramField()
+    project_status = fields.FacetMultiValueField()
+    geotarget = fields.FacetCharField()
+    geotarget_auto = fields.EdgeNgramField()
+    theme_ss = fields.FacetMultiValueField()
+
+    # specific fields
+    text = fields.CharField(document=True, use_template=True)
+    summary = fields.CharField(model_attr="summary", indexed=False, null=True)
+    name = fields.CharField(model_attr="title", indexed=False)
+    url = fields.CharField(model_attr="link", indexed=False)
+    image = fields.CharField(model_attr="image", indexed=False)
+    created_dt = fields.DateTimeField(model_attr="created", indexed=False, null=True)
+
+    def get_model(self):
+        return News
+
+    def prepare_kind(self, obj):
+        return "News"
+
+    def index_queryset(self, using=None):
+        return (
+            self.get_model()
+            .objects.select_related(
+                "project",
+                "project__state",
+            )
+            .prefetch_related(
+                "programmes",
+                "programmes__states",
+                "programmes__indicators",
+                "programmes__programme_areas",
+                "programmes__programme_areas__priority_sector",
+                "project__programme_areas",
+                "project__priority_sectors",
+                "project__themes",
+            )
+        )
+
+    def prepare_period(self, obj):
+        if obj.project:
+            return [obj.project.get_funding_period_display()]
+        return [
+            programme.get_funding_period_display() for programme in obj.programmes.all()
+        ]
+
+    def prepare_state_name(self, obj):
+        if obj.project:
+            return [obj.project.state.name]
+        else:
+            # Get this from ProgrammeOutcome, because of IN22
+            return list(
+                set(
+                    state.name
+                    for programme in obj.programmes.all()
+                    for state in programme.states.all()
+                )
+            )
+
+    def prepare_financial_mechanism_ss(self, obj):
+        if obj.project:
+            return [
+                FINANCIAL_MECHANISMS_DICT[fmId]
+                for fmId in obj.project.financial_mechanisms
+            ]
+
+        fms = set()
+        for programme in obj.programmes.all():
+            if programme.is_eea:
+                fms.add(FINANCIAL_MECHANISMS_DICT["EEA"])
+            if programme.is_norway:
+                fms.add(FINANCIAL_MECHANISMS_DICT["NOR"])
+        return list(fms)
+
+    def prepare_programme_area_ss(self, obj):
+        if obj.project:
+            return [
+                programme_area.name
+                for programme_area in obj.project.programme_areas.all()
+            ]
+
+        areas = set()
+        for programme in obj.programmes.all():
+            areas.union(area.name for area in programme.programme_areas.all())
+        return list(areas)
+
+    def prepare_priority_sector_ss(self, obj):
+        if obj.project:
+            return [sector.name for sector in obj.project.priority_sectors.all()]
+
+        sectors = set()
+        for programme in obj.programmes.all():
+            sectors.union(
+                area.priority_sector.name for area in programme.programme_areas.all()
+            )
+        return list(sectors)
+
+    def prepare_programme_name(self, obj):
+        if obj.project:
+            return [
+                "{}: {}".format(obj.project.programme.code, obj.project.programme.name)
+            ]
+        return list(
+            set(
+                [
+                    "{}: {}".format(programme.code, programme.name)
+                    for programme in obj.programmes.all()
+                ]
+            )
+        )
+
+    def prepare_project_name(self, obj):
+        if obj.project:
+            return [
+                "{}: {}".format(obj.project.code, " ".join(obj.project.name.split()))
+            ]
+        return None
+
+    def prepare_programme_status(self, obj):
+        if obj.project:
+            return [obj.project.programme.status]
+        return list(set([programme.status for programme in obj.programmes.all()]))
+
+    def prepare_outcome_ss(self, obj):
+        if obj.project:
+            return list(
+                set(
+                    " ".join(indicator.header.split())
+                    for indicator in obj.project.programme.indicators.all()
+                )
+            )
+        return list(
+            set(
+                " ".join(indicator.header.split())
+                for programme in obj.programmes.all()
+                for indicator in programme.indicators.all()
+            )
+        )
+
+    def prepare_project_status(self, obj):
+        if obj.project:
+            return [obj.project.status]
+        return None
+
+    def prepare_geotarget(self, obj):
+        if not obj.project:
+            return []
+        else:
+            return obj.project.geotarget
+
+    def prepare_theme_ss(self, obj):
+        if obj.project:
+            return list(set([theme.name for theme in obj.project.themes.all()]))
+        return None
+
+    def prepare(self, obj):
+        self.prepared_data = super().prepare(obj)
+        self.prepared_data["geotarget_auto"] = (
+            " ".join(self.prepared_data["geotarget"])
+            if self.prepared_data["geotarget"]
+            else None
+        )
+        self.prepared_data["project_name_auto"] = (
+            " ".join(self.prepared_data["project_name"])
+            if self.prepared_data["project_name"]
             else None
         )
         return self.prepared_data
@@ -516,182 +699,3 @@ class ProjectIndex(SearchIndex, Indexable):
 #         return self.prepared_data
 #
 #
-# class NewsIndex(SearchIndex, Indexable):
-#     # common facets;
-#     state_name = fields.FacetMultiValueField()
-#     financial_mechanism_ss = fields.FacetMultiValueField()
-#     programme_area_ss = fields.FacetMultiValueField()
-#     priority_sector_ss = fields.FacetMultiValueField()
-#     programme_name = fields.FacetMultiValueField()
-#     programme_status = fields.FacetMultiValueField()
-#     outcome_ss = fields.FacetMultiValueField()
-#
-#     kind = fields.FacetCharField()
-#
-#     # specific facets
-#     project_name = fields.FacetMultiValueField()
-#     project_name_auto = fields.EdgeNgramField()
-#     project_status = fields.FacetMultiValueField()
-#     geotarget = fields.FacetCharField()
-#     geotarget_auto = fields.EdgeNgramField()
-#     theme_ss = fields.FacetMultiValueField()
-#
-#     # specific fields
-#     text = fields.CharField(document=True, use_template=True)
-#     summary = fields.CharField(model_attr='summary', indexed=False)
-#     name = fields.CharField(model_attr='title', indexed=False)
-#     url = fields.CharField(model_attr='link', indexed=False)
-#     image = fields.CharField(model_attr='image', indexed=False)
-#     created_dt = fields.DateTimeField(model_attr='created', indexed=False, null=True)
-#
-#     def get_model(self):
-#         return News
-#
-#     def prepare_kind(self, obj):
-#         return 'News'
-#
-#     def index_queryset(self, using=None):
-#         return (
-#             self.get_model().objects
-#             .select_related(
-#                 'project',
-#                 'project__financial_mechanism',
-#                 'project__outcome',
-#                 'project__programme',
-#                 'project__programme_area',
-#                 'project__programme_area__priority_sector',
-#                 'project__state',
-#             )
-#             .prefetch_related('programmes', 'programmes__outcomes', 'project__themes')
-#         )
-#
-#     def prepare_state_name(self, obj):
-#         if self.project:
-#             return [self.project.state.name]
-#         elif self.programmes:
-#             # Get this from ProgrammeOutcome, because of IN22
-#             return list(set([
-#                 programme['country']
-#                 for programme in self.programmes
-#             ]))
-#         return None
-#
-#     def prepare_financial_mechanism_ss(self, obj):
-#         if self.project:
-#             return [self.project.financial_mechanism.grant_name]
-#         if self.programmes:
-#             return list(set([
-#                 programme['mechanism']
-#                 for programme in self.programmes
-#             ]))
-#         return None
-#
-#     def prepare_programme_area_ss(self, obj):
-#         if self.project:
-#             return [self.project.programme_area.name]
-#         if self.programmes:
-#             return list(set([
-#                 programme['area']
-#                 for programme in self.programmes
-#             ]))
-#         return None
-#
-#     def prepare_priority_sector_ss(self, obj):
-#         if self.project:
-#             return [self.project.programme_area.priority_sector.name]
-#         if self.programmes:
-#             return list(set([
-#                 programme['sector']
-#                 for programme in self.programmes
-#             ]))
-#         return None
-#
-#     def prepare_programme_name(self, obj):
-#         if self.project:
-#             return ['{}: {}'.format(self.project.programme.code,
-#                                     self.project.programme.name)]
-#         if self.programmes:
-#             return list(set([
-#                 '{}: {}'.format(programme['code'], programme['name'])
-#                 for programme in self.programmes
-#             ]))
-#         return None
-#
-#     def prepare_project_name(self, obj):
-#         if self.project:
-#             return ['{}: {}'.format(
-#                 self.project.code,
-#                 ' '.join(self.project.name.split())
-#             )]
-#         return None
-#
-#     def prepare_programme_status(self, obj):
-#         if self.project:
-#             return [self.project.programme.status]
-#         if self.programmes:
-#             return list(set([programme['status'] for programme in self.programmes]))
-#         return None
-#
-#     def prepare_outcome_ss(self, obj):
-#         if self.project:
-#             return [self.project.outcome.name.strip()]
-#         if self.programmes:
-#             return list(set([
-#                 programme['outcome_name']
-#                 for programme in self.programmes
-#                 if not programme['outcome_fbl']
-#             ]))
-#         return None
-#
-#     def prepare_project_status(self, obj):
-#         if self.project:
-#             return [self.project.status]
-#         return None
-#
-#     def prepare_geotarget(self, obj):
-#         if self.project:
-#             if len(self.project.nuts) > 2:
-#                 return ['{}: {}, {}'.format(self.project.nuts, self.project.geotarget,
-#                                             STATES[self.project.nuts[:2]])]
-#             else:
-#                 return ['{}: {}'.format(self.project.nuts, self.project.geotarget)]
-#         return None
-#
-#     def prepare_theme_ss(self, obj):
-#         if self.project:
-#             return list(set([theme.name for theme in self.project.themes.all()]))
-#         return None
-#
-#     def prepare(self, obj):
-#         self.project = None
-#         self.programmes = list()
-#         try:
-#             if obj.project:
-#                 self.project = obj.project
-#         except Project.DoesNotExist:
-#             pass
-#         if obj.programmes:
-#             self.programmes = (
-#                 obj.programmes
-#                 .annotate(
-#                     area=F('programme_areas__name'),
-#                     mechanism=F('programme_areas__financial_mechanism__grant_name'),
-#                     outcome_name=F('outcomes__outcome__name'),
-#                     outcome_fbl=F('outcomes__outcome__fixed_budget_line'),
-#                     sector=F('programme_areas__priority_sector__name'),
-#                     country=F('outcomes__state__name')
-#                 )
-#                 .values('area', 'code', 'mechanism', 'name',
-#                         'outcome_name', 'outcome_fbl',
-#                         'sector', 'country', 'status')
-#             )
-#         self.prepared_data = super().prepare(obj)
-#         self.prepared_data['geotarget_auto'] = (
-#             ' '.join(self.prepared_data['geotarget'])
-#             if self.prepared_data['geotarget'] else None
-#         )
-#         self.prepared_data['project_name_auto'] = (
-#             ' '.join(self.prepared_data['project_name'])
-#             if self.prepared_data['project_name'] else None
-#         )
-#         return self.prepared_data

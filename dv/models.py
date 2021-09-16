@@ -161,6 +161,15 @@ class Project(models.Model):
             financial_mechanisms.append(FM_NORWAY)
         return financial_mechanisms
 
+    @cached_property
+    def geotarget(self):
+        if not self.nuts:
+            return []
+        elif len(self.nuts.code) > 2:
+            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, self.state.name)]
+        else:
+            return ["{}: {}".format(self.nuts.code, self.nuts.label)]
+
 
 class ProjectTheme(models.Model):
     project = models.ForeignKey(Project, related_name='themes', on_delete=models.CASCADE)
