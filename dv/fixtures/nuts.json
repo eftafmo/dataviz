@@ -120,6 +120,27 @@
 },
 {
   "model": "dv.nuts",
+  "pk": "ALZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ALZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ALZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
+  }
+},
+{
+  "model": "dv.nuts",
   "pk": "AT",
   "fields": {
     "label": "ÖSTERREICH"
@@ -458,21 +479,21 @@
   "model": "dv.nuts",
   "pk": "ATZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ATZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ATZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -892,21 +913,21 @@
   "model": "dv.nuts",
   "pk": "BEZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "BEZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "BEZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -1172,21 +1193,21 @@
   "model": "dv.nuts",
   "pk": "BGZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "BGZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "BGZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -1436,6 +1457,27 @@
 },
 {
   "model": "dv.nuts",
+  "pk": "CHZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "CHZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "CHZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
+  }
+},
+{
+  "model": "dv.nuts",
   "pk": "CY",
   "fields": {
     "label": "ΚΥΠΡΟΣ / KYPROS"
@@ -1466,21 +1508,21 @@
   "model": "dv.nuts",
   "pk": "CYZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "CYZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "CYZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -1655,21 +1697,21 @@
   "model": "dv.nuts",
   "pk": "CZZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "CZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "CZZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -5372,21 +5414,21 @@
   "model": "dv.nuts",
   "pk": "DEZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "DEZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "DEZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -5519,21 +5561,21 @@
   "model": "dv.nuts",
   "pk": "DKZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "DKZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "DKZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -5596,21 +5638,21 @@
   "model": "dv.nuts",
   "pk": "EEZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "EEZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "EEZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -6101,6 +6143,27 @@
   "pk": "EL653",
   "fields": {
     "label": "Λακωνία, Μεσσηνία / Lakonia, Messinia"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ELZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ELZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ELZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -6709,21 +6772,21 @@
   "model": "dv.nuts",
   "pk": "ESZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ESZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ESZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -7038,21 +7101,21 @@
   "model": "dv.nuts",
   "pk": "FIZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "FIZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "FIZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -8935,21 +8998,21 @@
   "model": "dv.nuts",
   "pk": "FRZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "FRZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "FRZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -9439,21 +9502,21 @@
   "model": "dv.nuts",
   "pk": "GRZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "GRZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "GRZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -9747,7 +9810,7 @@
   "model": "dv.nuts",
   "pk": "HRZ",
   "fields": {
-    "label": "EXTRA-REGIO NUTS 1"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
@@ -10013,21 +10076,21 @@
   "model": "dv.nuts",
   "pk": "HUZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "HUZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "HUZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -10195,21 +10258,21 @@
   "model": "dv.nuts",
   "pk": "IEZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "IEZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "IEZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -10245,6 +10308,27 @@
   "pk": "IS002",
   "fields": {
     "label": "Landsbyggð"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ISZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ISZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "ISZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -11609,21 +11693,21 @@
   "model": "dv.nuts",
   "pk": "ITZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ITZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ITZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -11652,6 +11736,27 @@
   "pk": "LI000",
   "fields": {
     "label": "Liechtenstein"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "LIZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "LIZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "LIZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -11833,21 +11938,21 @@
   "model": "dv.nuts",
   "pk": "LTZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "LTZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "LTZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -11882,21 +11987,21 @@
   "model": "dv.nuts",
   "pk": "LUZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "LUZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "LUZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -11966,21 +12071,21 @@
   "model": "dv.nuts",
   "pk": "LVZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "LVZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "LVZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -12009,6 +12114,27 @@
   "pk": "ME000",
   "fields": {
     "label": "Црна Гора / Crna Gora"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "MEZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "MEZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "MEZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -12090,6 +12216,27 @@
 },
 {
   "model": "dv.nuts",
+  "pk": "MKZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "MKZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "MKZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
+  }
+},
+{
+  "model": "dv.nuts",
   "pk": "MT",
   "fields": {
     "label": "MALTA"
@@ -12127,21 +12274,21 @@
   "model": "dv.nuts",
   "pk": "MTZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "MTZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "MTZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -12610,21 +12757,21 @@
   "model": "dv.nuts",
   "pk": "NLZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "NLZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "NLZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -12828,6 +12975,27 @@
   "pk": "NO073",
   "fields": {
     "label": "Finnmark"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "NOZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "NOZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "NOZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -13821,21 +13989,21 @@
   "model": "dv.nuts",
   "pk": "PLZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "PLZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "PLZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -14241,21 +14409,21 @@
   "model": "dv.nuts",
   "pk": "PTZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "PTZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "PTZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -14647,21 +14815,21 @@
   "model": "dv.nuts",
   "pk": "ROZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ROZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "ROZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -14886,6 +15054,27 @@
   "pk": "RS229",
   "fields": {
     "label": "Топличка област / Toplička oblast"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "RSZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "RSZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "RSZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -15123,21 +15312,21 @@
   "model": "dv.nuts",
   "pk": "SEZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "SEZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "SEZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -15354,21 +15543,21 @@
   "model": "dv.nuts",
   "pk": "SIZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "SIZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "SIZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -15473,21 +15662,21 @@
   "model": "dv.nuts",
   "pk": "SKZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "SKZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "SKZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -16328,6 +16517,27 @@
   "pk": "TRC34",
   "fields": {
     "label": "Siirt"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "TRZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 1"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "TRZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 2"
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "TRZZZ",
+  "fields": {
+    "label": "Extra-Regio NUTS 3"
   }
 },
 {
@@ -18329,21 +18539,21 @@
   "model": "dv.nuts",
   "pk": "UKZ",
   "fields": {
-    "label": "EXTRA-REGIO"
+    "label": "Extra-Regio NUTS 1"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "UKZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 2"
   }
 },
 {
   "model": "dv.nuts",
   "pk": "UKZZZ",
   "fields": {
-    "label": "Extra-Regio"
+    "label": "Extra-Regio NUTS 3"
   }
 }
 ]

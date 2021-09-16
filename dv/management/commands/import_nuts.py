@@ -56,9 +56,13 @@ class Command(BaseCommand):
         resp.raise_for_status()
         lines = resp.content.decode("utf8").splitlines()
 
+        nuts_0 = []
         created_count = 0
         reader = csv.DictReader(lines)
         for line in reader:
+            if len(line["NUTS_ID"]) == 2:
+                nuts_0.append(line["NUTS_ID"])
+
             name, latin_name = line["NUTS_NAME"], line["NAME_LATN"]
             if name == latin_name:
                 label = name
@@ -73,3 +77,17 @@ class Command(BaseCommand):
 
         logger.info("Created %s out of %s", created_count, len(lines) - 1)
 
+        # Extra-Regio code are used to indicate there is not region.
+        # Add them as well to the DB for integrity checks.
+        created_count = 0
+        for country_code in nuts_0:
+            for level in (1, 2, 3):
+                code = country_code + "Z" * level
+                label = f"Extra-Regio NUTS {level}"
+
+                obj, created = NUTS.objects.update_or_create(
+                    {"label": label}, code=code
+                )
+                created_count += created
+                logger.info("NUTS extra %s, created=%s", obj, created)
+        logger.info("Created Extra-Regio %s out of %s", created_count, len(nuts_0))
