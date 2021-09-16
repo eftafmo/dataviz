@@ -12,12 +12,12 @@ from django.db.models.functions import Length
 
 from dv.lib.http import JsonResponse
 from dv.models import (
-    Allocation, BilateralInitiative, Indicator, News, NUTS,
-    OrganisationRole, Programme, Project, State,
+    Allocation, BilateralInitiative, Indicator, News, NUTS, OrganisationRole,
+    Programme, ProgrammeAllocation, Project, State,
     DEFAULT_PERIOD, FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
 )
 from dv.serializers import ProjectSerializer
-from dv.lib.utils import EEA_DONOR_STATES, DONOR_STATES_REVERSED
+from dv.lib.utils import DONOR_STATES, EEA_DONOR_STATES, DONOR_STATES_REVERSED
 
 CharField.register_lookup(Length, 'length')
 
@@ -342,6 +342,138 @@ def projects(request):
 
 @require_GET
 def partners(request):
+    # List of programmes having DPP or dpp
+    # Everything else will be grouped by these
+    partnership_programmes_query = ProgrammeAllocation.objects.filter(
+        programme__organisation_roles__role_code__in=('DPP', 'PJDPP')
+    ).select_related(
+        'programme_area',
+        'priority_sector',
+        'programme'
+    )
+
+    partnership_programmes = {}
+    # Compute allocations per Programme and Programme area
+    allocations = defaultdict(int)
+    for p in partnership_programmes_query:
+        if p.programme.code not in partnership_programmes:
+            partnership_programmes[p.programme.code] = {
+                'name': p.programme.name,
+                'url': p.programme.url,
+                'areas': {},
+                'beneficiaries': set(),
+                'donors': set(),
+                'DPP': {},
+                'PO': {},
+                'news': [],
+                'allocation': 0,
+            }
+        partnership_programmes[p.programme.code]['allocation'] += p.allocation
+        partnership_programmes[p.programme.code]['beneficiaries'].add(p.state_id)
+        if p.programme_area:
+            partnership_programmes[p.programme.code]['areas'][p.programme_area.code] = {
+                'area': p.programme_area.name,
+                'sector': p.priority_sector.name,
+                'fm': FINANCIAL_MECHANISMS_DICT[p.financial_mechanism],
+            }
+        key = (
+            p.programme.code,
+            p.programme_area.code if p.programme_area else None,
+            p.state_id,
+        )
+        allocations[key] += p.allocation
+
+    partnership_programmes_ids = partnership_programmes.keys()
+
+    # Get donor countries for each programme
+    programme_donors_query = OrganisationRole.objects.values(
+        'programme_id',
+        'organisation_country',
+    ).exclude(
+        programme_id__isnull=True,
+    ).filter(
+        role_code__in=('DPP', 'PJDPP'),
+    ).distinct()
+
+    for p in programme_donors_query:
+        partnership_programmes[p['programme_id']]['donors'].add(
+            DONOR_STATES.get(p['organisation_country'], 'Intl')
+        )
+
+    # Get programme partners (DPP and PO)
+    programme_partners_query = OrganisationRole.objects.filter(
+        programme_id__in=partnership_programmes_ids,
+        role_code__in=('DPP', 'PO'),
+    ).annotate(
+        org_id=F('organisation_id'),
+        name=F('organisation_name'),
+        country=F('organisation_country'),
+        role=F('role_code'),
+        nuts=F('nuts_code'),
+    ).values(
+        'country',
+        'org_id',
+        'name',
+        'programme_id',
+        'role',
+        'nuts',
+    ).order_by('role_code').distinct()
+    # Order by - for filtering out PO when no DPP is present
+
+    donor_programme_partners = defaultdict(dict)
+    donor_programmes = set()
+    # Donor programmes = only those having a DPP
+    for pp in programme_partners_query:
+        programme_code = pp['programme_id']
+        if pp['role'] == 'DPP':
+            donor = DONOR_STATES.get(pp['country'], 'Intl')
+            key = (programme_code, donor)
+            donor_programme_partners[key][pp['org_id']] = {
+                'name': pp['name'],
+                'nuts': pp['nuts'],
+            }
+            donor_programmes.add(programme_code)
+        elif programme_code in donor_programmes:
+            partnership_programmes[programme_code]['PO'][pp['org_id']] = {
+                'name': pp['name'],
+                'nuts': pp['nuts'],
+            }
+
+    # Get project partners (dpp and project promoters)
+    project_partners_query = OrganisationRole.objects.select_related(
+        'project',
+    ).filter(
+        programme_id__in=partnership_programmes_ids,
+        role_code__in=('PJDPP', 'PJPT'),
+    ).values(
+        'organisation_id',
+        'organisation_name',
+        'organisation_country',
+        'role_code',
+        'nuts_code',
+        'project_id',
+        'programme_id',
+        'project__state_id',
+        'project__is_dpp',
+        'project__has_ended',
+        'project__is_continued_coop',
+        'project__is_improved_knowledge',
+    ).prefetch_related(
+        'project__programme_areas',
+    ).order_by('role_code').distinct()
+    # Order by - for filtering out project promoters when no PJDPP is present
+
+    projects, project_promoters, donor_project_partners = (
+        defaultdict(dict), defaultdict(dict), defaultdict(dict)
+    )
+    donor_projects = set()
+    project_nuts = {}
+
+    for pp in project_partners_query:
+        # Projects have only one BS and one PA, so keep them separated
+        pass
+        # TODO WIP
+
     out = []
     return JsonResponse(out)
 

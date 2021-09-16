@@ -115,6 +115,18 @@ class Programme(models.Model):
         return self.allocation_norway != 0
 
 
+class ProgrammeAllocation(models.Model):
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+    financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
+
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE, null=True)
+    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE, null=True)
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, null=True)
+
+    allocation = models.DecimalField(max_digits=15, decimal_places=2)
+
+
 class Project(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
@@ -192,6 +204,7 @@ class OrganisationRole(models.Model):
     role_code = models.CharField(max_length=8)
     role_name = models.CharField(max_length=64)
 
+    organisation_id = models.IntegerField()
     organisation_country = models.CharField(max_length=64)
     organisation_name = models.CharField(max_length=256)
 
