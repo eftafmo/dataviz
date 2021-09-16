@@ -117,96 +117,116 @@ class ProgrammeIndex(SearchIndex, Indexable):
         return self.prepared_data
 
 
-#
-# class ProjectIndex(SearchIndex, Indexable):
-#     # common facets
-#     state_name = fields.FacetMultiValueField(model_attr='state__name')
-#     financial_mechanism_ss = fields.FacetMultiValueField()
-#     programme_area_ss = fields.FacetMultiValueField()
-#     priority_sector_ss = fields.FacetMultiValueField()
-#     programme_name = fields.FacetMultiValueField()
-#     programme_status = fields.FacetMultiValueField(model_attr='programme__status')
-#     outcome_ss = fields.FacetMultiValueField()
-#     outcome_ss_auto = fields.EdgeNgramField()
-#
-#     kind = fields.FacetCharField()
-#
-#     # specific facets
-#     code = fields.FacetCharField(model_attr='code')
-#     project_status = fields.FacetMultiValueField(model_attr='status')
-#     geotarget = fields.FacetCharField(model_attr='geotarget')
-#     geotarget_auto = fields.EdgeNgramField(model_attr='geotarget')
-#     theme_ss = fields.FacetMultiValueField()
-#
-#     # specific fields
-#     text = fields.CharField(document=True, use_template=True)
-#     summary = fields.CharField(model_attr='summary', indexed=False)
-#     actual_summary = fields.CharField(model_attr='actual_summary', indexed=False)
-#     url = fields.CharField(model_attr='url', indexed=False, null=True)
-#     name = fields.CharField(model_attr='name', indexed=False)
-#     grant = fields.DecimalField(model_attr='allocation')
-#
-#     def index_queryset(self, using=None):
-#         return (
-#             self.get_model().objects
-#             .select_related(
-#                 'financial_mechanism',
-#                 'outcome',
-#                 'programme',
-#                 'programme_area',
-#                 'programme_area__priority_sector',
-#                 'state',
-#             ).prefetch_related('themes')
-#             # using prefetch_related may require --batch-size 999 to avoid
-#             # sqlite3.OperationalError: too many SQL variables
-#         )
-#
-#     def get_model(self):
-#         return Project
-#
-#     def prepare_kind(self, obj):
-#         return 'Project'
-#
-#     def prepare_financial_mechanism_ss(self, obj):
-#         return [obj.financial_mechanism.grant_name]
-#
-#     def prepare_programme_area_ss(self, obj):
-#         return [obj.programme_area.name]
-#
-#     def prepare_priority_sector_ss(self, obj):
-#         return [obj.programme_area.priority_sector.name]
-#
-#     def prepare_programme_name(self, obj):
-#         return ['{}: {}'.format(
-#             obj.programme.code,
-#             ' '.join(obj.programme.name.split())
-#         )]
-#
-#     def prepare_outcome_ss(self, obj):
-#         return [' '.join(obj.outcome.name.split())]
-#
-#     def prepare_geotarget(self, obj):
-#         if len(obj.nuts) > 2:
-#             return ['{}: {}, {}'.format(obj.nuts, obj.geotarget, STATES[obj.nuts[:2]])]
-#         else:
-#             return ['{}: {}'.format(obj.nuts, obj.geotarget)]
-#
-#     def prepare_theme_ss(self, obj):
-#         return list(set([theme.name for theme in obj.themes.all()]))
-#
-#     def prepare(self, obj):
-#         self.prepared_data = super().prepare(obj)
-#         self.prepared_data['outcome_ss_auto'] = (
-#             ' '.join(self.prepared_data['outcome_ss'])
-#             if self.prepared_data['outcome_ss'] else None
-#         )
-#         self.prepared_data['geotarget_auto'] = (
-#             ' '.join(self.prepared_data['geotarget'])
-#             if self.prepared_data['geotarget'] else None
-#         )
-#         return self.prepared_data
-#
-#
+class ProjectIndex(SearchIndex, Indexable):
+    # common facets
+    period = fields.FacetCharField()
+    state_name = fields.FacetMultiValueField(model_attr="state__name")
+    financial_mechanism_ss = fields.FacetMultiValueField()
+    programme_area_ss = fields.FacetMultiValueField()
+    priority_sector_ss = fields.FacetMultiValueField()
+    programme_name = fields.FacetMultiValueField()
+    programme_status = fields.FacetMultiValueField(model_attr="programme__status")
+    outcome_ss = fields.FacetMultiValueField()
+    outcome_ss_auto = fields.EdgeNgramField()
+
+    kind = fields.FacetCharField()
+
+    # specific facets
+    code = fields.FacetCharField(model_attr="code")
+    project_status = fields.FacetMultiValueField(model_attr="status")
+    geotarget = fields.FacetCharField()
+    geotarget_auto = fields.EdgeNgramField()
+    theme_ss = fields.FacetMultiValueField()
+
+    # specific fields
+    text = fields.CharField(document=True, use_template=True)
+    url = fields.CharField(model_attr="url", indexed=False, null=True)
+    name = fields.CharField(model_attr="name", indexed=False)
+    grant = fields.DecimalField(model_attr="allocation")
+
+    def get_model(self):
+        return Project
+
+    def index_queryset(self, using=None):
+        return (
+            self.get_model()
+            .objects.select_related(
+                "programme",
+                "state",
+                "nuts",
+            )
+            .prefetch_related(
+                "themes",
+                "programme_areas",
+                "priority_sectors",
+            )
+            # using prefetch_related may require --batch-size 999 to avoid
+            # sqlite3.OperationalError: too many SQL variables
+        )
+
+    def programme_area_query(self, obj):
+        return obj.programme_areas.all()
+
+    def priority_sector_query(self, obj):
+        return obj.priority_sectors.all()
+
+    def themes_query(self, obj):
+        return obj.themes.all()
+
+    def prepare_kind(self, obj):
+        return "Project"
+
+    def prepare_period(self, obj):
+        return obj.get_funding_period_display()
+
+    def prepare_financial_mechanism_ss(self, obj):
+        return [FINANCIAL_MECHANISMS_DICT[fmId] for fmId in obj.financial_mechanisms]
+
+    def prepare_programme_area_ss(self, obj):
+        return [area.name for area in self.programme_area_query(obj)]
+
+    def prepare_priority_sector_ss(self, obj):
+        return [sector.name for sector in self.priority_sector_query(obj)]
+
+    def prepare_programme_name(self, obj):
+        return [
+            "{}: {}".format(obj.programme.code, " ".join(obj.programme.name.split()))
+        ]
+
+    def prepare_outcome_ss(self, obj):
+        return list(
+            set(
+                " ".join(indicator.header.split())
+                for indicator in obj.programme.indicators.all()
+            )
+        )
+
+    def prepare_geotarget(self, obj):
+        if not obj.nuts:
+            return []
+        elif len(obj.nuts.code) > 2:
+            return ["{}: {}, {}".format(obj.nuts.code, obj.nuts.label, obj.state.name)]
+        else:
+            return ["{}: {}".format(obj.nuts.code, obj.nuts.label)]
+
+    def prepare_theme_ss(self, obj):
+        return list(set(theme.name for theme in self.themes_query(obj)))
+
+    def prepare(self, obj):
+        self.prepared_data = super().prepare(obj)
+        self.prepared_data["outcome_ss_auto"] = (
+            " ".join(self.prepared_data["outcome_ss"])
+            if self.prepared_data["outcome_ss"]
+            else None
+        )
+        self.prepared_data["geotarget_auto"] = (
+            " ".join(self.prepared_data["geotarget"])
+            if self.prepared_data["geotarget"]
+            else None
+        )
+        return self.prepared_data
+
+
 # class OrganisationIndex(SearchIndex, Indexable):
 #     # common facets
 #     state_name = fields.FacetMultiValueField()
