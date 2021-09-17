@@ -10,7 +10,7 @@
 <script>
 import * as d3 from "d3";
 import d3tip from "d3-tip";
-import { fmcolour } from "./mixins/WithFMs";
+import WithFMs from "./mixins/WithFMs";
 
 import Chart from "./Chart";
 import MapBase from "./includes/MapBase";
@@ -21,6 +21,7 @@ import WithTooltipMixin from "./mixins/WithTooltip";
 // jumping through hoops because of vue's lack of template inheritance.
 // don't forget to add this to the template.
 const PijamaDefs = {
+  mixins: [WithFMs],
   template: `<svg class="defs">
     <defs>
       <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
@@ -37,10 +38,6 @@ const PijamaDefs = {
       </pattern>
     </defs>
   </svg>`,
-
-  methods: {
-    fmcolour,
-  },
 };
 
 export default {

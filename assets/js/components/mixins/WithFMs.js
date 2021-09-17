@@ -1,15 +1,7 @@
 import FMLegendComponent from "../includes/FMLegend";
 import FMS from "@js/constants/financial-mechanisms.json5";
 
-export function fmcolour(fmid) {
-  return FMS[fmid].colour;
-}
-
 export default {
-  beforeCreate() {
-    this.FMS = FMS;
-  },
-
   components: {
     "fm-legend": FMLegendComponent,
   },
@@ -19,10 +11,15 @@ export default {
     FM_ARRAY() {
       return Object.values(this.FMS);
     },
+    FMS() {
+      return FMS[this.period || "2014-2021"];
+    },
   },
 
   methods: {
-    fmcolour,
+    fmcolour(fmid) {
+      return this.FMS[fmid].colour;
+    },
 
     getFilterClassFm(fm) {
       if (!this.filters.fm) return;
