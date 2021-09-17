@@ -40,7 +40,7 @@ def overview(request):
     ).order_by('state', 'financial_mechanism')
 
     bilateral_fund = {
-        (bf['state'], bf['financial_mechanism']): bf['allocation']
+        (bf['financial_mechanism'], bf['state']): bf['allocation']
         for bf in allocations.filter(programme_area__code='OTBF')
     }
 
@@ -54,32 +54,24 @@ def overview(request):
 
     programmes = defaultdict(list)
     for programme in programme_query:
-        if programme.is_eea:
-            if not programme.states.exists():
-                programmes[(None, FM_EEA)].append(programme.code)
-            for state in programme.states.all():
-                programmes[(state.pk, FM_EEA)].append(programme.code)
-        if programme.is_norway:
-            if not programme.states.exists():
-                programmes[(None, FM_NORWAY)].append(programme.code)
-            for state in programme.states.all():
-                programmes[(state.pk, FM_NORWAY)].append(programme.code)
+        keys = product(
+            programme.financial_mechanisms,
+            programme.states.values_list('code', flat=True),
+        )
+        for key in keys:
+            programmes[key].append(programme.code)
 
     dpp_programme_query = programme_query.filter(
         organisation_roles__role_code='DPP',
     ).distinct()
     dpp_programmes = defaultdict(list)
     for programme in dpp_programme_query:
-        if programme.is_eea:
-            if not programme.states.exists():
-                dpp_programmes[(None, FM_EEA)].append(programme.code)
-            for state in programme.states.all():
-                dpp_programmes[(state.pk, FM_EEA)].append(programme.code)
-        if programme.is_norway:
-            if not programme.states.exists():
-                dpp_programmes[(None, FM_NORWAY)].append(programme.code)
-            for state in programme.states.all():
-                dpp_programmes[(state.pk, FM_NORWAY)].append(programme.code)
+        keys = product(
+            programme.financial_mechanisms,
+            programme.states.values_list('code', flat=True),
+        )
+        for key in keys:
+            dpp_programmes[key].append(programme.code)
 
     project_query = Project.objects.filter(
         funding_period=period_id,
@@ -101,21 +93,23 @@ def overview(request):
     positive_fx = defaultdict(list)
     for project in project_query:
         if project['is_eea']:
-            projects[(project['state'], FM_EEA)].append(project['code'])
+            key = (FM_EEA, project['state'])
+            projects[key].append(project['code'])
             if project['is_dpp']:
-                dpp_projects[(project['state'], FM_EEA)].append(project['code'])
+                dpp_projects[key].append(project['code'])
             if project['is_continued_coop']:
-                continued_coop[(project['state'], FM_EEA)].append(project['code'])
+                continued_coop[key].append(project['code'])
             if project['is_positive_fx']:
-                positive_fx[(project['state'], FM_EEA)].append(project['code'])
+                positive_fx[key].append(project['code'])
         if project['is_norway']:
-            projects[(project['state'], FM_NORWAY)].append(project['code'])
+            key = (FM_NORWAY, project['state'])
+            projects[key].append(project['code'])
             if project['is_dpp']:
-                dpp_projects[(project['state'], FM_NORWAY)].append(project['code'])
+                dpp_projects[key].append(project['code'])
             if project['is_continued_coop']:
-                continued_coop[(project['state'], FM_NORWAY)].append(project['code'])
+                continued_coop[key].append(project['code'])
             if project['is_positive_fx']:
-                positive_fx[(project['state'], FM_NORWAY)].append(project['code'])
+                positive_fx[key].append(project['code'])
 
     bilateral_initiative_query = BilateralInitiative.objects.filter(
         funding_period=period_id,
@@ -126,9 +120,9 @@ def overview(request):
     # TODO is it ok to decide if BI is EEA/Norway based on programme?
     for bi in bilateral_initiative_query:
         if bi.programme.is_eea:
-            bilateral_initiatives[(bi.state.pk, FM_EEA)].append(bi.code)
+            bilateral_initiatives[(FM_EEA, bi.state_id)].append(bi.code)
         if bi.programme.is_norway:
-            bilateral_initiatives[(bi.state.pk, FM_NORWAY)].append(bi.code)
+            bilateral_initiatives[(FM_NORWAY, bi.state_id)].append(bi.code)
 
     RELEVANT_INDICATORS = {
         'Number of people engaged in civil society organisation activities': 'people_civil_society',
@@ -145,16 +139,16 @@ def overview(request):
     indicators = defaultdict(lambda: defaultdict(int))
     for indicator in indicator_query:
         key = indicators[RELEVANT_INDICATORS[indicator.indicator]]
-        if indicator.achievement_eea:
-            key[(indicator.state_id, FM_EEA)] += indicator.achievement_eea
-        if indicator.achievement_norway:
-            key[(indicator.state_id, FM_NORWAY)] += indicator.achievement_norway
+        if indicator.is_eea:
+            key[(FM_EEA, indicator.state_id)] += indicator.achievement_eea
+        if indicator.is_norway:
+            key[(FM_NORWAY, indicator.state_id)] += indicator.achievement_norway
 
     out = []
     for allocation in allocations:
         state = allocation['state']
         financial_mechanism = allocation['financial_mechanism']
-        key = (state, financial_mechanism)
+        key = (financial_mechanism, state)
         element = {
             'period': period,
             'fm': FINANCIAL_MECHANISMS_DICT[financial_mechanism],
