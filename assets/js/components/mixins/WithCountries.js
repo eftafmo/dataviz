@@ -111,8 +111,11 @@ export default {
     },
     allBeneficiaries() {
       const results = {};
-      Object.values(this.BENEFICIARIES).forEach((country) => {
-        results[country.name] = country;
+      Object.values(this.BENEFICIARIES).forEach((country, index) => {
+        results[country.name] = {
+          ...country,
+          sortOrder: index,
+        };
       });
       return Object.values(results);
     },

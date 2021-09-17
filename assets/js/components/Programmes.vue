@@ -96,6 +96,7 @@ export default {
         const programmes = beneficiaries[b],
           beneficiary = {
             id: b,
+            ...this.allCountries[b],
             programmes: [],
           };
         out.beneficiaries.push(beneficiary);
@@ -116,10 +117,8 @@ export default {
         );
       }
 
-      //Sort by country
-      out.beneficiaries.sort((a, b) =>
-        d3.ascending(this.get_country_name(a.id), this.get_country_name(b.id))
-      );
+      //Sort by country sortOrder
+      out.beneficiaries.sort((a, b) => a.sortOrder - b.sortOrder);
 
       return out;
     },
