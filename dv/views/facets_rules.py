@@ -30,6 +30,7 @@ PROJECT_CUSTOM_FACETS = [
 
 ORGANISATION_CUSTOM_FACETS = [
     ("financial_mechanism_ss", "AND"),
+    ("period", "AND"),
     ("role_ss", "OR"),
     ("state_name", "OR"),
     ("priority_sector_ss", "OR"),

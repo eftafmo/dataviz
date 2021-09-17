@@ -1,7 +1,10 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils.functional import cached_property
+from django_countries import countries
 
+STATES = dict(countries)
+STATES["EL"] = "Greece"
 
 FM_EEA = 'EEA'
 FM_NORWAY = 'NOR'
@@ -113,6 +116,23 @@ class Programme(models.Model):
     def is_norway(self):
         return self.allocation_norway != 0
 
+    @cached_property
+    def financial_mechanisms(self):
+        financial_mechanisms = []
+        if self.is_eea:
+            financial_mechanisms.append(FM_EEA)
+        if self.is_norway:
+            financial_mechanisms.append(FM_NORWAY)
+        return financial_mechanisms
+
+    @cached_property
+    def financial_mechanisms_display(self):
+        return [FINANCIAL_MECHANISMS_DICT[fm] for fm in self.financial_mechanisms]
+
+    @cached_property
+    def display_name(self):
+        return "{}: {}".format(self.code, " ".join(self.name.split()))
+
 
 class ProgrammeAllocation(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
@@ -161,13 +181,21 @@ class Project(models.Model):
         return financial_mechanisms
 
     @cached_property
+    def financial_mechanisms_display(self):
+        return [FINANCIAL_MECHANISMS_DICT[fm] for fm in self.financial_mechanisms]
+
+    @cached_property
     def geotarget(self):
         if not self.nuts:
             return []
         elif len(self.nuts.code) > 2:
-            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, self.state.name)]
+            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, STATES[self.nuts.code[:2]])]
         else:
             return ["{}: {}".format(self.nuts.code, self.nuts.label)]
+
+    @cached_property
+    def display_name(self):
+        return "{}: {}".format(self.code, " ".join(self.name.split()))
 
 
 class ProjectAllocation(models.Model):
@@ -222,6 +250,14 @@ class Organisation(models.Model):
     country = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
 
+    @property
+    def projects(self):
+        return [role.project for role in self.roles.all() if role.project]
+
+    @property
+    def programmes(self):
+        return [role.programme for role in self.roles.all() if role.programme]
+
 
 class OrganisationRole(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
@@ -240,6 +276,15 @@ class OrganisationRole(models.Model):
     project = models.ForeignKey(Project, null=True, related_name='organisation_roles',
                                 on_delete=models.CASCADE)
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
+
+    @cached_property
+    def geotarget(self):
+        if not self.nuts:
+            return []
+        elif len(self.nuts.code) > 2:
+            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, STATES[self.nuts.code[:2]])]
+        else:
+            return ["{}: {}".format(self.nuts.code, self.nuts.label)]
 
 
 class BilateralInitiative(models.Model):
@@ -286,3 +331,4 @@ class StaticContent(models.Model):
 
     def __str__(self):
         return self.name
+

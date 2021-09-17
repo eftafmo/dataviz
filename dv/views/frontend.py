@@ -299,11 +299,11 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             d = defaultdict(list)
             if not res.object:
                 # inconsistent index, obj deleted from db but present in Solr
-                logger.warn("Inconsistent object in index: %s" % (res.id,))
+                logger.warning("Inconsistent object in index: %s" % (res.id,))
                 continue
             org_roles = res.object.roles.all()
             for org_role in org_roles:
-                role_name = org_role.organisation_role.role
+                role_name = org_role.role_name
                 if org_role.programme and org_role.programme.is_tap:
                     continue
                 prg_or_prj = org_role.programme
