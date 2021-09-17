@@ -48,6 +48,8 @@ def overview(request):
         funding_period=period_id,
         is_tap=False,
         is_bfp=False,
+    ).prefetch_related(
+        'states',
     ).order_by('code')
 
     programmes = defaultdict(list)
@@ -196,37 +198,54 @@ def grants(request):
     indicators = Indicator.objects.filter(
         funding_period=period_id,
         programme__is_tap=False,
-    ).select_related(
-        'programme',
+    ).values(
+        'indicator',
+        'header',
+        'state_id',
+        'programme_area_id'
+    ).annotate(
+        achievement_eea=Sum('achievement_eea'),
+        achievement_norway=Sum('achievement_norway'),
     ).order_by(F('order').asc(nulls_last=True))
 
     results = defaultdict(lambda: defaultdict(dict))
-    programmes = defaultdict(dict)
     for indicator in indicators:
-        if indicator.is_eea:
-            results[(FM_EEA, indicator.state_id, indicator.programme_area_id)][indicator.header].update({
-                indicator.indicator: {
-                    'achievement': indicator.achievement_eea,
+        if indicator['achievement_eea']:
+            key = (FM_EEA, indicator['state_id'], indicator['programme_area_id'])
+            results[key][indicator['header']].update({
+                indicator['indicator']: {
+                    'achievement': indicator['achievement_eea'],
                 }
             })
-            programmes[(FM_EEA, indicator.state_id, indicator.programme_area_id)].update({
-                indicator.programme.code: {
-                    'name': indicator.programme.name,
-                    'url': indicator.programme.url,
+        if indicator['achievement_norway']:
+            key = (FM_NORWAY, indicator['state_id'], indicator['programme_area_id'])
+            results[key][indicator['header']].update({
+                indicator['indicator']: {
+                    'achievement': indicator['achievement_eea'],
                 }
             })
-        if indicator.is_norway:
-            results[(FM_NORWAY, indicator.state_id, indicator.programme_area_id)][indicator.header].update({
-                indicator.indicator: {
-                    'achievement': indicator.achievement_norway,
-                }
-            })
-            programmes[(FM_NORWAY, indicator.state_id, indicator.programme_area_id)].update({
-                indicator.programme.code: {
-                    'name': indicator.programme.name,
-                    'url': indicator.programme.url,
-                }
-            })
+
+    programmes = defaultdict(dict)
+    programme_query = Programme.objects.filter(
+        funding_period=period_id,
+        is_tap=False,
+        is_bfp=False,
+    ).prefetch_related(
+        'states',
+        'programme_areas',
+    ).order_by('code')
+
+    for programme in programme_query:
+        keys = product(
+            programme.financial_mechanisms,
+            programme.states.values_list('code', flat=True),
+            programme.programme_areas.values_list('id', flat=True),
+        )
+        for key in keys:
+            programmes[key][programme.code] = {
+                'name': programme.name,
+                'url': programme.url,
+            }
 
     out = []
     for allocation in allocations:
