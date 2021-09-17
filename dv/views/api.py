@@ -1,19 +1,18 @@
 import html
 from collections import defaultdict
-from decimal import Decimal
 from itertools import product
 
 from rest_framework.generics import ListAPIView
 from django.views.decorators.http import require_GET
 from django.db.models import CharField, Q
 from django.db.models.expressions import F
-from django.db.models.aggregates import Count, Sum
+from django.db.models.aggregates import Sum
 from django.db.models.functions import Length
 
-from dv.lib.http import JsonResponse
+from dv.lib.http import JsonResponse, SetEncoder
 from dv.models import (
-    Allocation, BilateralInitiative, Indicator, News, NUTS, OrganisationRole,
-    Programme, ProgrammeAllocation, Project, State,
+    Allocation, BilateralInitiative, Indicator, News, OrganisationRole,
+    Programme, ProgrammeAllocation, Project, ProjectAllocation,
     DEFAULT_PERIOD, FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
 )
 from dv.serializers import ProjectSerializer
@@ -207,8 +206,9 @@ def grants(request):
         if indicator.is_eea:
             results[(FM_EEA, indicator.state_id, indicator.programme_area_id)][indicator.header].update({
                 indicator.indicator: {
-                "achievement": indicator.achievement_eea,
-            }})
+                    'achievement': indicator.achievement_eea,
+                }
+            })
             programmes[(FM_EEA, indicator.state_id, indicator.programme_area_id)].update({
                 indicator.programme.code: {
                     'name': indicator.programme.name,
@@ -218,15 +218,15 @@ def grants(request):
         if indicator.is_norway:
             results[(FM_NORWAY, indicator.state_id, indicator.programme_area_id)][indicator.header].update({
                 indicator.indicator: {
-                "achievement": indicator.achievement_norway,
-            }})
+                    'achievement': indicator.achievement_norway,
+                }
+            })
             programmes[(FM_NORWAY, indicator.state_id, indicator.programme_area_id)].update({
                 indicator.programme.code: {
                     'name': indicator.programme.name,
                     'url': indicator.programme.url,
                 }
             })
-
 
     out = []
     for allocation in allocations:
@@ -242,7 +242,7 @@ def grants(request):
             'is_ta': allocation.programme_area.priority_sector.code == 'OT',
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
-            'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),  # TODO this doesn't look right
+            'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),
             'results': results[(financial_mechanism, state, programme_area)],
             'programmes': programmes[(financial_mechanism, state, programme_area)],
             'thematic': allocation.thematic,
@@ -266,39 +266,40 @@ def projects(request):
         'programme_area__priority_sector',
     ).order_by('state', 'financial_mechanism')
 
-    project_query = Project.objects.filter(
+    project_allocation_query = ProjectAllocation.objects.filter(
         funding_period=period_id,
     ).select_related(
-        'programme',
-    ).prefetch_related(
-        'programme_areas',
+        'project',
+        'project__programme',
     )
 
-    programmes = defaultdict(lambda: defaultdict(dict))
-    projects = defaultdict(list)
-    for project in project_query:
-        for financial_mechanism in project.financial_mechanisms:
-            for programme_area in project.programme_areas.all():
-                key = (financial_mechanism, project.state_id, programme_area.id)
-                projects[key].append(project.code)
+    programmes = defaultdict(lambda: defaultdict(set))
+    projects = defaultdict(set)
+    project_allocations = defaultdict(int)
+    for pja in project_allocation_query:
+        project = pja.project
+        key = (pja.financial_mechanism, pja.state_id, pja.programme_area_id)
+        projects[key].add(project.code)
+        project_allocations[key] += pja.allocation
 
-                programme = project.programme
-                if not programmes[key][programme.code]:
-                    programmes[key][programme.code] = {
-                        'name': programme.name,
-                        'url': programme.url,
-                        'nuts': defaultdict(lambda: defaultdict(list)),
-                    }
-                programme_nuts = programmes[key][programme.code]['nuts'][project.nuts_id]
-                programme_nuts['total'].append(project.code)
-                if project.has_ended:
-                    programme_nuts['ended'].append(project.code)
-                if project.is_positive_fx:
-                    programme_nuts['positive'].append(project.code)
+        programme = project.programme
+        if not programmes[key][programme.code]:
+            programmes[key][programme.code] = {
+                'name': programme.name,
+                'url': programme.url,
+                'nuts': defaultdict(lambda: defaultdict(set)),
+            }
+        programme_nuts = programmes[key][programme.code]['nuts'][project.nuts_id]
+        programme_nuts['total'].add(project.code)
+        if project.has_ended:
+            programme_nuts['ended'].add(project.code)
+        if project.is_positive_fx:
+            programme_nuts['positive'].add(project.code)
 
     news_query = News.objects.filter(
             project__funding_period=period_id,
-        ).exclude(project_id__isnull=True
+        ).exclude(
+            project_id__isnull=True,
         ).select_related(
             'project',
         ).prefetch_related(
@@ -338,10 +339,10 @@ def projects(request):
             'net_allocation': allocation.net_allocation,
             'programmes': programmes[key],
             'projects': projects[key],
-            'project_allocation': 0,  # TODO get project allocation split between the two FMs
+            'project_allocation': project_allocations[key],
             'news': news[key],
         })
-    return JsonResponse(out)
+    return JsonResponse(out, encoder=SetEncoder)
 
 
 @require_GET

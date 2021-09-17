@@ -28,7 +28,7 @@ class Command(BaseCommand):
                     self._save(item)
                 page += 1
         cache.clear()
-        self.stdout.write(f'Cache cleared')
+        self.stdout.write('Cache cleared')
 
     def _save(self, item):
         try:

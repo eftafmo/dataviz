@@ -1,6 +1,15 @@
 import csv
 import io
+
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse, JsonResponse
+
+
+class SetEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return sorted(list(obj))
+        return super().default(obj)
 
 
 class JsonResponse(JsonResponse):

@@ -1,7 +1,6 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
 
 
 FM_EEA = 'EEA'
@@ -169,6 +168,18 @@ class Project(models.Model):
             return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, self.state.name)]
         else:
             return ["{}: {}".format(self.nuts.code, self.nuts.label)]
+
+
+class ProjectAllocation(models.Model):
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+    financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
+
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
+    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
 
 class ProjectTheme(models.Model):

@@ -1,5 +1,6 @@
 import re
 from contextlib import contextmanager
+from decimal import Decimal
 
 import bleach
 import pymssql
@@ -8,7 +9,8 @@ from django.core.management.base import BaseCommand
 
 from dv.models import (
     Allocation, BilateralInitiative, Indicator, OrganisationRole, PrioritySector,
-    Programme, ProgrammeAllocation, ProgrammeArea, Project, State
+    Programme, ProgrammeAllocation, ProgrammeArea, Project, ProjectAllocation, State,
+    FM_EEA, FM_NORWAY,
 )
 
 
@@ -143,14 +145,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f'Imported {ProgrammeAllocation.objects.count()} ProgrammeAllocation objects.'))
 
-
-        # Remove duplicate entries
-        project_query = (
-            'SELECT * FROM '
-            '(SELECT ROW_NUMBER() OVER(PARTITION BY ProjectCode ORDER BY ProjectCode DESC) '
-            'AS RowNum, * '
-            'FROM fmo.TR_RDPProject) n WHERE RowNum = 1;'
-        )
+        project_query = 'SELECT * FROM fmo.TR_RDPProject'
         with db_cursor() as cursor:
             cursor.execute(project_query)
             projects = {}
@@ -184,6 +179,41 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(
             f'Imported {Project.objects.count()} Project objects.'))
+
+        for project in Project.objects.prefetch_related('programme_areas', 'priority_sectors'):
+            if project.is_eea and project.is_norway:
+                ProjectAllocation.objects.create(
+                    funding_period=FUNDING_PERIOD,
+                    financial_mechanism=FM_EEA,
+                    state_id=project.state_id,
+                    programme_area=project.programme_areas.get(),
+                    priority_sector=project.priority_sectors.get(),
+                    project=project,
+                    allocation=Decimal('0.5525') * project.allocation,
+                )
+                ProjectAllocation.objects.create(
+                    funding_period=FUNDING_PERIOD,
+                    financial_mechanism=FM_NORWAY,
+                    state=project.state,
+                    programme_area=project.programme_areas.get(),
+                    priority_sector=project.priority_sectors.get(),
+                    project=project,
+                    allocation=Decimal('0.4475') * project.allocation,
+                )
+            else:
+                for idx, pa, ps in zip(range(3), project.programme_areas.all(), project.priority_sectors.all()):
+                    ProjectAllocation.objects.create(
+                        funding_period=FUNDING_PERIOD,
+                        financial_mechanism=FM_EEA if project.is_eea else FM_NORWAY,
+                        state_id=project.state_id,
+                        programme_area=pa,
+                        priority_sector=ps,
+                        project=project,
+                        allocation=project.allocation if idx == 0 else 0,
+                    )
+
+        self.stdout.write(self.style.SUCCESS(
+            f'Imported {ProjectAllocation.objects.count()} ProjectAllocation objects.'))
 
         indicator_query = 'SELECT * FROM fmo.TR_RDPIndicators'
         with db_cursor() as cursor:
