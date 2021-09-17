@@ -218,15 +218,19 @@ class Indicator(models.Model):
         return self.achievement_norway != 0
 
 
+class Organisation(models.Model):
+    country = models.CharField(max_length=64)
+    name = models.CharField(max_length=256)
+
+
 class OrganisationRole(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
 
     role_code = models.CharField(max_length=8)
     role_name = models.CharField(max_length=64)
 
-    organisation_id = models.IntegerField()
-    organisation_country = models.CharField(max_length=64)
-    organisation_name = models.CharField(max_length=256)
+    organisation = models.ForeignKey(Organisation, related_name='roles',
+                                     on_delete=models.CASCADE)
 
     nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
 

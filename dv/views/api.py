@@ -393,7 +393,7 @@ def partners(request):
     # Get donor countries for each programme
     programme_donors_query = OrganisationRole.objects.values(
         'programme_id',
-        'organisation_country',
+        'organisation__country',
     ).exclude(
         programme_id__isnull=True,
     ).filter(
@@ -402,7 +402,7 @@ def partners(request):
 
     for p in programme_donors_query:
         partnership_programmes[p['programme_id']]['donors'].add(
-            DONOR_STATES.get(p['organisation_country'], 'Intl')
+            DONOR_STATES.get(p['organisation__country'], 'Intl')
         )
 
     # Get programme partners (DPP and PO)
@@ -411,17 +411,16 @@ def partners(request):
         role_code__in=('DPP', 'PO'),
     ).annotate(
         org_id=F('organisation_id'),
-        name=F('organisation_name'),
-        country=F('organisation_country'),
+        name=F('organisation__name'),
+        country=F('organisation__country'),
         role=F('role_code'),
-        nuts=F('nuts_code'),
     ).values(
         'country',
         'org_id',
         'name',
         'programme_id',
         'role',
-        'nuts',
+        'nuts_id',
     ).order_by('role_code').distinct()
     # Order by - for filtering out PO when no DPP is present
 
@@ -435,13 +434,13 @@ def partners(request):
             key = (programme_code, donor)
             donor_programme_partners[key][pp['org_id']] = {
                 'name': pp['name'],
-                'nuts': pp['nuts'],
+                'nuts': pp['nuts_id'],
             }
             donor_programmes.add(programme_code)
         elif programme_code in donor_programmes:
             partnership_programmes[programme_code]['PO'][pp['org_id']] = {
                 'name': pp['name'],
-                'nuts': pp['nuts'],
+                'nuts': pp['nuts_id'],
             }
 
     # Get project partners (dpp and project promoters)
@@ -452,10 +451,10 @@ def partners(request):
         role_code__in=('PJDPP', 'PJPT'),
     ).values(
         'organisation_id',
-        'organisation_name',
-        'organisation_country',
+        'organisation__name',
+        'organisation__country',
         'role_code',
-        'nuts_code',
+        'nuts_id',
         'project_id',
         'programme_id',
         'project__state_id',

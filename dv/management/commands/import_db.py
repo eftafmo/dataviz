@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from dv.models import (
-    Allocation, BilateralInitiative, Indicator, OrganisationRole, PrioritySector,
+    Allocation, BilateralInitiative, Indicator, OrganisationRole, Organisation, PrioritySector,
     Programme, ProgrammeAllocation, ProgrammeArea, Project, ProjectAllocation, State,
     FM_EEA, FM_NORWAY,
 )
@@ -238,6 +238,21 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f'Imported {Indicator.objects.count()} Indicator objects.'))
 
+        organisation_query = '''
+            SELECT DISTINCT IdOrganisation, Organisation, CountryOrganisation 
+            FROM fmo.TR_RDPOrganisationRole
+        '''
+        with db_cursor() as cursor:
+            cursor.execute(organisation_query)
+            for row in cursor.fetchall():
+                Organisation.objects.create(
+                    id=row['IdOrganisation'],
+                    name=row['Organisation'],
+                    country=row['CountryOrganisation'],
+                )
+        self.stdout.write(self.style.SUCCESS(
+            f'Imported {Organisation.objects.count()} Organisation objects.'))
+
         organisation_role_query = 'SELECT * FROM fmo.TR_RDPOrganisationRole'
         with db_cursor() as cursor:
             cursor.execute(organisation_role_query)
@@ -245,8 +260,6 @@ class Command(BaseCommand):
                 OrganisationRole.objects.create(
                     funding_period=FUNDING_PERIOD,
                     organisation_id=row['IdOrganisation'],
-                    organisation_name=row['Organisation'],
-                    organisation_country=row['CountryOrganisation'],
                     nuts_id=row['NUTSCode'] or None,
                     role_code=row['OrganisationRoleCode'],
                     role_name=row['OrganisationRole'],
