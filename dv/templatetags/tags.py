@@ -72,6 +72,7 @@ def assign(value):
 @register.filter
 def kind_label(kind, count):
     kinds = {
+        "BilateralInitiative": ("bilateral initiative", "bilateral initiatives"),
         "Programme": ("programme", "programmes"),
         "Project": ("project", "projects"),
         "Organisation": ("organisation", "organisations"),

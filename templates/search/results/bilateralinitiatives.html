@@ -1,0 +1,43 @@
+{% load tags %}
+<li class="results-list">
+  <div class="search-result search-result-programme">
+    <h3 class="title">
+      {{ obj.title }}
+    </h3>
+    <div class="country_status">
+              <span class="country"><img
+                  src="/assets/sprites/flags/flag-{{ obj.state_name.0|lower|cut:" " }}.png"
+                  alt="{{ obj.state_name.0 }} flag"
+                  height="20px"
+              >&nbsp;{{ obj.state_name.0 }}</span> |
+      <span title="Bilateral Initiative status">
+        {{ obj.status }}
+      </span>
+    </div>
+    <div>
+      <b>Funded by:&nbsp;</b>
+      {% for fm in obj.financial_mechanism_ss %}
+        <span>{{ fm }}</span>{% if not forloop.last %} and {% endif %}
+      {% endfor %}
+    </div>
+    <div><b>Programme:&nbsp;</b>
+      <span>{{ obj.programme_name.0 }}</span> |
+      <span title="Programme status">{{ obj.programme_status.0 }}</span>
+    </div>
+    <div>
+      <b>Programme Area:&nbsp;</b>
+      <ul>
+        {% for area in obj.programme_area_ss %}
+          <li>
+            {{ area }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div><b>Grant: </b> {{ obj.grant | floatformat:0 | currency }}</div>
+    {% if obj.project_name %}
+      <div><b>Project:&nbsp;</b> {{ obj.project_name.0 }}</div>
+      <div><b>Project status:&nbsp;</b> {{ obj.project_status.0 }}</div>
+    {% endif %}
+  </div>
+</li>

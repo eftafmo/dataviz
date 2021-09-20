@@ -303,6 +303,10 @@ class BilateralInitiative(models.Model):
     level = models.CharField(max_length=16)
     status = models.CharField(max_length=16)
 
+    @cached_property
+    def display_name(self):
+        return "{}: {}".format(self.code, " ".join(self.title.split()))
+
 
 class News(models.Model):
     title = models.TextField(null=False, blank=False)

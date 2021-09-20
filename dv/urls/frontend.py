@@ -28,6 +28,16 @@ urlpatterns = [
     url(r"^disclaimer/$", views.disclaimer, name="disclaimer"),
     url(r"^search/$", views.ProgrammeFacetedSearchView.as_view(), name="search"),
     url(
+        r"^search/bilateralinitiatives/$",
+        views.BilateralInitiativesSearchView.as_view(),
+        name="search_bilateralinitiatives",
+    ),
+    url(
+        r"^search/bilateralinitiatives/export/$",
+        views.BilateralInitiativeFacetedExportView.as_view(),
+        name="bilateralinitiatives_export",
+    ),
+    url(
         r"^search/programme/$",
         views.ProgrammeFacetedSearchView.as_view(),
         name="search_programme",

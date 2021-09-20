@@ -27,6 +27,7 @@ from dv.models import (
 )
 from dv.views.facets_rules import (
     BASE_FACETS,
+    BILATERAL_INITIATIVE_FACETS,
     PROGRAMME_FACETS,
     PROJECT_FACETS,
     ORGANISATION_FACETS,
@@ -247,6 +248,12 @@ class FacetedSearchView(BaseFacetedSearchView):
         return qs
 
 
+class BilateralInitiativesSearchView(FacetedSearchView):
+    facet_rules = BILATERAL_INITIATIVE_FACETS
+    facet_kind = "BilateralInitiative"
+    order_field = "code"
+
+
 class ProgrammeFacetedSearchView(FacetedSearchView):
     facet_rules = PROGRAMME_FACETS
     facet_kind = "Programme"
@@ -374,6 +381,23 @@ class FacetedExportView(FacetedSearchView):
         ] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         response["Content-Disposition"] = 'attachment; filename="{0}.xlsx"'.format(name)
         return response
+
+
+class BilateralInitiativeFacetedExportView(FacetedExportView):
+    export_fields = OrderedDict(
+        [
+            ("code", "Code"),
+            ("title", "Bilateral Initiative name"),
+            ("financial_mechanism_ss", "Financial mechanism"),
+            ("priority_sector_ss", "Sector"),
+            ("programme_area_ss", "Programme area"),
+            ("state_name", "Beneficiary state"),
+            ("programme_status", "Programme status"),
+        ]
+    )
+    facet_kind = "BilateralInitiative"
+    facet_rules = BILATERAL_INITIATIVE_FACETS
+    order_field = BilateralInitiativesSearchView.order_field
 
 
 class ProgrammeFacetedExportView(FacetedExportView):

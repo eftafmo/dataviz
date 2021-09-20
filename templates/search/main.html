@@ -47,6 +47,11 @@
                 class="{% active 'News' kind %}"
             >{{ 'News'|kind_label:2|capfirst }}
             </a>
+            <a
+                href="{% url 'frontend:search_bilateralinitiatives' %}"
+                class="{% active 'BilateralInitiative' kind %}"
+            >{{ 'BilateralInitiative'|kind_label:2|capfirst }}
+            </a>
           </div>
         </div>
       </div>
@@ -99,6 +104,8 @@
           {% include 'search/results/organisation.html' with organisation=res %}
         {% elif kind == 'News' %}
           {% include 'search/results/news.html' with news=res %}
+        {% elif kind == 'BilateralInitiative' %}
+          {% include 'search/results/bilateralinitiatives.html' with obj=res %}
         {% else %}
           {{ res.text }}
         {% endif %}

@@ -9,6 +9,117 @@ from dv.models import News
 from dv.models import Project
 from dv.models import Programme
 from dv.models import Organisation
+from dv.models import BilateralInitiative
+
+
+class BilateralInitiativeIndex(SearchIndex, Indexable):
+    # common facets
+    period = fields.FacetMultiValueField()
+    state_name = fields.FacetMultiValueField()
+    financial_mechanism_ss = fields.FacetMultiValueField()
+    programme_name = fields.FacetMultiValueField()
+    programme_status = fields.FacetMultiValueField(model_attr="status")
+    programme_area_ss = fields.FacetMultiValueField()
+    priority_sector_ss = fields.FacetMultiValueField()
+
+    kind = fields.FacetCharField()
+
+    # specific facets
+    code = fields.FacetCharField(model_attr="code")
+    project_name = fields.FacetMultiValueField()
+    project_name_auto = fields.EdgeNgramField()
+    project_status = fields.FacetMultiValueField()
+    level = fields.FacetCharField(model_attr="level")
+    status = fields.FacetCharField(model_attr="status")
+
+    # specific fields
+    text = fields.CharField(document=True, use_template=True)
+    title = fields.CharField(indexed=False)
+    grant = fields.DecimalField()
+
+    def get_model(self):
+        return BilateralInitiative
+
+    def index_queryset(self, using=None):
+        return (
+            self.get_model()
+            .objects.select_related("project", "programme", "state")
+            .prefetch_related(
+                "programme_areas",
+                "project__programme_areas",
+                "project__priority_sectors",
+                "programme__programme_areas",
+                "programme__programme_areas__priority_sector",
+            )
+        )
+
+    def prepare_kind(self, obj):
+        return "BilateralInitiative"
+
+    def prepare_period(self, obj):
+        return [obj.get_funding_period_display()]
+
+    def prepare_state_name(self, obj):
+        return obj.state and [obj.state.name]
+
+    def prepare_financial_mechanism_ss(self, obj):
+        return obj.programme.financial_mechanisms_display
+
+    def prepare_programme_name(self, obj):
+        return obj.programme and [obj.programme.display_name]
+
+    def prepare_programme_status(self, obj):
+        if obj.project:
+            return [obj.project.programme.status]
+
+        if obj.programme:
+            return [obj.programme.status]
+        return []
+
+    def prepare_programme_area_ss(self, obj):
+        areas = set()
+        for area in obj.programme_areas.all():
+            areas.add(area.name)
+        if obj.project:
+            for area in obj.project.programme_areas.all():
+                areas.add(area.name)
+        if obj.programme:
+            for area in obj.programme.programme_areas.all():
+                areas.add(area.name)
+
+        return list(areas)
+
+    def prepare_priority_sector_ss(self, obj):
+        sectors = set()
+        if obj.project:
+            for sector in obj.project.priority_sectors.all():
+                sectors.add(sector.name)
+        if obj.programme:
+            for area in obj.programme.programme_areas.all():
+                sectors.add(area.priority_sector.name)
+
+        return list(sectors)
+
+    def prepare_project_name(self, obj):
+        return obj.project and [obj.project.display_name]
+
+    def prepare_project_status(self, obj):
+        return obj.project and obj.project.status
+
+    def prepare(self, obj):
+        self.prepared_data = super().prepare(obj)
+        self.prepared_data["project_name_auto"] = (
+            " ".join(self.prepared_data["project_name"])
+            if self.prepared_data["project_name"]
+            else None
+        )
+        return self.prepared_data
+
+    def prepare_title(self, obj):
+        return obj.display_name
+
+    def prepare_grant(self, obj):
+        return obj.programme.allocation_eea + obj.programme.allocation_norway
 
 
 class ProgrammeIndex(SearchIndex, Indexable):
@@ -489,9 +600,7 @@ class OrganisationIndex(SearchIndex, Indexable):
     def prepare_programme_status(self, obj):
         statuses = set(programme.status for programme in obj.programmes)
         # Add programme status from projects also
-        statuses.union(project.programme.status for project in obj.projects)
-
-        return list(statuses)
+        return list(statuses.union(project.programme.status for project in obj.projects))
 
     def prepare_project_status(self, obj):
         return list(set(project.status for project in obj.projects))
