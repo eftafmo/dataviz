@@ -239,7 +239,13 @@ class Command(BaseCommand):
             f'Imported {Indicator.objects.count()} Indicator objects.'))
 
         organisation_query = '''
-            SELECT DISTINCT IdOrganisation, Organisation, CountryOrganisation 
+            SELECT DISTINCT 
+                IdOrganisation, 
+                Organisation, 
+                CountryOrganisation, 
+                City, 
+                OrganisationClassificationSector, 
+                OrganisationClassification
             FROM fmo.TR_RDPOrganisationRole
         '''
         with db_cursor() as cursor:
@@ -248,7 +254,10 @@ class Command(BaseCommand):
                 Organisation.objects.create(
                     id=row['IdOrganisation'],
                     name=row['Organisation'],
+                    city=row['City'],
                     country=row['CountryOrganisation'],
+                    category=row['OrganisationClassificationSector'],
+                    subcategory=row['OrganisationClassification'],
                 )
         self.stdout.write(self.style.SUCCESS(
             f'Imported {Organisation.objects.count()} Organisation objects.'))

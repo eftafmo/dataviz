@@ -247,8 +247,11 @@ class Indicator(models.Model):
 
 
 class Organisation(models.Model):
-    country = models.CharField(max_length=64)
     name = models.CharField(max_length=256)
+    city = models.CharField(max_length=256)
+    country = models.CharField(max_length=64)
+    category = models.CharField(max_length=256)
+    subcategory = models.CharField(max_length=256)
 
     @property
     def projects(self):

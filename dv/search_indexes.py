@@ -514,10 +514,10 @@ class OrganisationIndex(SearchIndex, Indexable):
 
     # specific facets
     project_status = fields.FacetMultiValueField()
-    org_type_category = fields.FacetCharField()
-    org_type = fields.FacetCharField()
+    org_type_category = fields.FacetCharField(model_attr="category")
+    org_type = fields.FacetCharField(model_attr="subcategory")
     country = fields.FacetCharField(model_attr="country")
-    city = fields.FacetCharField()
+    city = fields.FacetCharField(model_attr="city")
     city_auto = fields.EdgeNgramField()
     geotarget = fields.FacetCharField(null=True)
     geotarget_auto = fields.EdgeNgramField(null=True)
@@ -564,15 +564,6 @@ class OrganisationIndex(SearchIndex, Indexable):
 
     def prepare_period(self, obj):
         return [role.get_funding_period_display() for role in obj.roles.all()]
-
-    def prepare_orgtype(self, obj):
-        return ""
-
-    def prepare_orgtypecateg(self, obj):
-        return ""
-
-    def prepare_city(self, obj):
-        return ""
 
     def prepare_financial_mechanism_ss(self, obj):
         return list(
