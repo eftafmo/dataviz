@@ -2,14 +2,23 @@
 <li class="results-list">
   <div class="search-result search-result-programme">
     <h3 class="title">
-      {{ obj.title }}
+      {% if obj.url %}
+        <a href="{{ obj.url }}" target="_blank">
+          {{ obj.title }}
+        </a>
+      {% else %}
+        <span>{{ obj.title }}</span>
+      {% endif %}
     </h3>
     <div class="country_status">
-              <span class="country"><img
-                  src="/assets/sprites/flags/flag-{{ obj.state_name.0|lower|cut:" " }}.png"
-                  alt="{{ obj.state_name.0 }} flag"
-                  height="20px"
-              >&nbsp;{{ obj.state_name.0 }}</span> |
+    <span class="country">
+      <img
+          src="/assets/sprites/flags/flag-{{ obj.state_name.0|lower|cut:" " }}.png"
+          alt="{{ obj.state_name.0 }} flag"
+          height="20px"
+      />
+      {{ obj.state_name.0 }}
+    </span> |
       <span title="Bilateral Initiative status">
         {{ obj.status }}
       </span>
@@ -34,10 +43,16 @@
         {% endfor %}
       </ul>
     </div>
-    <div><b>Grant: </b> {{ obj.grant | floatformat:0 | currency }}</div>
+    {% if obj.promoter_organization %}
+      <div>
+        <b>Promoter Organization:&nbsp;</b>
+        <span>{{ obj.promoter_organization }}</span>
+      </div>
+    {% endif %}
     {% if obj.project_name %}
       <div><b>Project:&nbsp;</b> {{ obj.project_name.0 }}</div>
       <div><b>Project status:&nbsp;</b> {{ obj.project_status.0 }}</div>
     {% endif %}
+    <div><b>Grant: </b> {{ obj.grant | floatformat:0 | currency }}</div>
   </div>
 </li>
