@@ -31,10 +31,15 @@ class BilateralInitiativeIndex(SearchIndex, Indexable):
     project_status = fields.FacetMultiValueField()
     level = fields.FacetCharField(model_attr="level")
     status = fields.FacetCharField(model_attr="status")
+    promoter_state_name = fields.FacetCharField()
 
     # specific fields
     text = fields.CharField(document=True, use_template=True)
     title = fields.CharField(indexed=False)
+    url = fields.CharField(indexed=False, model_attr="url", null=True)
+    promoter_organization = fields.CharField(
+        indexed=False, model_attr="promoter_organization"
+    )
     grant = fields.DecimalField()
 
     def get_model(self):
@@ -120,6 +125,9 @@ class BilateralInitiativeIndex(SearchIndex, Indexable):
 
     def prepare_grant(self, obj):
         return obj.programme.allocation_eea + obj.programme.allocation_norway
+
+    def prepare_promoter_state_name(self, obj):
+        return obj.promoter_state and obj.promoter_state.name
 
 
 class ProgrammeIndex(SearchIndex, Indexable):
@@ -591,7 +599,9 @@ class OrganisationIndex(SearchIndex, Indexable):
     def prepare_programme_status(self, obj):
         statuses = set(programme.status for programme in obj.programmes)
         # Add programme status from projects also
-        return list(statuses.union(project.programme.status for project in obj.projects))
+        return list(
+            statuses.union(project.programme.status for project in obj.projects)
+        )
 
     def prepare_project_status(self, obj):
         return list(set(project.status for project in obj.projects))
