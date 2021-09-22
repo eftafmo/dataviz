@@ -74,36 +74,15 @@ class BilateralInitiativeIndex(SearchIndex, Indexable):
         return obj.programme and [obj.programme.display_name]
 
     def prepare_programme_status(self, obj):
-        if obj.project:
-            return [obj.project.programme.status]
-
-        if obj.programme:
-            return [obj.programme.status]
-        return []
+        return obj.programme and [obj.programme.status]
 
     def prepare_programme_area_ss(self, obj):
-        areas = set()
-        for area in obj.programme_areas.all():
-            areas.add(area.name)
-        if obj.project:
-            for area in obj.project.programme_areas.all():
-                areas.add(area.name)
-        if obj.programme:
-            for area in obj.programme.programme_areas.all():
-                areas.add(area.name)
-
-        return list(areas)
+        return [area.name for area in obj.programme_areas.all()]
 
     def prepare_priority_sector_ss(self, obj):
-        sectors = set()
-        if obj.project:
-            for sector in obj.project.priority_sectors.all():
-                sectors.add(sector.name)
-        if obj.programme:
-            for area in obj.programme.programme_areas.all():
-                sectors.add(area.priority_sector.name)
-
-        return list(sectors)
+        return list(
+            set(area.priority_sector.name for area in obj.programme_areas.all())
+        )
 
     def prepare_project_name(self, obj):
         return obj.project and [obj.project.display_name]
@@ -124,7 +103,7 @@ class BilateralInitiativeIndex(SearchIndex, Indexable):
         return obj.display_name
 
     def prepare_grant(self, obj):
-        return obj.programme.allocation_eea + obj.programme.allocation_norway
+        return obj.grant
 
     def prepare_promoter_state_name(self, obj):
         return obj.promoter_state and obj.promoter_state.name
