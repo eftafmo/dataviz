@@ -295,16 +295,25 @@ class BilateralInitiative(models.Model):
 
     code = models.CharField(max_length=32, primary_key=True)
     title = models.CharField(max_length=512)  # not unique
+    url = models.CharField(max_length=256, null=True)
 
+    grant = models.DecimalField(max_digits=15, decimal_places=2)
     programme = models.ForeignKey(Programme, related_name='bilateral_initiatives',
                                   on_delete=models.CASCADE)
     project = models.ForeignKey(Project, null=True, related_name='bilateral_initiatives',
                                 on_delete=models.CASCADE)
-    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True,
+                              related_name='bilateral_initiatives')
     programme_areas = models.ManyToManyField(ProgrammeArea)
 
     level = models.CharField(max_length=16)
     status = models.CharField(max_length=16)
+
+    initial_description = models.TextField()
+    results_description = models.TextField()
+
+    promoter_state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
+    promoter_organization = models.CharField(max_length=256, null=True)
 
     @cached_property
     def display_name(self):

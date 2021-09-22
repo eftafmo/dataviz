@@ -287,11 +287,17 @@ class Command(BaseCommand):
                     funding_period=FUNDING_PERIOD,
                     code=row['BICode'],
                     title=row['BITitle'],
+                    url=row['BIURL'],
+                    grant=row['BIGrant'],
                     programme=programmes.get(row['ProgrammeShortName']),
                     project=projects.get(row['ProjectCode']),
                     state=states.get(row['Country']),
                     level=row['Level'] or '',
                     status=row['BIStatus'],
+                    initial_description=sanitize_html(row['BIInitialDescriptionHtml']),
+                    results_description=sanitize_html(row['BIResultsDescriptionHtml']),
+                    promoter_state=states.get(row['PromoterCountry']),
+                    promoter_organization=row['PromoterOrganisation'],
                 )
                 self._add_m2m_entries(bilateral_initiative, row, 'ProgrammeAreaCodesList', 'programme_areas',
                                       'ProgrammeArea', programme_areas)
