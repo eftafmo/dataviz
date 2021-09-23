@@ -12,7 +12,11 @@ export default {
       return Object.values(this.FMS);
     },
     FMS() {
-      return FMS[this.period || "2014-2021"];
+      let key = this.period;
+      if (!this.period || this.period === "none") {
+        key = "2014-2021";
+      }
+      return FMS[key];
     },
   },
 
