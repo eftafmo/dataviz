@@ -1,5 +1,6 @@
 import html
 from collections import defaultdict
+from itertools import chain
 from itertools import product
 
 from rest_framework.generics import ListAPIView
@@ -310,21 +311,31 @@ def projects(request):
             programme_nuts['positive'].add(project.code)
 
     news_query = News.objects.filter(
-            project__funding_period=period_id,
-        ).exclude(
-            project_id__isnull=True,
-        ).select_related(
-            'project',
+            Q(project__funding_period=period_id) | Q(programmes__funding_period=period_id),
         ).prefetch_related(
+            'project',
             'project__programme_areas',
+            'programmes',
+            'programmes__states',
+            'programmes__programme_areas'
         ).order_by('-created')
     news = defaultdict(list)
     for item in news_query:
-        keys = product(
-            item.project.financial_mechanisms,
-            (item.project.state_id, ),
-            item.project.programme_areas.values_list('id', flat=True),
-        )
+        if item.project:
+            keys = product(
+                item.project.financial_mechanisms,
+                (item.project.state_id, ),
+                item.project.programme_areas.values_list('id', flat=True),
+            )
+        else:
+            keys = chain(*[
+                product(
+                    programme.financial_mechanisms,
+                    programme.states.values_list('code', flat=True),
+                    programme.programme_areas.values_list('id', flat=True),
+                )
+                for programme in item.programmes.all()
+            ])
         for key in keys:
             news[key].append({
                 'title': html.unescape(item.title or ''),
@@ -332,7 +343,7 @@ def projects(request):
                 'created': item.created,
                 'summary': item.summary,
                 'image': item.image,
-                'nuts': item.project.nuts_id,
+                'nuts': item.project and item.project.nuts_id,
             })
 
     out = []
