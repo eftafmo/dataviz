@@ -100,13 +100,13 @@
     icon: "other.png",
   },
   {
+    name: "Allocation to Hungary",
+    colour: "rgb(100, 100, 100)",
+    icon: "other.png",
+  },
+  {
     name: "Other",
     colour: "rgb(179, 179, 179)",
     icon: "other.png",
   },
-  {
-    name: "Allocation to Hungary",
-    colour: "rgb(100, 100, 100)",
-    icon: "other.png",
-  }
 ]
