@@ -145,6 +145,9 @@ class ProgrammeAllocation(models.Model):
 
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
+    thematic = models.CharField(max_length=16, blank=True)
+    sdg_no = models.IntegerField(null=True)
+
 
 class Project(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)

@@ -139,7 +139,9 @@ class Command(BaseCommand):
                     programme_area=programme_areas.get(row['PACode']),
                     priority_sector=priority_sectors.get(row['PSCode']),
                     programme=programmes.get(row['ProgrammeShortName']),
-                    allocation=row['BudgetHeadingGrant']
+                    allocation=row['BudgetHeadingGrant'],
+                    thematic=row['Thematic'] or '',
+                    sdg_no=row['SDGno'],
                 )
 
         self.stdout.write(self.style.SUCCESS(
