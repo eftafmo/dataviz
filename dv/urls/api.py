@@ -16,7 +16,7 @@ urlpatterns = [
         name='grants'),
     url(r'^sdg.json',
         cache_page(settings.API_CACHE_SECONDS)(views.sdg),
-        name='grants'),
+        name='sdg'),
     url(r'^projects.json',
         cache_page(settings.API_CACHE_SECONDS)(views.projects),
         name='projects'),
