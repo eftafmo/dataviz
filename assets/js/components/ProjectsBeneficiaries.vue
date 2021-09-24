@@ -29,17 +29,17 @@ export default {
     },
 
     totalvaluefunc(v) {
-      return v ? v.project_count : 0;
+      return v ? v.projects.size : 0;
     },
 
     tooltipTemplate(ev, d) {
       // TODO: oh my, the copy-paste. it hurts.
-      const data = d.data.filter((x) => x.value != 0);
+      const data = d.data.filter((x) => x.value !== 0);
       const datatxt = data
         .map(
           (x) => `
             <ul>${x.name} : ${this.number(
-            d[x.name].project_count
+            d[x.name].projects.size
           )} projects</ul>
         `
         )
