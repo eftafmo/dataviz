@@ -11,13 +11,14 @@ export default {
     FM_ARRAY() {
       return Object.values(this.FMS);
     },
-    FMS() {
-      let key = this.period;
-      if (!this.period || this.period === "none") {
-        key = "2014-2021";
-      }
-      return FMS[key];
-    },
+  },
+
+  created() {
+    let key = this.period;
+    if (!this.period || this.period === "none") {
+      key = "2014-2021";
+    }
+    this.FMS = FMS[key];
   },
 
   methods: {
