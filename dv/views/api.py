@@ -266,6 +266,95 @@ def grants(request):
 
 
 @require_GET
+def sdg(request):
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
+    allocations = ProgrammeAllocation.objects.filter(
+        funding_period=period_id,
+        programme_area__isnull=False,
+    ).exclude(
+        allocation=0,  # TODO should we still exclude this?
+    ).select_related(
+        'programme_area',
+        'programme_area__priority_sector',
+    ).order_by('state', 'financial_mechanism')
+
+    indicators = Indicator.objects.filter(
+        funding_period=period_id,
+        programme__is_tap=False,
+    ).values(
+        'indicator',
+        'header',
+        'state_id',
+        'programme_area_id'
+    ).annotate(
+        achievement_eea=Sum('achievement_eea'),
+        achievement_norway=Sum('achievement_norway'),
+    ).order_by(F('order').asc(nulls_last=True))
+
+    results = defaultdict(lambda: defaultdict(dict))
+    for indicator in indicators:
+        if indicator['achievement_eea']:
+            key = (FM_EEA, indicator['state_id'], indicator['programme_area_id'])
+            results[key][indicator['header']].update({
+                indicator['indicator']: {
+                    'achievement': indicator['achievement_eea'],
+                }
+            })
+        if indicator['achievement_norway']:
+            key = (FM_NORWAY, indicator['state_id'], indicator['programme_area_id'])
+            results[key][indicator['header']].update({
+                indicator['indicator']: {
+                    'achievement': indicator['achievement_eea'],
+                }
+            })
+
+    programmes = defaultdict(dict)
+    programme_query = Programme.objects.filter(
+        funding_period=period_id,
+        is_tap=False,
+        is_bfp=False,
+    ).prefetch_related(
+        'states',
+        'programme_areas',
+    ).order_by('code')
+
+    for programme in programme_query:
+        keys = product(
+            programme.financial_mechanisms,
+            programme.states.values_list('code', flat=True),
+            programme.programme_areas.values_list('id', flat=True),
+        )
+        for key in keys:
+            programmes[key][programme.code] = {
+                'name': programme.name,
+                'url': programme.url,
+            }
+
+    out = []
+    for allocation in allocations:
+        state = allocation.state_id
+        financial_mechanism = allocation.financial_mechanism
+        programme_area = allocation.programme_area_id
+        out.append({
+            'period': period,
+            'fm': FINANCIAL_MECHANISMS_DICT[financial_mechanism],
+            'sector': allocation.programme_area.priority_sector.name,
+            'area': allocation.programme_area.name,
+            'beneficiary': state,
+            'is_ta': allocation.programme_area.priority_sector.code == 'OT',
+            'allocation': allocation.allocation,
+            'results': results[(financial_mechanism, state, programme_area)],
+            'programmes': programmes[(financial_mechanism, state, programme_area)],
+            'thematic': allocation.thematic,
+            'sdg_no': allocation.sdg_no,
+        })
+
+    return JsonResponse(out)
+
+
+@require_GET
 def projects(request):
     period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
     period_id = FUNDING_PERIODS_DICT[period]  # used in queries
