@@ -100,9 +100,9 @@ export default {
     return {
       tag: "beneficiaries",
       state_type: undefined, // children must define this (beneficiary / donor)
-      //div_types: undefined, // required, an array of dictionaries with {id, colour}
+      //div_types: undefined, // required, an array of dictionaries with {id, color}
 
-      label_colour: "#333",
+      label_color: "#333",
       layout: {
         // these are all em-based values
         itemHeight: 1.4,
@@ -389,8 +389,8 @@ export default {
         .attr("fill", (d) =>
           this.filters[this.state_type] === null ||
           this.filters[this.state_type] == d[this.state_type]
-            ? d.stripesFill || d.colour
-            : this.inactivecolour(d.colour)
+            ? d.stripesFill || d.color
+            : this.inactivecolor(d.color)
         );
       this.createStateFmRect(g);
 
@@ -405,7 +405,7 @@ export default {
     createStateFmRect(el) {
       // adding a stroke as well prevents what looks like a sub-pixel gap
       // between divs. but needs to be done for background too, so, TODO
-      //.attr("stroke", (d) => d.colour )
+      //.attr("stroke", (d) => d.color )
       return el
         .append("rect")
         .attr("shape-rendering", "crispEdges")
@@ -516,7 +516,7 @@ export default {
       country
         .append("text")
         .text((d) => d.name)
-        .attr("fill", this.label_colour)
+        .attr("fill", this.label_color)
         .attr("text-anchor", "end")
         .attr("font-size", 12)
         // v-align
@@ -552,7 +552,7 @@ export default {
         .call(this.renderStateData);
 
       /*
-       * set the active / inactive colours if necessary
+       * set the active / inactive colors if necessary
        * (after the divs were drawn)
        */
       sentered.call(this.renderActive);
@@ -585,7 +585,7 @@ export default {
           .transition(t)
           .attr(
             "fill",
-            yes ? this.label_colour : this.inactivecolour(this.label_colour)
+            yes ? this.label_color : this.inactivecolor(this.label_color)
           );
 
         // the flag
@@ -649,7 +649,7 @@ export default {
           .selectAll(".div")
           .transition(t)
           .attr("fill", (d) =>
-            yes ? d.stripesFill || d.colour : this.inactivecolour(d.colour)
+            yes ? d.stripesFill || d.color : this.inactivecolor(d.color)
           );
       };
 

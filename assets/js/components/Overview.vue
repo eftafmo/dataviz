@@ -118,7 +118,7 @@ export default {
 
       inner_radius: 0.85, // percentage of outer radius
 
-      beneficiary_colour: "#ccc",
+      beneficiary_color: "#ccc",
 
       source_stroke_opacity: 0.1,
       target_stroke_opacity: 0.5,
@@ -395,7 +395,7 @@ export default {
           .selectAll("path")
           .data(chords);
 
-      const fmcolour = (d) => this.FM_ARRAY[d.index].colour,
+      const fmcolor = (d) => this.FM_ARRAY[d.index].color,
         extract_coords = (d) => ({
           startAngle: d.startAngle,
           endAngle: d.endAngle,
@@ -423,8 +423,8 @@ export default {
       const fentered = fms
         .enter()
         .append("g")
-        .style("fill", fmcolour)
-        .style("stroke", fmcolour);
+        .style("fill", fmcolor)
+        .style("stroke", fmcolor);
 
       const bentered = beneficiaries.enter().append("g");
 

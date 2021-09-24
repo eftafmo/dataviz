@@ -28,9 +28,9 @@ export default {
     },
   },
   methods: {
-    sectorcolour(sectorname) {
+    sectorcolor(sectorname) {
       // using sector's name because we're mostly dealing with that
-      return this.SECTORS[slugify(sectorname)].colour;
+      return this.SECTORS[slugify(sectorname)].color;
     },
     sectoricon(sectorname) {
       // TODO: mismatch between sectors.icon and slugify(sname)

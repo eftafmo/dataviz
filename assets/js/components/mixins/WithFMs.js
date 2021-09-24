@@ -22,8 +22,8 @@ export default {
   },
 
   methods: {
-    fmcolour(fmid) {
-      return this.FMS[fmid].colour;
+    fmcolor(fmid) {
+      return this.FMS[fmid].color;
     },
 
     getFilterClassFm(fm) {

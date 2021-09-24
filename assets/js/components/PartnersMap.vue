@@ -70,7 +70,7 @@ export default {
       visible_layers: this.layers,
       region: null,
 
-      region_colour: "#ccc",
+      region_color: "#ccc",
 
       chart_opacity: 1.0,
       region_opacity: 0.8,
@@ -100,7 +100,7 @@ export default {
 
         - the array of regions involved, for showing on the map, resembling
           what we would "normally" aggregate.
-          must contain aggregated FMs (so the donor colours can be derived).
+          must contain aggregated FMs (so the donor colors can be derived).
       */
 
       const dataset = this.filtered;
@@ -316,7 +316,7 @@ export default {
     renderChart() {
       const t = this.getTransition();
 
-      this.renderDonorColours(t);
+      this.renderDonorColors(t);
       this.renderRegionData(t);
       this.renderConnections(t);
       this.renderVisibleLayers(t);
@@ -359,17 +359,17 @@ export default {
       const container = this.chart.select(`.partnerships > .base.${type}`),
         regions = container.selectAll("g").data(data, (d) => d.country);
 
-      const getColour = (d) => {
-        const colour = this.colours[type];
+      const getColor = (d) => {
+        const color = this.colors[type];
 
-        if (!this.filters.fm) return colour;
+        if (!this.filters.fm) return color;
 
         const country = d.country,
           fms = this.COUNTRIES[country].fms;
 
         if (!fms || fms.indexOf(slugify(this.filters.fm)) === -1)
-          return this.weak_colours[type];
-        else return colour;
+          return this.weak_colors[type];
+        else return color;
       };
 
       // connections are grouped by source state. will help us transition
@@ -378,9 +378,9 @@ export default {
         .enter()
         .append("g")
         .attr("class", (d) => d.country)
-        .attr("stroke", getColour);
+        .attr("stroke", getColor);
 
-      regions.transition(t).attr("stroke", getColour);
+      regions.transition(t).attr("stroke", getColor);
 
       const rexit = regions.exit().remove();
 

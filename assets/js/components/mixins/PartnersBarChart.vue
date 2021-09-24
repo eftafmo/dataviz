@@ -13,7 +13,7 @@ export default {
         types[k] = Object.assign(
           {
             id: k,
-            colour: this.colours[k],
+            color: this.colors[k],
           },
           col
         );

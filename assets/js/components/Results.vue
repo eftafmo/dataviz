@@ -12,7 +12,7 @@
                   v-for="(value, indicator) in indicators"
                   :key="indicator"
                   class="indicator clearfix"
-                  :style="{ borderColor: sectorcolour(sector) }"
+                  :style="{ borderColor: sectorcolor(sector) }"
                 >
                   <div class="indicator-achievement">{{ number(value) }}</div>
                   <div class="indicator-name">{{ indicator }}</div>

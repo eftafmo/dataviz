@@ -15,7 +15,7 @@
         patternTransform="rotate(45 0 0)"
         patternUnits="userSpaceOnUse"
       >
-        <rect width="100%" height="100%" :fill="fmData.colour"></rect>
+        <rect width="100%" height="100%" :fill="fmData.color"></rect>
         <line
           x1="0"
           y1="0"

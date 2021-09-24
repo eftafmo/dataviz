@@ -5,11 +5,11 @@ export default {
 
   data() {
     return {
-      colours: {
+      colors: {
         programmes: "#089900",
         projects: "#e68a00",
       },
-      weak_colours: {
+      weak_colors: {
         programmes: rgb(8, 153, 0, 0.2),
         projects: rgb(230, 138, 0, 0.1),
       },

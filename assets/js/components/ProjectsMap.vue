@@ -245,7 +245,7 @@ export default {
       // TODO: this shouldn't be handled here, but in AllocationMap or BaseMap
       self
         .transition(this.getTransition(this.short_duration))
-        .attr("fill", over ? this.hovered_region_colour : this.fillfunc);
+        .attr("fill", over ? this.hovered_region_color : this.fillfunc);
     },
 
     clickfunc(ev, d) {
@@ -462,8 +462,8 @@ export default {
         .transition(t)
         .attr("fill", (d) =>
           this.getRegionLevel(d.id) == 0
-            ? this.beneficiary_colour_zero
-            : this.region_colour_zero
+            ? this.beneficiary_color_zero
+            : this.region_color_zero
         );
 
       // we only go this far if this isn't the current region

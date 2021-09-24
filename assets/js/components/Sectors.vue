@@ -62,7 +62,7 @@
                 isSelectedSector(sector) ? null : unhighlight({}, sector)
               "
             >
-              <span :style="{ background: sector.data.colour }"></span>
+              <span :style="{ background: sector.data.color }"></span>
               <span>
                 {{ sector.data.name }}
               </span>
@@ -101,7 +101,7 @@
                     @mouseenter="highlight({}, area)"
                     @mouseleave="unhighlight({}, area)"
                   >
-                    <span :style="{ background: area.data.colour }"></span>
+                    <span :style="{ background: area.data.color }"></span>
                     <span>
                       {{ area.data.name }}
                     </span>
@@ -124,7 +124,7 @@ import * as d3 from "d3";
 import d3tip from "d3-tip";
 import debounce from "lodash.debounce";
 import merge from "lodash.merge";
-import { colour2gray, slugify } from "@js/lib/util";
+import { color2gray, slugify } from "@js/lib/util";
 
 import Chart from "./Chart";
 import WithSectors from "./mixins/WithSectors";
@@ -206,7 +206,7 @@ export default {
             sector = sectortree[sid] = {
               id: sid,
               name: s,
-              colour: "#555",
+              color: "#555",
             };
 
           let children = sector.children;
@@ -223,7 +223,7 @@ export default {
         // final touches
         for (const sid in sectortree) {
           const sector = sectortree[sid],
-            colour = sector.colour,
+            color = sector.color,
             areas =
               sector.children === undefined
                 ? []
@@ -231,12 +231,12 @@ export default {
 
           // add a backreference to the parent sector for all areas
           // and generate area colors
-          const colourscale = this._mkcolourscale(colour, areas.length);
+          const colorscale = this._mkcolorscale(color, areas.length);
 
           for (const area of areas) {
             area.parentid = sector.id;
             area.parentname = sector.name;
-            area.colour = colourscale(area.id);
+            area.color = colorscale(area.id);
           }
         }
       }
@@ -426,10 +426,10 @@ export default {
       return arc;
     },
 
-    _mkcolourscale: (colour, length) => {
-      if (length == 1) return d3.scaleOrdinal([colour]);
+    _mkcolorscale: (color, length) => {
+      if (length == 1) return d3.scaleOrdinal([color]);
 
-      const _c = d3.hsl(colour);
+      const _c = d3.hsl(color);
       let start = d3.hsl(_c.h, _c.s, _c.l, _c.opacity),
         end = d3.hsl(_c.h, _c.s, _c.l, _c.opacity);
 
@@ -440,11 +440,11 @@ export default {
         .range([0.1, 0.5])
         .clamp(true)(length);
 
-      // make the starting colour _delta% more saturated,
+      // make the starting color _delta% more saturated,
       start.s = Math.min(1, start.s + start.s * _delta);
       // and slightly darker
       start.l = Math.max(0, start.l - start.l * _delta);
-      // and the ending colour a bit lighter,
+      // and the ending color a bit lighter,
       end.l = Math.min(0.95, end.l + end.l * _delta);
 
       const _range = d3.range(length);
@@ -565,16 +565,16 @@ export default {
         .attr("id", this.getArcID)
         .attr("class", "arc");
 
-      aentered.filter((d) => d.depth == 1).attr("fill", (d) => d.data.colour);
+      aentered.filter((d) => d.depth == 1).attr("fill", (d) => d.data.color);
 
       const areas = aentered.filter((d) => d.depth == 2);
       // areas are normally hidden, unless filtered by sector.
-      // they're also normally coloured.
+      // they're also normally colored.
       if (!currsector) {
         areas
           .attr("opacity", 0)
           .style("display", "none")
-          .attr("fill", (d) => d.data.colour);
+          .attr("fill", (d) => d.data.color);
       } else {
         areas
           .attr("opacity", (d) => (this.isSelectedSector(d.parent) ? 1 : 0))
@@ -583,12 +583,12 @@ export default {
           );
 
         if (this.filters.area === null) {
-          areas.attr("fill", (d) => d.data.colour);
+          areas.attr("fill", (d) => d.data.color);
         } else {
           areas.attr("fill", (d) => {
-            const c = d.data.colour;
+            const c = d.data.color;
             if (this.isActiveArea(d)) return c;
-            return colour2gray(c, this.inactive_opacity);
+            return color2gray(c, this.inactive_opacity);
           });
         }
       }
@@ -666,12 +666,12 @@ export default {
           .style("display", null) // null undoes any other value
           .attr("opacity", 1)
           .attr("fill", (d) => {
-            const c = d.data.colour;
+            const c = d.data.color;
             if (this.filters.area === null) return c;
             if (this.isActiveArea(d)) return c;
             // TODO: if this was already grayed out it would be nice to pass
-            // momentarily through the default colour
-            return colour2gray(c, this.inactive_opacity);
+            // momentarily through the default color
+            return color2gray(c, this.inactive_opacity);
           });
       }
 
@@ -681,8 +681,8 @@ export default {
           .transition(t)
           .style("display", null) // null undoes any other value
           .attr("opacity", 0)
-          // reset colours to default
-          .attr("fill", (d) => d.data.colour)
+          // reset colors to default
+          .attr("fill", (d) => d.data.color)
           .on("end", function () {
             this.style.display = "none";
           });
@@ -790,7 +790,7 @@ export default {
 <style lang="less">
 .dataviz .viz.sectors {
   // defs
-  @text-colour: #444;
+  @text-color: #444;
   // these need to be synced with js
   @duration: 0.5s;
   @short_duration: 0.25s;
@@ -913,7 +913,7 @@ export default {
           display: flex;
           padding: 0.4rem;
           text-decoration: none;
-          color: @text-colour;
+          color: @text-color;
           border: 1px solid transparent;
           border-radius: 0.2rem;
           //transition: border-color @short_duration;

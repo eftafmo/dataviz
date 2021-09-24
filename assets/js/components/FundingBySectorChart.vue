@@ -190,7 +190,7 @@ export default {
         .attr("y", (d) => this.yScale(d.allocation))
         .attr("width", this.xScale.bandwidth())
         .attr("height", (d) => this.barChartHeight - this.yScale(d.allocation))
-        .attr("fill", (d) => d.sector.colour)
+        .attr("fill", (d) => d.sector.color)
         .attr("stroke", "none");
       sectorsGroups.exit().remove();
     },
@@ -232,7 +232,7 @@ export default {
         )
         .attr("width", this.legendSquareSize)
         .attr("height", this.legendSquareSize)
-        .attr("fill", (d) => d.sector.colour);
+        .attr("fill", (d) => d.sector.color);
       legendSquare.exit().remove();
 
       const legendLabels = this.chart

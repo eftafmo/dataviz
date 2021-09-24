@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 
-export function colour2gray(colour, opacity) {
+export function color2gray(color, opacity) {
   /*
-   * transforms the colour to grayscale while applying
+   * transforms the color to grayscale while applying
    * an optional simulated opacity change
    */
   // computes the gray value as a weighted average.
@@ -12,7 +12,7 @@ export function colour2gray(colour, opacity) {
   const G = 0.7152;
   const B = 0.0722;
 
-  const c = d3.rgb(colour);
+  const c = d3.rgb(color);
   const Y = c.r * R + c.g * G + c.b * B;
 
   if (opacity === undefined) return d3.rgb(Y, Y, Y);

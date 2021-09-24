@@ -4,109 +4,109 @@
   // 2009-2014
   {
     name: "Environmental protection and management",
-    colour: "rgb(140, 160, 35)",
+    color: "rgb(140, 160, 35)",
     icon: "environmental-protection-and-management.png",
   },
   {
     name: "Climate change and energy",
-    colour: "rgb(245, 130, 70)",
+    color: "rgb(245, 130, 70)",
     icon: "climate-change-and-energy.png",
   },
   {
     name: "Civil society",
-    colour: "rgb(195, 0, 105)",
+    color: "rgb(195, 0, 105)",
     icon: "civil-society.png",
   },
   {
     name: "Human and social development",
-    colour: "rgb(115, 70, 160)",
+    color: "rgb(115, 70, 160)",
     icon: "human-and-social-development.png",
   },
   {
     name: "Protecting cultural heritage",
-    colour: "rgb(105, 40, 0)",
+    color: "rgb(105, 40, 0)",
     icon: "protecting-cultural-heritage.png",
   },
   {
     name: "Research and scholarship",
-    colour: "rgb(245, 195, 10)",
+    color: "rgb(245, 195, 10)",
     icon: "research-and-scholarship.png",
   },
   {
     name: "Carbon capture and storage",
-    colour: "rgb(110, 125, 150)",
+    color: "rgb(110, 125, 150)",
     icon: "carbon-capture-and-storage.png",
   },
   {
     name: "Green industry innovation",
-    colour: "rgb(10, 160, 70)",
+    color: "rgb(10, 160, 70)",
     icon: "green-industry-innovation.png",
   },
   {
     name: "Decent work and tripartite dialogue",
-    colour: "rgb(0, 175, 240)",
+    color: "rgb(0, 175, 240)",
     icon: "decent-work-and-tripartite-dialogue.png",
   },
   {
     name: "Justice and home affairs",
-    colour: "rgb(10, 110, 145)",
+    color: "rgb(10, 110, 145)",
     icon: "justice-and-home-affairs.png",
   },
   // 2014-2021
   {
     name: "Innovation, research, education and competitiveness",
-    colour: "#F5C600",
+    color: "#F5C600",
     icon: "innovation-research-education-and-competitiveness.png"
   },
   {
     name: "Social inclusion, youth employment and poverty reduction",
-    colour: "#783F91",
+    color: "#783F91",
     icon: "social-inclusion-youth-employment-and-poverty-reduction.png",
   },
   {
     name: "Environment, energy, climate change and low carbon economy",
-    colour: "#9AA400",
+    color: "#9AA400",
     icon: "environment-energy-climate-change-and-low-carbon-economy.png",
   },
   {
     name: "Culture, civil society, good governance, fundamental rights and freedoms",
-    colour: "#C30064",
+    color: "#C30064",
     icon: "culture-civil-society-good-governance-fundamental-rights-and-freedoms.png",
   },
   {
     name: "Regional cooperation",
-    colour: "rgb(245, 130, 70)",
+    color: "rgb(245, 130, 70)",
     icon: "other.png",
   },
   {
     name: "Youth employment",
-    colour: "rgb(245, 130, 70)",
+    color: "rgb(245, 130, 70)",
     icon: "other.png",
   },
   // Other
   {
     name: "Technical assistance",
-    colour: "rgb(179, 179, 179)",
+    color: "rgb(179, 179, 179)",
     icon: "other.png",
   },
   {
     name: "Fund for bilateral relations",
-    colour: "rgb(179, 179, 179)",
+    color: "rgb(179, 179, 179)",
     icon: "other.png",
   },
   {
     name: "Reserve",
-    colour: "rgb(179, 179, 179)",
+    color: "rgb(179, 179, 179)",
     icon: "other.png",
   },
   {
     name: "Allocation to Hungary",
-    colour: "rgb(100, 100, 100)",
+    color: "rgb(100, 100, 100)",
     icon: "other.png",
   },
   {
     name: "Other",
-    colour: "rgb(179, 179, 179)",
+    color: "rgb(179, 179, 179)",
     icon: "other.png",
   },
 ]

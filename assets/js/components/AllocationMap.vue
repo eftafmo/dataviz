@@ -144,7 +144,7 @@ const AllocationMap = {
     idx = this.aggregate_on.findIndex((x) => x.source == "beneficiary");
     if (idx !== -1) this.aggregate_on.splice(idx, 1);
 
-    // aggreggate on fm, we'll need that for donor colours
+    // aggreggate on fm, we'll need that for donor colors
     this.aggregate_on.push({ source: "fm", destination: "fms", type: String });
 
     // cache for raw region-level data
@@ -211,7 +211,7 @@ const AllocationMap = {
     renderChart() {
       const t = this.getTransition();
 
-      this.renderDonorColours(t);
+      this.renderDonorColors(t);
       this.doZoom(t);
       this.renderData(t);
       this.doRenderRegionData(t); // leave this last in the chain, because...
@@ -349,7 +349,7 @@ const AllocationMap = {
 
             if (!yes)
               s.style("display", "none")
-                // also reset regions to default colour
+                // also reset regions to default color
                 .selectAll("path")
                 .attr("fill", $this.fillfunc);
           });

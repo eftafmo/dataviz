@@ -38,8 +38,8 @@ export default {
   },
 
   computed: {
-    inactivecolour() {
-      return (c) => util.colour2gray(c, this.inactive_opacity);
+    inactivecolor() {
+      return (c) => util.color2gray(c, this.inactive_opacity);
     },
   },
 

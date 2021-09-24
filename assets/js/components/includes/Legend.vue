@@ -22,7 +22,7 @@
             <rect
               width="10"
               height="10"
-              :fill="item.stripesFill || item.colour"
+              :fill="item.stripesFill || item.color"
             ></rect>
           </svg>
           {{ item.name }}

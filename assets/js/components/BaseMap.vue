@@ -27,13 +27,13 @@ const PijamaDefs = {
       <pattern id="multi-fm" width="50" height="11" patternUnits="userSpaceOnUse">
         <rect x="0" y="0" width="50" height="6"
               class="norway-grants"
-              :fill="fmcolour('norway-grants')"
-              :stroke="fmcolour('norway-grants')"
+              :fill="fmcolor('norway-grants')"
+              :stroke="fmcolor('norway-grants')"
         />
         <rect x="0" y="6" width="50" height="5"
               class="eea-grants"
-              :fill="fmcolour('eea-grants')"
-              :stroke="fmcolour('eea-grants')"
+              :fill="fmcolor('eea-grants')"
+              :stroke="fmcolor('eea-grants')"
         />
       </pattern>
     </defs>
@@ -59,16 +59,16 @@ export default {
     }
 
     return {
-      beneficiary_colour: "#b3dae4",
-      beneficiary_colour_zero: "#c2cdd3",
-      region_colour: "rgba(221, 221, 221, 0.5)",
-      region_colour_zero: "rgba(238, 238, 238, 0.9)",
+      beneficiary_color: "#b3dae4",
+      beneficiary_color_zero: "#c2cdd3",
+      region_color: "rgba(221, 221, 221, 0.5)",
+      region_color_zero: "rgba(238, 238, 238, 0.9)",
 
-      hovered_region_colour: "rgba(150, 210, 249, 0.5)",
-      current_region_colour: "rgba(221, 238, 255, 1)",
-      ancestor_region_colour: "rgba(221, 238, 255, 0)",
+      hovered_region_color: "rgba(150, 210, 249, 0.5)",
+      current_region_color: "rgba(221, 238, 255, 1)",
+      ancestor_region_color: "rgba(221, 238, 255, 0)",
 
-      donor_colour_inactive: "#fff",
+      donor_color_inactive: "#fff",
 
       width: 0,
       height: 0,
@@ -154,7 +154,7 @@ export default {
       return self;
     },
 
-    renderDonorColours(t) {
+    renderDonorColors(t) {
       let with_eea = false,
         with_no = false;
 
@@ -194,7 +194,7 @@ export default {
         with_eea = with_no = true;
       }
 
-      // EEA donors are either coloured or inactive
+      // EEA donors are either colored or inactive
       this.chart
         .select(".regions")
         .selectAll("path.donor")
@@ -202,15 +202,15 @@ export default {
         .transition(t)
         .attr(
           "fill",
-          with_eea ? this.fmcolour("eea-grants") : this.donor_colour_inactive
+          with_eea ? this.fmcolor("eea-grants") : this.donor_color_inactive
         );
 
       // Norway donors are handled via the pattern fill
-      const colourfuncNO = (id) => {
-        if (with_eea && with_no) return this.fmcolour(id);
+      const colorfuncNO = (id) => {
+        if (with_eea && with_no) return this.fmcolor(id);
 
-        if (with_eea) return this.fmcolour("eea-grants");
-        if (with_no) return this.fmcolour("norway-grants");
+        if (with_eea) return this.fmcolor("eea-grants");
+        if (with_no) return this.fmcolor("norway-grants");
       };
 
       d3.select("pattern#multi-fm")
@@ -219,12 +219,12 @@ export default {
           return this.getAttribute("class");
         })
         .transition(t)
-        .attr("fill", colourfuncNO)
-        .attr("stroke", colourfuncNO);
+        .attr("fill", colorfuncNO)
+        .attr("stroke", colorfuncNO);
     },
 
     fillfunc(d, i, group) {
-      // returns the fill colour of a country or region
+      // returns the fill color of a country or region
       const id = d.id || d.properties.id,
         level = this.getRegionLevel(id),
         country = this.getAncestorRegion(id, 0),
@@ -234,21 +234,21 @@ export default {
         if (country == "NO") return "url(#multi-fm)";
 
         if (this.filters.fm == "Norway Grants")
-          return this.donor_colour_inactive;
+          return this.donor_color_inactive;
 
-        return this.fmcolour("eea-grants");
+        return this.fmcolor("eea-grants");
       }
 
       if (this.current_region) {
-        if (id == this.current_region) return this.current_region_colour;
+        if (id == this.current_region) return this.current_region_color;
 
         if (this.isAncestorRegion(id, this.current_region))
-          return this.ancestor_region_colour;
+          return this.ancestor_region_color;
       }
 
-      if (level == 0) return this.beneficiary_colour;
+      if (level == 0) return this.beneficiary_color;
 
-      return this.region_colour;
+      return this.region_color;
     },
   },
 };

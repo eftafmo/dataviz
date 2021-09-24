@@ -13,7 +13,7 @@ export default {
       nuts_level: 3,
       draw_nuts_levels: [3],
 
-      region_colour: interpolateYlGn(0),
+      region_color: interpolateYlGn(0),
     };
   },
 
@@ -69,14 +69,14 @@ export default {
       if (!self) return;
 
       if (
-        this.hovered_region_colour &&
+        this.hovered_region_color &&
         d.id.length == 2 &&
         d.allocation != 0 &&
         this.COUNTRIES[d.id].type === "beneficiary"
       )
         self
           .transition(this.getTransition(this.short_duration))
-          .attr("fill", over ? this.hovered_region_colour : this.fillfunc);
+          .attr("fill", over ? this.hovered_region_color : this.fillfunc);
     },
 
     renderData(t) {
@@ -90,7 +90,7 @@ export default {
       beneficiaries
         .classed("zero", false)
         .transition(t)
-        .attr("fill", this.beneficiary_colour);
+        .attr("fill", this.beneficiary_color);
 
       beneficiaries
         .exit()
@@ -102,7 +102,7 @@ export default {
           });
         })
         .transition(t)
-        .attr("fill", this.beneficiary_colour_zero);
+        .attr("fill", this.beneficiary_color_zero);
 
       // and TODO: disable filtering for 0 / missing items
     },

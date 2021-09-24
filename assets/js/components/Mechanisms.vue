@@ -33,7 +33,7 @@
           <text
             :x="(width / 2) * index + width / 4"
             :y="height + 10"
-            :fill="isDisabledFm(fm) ? disabledColor : fm.colour"
+            :fill="isDisabledFm(fm) ? disabledColor : fm.color"
             dominant-baseline="hanging"
             text-anchor="middle"
             font-size="18"
@@ -81,7 +81,7 @@
 <script>
 import * as d3 from "d3";
 import d3tip from "d3-tip";
-import { colour2gray } from "@js/lib/util";
+import { color2gray } from "@js/lib/util";
 
 import Chart from "./Chart";
 
@@ -178,7 +178,7 @@ export default {
         .attr("height", this.height)
         .attr("fill", (d) =>
           this.isDisabledFm(d)
-            ? colour2gray(d.colour, this.inactiveOpacity)
+            ? color2gray(d.color, this.inactiveOpacity)
             : d.stripesFill
         );
       this.chart
