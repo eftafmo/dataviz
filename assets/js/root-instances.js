@@ -7,6 +7,7 @@
 import { default as Root } from "./components/Root";
 import * as components from "./components";
 import Sidebar from "./components/includes/Sidebar";
+import { ThematicBarChart } from "./components";
 
 const _Base = {
   extends: Root,
@@ -33,6 +34,7 @@ export const Grants = {
 
   components: {
     mechanisms: components.Mechanisms,
+    thematic_bar_chart: components.ThematicBarChart,
     sectors: components.Sectors,
     xmap: components.GrantsMap,
     beneficiaries: components.Beneficiaries,
@@ -76,6 +78,7 @@ export const Projects = {
 
   components: {
     mechanisms: components.ProjectsMechanisms,
+    thematic_bar_chart: components.ThematicBarChart,
     sectors: components.ProjectsSectors,
     xmap: components.ProjectsMap,
     beneficiaries: components.ProjectsBeneficiaries,

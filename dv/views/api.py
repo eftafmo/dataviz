@@ -454,6 +454,7 @@ def projects(request):
             'projects': projects[key],
             'project_allocation': project_allocations[key],
             'news': news[key],
+            'thematic': allocation.thematic,
         })
     return JsonResponse(out, encoder=SetEncoder)
 

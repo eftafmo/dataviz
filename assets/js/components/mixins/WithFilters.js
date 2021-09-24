@@ -8,12 +8,13 @@ export const FILTERS = {
   area: null,
   donor: null,
   DPP: null,
+  thematic: null,
 };
 
 // and their usage across scenarios
 export const SCENARIOFILTERS = {
   index: ["fm", "beneficiary"],
-  funding: ["fm", "beneficiary", "sector", "area"],
+  funding: ["fm", "beneficiary", "sector", "area", "thematic"],
   global_goals: ["fm", "beneficiary", "sector", "area", "sdg_no"],
   cooperation: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
   projects: ["fm", "beneficiary", "region", "sector", "area"],
@@ -39,6 +40,7 @@ export default {
     "filters.area": "handleFilterArea",
     "filters.donor": "handleFilterDonor",
     "filters.DPP": "handleFilterDPP",
+    "filters.thematic": "handleFilterThematic",
   },
 
   methods: {
@@ -77,6 +79,10 @@ export default {
     },
     handleFilterDPP(val, old) {
       const type = "DPP";
+      this.handleFilter(type, val, old);
+    },
+    handleFilterThematic(val, old) {
+      const type = "thematic";
       this.handleFilter(type, val, old);
     },
   },

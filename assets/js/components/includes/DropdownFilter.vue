@@ -104,7 +104,8 @@ export default {
       } else if (
         this.filter === "beneficiary" ||
         this.filter === "donor" ||
-        this.filter === "sdg_no"
+        this.filter === "sdg_no" ||
+        this.filter === "thematic"
       ) {
         // special case for country filters
         return item.id;

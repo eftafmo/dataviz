@@ -17,6 +17,10 @@
       </mechanisms>
     </div>
 
+    <div class="grant-dataviz" id="thematic-chart">
+      <thematic_bar_chart :initial="dataset" period="{{ PERIOD }}"></thematic_bar_chart>
+    </div>
+
     <div class="grant-dataviz" id="priority-sectors">
       <sectors
           :initial="dataset"
@@ -77,7 +81,7 @@
       Dataviz.Grants,
       {
         datasource: "/api/grants.json",
-        datasourcePeriods: ["{{ PERIOD }}"],
+        datasourcePeriods: ["{{ PERIOD }}"]
       }
     ).mount("#content");
   });

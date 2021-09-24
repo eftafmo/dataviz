@@ -54,11 +54,6 @@ export default {
   extends: Component,
   type: "overview",
   mixins: [WithFMsMixin, WithCountriesMixin],
-  data() {
-    return {
-      filter_by: ["fm", "beneficiary"],
-    };
-  },
   computed: {
     aggregated() {
       // XXX DPP = Donor Programme Partners

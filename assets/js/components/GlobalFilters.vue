@@ -83,6 +83,7 @@ export default {
       donor: { name: "DS", formatter: this.get_country },
       DPP: { name: "Programme partner", truncate: 60 },
       dpp: { name: "Project partner", truncate: 60 },
+      thematic: { name: "Criteria" },
     };
   },
 

@@ -27,7 +27,7 @@ export default {
     return {
       // what the dataset can be filtered on.
       // default to filters applicable to all scenarios.
-      filter_by: ["fm", "beneficiary", "sector", "area", "sdg_no"],
+      filter_by: ["fm", "beneficiary", "sector", "area", "sdg_no", "thematic"],
 
       // aggregation columns.
       aggregate_by: [],
