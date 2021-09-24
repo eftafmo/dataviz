@@ -101,7 +101,11 @@ export default {
     getFilterName(item) {
       if (typeof item === "string") {
         return item;
-      } else if (this.filter === "beneficiary" || this.filter === "donor") {
+      } else if (
+        this.filter === "beneficiary" ||
+        this.filter === "donor" ||
+        this.filter === "sdg_no"
+      ) {
         // special case for country filters
         return item.id;
       } else {

@@ -4,6 +4,7 @@ export const FILTERS = {
   beneficiary: null,
   region: null,
   sector: null,
+  sdg_no: null,
   area: null,
   donor: null,
   DPP: null,
@@ -13,7 +14,7 @@ export const FILTERS = {
 export const SCENARIOFILTERS = {
   index: ["fm", "beneficiary"],
   funding: ["fm", "beneficiary", "sector", "area"],
-  global_goals: ["fm", "beneficiary", "sector", "area"],
+  global_goals: ["fm", "beneficiary", "sector", "area", "sdg_no"],
   cooperation: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
   projects: ["fm", "beneficiary", "region", "sector", "area"],
   search: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
@@ -34,6 +35,7 @@ export default {
     "filters.beneficiary": "handleFilterBeneficiary",
     "filters.region": "handleFilterRegion",
     "filters.sector": "handleFilterSector",
+    "filters.sdg_no": "handleFilterSDG",
     "filters.area": "handleFilterArea",
     "filters.donor": "handleFilterDonor",
     "filters.DPP": "handleFilterDPP",
@@ -59,6 +61,10 @@ export default {
     },
     handleFilterSector(val, old) {
       const type = "sector";
+      this.handleFilter(type, val, old);
+    },
+    handleFilterSDG(val, old) {
+      const type = "sdg_no";
       this.handleFilter(type, val, old);
     },
     handleFilterArea(val, old) {

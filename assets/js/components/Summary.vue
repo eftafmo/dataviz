@@ -3,7 +3,7 @@
     <transition name="fade">
       <div v-if="data.allocation > 0" :key="changed" class="allocation">
         <strong>{{ currency(data.allocation) }}</strong>
-        <small>
+        <small v-if="data.bilateral_allocation">
           {{ currency(data.bilateral_allocation) }} for bilateral fund
         </small>
       </div>

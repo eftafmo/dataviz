@@ -6,23 +6,15 @@
       :svg-node="$refs.svgContainer"
       :scale-download="2"
     />
-    <h2>Allocation by sector</h2>
-    <dropdown-filter filter="sector" :items="dropDownItems" title="Sector" />
+    <h2>Sustainable Development Goals</h2>
+    <dropdown-filter
+      filter="sdg_no"
+      :items="allItems"
+      title="Sustainable Development Goals"
+    />
     <transition name="fade">
-      <div
-        v-if="currentGoal"
-        class="current-goal"
-        :style="{ 'background-color': currentGoal.color }"
-      >
-        <div class="current-goal-title">
-          <div class="current-goal-index">
-            {{ currentGoal.index + 1 }}
-          </div>
-          <div class="current-goal-name">
-            {{ currentGoal.name }}
-          </div>
-        </div>
-        <img :src="currentGoal.imgURL" alt="" />
+      <div v-if="currentGoal" class="current-goal">
+        <img :src="currentGoal.imgURL" :alt="currentGoal.name" />
       </div>
     </transition>
     <chart-container
@@ -34,7 +26,7 @@
         <defs>
           <pattern
             v-for="patternData in patternArray"
-            :id="`stripes-pattern-${patternData.id}`"
+            :id="`stripes-pattern-sdg_no${patternData.id}`"
             :key="patternData.id"
             width="6"
             height="20"
@@ -44,7 +36,7 @@
             <rect
               width="100%"
               height="100%"
-              :fill="patternData.colour"
+              :fill="patternData.color"
               fill-opacity="0.15"
             ></rect>
             <line
@@ -54,7 +46,7 @@
               y2="100%"
               stroke-width="1"
               stroke-opacity="0.25"
-              :stroke="patternData.colour"
+              :stroke="patternData.color"
             />
           </pattern>
         </defs>
@@ -72,10 +64,9 @@
 </template>
 
 <script>
+import allSDGs from "@js/constants/sdg.json5";
 import Embeddor from "./includes/Embeddor";
 import Chart from "./Chart";
-import WithSectors from "./mixins/WithSectors";
-import { slugify } from "../lib/util";
 import * as d3 from "d3";
 import DropdownFilter from "./includes/DropdownFilter";
 
@@ -85,49 +76,42 @@ export default {
   extends: Chart,
   type: "",
 
-  mixins: [WithSectors],
   data() {
     return {
-      // TODO: Set to sectors for testing only.
-      // TODO: NEEDS TO change after new data is available.
-      aggregate_by: ["sector"],
+      aggregate_by: ["sdg_no"],
       filter_by: ["fm", "beneficiary"],
       barHeight: 18,
       barPadding: 1.25,
       width: 500,
       disabledColor: "#9f9f9f",
-      disabledFill: "url(#stripes-pattern-disabled-sector)",
+      disabledFill: "url(#stripes-pattern-sdg_nodisabled)",
     };
   },
   computed: {
+    allItems() {
+      return allSDGs;
+    },
     data() {
-      return Object.entries(this.aggregated).map(([key, item], index) => {
-        const id = slugify(key);
+      return this.allItems.map((sdg, index) => {
         return {
-          id,
+          ...sdg,
           index,
-          name: key,
-          color: this.sectorcolour(key),
-          stripesFill: `url(#stripes-pattern-${id})`,
-          imgURL: this.sectorUrl(key),
-          ...item,
+          allocation: this.aggregated[sdg.id]?.allocation || 0,
+          stripesFill: `url(#stripes-pattern-sdg_no${sdg.id})`,
+          imgURL: this.getAssetUrl(`imgs/goals/${sdg.icon}`),
         };
       });
     },
     currentGoal() {
-      if (!this.filters.sector) return null;
-      const idToFind = slugify(this.filters.sector);
-      return this.data.find((item) => idToFind === item.id);
-    },
-    dropDownItems() {
-      return Array.from(new Set(this.dataset.map((item) => item.sector)));
+      if (!this.filters.sdg_no) return null;
+      return this.data.find((item) => this.filters.sdg_no === item.id);
     },
     patternArray() {
       return [
-        ...this.SECTORS_ARRAY,
+        ...this.allItems,
         {
-          id: "disabled-sector",
-          colour: this.disabledColor,
+          id: "disabled",
+          color: this.disabledColor,
         },
       ];
     },
@@ -145,20 +129,20 @@ export default {
     },
     height() {
       return (
-        (this.SECTORS_ARRAY.length - 1) *
+        this.allItems.length *
         (this.barHeight + this.barHeight * this.barPadding)
       );
     },
   },
   methods: {
-    toggleSector(d) {
-      this.filters.sector = this.filters.sector === d.name ? null : d.name;
+    toggleSDG(d) {
+      this.filters.sdg_no = this.filters.sdg_no === d.id ? null : d.id;
     },
-    isSelectedSector(d) {
-      return this.filters.sector === d.name;
+    isSelectedSDG(d) {
+      return this.filters.sdg_no === d.id;
     },
-    isDisabledSector(d) {
-      return this.filters.sector && this.filters.sector !== d.name;
+    isDisabledSDG(d) {
+      return this.filters.sdg_no && this.filters.sdg_no !== d.id;
     },
     yScale(d) {
       return d.index * (this.barHeight + this.barHeight * this.barPadding);
@@ -180,7 +164,7 @@ export default {
 
       this.chart
         .selectAll("rect.hover-bar")
-        .on("click", (ev, d) => this.toggleSector(d));
+        .on("click", (ev, d) => this.toggleSDG(d));
     },
     updateSquares() {
       const t = this.getTransition();
@@ -218,7 +202,7 @@ export default {
         .attr("stroke", "none")
         .attr("fill", "white")
         .attr("font-weight", "bold")
-        .text((d) => (d.index + 1).toString());
+        .text((d) => d.id.toString());
       barSquaresText.exit().remove();
     },
     updateBars() {
@@ -235,12 +219,12 @@ export default {
         .attr("width", (d) => this.barHeight + this.xScale(d.allocation))
         .attr("height", this.barHeight)
         .attr("stroke", (d) =>
-          this.isDisabledSector(d) ? this.disabledColor : d.color
+          this.isDisabledSDG(d) ? this.disabledColor : d.color
         )
         .attr("stroke-width", 1)
         .attr("stroke-opacity", 0.25)
         .attr("fill", (d) =>
-          this.isDisabledSector(d) ? this.disabledFill : d.stripesFill
+          this.isDisabledSDG(d) ? this.disabledFill : d.stripesFill
         );
       barGoals.exit().remove();
     },
@@ -257,9 +241,7 @@ export default {
         .attr("x", this.barHeight + 10)
         .attr("y", (d) => this.yScaleMiddle(d))
         .attr("font-size", "14px")
-        .attr("font-weight", (d) =>
-          this.isSelectedSector(d) ? "bold" : "normal"
-        )
+        .attr("font-weight", (d) => (this.isSelectedSDG(d) ? "bold" : "normal"))
         .attr("dominant-baseline", "middle")
         .text((d) => d.name);
       barLabels.exit().remove();
@@ -277,9 +259,7 @@ export default {
         .attr("x", this.width - 10)
         .attr("y", (d) => this.yScaleMiddle(d))
         .attr("font-size", "14px")
-        .attr("font-weight", (d) =>
-          this.isSelectedSector(d) ? "bold" : "normal"
-        )
+        .attr("font-weight", (d) => (this.isSelectedSDG(d) ? "bold" : "normal"))
         .attr("dominant-baseline", "middle")
         .attr("text-anchor", "end")
         .text((d) => this.currency(d.allocation));
@@ -316,34 +296,9 @@ export default {
   margin: 5rem auto 7rem auto;
   padding: 1rem;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-
-  .current-goal-title {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    color: white;
-    font-weight: bold;
-    width: 100%;
-
-    .current-goal-index {
-      font-size: 40px;
-      margin-right: 1rem;
-    }
-
-    .current-goal-name {
-      font-size: 16px;
-      text-transform: uppercase;
-    }
-  }
-
   img {
-    filter: invert(1);
-    display: block;
-    width: 12rem;
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 

@@ -27,7 +27,7 @@ export default {
     return {
       // what the dataset can be filtered on.
       // default to filters applicable to all scenarios.
-      filter_by: ["fm", "beneficiary", "sector", "area"],
+      filter_by: ["fm", "beneficiary", "sector", "area", "sdg_no"],
 
       // aggregation columns.
       aggregate_by: [],
@@ -172,7 +172,9 @@ export default {
         filterfuncs.push(
           // NOTE: use lower-case comparison, or things might get messy
           // (until we switch to using ids)
-          (item) => item[f] && item[f].toLowerCase() == val.toLowerCase()
+          (item) =>
+            item[f] &&
+            item[f].toString().toLowerCase() == val.toString().toLowerCase()
         );
       }
 

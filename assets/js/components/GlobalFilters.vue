@@ -78,6 +78,7 @@ export default {
       beneficiary: { name: "BS", formatter: this.get_country },
       region: { name: "Region" },
       sector: { name: "PS", truncate: 20 },
+      sdg_no: { name: "SDG", formatter: (v) => v.toString() },
       area: { name: "PA", formatter: this.format_pa },
       donor: { name: "DS", formatter: this.get_country },
       DPP: { name: "Programme partner", truncate: 60 },
