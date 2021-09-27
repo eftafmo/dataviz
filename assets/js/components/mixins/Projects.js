@@ -3,6 +3,7 @@ export default {
 
   created() {
     // append projects & programmes to aggregation columns
+    this.aggregate_on.push("project_count");
     this.aggregate_on.push({ source: "projects", type: Array });
     this.aggregate_on.push("project_allocation");
     this.aggregate_on.push({

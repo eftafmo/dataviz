@@ -3,8 +3,7 @@ import * as d3 from "d3";
 
 import AllocationMap from "./AllocationMap";
 import ProjectsMixin from "./mixins/Projects";
-
-let _PARENT_UID; // this is a very ugly hack, but, cutting corners
+import WithRegions from "./mixins/WithRegions";
 
 const RegionDetails = {
   template: `<transition appear name="fade">
@@ -15,15 +14,17 @@ const RegionDetails = {
              :height="radius * 2"
              >
           <g :transform="'translate(' + radius + ',' + radius + ')'">
-            <circle :r="radius" />
-            <text dy=".33em">{{ count }}</text>
+            <circle :r="radius" fill="#c41130" />
+            <text dominant-baseline="middle" text-anchor="middle" fill="white" font-size="16" font-weight="bold">
+              {{ count }}
+            </text>
           </g>
         </svg></transition>
         <span>{{ label }}</span>
       </div></transition>
     </div>
   </transition>`,
-
+  mixins: [WithRegions],
   props: {
     region: Object,
   },
@@ -36,44 +37,47 @@ const RegionDetails = {
     };
   },
 
-  created() {
-    let component = this;
-
-    while (component._uid != _PARENT_UID) {
-      component = component.$parent;
-    }
-    this.$self = component;
-  },
-
   computed: {
     label() {
-      return this.region.id.length == 2
+      return this.region.id.length === 2
         ? this.root_label
-        : this.$self.getRegionName(this.region.id) +
-            " (" +
-            this.region.id +
-            ")";
+        : this.getRegionName(this.region.id) + " (" + this.region.id + ")";
     },
-
     count() {
-      return this.$self.getprojectcount(this.region);
+      return this.getProjectCount(this.region);
     },
-
     radius() {
-      return this.$self.getradius(this.count);
+      if (!this.textDimensions) return 0;
+      const len = this.count.toString().length;
+      return (
+        ((len === 1
+          ? this.textDimensions.height
+          : this.textDimensions.width * (len + 1 / 2)) /
+          2) *
+        1.4
+      );
+    },
+    textDimensions() {
+      return this.region && this.region.textDimensions;
     },
   },
-
   watch: {
     // (watching by property makes stuff get weird,
     // so this is better. region is always swapped for a new object.)
     region(a, b) {
       if (!a || !b) return;
 
-      if (a.id != b.id) this.changed_region = Number(!this.changed_region);
+      if (a.id !== b.id) this.changed_region = Number(!this.changed_region);
 
-      if (a.project_count != b.project_count)
+      if (this.getProjectCount(a) !== this.getProjectCount(b))
         this.changed_count = Number(!this.changed_count);
+    },
+  },
+  methods: {
+    getProjectCount(region) {
+      return (
+        region.project_count || (region.projects && region.projects.size) || 0
+      );
     },
   },
 };
@@ -89,13 +93,26 @@ export default {
     return {
       // need to set these so pointer events work in IE
       zoomed_nuts_level: 2,
-
+      textDimensions: null,
+      regionRenderOptions: null,
       all_nuts_levels: [0, 2, 3],
     };
   },
+  watch: {
+    isReady() {
+      this.textDimensions = this.getTextDimensions();
+    },
+  },
+  created() {
+    this._rendered_bubbles = {};
+  },
 
-  computed: {
-    textDimensions() {
+  mounted() {
+    this.projects = this.chart.append("g").attr("class", "projects");
+  },
+
+  methods: {
+    getTextDimensions() {
       // compute the dimensions of an average number character
       if (!this.isReady) return 0;
 
@@ -111,19 +128,6 @@ export default {
 
       return { width: bounds.width / 10, height: bounds.height };
     },
-  },
-
-  created() {
-    _PARENT_UID = this._uid;
-
-    this._rendered_bubbles = {};
-  },
-
-  mounted() {
-    this.projects = this.chart.append("g").attr("class", "projects");
-  },
-
-  methods: {
     getradius(txt) {
       // return enough for the the text to fit, plus spacing
       // for another half a character
@@ -158,8 +162,14 @@ export default {
           d.id.length === 2 && this.COUNTRIES[d.id].type === "donor",
         state_type = country_is_donor ? "donor-tooltip" : "";
 
-      let details = "";
-      if (!country_is_donor) {
+      let details = `
+        <li>
+          ${this.number(num_projects)} 
+          ${this.singularize("projects", num_projects)} 
+        </li>
+      `;
+
+      if (d.programmes) {
         details = `
         <li>
           ${this.number(num_projects)}
@@ -222,7 +232,7 @@ export default {
       }
     },
     getprojectcount(d) {
-      return (d.projects && d.projects.size) || 0;
+      return d.project_count || (d.projects && d.projects.size) || 0;
     },
     _domouse(over, ev, d) {
       const $super = AllocationMap.methods._domouse.bind(this);
@@ -514,10 +524,19 @@ export default {
       this._renderRegionData(region, dataset, t);
 
       // keep the current region data around, it's used for "the parent bubble"
-      if (region == this.current_region)
-        this.current_region_data = aggregated[region] || {
-          id: this.current_region,
-        };
+      if (region == this.current_region) {
+        if (aggregated[region]) {
+          this.current_region_data = {
+            ...aggregated[region],
+            textDimensions: this.textDimensions,
+          };
+        } else {
+          this.current_region_data = {
+            id: this.current_region,
+            textDimensions: this.textDimensions,
+          };
+        }
+      }
     },
 
     _mkLevelData(parentid, data) {
@@ -637,8 +656,8 @@ export default {
 
   .current-region {
     position: absolute;
-    left: 3em;
-    top: 1em;
+    left: 4.2em;
+    top: 0.7em;
 
     width: ~"calc(100% - 4em)";
 

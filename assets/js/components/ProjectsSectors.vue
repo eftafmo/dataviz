@@ -26,7 +26,10 @@ export default {
         count = item.data.projects.size;
       } else {
         count = new Set(
-          item.children.map((child) => Array.from(child.data.projects)).flat()
+          item.children
+            .filter((child) => !!child.data.projects)
+            .map((child) => Array.from(child.data.projects))
+            .flat()
         ).size;
       }
 
