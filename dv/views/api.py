@@ -820,7 +820,7 @@ def project_nuts(request, state_id, force_nuts3):
             row['area'] = pa.programme_area.name
             row['sector'] = pa.priority_sector.name
             row['fm'] = FINANCIAL_MECHANISMS_DICT[pa.financial_mechanism]
-            row['allocation'] += pa.allocation
+            row['allocation'] += allocation
             row['projects'].add(pa.project_id)
             row['project_count'] = len(row['projects'])
             row['programmes'][pa.project.programme_id] = pa.project.programme_id
