@@ -490,7 +490,7 @@ def partners(request):
         partnership_programmes[p.programme.code]['allocation'] += p.allocation
         partnership_programmes[p.programme.code]['beneficiaries'].add(p.state_id)
         if p.programme_area:
-            partnership_programmes[p.programme.code]['areas'][p.programme_area.code] = {
+            partnership_programmes[p.programme.code]['areas'][p.programme_area_id] = {
                 'area': p.programme_area.name,
                 'sector': p.priority_sector.name,
                 'fm': FINANCIAL_MECHANISMS_DICT[p.financial_mechanism],
@@ -560,22 +560,11 @@ def partners(request):
     # Get project partners (dpp and project promoters)
     project_partners_query = OrganisationRole.objects.select_related(
         'project',
+        'organisation',
     ).filter(
         programme_id__in=partnership_programmes_ids,
         role_code__in=('PJDPP', 'PJPT'),
-    ).values(
-        'organisation_id',
-        'organisation__name',
-        'organisation__country',
-        'role_code',
-        'nuts_id',
-        'project_id',
-        'programme_id',
-        'project__state_id',
-        'project__is_dpp',
-        'project__has_ended',
-        'project__is_continued_coop',
-        'project__is_improved_knowledge',
+        project__isnull=False,
     ).prefetch_related(
         'project__programme_areas',
     ).order_by('role_code').distinct()
@@ -587,12 +576,150 @@ def partners(request):
     donor_projects = set()
     project_nuts = {}
 
-    for pp in project_partners_query:
+    for org_role in project_partners_query:
         # Projects have only one BS and one PA, so keep them separated
-        pass
-        # TODO WIP
+        project_code = org_role.project_id
+
+        if org_role.role_code == 'PJPT':
+            # Project promoters are stored by project, only for projects with dpp
+            if project_code in donor_projects:
+                project_promoters[project_code][org_role.organisation_id] = {
+                    'name': org_role.organisation.name,
+                    'nuts': org_role.nuts_id,
+                }
+                project_nuts[project_code]['dst'].append(org_role.nuts_id)
+        elif org_role.role_code == 'PJDPP':
+            donor_projects.add(project_code)
+
+            # Donor project partner
+            donor = DONOR_STATES.get(org_role.organisation.country, 'Intl')
+            for programme_area in org_role.project.programme_areas.all():
+                key = (
+                    org_role.programme_id,
+                    programme_area.id,
+                    org_role.state_id,
+                    donor
+                )
+                if org_role.organisation_id not in donor_project_partners[key]:
+                    donor_project_partners[key][org_role.organisation_id] = {
+                        'name': org_role.organisation.name,
+                        'nuts': org_role.nuts_id,
+                        # 'projects': [],
+                        # project_count should be enough, trying to save 90KB
+                        'prj': 0,
+                    }
+                # donor_project_partners[key][pp['organisation_id']]['projects'].append(pp['project_id'])
+                donor_project_partners[key][org_role.organisation_id]['prj'] += 1
+                # projects with dpp are stored for bilateral indicators
+                if project_code not in projects[key]:
+                    projects[key][project_code] = {
+                        'is_dpp': org_role.project.is_dpp,
+                        'has_ended': org_role.project.has_ended,
+                        'continued_coop': org_role.project.is_continued_coop,
+                        'improved_knowledge': org_role.project.is_improved_knowledge,
+                        'src_nuts': [],
+                        'dst_nuts': [],
+                    }
+                if project_code not in project_nuts:
+                    project_nuts[project_code] = {
+                        'src': [],
+                        'dst': [],
+                    }
+                project_nuts[project_code]['src'].append(org_role.nuts_id)
+
+    # Bilateral news, they are always related to programmes, not projects
+    news_query = Programme.objects.filter(
+        news__is_partnership=True,
+        code__in=partnership_programmes_ids,
+        news__isnull=False,
+    ).values(
+        'code',
+        'news__link',
+        'news__summary',
+        'news__image',
+        'news__title',
+        'news__created',
+        'news__is_partnership',
+    ).distinct()
+    for item in news_query:
+        partnership_programmes[item['code']]['news'].append({
+            'title': html.unescape(item['news__title'] or ""),
+            'link': item['news__link'],
+            'created': item['news__created'],
+            'summary': item['news__summary'],
+            'image': item['news__image'],
+        })
+
+    def nuts_in_state(nuts, state_id):
+        if state_id == 'Intl':
+            return not re.match('IS|LI|NO', nuts)
+        return nuts.startswith(state_id)
 
     out = []
+    for prg, item in partnership_programmes.items():
+        # item: {'beneficiaries', 'news', 'areas', 'PO', 'donors', 'allocation'}
+        for pa_code, pa_data in item['areas'].items():
+            # pa_data = {'fm', 'sector', 'area'}
+            for donor in item['donors']:
+                for beneficiary in item['beneficiaries']:
+                    key = (prg, pa_code, beneficiary)
+                    key_donor = (prg, pa_code, beneficiary, donor)
+                    # TODO Because of HU12 must get the amounts from Programme where possible
+                    allocation = item['allocation']
+                    if (len(item['beneficiaries']) > 1 or len(item['areas']) > 1):
+                        allocation = allocations[key]
+                    prj_promoters = {}
+                    nuts_connections = {}
+                    for prj_code in projects[key_donor]:
+                        for key, value in project_promoters[prj_code].items():
+                            prj_promoters[key] = value
+                        for src in project_nuts[prj_code]['src']:
+                            if not nuts_in_state(src, donor):
+                                continue
+                            for dst in project_nuts[prj_code]['dst']:
+                                nuts_connections[(src, dst)] = {
+                                    'src': src,
+                                    'dst': dst,
+                                }
+                                if src not in projects[key_donor][prj_code]['src_nuts']:
+                                    projects[key_donor][prj_code]['src_nuts'].append(src)
+                                if dst not in projects[key_donor][prj_code]['dst_nuts']:
+                                    projects[key_donor][prj_code]['dst_nuts'].append(dst)
+                    row = {
+                        'fm': pa_data['fm'],
+                        'sector': pa_data['sector'],
+                        'area': pa_data['area'],
+                        'beneficiary': beneficiary,
+                        'donor': donor,
+                        'allocation': float(allocation),
+                        'programme': prg,
+                        'programmes': {
+                            prg: {
+                                'name': item['name'],
+                                'url': item['url'],
+                            }
+                        },
+                        'projects': projects[key_donor],
+                        'prj_nuts': list(nuts_connections.values()),
+                        'PO': item['PO'],
+                        'PJDPP': donor_project_partners[key_donor],
+                        'PJPT': prj_promoters,
+                        'news': item['news'],
+                    }
+                    if donor_programme_partners[(prg, donor)]:
+                        # This project has DPP, duplicate it for each partner from the current donor
+                        for DPP_code, DPP_data in donor_programme_partners[(prg, donor)].items():
+                            copy = dict(row)
+                            # Assumption: name of DPP are unique
+                            copy['DPP'] = DPP_data['name']
+                            copy['DPP_nuts'] = DPP_data['nuts']
+                            out.append(copy)
+                    else:
+                        # Still need to add rows without DPP if they have project partners
+                        if row['PJDPP']:
+                            if 'PO' in row:
+                                del row['PO']  # Apparently we only need PO's for DPP programmes
+                            out.append(row)
     return JsonResponse(out)
 
 
