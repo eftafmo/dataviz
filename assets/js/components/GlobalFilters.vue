@@ -67,20 +67,18 @@ export default {
   },
 
   beforeCreate() {
-    this.format_pa = function (programme_area) {
-      return _programme_areas[programme_area]["short_name"];
-    };
+    this.format_pa = function (programme_area) {};
     this.get_country = function (country_code) {
-      return COUNTRIES[country_code]["name"];
+      return;
     };
     this.FILTER_SETTINGS = {
       fm: { name: "FM" },
-      beneficiary: { name: "BS", formatter: this.get_country },
+      beneficiary: { name: "BS", formatter: this.getCountry },
       region: { name: "Region" },
       sector: { name: "PS", truncate: 20 },
       sdg_no: { name: "SDG", formatter: (v) => v.toString() },
-      area: { name: "PA", formatter: this.format_pa },
-      donor: { name: "DS", formatter: this.get_country },
+      area: { name: "PA", formatter: this.formatPa },
+      donor: { name: "DS", formatter: this.getCountry },
       DPP: { name: "Programme partner", truncate: 60 },
       dpp: { name: "Project partner", truncate: 60 },
       thematic: { name: "Criteria" },
@@ -95,6 +93,15 @@ export default {
   },
 
   methods: {
+    formatPa(programmeArea) {
+      if (!_programme_areas[programmeArea]) {
+        return programmeArea.slice(0, 30);
+      }
+      return _programme_areas[programmeArea]["short_name"];
+    },
+    getCountry(code) {
+      return COUNTRIES[code]["name"];
+    },
     initFiltersStack() {
       for (const type in this.filters) {
         if (this.filters[type]) {
