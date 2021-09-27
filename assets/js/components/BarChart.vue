@@ -117,7 +117,10 @@ export default {
       ];
     },
     maxAllocation() {
-      return Math.max(...this.data.map((item) => item.allocation));
+      // Make sure the max allocation is always > 0. Otherwise all
+      // bars in the bar chart will have full width, even thought they
+      // are all 0. This makes the chart really confusing otherwise.
+      return Math.max(...this.data.map((item) => item.allocation)) || 1;
     },
     height() {
       return (
