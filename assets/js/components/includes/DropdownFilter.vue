@@ -22,7 +22,7 @@ export default {
 
   props: {
     items: {
-      type: Object,
+      type: [Object, Array],
       required: true,
     },
     title: {
@@ -40,11 +40,14 @@ export default {
     };
   },
   computed: {
+    itemArray() {
+      return Array.isArray(this.items) ? this.items : Object.values(this.items);
+    },
     current() {
       return this.filters[this.filter];
     },
     currentItem() {
-      return this.items.find(
+      return this.itemArray.find(
         (item) => this.getFilterName(item) === this.current
       );
     },
@@ -99,19 +102,7 @@ export default {
       }
     },
     getFilterName(item) {
-      if (typeof item === "string") {
-        return item;
-      } else if (
-        this.filter === "beneficiary" ||
-        this.filter === "donor" ||
-        this.filter === "sdg_no" ||
-        this.filter === "thematic"
-      ) {
-        // special case for country filters
-        return item.id;
-      } else {
-        return item.name;
-      }
+      return item.id || item.name || item;
     },
   },
 };
