@@ -1,7 +1,7 @@
 import html
 from collections import defaultdict
-from itertools import chain
-from itertools import product
+from decimal import Decimal
+from itertools import chain, product
 
 from rest_framework.generics import ListAPIView
 from django.views.decorators.http import require_GET
@@ -12,8 +12,8 @@ from django.db.models.functions import Length
 
 from dv.lib.http import JsonResponse, SetEncoder
 from dv.models import (
-    Allocation, BilateralInitiative, Indicator, News, OrganisationRole,
-    Programme, ProgrammeAllocation, Project, ProjectAllocation,
+    Allocation, BilateralInitiative, Indicator, News, NUTS, OrganisationRole,
+    Programme, ProgrammeAllocation, Project, ProjectAllocation, State,
     DEFAULT_PERIOD, FUNDING_PERIODS_DICT, FINANCIAL_MECHANISMS_DICT, FM_EEA, FM_NORWAY,
 )
 from dv.serializers import ProjectSerializer
@@ -724,19 +724,120 @@ def partners(request):
 
 
 def beneficiary_detail(request, beneficiary):
-    return project_nuts(beneficiary, True)
+    return project_nuts(request, beneficiary, True)
 
 
-def project_nuts(beneficiary, force_nuts3):
+def project_nuts(request, state_id, force_nuts3):
     """
     Returns NUTS3-level allocations for the given state.
     """
+
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
+    try:
+        state = State.objects.get(pk=state_id)
+    except State.DoesNotExist:
+        return JsonResponse({
+            'error': "Beneficiary state '%s' does not exist." % state_id
+        }, status=404)
+
+    project_allocation_query = ProjectAllocation.objects.filter(
+        funding_period=period_id,
+        state=state,
+    ).select_related(
+        'project',
+        'programme_area',
+        'priority_sector',
+    )
+
+    # split all non-level3 allocation among level3s, but
+    #
+    # NOTE: "In every country at every NUTS level the “Extra-Regio” regions
+    # have been designated (coded by adding to a two-letter country code
+    # the letter Z at NUTS level 1, letters ZZ at NUTS level 2 and letters
+    # ZZZ at NUTS level 3)."
+    #
+    # (we'll pretend the Zs are root)
+
+    nuts3s = tuple(
+        NUTS.objects
+        .filter(code__startswith=state_id, code__length=5)
+        .exclude(code__endswith="Z")  # skip extra-regio
+        .order_by('code')
+        .values_list('code', flat=True)
+    )
+
+    dataset = defaultdict(lambda: {
+        'allocation': 0,
+        'projects': set(),
+        'project_count': 0,
+        'programmes': {},
+    })
+
+    for pa in project_allocation_query:
+        code = pa.project.nuts_id
+        if len(code) > 2 and code.endswith('Z'):  # extra-regio
+            code = code[:2]
+
+        key = (
+            pa.project.nuts_id,
+            pa.programme_area_id,
+            pa.priority_sector_id,
+            pa.financial_mechanism
+        )
+        if not force_nuts3 or len(code) == 5:
+            row = dataset[key]
+            row['id'] = pa.project.nuts_id
+            row['area'] = pa.programme_area.name
+            row['sector'] = pa.priority_sector.name
+            row['fm'] = FINANCIAL_MECHANISMS_DICT[pa.financial_mechanism]
+            row['allocation'] += pa.allocation
+            row['projects'].add(pa.project_id)
+            row['project_count'] = len(row['projects'])
+            row['programmes'][pa.project.programme_id] = pa.project.programme_id
+            continue
+
+        # else split allocation among children, and add project count to all children
+        children = (nuts3s if len(code) == 2
+                    else [n for n in nuts3s if n.startswith(code)])
+
+        if len(children) == 0:
+            # TODO: this is an error. log it, etc.
+            continue
+
+        allocation = pa.allocation / len(children)
+
+        for nuts in children:
+            childkey = (
+                nuts,
+                pa.programme_area_id,
+                pa.priority_sector_id,
+                pa.financial_mechanism
+            )
+            row = dataset[childkey]
+            row['id'] = nuts
+            row['area'] = pa.programme_area.name
+            row['sector'] = pa.priority_sector.name
+            row['fm'] = FINANCIAL_MECHANISMS_DICT[pa.financial_mechanism]
+            row['allocation'] += pa.allocation
+            row['projects'].add(pa.project_id)
+            row['project_count'] = len(row['projects'])
+            row['programmes'][pa.project.programme_id] = pa.project.programme_id
+
     out = []
+
+    for key, row in dataset.items():
+        # strip away some of that crazy precision
+        row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+        del row['projects']
+        out.append(row)
+
     return JsonResponse(out)
 
 
 def projects_beneficiary_detail(request, beneficiary):
-    return project_nuts(beneficiary, False)
+    return project_nuts(request, beneficiary, False)
 
 
 class ProjectList(ListAPIView):
