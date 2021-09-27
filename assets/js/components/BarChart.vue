@@ -93,7 +93,7 @@ export default {
       aggregate_by: null,
       width: 500,
       barHeight: 18,
-      barPadding: 1.25,
+      barPadding: 0.9,
       disabledColor: "#9f9f9f",
     };
   },
@@ -233,7 +233,7 @@ export default {
         .attr("class", "bar-item")
         .merge(bars)
         .transition(t)
-        .attr("x", this.barHeight)
+        .attr("x", 0)
         .attr("y", (d) => this.yScale(d))
         .attr("width", (d) => this.barHeight + this.xScale(d.allocation))
         .attr("height", this.barHeight)

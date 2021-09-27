@@ -56,7 +56,7 @@ export default {
 .current-goal {
   width: 19rem;
   height: 19rem;
-  margin: 5rem auto 7rem auto;
+  margin: 0 auto 2rem auto;
   padding: 1rem;
 
   img {
