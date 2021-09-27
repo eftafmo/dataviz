@@ -5,9 +5,14 @@ from django.utils.functional import cached_property
 from dv.lib.utils import FM_EEA, FM_NORWAY, FINANCIAL_MECHANISMS, FM_DICT, FUNDING_PERIODS, STATES
 
 
+class NUTSVersion(models.Model):
+    year = models.IntegerField(unique=True)
+
+
 class NUTS(models.Model):
     code = models.CharField(max_length=5, primary_key=True)
     label = models.CharField(max_length=128)
+    nuts_versions = models.ManyToManyField(NUTSVersion)
 
     class Meta:
         ordering = ['code']

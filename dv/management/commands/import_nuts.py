@@ -7,6 +7,7 @@ import requests
 from django.core.management.base import BaseCommand
 
 from dv.models import NUTS
+from dv.models import NUTSVersion
 
 logger = logging.getLogger(__name__)
 API_BASE = "https://gisco-services.ec.europa.eu/distribution/v2/nuts"
@@ -56,6 +57,10 @@ class Command(BaseCommand):
         resp.raise_for_status()
         lines = resp.content.decode("utf8").splitlines()
 
+        nuts_version = NUTSVersion.objects.get_or_create(
+            year=year, defaults={"year": year}
+        )[0]
+
         nuts_0 = []
         created_count = 0
         reader = csv.DictReader(lines)
@@ -72,12 +77,13 @@ class Command(BaseCommand):
             obj, created = NUTS.objects.update_or_create(
                 {"label": label}, code=line["NUTS_ID"]
             )
+            obj.nuts_versions.add(nuts_version)
             created_count += created
             logger.info("NUTS %s, created=%s", obj, created)
 
         logger.info("Created %s out of %s", created_count, len(lines) - 1)
 
-        # Extra-Regio code are used to indicate there is not region.
+        # Extra-Regio codes are used to indicate there is no region.
         # Add them as well to the DB for integrity checks.
         created_count = 0
         for country_code in nuts_0:
@@ -88,6 +94,7 @@ class Command(BaseCommand):
                 obj, created = NUTS.objects.update_or_create(
                     {"label": label}, code=code
                 )
+                obj.nuts_versions.add(nuts_version)
                 created_count += created
                 logger.info("NUTS extra %s, created=%s", obj, created)
-        logger.info("Created Extra-Regio %s out of %s", created_count, len(nuts_0))
+        logger.info("Created Extra-Regio %s out of %s", created_count, len(nuts_0 * 3))
