@@ -15,6 +15,7 @@ from dv.lib.http import JsonResponse, SetEncoder
 from dv.lib.utils import (
     DONOR_STATES, EEA_DONOR_STATES, DONOR_STATES_REVERSED, DEFAULT_PERIOD,
     FUNDING_PERIODS_DICT, FM_DICT, FM_REVERSED_DICT, FM_EEA, FM_NORWAY,
+    NUTS_VERSION_BY_PERIOD,
 )
 from dv.models import (
     Allocation, BilateralInitiative, Indicator, News, NUTS, OrganisationRole,
@@ -765,6 +766,7 @@ def project_nuts(request, state_id, force_nuts3):
 
     nuts3s = tuple(
         NUTS.objects
+        .filter(nuts_versions__year=NUTS_VERSION_BY_PERIOD[period])
         .filter(code__startswith=state_id, code__length=5)
         .exclude(code__endswith="Z")  # skip extra-regio
         .order_by('code')

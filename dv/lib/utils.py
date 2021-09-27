@@ -25,6 +25,11 @@ FUNDING_PERIODS = [
 FUNDING_PERIODS_DICT = {v: k for k, v in FUNDING_PERIODS}
 DEFAULT_PERIOD = '2014-2021'
 
+NUTS_VERSION_BY_PERIOD = {
+    '2009-2014': 2006,
+    '2014-2021': 2016,
+}
+
 STATES = dict(countries)
 STATES["EL"] = "Greece"
 
