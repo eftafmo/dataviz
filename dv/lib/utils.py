@@ -3,7 +3,30 @@ import re
 import time
 from binascii import crc32
 from collections import Iterable
+
 from django.utils.baseconv import base62
+from django_countries import countries
+
+
+FM_EEA = 'EEA'
+FM_NORWAY = 'NOR'
+FINANCIAL_MECHANISMS = [
+    (FM_EEA, 'EEA Grants'),
+    (FM_NORWAY, 'Norway Grants'),
+]
+FM_DICT = dict(FINANCIAL_MECHANISMS)
+FM_REVERSED_DICT = {v: k for k, v in FM_DICT.items()}
+
+FUNDING_PERIODS = [
+    (1, '2004-2009'),
+    (2, '2009-2014'),
+    (3, '2014-2021'),
+]
+FUNDING_PERIODS_DICT = {v: k for k, v in FUNDING_PERIODS}
+DEFAULT_PERIOD = '2014-2021'
+
+STATES = dict(countries)
+STATES["EL"] = "Greece"
 
 # Everything else is International
 EEA_DONOR_STATES = {
@@ -11,10 +34,8 @@ EEA_DONOR_STATES = {
     'Liechtenstein': 'LI',
     'Norway': 'NO',
 }
-
 DONOR_STATES = {'International': 'Intl'}
 DONOR_STATES.update(EEA_DONOR_STATES)
-
 DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
 
 

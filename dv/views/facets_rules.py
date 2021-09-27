@@ -1,6 +1,6 @@
 from collections import OrderedDict, defaultdict
 
-from dv.models import FINANCIAL_MECHANISMS_DICT
+from dv.lib.utils import FM_DICT
 from dv.models import (
     ProgrammeArea,
     State,
@@ -188,7 +188,7 @@ class ModelFacetRules:
             areas_sort[area.name] = area.order
             sectors_sort[area.priority_sector.name] = area.order
             fms = [
-                FINANCIAL_MECHANISMS_DICT[fm_code]
+                FM_DICT[fm_code]
                 for fm_code in area.allocations.values_list(
                     "financial_mechanism", flat=True
                 ).distinct()

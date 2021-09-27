@@ -10,8 +10,8 @@ from django.core.management.base import BaseCommand
 from dv.models import (
     Allocation, BilateralInitiative, Indicator, OrganisationRole, Organisation, PrioritySector,
     Programme, ProgrammeAllocation, ProgrammeArea, Project, ProjectAllocation, State,
-    FM_EEA, FM_NORWAY,
 )
+from dv.lib.utils import FM_EEA, FM_NORWAY
 
 
 FUNDING_PERIOD = 3  # 2014-2021
@@ -241,12 +241,12 @@ class Command(BaseCommand):
             f'Imported {Indicator.objects.count()} Indicator objects.'))
 
         organisation_query = '''
-            SELECT DISTINCT 
-                IdOrganisation, 
-                Organisation, 
-                CountryOrganisation, 
-                City, 
-                OrganisationClassificationSector, 
+            SELECT DISTINCT
+                IdOrganisation,
+                Organisation,
+                CountryOrganisation,
+                City,
+                OrganisationClassificationSector,
                 OrganisationClassification
             FROM fmo.TR_RDPOrganisationRole
         '''

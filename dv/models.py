@@ -1,25 +1,8 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils.functional import cached_property
-from django_countries import countries
 
-STATES = dict(countries)
-STATES["EL"] = "Greece"
-
-FM_EEA = 'EEA'
-FM_NORWAY = 'NOR'
-FINANCIAL_MECHANISMS = [
-    (FM_EEA, 'EEA Grants'),
-    (FM_NORWAY, 'Norway Grants'),
-]
-FINANCIAL_MECHANISMS_DICT = dict(FINANCIAL_MECHANISMS)
-FUNDING_PERIODS = [
-    (1, '2004-2009'),
-    (2, '2009-2014'),
-    (3, '2014-2021'),
-]
-FUNDING_PERIODS_DICT = {val: key for key, val in FUNDING_PERIODS}
-DEFAULT_PERIOD = '2014-2021'
+from dv.lib.utils import FM_EEA, FM_NORWAY, FINANCIAL_MECHANISMS, FM_DICT, FUNDING_PERIODS, STATES
 
 
 class NUTS(models.Model):
@@ -127,7 +110,7 @@ class Programme(models.Model):
 
     @cached_property
     def financial_mechanisms_display(self):
-        return [FINANCIAL_MECHANISMS_DICT[fm] for fm in self.financial_mechanisms]
+        return [FM_DICT[fm] for fm in self.financial_mechanisms]
 
     @cached_property
     def display_name(self):
@@ -185,7 +168,7 @@ class Project(models.Model):
 
     @cached_property
     def financial_mechanisms_display(self):
-        return [FINANCIAL_MECHANISMS_DICT[fm] for fm in self.financial_mechanisms]
+        return [FM_DICT[fm] for fm in self.financial_mechanisms]
 
     @cached_property
     def geotarget(self):
@@ -350,4 +333,3 @@ class StaticContent(models.Model):
 
     def __str__(self):
         return self.name
-
