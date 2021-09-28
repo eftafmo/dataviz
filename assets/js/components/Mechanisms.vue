@@ -20,13 +20,6 @@
       class="mechanism"
     >
       <chart-patterns :patterns="FM_ARRAY" />
-      <rect
-        x="-10"
-        y="-10"
-        :width="width + 20"
-        :height="height + legendHeight + 20"
-        fill="white"
-      ></rect>
       <g class="chart"></g>
       <template v-if="showTotals">
         <g v-for="(fm, index) in data" :key="fm.id">
@@ -102,11 +95,6 @@ export default {
       type: String,
       default: "#ccc",
     },
-    showTotals: {
-      type: Boolean,
-      default: true,
-      required: false,
-    },
   },
 
   data() {
@@ -116,6 +104,7 @@ export default {
       legendHeight: 50,
       aggregate_by: [{ source: "fm", destination: "name" }],
       inactiveOpacity: 0.7,
+      showTotals: true,
     };
   },
 

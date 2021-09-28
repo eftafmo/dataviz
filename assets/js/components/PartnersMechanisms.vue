@@ -1,35 +1,19 @@
-<template>
-  <fms
-    :datasource="datasource"
-    :initial="initial"
-    :period="period"
-    :show-totals="false"
-  >
-    <template #title><slot name="title"></slot></template>
-  </fms>
-</template>
-
 <script>
 import Component from "./Component";
 import BaseMechanisms from "./Mechanisms";
 
 import PartnersMixin from "./mixins/Partners";
 
-const Mechanisms = {
+export default {
   extends: BaseMechanisms,
   mixins: [PartnersMixin],
-
   data() {
-    return {};
+    return {
+      showTotals: false,
+    };
   },
-
   computed: {
     aggregated() {
-      // allocation amounts are duplicated sometimes by donors,
-      // so we need to overwrite it.
-      this.aggregate_on = this.aggregate_on.filter(
-        (item) => item !== "allocation"
-      );
       const aggregated = this.aggregate(
         this.filtered,
         this.aggregate_by,
@@ -49,6 +33,13 @@ const Mechanisms = {
       }
       return aggregated;
     },
+  },
+  created() {
+    // allocation amounts are duplicated sometimes by donors,
+    // so we need to overwrite it.
+    this.aggregate_on = this.aggregate_on.filter(
+      (item) => item !== "allocation"
+    );
   },
 
   methods: {
@@ -77,13 +68,6 @@ const Mechanisms = {
       );
     },
   },
-};
-
-export default {
-  components: {
-    fms: Mechanisms,
-  },
-  extends: Component,
 };
 </script>
 
