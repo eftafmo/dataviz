@@ -101,7 +101,7 @@ def sandbox(request):
     return render(request, "sandbox.html")
 
 
-def embed_sandbox(request, scenario=None, component=None, period="2009-2014"):
+def embed_sandbox(request, scenario=None, component=None, period="2014-2021"):
     components = _parse_js_root_instances()
 
     if scenario or component:
@@ -115,8 +115,8 @@ def embed_sandbox(request, scenario=None, component=None, period="2009-2014"):
         "embed_sandbox.html",
         context={
             "available_periods": {
-                "2009-2014": components,
                 "2014-2021": components,
+                "2009-2014": components,
             },
             "selected_period": period,
             "selected_scenario": scenario,
@@ -561,7 +561,7 @@ class EmbedComponent(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        period = kwargs.get("period", "2009-2014")
+        period = kwargs.get("period", "2014-2021")
         scenario = context["scenario"]
         component = context["component"]
 

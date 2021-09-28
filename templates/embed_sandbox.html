@@ -38,7 +38,7 @@
   <b>{{ selected_scenario }} ({{ selected_period }}): {{ selected_component }}</b>
   <div style="display: flex;">
     {% if selected_scenario and selected_component %}
-      <div style="margin-top: 20px; overflow: hidden; border: 1px solid;">
+      <div style="margin-top: 20px; overflow: hidden; border: 1px solid; min-width: 500px">
         <script
             src="{% url 'frontend:embed' scenario=selected_scenario component=selected_component period=selected_period %}"
             async
