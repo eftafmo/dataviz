@@ -9,6 +9,10 @@ export default {
         programmes: "#089900",
         projects: "#e68a00",
       },
+      patternColors: {
+        programmes: "#067a00",
+        projects: "#b86e00",
+      },
       weak_colors: {
         programmes: rgb(8, 153, 0, 0.2),
         projects: rgb(230, 138, 0, 0.1),

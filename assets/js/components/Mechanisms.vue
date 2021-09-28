@@ -19,7 +19,7 @@
       xmlns="http://www.w3.org/2000/svg"
       class="mechanism"
     >
-      <chart-patterns />
+      <chart-patterns :patterns="FM_ARRAY" />
       <rect
         x="-10"
         y="-10"

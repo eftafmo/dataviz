@@ -14,6 +14,8 @@ export default {
           {
             id: k,
             color: this.colors[k],
+            pattern: this.patternColors[k],
+            stripesFill: `url(#stripes-pattern-${k})`,
           },
           col
         );

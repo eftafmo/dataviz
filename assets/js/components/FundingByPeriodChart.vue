@@ -16,7 +16,7 @@
         :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <chart-patterns />
+        <chart-patterns :patterns="FM_ARRAY" />
 
         <rect fill="#F5F5F5" :width="svgWidth" :height="svgHeight"></rect>
         <image

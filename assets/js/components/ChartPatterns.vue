@@ -7,22 +7,22 @@
   >
     <defs>
       <pattern
-        v-for="fmData in FM_ARRAY"
-        :id="`stripes-pattern-${fmData.id}`"
-        :key="fmData.id"
+        v-for="item in patterns"
+        :id="`stripes-pattern-${item.id}`"
+        :key="item.id"
         width="6"
         height="20"
         patternTransform="rotate(45 0 0)"
         patternUnits="userSpaceOnUse"
       >
-        <rect width="100%" height="100%" :fill="fmData.color"></rect>
+        <rect width="100%" height="100%" :fill="item.color"></rect>
         <line
           x1="0"
           y1="0"
           x2="0"
           y2="100%"
           stroke-width="1"
-          :stroke="fmData.pattern"
+          :stroke="item.pattern"
         />
       </pattern>
     </defs>
@@ -34,7 +34,12 @@ import WithFMs from "./mixins/WithFMs";
 
 export default {
   name: "ChartPatterns",
-  mixins: [WithFMs],
+  props: {
+    patterns: {
+      type: Array,
+      required: true,
+    },
+  },
 };
 </script>
 

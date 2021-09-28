@@ -24,7 +24,7 @@
       class="chart"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <chart-patterns />
+      <chart-patterns :patterns="div_types" />
 
       <defs>
         <filter id="drop-shadow">
@@ -115,6 +115,9 @@ export default {
   },
 
   computed: {
+    div_types() {
+      return [];
+    },
     legendClickFunc() {
       return null;
     },
