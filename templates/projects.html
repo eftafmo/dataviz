@@ -35,6 +35,18 @@
       </sectors>
     </div>
 
+    <div class="grant-dataviz" id="bilateral-initiatives-chart">
+      <bilateral_initiatives_chart
+          datasource="/api/bilateral-initiatives.json"
+          :datasource-periods="['{{ PERIOD }}']"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Bilateral Initiatives</h2>
+        </template>
+      </bilateral_initiatives_chart>
+    </div>
+
   </div>
 
 
