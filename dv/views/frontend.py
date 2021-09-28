@@ -594,7 +594,11 @@ class EmbedComponent(TemplateView):
         }
 
         # this is ugly, nasty and not nice
-        if scenario in ("grants", "projects") and component == "xmap":
+        if component == "bilateral_initiatives_chart":
+            props["datasource"] = self.request.build_absolute_uri(
+                reverse("api:bilateral-initiatives")
+            )
+        elif scenario in ("grants", "projects") and component == "xmap":
             props["detailsDatasource"] = self.request.build_absolute_uri(
                 reverse("api:%s-beneficiary-detail" % scenario, args=("XX",))
             )
