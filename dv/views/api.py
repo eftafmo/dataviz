@@ -31,6 +31,20 @@ def test_sentry(request):
 
 
 @require_GET
+def bilateral_initiatives(request):
+    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
+    return JsonResponse(
+        list(
+            BilateralInitiative.objects.filter(funding_period=period_id)
+            .values("state_id")
+            .annotate(allocation=Sum("grant"), beneficiary=F("state_id"))
+        )
+    )
+
+
+@require_GET
 def overview(request):
     period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
     period_id = FUNDING_PERIODS_DICT[period]  # used in queries

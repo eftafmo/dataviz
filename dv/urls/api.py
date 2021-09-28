@@ -8,6 +8,9 @@ from dv.views import frontend as front_views
 
 urlpatterns = [
     url(r'^test-sentry', views.test_sentry),
+    url(r'^bilateral-initiatives.json',
+        cache_page(settings.API_CACHE_SECONDS)(views.bilateral_initiatives),
+        name='bilateral-initiatives'),
     url(r'^overview.json',
         cache_page(settings.API_CACHE_SECONDS)(views.overview),
         name='index'),
