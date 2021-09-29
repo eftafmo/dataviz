@@ -87,6 +87,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    hideZero: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
@@ -99,13 +104,15 @@ export default {
   },
   computed: {
     data() {
-      return this.allItems.map((item, index) => {
-        return {
-          ...item,
-          index,
-          allocation: this.aggregated[item.id]?.allocation || 0,
-        };
-      });
+      return this.allItems
+        .filter((item) => !this.hideZero || this.getAllocation(item.id) > 0)
+        .map((item, index) => {
+          return {
+            ...item,
+            index,
+            allocation: this.getAllocation(item.id),
+          };
+        });
     },
     patternArray() {
       return [
@@ -145,6 +152,9 @@ export default {
     this.filter_by = this.filter_by.filter((f) => f !== this.mainFilter);
   },
   methods: {
+    getAllocation(id) {
+      return this.aggregated[id]?.allocation || 0;
+    },
     getStripeUrl(id) {
       return `url(#stripes-pattern-${this.mainFilter}${id})`;
     },
@@ -190,7 +200,7 @@ export default {
       const t = this.getTransition();
       const barSquares = this.chart
         .selectAll("rect.bar-square")
-        .data(this.data);
+        .data(this.data, (d) => d.id);
       barSquares
         .enter()
         .append("rect")
@@ -210,7 +220,7 @@ export default {
       const t = this.getTransition();
       const barSquaresText = this.chart
         .selectAll("text.id-label")
-        .data(this.data);
+        .data(this.data, (d) => d.id);
       barSquaresText
         .enter()
         .append("text")
@@ -229,7 +239,9 @@ export default {
     },
     updateBars() {
       const t = this.getTransition();
-      const bars = this.chart.selectAll("rect.bar-item").data(this.data);
+      const bars = this.chart
+        .selectAll("rect.bar-item")
+        .data(this.data, (d) => d.id);
       bars
         .enter()
         .append("rect")
@@ -253,7 +265,9 @@ export default {
 
     updateText() {
       const t = this.getTransition();
-      const barLabels = this.chart.selectAll("text.bar-label").data(this.data);
+      const barLabels = this.chart
+        .selectAll("text.bar-label")
+        .data(this.data, (d) => d.id);
 
       barLabels
         .enter()
@@ -269,7 +283,9 @@ export default {
         .text((d) => d.name);
       barLabels.exit().remove();
 
-      const barValues = this.chart.selectAll("text.bar-values").data(this.data);
+      const barValues = this.chart
+        .selectAll("text.bar-values")
+        .data(this.data, (d) => d.id);
 
       barValues
         .enter()
@@ -289,7 +305,9 @@ export default {
 
     updateHoverBars() {
       const t = this.getTransition();
-      const hoverBar = this.chart.selectAll("rect.hover-bar").data(this.data);
+      const hoverBar = this.chart
+        .selectAll("rect.hover-bar")
+        .data(this.data, (d) => d.id);
       hoverBar
         .enter()
         .append("rect")

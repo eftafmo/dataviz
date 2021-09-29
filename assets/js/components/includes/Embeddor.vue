@@ -15,7 +15,6 @@
           </p>
           <hr />
         </template>
-        {{ url }}
         <p class="title">Embed</p>
         <p>
           <small>

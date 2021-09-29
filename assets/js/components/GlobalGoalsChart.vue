@@ -6,6 +6,7 @@
     drop-down-title="Sustainable Development Goals"
     :all-items="sdgArray"
     show-id
+    hide-zero
   >
     <template #before-chart>
       <transition name="fade">
