@@ -69,8 +69,13 @@
               <span
                 v-show="filters.sector != sector.data.id"
                 :key="`v-${getLabelID(sector)}`"
+                class="sector-allocation"
               >
-                {{ display(sector) }}
+                {{
+                  isSelectedSector(sector)
+                    ? displayLong(sector)
+                    : display(sector)
+                }}
               </span>
               <span v-if="isSelectedSector(sector)" class="icon icon-cross" />
             </a>
@@ -366,6 +371,9 @@ export default {
     display(item) {
       return this.currency(item.value);
     },
+    displayLong(item) {
+      return this.currency(item.value) + " net allocation";
+    },
 
     areasBeforeEnter(el) {
       // get height from a clone, it's safer
@@ -497,7 +505,7 @@ export default {
           <span>${d.data.name}</span>
         </div>
         <ul>
-          <li>${this.display(d)}</li>
+          <li>${this.display(d)} net allocation</li>
           <li>${num_bs} ` +
         this.singularize(`Beneficiary States`, num_bs) +
         `</li>
@@ -895,7 +903,12 @@ export default {
           border-style: none;
           padding: 0;
 
-          span:first-child {
+          .sector-allocation {
+            text-align: right;
+            white-space: nowrap;
+          }
+
+          & > span:first-child {
             width: 2rem;
             height: 2rem;
             flex: 0 0 2rem;
@@ -911,6 +924,7 @@ export default {
 
         a {
           display: flex;
+          align-items: center;
           padding: 0.4rem;
           text-decoration: none;
           color: @text-color;
@@ -929,7 +943,7 @@ export default {
             flex-grow: 1;
             margin: 0 0.2rem 0 0.2rem;
           }
-          span:first-child {
+          & > span:first-child {
             flex: 0 0 1.8rem;
             width: 1.8rem;
             height: 1.8rem;
@@ -938,8 +952,10 @@ export default {
             transition: width @short_duration, height @short_duration,
               flex @short_duration;
           }
-          *:last-child {
+          & > *:last-child {
             margin-right: 0;
+            margin-left: 0.2rem;
+            flex-grow: unset;
             text-align: right;
           }
         }

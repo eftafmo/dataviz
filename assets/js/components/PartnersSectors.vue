@@ -72,12 +72,13 @@ export default {
 
       return this.programme_counts[d.parentid].areas[d.id];
     },
-
     display(item) {
       // customer has requested not to show the programme count in the legend
       return "";
     },
-
+    displayLong(item) {
+      return "";
+    },
     tooltipTemplate(ev, d) {
       // TODO: such horribleness. sad face.
       let thing = "programme area",

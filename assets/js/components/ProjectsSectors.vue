@@ -37,7 +37,9 @@ export default {
         this.number(count) + "\u00a0" + this.singularize("projects", count)
       );
     },
-
+    displayLong(item) {
+      return this.display(item);
+    },
     tooltipTemplate(ev, d) {
       // TODO: such horribleness. sad face.
       let thing = "programme area",
