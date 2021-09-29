@@ -15,12 +15,12 @@ export const FILTERS = {
 export const SCENARIOFILTERS = {
   index: ["fm", "beneficiary"],
   funding: ["fm", "beneficiary", "sector", "area", "thematic"],
-  global_goals: ["fm", "beneficiary", "sector", "area", "sdg_no"],
+  global_goals: ["fm", "beneficiary", "sdg_no"],
   cooperation: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
   projects: ["fm", "beneficiary", "region", "sector", "area"],
   search: ["fm", "beneficiary", "sector", "area", "donor", "DPP"],
-  sectors: ["fm", "beneficiary"],
-  beneficiary_states: ["fm", "beneficiary"],
+  sectors: ["beneficiary"],
+  beneficiary_states: ["beneficiary"],
 };
 
 export default {
