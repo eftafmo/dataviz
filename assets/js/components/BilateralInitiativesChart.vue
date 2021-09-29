@@ -10,6 +10,7 @@ export default {
 
   data() {
     return {
+      hideIfEmpty: true,
       aggregate_by: ["beneficiary"],
       aggregate_on: ["allocation"],
     };

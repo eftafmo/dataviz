@@ -1,21 +1,23 @@
 <template>
   <div :class="classNames">
-    <embeddor :period="period" :tag="tag" :svg-node="$refs.svgEl" />
-    <slot v-if="!embedded" name="title"></slot>
-    <dropdown
-      v-if="hasData && !noDropdown"
-      :filter="state_type"
-      title="No filter selected"
-      :items="nonzero"
-    ></dropdown>
+    <template v-if="!hideIfEmpty || nonzero.length > 0">
+      <embeddor :period="period" :tag="tag" :svg-node="$refs.svgEl" />
+      <slot v-if="!embedded" name="title"></slot>
+      <dropdown
+        v-if="hasData && !noDropdown"
+        :filter="state_type"
+        title="No filter selected"
+        :items="nonzero"
+      ></dropdown>
 
-    <chart-legend
-      v-if="!noLegend"
-      class="inline"
-      :items="legend_items"
-      :click-func="legendClickFunc"
-      :format-func="legendFormatFunc"
-    ></chart-legend>
+      <chart-legend
+        v-if="!noLegend"
+        class="inline"
+        :items="legend_items"
+        :click-func="legendClickFunc"
+        :format-func="legendFormatFunc"
+      ></chart-legend>
+    </template>
 
     <svg
       ref="svgEl"
@@ -103,6 +105,7 @@ export default {
       //div_types: undefined, // required, an array of dictionaries with {id, color}
 
       label_color: "#333",
+      hideIfEmpty: false,
       layout: {
         // these are all em-based values
         itemHeight: 1.4,
@@ -184,6 +187,7 @@ export default {
     },
 
     height() {
+      if (this.hideIfEmpty && this.nonzero.length === 0) return 0;
       // only resize the chart if there's not enough drawing room
       // (prevents the footer from dancing around during filtering)
       // TODO: The component state MUST NEVER be modified while computing a property!
@@ -279,7 +283,7 @@ export default {
     },
 
     nonzero() {
-      return this.data.filter((d) => d.total != 0);
+      return this.data.filter((d) => d.total !== 0);
     },
 
     total() {

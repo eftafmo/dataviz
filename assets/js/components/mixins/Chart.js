@@ -40,7 +40,10 @@ export default {
   },
 
   mounted() {
-    this.chart = d3.select(this.$el).select(".chart");
+    const el = d3.select(this.$el);
+    if (!el || !el.select) return;
+
+    this.chart = el.select(".chart");
     const chart = this.chart.node();
     this.svg = chart.ownerSVGElement ? chart.ownerSVGElement : chart;
 
