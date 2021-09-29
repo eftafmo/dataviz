@@ -117,7 +117,7 @@ export default {
           <span>${d.data.name}</span>
         </div>
         <ul>
-          <li>Donor States: ${ds_sorted}</li>
+          <li>Donor States with programme or project partners: ${ds_sorted}</li>
           <li>${value}\u00a0` +
         this.singularize("programmes", value) +
         `</li>
