@@ -15,6 +15,7 @@
           </p>
           <hr />
         </template>
+        {{ url }}
         <p class="title">Embed</p>
         <p>
           <small>
@@ -75,6 +76,7 @@ export default {
       padding: 10,
       target: null,
       timeout: 400,
+      scenario: "none",
 
       target_hovered: false,
       popper_hovered: false,

@@ -2,7 +2,7 @@
   <div :class="classNames" class="funding-by-sector-chart">
     <embeddor
       :period="period"
-      tag="sectors"
+      tag="funding_by_sector_chart"
       :svg-node="$refs.svgEl"
       :scale-download="2"
     />

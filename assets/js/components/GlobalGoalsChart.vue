@@ -1,7 +1,7 @@
 <template>
   <bar-chart
     main-filter="sdg_no"
-    embed-tag="global_goals"
+    embed-tag="global_goals_chart"
     title="Sustainable Development Goals"
     drop-down-title="Sustainable Development Goals"
     :all-items="sdgArray"

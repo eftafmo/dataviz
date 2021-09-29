@@ -41,9 +41,9 @@ export const Grants = {
   },
 };
 
-export const GlobalGoals = {
+export const Goals = {
   extends: _Base,
-  name: "GlobalGoals",
+  name: "Goals",
 
   components: {
     mechanisms: components.Mechanisms,
@@ -86,23 +86,17 @@ export const Projects = {
   },
 };
 
-export const CompareSectors = {
+export const Compare = {
   extends: _Base,
-  name: "CompareSectors",
+  name: "Compare",
 
   components: {
     compare_sectors_view: components.CompareSectorsView,
-    funding_by_sector_chart: components.FundingBySectorChart,
-  },
-};
-
-export const CompareBeneficiaries = {
-  extends: _Base,
-  name: "CompareBeneficiaries",
-
-  components: {
     compare_beneficiaries_view: components.CompareBeneficiariesView,
+
+    funding_by_sector_chart: components.FundingBySectorChart,
     funding_by_period_chart: components.FundingByPeriodChart,
+    beneficiaries: components.Beneficiaries,
   },
 };
 

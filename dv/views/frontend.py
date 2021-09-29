@@ -48,6 +48,8 @@ SCENARIOS = (
     "grants",
     "partners",
     "projects",
+    "goals",
+    "compare",
 )
 
 logger = logging.getLogger()
@@ -84,6 +86,9 @@ def _parse_js_root_instances():
             name, obj = comp.split(":")
             name = name.strip().strip("\"'")
             obj = obj.strip()
+
+            if obj.endswith("View"):
+                continue
 
             components[name] = obj
 
@@ -586,9 +591,13 @@ class EmbedComponent(TemplateView):
             elif name.endswith(".css"):
                 cssfiles.append(url)
 
+        api_name = "api:" + scenario
+        if scenario == "compare":
+            api_name = "api:grants"
+
         datasourcePeriods = [period]
         props = {
-            "datasource": self.request.build_absolute_uri(reverse("api:" + scenario)),
+            "datasource": self.request.build_absolute_uri(reverse(api_name)),
             "period": period,
             "origin": origin,
         }
@@ -597,6 +606,18 @@ class EmbedComponent(TemplateView):
         if component == "bilateral_initiatives_chart":
             props["datasource"] = self.request.build_absolute_uri(
                 reverse("api:bilateral-initiatives")
+            )
+        if component == "funding_by_period_chart" or (
+            scenario == "compare" and component == "beneficiaries"
+        ):
+            datasourcePeriods = [
+                "2004-2009",
+                "2009-2014",
+                "2014-2021",
+            ]
+        elif scenario == "goals" and component == "xmap":
+            props["detailsDatasource"] = self.request.build_absolute_uri(
+                reverse("api:grants-beneficiary-detail", args=("XX",))
             )
         elif scenario in ("grants", "projects") and component == "xmap":
             props["detailsDatasource"] = self.request.build_absolute_uri(

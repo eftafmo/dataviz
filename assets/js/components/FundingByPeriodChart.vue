@@ -2,7 +2,7 @@
   <div :class="classNames" class="funding-by-period-chart">
     <embeddor
       :period="period"
-      tag="beneficiary_states"
+      tag="funding_by_period_chart"
       :svg-node="$refs.svgEl"
       :scale-download="2"
     />
