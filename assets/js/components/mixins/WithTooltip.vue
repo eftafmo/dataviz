@@ -86,7 +86,7 @@ export default {
     &.donor-tooltip {
       border-bottom: none;
     }
-    svg {
+    img {
       max-width: 30px;
       box-shadow: 0 0 2px #aaa;
       height: 20px;
