@@ -29,6 +29,9 @@
         <span>{{ fm }}</span>{% if not forloop.last %} and {% endif %}
       {% endfor %}
     </div>
+    <div><b>Level:&nbsp;</b>
+      <span>{{ obj.level }}</span>
+    </div>
     <div><b>Programme:&nbsp;</b>
       <span>{{ obj.programme_name.0 }}</span> |
       <span title="Programme status">{{ obj.programme_status.0 }}</span>

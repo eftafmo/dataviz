@@ -18,6 +18,7 @@ BASE_FACETS = [
 BILATERAL_INITIATIVE_CUSTOM_FACETS = [
     ("status", "OR"),
     ("project_status", "OR"),
+    ("level", "OR"),
 ]
 
 PROGRAMME_CUSTOM_FACETS = [
