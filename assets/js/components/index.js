@@ -36,6 +36,7 @@ export { default as BilateralInitiativesChart } from "./BilateralInitiativesChar
 export { default as PartnersDonorProgrammes } from "./PartnersDonorProgrammes";
 export { default as PartnersDonorProjects } from "./PartnersDonorProjects";
 
+export { default as GoalsSidebar } from "./GoalsSidebar";
 export { default as GrantsSidebar } from "./GrantsSidebar";
 export { default as PartnersSidebar } from "./PartnersSidebar";
 export { default as ProjectsSidebar } from "./ProjectsSidebar";

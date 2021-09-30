@@ -51,7 +51,7 @@ export const Goals = {
     sectors: components.Sectors,
     xmap: components.GrantsMap,
     beneficiaries: components.Beneficiaries,
-    sidebar: components.GrantsSidebar,
+    sidebar: components.GoalsSidebar,
   },
 };
 

@@ -6,13 +6,15 @@
           <div class="body">
             <h4 class="title">{{ outcome }}</h4>
             <div v-for="(indicators, sector) in sectors" :key="sector">
-              <small v-show="!filters.sector">{{ sector }}</small>
+              <small v-show="!filters.sector && !hideSector">
+                {{ sector }}
+              </small>
               <ul class="indicators">
                 <li
                   v-for="(value, indicator) in indicators"
                   :key="indicator"
                   class="indicator clearfix"
-                  :style="{ borderColor: sectorcolor(sector) }"
+                  :style="{ borderColor: getColor(sector) }"
                 >
                   <div class="indicator-achievement">{{ number(value) }}</div>
                   <div class="indicator-name">{{ indicator }}</div>
@@ -34,9 +36,14 @@ import WithSectorsMixin from "./mixins/WithSectors";
 export default {
   extends: Component,
   type: "results",
-
   mixins: [WithSectorsMixin],
-
+  props: {
+    hideSector: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
   computed: {
     data() {
       if (!this.hasData) return [];
@@ -45,7 +52,12 @@ export default {
       const results = {};
 
       for (const d of dataset) {
-        const sector = d.sector;
+        let sector = "";
+
+        if (!this.hideSector) {
+          sector = d.sector;
+        }
+
         for (const o in d.results) {
           const values = d.results[o];
 
@@ -53,6 +65,7 @@ export default {
 
           for (let indicator in values) {
             const value = +values[indicator]["achievement"];
+
             if (value === 0) continue;
 
             const priority = values[indicator]["order"];
@@ -89,7 +102,6 @@ export default {
       return flattened;
     },
   },
-
   updated() {
     //TODO: this can be done a lot better
     if (window.matchMedia("(max-width: 800px)").matches) {
@@ -102,6 +114,12 @@ export default {
       if (!parent_nav) return;
       parent_nav.innerHTML = "Results (" + results_count + ")";
     }
+  },
+  methods: {
+    getColor(sector) {
+      if (!sector) return "#3b5998";
+      return this.sectorcolor(sector);
+    },
   },
 };
 </script>
