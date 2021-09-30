@@ -73,33 +73,33 @@ export default {
       return [
         {
           id: "civil-soa",
-          image: "sprites/placeholder.png",
+          image: "imgs/results/icon_people.svg",
           amount: this.aggregated.people_civil_society,
           description:
             "people involved in civil society organisation activities",
         },
         {
           id: "co2-reduction",
-          image: "sprites/placeholder.png",
+          image: "imgs/results/icon_emissions.svg",
           amount: this.aggregated.co2_emissions_reduction,
           description: "tons of est. annual CO2 emissions reduction",
         },
         this.aggregated.supported_researchers > 0
           ? {
               id: "researchers",
-              image: "sprites/placeholder.png",
+              image: "imgs/results/icon_researchers.svg",
               amount: this.aggregated.supported_researchers,
               description: "supported researchers",
             }
           : {
               id: "staff-trained",
-              image: "sprites/placeholder.png",
+              image: "imgs/results/icon_researchers.svg",
               amount: this.aggregated.staff_trained,
               description: "professional staff trained",
             },
         {
           id: "jobs",
-          image: "sprites/placeholder.png",
+          image: "imgs/results/icon_jobs.svg",
           amount: this.aggregated.jobs_created,
           description: "jobs created",
         },
@@ -142,6 +142,11 @@ export default {
 
     &.hidden {
       display: none;
+    }
+
+    img {
+      max-width: 5rem;
+      max-height: 5rem;
     }
 
     .amount {
