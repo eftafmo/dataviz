@@ -102,7 +102,14 @@ export default {
       }
     },
     getFilterName(item) {
-      return item.id || item.name || item;
+      // XXX FM uses name instead of ID for filter for some reason.
+      switch (this.filter) {
+        case "fm":
+        case "sector":
+          return item.name;
+        default:
+          return item.id || item.name || item;
+      }
     },
   },
 };
