@@ -14,8 +14,10 @@
         id="search_request_input" type="search" name="q"
         placeholder="Search"
     >
-    <input type="text" name="period" hidden value="{{ PERIOD }}" />
-    <a id="search_request" href="{% url 'frontend:search_programme' %}" class="icon icon-search"></a>
+    <input type="text" name="period" hidden value="{{ PERIOD }}"/>
+    <button type="submit" title="Search" name="page" value="1">
+      <span class="icon icon-search"></span>
+    </button>
   </form>
 {% endblock %}
 

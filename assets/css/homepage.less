@@ -12,16 +12,21 @@
   border-bottom: 1px solid @border-normal;
   padding: 2rem 0;
 
-  input {
+  input,
+  button {
     border: none;
     outline: none;
+    appearance: none;
     background: none;
     padding: 0.8rem 0;
-    flex-grow: 1;
     font-size: 2rem;
   }
 
-  #search_request {
+  input {
+    flex-grow: 1;
+  }
+
+  button {
     color: @color-blue;
     font-size: 2.6rem;
     text-decoration: none;
