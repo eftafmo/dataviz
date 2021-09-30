@@ -24,6 +24,7 @@ BILATERAL_INITIATIVE_CUSTOM_FACETS = [
 PROGRAMME_CUSTOM_FACETS = [
     ("programme_status", "OR"),
     ("outcome_ss", "OR"),
+    ("organisation", "OR"),
 ]
 
 PROJECT_CUSTOM_FACETS = [
@@ -32,6 +33,7 @@ PROJECT_CUSTOM_FACETS = [
     ("project_status", "OR"),
     ("theme_ss", "OR"),
     ("geotarget", "OR"),
+    ("organisation", "OR"),
 ]
 
 ORGANISATION_CUSTOM_FACETS = [

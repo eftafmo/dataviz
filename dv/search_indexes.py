@@ -120,6 +120,7 @@ class ProgrammeIndex(SearchIndex, Indexable):
     outcome_ss_auto = fields.EdgeNgramField()
     programme_name = fields.FacetMultiValueField()
     programme_status = fields.FacetMultiValueField(model_attr="status")
+    organisation = fields.FacetMultiValueField()
 
     kind = fields.FacetCharField()
 
@@ -146,6 +147,8 @@ class ProgrammeIndex(SearchIndex, Indexable):
                 "states",
                 "programme_areas",
                 "programme_areas__priority_sector",
+                "organisation_roles",
+                "organisation_roles__organisation",
             )
         )
 
@@ -193,6 +196,14 @@ class ProgrammeIndex(SearchIndex, Indexable):
     def prepare_grant(self, obj):
         return obj.allocation_eea + obj.allocation_norway
 
+    def prepare_organisation(self, obj):
+        return list(
+            set(
+                role.organisation.name
+                for role in obj.organisation_roles.all()
+            )
+        )
+
     def prepare(self, obj):
         self.prepared_data = super().prepare(obj)
         self.prepared_data["outcome_ss_auto"] = (
@@ -214,6 +225,7 @@ class ProjectIndex(SearchIndex, Indexable):
     programme_status = fields.FacetMultiValueField(model_attr="programme__status")
     outcome_ss = fields.FacetMultiValueField()
     outcome_ss_auto = fields.EdgeNgramField()
+    organisation = fields.FacetMultiValueField()
 
     kind = fields.FacetCharField()
 
@@ -293,6 +305,14 @@ class ProjectIndex(SearchIndex, Indexable):
 
     def prepare_theme_ss(self, obj):
         return list(set(theme.name for theme in self.themes_query(obj)))
+    
+    def prepare_organisation(self, obj):
+        return list(
+            set(
+                role.organisation.name
+                for role in obj.organisation_roles.all()
+            )
+        )
 
     def prepare(self, obj):
         self.prepared_data = super().prepare(obj)
