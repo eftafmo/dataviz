@@ -1,17 +1,8 @@
-FROM python:3.9-slim-buster AS frontend
+FROM node:16 AS frontend
 
 ENV APP_HOME=/var/local/dataviz
 
-RUN runDeps="curl gnupg" \
- && apt-get update -y \
- && apt-get install -y --no-install-recommends $runDeps \
- && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
- && echo 'Package: *' > /etc/apt/preferences.d/nodesource \
- && echo 'Pin: origin deb.nodesource.com' >> /etc/apt/preferences.d/nodesource \
- && echo 'Pin-Priority: 600' >> /etc/apt/preferences.d/nodesource \
- && apt-get install -y nodejs \
- && rm -rf /var/lib/apt/lists/* \
- && mkdir -p $APP_HOME
+RUN mkdir -p $APP_HOME
 
 WORKDIR $APP_HOME
 ADD package.json package-lock.json postcss.config.js ./
@@ -34,10 +25,9 @@ LABEL maintainer="andrei.melis@eaudeweb.ro" \
 ENV APP_HOME=/var/local/dataviz \
     PYTHONUNBUFFERED=1
 
-RUN runDeps="git curl cron netcat-traditional" \
+RUN runDeps="cron netcat-traditional" \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends $runDeps \
- && curl -sL https://sentry.io/get-cli/ | bash \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p $APP_HOME \
  && mkdir -p /var/local/logs \
