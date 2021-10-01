@@ -135,7 +135,8 @@ export default {
     isDonor(d) {
       return this.DONORS[d.id] !== undefined;
     },
-    toggleBeneficiary(b) {
+    toggleBeneficiary(b, allowHungary = false) {
+      if (!allowHungary && this.isHungaryException(b.id)) return;
       // don't filter by zero-valued items
       if (b.total === 0) return;
 

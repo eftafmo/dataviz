@@ -436,7 +436,7 @@ export default {
         },
         target: {
           items: this.BENEFICIARY_ARRAY,
-          filterfunc: this.toggleBeneficiary,
+          filterfunc: (d) => this.toggleBeneficiary(d, true),
           direction: 1,
         },
       };
