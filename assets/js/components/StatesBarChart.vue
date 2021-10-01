@@ -7,7 +7,7 @@
         v-if="hasData && !noDropdown"
         :filter="state_type"
         title="No filter selected"
-        :items="nonzero"
+        :items="dropDownItems"
       ></dropdown>
 
       <chart-legend
@@ -23,7 +23,7 @@
       ref="svgEl"
       width="100%"
       :height="height + 'px'"
-      class="chart"
+      :class="`chart period-${period}`"
       xmlns="http://www.w3.org/2000/svg"
     >
       <chart-patterns :patterns="div_types" />
@@ -285,15 +285,15 @@ export default {
 
       return out;
     },
-
+    dropDownItems() {
+      return this.nonzero.filter((d) => !this.isHungaryException(d.id));
+    },
     nonzero() {
       return this.data.filter((d) => d.total !== 0);
     },
-
     total() {
       return this.data.reduce((total, item) => total + item.total, 0);
     },
-
     totals() {
       // like above, but grouped by type
       const state = this.filters[this.state_type];
@@ -432,7 +432,11 @@ export default {
       // add tooltip
       let tip = d3tip()
         .attr("class", "dataviz-tooltip state")
-        .html(this.tooltipTemplate)
+        .html((ev, d) =>
+          this.isHungaryException(d.id)
+            ? this.hungaryTooltipTemplate(ev, d)
+            : this.tooltipTemplate(ev, d)
+        )
         .direction("n")
         .offset(function (ev, d) {
           const zeroed = -this.getBBox().width / 2 - this.getBBox().x;
@@ -751,5 +755,9 @@ export default {
       }
     }
   }
+}
+
+.chart.period-2014-2021 .states .HU {
+  cursor: not-allowed !important;
 }
 </style>

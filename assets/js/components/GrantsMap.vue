@@ -19,6 +19,8 @@ export default {
 
   methods: {
     tooltipTemplate(ev, d) {
+      if (this.isHungaryException(d.id)) return this.hungaryTooltipTemplate();
+
       const allocation = d.allocation || 0,
         country_is_donor =
           d.id.length === 2 && this.COUNTRIES[d.id].type === "donor",
@@ -70,8 +72,8 @@ export default {
 
       if (
         this.hovered_region_color &&
-        d.id.length == 2 &&
-        d.allocation != 0 &&
+        d.id.length === 2 &&
+        d.allocation !== 0 &&
         this.COUNTRIES[d.id].type === "beneficiary"
       )
         self

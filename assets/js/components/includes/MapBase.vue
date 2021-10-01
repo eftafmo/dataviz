@@ -1,7 +1,10 @@
 <template>
   <chart-container :width="width" :height="height">
     <embeddor :period="period" tag="xmap" :svg-node="svgEl" />
-    <svg :viewBox="`0 0 ${width} ${height}`" class="map-svg">
+    <svg
+      :viewBox="`0 0 ${width} ${height}`"
+      :class="`map-svg period-${period}`"
+    >
       <g class="chart">
         <g class="base">
           <path class="sphere" />
@@ -714,6 +717,10 @@ export default {
       box-shadow: 0 0 2px #aaa;
     }
   }
+}
+
+.map-svg.period-2014-2021 .HU {
+  cursor: not-allowed !important;
 }
 </style>
 

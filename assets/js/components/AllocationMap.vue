@@ -5,7 +5,7 @@
       v-if="hasData"
       filter="beneficiary"
       title="No filter selected"
-      :items="data"
+      :items="dropDownItems"
     ></dropdown>
 
     <map-base
@@ -187,6 +187,9 @@ const AllocationMap = {
         item.name = this.BENEFICIARIES[item.id].name;
       }
       return aggregated.sort((a, b) => d3.ascending(a.name, b.name));
+    },
+    dropDownItems() {
+      return this.data.filter((d) => !this.isHungaryException(d.id));
     },
   },
 

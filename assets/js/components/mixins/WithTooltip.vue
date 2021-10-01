@@ -8,6 +8,20 @@ export default {
     createTooltip() {
       throw "Not Implemented";
     },
+    hungaryTooltipTemplate() {
+      return `
+      <div class="title-container">
+        <img src="${this.get_flag("HU")}" alt=""/>
+        <span class="name">Hungary</span>
+      </div>
+      <div>
+        Iceland, Liechtenstein and Norway, did not reach an agreement with Hungary
+        on civil society funding. Therefore, no programmes will be implemented in
+        Hungary under the EEA and Norway Grants during the 2014-2021
+        funding period.
+      </div>
+      `;
+    },
   },
 };
 </script>

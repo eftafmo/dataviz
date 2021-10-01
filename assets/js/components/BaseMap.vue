@@ -135,7 +135,7 @@ export default {
       const self = d3.select(thisnode);
 
       // disable mouse-over when zeroed
-      if (self.classed("zero")) return;
+      // if (self.classed("zero")) return;
 
       if (over) {
         self.raise();

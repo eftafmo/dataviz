@@ -122,6 +122,10 @@ export default {
   },
 
   methods: {
+    isHungaryException(countryId) {
+      // An agreement with Hungary was not reached for this period.
+      return this.period === "2014-2021" && countryId.slice(0, 2) === "HU";
+    },
     async fetchData() {
       if (!this.datasource) throw "Base.fetchData(): Missing datasource.";
 

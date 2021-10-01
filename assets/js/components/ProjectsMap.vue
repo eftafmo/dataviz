@@ -155,6 +155,7 @@ export default {
     },
 
     tooltipTemplate(ev, d) {
+      if (this.isHungaryException(d.id)) return this.hungaryTooltipTemplate();
       const level = this.getRegionLevel(d.id);
       const allocation = d.allocation || 0,
         num_projects = this.getprojectcount(d),
