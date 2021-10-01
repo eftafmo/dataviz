@@ -225,6 +225,9 @@ class Indicator(models.Model):
     is_core = models.BooleanField()
     is_common = models.BooleanField()
 
+    thematic = models.CharField(max_length=16, blank=True)
+    sdg_no = models.IntegerField(null=True)
+
     def __str__(self):
         return "%s - %s" % (self.programme.code, self.indicator)
 

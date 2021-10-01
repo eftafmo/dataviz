@@ -235,6 +235,8 @@ class Command(BaseCommand):
                     order=row['CoreIndicatorCode'],
                     is_core=bool(row['IsCore']),
                     is_common=bool(row['IsCommon']),
+                    thematic=row['Thematic'] or '',
+                    sdg_no=row['SDGno'],
                 )
 
         self.stdout.write(self.style.SUCCESS(
