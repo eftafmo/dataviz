@@ -242,11 +242,11 @@ class FacetedSearchView(BaseFacetedSearchView):
         return ctx
 
     def get_queryset(self):
-        # Override default Solr settings
+        # Override default settings
         qs = super(BaseFacetedSearchMixin, self).get_queryset()
         for field in self.facet_fields:
             qs = qs.facet(
-                field, mincount=FACET_MIN_COUNT, limit=FACET_LIMIT, sort=FACET_SORT
+                field, min_doc_count=FACET_MIN_COUNT, size=FACET_LIMIT,
             )
         if self.order_field:
             qs = qs.order_by(self.order_field)
@@ -310,7 +310,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
         for res in ctx["object_list"]:
             d = defaultdict(list)
             if not res.object:
-                # inconsistent index, obj deleted from db but present in Solr
+                # inconsistent index, obj deleted from db but present in the index
                 logger.warning("Inconsistent object in index: %s" % (res.id,))
                 continue
             org_roles = res.object.roles.all()

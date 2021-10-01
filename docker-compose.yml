@@ -1,24 +1,14 @@
 version: '2'
 services:
-  solr:
-    image: solr:6.6.4
-    container_name: eeag_solr
-    user: root
+  elasticsearch:
+    image: elasticsearch:7.14.1
+    container_name: eeag_elasticsearch
     environment:
-      - TZ=Europe/Brussels
-      - SOLR_HOME=/solr_home
-      - SOLR_HEAP=256m
-      - SOLR_TIMEZONE=CET
-      - SOLR_LOG_LEVEL=CONFIG
-      - SOLR_LOGS_DIR=/solr_logs
-      - INIT_SOLR_HOME=yes
-      # LOG4J_PROPS=/var/solr/log4j.properties
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:
-      - solr_home:/solr_home
-      - solr_logs:/solr_logs
-    command: ["bash", "-c", "chown solr: /solr_home /solr_logs && exec gosu solr docker-entrypoint.sh solr-precreate eeagrants"]
+      - elasticsearch_data:/usr/share/elasticsearch/data
     restart: "always"
-
 
   web:
     image: eftafmo/dataviz:latest
@@ -78,5 +68,4 @@ volumes:
   webroot:
   web_db:
   web_logs:
-  solr_home:
-  solr_logs:
+  elasticsearch_data:

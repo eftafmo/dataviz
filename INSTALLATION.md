@@ -58,8 +58,7 @@ These instructions assume you're deploying to Azure Containers, and have already
 
 1. Create volumes:
     ```shell
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-solrhome
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-solrlogs
+    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-elasticsearchdata
     docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-webdb
     docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-weblogs
     docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-webroot
@@ -87,21 +86,6 @@ These instructions assume you're deploying to Azure Containers, and have already
 1. Deploy the app:
     ```shell
     docker compose -f docker-compose-azure.yml up
-    ```
-
-1. Reload Solr schema:
-    ```shell
-    docker exec -it we-p-fmo-docker-dataeeagrantsorg-cg_web bash  # log in to web container
-    ./manage.py build_solr_schema --filename /var/local/db/schema.xml
-    ./manage.py patch_schema /var/local/db/schema.xml
-    exit  # log out of web container
-
-    az storage copy -s "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-webdb/schema.xml" -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-solrhome/eeagrants/conf/schema.xml"
-
-    docker exec -it we-p-fmo-docker-dataeeagrantsorg-cg_solr bash  # log in to solr container
-    rm /solr_home/eeagrants/conf/managed-schema
-    curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=eeagrants"
-    exit  # log out of solr container
     ```
 
 1. Rebuild indexes:

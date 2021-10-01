@@ -1,8 +1,5 @@
 version: '2'
 services:
-  solr:
-    ports:
-    - "127.0.0.1:8983:8983"
   web:
     image: eftafmo/dataviz:20191210
     volumes:

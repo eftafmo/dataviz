@@ -174,11 +174,12 @@ CKEDITOR_CONFIGS = {
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://localhost:8983/solr/eeagrants',
+        'ENGINE': 'haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'eeagrants',
         'BATCH_SIZE': 999,
         'SILENTLY_FAIL': False,
-        'TIMEOUT': env("HAYSTACK_SOLR_TIMEOUT", cast=int, default=60),
+        'TIMEOUT': env("HAYSTACK_TIMEOUT", cast=int, default=60),
     },
 }
 

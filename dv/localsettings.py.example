@@ -34,11 +34,12 @@ CACHES = {
 
 
 HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://solr:8983/solr/eeagrants',
-        'BATCH_SIZE': 999,
-        'SILENTLY_FAIL': False,
+    "default": {
+        "ENGINE": "haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine",
+        "URL": "http://elasticsearch:9200/",
+        "INDEX_NAME": "eeagrants",
+        "BATCH_SIZE": 999,
+        "SILENTLY_FAIL": False,
     },
 }
 

@@ -5,9 +5,9 @@ init() {
     ./manage.py collectstatic --noinput
 }
 
-wait_solr() {
-    while ! nc -z solr 8983; do
-        echo "Waiting for Solr server solr:8983 ..."
+wait_elasticsearch() {
+    while ! nc -z elasticsearch 9200; do
+        echo "Waiting for ES server elasticsearch:9200 ..."
         sleep 1
     done
 
@@ -24,7 +24,7 @@ install_crontab
 
 if [ -z "$1" ]; then
   init &&
-  wait_solr &&
+  wait_elasticsearch &&
   exec gunicorn dv.wsgi:application \
          --name eeag \
          --bind 0.0.0.0:8000 \

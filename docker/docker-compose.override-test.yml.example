@@ -1,10 +1,5 @@
 version: '2'
 services:
-  solr:
-    container_name: eeagtest_solr
-    ports:
-    - "127.0.0.1:8984:8983"
-
   web:
     container_name: eeagtest_web
     volumes:

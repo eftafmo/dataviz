@@ -40,6 +40,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
             if operator == 'AND':
                 sqs = sqs.narrow('{}:({})'.format(facet_name, query))
             elif operator == 'OR':
+                # XXX We change to ES from Solr, need to check if this is still needed?
                 # Exclude {facet_name} when calculating facets and counts
                 # Note that we are using as key the same facet_name, not a new alias
                 # wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
@@ -50,9 +51,8 @@ class EeaFacetedSearchForm(FacetedSearchForm):
                 # Fixes #518
                 sqs = sqs.facet(
                     '{{!ex={0} key={0}}}{0}'.format(facet_name),
-                    mincount=FACET_MIN_COUNT,
-                    limit=FACET_LIMIT,
-                    sort=FACET_SORT,
+                    min_doc_count=FACET_MIN_COUNT,
+                    size=FACET_LIMIT,
                 )
         return sqs
 
@@ -86,13 +86,13 @@ class EeaAutoFacetedSearchForm(EeaFacetedSearchForm):
 
         super().__init__(*args, **kwargs)
 
-    def matched_multi_values(self, solr_res, terms):
+    def matched_multi_values(self, res, terms):
         vals = set()
-        solr_field_val = getattr(solr_res, self.auto_name)
+        field_val = getattr(res, self.auto_name)
         # reduce to multival
-        if not isinstance(solr_field_val, list):
-            solr_field_val = [solr_field_val]
-        for val in solr_field_val:
+        if not isinstance(field_val, list):
+            field_val = [field_val]
+        for val in field_val:
             low_val = val.lower()
             for term in terms:
                 if term in low_val:

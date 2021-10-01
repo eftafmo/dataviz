@@ -34,17 +34,12 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 
         $ docker-compose up -d
 
-1. Reload solr schema:
-
-        $ ./docker/solr_reload_schema.sh
-        $ rm schema.xml
-
 1. Replace database file with the latest version from production
 
         $ scp edwsys@data.eeagrants.org:/var/local/eeag.docker/db/eeag.sqlite3 /tmp/eeag.sqlite3
         $ docker cp /tmp/eeag.sqlite3 eeag_web:/var/local/db/eeag.sqlite3
 
-1. Step in the container, install requirements and rebuild solr indexes.
+1. Step in the container, install requirements and rebuild indexes.
 
         $ docker-compose exec web bash
         $ pip install -r requirements.dev.txt

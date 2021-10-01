@@ -1,7 +1,6 @@
 .git
 sandbox
 node_modules
-solr
 *.log
 localsettings.py
 __pycache__
