@@ -57,11 +57,14 @@ import Chart from "./Chart";
 import Embeddor from "./includes/Embeddor";
 import DropdownFilter from "./includes/DropdownFilter";
 import * as d3 from "d3";
+import d3tip from "d3-tip";
+import WithTooltip from "./mixins/WithTooltip";
 
 export default {
   name: "BarChart",
   components: { DropdownFilter, Embeddor },
   extends: Chart,
+  mixins: [WithTooltip],
   props: {
     mainFilter: {
       type: String,
@@ -107,7 +110,9 @@ export default {
       return this.allItems
         .filter((item) => !this.hideZero || this.getAllocation(item.id) > 0)
         .map((item, index) => {
+          const d = this.aggregated[item.id];
           return {
+            ...d,
             ...item,
             index,
             allocation: this.getAllocation(item.id),
@@ -187,7 +192,9 @@ export default {
 
       this.chart
         .selectAll("rect.hover-bar")
-        .on("click", (ev, d) => this.toggleFilter(d));
+        .on("click", (ev, d) => this.toggleFilter(d))
+        .on("mouseover", this.tip.show)
+        .on("mouseout", this.tip.hide);
     },
     yScale(d) {
       return d.index * (this.barHeight + this.barHeight * this.barPadding);
@@ -324,6 +331,40 @@ export default {
         .attr("fill", (d) => d.color)
         .attr("fill-opacity", 0);
       hoverBar.exit().remove();
+    },
+    tooltipTemplate(ev, d) {
+      return `
+        <div class="title-container">
+          <span>${d.name}</span>
+        </div>
+        <ul>
+          <li>${this.currency(d.allocation)}</li>
+          <li>
+            ${d.beneficiaries.size}
+            ${this.singularize("Beneficiary States", d.beneficiaries.size)}
+          </li>
+          <li>
+            ${d.sectors.size}
+            ${this.singularize("sectors", d.sectors.size)}
+          </li>
+          <li>
+            ${d.areas.size}
+            ${this.singularize("programme areas", d.areas.size)}
+          </li>
+          <li>
+            ${d.programmes.size}
+            ${this.singularize("programmes", d.programmes.size)}
+          </li>
+        </ul>
+      `;
+    },
+    createTooltip() {
+      // add tooltip
+      this.tip = d3tip()
+        .attr("class", "dataviz-tooltip")
+        .html(this.tooltipTemplate)
+        .offset([-5, 0]);
+      this.chart.call(this.tip);
     },
   },
 };
