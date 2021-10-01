@@ -9,7 +9,7 @@
     <h2>{{ title }}</h2>
     <dropdown-filter
       :filter="mainFilter"
-      :items="allItems"
+      :items="data"
       :title="dropDownTitle"
     />
     <slot name="before-chart"></slot>
