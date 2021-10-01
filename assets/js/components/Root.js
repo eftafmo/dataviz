@@ -32,6 +32,17 @@ function getScenario(url) {
   return { period, scenario };
 }
 
+const hungaryAllowedScenarios = new Set([
+  "index",
+  // "funding",
+  // "global_goals",
+  // "cooperation",
+  // "projects",
+  "search",
+  "sectors",
+  "beneficiary_states",
+]);
+
 export default {
   extends: Base,
   props: {
@@ -50,6 +61,15 @@ export default {
       if (param) {
         param = param.replace(/\+/g, " ");
       }
+
+      if (
+        name === "beneficiary" &&
+        period === "2014-2021" &&
+        param === "HU" &&
+        !hungaryAllowedScenarios.has(scenario)
+      )
+        continue;
+
       FILTERS[name] = param;
     }
 
