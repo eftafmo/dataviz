@@ -14,10 +14,6 @@ export default {
       return this.BENEFICIARIES;
     },
 
-    longestText() {
-      return this.longestBeneficiary;
-    },
-
     clickFunc() {
       return this.toggleBeneficiary;
     },

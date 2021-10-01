@@ -197,7 +197,11 @@ export default {
     },
 
     longestText() {
-      return this.longestCountry;
+      return this.nonzero.reduce(
+        (result, current) =>
+          current.name.length > result.length ? current.name : result,
+        ""
+      );
     },
 
     legendWidth() {
