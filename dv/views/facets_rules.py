@@ -8,7 +8,7 @@ from dv.models import (
 
 BASE_FACETS = [
     ("financial_mechanism_ss", "AND"),
-    ("period", "AND"),
+    ("period", "OR"),
     ("state_name", "OR"),
     ("priority_sector_ss", "OR"),
     ("programme_area_ss", "OR"),
@@ -38,7 +38,7 @@ PROJECT_CUSTOM_FACETS = [
 
 ORGANISATION_CUSTOM_FACETS = [
     ("financial_mechanism_ss", "AND"),
-    ("period", "AND"),
+    ("period", "OR"),
     ("role_ss", "OR"),
     ("state_name", "OR"),
     ("priority_sector_ss", "OR"),

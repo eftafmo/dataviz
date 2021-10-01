@@ -1,21 +1,13 @@
 from haystack.forms import FacetedSearchForm
-from haystack.inputs import AltParser
-
-from dv.views.facets_rules import (
-    FACET_MIN_COUNT, FACET_LIMIT, FACET_SORT,
-)
 
 
 class EeaFacetedSearchForm(FacetedSearchForm):
-
     def __init__(self, *args, **kwargs):
-        initial = kwargs.get('initial', {})
-        self.facet_rules = kwargs.pop('facet_rules', {})
+        initial = kwargs.get("initial", {})
+        self.facet_rules = kwargs.pop("facet_rules", {})
 
-        data = dict(kwargs.get('data', initial))
-        self.facets = {
-            'kind': [kwargs.pop('facet_kind', 'Programme')]
-        }
+        data = dict(kwargs.get("data", initial))
+        self.facets = {"kind": [kwargs.pop("facet_kind", "Programme")]}
         for facet_name in self.facet_rules.keys():
             self.facets[facet_name] = data.get(facet_name, [])
         super().__init__(*args, **kwargs)
@@ -27,38 +19,23 @@ class EeaFacetedSearchForm(FacetedSearchForm):
     def alter_or_facets(self, sqs, facet_name, facet_values):
         # Determine operation type - AND/OR supported so far
         operator = self.facet_rules.get(facet_name, None)
-        if facet_name == 'kind':
-            operator = 'AND'
-        if operator not in ['AND', 'OR']:
+        if facet_name == "kind":
+            operator = "AND"
+        if operator not in ["AND", "OR"] or not facet_values:
             return sqs
-        query = ''
+
+        facet = facet_name + "__in"
+
+        if operator == "OR":
+            return sqs.filter(**{facet: facet_values})
+
         for value in facet_values:
-            if query:
-                query += " {} ".format(operator)
-            query += '"{}"'.format(sqs.query.clean(value))
-        if query:
-            if operator == 'AND':
-                sqs = sqs.narrow('{}:({})'.format(facet_name, query))
-            elif operator == 'OR':
-                # XXX We change to ES from Solr, need to check if this is still needed?
-                # Exclude {facet_name} when calculating facets and counts
-                # Note that we are using as key the same facet_name, not a new alias
-                # wiki.apache.org/solr/SimpleFacetParameters#Multi-Select_Faceting_and_LocalParams
-                # When searching for autocomplete facets, must not filter by itself
-                sqs = sqs.narrow('{{!tag={0}}}{0}:({1})'.format(facet_name, query))
-                # del sqs.query.facets[facet_name]
-                # Don't delete the original facet, no support for tagging/params in facet.mincount
-                # Fixes #518
-                sqs = sqs.facet(
-                    '{{!ex={0} key={0}}}{0}'.format(facet_name),
-                    min_doc_count=FACET_MIN_COUNT,
-                    size=FACET_LIMIT,
-                )
+            sqs = sqs.filter(**{facet: [value]})
         return sqs
 
     def search(self):
         try:
-            q = self.cleaned_data.pop('q')
+            q = self.cleaned_data.pop("q")
         except KeyError:
             q = None
         sqs = super().search()
@@ -72,13 +49,13 @@ class EeaFacetedSearchForm(FacetedSearchForm):
 
 class EeaAutoFacetedSearchForm(EeaFacetedSearchForm):
     def __init__(self, *args, **kwargs):
-        data = dict(kwargs.get('data', kwargs.get('initial', {})))
-        self.auto_name = data.pop('auto_name')
+        data = dict(kwargs.get("data", kwargs.get("initial", {})))
+        self.auto_name = data.pop("auto_name")
         if self.auto_name:
             self.auto_name = self.auto_name[0]
-        self.auto_value = data.pop('auto_value', '')
+        self.auto_value = data.pop("auto_value", "")
         if self.auto_value:
-            self.auto_value = ' '.join(self.auto_value)
+            self.auto_value = " ".join(self.auto_value)
 
         super().__init__(*args, **kwargs)
 
@@ -102,11 +79,9 @@ class EeaAutoFacetedSearchForm(EeaFacetedSearchForm):
         # (we type in only one field at a time, select the value desired, then type for a new match)
         if self.auto_name and self.auto_value and len(self.auto_value) >= 2:
             # Remove one-letter words from auto_value because default minGramSize=2 in haystack
-            search_term = ' '.join([w for w in self.auto_value.split() if len(w) > 1])
+            search_term = " ".join([w for w in self.auto_value.split() if len(w) > 1])
             if search_term:
-                kw = {
-                    '{}_auto'.format(self.auto_name): search_term
-                }
+                kw = {"{}_auto".format(self.auto_name): search_term}
                 sqs = sqs.autocomplete(**kw)
 
         return sqs
