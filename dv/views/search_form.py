@@ -63,11 +63,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
             q = None
         sqs = super().search()
         if q:
-            params = {
-                'q.op': 'AND'
-            }
-            # Set default op for multi-word search term
-            sqs = sqs.filter(content=AltParser('dismax', q, **params))
+            sqs = sqs.filter(content=q)
 
         for facet_name, facet_values in self.facets.items():
             sqs = self.alter_or_facets(sqs, facet_name, facet_values)
