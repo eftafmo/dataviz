@@ -288,15 +288,32 @@ def sdg(request):
     period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
     period_id = FUNDING_PERIODS_DICT[period]  # used in queries
 
-    allocations = ProgrammeAllocation.objects.filter(
+    allocation_query = ProgrammeAllocation.objects.filter(
         funding_period=period_id,
         programme_area__isnull=False,
     ).exclude(
-        allocation=0,  # TODO should we still exclude this?
+        allocation=0,
     ).select_related(
-        'programme_area',
-        'programme_area__priority_sector',
+        'programme',
     ).order_by('state', 'financial_mechanism')
+
+    dataset = defaultdict(lambda: {
+        'allocation': 0,
+        'sectors': set(),
+        'areas': set(),
+        'programmes': {},
+    })
+    for allocation in allocation_query:
+        key = (allocation.financial_mechanism, allocation.state_id, allocation.sdg_no)
+        dataset[key]['allocation'] += allocation.allocation
+        dataset[key]['sectors'].add(allocation.priority_sector_id)
+        dataset[key]['areas'].add(allocation.programme_area_id)
+        if not allocation.programme:
+            continue
+        dataset[key]['programmes'][allocation.programme.code] = {
+            'name': allocation.programme.name,
+            'url': allocation.programme.url,
+        }
 
     indicators = Indicator.objects.filter(
         funding_period=period_id,
@@ -305,7 +322,7 @@ def sdg(request):
         'indicator',
         'header',
         'state_id',
-        'programme_area_id'
+        'sdg_no'
     ).annotate(
         achievement_eea=Sum('achievement_eea'),
         achievement_norway=Sum('achievement_norway'),
@@ -314,59 +331,33 @@ def sdg(request):
     results = defaultdict(lambda: defaultdict(dict))
     for indicator in indicators:
         if indicator['achievement_eea']:
-            key = (FM_EEA, indicator['state_id'], indicator['programme_area_id'])
+            key = (FM_EEA, indicator['state_id'], indicator['sdg_no'])
             results[key][indicator['header']].update({
                 indicator['indicator']: {
                     'achievement': indicator['achievement_eea'],
                 }
             })
         if indicator['achievement_norway']:
-            key = (FM_NORWAY, indicator['state_id'], indicator['programme_area_id'])
+            key = (FM_EEA, indicator['state_id'], indicator['sdg_no'])
             results[key][indicator['header']].update({
                 indicator['indicator']: {
                     'achievement': indicator['achievement_eea'],
                 }
             })
 
-    programmes = defaultdict(dict)
-    programme_query = Programme.objects.filter(
-        funding_period=period_id,
-        is_tap=False,
-        is_bfp=False,
-    ).prefetch_related(
-        'states',
-        'programme_areas',
-    ).order_by('code')
-
-    for programme in programme_query:
-        keys = product(
-            programme.financial_mechanisms,
-            programme.states.values_list('code', flat=True),
-            programme.programme_areas.values_list('id', flat=True),
-        )
-        for key in keys:
-            programmes[key][programme.code] = {
-                'name': programme.name,
-                'url': programme.url,
-            }
-
     out = []
-    for allocation in allocations:
-        state = allocation.state_id
-        financial_mechanism = allocation.financial_mechanism
-        programme_area = allocation.programme_area_id
+    for key, value in dataset.items():
+        financial_mechanism, state, sdg_no = key
         out.append({
             'period': period,
             'fm': FM_DICT[financial_mechanism],
-            'sector': allocation.programme_area.priority_sector.name,
-            'area': allocation.programme_area.name,
+            'sectors': list(value['sectors']),
+            'areas': list(value['areas']),
             'beneficiary': state,
-            'is_ta': allocation.programme_area.priority_sector.code == 'OT',
-            'allocation': allocation.allocation,
-            'results': results[(financial_mechanism, state, programme_area)],
-            'programmes': programmes[(financial_mechanism, state, programme_area)],
-            'thematic': allocation.thematic,
-            'sdg_no': allocation.sdg_no,
+            'allocation': value['allocation'],
+            'results': results[key],
+            'programmes': value['programmes'],
+            'sdg_no': sdg_no,
         })
 
     return JsonResponse(out)
