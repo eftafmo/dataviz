@@ -46,13 +46,13 @@ class ProgrammeArea(models.Model):
     priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE)
 
     code = models.CharField(max_length=4)  # not unique because of period
-    name = models.CharField(max_length=256)  # not unique because of FM
+    name = models.CharField(max_length=256)
     short_name = models.CharField(max_length=32)  # not unique
     order = models.SmallIntegerField(null=True)
     objective = models.TextField()
 
     class Meta:
-        unique_together = ('code', 'funding_period')
+        unique_together = ('funding_period', 'code')
 
 
 class Allocation(models.Model):
@@ -68,7 +68,7 @@ class Allocation(models.Model):
     thematic = models.CharField(max_length=16, blank=True)
 
     class Meta:
-        unique_together = ('state', 'programme_area', 'financial_mechanism', 'funding_period')
+        unique_together = ('funding_period', 'state', 'programme_area', 'financial_mechanism')
 
 
 class Programme(models.Model):
@@ -82,7 +82,7 @@ class Programme(models.Model):
 
     status = models.CharField(max_length=16)
 
-    url = models.CharField(max_length=256, null=True)
+    url = models.CharField(max_length=256, blank=True)
     summary = models.TextField()
 
     allocation_eea = models.DecimalField(max_digits=15, decimal_places=2)
@@ -90,7 +90,7 @@ class Programme(models.Model):
     co_financing = models.DecimalField(max_digits=15, decimal_places=2)
 
     is_tap = models.BooleanField(help_text='Technical Assistance Programme')
-    is_bfp = models.BooleanField(help_text='Bilateral Fund Programme')
+    is_bfp = models.BooleanField(default=False, help_text='Bilateral Fund Programme')
 
     @property
     def allocation(self):
@@ -241,11 +241,18 @@ class Indicator(models.Model):
 
 
 class Organisation(models.Model):
+    funding_period = models.IntegerField(choices=FUNDING_PERIODS)
+
+    code = models.IntegerField()  # Same OrgId with different names for the 2 periods
     name = models.CharField(max_length=256)
+
     city = models.CharField(max_length=256)
     country = models.CharField(max_length=64)
     category = models.CharField(max_length=256)
     subcategory = models.CharField(max_length=256)
+
+    class Meta:
+        unique_together = ('funding_period', 'code')
 
     @property
     def projects(self):
@@ -289,7 +296,7 @@ class BilateralInitiative(models.Model):
 
     code = models.CharField(max_length=32, primary_key=True)
     title = models.CharField(max_length=512)  # not unique
-    url = models.CharField(max_length=256, null=True)
+    url = models.CharField(max_length=256, blank=True)
 
     grant = models.DecimalField(max_digits=15, decimal_places=2)
     programme = models.ForeignKey(Programme, related_name='bilateral_initiatives',
@@ -307,7 +314,7 @@ class BilateralInitiative(models.Model):
     results_description = models.TextField()
 
     promoter_state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
-    promoter_organization = models.CharField(max_length=256, null=True)
+    promoter_organization = models.CharField(max_length=256, blank=True)
 
     @cached_property
     def display_name(self):
@@ -315,15 +322,15 @@ class BilateralInitiative(models.Model):
 
 
 class News(models.Model):
-    title = models.TextField(null=False, blank=False)
-    link = models.URLField(max_length=2000, null=False, blank=False)
+    title = models.TextField()
+    link = models.URLField(max_length=2000)
     created = models.DateTimeField(null=True)
     updated = models.DateTimeField(null=True)
 
     programmes = models.ManyToManyField(Programme, related_name='news')
     project = models.ForeignKey(Project, null=True, default=None, related_name='news',
                                 on_delete=models.CASCADE)
-    summary = models.TextField(null=True)
+    summary = models.TextField(blank=True)
     image = models.URLField(max_length=2000)
     is_partnership = models.BooleanField(default=False)
 
@@ -336,8 +343,8 @@ class News(models.Model):
 
 
 class StaticContent(models.Model):
-    name = models.CharField(max_length=64, null=False, blank=False, unique=True)
-    body = RichTextField(null=False, blank=False)
+    name = models.CharField(max_length=64, unique=True)
+    body = RichTextField()
 
     def __str__(self):
         return self.name
