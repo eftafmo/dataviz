@@ -17,9 +17,11 @@
       </mechanisms>
     </div>
 
-    <div class="grant-dataviz" id="thematic-chart">
-      <thematic_bar_chart :initial="dataset" period="{{ PERIOD }}"></thematic_bar_chart>
-    </div>
+    {% if PERIOD == "2014-2021" %}
+      <div class="grant-dataviz" id="thematic-chart">
+        <thematic_bar_chart :initial="dataset" period="{{ PERIOD }}"></thematic_bar_chart>
+      </div>
+    {% endif %}
 
     <div class="grant-dataviz" id="priority-sectors">
       <sectors
