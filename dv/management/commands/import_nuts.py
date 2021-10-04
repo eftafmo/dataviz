@@ -12,6 +12,15 @@ from dv.models import NUTSVersion
 logger = logging.getLogger(__name__)
 API_BASE = "https://gisco-services.ec.europa.eu/distribution/v2/nuts"
 
+# Some Organisations have fake NUTS code, so include them here as well.
+FAKE_NUTS = {
+    "UA010": "Ukraine",
+    "MD010": "Moldova, Republic of",
+    "RS0GF": "Serbia",
+    "RS-061": "Serbia",
+    "RU010": "Russian Federation",
+}
+
 
 def get_file_list(year):
     logger.debug("Getting dataset list for %s", year)
@@ -98,3 +107,14 @@ class Command(BaseCommand):
                 created_count += created
                 logger.info("NUTS extra %s, created=%s", obj, created)
         logger.info("Created Extra-Regio %s out of %s", created_count, len(nuts_0 * 3))
+
+        created_count = 0
+        for code, label in FAKE_NUTS.items():
+            obj, created = NUTS.objects.update_or_create(
+                {"label": label}, code=code
+            )
+            obj.nuts_versions.add(nuts_version)
+            created_count += created
+            logger.info("NUTS extra %s, created=%s", obj, created)
+        logger.info("Created Fake NUTS codes %s out of %s", created_count, len(FAKE_NUTS))
+

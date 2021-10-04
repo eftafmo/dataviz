@@ -18243,6 +18243,17 @@
 },
 {
   "model": "dv.nuts",
+  "pk": "MD010",
+  "fields": {
+    "label": "Moldova, Republic of",
+    "nuts_versions": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "dv.nuts",
   "pk": "ME",
   "fields": {
     "label": "ЦРНА ГОРА / CRNA GORA",
@@ -22412,6 +22423,28 @@
 },
 {
   "model": "dv.nuts",
+  "pk": "RS-061",
+  "fields": {
+    "label": "Serbia",
+    "nuts_versions": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "RS0GF",
+  "fields": {
+    "label": "Serbia",
+    "nuts_versions": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "dv.nuts",
   "pk": "RS1",
   "fields": {
     "label": "Србија - север  / Srbija - sever",
@@ -22746,6 +22779,17 @@
   "fields": {
     "label": "Extra-Regio NUTS 3",
     "nuts_versions": [
+      2
+    ]
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "RU010",
+  "fields": {
+    "label": "Russian Federation",
+    "nuts_versions": [
+      1,
       2
     ]
   }
@@ -25015,6 +25059,17 @@
   "pk": "TRZZZ",
   "fields": {
     "label": "Extra-Regio NUTS 3",
+    "nuts_versions": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "dv.nuts",
+  "pk": "UA010",
+  "fields": {
+    "label": "Ukraine",
     "nuts_versions": [
       1,
       2
