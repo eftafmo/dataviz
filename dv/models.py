@@ -8,6 +8,9 @@ from dv.lib.utils import FM_EEA, FM_NORWAY, FINANCIAL_MECHANISMS, FM_DICT, FUNDI
 class NUTSVersion(models.Model):
     year = models.IntegerField(unique=True)
 
+    def __str__(self):
+        return str(self.year)
+
 
 class NUTS(models.Model):
     code = models.CharField(max_length=5, primary_key=True)
