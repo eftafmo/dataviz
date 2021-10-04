@@ -123,8 +123,8 @@ export default {
           name: "Funding",
           link: `/${this.period}/funding/`,
           description:
-            "Donec bibendum eros a velit ullamcorper ullamcorper. Sed eu temporquam. " +
-            "Praesent imperdiet felis vitae pretium eleifend.",
+            "Learn more about allocations to the " +
+            "Beneficiary States and priority sectors.",
           items: [
             ...this.allocationByFm,
             {
@@ -144,10 +144,8 @@ export default {
           name: "Cooperation",
           link: `/${this.period}/cooperation/`,
           description:
-            "Quisque volutpat diam orci, ut dignissim elit cursus sit amet. " +
-            "Donec euismod quam eget ipsum accumsan congue. Nulla tempus elit sed maximus elementum. " +
-            "Duis ac ipsum dui. Suspendisse posuere neque eget finibus dignissim. " +
-            "Mauris quis quam libero",
+            "Partnerships are at the centre of the EEA and Norway Grants. " +
+            "Discover our partnership network.",
           items: [
             {
               id: "prg-part",
@@ -176,9 +174,8 @@ export default {
           name: "Projects",
           link: `/${this.period}/projects/`,
           description:
-            "Vestibulum purus turpis, ultrices sed metus bibendum, faucibus tempor tortor. " +
-            "Vivamus auctor est dui, eget sodales tellus tempus in. " +
-            "Nulla vel posuere erat, in mattis sem.",
+            "Discover projects and initiatives, helping reduce social and economic " +
+            "disparities and strengthen bilateral relations",
           items: [
             {
               id: "proj",
