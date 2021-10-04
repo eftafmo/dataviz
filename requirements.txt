@@ -15,4 +15,5 @@ pyexcel-io==0.6.4
 pyexcel-xls==0.6.2
 pyexcel-xlsx==0.6.0
 pymssql==2.2.2
+requests==2.26.0
 sentry-sdk
