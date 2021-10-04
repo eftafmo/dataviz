@@ -257,6 +257,15 @@ class Organisation(models.Model):
     def programmes(self):
         return [role.programme for role in self.roles.all() if role.programme]
 
+    @cached_property
+    def geotarget(self):
+        if not self.nuts:
+            return []
+        elif len(self.nuts.code) > 2:
+            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, STATES[self.nuts.code[:2]])]
+        else:
+            return ["{}: {}".format(self.nuts.code, self.nuts.label)]
+
 
 class OrganisationRole(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
@@ -274,14 +283,6 @@ class OrganisationRole(models.Model):
                                 on_delete=models.CASCADE)
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
 
-    @cached_property
-    def geotarget(self):
-        if not self.nuts:
-            return []
-        elif len(self.nuts.code) > 2:
-            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, STATES[self.nuts.code[:2]])]
-        else:
-            return ["{}: {}".format(self.nuts.code, self.nuts.label)]
 
 
 class BilateralInitiative(models.Model):

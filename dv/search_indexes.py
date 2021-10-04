@@ -642,7 +642,7 @@ class OrganisationIndex(SearchIndex, Indexable):
         return list(set(role.role_name for role in obj.roles.all()))
 
     def prepare_geotarget(self, obj):
-        return list(set(geo for role in obj.roles.all() for geo in role.geotarget))
+        return obj.geotarget
 
     def prepare_org_name(self, obj):
         return " ".join(obj.name.split())
