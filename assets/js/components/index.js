@@ -24,6 +24,7 @@ export { default as PartnersDonors } from "./PartnersDonors";
 
 export { default as Summary } from "./Summary";
 
+export { default as GlobalGoalsMap } from "./GlobalGoalsMap";
 export { default as GlobalGoalsChart } from "./GlobalGoalsChart";
 
 export { default as GlobalFilters } from "./GlobalFilters";

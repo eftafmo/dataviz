@@ -28,7 +28,7 @@ export default {
 
       let region_name;
       let extra = "";
-      if (d.id.length == 2) {
+      if (d.id.length === 2) {
         region_name = this.COUNTRIES[d.id].name;
         extra = `
             <li>${this.currency(allocation)}</li>
