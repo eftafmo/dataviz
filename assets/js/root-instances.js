@@ -7,7 +7,7 @@
 import { default as Root } from "./components/Root";
 import * as components from "./components";
 import Sidebar from "./components/includes/Sidebar";
-import { GlobalGoalsMap } from "./components";
+import { GlobalGoalsMap, GlobalGoalsMechanism } from "./components";
 
 const _Base = {
   extends: Root,
@@ -47,9 +47,8 @@ export const Goals = {
   name: "Goals",
 
   components: {
-    mechanisms: components.Mechanisms,
+    mechanisms: components.GlobalGoalsMechanism,
     global_goals_chart: components.GlobalGoalsChart,
-    sectors: components.Sectors,
     xmap: components.GlobalGoalsMap,
     beneficiaries: components.Beneficiaries,
     sidebar: components.GoalsSidebar,

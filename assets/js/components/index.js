@@ -26,6 +26,7 @@ export { default as Summary } from "./Summary";
 
 export { default as GlobalGoalsMap } from "./GlobalGoalsMap";
 export { default as GlobalGoalsChart } from "./GlobalGoalsChart";
+export { default as GlobalGoalsMechanism } from "./GlobalGoalsMechanism";
 
 export { default as GlobalFilters } from "./GlobalFilters";
 export { default as Results } from "./Results";

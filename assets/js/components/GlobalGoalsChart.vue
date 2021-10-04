@@ -1,5 +1,5 @@
 <template>
-  <bar-chart
+  <global-goals-bar-chart
     main-filter="sdg_no"
     embed-tag="global_goals_chart"
     title="Sustainable Development Goals"
@@ -15,7 +15,7 @@
         </div>
       </transition>
     </template>
-  </bar-chart>
+  </global-goals-bar-chart>
 </template>
 
 <script>
@@ -23,10 +23,11 @@ import sdgArray from "@js/constants/sdg.json5";
 import BarChart from "./BarChart";
 import { getAssetUrl } from "../lib/util";
 import WithFiltersMixin from "./mixins/WithFilters";
+import GlobalGoalsBarChart from "./GlobalGoalsBarChart";
 
 export default {
   name: "GlobalGoalsChart",
-  components: { BarChart },
+  components: { GlobalGoalsBarChart },
   mixins: [WithFiltersMixin],
   type: "",
 
