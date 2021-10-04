@@ -7,6 +7,13 @@
 
   <h1 class="page-title">Global Goals</h1>
 
+  <div class="page-description">
+    The United Nations’ Sustainable Development Goals reflect a shared global vision for a peaceful and prosperous world
+    through sustainable and fair development. Through the Grants, the Donor States empower public authorities, civil
+    society, the private sector and academia in the Beneficiary States to take concrete actions to deliver on the shared
+    commitment to fulfilling the UN Sustainable Development Goals
+  </div>
+
   <div class="lg-column">
 
     <div class="grant-dataviz" id="financial-mechanisms">
@@ -70,7 +77,7 @@
       Dataviz.Goals,
       {
         datasource: "/api/sdg.json",
-        datasourcePeriods: ["{{ PERIOD }}"],
+        datasourcePeriods: ["{{ PERIOD }}"]
       }
     ).mount("#content");
   });
