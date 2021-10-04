@@ -3,11 +3,16 @@
     <h1 class="page-title">Funding periods</h1>
     <div class="compare-beneficiaries-wrapper grant-dataviz">
       <funding-by-period-chart :initial="dataset" period="none" />
-      <beneficiaries :initial="dataset" no-dropdown no-legend period="none">
+      <compare-beneficiaries-chart
+        :initial="dataset"
+        no-dropdown
+        no-legend
+        period="none"
+      >
         <template #title>
           <h2>Beneficiary States</h2>
         </template>
-      </beneficiaries>
+      </compare-beneficiaries-chart>
     </div>
   </div>
 </template>
@@ -18,10 +23,11 @@ import Beneficiaries from "../Beneficiaries";
 import WithCountries from "../mixins/WithCountries";
 import DropdownFilter from "../includes/DropdownFilter";
 import FundingByPeriodChart from "../FundingByPeriodChart";
+import CompareBeneficiariesChart from "../CompareBeneficiariesChart";
 
 export default {
   name: "CompareBeneficiariesView",
-  components: { FundingByPeriodChart, Beneficiaries },
+  components: { CompareBeneficiariesChart, FundingByPeriodChart },
   extends: Component,
   mixins: [WithCountries],
 };

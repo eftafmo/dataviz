@@ -293,7 +293,8 @@ export default {
       // each aggregation item a key.
       const aggregator = {};
 
-      for (const item of data) {
+      for (let item of data) {
+        item = this.preprocessItem(item);
         const base = {};
         let row = aggregator;
         for (let i = 0, j = _bycols.length; i < j; i++) {
@@ -397,6 +398,9 @@ export default {
 
       recurse(aggregator, 0);
       return out;
+    },
+    preprocessItem(item) {
+      return item;
     },
     main() {
       /*
