@@ -305,7 +305,7 @@ class ProjectIndex(SearchIndex, Indexable):
 
     def prepare_theme_ss(self, obj):
         return list(set(theme.name for theme in self.themes_query(obj)))
-    
+
     def prepare_organisation(self, obj):
         return list(
             set(
@@ -552,7 +552,6 @@ class OrganisationIndex(SearchIndex, Indexable):
     def index_queryset(self, using=None):
         return self.get_model().objects.prefetch_related(
             "roles",
-            "roles__nuts",
             "roles__state",
             "roles__project",
             "roles__project__state",

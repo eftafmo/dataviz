@@ -536,6 +536,7 @@ def partners(request):
         org_id=F('organisation_id'),
         name=F('organisation__name'),
         country=F('organisation__country'),
+        nuts_id=F('organisation__nuts'),
         role=F('role_code'),
     ).values(
         'country',
@@ -594,9 +595,9 @@ def partners(request):
             if project_code in donor_projects:
                 project_promoters[project_code][org_role.organisation_id] = {
                     'name': org_role.organisation.name,
-                    'nuts': org_role.nuts_id,
+                    'nuts': org_role.organisation.nuts_id,
                 }
-                project_nuts[project_code]['dst'].append(org_role.nuts_id)
+                project_nuts[project_code]['dst'].append(org_role.organisation.nuts_id)
         elif org_role.role_code == 'PJDPP':
             donor_projects.add(project_code)
 
@@ -612,7 +613,7 @@ def partners(request):
                 if org_role.organisation_id not in donor_project_partners[key]:
                     donor_project_partners[key][org_role.organisation_id] = {
                         'name': org_role.organisation.name,
-                        'nuts': org_role.nuts_id,
+                        'nuts': org_role.organisation.nuts_id,
                         # 'projects': [],
                         # project_count should be enough, trying to save 90KB
                         'prj': 0,
@@ -634,7 +635,7 @@ def partners(request):
                         'src': [],
                         'dst': [],
                     }
-                project_nuts[project_code]['src'].append(org_role.nuts_id)
+                project_nuts[project_code]['src'].append(org_role.organisation.nuts_id)
 
     # Bilateral news, they are always related to programmes, not projects
     news_query = Programme.objects.filter(

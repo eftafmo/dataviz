@@ -222,8 +222,8 @@ class Indicator(models.Model):
     achievement_norway = models.DecimalField(max_digits=9, decimal_places=2)
     order = models.SmallIntegerField(null=True)
 
-    is_core = models.BooleanField()
-    is_common = models.BooleanField()
+    is_core = models.BooleanField(default=False)
+    is_common = models.BooleanField(default=False)
 
     thematic = models.CharField(max_length=16, blank=True)
     sdg_no = models.IntegerField(null=True)
@@ -242,17 +242,12 @@ class Indicator(models.Model):
 
 class Organisation(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
-
-    code = models.IntegerField()  # Same OrgId with different names for the 2 periods
     name = models.CharField(max_length=256)
-
     city = models.CharField(max_length=256)
     country = models.CharField(max_length=64)
     category = models.CharField(max_length=256)
     subcategory = models.CharField(max_length=256)
-
-    class Meta:
-        unique_together = ('funding_period', 'code')
+    nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
 
     @property
     def projects(self):
@@ -271,8 +266,6 @@ class OrganisationRole(models.Model):
 
     organisation = models.ForeignKey(Organisation, related_name='roles',
                                      on_delete=models.CASCADE)
-
-    nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
 
     # programme and project are denormalised to include BS
     programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles',

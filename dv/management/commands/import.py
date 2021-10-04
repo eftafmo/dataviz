@@ -6,6 +6,7 @@ from decimal import Decimal
 import bleach
 import pyexcel
 import pymssql
+from django.db.utils import IntegrityError
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
@@ -240,6 +241,102 @@ class Command(BaseCommand):
         pa_count = ProgrammeAllocation.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {pa_count} ProgrammeAllocation objects.'))
 
+        sheet = sheets['Project']
+        for record in sheet.records:
+            project = Project.objects.create(
+                funding_period=FUNDING_PERIOD,
+                code=record['ProjectCode'],
+                name=record['Project'],
+                status=record['ProjectStatus'],
+                state_id=states[record['BeneficiaryState']],
+                programme_id=record['ProgrammeCode'],
+                nuts_id=record['NUTSCode'],
+                url=record['UrlProjectPage'],
+                allocation=record['GrantAmount'],
+                is_eea=record['IsEEA'],
+                is_norway=record['IsNorway'],
+                has_ended=record['HasEnded'],
+                is_dpp=record['HasDpp'],
+                is_positive_fx=record['ResultPositiveEffects'],
+                is_improved_knowledge=record['ResultImprovedKnowledge'],
+                is_continued_coop=record['ResultContinuedCooperation'],
+                initial_description=sanitize_html(record['PlannedSummary']),
+                results_description=sanitize_html(record['ActualSummary']),
+            )
+            project.programme_areas.add(programme_areas[record['PACode']])
+            project.priority_sectors.add(record['PSCode'])
+
+            ProjectAllocation.objects.create(
+                funding_period=FUNDING_PERIOD,
+                financial_mechanism=GRANT_CODE_TO_FM[record['FMCode']],
+                state_id=states[record['BeneficiaryState']],
+                programme_area_id=programme_areas[record['PACode']],
+                priority_sector_id=record['PSCode'],
+                project=project,
+                allocation=record['GrantAmount'],
+            )
+
+        p_count = Project.objects.filter(funding_period=FUNDING_PERIOD).count()
+        self.stdout.write(self.style.SUCCESS(f'Imported {p_count} Project objects.'))
+
+        pa_count = ProjectAllocation.objects.filter(funding_period=FUNDING_PERIOD).count()
+        self.stdout.write(self.style.SUCCESS(f'Imported {pa_count} ProjectAllocation objects.'))
+
+        sheet = sheets['ProgrammeIndicators']
+        for record in sheet.records:
+            Indicator.objects.create(
+                funding_period=FUNDING_PERIOD,
+                programme_id=record['ProgrammeCode'],
+                programme_area_id=programme_areas[record['ProgrammeAreaCode']],
+                state_id=states[record['BeneficiaryState']],
+                indicator=record['Indicator'],
+                achievement_eea=record['Achievement'] if record['FMCode'] == 'EEA FM' else 0,
+                achievement_norway=record['Achievement'] if record['FMCode'] == 'N FM' else 0,
+                order=record['SortOrder'],
+            )
+
+        i_count = Indicator.objects.filter(funding_period=FUNDING_PERIOD).count()
+        self.stdout.write(self.style.SUCCESS(f'Imported {i_count} Indicator objects.'))
+
+        sheet = sheets['Organisation']
+        organisations = {}
+        for record in sheet.records:
+            organisation = Organisation.objects.create(
+                funding_period=FUNDING_PERIOD,
+                name=record['Organisation'],
+                city=record['City'],
+                country=record['Country'],
+                category=record['OrganisationTypeCategory'],
+                subcategory=record['OrganisationType'],
+                nuts_id=record['NUTSCode'] or None,
+            )
+            organisations[record['IdOrganisation']] = organisation.id
+
+        o_count = Organisation.objects.filter(funding_period=FUNDING_PERIOD).count()
+        self.stdout.write(self.style.SUCCESS(f'Imported {o_count} Organisation objects.'))
+
+        sheet = sheets['OrganisationRoles']
+        for record in sheet.records:
+            try:
+                OrganisationRole.objects.create(
+                    funding_period=FUNDING_PERIOD,
+                    organisation_id=organisations[record['IdOrganisation']],
+                    role_code=record['OrganisationRoleCode'],
+                    role_name=record['OrganisationRole'],
+                    programme_id=record['ProgrammeCode'] or None,
+                    project_id=record['ProjectCode'] or None,
+                    state_id=states.get(record['Country']),
+                )
+            except KeyError:
+                self.stdout.write(self.style.ERROR(
+                    f'OrganisationRole record {record} failed to import; organisation id not found'))
+            except IntegrityError as ex:
+                self.stdout.write(self.style.ERROR(
+                    f'OrganisationRole record {record} failed to import; {ex}'))
+        or_count = OrganisationRole.objects.filter(funding_period=FUNDING_PERIOD).count()
+        self.stdout.write(self.style.SUCCESS(f'Imported {or_count} OrganisationRole objects.'))
+
+
     def _import_2014_2021(self):
         """Import data from grACE db for period 2014-2021"""
         self.stdout.write('Running import for 2014-2021.')
@@ -327,7 +424,7 @@ class Command(BaseCommand):
                 self._add_m2m_entries(programme, row, 'Country', 'states',
                                       'State', states)
 
-        p_count = Allocation.objects.filter(funding_period=FUNDING_PERIOD).count()
+        p_count = Programme.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {p_count} Programme objects.'))
 
         programme_allocation_query = 'SELECT * FROM fmo.TR_RDPProgrammeBudgetHeading'
@@ -451,7 +548,8 @@ class Command(BaseCommand):
                 CountryOrganisation,
                 City,
                 OrganisationClassificationSector,
-                OrganisationClassification
+                OrganisationClassification,
+                NUTSCode
             FROM fmo.TR_RDPOrganisationRole
         '''
         with db_cursor() as cursor:
@@ -460,14 +558,14 @@ class Command(BaseCommand):
             for row in cursor.fetchall():
                 organisation = Organisation.objects.create(
                     funding_period=FUNDING_PERIOD,
-                    code=row['IdOrganisation'],
                     name=row['Organisation'],
                     city=row['City'],
                     country=row['CountryOrganisation'],
                     category=row['OrganisationClassificationSector'],
                     subcategory=row['OrganisationClassification'],
+                    nuts_id=row['NUTSCode'] or None,
                 )
-                organisations[organisation.code] = organisation.id
+                organisations[row['IdOrganisation']] = organisation.id
         o_count = Organisation.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {o_count} Organisation objects.'))
 
@@ -478,7 +576,6 @@ class Command(BaseCommand):
                 OrganisationRole.objects.create(
                     funding_period=FUNDING_PERIOD,
                     organisation_id=organisations[row['IdOrganisation']],
-                    nuts_id=row['NUTSCode'] or None,
                     role_code=row['OrganisationRoleCode'],
                     role_name=row['OrganisationRole'],
                     programme=programmes.get(row['ProgrammeCode']),
