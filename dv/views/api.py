@@ -60,7 +60,7 @@ def overview(request):
 
     bilateral_fund = {
         (bf['financial_mechanism'], bf['state']): bf['allocation']
-        for bf in allocations.filter(programme_area__code='OTBF')
+        for bf in allocations.filter(programme_area__code__in=('TA02', 'TA04', 'OTBF'))
     }
 
     programme_query = Programme.objects.filter(
@@ -205,7 +205,7 @@ def grants(request):
 
     bilateral_fund = {
         (bf.financial_mechanism, bf.state_id, bf.programme_area_id): bf.gross_allocation
-        for bf in allocations.filter(programme_area__code='OTBF')
+        for bf in allocations.filter(programme_area__code__in=('TA02', 'TA04', 'OTBF'))
     }
 
     indicators = Indicator.objects.filter(
@@ -271,7 +271,7 @@ def grants(request):
             'sector': allocation.programme_area.priority_sector.name,
             'area': allocation.programme_area.name,
             'beneficiary': state,
-            'is_ta': allocation.programme_area.priority_sector.code == 'OT',
+            'is_ta': allocation.programme_area.priority_sector.code in ('OT', 'PS13a', 'PS14a'),
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),
@@ -456,7 +456,7 @@ def projects(request):
             'sector': allocation.programme_area.priority_sector.name,
             'area': allocation.programme_area.name,
             'beneficiary': state,
-            'is_ta': allocation.programme_area.priority_sector.code == 'OT',
+            'is_ta': allocation.programme_area.priority_sector.code in ('OT', 'PS13a', 'PS14a'),
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'programmes': programmes[key],
