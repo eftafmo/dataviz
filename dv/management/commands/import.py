@@ -481,7 +481,13 @@ class Command(BaseCommand):
         p_count = Project.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {p_count} Project objects.'))
 
-        for project in Project.objects.prefetch_related('programme_areas', 'priority_sectors'):
+        project_query = Project.objects.filter(
+            funding_period=FUNDING_PERIOD,
+        ).prefetch_related(
+            'programme_areas',
+            'priority_sectors',
+        )
+        for project in project_query:
             if project.is_eea and project.is_norway:
                 ProjectAllocation.objects.create(
                     funding_period=FUNDING_PERIOD,
