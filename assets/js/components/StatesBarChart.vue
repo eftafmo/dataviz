@@ -577,7 +577,7 @@ export default {
        */
       sentered
         .on("click", function (ev, d) {
-          $this.clickFunc(d, this);
+          $this.clickFunc(d);
         })
         // tooltip events
         .on("mouseenter", this.tip.show)
