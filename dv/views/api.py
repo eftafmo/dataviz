@@ -482,7 +482,7 @@ def partners(request):
         'programme_area',
         'priority_sector',
         'programme',
-    )
+    ).distinct()
 
     partnership_programmes = {}
     # Compute allocations per Programme and Programme area
@@ -503,7 +503,7 @@ def partners(request):
         partnership_programmes[p.programme.code]['allocation'] += p.allocation
         partnership_programmes[p.programme.code]['beneficiaries'].add(p.state_id)
         if p.programme_area:
-            partnership_programmes[p.programme.code]['areas'][p.programme_area_id] = {
+            partnership_programmes[p.programme.code]['areas'][p.programme_area.code] = {
                 'area': p.programme_area.name,
                 'sector': p.priority_sector.name,
                 'fm': FM_DICT[p.financial_mechanism],
@@ -613,8 +613,8 @@ def partners(request):
             for programme_area in org_role.project.programme_areas.all():
                 key = (
                     org_role.programme_id,
-                    programme_area.id,
-                    org_role.state_id,
+                    programme_area.code,
+                    org_role.project.state_id,
                     donor
                 )
                 if org_role.organisation_id not in donor_project_partners[key]:
@@ -669,6 +669,8 @@ def partners(request):
         })
 
     def nuts_in_state(nuts, state_id):
+        if not nuts:
+            return
         if state_id == 'Intl':
             return not re.match('IS|LI|NO', nuts)
         return nuts.startswith(state_id)
