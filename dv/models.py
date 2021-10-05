@@ -57,6 +57,9 @@ class ProgrammeArea(models.Model):
     class Meta:
         unique_together = ('funding_period', 'code')
 
+    def __str__(self):
+        return self.name
+
 
 class Allocation(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
