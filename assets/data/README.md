@@ -12,7 +12,6 @@ Current TopoJSON objects:
    - frameremote
    - framemalta
    - countries
-   - coasts
  - `assets/data/nuts{YEAR}.topojson`
    - nuts0
    - nuts1
@@ -37,7 +36,7 @@ theme_spatialtype_resolution_year_projection_subset.format
 In all datasets the following must be the same:
 
  - `spatialtype` **must** be RG: regions (multipolygons)
- - `resolution` will determine the size of the file, current 60M is being used
+ - `resolution` will determine the size of the file, current 20M is being used
  - `year` **must** be consistent between all downloaded files
  - `projection`, **must** be 4326 (WGS84 World Geodetic System 1984, https://epsg.io/4326)
 
@@ -46,7 +45,7 @@ In all datasets the following must be the same:
 Unpack older layers topojson
 
 ```
-npx topo2geo -i assets/data/layers2016.topojson frameremote.geojson framemalta.geojson countries.geojson coasts.geojson
+npx topo2geo -i assets/data/layers2016.topojson frameremote.geojson framemalta.geojson countries.geojson
 ```
 
 Identify required files and download them. (**NOTE THAT FILENAME IS IMPORTANT FOR PACKING INTO TOPOJSON LATER**)
@@ -54,23 +53,19 @@ Identify required files and download them. (**NOTE THAT FILENAME IS IMPORTANT FO
 #### Download NUTS levels
 
 ```
-wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_60M_2016_4326_LEVL_0.geojson -O nuts0.geojson
-wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_60M_2016_4326_LEVL_1.geojson -O nuts1.geojson
-wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_60M_2016_4326_LEVL_2.geojson -O nuts2.geojson
-wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_60M_2016_4326_LEVL_3.geojson -O nuts3.geojson
-```
-
-#### Download coastal lines, overwriting the unpacked one:
-
-```
-wget https://gisco-services.ec.europa.eu/distribution/v2/coas/geojson/COAS_RG_60M_2016_4326.geojson -O coasts.geojson
+wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2016_4326_LEVL_0.geojson -O nuts0.geojson
+wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2016_4326_LEVL_1.geojson -O nuts1.geojson
+wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2016_4326_LEVL_2.geojson -O nuts2.geojson
+wget https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2016_4326_LEVL_3.geojson -O nuts3.geojson
 ```
 
 #### Download countries, overwriting the unpacked one:
 
 ```
-wget https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_60M_2016_4326.geojson -O countries.geojson
+wget https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_20M_2016_4326.geojson -O countries.geojson
 ```
+
+Optionally, remove countries that are not required to reduce the size of the layer.
 
 ## Adjust map layers
 
@@ -88,7 +83,7 @@ After all modifications are done export each layer them back into GeoJSON.
 Create `.topojson` files with the year specified in the filename. For example:
 
 ```
-npx geo2topo -o assets/data/layers2016.topojson --id-property ID --properties name=name -- frameremote.geojson framemalta.geojson countries.geojson coasts.geojson 
+npx geo2topo -o assets/data/layers2016.topojson --id-property ID --properties name=name -- frameremote.geojson framemalta.geojson countries.geojson
 npx geo2topo -o assets/data/nuts2016.topojson --id-property ID --properties name=name -- nuts0.geojson nuts1.geojson nuts2.geojson nuts3.geojson
 ```
 

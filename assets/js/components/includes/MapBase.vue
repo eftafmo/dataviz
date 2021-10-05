@@ -356,7 +356,6 @@ export default {
       // handle the layers. they are:
       // - framemalta
       // - frameremote
-      // - coasts
       // - countries
 
       // the frames need to be drawn twice, because
@@ -372,13 +371,6 @@ export default {
           .append("path")
           .attr("d", path);
       }
-
-      // coastlines get drawn as a mesh
-      terrain
-        .select(".coastline")
-        .datum(topo.mesh("coasts"))
-        .attr("d", path)
-        .attr("fill", "none");
 
       // countries are filled
       // TODO: it's useless to use countries here, because the real remote
