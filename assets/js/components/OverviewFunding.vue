@@ -161,6 +161,7 @@ export default {
               id: "bil-init",
               name: "Bilateral initiatives",
               amount: this.number(this.aggregated.bilateral_initiatives.size),
+              hidden: this.period !== "2014-2021",
             },
             {
               id: "part-cont",
