@@ -11,7 +11,7 @@ class AllocationAdmin(admin.ModelAdmin):
         'financial_mechanism',
         'gross_allocation',
     )
-    list_filter = ('state', 'programme_area', 'financial_mechanism')
+    list_filter = ('state', 'programme_area', 'financial_mechanism', 'funding_period')
     search_fields = (
         'state__code', 'state__name',
         'programme_area__code', 'programme_area__name',
@@ -22,7 +22,7 @@ class AllocationAdmin(admin.ModelAdmin):
 @admin.register(Indicator)
 class IndicatorAdmin(admin.ModelAdmin):
     list_display = ('id', 'indicator')
-    search_fields = ('id', 'indicator')
+    search_fields = ('id', 'indicator', 'funding_period')
 
 
 @admin.register(News)
@@ -52,7 +52,7 @@ class CountryFilter(admin.SimpleListFilter):
         )
 
         for nn in nuts0:
-            yield nn['code'], '{} ({})'.format(nn['code'], nn['label'])
+            yield nn['code'], f'{nn["code"]} ({nn["label"]})'
 
     def queryset(self, request, queryset):
         if self.value():
@@ -69,10 +69,9 @@ class NutsAdmin(admin.ModelAdmin):
     ordering = ('code',)
 
 
-#
 @admin.register(OrganisationRole)
 class OrganisationRoleAdmin(admin.ModelAdmin):
-    list_display = ('role_code', 'role_name')
+    list_display = ('role_code', 'role_name', 'funding_period')
     ordering = ('role_code',)
 
 
@@ -83,7 +82,7 @@ class OrganisationAdmin(admin.ModelAdmin):
         'country', 'city',
         'category', 'subcategory',
     )
-    list_filter = ('category', 'country', 'subcategory',)
+    list_filter = ('category', 'country', 'subcategory', 'funding_period')
     search_fields = ('name',)
     ordering = ('id',)
 
@@ -99,7 +98,7 @@ class ProgrammeAreaAdmin(admin.ModelAdmin):
     list_display = (
         'code', 'name', 'short_name', 'priority_sector'
     )
-    list_filter = ('priority_sector', 'objective')
+    list_filter = ('priority_sector', 'objective', 'funding_period')
     search_fields = ('code', 'name')
     ordering = ('order',)
 
@@ -111,7 +110,7 @@ class ProgrammeAdmin(admin.ModelAdmin):
         'status', 'is_tap',
     )
     list_filter = (
-        'states', 'status', 'is_tap',
+        'states', 'status', 'is_tap', 'funding_period'
     )
     search_fields = ('name',)
     ordering = ('code',)
@@ -122,7 +121,6 @@ class ProgrammeAdmin(admin.ModelAdmin):
     get_states.short_description = 'States'
 
 
-#
 @admin.register(ProjectTheme)
 class ProjectThemeAdmin(admin.ModelAdmin):
     list_display = (
@@ -140,12 +138,10 @@ class ProjectThemeAdmin(admin.ModelAdmin):
     ordering = ('project__code',)
 
 
-#
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = (
         'code', 'name', 'allocation',
-        # 'outcome',
         'status', 'nuts', 'geotarget',
         'has_ended', 'is_dpp', 'is_positive_fx',
         'is_improved_knowledge', 'is_continued_coop',
@@ -156,13 +152,12 @@ class ProjectAdmin(admin.ModelAdmin):
         'state', 'status',
         'has_ended', 'is_dpp', 'is_positive_fx',
         'is_improved_knowledge', 'is_continued_coop',
+        'funding_period'
     )
     search_fields = ('name',)
     ordering = ('code',)
 
 
-#
-#
 @admin.register(State)
 class StateAdmin(admin.ModelAdmin):
     list_display = ('code', 'name', 'url',)
