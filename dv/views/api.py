@@ -146,11 +146,10 @@ def overview(request):
     RELEVANT_INDICATORS = {
         # FUNDING_PERIOD_ID
         2: {
-            'Estimated CO2 reduction and/or avoidance in tonnes/year': 'co2_emissions_reduction',
-            'Number of green jobs created': 'jobs_created',
-            'Number of NGOs/small organisations reporting strengthened capacity': 'supported_researchers',
-            'Number of beneficiaries reporting improved access to basic and welfare services': 'staff_trained'
-
+            'Estimated CO2 reduction and/or avoidance in tonnes/year': 'annual_c02_emissions_reduced',
+            'Number of green jobs created': 'green_jobs_created',
+            'Number of NGOs/small organisations reporting strengthened capacity': 'ngos_small_organisations_supported',
+            'Number of beneficiaries reporting improved access to basic and welfare services': 'people_improved_access'
         },
         3: {
             'Number of people engaged in civil society organisation activities': 'people_civil_society',
