@@ -26,11 +26,10 @@ DATABASES = {
 
 HAYSTACK_CONNECTIONS = {
     "default": {
-        "ENGINE": "haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine",
+        "ENGINE": "dv.lib.es7.CustomES7SearchEngine",
         "URL": "http://elasticsearch:9200/",
         "INDEX_NAME": "eeagrants",
         "SILENTLY_FAIL": False,
-        "BATCH_SIZE": 999,
         "TIMEOUT": env("HAYSTACK_TIMEOUT", cast=int, default=60),
     },
 }
