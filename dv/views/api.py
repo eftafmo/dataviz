@@ -38,8 +38,8 @@ def bilateral_initiatives(request):
     return JsonResponse(
         list(
             BilateralInitiative.objects.filter(funding_period=period_id)
-            .values("state_id")
-            .annotate(allocation=Sum("grant"), beneficiary=F("state_id"))
+                .values("state_id")
+                .annotate(allocation=Sum("grant"), beneficiary=F("state_id"))
         )
     )
 
@@ -144,20 +144,30 @@ def overview(request):
             bilateral_initiatives[(FM_NORWAY, bi.state_id)].append(bi.code)
 
     RELEVANT_INDICATORS = {
-        'Number of people engaged in civil society organisation activities': 'people_civil_society',
-        'Estimated annual CO2 emissions reductions': 'co2_emissions_reduction',
-        'Number of researchers supported': 'supported_researchers',
-        'Number of professional staff trained': 'staff_trained',
-        'Number of jobs created': 'jobs_created',
+        # FUNDING_PERIOD_ID
+        2: {
+            'Estimated CO2 reduction and/or avoidance in tonnes/year': 'co2_emissions_reduction',
+            'Number of green jobs created': 'jobs_created',
+            'Number of NGOs/small organisations reporting strengthened capacity': 'supported_researchers',
+            'Number of beneficiaries reporting improved access to basic and welfare services': 'staff_trained'
+
+        },
+        3: {
+            'Number of people engaged in civil society organisation activities': 'people_civil_society',
+            'Estimated annual CO2 emissions reductions': 'co2_emissions_reduction',
+            'Number of researchers supported': 'supported_researchers',
+            'Number of professional staff trained': 'staff_trained',
+            'Number of jobs created': 'jobs_created',
+        }
     }
     indicator_query = Indicator.objects.filter(
         Q(achievement_eea__gt=0) | Q(achievement_norway__gt=0),
         funding_period=period_id,
-        indicator__in=RELEVANT_INDICATORS.keys(),
+        indicator__in=RELEVANT_INDICATORS[period_id].keys(),
     )
     indicators = defaultdict(lambda: defaultdict(int))
     for indicator in indicator_query:
-        key = indicators[RELEVANT_INDICATORS[indicator.indicator]]
+        key = indicators[RELEVANT_INDICATORS[period_id][indicator.indicator]]
         if indicator.is_eea:
             key[(FM_EEA, indicator.state_id)] += indicator.achievement_eea
         if indicator.is_norway:
@@ -182,7 +192,7 @@ def overview(request):
             'bilateral_initiatives': bilateral_initiatives.get(key, []),
             'positive_fx': positive_fx.get(key, []),
         }
-        for indicator in RELEVANT_INDICATORS.values():
+        for indicator in RELEVANT_INDICATORS[period_id].values():
             element[indicator] = indicators[indicator].get(key, 0)
         out.append(element)
     return JsonResponse(out)
@@ -409,20 +419,20 @@ def projects(request):
             programme_nuts['positive'].add(project.code)
 
     news_query = News.objects.filter(
-            Q(project__funding_period=period_id) | Q(programmes__funding_period=period_id),
-        ).prefetch_related(
-            'project',
-            'project__programme_areas',
-            'programmes',
-            'programmes__states',
-            'programmes__programme_areas'
-        ).order_by('-created')
+        Q(project__funding_period=period_id) | Q(programmes__funding_period=period_id),
+    ).prefetch_related(
+        'project',
+        'project__programme_areas',
+        'programmes',
+        'programmes__states',
+        'programmes__programme_areas'
+    ).order_by('-created')
     news = defaultdict(list)
     for item in news_query:
         if item.project:
             keys = product(
                 item.project.financial_mechanisms,
-                (item.project.state_id, ),
+                (item.project.state_id,),
                 item.project.programme_areas.values_list('id', flat=True),
             )
         else:
@@ -772,11 +782,11 @@ def project_nuts(request, state_id, force_nuts3):
 
     nuts3s = tuple(
         NUTS.objects
-        .filter(nuts_versions__year=NUTS_VERSION_BY_PERIOD[period])
-        .filter(code__startswith=state_id, code__length=5)
-        .exclude(code__endswith="Z")  # skip extra-regio
-        .order_by('code')
-        .values_list('code', flat=True)
+            .filter(nuts_versions__year=NUTS_VERSION_BY_PERIOD[period])
+            .filter(code__startswith=state_id, code__length=5)
+            .exclude(code__endswith="Z")  # skip extra-regio
+            .order_by('code')
+            .values_list('code', flat=True)
     )
 
     dataset = defaultdict(lambda: {
