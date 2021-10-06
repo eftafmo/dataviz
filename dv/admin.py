@@ -11,7 +11,7 @@ class AllocationAdmin(admin.ModelAdmin):
         'financial_mechanism',
         'gross_allocation',
     )
-    list_filter = ('state', 'programme_area', 'financial_mechanism', 'funding_period')
+    list_filter = ('funding_period', 'financial_mechanism', 'programme_area', 'state')
     search_fields = (
         'state__code', 'state__name',
         'programme_area__code', 'programme_area__name',
@@ -21,8 +21,9 @@ class AllocationAdmin(admin.ModelAdmin):
 
 @admin.register(Indicator)
 class IndicatorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'indicator')
-    search_fields = ('id', 'indicator', 'funding_period')
+    list_display = ('funding_period', 'programme', 'programme_area', 'state', 'indicator', 'header')
+    search_fields = ('id', 'indicator')
+    list_filter = ('funding_period',)
 
 
 @admin.register(News)
@@ -71,7 +72,7 @@ class NutsAdmin(admin.ModelAdmin):
 
 @admin.register(OrganisationRole)
 class OrganisationRoleAdmin(admin.ModelAdmin):
-    list_display = ('role_code', 'role_name', 'funding_period')
+    list_display = ('funding_period', 'programme', 'state')
     ordering = ('role_code',)
 
 
@@ -82,7 +83,7 @@ class OrganisationAdmin(admin.ModelAdmin):
         'country', 'city',
         'category', 'subcategory',
     )
-    list_filter = ('category', 'country', 'subcategory', 'funding_period')
+    list_filter = ('funding_period', 'category', 'country', 'subcategory', )
     search_fields = ('name',)
     ordering = ('id',)
 
@@ -96,9 +97,9 @@ class PrioritySectorAdmin(admin.ModelAdmin):
 @admin.register(ProgrammeArea)
 class ProgrammeAreaAdmin(admin.ModelAdmin):
     list_display = (
-        'code', 'name', 'short_name', 'priority_sector'
+        'priority_sector', 'code', 'name', 'short_name',
     )
-    list_filter = ('priority_sector', 'objective', 'funding_period')
+    list_filter = ('funding_period', 'priority_sector', 'objective',)
     search_fields = ('code', 'name')
     ordering = ('order',)
 
@@ -109,9 +110,7 @@ class ProgrammeAdmin(admin.ModelAdmin):
         'code', 'name', 'get_states',
         'status', 'is_tap',
     )
-    list_filter = (
-        'states', 'status', 'is_tap', 'funding_period'
-    )
+    list_filter = ('funding_period', 'states', 'status', 'is_tap')
     search_fields = ('name',)
     ordering = ('code',)
 
@@ -147,12 +146,12 @@ class ProjectAdmin(admin.ModelAdmin):
         'is_improved_knowledge', 'is_continued_coop',
     )
     list_filter = (
+        'funding_period',
         'priority_sectors',
         'programme_areas',
         'state', 'status',
         'has_ended', 'is_dpp', 'is_positive_fx',
         'is_improved_knowledge', 'is_continued_coop',
-        'funding_period'
     )
     search_fields = ('name',)
     ordering = ('code',)
