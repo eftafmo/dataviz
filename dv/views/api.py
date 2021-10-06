@@ -15,7 +15,7 @@ from dv.lib.http import JsonResponse, SetEncoder
 from dv.lib.utils import (
     DONOR_STATES, EEA_DONOR_STATES, DONOR_STATES_REVERSED, DEFAULT_PERIOD,
     FUNDING_PERIODS_DICT, FM_DICT, FM_REVERSED_DICT, FM_EEA, FM_NORWAY,
-    NUTS_VERSION_BY_PERIOD,
+    NUTS_VERSION_BY_PERIOD, OVERVIEW_INDICATORS
 )
 from dv.models import (
     Allocation, BilateralInitiative, Indicator, News, NUTS, OrganisationRole,
@@ -143,21 +143,15 @@ def overview(request):
         if bi.programme.is_norway:
             bilateral_initiatives[(FM_NORWAY, bi.state_id)].append(bi.code)
 
-    RELEVANT_INDICATORS = {
-        'Number of people engaged in civil society organisation activities': 'people_civil_society',
-        'Estimated annual CO2 emissions reductions': 'co2_emissions_reduction',
-        'Number of researchers supported': 'supported_researchers',
-        'Number of professional staff trained': 'staff_trained',
-        'Number of jobs created': 'jobs_created',
-    }
+    relevant_indicators = OVERVIEW_INDICATORS[period_id]
     indicator_query = Indicator.objects.filter(
         Q(achievement_eea__gt=0) | Q(achievement_norway__gt=0),
         funding_period=period_id,
-        indicator__in=RELEVANT_INDICATORS.keys(),
+        indicator__in=relevant_indicators.keys(),
     )
     indicators = defaultdict(lambda: defaultdict(int))
     for indicator in indicator_query:
-        key = indicators[RELEVANT_INDICATORS[indicator.indicator]]
+        key = indicators[relevant_indicators[indicator.indicator]]
         if indicator.is_eea:
             key[(FM_EEA, indicator.state_id)] += indicator.achievement_eea
         if indicator.is_norway:
@@ -182,7 +176,7 @@ def overview(request):
             'bilateral_initiatives': bilateral_initiatives.get(key, []),
             'positive_fx': positive_fx.get(key, []),
         }
-        for indicator in RELEVANT_INDICATORS.values():
+        for indicator in relevant_indicators.values():
             element[indicator] = indicators[indicator].get(key, 0)
         out.append(element)
     return JsonResponse(out)
@@ -409,20 +403,20 @@ def projects(request):
             programme_nuts['positive'].add(project.code)
 
     news_query = News.objects.filter(
-            Q(project__funding_period=period_id) | Q(programmes__funding_period=period_id),
-        ).prefetch_related(
-            'project',
-            'project__programme_areas',
-            'programmes',
-            'programmes__states',
-            'programmes__programme_areas'
-        ).order_by('-created')
+        Q(project__funding_period=period_id) | Q(programmes__funding_period=period_id),
+    ).prefetch_related(
+        'project',
+        'project__programme_areas',
+        'programmes',
+        'programmes__states',
+        'programmes__programme_areas'
+    ).order_by('-created')
     news = defaultdict(list)
     for item in news_query:
         if item.project:
             keys = product(
                 item.project.financial_mechanisms,
-                (item.project.state_id, ),
+                (item.project.state_id,),
                 item.project.programme_areas.values_list('id', flat=True),
             )
         else:
