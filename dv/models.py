@@ -57,6 +57,9 @@ class ProgrammeArea(models.Model):
     class Meta:
         unique_together = ('funding_period', 'code')
 
+    def __str__(self):
+        return self.name
+
 
 class Allocation(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
@@ -122,7 +125,7 @@ class Programme(models.Model):
 
     @cached_property
     def display_name(self):
-        return "{}: {}".format(self.code, " ".join(self.name.split()))
+        return f"{self.code}: {' '.join(self.name.split())}"
 
 
 class ProgrammeAllocation(models.Model):
@@ -183,13 +186,13 @@ class Project(models.Model):
         if not self.nuts:
             return []
         elif len(self.nuts.code) > 2:
-            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, STATES[self.nuts.code[:2]])]
+            return [f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"]
         else:
-            return ["{}: {}".format(self.nuts.code, self.nuts.label)]
+            return [f"{self.nuts.code}: {self.nuts.label}"]
 
     @cached_property
     def display_name(self):
-        return "{}: {}".format(self.code, " ".join(self.name.split()))
+        return f"{self.code}: {' '.join(self.name.split())}"
 
 
 class ProjectAllocation(models.Model):
@@ -265,9 +268,9 @@ class Organisation(models.Model):
         if not self.nuts:
             return []
         elif len(self.nuts.code) > 2:
-            return ["{}: {}, {}".format(self.nuts.code, self.nuts.label, STATES[self.nuts.code[:2]])]
+            return [f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"]
         else:
-            return ["{}: {}".format(self.nuts.code, self.nuts.label)]
+            return [f"{self.nuts.code}: {self.nuts.label}"]
 
 
 class OrganisationRole(models.Model):
@@ -285,7 +288,6 @@ class OrganisationRole(models.Model):
     project = models.ForeignKey(Project, null=True, related_name='organisation_roles',
                                 on_delete=models.CASCADE)
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
-
 
 
 class BilateralInitiative(models.Model):
@@ -315,7 +317,7 @@ class BilateralInitiative(models.Model):
 
     @cached_property
     def display_name(self):
-        return "{}: {}".format(self.code, " ".join(self.title.split()))
+        return f"{self.code}: {' '.join(self.title.split())}"
 
 
 class News(models.Model):
