@@ -29,6 +29,7 @@ if [ -z "$1" ]; then
          --name eeag \
          --bind 0.0.0.0:8000 \
          --workers $NUM_WORKERS \
+         --timeout 300 \
          --access-logfile - \
          --error-logfile -
 fi
