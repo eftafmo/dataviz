@@ -28,14 +28,14 @@ urlpatterns = [
     url(r"^disclaimer/$", views.disclaimer, name="disclaimer"),
     url(r"^search/$", views.ProgrammeFacetedSearchView.as_view(), name="search"),
     url(
-        r"^search/bilateralinitiatives/$",
+        r"^search/bilateralinitiative/$",
         views.BilateralInitiativesSearchView.as_view(),
-        name="search_bilateralinitiatives",
+        name="search_bilateralinitiative",
     ),
     url(
-        r"^search/bilateralinitiatives/export/$",
+        r"^search/export/bilateralinitiative/$",
         views.BilateralInitiativeFacetedExportView.as_view(),
-        name="bilateralinitiatives_export",
+        name="bilateralinitiative_export",
     ),
     url(
         r"^search/programme/$",
@@ -43,7 +43,7 @@ urlpatterns = [
         name="search_programme",
     ),
     url(
-        r"^search/programme/export/$",
+        r"^search/export/programme/$",
         views.ProgrammeFacetedExportView.as_view(),
         name="programme_export",
     ),
@@ -53,7 +53,7 @@ urlpatterns = [
         name="search_project",
     ),
     url(
-        r"^search/project/export/$",
+        r"^search/export/project/$",
         views.ProjectFacetedExportView.as_view(),
         name="project_export",
     ),
@@ -63,13 +63,13 @@ urlpatterns = [
         name="search_organisation",
     ),
     url(
-        r"^search/organisation/export/$",
+        r"^search/export/organisation/$",
         views.OrganisationFacetedExportView.as_view(),
         name="organisation_export",
     ),
     url(r"^search/news/$", views.NewsFacetedSearchView.as_view(), name="search_news"),
     url(
-        r"^search/news/export/$",
+        r"^search/export/news/$",
         views.NewsFacetedExportView.as_view(),
         name="news_export",
     ),

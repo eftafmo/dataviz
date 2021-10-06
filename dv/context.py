@@ -6,18 +6,17 @@ from dv.views.dataviz import get_menu
 def get_context(request):
     # expose public settings
     expose_settings = [
-        'DEBUG',
-        'SENTRY_DSN', 'SENTRY_ENVIRONMENT',
+        "DEBUG",
+        "SENTRY_DSN",
+        "SENTRY_ENVIRONMENT",
     ]
     if not settings.DEBUG:
-        expose_settings += ['GOOGLE_ANALYTICS_PROPERTY_ID']
+        expose_settings += ["GOOGLE_ANALYTICS_PROPERTY_ID"]
 
-    exposed_settings = {
-        s: getattr(settings, s, None)
-        for s in expose_settings}
+    exposed_settings = {s: getattr(settings, s, None) for s in expose_settings}
 
     out = exposed_settings
-    out['settings'] = exposed_settings.copy()
+    out["settings"] = exposed_settings.copy()
 
     # add assets
     try:
@@ -27,9 +26,9 @@ def get_context(request):
             assets = {}
         else:
             raise
-    out['assets'] = assets
+    out["assets"] = assets
 
     # constants
-    out['MENU'] = get_menu()
+    out["MENU"] = get_menu(request)
 
     return out

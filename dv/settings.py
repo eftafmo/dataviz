@@ -174,10 +174,9 @@ CKEDITOR_CONFIGS = {
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine',
+        'ENGINE': 'dv.lib.es7.CustomES7SearchEngine',
         'URL': 'http://127.0.0.1:9200/',
         'INDEX_NAME': 'eeagrants',
-        'BATCH_SIZE': 999,
         'SILENTLY_FAIL': False,
         'TIMEOUT': env("HAYSTACK_TIMEOUT", cast=int, default=60),
     },

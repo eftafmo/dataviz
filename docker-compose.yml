@@ -47,6 +47,16 @@ services:
             alias /var/local/webroot/static;
             add_header 'Access-Control-Allow-Origin' "*" always;
           }
+          location /search/export/ {
+            proxy_read_timeout 300;
+            proxy_pass http://djangoapp;
+            proxy_set_header Host $$host;
+            proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $$remote_addr;
+            gzip on;
+            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+            expires 1h;
+          }
           location / {
             proxy_pass http://djangoapp;
             proxy_set_header Host $$host;

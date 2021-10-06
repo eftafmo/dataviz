@@ -35,10 +35,9 @@ CACHES = {
 
 HAYSTACK_CONNECTIONS = {
     "default": {
-        "ENGINE": "haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine",
+        "ENGINE": "dv.lib.es7.CustomES7SearchEngine",
         "URL": "http://elasticsearch:9200/",
         "INDEX_NAME": "eeagrants",
-        "BATCH_SIZE": 999,
         "SILENTLY_FAIL": False,
     },
 }

@@ -239,6 +239,9 @@ class FacetedSearchView(BaseFacetedSearchView):
         # Custom filtering of PS/PA facets, refs #329
         self.filter_facets(facet_fields, kwargs["form"].facets)
 
+        export_url = reverse(f"frontend:{self.facet_kind.lower()}_export")
+        ctx["export_url"] = export_url + "?" + self.request.GET.urlencode()
+
         return ctx
 
     def get_queryset(self):
@@ -246,7 +249,9 @@ class FacetedSearchView(BaseFacetedSearchView):
         qs = super(BaseFacetedSearchMixin, self).get_queryset()
         for field in self.facet_fields:
             qs = qs.facet(
-                field, min_doc_count=FACET_MIN_COUNT, size=FACET_LIMIT,
+                field,
+                min_doc_count=FACET_MIN_COUNT,
+                size=FACET_LIMIT,
             )
         if self.order_field:
             qs = qs.order_by(self.order_field)
@@ -451,8 +456,7 @@ class ProjectFacetedExportView(FacetedExportView):
 class OrganisationFacetedExportView(FacetedExportView):
     export_fields = OrderedDict(
         [
-            ("name", "Name"),
-            ("domestic_name", "Domestic name"),
+            ("org_name", "Name"),
             ("country", "Country"),
             ("city", "City"),
             ("role_ss", "Organisation role"),

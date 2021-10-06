@@ -290,6 +290,7 @@ class Command(BaseCommand):
                 programme_area_id=programme_areas[record['ProgrammeAreaCode']],
                 state_id=states[record['BeneficiaryState']],
                 indicator=record['Indicator'],
+                header=record['ResultText'],
                 achievement_eea=record['Achievement'] if record['FMCode'] == 'EEA FM' else 0,
                 achievement_norway=record['Achievement'] if record['FMCode'] == 'N FM' else 0,
                 order=record['SortOrder'],

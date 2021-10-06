@@ -5,50 +5,64 @@ from django.urls import reverse
 
 ALLOCATION_PERIODS = {
     "2014-2021": [
-        'overview',
-        'funding',
-        'cooperation',
-        'projects',
-        'global_goals',
+        "overview",
+        "funding",
+        "cooperation",
+        "projects",
+        "global_goals",
     ],
     "2009-2014": [
-        'overview',
-        'funding',
-        'cooperation',
-        'projects',
+        "overview",
+        "funding",
+        "cooperation",
+        "projects",
     ],
     "compare": [
-        'beneficiary_states',
-        'sectors',
-    ]
-    # "2004-2009": [
-    #
-    # ],
+        "beneficiary_states",
+        "sectors",
+    ],
 }
 
 
-def get_menu():
-    return [
-        {
-            "id": period,
-            "url": reverse('frontend:period', args=[period]),
-            "scenarios": [
+def get_menu(request):
+    current_period = request.resolver_match.kwargs.get("period")
+    current_scenario = request.resolver_match.kwargs.get("scenario")
+
+    menu_items = []
+
+    for period, scenarios in ALLOCATION_PERIODS.items():
+        scenarios_menu_items = []
+
+        for scenario in scenarios:
+            if scenario == "overview":
+                url = reverse("frontend:period", args=[period])
+            else:
+                url = reverse("frontend:scenario", args=[period, scenario])
+
+            scenarios_menu_items.append(
                 {
                     "id": scenario,
                     "name": scenario.title().replace("_", " "),
-                    "url": (
-                        reverse('frontend:period', args=[period])
-                        if scenario == 'overview' else
-                        reverse('frontend:scenario', args=[period, scenario])
-                    )
+                    "url": url,
                 }
+            )
 
-                for scenario in scenarios
-            ]
-        }
+        url = reverse("frontend:period", args=[period])
+        if current_scenario in scenarios and current_period != period:
+            # The current view has an equivalent page for the other period.
+            # Instead of using the "overview" as the first page for this period
+            # use the same scenario.
+            url = reverse("frontend:scenario", args=[period, current_scenario])
 
-        for period, scenarios in ALLOCATION_PERIODS.items()
-    ]
+        menu_items.append(
+            {
+                "id": period,
+                "url": url,
+                "scenarios": scenarios_menu_items,
+            }
+        )
+
+    return menu_items
 
 
 def render(request, period, scenario=None):
@@ -58,9 +72,9 @@ def render(request, period, scenario=None):
     """
 
     if scenario is None and period == "compare":
-        scenario = 'beneficiary_states'
+        scenario = "beneficiary_states"
     elif scenario is None:
-        scenario = 'overview'
+        scenario = "overview"
 
     if scenario not in ALLOCATION_PERIODS[period]:
         raise Http404()
@@ -70,6 +84,6 @@ def render(request, period, scenario=None):
         "SCENARIO": scenario,
     }
 
-    template = '%s.html' % scenario
+    template = "%s.html" % scenario
 
     return _render(request, template, context)

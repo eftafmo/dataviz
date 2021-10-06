@@ -32,14 +32,14 @@ def test_sentry(request):
 
 @require_GET
 def bilateral_initiatives(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
     period_id = FUNDING_PERIODS_DICT[period]  # used in queries
 
     return JsonResponse(
         list(
             BilateralInitiative.objects.filter(funding_period=period_id)
-                .values("state_id")
-                .annotate(allocation=Sum("grant"), beneficiary=F("state_id"))
+            .values('state_id')
+            .annotate(allocation=Sum('grant'), beneficiary=F('state_id'))
         )
     )
 
@@ -464,15 +464,19 @@ def projects(request):
 
 @require_GET
 def partners(request):
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
     # List of programmes having DPP or dpp
     # Everything else will be grouped by these
     partnership_programmes_query = ProgrammeAllocation.objects.filter(
-        programme__organisation_roles__role_code__in=('DPP', 'PJDPP')
+        funding_period=period_id,
+        programme__organisation_roles__role_code__in=('DPP', 'PJDPP'),
     ).select_related(
         'programme_area',
         'priority_sector',
-        'programme'
-    )
+        'programme',
+    ).distinct()
 
     partnership_programmes = {}
     # Compute allocations per Programme and Programme area
@@ -493,7 +497,7 @@ def partners(request):
         partnership_programmes[p.programme.code]['allocation'] += p.allocation
         partnership_programmes[p.programme.code]['beneficiaries'].add(p.state_id)
         if p.programme_area:
-            partnership_programmes[p.programme.code]['areas'][p.programme_area_id] = {
+            partnership_programmes[p.programme.code]['areas'][p.programme_area.code] = {
                 'area': p.programme_area.name,
                 'sector': p.priority_sector.name,
                 'fm': FM_DICT[p.financial_mechanism],
@@ -508,13 +512,14 @@ def partners(request):
     partnership_programmes_ids = partnership_programmes.keys()
 
     # Get donor countries for each programme
-    programme_donors_query = OrganisationRole.objects.values(
-        'programme_id',
-        'organisation__country',
+    programme_donors_query = OrganisationRole.objects.filter(
+        funding_period=period_id,
+        role_code__in=('DPP', 'PJDPP'),
     ).exclude(
         programme_id__isnull=True,
-    ).filter(
-        role_code__in=('DPP', 'PJDPP'),
+    ).values(
+        'programme_id',
+        'organisation__country',
     ).distinct()
 
     for p in programme_donors_query:
@@ -524,6 +529,7 @@ def partners(request):
 
     # Get programme partners (DPP and PO)
     programme_partners_query = OrganisationRole.objects.filter(
+        funding_period=period_id,
         programme_id__in=partnership_programmes_ids,
         role_code__in=('DPP', 'PO'),
     ).annotate(
@@ -562,13 +568,14 @@ def partners(request):
             }
 
     # Get project partners (dpp and project promoters)
-    project_partners_query = OrganisationRole.objects.select_related(
-        'project',
-        'organisation',
-    ).filter(
+    project_partners_query = OrganisationRole.objects.filter(
+        funding_period=period_id,
         programme_id__in=partnership_programmes_ids,
         role_code__in=('PJDPP', 'PJPT'),
         project__isnull=False,
+    ).select_related(
+        'project',
+        'organisation',
     ).prefetch_related(
         'project__programme_areas',
     ).order_by('role_code').distinct()
@@ -600,8 +607,8 @@ def partners(request):
             for programme_area in org_role.project.programme_areas.all():
                 key = (
                     org_role.programme_id,
-                    programme_area.id,
-                    org_role.state_id,
+                    programme_area.code,
+                    org_role.project.state_id,
                     donor
                 )
                 if org_role.organisation_id not in donor_project_partners[key]:
@@ -633,6 +640,7 @@ def partners(request):
 
     # Bilateral news, they are always related to programmes, not projects
     news_query = Programme.objects.filter(
+        funding_period=period_id,
         news__is_partnership=True,
         code__in=partnership_programmes_ids,
         news__isnull=False,
@@ -647,7 +655,7 @@ def partners(request):
     ).distinct()
     for item in news_query:
         partnership_programmes[item['code']]['news'].append({
-            'title': html.unescape(item['news__title'] or ""),
+            'title': html.unescape(item['news__title'] or ''),
             'link': item['news__link'],
             'created': item['news__created'],
             'summary': item['news__summary'],
@@ -655,6 +663,8 @@ def partners(request):
         })
 
     def nuts_in_state(nuts, state_id):
+        if not nuts:
+            return
         if state_id == 'Intl':
             return not re.match('IS|LI|NO', nuts)
         return nuts.startswith(state_id)
@@ -766,11 +776,11 @@ def project_nuts(request, state_id, force_nuts3):
 
     nuts3s = tuple(
         NUTS.objects
-            .filter(nuts_versions__year=NUTS_VERSION_BY_PERIOD[period])
-            .filter(code__startswith=state_id, code__length=5)
-            .exclude(code__endswith="Z")  # skip extra-regio
-            .order_by('code')
-            .values_list('code', flat=True)
+        .filter(nuts_versions__year=NUTS_VERSION_BY_PERIOD[period])
+        .filter(code__startswith=state_id, code__length=5)
+        .exclude(code__endswith='Z')  # skip extra-regio
+        .order_by('code')
+        .values_list('code', flat=True)
     )
 
     dataset = defaultdict(lambda: {
@@ -850,6 +860,10 @@ class ProjectList(ListAPIView):
 
     def get_queryset(self):
         queryset = ProjectAllocation.objects.all()
+
+        period = self.request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+        period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+        queryset = queryset.filter(funding_period=period_id)
 
         programme = self.request.query_params.get('programme', None)
         if programme is not None:

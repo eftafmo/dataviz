@@ -17,7 +17,6 @@ BASE_FACETS = [
 
 BILATERAL_INITIATIVE_CUSTOM_FACETS = [
     ("status", "OR"),
-    ("project_status", "OR"),
     ("level", "OR"),
 ]
 
@@ -123,7 +122,7 @@ PRJ_STATUS_SORT = {
 }
 
 FACET_MIN_COUNT = 1
-FACET_LIMIT = 10000
+FACET_LIMIT = 20000
 FACET_SORT = "index"
 
 ORG_ROLE_SORT = {

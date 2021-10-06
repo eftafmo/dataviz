@@ -198,10 +198,7 @@ class ProgrammeIndex(SearchIndex, Indexable):
 
     def prepare_organisation(self, obj):
         return list(
-            set(
-                role.organisation.name
-                for role in obj.organisation_roles.all()
-            )
+            set(role.organisation.name for role in obj.organisation_roles.all())
         )
 
     def prepare(self, obj):
@@ -232,7 +229,7 @@ class ProjectIndex(SearchIndex, Indexable):
     # specific facets
     code = fields.FacetCharField(model_attr="code")
     project_status = fields.FacetMultiValueField(model_attr="status")
-    geotarget = fields.FacetCharField()
+    geotarget = fields.FacetMultiValueField()
     geotarget_auto = fields.EdgeNgramField()
     theme_ss = fields.FacetMultiValueField()
 
@@ -308,10 +305,7 @@ class ProjectIndex(SearchIndex, Indexable):
 
     def prepare_organisation(self, obj):
         return list(
-            set(
-                role.organisation.name
-                for role in obj.organisation_roles.all()
-            )
+            set(role.organisation.name for role in obj.organisation_roles.all())
         )
 
     def prepare(self, obj):
@@ -346,7 +340,7 @@ class NewsIndex(SearchIndex, Indexable):
     project_name = fields.FacetMultiValueField()
     project_name_auto = fields.EdgeNgramField()
     project_status = fields.FacetMultiValueField()
-    geotarget = fields.FacetCharField()
+    geotarget = fields.FacetMultiValueField()
     geotarget_auto = fields.EdgeNgramField()
     theme_ss = fields.FacetMultiValueField()
 

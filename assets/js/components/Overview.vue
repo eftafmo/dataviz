@@ -747,6 +747,12 @@ export default {
       color: #292623;
     }
 
+    @media (max-width: 1400px) {
+      .ending {
+        max-width: 25rem;
+      }
+    }
+
     @media (max-width: 800px) {
       .data {
         .amount {
@@ -815,10 +821,6 @@ export default {
   }
 
   &.embedded {
-    .ending {
-      left: 0;
-      width: 100%;
-    }
     .info {
       .data-wrapper {
         margin-top: -1rem;
