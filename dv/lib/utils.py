@@ -43,6 +43,23 @@ DONOR_STATES = {'International': 'Intl'}
 DONOR_STATES.update(EEA_DONOR_STATES)
 DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
 
+OVERVIEW_INDICATORS = {
+    # FUNDING_PERIOD_ID
+    2: {
+        'Estimated CO2 reduction and/or avoidance in tonnes/year': 'annual_co2_emissions_reduced',
+        'Number of green jobs created': 'green_jobs_created',
+        'Number of NGOs/small organisations reporting strengthened capacity': 'ngos_small_organisations_supported',
+        'Number of beneficiaries reporting improved access to basic and welfare services': 'people_improved_access',
+    },
+    3: {
+        'Number of people engaged in civil society organisation activities': 'people_civil_society',
+        'Estimated annual CO2 emissions reductions': 'co2_emissions_reduction',
+        'Number of researchers supported': 'supported_researchers',
+        'Number of professional staff trained': 'staff_trained',
+        'Number of jobs created': 'jobs_created',
+    }
+}
+
 
 def camel_case_to__(txt):
     """
