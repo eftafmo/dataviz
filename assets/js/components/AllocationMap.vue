@@ -266,9 +266,13 @@ const AllocationMap = {
         // TODO: run a throbber / suggest data loading somehow?
 
         // fetch the data, fill the cache, render
-        const url = this.detailsDatasource.replace("XX", state);
+        const url = new URL(
+          this.detailsDatasource.replace("XX", state),
+          window.location
+        );
+        url.searchParams.append("period", this.period);
 
-        fetch(url).then((response) => {
+        fetch(url.toString()).then((response) => {
           if (!response.ok)
             throw new Error(`${response.status} ${response.statusText}`);
 
