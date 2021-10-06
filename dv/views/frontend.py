@@ -456,8 +456,7 @@ class ProjectFacetedExportView(FacetedExportView):
 class OrganisationFacetedExportView(FacetedExportView):
     export_fields = OrderedDict(
         [
-            ("name", "Name"),
-            ("domestic_name", "Domestic name"),
+            ("org_name", "Name"),
             ("country", "Country"),
             ("city", "City"),
             ("role_ss", "Organisation role"),
