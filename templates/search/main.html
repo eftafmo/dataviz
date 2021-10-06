@@ -48,7 +48,7 @@
             >{{ 'News'|kind_label:2|capfirst }}
             </a>
             <a
-                href="{% url 'frontend:search_bilateralinitiatives' %}"
+                href="{% url 'frontend:search_bilateralinitiative' %}"
                 class="{% active 'BilateralInitiative' kind %}"
             >{{ 'BilateralInitiative'|kind_label:2|capfirst }}
             </a>
@@ -79,18 +79,7 @@
             </option>
           {% endfor %}
         </select>
-          <a
-              rel="nofollow"
-              {# No pretty indent because Django can't strip spaces inside tags #}
-              href="
-               {% if kind == 'Programme' %}{% url 'frontend:programme_export' %}?{% elif kind == 'Project' %}
-                 {% url 'frontend:project_export' %}?{% elif kind == 'BilateralInitiative' %}
-                 {% url 'frontend:bilateralinitiatives_export' %}?{% elif kind == 'Organisation' %}
-                 {% url 'frontend:project_export' %}?{% elif kind == 'Organisation' %}
-                 {% url 'frontend:organisation_export' %}?{% elif kind == 'News' %}
-                 {% url 'frontend:news_export' %}?{% endif %}{% for item in query %}{{ item.0 }}=
-                {{ item.1 }}{% if not forloop.last %}&{% endif %}{% endfor %}"
-          >
+          <a rel="nofollow" href="{{ export_url }}">
             Export
           </a>
       </span>
