@@ -43,6 +43,7 @@ export default {
     sector: { type: String, default: null },
     name: { type: String, default: null },
     extra: { type: String, default: null },
+    period: { type: String, default: null },
   },
 
   data() {
@@ -84,6 +85,9 @@ export default {
         this.posts.results.length === 0
       ) {
         let url = `${this.detailsDatasource}?beneficiary=${this.country}&programme=${this.id}`;
+        if (this.period) {
+          url = url + "&period=" + this.period;
+        }
         if (this.filters.donor) {
           url = url + "&donor=" + this.filters.donor;
         }

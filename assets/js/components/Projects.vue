@@ -8,6 +8,7 @@
         :sector="x.programme.sector"
         :name="x.programme.programme_name"
         :extra="extra"
+        :period="period"
       ></projects>
     </template>
   </programmes>

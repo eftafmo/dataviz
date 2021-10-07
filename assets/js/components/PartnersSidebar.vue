@@ -23,6 +23,7 @@
           :initial="dataset"
           :details-datasource="projectsDatasource"
           :embedded="embedded"
+          :period="period"
         ></projects>
       </tab>
     </tabs>
