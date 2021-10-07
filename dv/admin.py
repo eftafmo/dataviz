@@ -1,6 +1,11 @@
 from django.contrib import admin
 from django.db.models.functions import Length
-from .models import *
+from dv.models import (
+    Allocation, BilateralInitiative, Indicator, News, NUTS, NUTSVersion,
+    Organisation, OrganisationRole, PrioritySector, Programme,
+    ProgrammeAllocation, ProgrammeArea, Project, ProjectAllocation,
+    ProjectTheme, State, StaticContent,
+)
 
 
 @admin.register(Allocation)

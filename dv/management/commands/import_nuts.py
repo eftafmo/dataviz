@@ -117,4 +117,3 @@ class Command(BaseCommand):
             created_count += created
             logger.info("NUTS extra %s, created=%s", obj, created)
         logger.info("Created Fake NUTS codes %s out of %s", created_count, len(FAKE_NUTS))
-

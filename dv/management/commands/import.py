@@ -348,7 +348,6 @@ class Command(BaseCommand):
         or_count = OrganisationRole.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {or_count} OrganisationRole objects.'))
 
-
     def _import_2014_2021(self):
         """Import data from grACE db for period 2014-2021"""
         self.stdout.write('Running import for 2014-2021.')

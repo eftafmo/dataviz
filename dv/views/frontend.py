@@ -34,7 +34,6 @@ from dv.views.facets_rules import (
     NEWS_FACETS,
     FACET_MIN_COUNT,
     FACET_LIMIT,
-    FACET_SORT,
     COUNTRY_SORT_BOOST,
     ORG_ROLE_SORT,
     ModelFacetRules,
