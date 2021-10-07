@@ -25,6 +25,19 @@ from dv.serializers import ProjectSerializer
 
 CharField.register_lookup(Length, 'length')
 
+# Used to determine the `is_ta` flag.
+TA_CODES = frozenset({
+    # 2014-2021
+    'OT',
+    # 2009-2014
+    'PS13a',
+    'PS13b',
+    'PS14a',
+    'PS14b',
+    'PS15',
+    'PS16',
+})
+
 
 def test_sentry(request):
     raise Exception('Testing sentry...')
@@ -265,7 +278,7 @@ def grants(request):
             'sector': allocation.programme_area.priority_sector.name,
             'area': allocation.programme_area.name,
             'beneficiary': state,
-            'is_ta': allocation.programme_area.priority_sector.code in ('OT', 'PS13a', 'PS14a'),
+            'is_ta': allocation.programme_area.priority_sector.code in TA_CODES,
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),
@@ -450,7 +463,7 @@ def projects(request):
             'sector': allocation.programme_area.priority_sector.name,
             'area': allocation.programme_area.name,
             'beneficiary': state,
-            'is_ta': allocation.programme_area.priority_sector.code in ('OT', 'PS13a', 'PS14a'),
+            'is_ta': allocation.programme_area.priority_sector.code in TA_CODES,
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'programmes': programmes[key],
