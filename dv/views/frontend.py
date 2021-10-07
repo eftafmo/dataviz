@@ -223,6 +223,18 @@ class FacetedSearchView(BaseFacetedSearchView):
     def get_context_data(self, *args, **kwargs):
         objls = kwargs.pop("object_list", self.queryset)
         ctx = super().get_context_data(object_list=objls, **kwargs)
+
+        # Add donor and beneficiary states - need to check if show flag
+        states = list(
+            State.objects.exclude(code="IN",).values_list(
+                "name",
+                flat=True,
+            )
+        )
+        # states.extend(['Liechtenstein', 'Norway', 'Iceland'])
+        states.extend(utils.EEA_DONOR_STATES.keys())
+        ctx["states_with_flags"] = states
+
         ctx["page_sizes"] = [10, 25, 50, 100]
 
         ctx["query"] = [
@@ -300,16 +312,6 @@ class OrganisationFacetedSearchView(FacetedSearchView):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
-        # Add donor and beneficiary states - need to check if show flag
-        states = list(
-            State.objects.exclude(code="IN",).values_list(
-                "name",
-                flat=True,
-            )
-        )
-        # states.extend(['Liechtenstein', 'Norway', 'Iceland'])
-        states.extend(utils.EEA_DONOR_STATES.keys())
-        ctx["states_with_flags"] = states
 
         # Group programmes and projects by organisation roles
         for res in ctx["object_list"]:
