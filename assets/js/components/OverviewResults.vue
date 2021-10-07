@@ -60,17 +60,24 @@ export default {
         [],
         [
           "allocation",
+          // 2014-2021
           "people_civil_society",
           "jobs_created",
           "supported_researchers",
           "staff_trained",
           "co2_emissions_reduction",
+          // 2009-2014
+          "annual_co2_emissions_reduced",
+          "green_jobs_created",
+          "ngos_small_organisations_supported",
+          "people_improved_access",
         ],
         false
       );
     },
     gridItems() {
       return [
+        // 2014-2021
         {
           id: "civil-soa",
           image: "imgs/results/icon_people.svg",
@@ -102,6 +109,32 @@ export default {
           image: "imgs/results/icon_jobs.svg",
           amount: this.aggregated.jobs_created,
           description: "jobs created",
+        },
+        // 2009-2014
+        {
+          id: "anual-co2-reduction",
+          image: "imgs/results/icon_emissions.svg",
+          amount: this.aggregated.annual_co2_emissions_reduced,
+          description: "tons of est. annual CO2 emissions reduced",
+        },
+        {
+          id: "green-jobs",
+          image: "imgs/results/icon_jobs.svg",
+          amount: this.aggregated.green_jobs_created,
+          description: "green jobs created",
+        },
+        {
+          id: "ngos-supported",
+          image: "imgs/results/icon_researchers.svg",
+          amount: this.aggregated.ngos_small_organisations_supported,
+          description: "ngos and small organisations supported",
+        },
+        {
+          id: "basic-welfare",
+          image: "imgs/results/icon_people.svg",
+          amount: this.aggregated.people_improved_access,
+          description:
+            "people with improved access to basic and welfare services",
         },
       ].filter((item) => item.amount > 0);
     },
