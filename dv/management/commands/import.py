@@ -216,6 +216,16 @@ class Command(BaseCommand):
             programme.programme_areas.add(*programme_area_codes)
             programme.states.add(states[record['BeneficiaryState']])
 
+            if programme.code == "IN22":
+                # IN22 is has "Innovation Norway" as a fake state, add
+                # the full list here so it is counted properly for each
+                # individual beneficiary state.
+                for code in [
+                    'RO', 'SK', 'SI', 'PL', 'MT', 'LT', 'EE',
+                    'HU', 'LV', 'BG', 'HR', 'CZ', 'CY'
+                ]:
+                    programme.states.add(code)
+
         p_count = Programme.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {p_count} Programme objects.'))
 
