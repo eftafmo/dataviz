@@ -241,7 +241,7 @@ def grants(request):
             key = (FM_NORWAY, indicator['state_id'], indicator['programme_area_id'])
             results[key][indicator['header']].update({
                 indicator['indicator']: {
-                    'achievement': indicator['achievement_eea'],
+                    'achievement': indicator['achievement_norway'],
                 }
             })
 
