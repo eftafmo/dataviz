@@ -139,6 +139,8 @@ class ProgrammeAllocation(models.Model):
 
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
+    outcome = models.CharField(max_length=256)
+
     thematic = models.CharField(max_length=16, blank=True)
     sdg_no = models.IntegerField(null=True)
 

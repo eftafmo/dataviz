@@ -66,15 +66,32 @@ def overview(request):
         funding_period=period_id,
     ).values(
         'financial_mechanism',
-        'state'
+        'state',
     ).annotate(
-        allocation=Sum('gross_allocation')
+        allocation=Sum('gross_allocation'),
     ).order_by('state', 'financial_mechanism')
 
-    bilateral_fund = {
-        (bf['financial_mechanism'], bf['state']): bf['allocation']
-        for bf in allocations.filter(programme_area__code__in=('TA02', 'TA04', 'OTBF'))
-    }
+    if period_id == 2:
+        programme_allocations = ProgrammeAllocation.objects.filter(
+            funding_period=period_id,
+            outcome='Fund for bilateral relations',
+        ).exclude(
+             priority_sector_id__in=('PS13a', 'PS14a'),
+        ).values(
+            'financial_mechanism',
+            'state',
+        ).annotate(
+            allocation=Sum('allocation'),
+        )
+        bilateral_fund = {
+            (bf['financial_mechanism'], bf['state']): bf['allocation']
+            for bf in programme_allocations
+        }
+    elif period_id == 3:
+        bilateral_fund = {
+            (bf['financial_mechanism'], bf['state']): bf['allocation']
+            for bf in allocations.filter(programme_area__code__in=('TA02', 'TA04', 'OTBF'))
+        }
 
     programme_query = Programme.objects.filter(
         funding_period=period_id,
@@ -210,10 +227,28 @@ def grants(request):
         'programme_area__priority_sector',
     ).order_by('state', 'financial_mechanism')
 
-    bilateral_fund = {
-        (bf.financial_mechanism, bf.state_id, bf.programme_area_id): bf.gross_allocation
-        for bf in allocations.filter(programme_area__code__in=('TA02', 'TA04', 'OTBF'))
-    }
+    if period_id == 2:
+        programme_allocations = ProgrammeAllocation.objects.filter(
+            funding_period=period_id,
+            outcome='Fund for bilateral relations',
+        ).exclude(
+             priority_sector_id__in=('PS13a', 'PS14a'),
+        ).values(
+            'financial_mechanism',
+            'state',
+            'programme_area',
+        ).annotate(
+            allocation=Sum('allocation'),
+        )
+        bilateral_fund = {
+            (bf['financial_mechanism'], bf['state'], bf['programme_area']): bf['allocation']
+            for bf in programme_allocations
+        }
+    elif period_id == 3:
+        bilateral_fund = {
+            (bf.financial_mechanism, bf.state_id, bf.programme_area_id): bf.gross_allocation
+            for bf in allocations.filter(programme_area__code__in=('TA02', 'TA04', 'OTBF'))
+        }
 
     indicators = Indicator.objects.filter(
         funding_period=period_id,

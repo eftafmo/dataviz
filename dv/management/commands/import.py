@@ -246,6 +246,7 @@ class Command(BaseCommand):
                 priority_sector_id=record['PSCode'],
                 programme_id=record['ProgrammeCode'],
                 allocation=record['GrantAmount'],
+                outcome=record['Outcome'],
             )
 
         pa_count = ProgrammeAllocation.objects.filter(funding_period=FUNDING_PERIOD).count()
