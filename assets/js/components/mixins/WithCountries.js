@@ -28,7 +28,7 @@ Object.entries(_types).forEach(([type, source]) => {
       // elements.
       flag: flags["../../../sprites/flags/" + flagName].default,
       flagName,
-      sortOrder: index,
+      sortOrder: index + 1,
       ...country,
     };
   });
