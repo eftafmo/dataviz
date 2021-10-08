@@ -104,7 +104,7 @@ export default {
 
     createTooltip() {
       let tip = d3tip()
-        .attr("class", "dataviz-tooltip map")
+        .attr("class", "dataviz dataviz-tooltip map")
         .html(this.tooltipTemplate)
         .direction("n")
         .offset([0, 0]);

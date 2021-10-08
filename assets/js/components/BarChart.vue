@@ -361,7 +361,7 @@ export default {
     createTooltip() {
       // add tooltip
       this.tip = d3tip()
-        .attr("class", "dataviz-tooltip")
+        .attr("class", "dataviz dataviz-tooltip")
         .html(this.tooltipTemplate)
         .offset([-5, 0]);
       this.chart.call(this.tip);

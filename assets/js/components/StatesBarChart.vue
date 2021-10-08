@@ -431,7 +431,7 @@ export default {
       const $this = this;
       // add tooltip
       let tip = d3tip()
-        .attr("class", "dataviz-tooltip state")
+        .attr("class", "dataviz dataviz-tooltip state")
         .html((ev, d) =>
           this.isHungaryException(d.id)
             ? this.hungaryTooltipTemplate(ev, d)

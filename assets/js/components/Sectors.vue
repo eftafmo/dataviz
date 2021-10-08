@@ -521,7 +521,7 @@ export default {
     createTooltip() {
       // add tooltip
       let tip = d3tip()
-        .attr("class", "dataviz-tooltip sect")
+        .attr("class", "dataviz dataviz-tooltip sect")
         .html(this.tooltipTemplate)
         .offset([15, 30])
         .direction("s");

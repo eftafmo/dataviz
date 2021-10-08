@@ -206,7 +206,7 @@ export default {
     },
     createTooltip() {
       this.tip = d3tip()
-        .attr("class", "dataviz-tooltip fms")
+        .attr("class", "dataviz dataviz-tooltip fms")
         .html(this.tooltipTemplate)
         .direction("s")
         .offset([0, 0]);
