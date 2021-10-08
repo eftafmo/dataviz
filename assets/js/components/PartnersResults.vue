@@ -45,8 +45,10 @@ export default {
           aggregated.dpp_programmes.add(d.programme);
         }
         for (let prj in d.projects) {
-          aggregated.dpp_projects.add(prj);
           const prj_data = d.projects[prj];
+          if (!prj_data.is_dpp) continue;
+          aggregated.dpp_projects.add(prj);
+
           if (prj_data.has_ended) {
             aggregated.dpp_projects_ended.add(prj);
           }
