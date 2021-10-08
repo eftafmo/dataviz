@@ -126,6 +126,12 @@ export default {
       // An agreement with Hungary was not reached for this period.
       return this.period === "2014-2021" && countryId.slice(0, 2) === "HU";
     },
+    getBeneficiaryCount(beneficiaries) {
+      // Exclude "Non-country specific"
+      return Array.from(beneficiaries).filter(
+        (countryCode) => countryCode !== "XX"
+      ).length;
+    },
     async fetchData() {
       if (!this.datasource) throw "Base.fetchData(): Missing datasource.";
 

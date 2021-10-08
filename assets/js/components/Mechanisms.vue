@@ -187,8 +187,11 @@ export default {
         </div>
         <ul>
           <li>${this.currency(d.allocation)}</li>
-          <li>${d.beneficiaries.size} ` +
-        this.singularize(`Beneficiary States`, d.beneficiaries.size) +
+          <li>${this.getBeneficiaryCount(d.beneficiaries)} ` +
+        this.singularize(
+          `Beneficiary States`,
+          this.getBeneficiaryCount(d.beneficiaries)
+        ) +
         `</li>
           <li>${d.sectors.size} ` +
         this.singularize(`sectors`, d.sectors.size) +

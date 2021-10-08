@@ -110,12 +110,6 @@ export default {
         return true;
       }).length;
     },
-    beneficiaryCount() {
-      // Exclude "Non-country specific"
-      return Array.from(this.aggregated.beneficiary).filter(
-        (countryCode) => countryCode !== "XX"
-      ).length;
-    },
     gridItems() {
       return [
         {
@@ -186,7 +180,9 @@ export default {
             {
               id: "bs",
               name: "Beneficiary States",
-              amount: this.number(this.beneficiaryCount),
+              amount: this.number(
+                this.getBeneficiaryCount(this.aggregated.beneficiary)
+              ),
               hidden: this.aggregated.beneficiary.size <= 1,
             },
             {

@@ -274,8 +274,11 @@ export default {
         <ul>
           <li>${this.currency(d.allocation)}</li>
           <li>
-            ${d.beneficiaries.size}
-            ${this.singularize("Beneficiary States", d.beneficiaries.size)}
+            ${this.getBeneficiaryCount(d.beneficiaries)}
+            ${this.singularize(
+              "Beneficiary States",
+              this.getBeneficiaryCount(d.beneficiaries)
+            )}
           </li>
           <li>
             ${d.areas.size}
