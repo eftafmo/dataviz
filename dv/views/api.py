@@ -786,10 +786,18 @@ def partners(request):
 
 
 def beneficiary_detail(request, beneficiary):
-    return project_nuts(request, beneficiary, True)
+    return project_nuts(request, beneficiary, force_nuts3=True)
 
 
-def project_nuts(request, state_id, force_nuts3):
+def projects_beneficiary_detail(request, beneficiary):
+    return project_nuts(request, beneficiary, force_nuts3=False)
+
+
+def sdg_beneficiary_detail(request, beneficiary):
+    return project_nuts(request, beneficiary, force_nuts3=True, include_sdg=True)
+
+
+def project_nuts(request, state_id, force_nuts3, include_sdg=False):
     """
     Returns NUTS3-level allocations for the given state.
     """
@@ -859,6 +867,8 @@ def project_nuts(request, state_id, force_nuts3):
             row['projects'].add(pa.project_id)
             row['project_count'] = len(row['projects'])
             row['programmes'][pa.project.programme_id] = pa.project.programme_id
+            if include_sdg:
+                row['sdg_no'] = pa.project.sdg_no
             continue
 
         # else split allocation among children, and add project count to all children
@@ -887,6 +897,8 @@ def project_nuts(request, state_id, force_nuts3):
             row['projects'].add(pa.project_id)
             row['project_count'] = len(row['projects'])
             row['programmes'][pa.project.programme_id] = pa.project.programme_id
+            if include_sdg:
+                row['sdg_no'] = pa.project.sdg_no
 
     out = []
 
@@ -897,10 +909,6 @@ def project_nuts(request, state_id, force_nuts3):
         out.append(row)
 
     return JsonResponse(out)
-
-
-def projects_beneficiary_detail(request, beneficiary):
-    return project_nuts(request, beneficiary, False)
 
 
 class ProjectList(ListAPIView):

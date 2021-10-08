@@ -470,6 +470,7 @@ class Command(BaseCommand):
                     state=states.get(row['Country']),
                     programme=programmes.get(row['ProgrammeShortName']),
                     nuts_id=row['ProjectLocation'] or None,
+                    sdg_no=row['SDGno'],
                     url=row['ProjectURL'],
                     allocation=row['ProjectGrant'],
                     is_eea=bool(row['IdFinancialMechanismEEA']),

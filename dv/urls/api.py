@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^projects/(?P<beneficiary>[A-Z]{2}).json',
         cache_page(settings.API_CACHE_SECONDS)(views.projects_beneficiary_detail),
         name='projects-beneficiary-detail'),
+    url(r'^sdg/(?P<beneficiary>[A-Z]{2}).json',
+        cache_page(settings.API_CACHE_SECONDS)(views.sdg_beneficiary_detail),
+        name='sdg-beneficiary-detail'),
 
     url(r'^projects/',
         views.ProjectList.as_view(),

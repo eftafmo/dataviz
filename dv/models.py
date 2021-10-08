@@ -151,15 +151,17 @@ class Project(models.Model):
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
     status = models.CharField(max_length=19)
+    url = models.CharField(max_length=256, null=True)
 
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
     programme_areas = models.ManyToManyField(ProgrammeArea)
     priority_sectors = models.ManyToManyField(PrioritySector)
-
     nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
-    url = models.CharField(max_length=256, null=True)
+    sdg_no = models.IntegerField(null=True)
+
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
+
     is_eea = models.BooleanField()
     is_norway = models.BooleanField()
     has_ended = models.BooleanField()
@@ -167,6 +169,7 @@ class Project(models.Model):
     is_positive_fx = models.BooleanField()
     is_improved_knowledge = models.BooleanField()
     is_continued_coop = models.BooleanField()
+
     initial_description = models.TextField()
     results_description = models.TextField()
 
