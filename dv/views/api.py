@@ -126,7 +126,7 @@ def overview(request):
         funding_period=period_id,
     ).exclude(
         # TODO check if values for 2009-2014 are the same, update tuple below otherwise
-        status__in=('Planned', 'Terminated'),
+        status__in=('Planned',),
     ).values(
         'code',
         'is_eea',
