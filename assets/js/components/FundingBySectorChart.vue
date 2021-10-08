@@ -160,7 +160,8 @@ export default {
       const yAxis = this.chart
         .select(".y-axis")
         .transition(t)
-        .call(d3.axisLeft(this.yScale).tickFormat(this.shortCurrency));
+        .call(d3.axisLeft(this.yScale).tickFormat(this.shortCurrency))
+        .attr("font-family", '"Source Sans Pro", sans-serif');
 
       yAxis.select(".domain").remove();
       yAxis

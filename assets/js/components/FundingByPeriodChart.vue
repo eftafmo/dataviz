@@ -172,7 +172,8 @@ export default {
         .select(".x-axis")
         .attr("transform", "translate(0," + this.height + ")")
         .transition(t)
-        .call(d3.axisBottom(this.xScale));
+        .call(d3.axisBottom(this.xScale))
+        .attr("font-family", '"Source Sans Pro", sans-serif');
       xAxis.select(".domain").attr("fill", "#DF514E").attr("stroke", "#DF514E");
       xAxis.selectAll(".tick line").remove();
       xAxis
@@ -188,7 +189,8 @@ export default {
       const yAxis = this.chart
         .select(".y-axis")
         .transition(t)
-        .call(d3.axisLeft(this.yScale).tickFormat(this.shortCurrency));
+        .call(d3.axisLeft(this.yScale).tickFormat(this.shortCurrency))
+        .attr("font-family", '"Source Sans Pro", sans-serif');
       yAxis.select(".domain").remove();
       yAxis
         .selectAll(".tick line")
