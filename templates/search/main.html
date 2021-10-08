@@ -298,7 +298,7 @@
     $visible_input.val($hidden_input.val());
 
     //sync the real input and submit with the fake ones
-    $visible_input.on("keyup", function () {
+    $visible_input.on("change", function () {
       $hidden_input.val($(this).val());
     });
 
