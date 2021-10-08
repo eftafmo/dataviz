@@ -794,10 +794,100 @@ def projects_beneficiary_detail(request, beneficiary):
 
 
 def sdg_beneficiary_detail(request, beneficiary):
-    return project_nuts(request, beneficiary, force_nuts3=True, include_sdg=True)
+    # TODO This is very similar to project_nuts; refactor to reduce code duplication
+    period = request.GET.get('period', DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    state_id = beneficiary
+
+    try:
+        state = State.objects.get(pk=state_id)
+    except State.DoesNotExist:
+        return JsonResponse({
+            'error': f"Beneficiary state '{state_id}' does not exist."
+        }, status=404)
+
+    project_allocation_query = ProjectAllocation.objects.filter(
+        funding_period=period_id,
+        state=state,
+    ).select_related(
+        'project',
+    )
+
+    nuts3s = tuple(
+        NUTS.objects
+        .filter(nuts_versions__year=NUTS_VERSION_BY_PERIOD[period])
+        .filter(code__startswith=state_id, code__length=5)
+        .exclude(code__endswith='Z')  # skip extra-regio
+        .order_by('code')
+        .values_list('code', flat=True)
+    )
+
+    dataset = defaultdict(lambda: {
+        'allocation': 0,
+        'programmes': {},
+        'areas': set(),
+        'sectors': set(),
+    })
+
+    for pa in project_allocation_query:
+        code = pa.project.nuts_id
+        if len(code) > 2 and code.endswith('Z'):  # extra-regio
+            code = code[:2]
+
+        key = (
+            pa.project.nuts_id,
+            pa.financial_mechanism,
+            pa.project.sdg_no,
+        )
+        if len(code) == 5:
+            row = dataset[key]
+            row['id'] = pa.project.nuts_id
+            row['areas'].add(pa.programme_area_id)
+            row['sectors'].add(pa.priority_sector_id)
+            row['fm'] = FM_DICT[pa.financial_mechanism]
+            row['allocation'] += pa.allocation
+            row['programmes'][pa.project.programme_id] = pa.project.programme_id
+            row['sdg_no'] = pa.project.sdg_no
+            continue
+
+        # else split allocation among children, and add project count to all children
+        children = (nuts3s if len(code) == 2
+                    else [n for n in nuts3s if n.startswith(code)])
+
+        if len(children) == 0:
+            # TODO: this is an error. log it, etc.
+            continue
+
+        allocation = pa.allocation / len(children)
+
+        for nuts in children:
+            childkey = (
+                nuts,
+                pa.financial_mechanism,
+                pa.project.sdg_no,
+            )
+            row = dataset[childkey]
+            row['id'] = nuts
+            row['areas'].add(pa.programme_area_id)
+            row['sectors'].add(pa.priority_sector_id)
+            row['fm'] = FM_DICT[pa.financial_mechanism]
+            row['allocation'] += allocation
+            row['programmes'][pa.project.programme_id] = pa.project.programme_id
+            row['sdg_no'] = pa.project.sdg_no
+
+    out = []
+
+    for key, row in dataset.items():
+        # strip away some of that crazy precision
+        row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+        row['areas'] = list(row['areas'])
+        row['sectors'] = list(row['sectors'])
+        out.append(row)
+
+    return JsonResponse(out)
 
 
-def project_nuts(request, state_id, force_nuts3, include_sdg=False):
+def project_nuts(request, state_id, force_nuts3):
     """
     Returns NUTS3-level allocations for the given state.
     """
@@ -809,7 +899,7 @@ def project_nuts(request, state_id, force_nuts3, include_sdg=False):
         state = State.objects.get(pk=state_id)
     except State.DoesNotExist:
         return JsonResponse({
-            'error': "Beneficiary state '%s' does not exist." % state_id
+            'error': f"Beneficiary state '{state_id}' does not exist."
         }, status=404)
 
     project_allocation_query = ProjectAllocation.objects.filter(
@@ -865,10 +955,7 @@ def project_nuts(request, state_id, force_nuts3, include_sdg=False):
             row['fm'] = FM_DICT[pa.financial_mechanism]
             row['allocation'] += pa.allocation
             row['projects'].add(pa.project_id)
-            row['project_count'] = len(row['projects'])
             row['programmes'][pa.project.programme_id] = pa.project.programme_id
-            if include_sdg:
-                row['sdg_no'] = pa.project.sdg_no
             continue
 
         # else split allocation among children, and add project count to all children
@@ -895,16 +982,14 @@ def project_nuts(request, state_id, force_nuts3, include_sdg=False):
             row['fm'] = FM_DICT[pa.financial_mechanism]
             row['allocation'] += allocation
             row['projects'].add(pa.project_id)
-            row['project_count'] = len(row['projects'])
             row['programmes'][pa.project.programme_id] = pa.project.programme_id
-            if include_sdg:
-                row['sdg_no'] = pa.project.sdg_no
 
     out = []
 
     for key, row in dataset.items():
         # strip away some of that crazy precision
         row['allocation'] = row['allocation'].quantize(Decimal('1.00'))
+        row['project_count'] = len(row['projects'])
         del row['projects']
         out.append(row)
 
