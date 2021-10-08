@@ -18,7 +18,7 @@ function transformCountryName(name) {
 }
 
 Object.entries(_types).forEach(([type, source]) => {
-  Object.entries(source).forEach(([code, country]) => {
+  Object.entries(source).forEach(([code, country], index) => {
     const flagName = `flag-${transformCountryName(source[code].name)}.png`;
 
     COUNTRIES[code] = {
@@ -28,6 +28,7 @@ Object.entries(_types).forEach(([type, source]) => {
       // elements.
       flag: flags["../../../sprites/flags/" + flagName].default,
       flagName,
+      sortOrder: index,
       ...country,
     };
   });
@@ -44,31 +45,14 @@ export function get_flag(code) {
   return country.flag;
 }
 
-export function get_flag_name(code) {
-  if (code.length > 2 && code !== "Intl") {
-    // because Intl is a country and has a flag
-    code = code.substring(0, 2);
-  }
-  const country = COUNTRIES[code];
-  if (!country) throw "Country not found: " + code;
-  const flag = transformCountryName(country.name);
-  return `flag-${flag}`;
-}
-
 export function get_country_name(code) {
   const country_name = COUNTRIES[code].name;
   if (!country_name) throw "Country not found: " + code;
   return country_name;
 }
 
-export function get_country_alt_name(code) {
-  const country_name = COUNTRIES[code].alt_name;
-  if (!country_name) throw "Country not found: " + code;
-  return country_name;
-}
-
 export function get_sort_order(code) {
-  const sort_order = COUNTRIES[code].sort_order;
+  const sort_order = COUNTRIES[code].sortOrder;
   if (!sort_order) throw "Country not found: " + code;
   return sort_order;
 }

@@ -1,4 +1,6 @@
 {
+  // XXX Order in the Objects, determines the sorting order in which
+  // XXX the country data is presented.
   donors: {
     IS: {
       id: "IS",
@@ -7,7 +9,6 @@
       fms: [
         "eea-grants"
       ],
-      sort_order: 1,
     },
     LI: {
       id: "LI",
@@ -16,7 +17,6 @@
       fms: [
         "eea-grants"
       ],
-      sort_order: 2,
     },
     NO: {
       id: "NO",
@@ -26,13 +26,11 @@
         "norway-grants",
         "eea-grants"
       ],
-      sort_order: 3,
     },
     Intl: {
       id: "Intl",
       name: "International",
       alt_name: "International",
-      sort_order: 4,
     },
   },
   beneficiaries: {
