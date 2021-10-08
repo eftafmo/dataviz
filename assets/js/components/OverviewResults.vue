@@ -4,7 +4,7 @@
     class="overview-results"
   >
     <embeddor :period="period" tag="overview_results" />
-    <div class="overview-heading">
+    <div class="overview-heading extra-bold">
       <span class="muted">The</span>
       <dropdown-filter
         filter="fm"
@@ -29,7 +29,7 @@
         :class="{ hidden: !!item.hidden }"
       >
         <img :src="getAssetUrl(item.image)" alt="" />
-        <div class="amount">{{ shortNumber(item.amount) }}</div>
+        <div class="amount extra-bold">{{ shortNumber(item.amount) }}</div>
         <div class="description">{{ item.description }}</div>
       </div>
     </div>
@@ -150,6 +150,7 @@ export default {
 }
 
 .dataviz .overview-heading {
+  margin-bottom: 7rem;
   .muted {
     color: #f7c5c4;
   }
@@ -184,10 +185,10 @@ export default {
 
     .amount {
       color: #ffffff;
-      font-size: 3.6rem;
+      font-size: 6rem;
       margin-left: 3rem;
       font-weight: bold;
-      min-width: 10rem;
+      min-width: 15rem;
     }
 
     .description {

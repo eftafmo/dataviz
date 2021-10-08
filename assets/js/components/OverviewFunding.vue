@@ -1,7 +1,7 @@
 <template>
   <div v-if="hasData && aggregated.allocation" class="overview-funding">
     <embeddor :period="period" tag="overview_funding" />
-    <div class="overview-heading">
+    <div class="overview-heading extra-bold">
       <span class="muted">The</span>
       <dropdown-filter
         filter="fm"
@@ -33,7 +33,7 @@
           class="row-item"
           :class="{ hidden: !!item.hidden }"
         >
-          <div class="amount">{{ item.amount }}</div>
+          <div class="amount extra-bold">{{ item.amount }}</div>
           <div class="name">{{ item.name }}</div>
         </div>
       </template>

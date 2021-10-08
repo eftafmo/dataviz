@@ -42,6 +42,7 @@
                 fill="#dc4844"
                 font-size="65"
                 font-weight="bold"
+                font-family="'gilroy-extrabold', 'Source Sans Pro', sans-serif"
               >
                 {{ shortCurrency(aggregated.allocation) }}
               </text>
@@ -53,6 +54,7 @@
                 fill="#444444"
                 font-size="30"
                 font-weight="bold"
+                font-family="'gilroy-extrabold', 'Source Sans Pro', sans-serif"
               >
                 {{ period }}
               </text>
