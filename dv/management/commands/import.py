@@ -1,3 +1,4 @@
+import json
 import os.path
 import re
 from contextlib import contextmanager
@@ -56,17 +57,29 @@ class Command(BaseCommand):
         parser.add_argument(
             '--period_id',
             type=int,
-            choices=(2, 3),
+            choices=(1, 2, 3),
             help='Run import for specific period; options: 2 (2009-2014); 3 (2014-2021).',
         )
         parser.add_argument(
             '--directory',
             help='A directory containing spreadsheet (xlsx) files. Required for period 2.',
         )
+        parser.add_argument(
+            '--json-path',
+            help='A JSON file with allocation for 2004-2009. Required for period 1.',
+        )
 
     def handle(self, *args, **options):
         funding_period = options.get('period_id')
         directory = options.get('directory')
+        json_path = options.get('json_path')
+
+        if not funding_period or funding_period == 1:
+            if json_path:
+                self._import_2004_2009(json_path)
+            else:
+                self.stdout.write(self.style.ERROR('A JSON file must be provided for '
+                                                   '2004-2009 import.'))
 
         if not funding_period or funding_period == 2:
             if directory:
@@ -77,6 +90,41 @@ class Command(BaseCommand):
 
         if not funding_period or funding_period == 3:
             self._import_2014_2021()
+
+    def _import_2004_2009(self, json_path):
+        self.stdout.write('Running import for 2004-2009.')
+
+        sector, created = PrioritySector.objects.get_or_create({
+            'code': 'XX0',
+            'name': 'Fake sector 2004-2009'
+        }, code='XX0')
+        self.stdout.write(self.style.SUCCESS(f'Imported {int(created)} PrioritySector objects.'))
+
+        area, created = ProgrammeArea.objects.get_or_create({
+            'funding_period': 1,
+            'priority_sector': sector,
+            'code': 'XX99',
+            'name': 'Fake programme area 2004-2009',
+            'short_name': 'Fake programme area 2004-2009',
+        }, code='XX99', priority_sector=sector)
+        self.stdout.write(self.style.SUCCESS(f'Imported {int(created)} ProgrammeArea objects.'))
+
+        with open(json_path, 'r') as json_f:
+            data = json.load(json_f)
+
+        count = 0
+        for d in data:
+            obj, created = Allocation.objects.update_or_create(
+                funding_period=1,
+                programme_area=area,
+                state_id=d['country'],
+                gross_allocation=d['allocation'],
+                net_allocation=0,
+                financial_mechanism=FM_REVERSED_DICT[d['fm']]
+            )
+            count += created
+        self.stdout.write(self.style.SUCCESS(f'Imported {count} Allocation objects.'))
+
 
     def _import_2009_2014(self, directory_path):
         """Import data from Excel files for period 2009-2014"""
