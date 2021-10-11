@@ -169,6 +169,7 @@ export default {
 
         if (f === "beneficiary" && (val === "GR" || val === "EL")) {
           switch (this.period) {
+            case "2004-2009":
             case "2009-2014":
               val = "GR";
               break;
@@ -329,6 +330,7 @@ export default {
 
           if (srccol === "beneficiary" && (value === "GR" || value === "EL")) {
             switch (this.period) {
+              case "2004-2009":
               case "2009-2014":
                 value = "GR";
                 break;
