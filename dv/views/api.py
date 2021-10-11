@@ -227,6 +227,7 @@ def grants(request):
         'programme_area__priority_sector',
     ).order_by('state', 'financial_mechanism')
 
+    bilateral_fund = {}
     if period_id == 2:
         programme_allocations = ProgrammeAllocation.objects.filter(
             funding_period=period_id,
