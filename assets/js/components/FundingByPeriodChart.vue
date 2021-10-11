@@ -272,6 +272,25 @@ export default {
         .text((d) => d.name);
     },
     tooltipTemplate(ev, d) {
+      let details = `
+          <li>
+            ${d.sectors.size}
+            ${this.singularize("sectors", d.sectors.size)}
+          </li>
+          <li>
+            ${d.areas.size}
+            ${this.singularize("programme areas", d.areas.size)}
+          </li>
+          <li>
+            ${d.programmes.size}
+            ${this.singularize("programmes", d.programmes.size)}
+          </li>
+      `;
+      // This period only has fake PS/PA, so hide the details.
+      if (d.period === "2004-2009") {
+        details = "";
+      }
+
       return `
         <div class="title-container">
           <span>Financial Mechanism: ${d.period}</span>
@@ -287,18 +306,7 @@ export default {
               this.getBeneficiaryCount(d.beneficiaries)
             )}
           </li>
-          <li>
-            ${d.sectors.size}
-            ${this.singularize("sectors", d.sectors.size)}
-          </li>
-          <li>
-            ${d.areas.size}
-            ${this.singularize("programme areas", d.areas.size)}
-          </li>
-          <li>
-            ${d.programmes.size}
-            ${this.singularize("programmes", d.programmes.size)}
-          </li>
+          ${details}
         </ul>
       `;
     },
