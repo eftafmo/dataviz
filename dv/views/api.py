@@ -64,6 +64,7 @@ def overview(request):
 
     allocations = Allocation.objects.filter(
         funding_period=period_id,
+        programme_area__isnull=False,
     ).values(
         'financial_mechanism',
         'state',
