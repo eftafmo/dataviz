@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     _valuefunc(v) {
-      // a slight detour for the logic below
       return v?.allocation || 0;
     },
     valuefunc(item) {
@@ -57,7 +56,11 @@ export default {
           <span class="name">${d.name}</span>
         </div>
         <ul>
-          <li>Bilateral Initiatives: ${this.currency(value)}</li>
+          <li>
+            Bilateral Initiatives:
+            ${this.currency(value)}
+            net allocation
+          </li>
         </ul>
         <span class="action">Click to filter by Beneficiary State</span>
       `;
