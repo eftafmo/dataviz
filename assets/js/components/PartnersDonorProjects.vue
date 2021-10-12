@@ -136,9 +136,7 @@ export default {
     },
     allOrganizations() {
       return new Set(
-        this.data
-          .map((item) => item.organizations.map((org) => org.name))
-          .flat()
+        this.data.map((item) => item.organizations.map((org) => org.id)).flat()
       );
     },
     allCountries() {
