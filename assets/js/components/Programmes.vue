@@ -53,7 +53,9 @@ export default {
   computed: {
     dppProjects() {
       const result = {};
-      this.COUNTRY_ARRAY.forEach((country) => (result[country.id] = new Set()));
+      Object.keys(this.COUNTRIES).forEach(
+        (countryId) => (result[countryId] = new Set())
+      );
 
       this.filtered.forEach((d) => {
         Object.entries(d.projects || {}).forEach(([projectId, project]) => {
