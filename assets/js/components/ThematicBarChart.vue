@@ -5,6 +5,8 @@
     title="Working together for..."
     drop-down-title="Criteria"
     :all-items="themeArray"
+    allocation-field="net_allocation"
+    allocation-type="net"
   />
 </template>
 

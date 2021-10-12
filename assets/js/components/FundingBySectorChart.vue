@@ -119,7 +119,7 @@ export default {
       );
     },
     maxAllocation() {
-      return Math.max(...this.data.map((item) => item.allocation));
+      return Math.max(...this.data.map((item) => item.net_allocation));
     },
     yScale() {
       return d3
@@ -188,9 +188,12 @@ export default {
         .merge(sectorsGroups)
         .transition(t)
         .attr("x", (d) => this.xScale(d.id))
-        .attr("y", (d) => this.yScale(d.allocation))
+        .attr("y", (d) => this.yScale(d.net_allocation))
         .attr("width", this.xScale.bandwidth())
-        .attr("height", (d) => this.barChartHeight - this.yScale(d.allocation))
+        .attr(
+          "height",
+          (d) => this.barChartHeight - this.yScale(d.net_allocation)
+        )
         .attr("fill", (d) => d.sector.color)
         .attr("stroke", "none");
       sectorsGroups.exit().remove();
@@ -282,7 +285,7 @@ export default {
           name: "programmes",
         },
       ];
-      console.log(d);
+
       const details = items
         .filter(
           (item) =>
@@ -308,7 +311,10 @@ export default {
           <span>${d.sector.name}</span>
         </div>
         <ul>
-          <li>${this.currency(d.allocation)}</li>
+          <li>
+            ${this.currency(d.net_allocation)}
+            net allocation
+          </li>
           ${details}
         </ul>
       `;

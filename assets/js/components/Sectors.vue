@@ -45,6 +45,9 @@
         class="legend"
         :style="{ minHeight: minHeight + 'px' }"
       >
+        <div v-if="legendTitle" class="legend-title">
+          {{ legendTitle }}
+        </div>
         <!-- much repetition here, but not worth doing a recursive component -->
         <transition-group tag="ul" class="sectors" name="item">
           <li
@@ -71,11 +74,7 @@
                 :key="`v-${getLabelID(sector)}`"
                 class="sector-allocation"
               >
-                {{
-                  isSelectedSector(sector)
-                    ? displayLong(sector)
-                    : display(sector)
-                }}
+                {{ display(sector) }}
               </span>
               <span v-if="isSelectedSector(sector)" class="icon icon-cross" />
             </a>
@@ -153,6 +152,7 @@ export default {
       // percentage of mid-donut void
       inner_radius: 0.65,
       minHeight: null,
+      legendTitle: "Net allocation",
     };
   },
 
@@ -370,9 +370,6 @@ export default {
     // the value displayed for legend items
     display(item) {
       return this.currency(item.value);
-    },
-    displayLong(item) {
-      return this.currency(item.value) + " net allocation";
     },
 
     areasBeforeEnter(el) {
@@ -874,6 +871,10 @@ export default {
     @media (min-width: 1000px) and (max-width: 1400px) {
       float: left;
     }
+  }
+
+  .legend-title {
+    text-align: right;
   }
 
   .chart path,

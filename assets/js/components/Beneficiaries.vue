@@ -9,7 +9,9 @@ export default {
   mixins: [BeneficiariesBarChartMixin, WithFMsMixin],
 
   data() {
-    return {};
+    return {
+      allocationType: "gross",
+    };
   },
 
   computed: {
@@ -88,7 +90,11 @@ export default {
       const datatxt = data
         .map(
           (x) => `
-            <li>${x.name} : ${this.currency(x.value)}</li>
+            <li>
+              ${x.name} :
+              ${this.currency(x.value)}
+              ${this.allocationType} allocation
+            </li>
         `
         )
         .join("");

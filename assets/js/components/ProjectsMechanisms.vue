@@ -23,7 +23,7 @@ export default {
         </div>
         <ul>
           <li>${this.number(d.projects.size)} projects</li>
-          <li>${this.currency(d.allocation)}</li>
+          <li>${this.currency(d.allocation)} gross allocation</li>
           <li>${this.getBeneficiaryCount(d.beneficiaries)} ` +
         this.singularize(
           `Beneficiary States`,

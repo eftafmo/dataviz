@@ -11,7 +11,9 @@ export default {
   mixins: [PartnersMixin],
 
   data() {
-    return {};
+    return {
+      legendTitle: "",
+    };
   },
 
   computed: {
@@ -74,9 +76,6 @@ export default {
     },
     display(item) {
       // customer has requested not to show the programme count in the legend
-      return "";
-    },
-    displayLong(item) {
       return "";
     },
     tooltipTemplate(ev, d) {

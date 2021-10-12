@@ -7,7 +7,6 @@
 import { default as Root } from "./components/Root";
 import * as components from "./components";
 import Sidebar from "./components/includes/Sidebar";
-import { GlobalGoalsMap, GlobalGoalsMechanism } from "./components";
 
 const _Base = {
   extends: Root,
@@ -42,19 +41,6 @@ export const Grants = {
   },
 };
 
-export const Goals = {
-  extends: _Base,
-  name: "Goals",
-
-  components: {
-    mechanisms: components.GlobalGoalsMechanism,
-    global_goals_chart: components.GlobalGoalsChart,
-    xmap: components.GlobalGoalsMap,
-    beneficiaries: components.Beneficiaries,
-    sidebar: components.GoalsSidebar,
-  },
-};
-
 export const Partners = {
   extends: _Base,
   name: "Partners",
@@ -83,6 +69,19 @@ export const Projects = {
     beneficiaries: components.ProjectsBeneficiaries,
     sidebar: components.ProjectsSidebar,
     bilateral_initiatives_chart: components.BilateralInitiativesChart,
+  },
+};
+
+export const Goals = {
+  extends: _Base,
+  name: "Goals",
+
+  components: {
+    mechanisms: components.GlobalGoalsMechanism,
+    global_goals_chart: components.GlobalGoalsChart,
+    xmap: components.GlobalGoalsMap,
+    beneficiaries: components.GlobalGoalsBeneficiaries,
+    sidebar: components.GoalsSidebar,
   },
 };
 

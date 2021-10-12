@@ -176,7 +176,7 @@ export default {
           ${this.number(num_projects)}
           ${this.singularize("projects", num_projects)}
         </li>
-        <li>${this.currency(allocation)}</li>
+        <li>${this.currency(allocation)} gross allocation</li>
         <li>
           ${d.sectors.size}
           ${this.singularize("sectors", d.sectors.size)}

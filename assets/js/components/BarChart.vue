@@ -95,6 +95,16 @@ export default {
       required: false,
       default: false,
     },
+    allocationField: {
+      type: String,
+      required: false,
+      default: "allocation",
+    },
+    allocationType: {
+      type: String,
+      required: false,
+      default: "gross",
+    },
   },
   data() {
     return {
@@ -160,7 +170,9 @@ export default {
   },
   methods: {
     getAllocation(id) {
-      return this.aggregated[id]?.allocation || 0;
+      return this.aggregated[id]
+        ? this.aggregated[id][this.allocationField]
+        : 0;
     },
     getStripeUrl(id) {
       return `url(#stripes-pattern-${this.mainFilter}${id})`;
@@ -347,7 +359,10 @@ export default {
           <span>${d.name}</span>
         </div>
         <ul>
-          <li>${this.currency(d.allocation)}</li>
+          <li>
+            ${this.currency(d.allocation)}
+            ${this.allocationType} allocation
+          </li>
           <li>
             ${this.getBeneficiaryCount(d.beneficiaries)}
             ${this.singularize(
