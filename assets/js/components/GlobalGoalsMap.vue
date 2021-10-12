@@ -6,6 +6,7 @@ export default {
   extends: GrantsMap,
   data() {
     return {
+      allocationType: "net",
       aggregate_on: [
         "allocation",
         "net_allocation",

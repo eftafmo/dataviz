@@ -7,6 +7,8 @@
     :all-items="sdgArray"
     show-id
     hide-zero
+    allocation-field="allocation"
+    allocation-type="net"
   >
     <template #before-chart>
       <transition name="fade">
