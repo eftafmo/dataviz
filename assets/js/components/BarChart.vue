@@ -102,7 +102,9 @@ export default {
       width: 500,
       barHeight: 18,
       barPadding: 0.9,
+      textColor: "#444",
       disabledColor: "#9f9f9f",
+      disabledTextColor: "#ccc",
     };
   },
   computed: {
@@ -220,6 +222,7 @@ export default {
         .attr("height", this.barHeight)
         .attr("stroke", (d) => d.color)
         .attr("stroke-width", 1)
+        .attr("opacity", (d) => (this.isDisabled(d) ? 0.5 : 1))
         .attr("fill", (d) => d.color);
       barSquares.exit().remove();
     },
@@ -284,6 +287,9 @@ export default {
         .transition(t)
         .attr("x", this.barHeight + 10)
         .attr("y", (d) => this.yScaleMiddle(d))
+        .attr("fill", (d) =>
+          this.isDisabled(d) ? this.disabledTextColor : this.textColor
+        )
         .attr("font-size", "14px")
         .attr("font-weight", (d) => (this.isSelected(d) ? "bold" : "normal"))
         .attr("dominant-baseline", "middle")
@@ -302,6 +308,9 @@ export default {
         .transition(t)
         .attr("x", this.width - 10)
         .attr("y", (d) => this.yScaleMiddle(d))
+        .attr("fill", (d) =>
+          this.isDisabled(d) ? this.disabledTextColor : this.textColor
+        )
         .attr("font-size", "14px")
         .attr("font-weight", (d) => (this.isSelected(d) ? "bold" : "normal"))
         .attr("dominant-baseline", "middle")
