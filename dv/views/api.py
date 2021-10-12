@@ -1053,8 +1053,5 @@ class ProjectList(ListAPIView):
                 # Django ORM generates an unnecessary complicated query here
             queryset = queryset.filter(q)
 
-        return queryset.select_related(
-            'project',
-        ).annotate(
-            total_allocation=Sum('allocation')
-        ).order_by('project_id').distinct()
+        project_list = queryset.values_list('project', flat=True).distinct()
+        return Project.objects.filter(code__in=project_list)
