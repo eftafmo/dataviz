@@ -10,6 +10,7 @@ export default {
 
   data() {
     return {
+      allocationType: "gross",
       nuts_level: 3,
       draw_nuts_levels: [3],
 
@@ -31,8 +32,10 @@ export default {
       if (d.id.length === 2) {
         region_name = this.COUNTRIES[d.id].name;
         extra = `
-            <li>${this.currency(allocation)}</li>
-            `;
+          <li>
+            ${this.currency(allocation)} ${this.allocationType} allocation
+          </li>
+        `;
       } else {
         region_name = this.getRegionName(d.id) + "(" + d.id + ")";
       }
