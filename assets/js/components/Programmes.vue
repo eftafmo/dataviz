@@ -12,7 +12,7 @@
           </div>
           <ul class="programme-list" :class="[{ active: filters.beneficiary }]">
             <li
-              v-for="programme in getBeneficiaryProgrammes(beneficiary)"
+              v-for="programme in beneficiary.programmes"
               :key="programme.programme_code"
               class="programme-item"
             >
@@ -176,12 +176,6 @@ export default {
         }
       }
       return false;
-    },
-    getBeneficiaryProgrammes(beneficiary) {
-      // Hide Programme Area PA05 from the list, but keep it in the count
-      return beneficiary.programmes.filter(
-        (programme) => !programme.programme_code.endsWith("-DECENTWORK")
-      );
     },
   },
 };
