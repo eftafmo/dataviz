@@ -8,7 +8,7 @@
               <img :src="`${get_flag(beneficiary.id)}`" alt="" />
             </div>
             <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
-            <small>({{ beneficiary.programmes.length }} programmes)</small>
+            <small>({{ getCountryCount(beneficiary) }})</small>
           </div>
           <ul class="programme-list" :class="[{ active: filters.beneficiary }]">
             <li
@@ -51,6 +51,17 @@ export default {
   mixins: [WithCountriesMixin, WithRegionsMixin],
 
   computed: {
+    dppProjects() {
+      const result = {};
+      this.COUNTRY_ARRAY.forEach((country) => (result[country.id] = new Set()));
+
+      this.filtered.forEach((d) => {
+        Object.entries(d.projects).forEach(([projectId, project]) => {
+          if (project.is_dpp) result[d.beneficiary].add(projectId);
+        });
+      });
+      return result;
+    },
     data() {
       if (!this.hasData) return [];
 
@@ -98,6 +109,7 @@ export default {
             id: b,
             ...this.allCountries[b],
             programmes: [],
+            dpp_projects_count: this.dppProjects[b].size,
           };
         out.beneficiaries.push(beneficiary);
 
@@ -161,6 +173,9 @@ export default {
       } else {
         target.classList.add("active");
       }
+    },
+    getCountryCount(beneficiary) {
+      return `${beneficiary.programmes.length} programmes`;
     },
     /**
      * will consider relevant if at least one nuts from the programme is contained in the selected region or its children
@@ -241,6 +256,7 @@ export default {
   }
 
   .flag {
+    min-width: 30px;
     width: 30px;
     height: 20px;
     img {
@@ -279,8 +295,8 @@ export default {
   }
 
   .title-wrapper {
-    -js-display: flex;
     display: flex;
+    flex-wrap: wrap;
     cursor: pointer;
     align-items: center;
     margin: 1rem 0;

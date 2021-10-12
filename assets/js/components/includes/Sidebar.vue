@@ -183,6 +183,7 @@ export default {
 
   .content-item .title {
     margin: 0 0.5rem 0 0;
+    flex-shrink: 0;
     font-size: 1.4rem;
     font-weight: inherit;
     color: #000000;
