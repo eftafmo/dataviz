@@ -56,7 +56,7 @@ export default {
       this.COUNTRY_ARRAY.forEach((country) => (result[country.id] = new Set()));
 
       this.filtered.forEach((d) => {
-        Object.entries(d.projects).forEach(([projectId, project]) => {
+        Object.entries(d.projects || {}).forEach(([projectId, project]) => {
           if (project.is_dpp) result[d.beneficiary].add(projectId);
         });
       });
