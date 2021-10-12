@@ -88,7 +88,6 @@ class Programme(models.Model):
 
     status = models.CharField(max_length=16)
 
-    url = models.CharField(max_length=256, blank=True)
     summary = models.TextField()
 
     allocation_eea = models.DecimalField(max_digits=15, decimal_places=2)
@@ -127,6 +126,10 @@ class Programme(models.Model):
     def display_name(self):
         return f"{self.code}: {' '.join(self.name.split())}"
 
+    @cached_property
+    def url(self):
+        return f"https://eeagrants.org/archive/{self.get_funding_period_display()}/programmes/{self.code}"
+
 
 class ProgrammeAllocation(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
@@ -151,7 +154,6 @@ class Project(models.Model):
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=512)  # not unique
     status = models.CharField(max_length=19)
-    url = models.CharField(max_length=256, null=True)
 
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
@@ -172,6 +174,10 @@ class Project(models.Model):
 
     initial_description = models.TextField()
     results_description = models.TextField()
+
+    @cached_property
+    def url(self):
+        return f"https://eeagrants.org/archive/{self.get_funding_period_display()}/projects/{self.code}"
 
     @cached_property
     def financial_mechanisms(self):

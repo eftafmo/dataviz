@@ -254,7 +254,6 @@ class Command(BaseCommand):
                 allocation_eea=record['AllocatedProgrammeGrantEEA'] or 0,
                 allocation_norway=record['AllocatedProgrammeGrantNorway'] or 0,
                 co_financing=record['ProgrammeCoFinancing'],
-                url=record['UrlProgrammePage'] or '',
                 is_tap=record['IsTAProgramme'],
             )
             programme_area_codes = [
@@ -310,7 +309,6 @@ class Command(BaseCommand):
                 state_id=states[record['BeneficiaryState']],
                 programme_id=record['ProgrammeCode'],
                 nuts_id=record['NUTSCode'],
-                url=record['UrlProjectPage'],
                 allocation=record['GrantAmount'],
                 is_eea=record['IsEEA'],
                 is_norway=record['IsNorway'],
@@ -519,7 +517,6 @@ class Command(BaseCommand):
                     programme=programmes.get(row['ProgrammeShortName']),
                     nuts_id=row['ProjectLocation'] or None,
                     sdg_no=row['SDGno'],
-                    url=row['ProjectURL'],
                     allocation=row['ProjectGrant'],
                     is_eea=bool(row['IdFinancialMechanismEEA']),
                     is_norway=bool(row['IdFinancialMechanismNorway']),
