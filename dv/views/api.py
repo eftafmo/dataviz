@@ -351,7 +351,7 @@ def sdg(request):
         dataset[key]['allocation'] += allocation.allocation
         dataset[key]['sectors'].add(allocation.priority_sector_id)
         dataset[key]['areas'].add(allocation.programme_area_id)
-        if not allocation.programme:
+        if not allocation.programme or allocation.programme.is_bfp or allocation.programme.is_tap:
             continue
         dataset[key]['programmes'][allocation.programme.code] = {
             'name': allocation.programme.name,
