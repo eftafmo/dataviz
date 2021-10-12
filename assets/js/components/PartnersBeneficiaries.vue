@@ -66,7 +66,7 @@ export default {
         datatxt +=
           `<li>${num_PO} programme ` +
           this.singularize("operators", num_PO) +
-          ` working with ${num_DPP} donor ` +
+          ` working with ${num_DPP} Donor ` +
           this.singularize("partners", num_DPP) +
           ` in ${num_prg_DPP} ` +
           this.singularize("programmes", num_prg_DPP);
@@ -75,7 +75,7 @@ export default {
         datatxt +=
           `<li>${num_PJPT} project ` +
           this.singularize("promoters", num_PJPT) +
-          ` working with ${num_dpp} donor ` +
+          ` working with ${num_dpp} Donor ` +
           this.singularize("partners", num_dpp) +
           ` in ${num_prj_dpp} ` +
           this.singularize("projects", num_prj_dpp);

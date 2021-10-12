@@ -6,6 +6,12 @@ import PartnersMixin from "./mixins/Partners";
 const PartnersProgrammes = {
   extends: Programmes,
   mixins: [PartnersMixin],
+
+  methods: {
+    getCountryCount(beneficiary) {
+      return `${beneficiary.dpp_projects_count} projects with Donor partners`;
+    },
+  },
 };
 
 export default {

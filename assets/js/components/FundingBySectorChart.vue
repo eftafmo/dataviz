@@ -268,27 +268,48 @@ export default {
       legendLabels.exit().remove();
     },
     tooltipTemplate(ev, d) {
+      const items = [
+        {
+          value: this.getBeneficiaryCount(d.beneficiaries),
+          name: "Beneficiary States",
+        },
+        {
+          value: d.areas.size,
+          name: "programme areas",
+        },
+        {
+          value: d.programmes.size,
+          name: "programmes",
+        },
+      ];
+      console.log(d);
+      const details = items
+        .filter(
+          (item) =>
+            // Special case for the hungary sector, since it's a fake one (Sadge)
+            !(
+              item.name === "programme areas" &&
+              d.sector.id === "allocation-to-hungary"
+            )
+        )
+        .filter((item) => item.value > 0)
+        .map(
+          (item) => `
+            <li>
+              ${item.value}
+              ${this.singularize(item.name, item.value)}
+            </li>
+        `
+        )
+        .join("");
+
       return `
         <div class="title-container">
           <span>${d.sector.name}</span>
         </div>
         <ul>
           <li>${this.currency(d.allocation)}</li>
-          <li>
-            ${this.getBeneficiaryCount(d.beneficiaries)}
-            ${this.singularize(
-              "Beneficiary States",
-              this.getBeneficiaryCount(d.beneficiaries)
-            )}
-          </li>
-          <li>
-            ${d.areas.size}
-            ${this.singularize("programme areas", d.areas.size)}
-          </li>
-          <li>
-            ${d.programmes.size}
-            ${this.singularize("programmes", d.programmes.size)}
-          </li>
+          ${details}
         </ul>
       `;
     },

@@ -8,11 +8,11 @@
               <img :src="`${get_flag(beneficiary.id)}`" alt="" />
             </div>
             <h3 class="title">{{ get_country_name(beneficiary.id) }}</h3>
-            <small>({{ beneficiary.programmes.length }} programmes)</small>
+            <small>({{ getCountryCount(beneficiary) }})</small>
           </div>
           <ul class="programme-list" :class="[{ active: filters.beneficiary }]">
             <li
-              v-for="programme in getBeneficiaryProgrammes(beneficiary)"
+              v-for="programme in beneficiary.programmes"
               :key="programme.programme_code"
               class="programme-item"
             >
@@ -51,6 +51,19 @@ export default {
   mixins: [WithCountriesMixin, WithRegionsMixin],
 
   computed: {
+    dppProjects() {
+      const result = {};
+      Object.keys(this.COUNTRIES).forEach(
+        (countryId) => (result[countryId] = new Set())
+      );
+
+      this.filtered.forEach((d) => {
+        Object.entries(d.projects || {}).forEach(([projectId, project]) => {
+          if (project.is_dpp) result[d.beneficiary].add(projectId);
+        });
+      });
+      return result;
+    },
     data() {
       if (!this.hasData) return [];
 
@@ -98,6 +111,7 @@ export default {
             id: b,
             ...this.allCountries[b],
             programmes: [],
+            dpp_projects_count: this.dppProjects[b].size,
           };
         out.beneficiaries.push(beneficiary);
 
@@ -162,6 +176,9 @@ export default {
         target.classList.add("active");
       }
     },
+    getCountryCount(beneficiary) {
+      return `${beneficiary.programmes.length} programmes`;
+    },
     /**
      * will consider relevant if at least one nuts from the programme is contained in the selected region or its children
      * ex: for RO31: RO31, RO312 will be relevant, but not RO, RO3, RO4 nor RO32
@@ -176,12 +193,6 @@ export default {
         }
       }
       return false;
-    },
-    getBeneficiaryProgrammes(beneficiary) {
-      // Hide Programme Area PA05 from the list, but keep it in the count
-      return beneficiary.programmes.filter(
-        (programme) => !programme.programme_code.endsWith("-DECENTWORK")
-      );
     },
   },
 };
@@ -247,6 +258,7 @@ export default {
   }
 
   .flag {
+    min-width: 30px;
     width: 30px;
     height: 20px;
     img {
@@ -285,8 +297,8 @@ export default {
   }
 
   .title-wrapper {
-    -js-display: flex;
     display: flex;
+    flex-wrap: wrap;
     cursor: pointer;
     align-items: center;
     margin: 1rem 0;

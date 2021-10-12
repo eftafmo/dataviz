@@ -289,7 +289,7 @@ export default {
       if (d.programmes) {
         details += _line(
           _plm("programme", "operator", d.programmes.bs_orgs.size),
-          _plm("donor", "partner", d.programmes.ds_orgs.size),
+          _plm("Donor", "partner", d.programmes.ds_orgs.size),
           _plm("", "programme", d.programmes.programmes.size),
           is_ds
         );
@@ -297,7 +297,7 @@ export default {
       if (d.projects) {
         details += _line(
           _plm("project", "promoter", d.projects.bs_orgs.size),
-          _plm("donor", "partner", d.projects.ds_orgs.size),
+          _plm("Donor", "partner", d.projects.ds_orgs.size),
           _plm("", "project", d.projects.projects.size),
           is_ds
         );
