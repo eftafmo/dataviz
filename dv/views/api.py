@@ -7,7 +7,7 @@ from itertools import chain, product
 from django.views.decorators.http import require_GET
 from django.db.models import CharField, Q
 from django.db.models.expressions import F
-from django.db.models.aggregates import Sum
+from django.db.models.aggregates import Sum, Aggregate
 from django.db.models.functions import Length
 from rest_framework.generics import ListAPIView
 
@@ -1049,8 +1049,5 @@ class ProjectList(ListAPIView):
                 # Django ORM generates an unnecessary complicated query here
             queryset = queryset.filter(q)
 
-        return queryset.select_related(
-            'project',
-        ).annotate(
-            total_allocation=Sum('allocation')
-        ).order_by('project_id').distinct()
+        project_list = queryset.values_list('project', flat=True).distinct()
+        return Project.objects.filter(code__in=project_list)
