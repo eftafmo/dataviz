@@ -38,7 +38,7 @@ export default {
     padding-left: 0;
     margin: 0.5rem 0.5rem 1rem;
   }
-  z-index: 2;
+  z-index: 3;
   min-width: 320px;
   max-width: 420px;
   padding: 1rem 2rem;
