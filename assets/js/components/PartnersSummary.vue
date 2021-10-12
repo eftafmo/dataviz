@@ -4,7 +4,7 @@
       <div v-if="data.DPP_count > 0" :key="changed" class="allocation">
         <strong
           >{{ data.DPP_count }} Donor Programme
-          {{ singularize("partners", data.DPP_count) }}</strong
+          {{ singularize("Partners", data.DPP_count) }}</strong
         >
         <small v-if="data.dpp_count > 0"
           >{{ data.dpp_count }} Donor project
