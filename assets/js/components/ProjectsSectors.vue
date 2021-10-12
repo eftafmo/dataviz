@@ -3,6 +3,7 @@ import * as d3 from "d3";
 
 import Sectors from "./Sectors";
 import ProjectsMixin from "./mixins/Projects";
+import { slugify } from "../lib/util";
 
 export default {
   extends: Sectors,
@@ -16,8 +17,12 @@ export default {
 
   computed: {
     filtered() {
-      // exclude technical assistance sectors from project
-      return this.filter(this.dataset, this.filter_by).filter((x) => !x.is_ta);
+      // - exclude technical assistance sectors from project
+      // - exclude fake sector "allocation-to-hungary" as it will
+      //   always have 0 projects
+      return this.filter(this.dataset, this.filter_by).filter(
+        (x) => !x.is_ta && slugify(x.sector) !== "allocation-to-hungary"
+      );
     },
   },
 
