@@ -316,14 +316,14 @@ export default {
       return this.FM_ARRAY.map((fm) => {
         const allocation = (data[fm.name] && data[fm.name].allocation) || 0;
         return `
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12">
             <rect width="12" height="12" fill="${fm.stripesFill}">
           </svg>
           <span>
              ${fm.name}
           </span>
-          <span class="muted">
-            ${this.currency(allocation)}
+          <span class="muted no-wrap">
+            ${this.currency(allocation)}<br/>gross allocation
           </span>
         `;
       }).join("");
