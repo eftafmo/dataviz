@@ -2,9 +2,9 @@ import os.path
 import environ
 
 try:
-    BASE_DIR, INSTALLED_APPS
+    BASE_DIR, INSTALLED_APPS, DB_PATH
 except NameError:
-    from .settings import BASE_DIR, INSTALLED_APPS  # noqa: F401
+    from .settings import BASE_DIR, INSTALLED_APPS, DB_PATH # noqa: F401
 
 root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(
@@ -20,7 +20,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": env("DJANGO_DB_PATH", default=os.path.join("/var/local/db/eeag.sqlite3")),
+        "NAME": DB_PATH,
     }
 }
 
