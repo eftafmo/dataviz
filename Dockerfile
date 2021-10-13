@@ -15,9 +15,9 @@ FROM python:3.9-slim-buster
 
 # roles:
 #   front - publishes ports to the world; this depends on run/docker-compose though...
-#   cron - runs cron daemon
+
 LABEL maintainer="andrei.melis@eaudeweb.ro" \
-      roles="front,cron" \
+      roles="front" \
       name="web"
 
 #RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
@@ -25,7 +25,7 @@ LABEL maintainer="andrei.melis@eaudeweb.ro" \
 ENV APP_HOME=/var/local/dataviz \
     PYTHONUNBUFFERED=1
 
-RUN runDeps="cron netcat-traditional" \
+RUN runDeps="netcat-traditional" \
  && apt-get update -y \
  && apt-get install -y --no-install-recommends $runDeps \
  && rm -rf /var/lib/apt/lists/* \
@@ -34,7 +34,6 @@ RUN runDeps="cron netcat-traditional" \
  && touch ~/.bashrc
 
 WORKDIR $APP_HOME
-COPY ./docker/crontab /etc/crontab.dataviz
 COPY ./docker/entrypoint.sh ./docker/import.sh /bin/
 ADD requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
