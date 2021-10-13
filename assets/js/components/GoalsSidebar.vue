@@ -1,7 +1,7 @@
 <template>
   <sidebar :class="classNames" :embedded="embedded">
     <embeddor :period="period" tag="sidebar" />
-    <xsummary :initial="dataset" :embedded="embedded"></xsummary>
+    <xsummary :initial="dataset" :embedded="embedded" allocation-type="net" />
 
     <tabs cache-lifetime="">
       <tab name="Results">
