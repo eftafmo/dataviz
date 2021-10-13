@@ -22,6 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # root directory, where project is deployed
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
+DB_PATH = env(
+    "DJANGO_DB_PATH",
+    default=os.path.join(
+       os.path.join(os.path.dirname(BASE_DIR), "db"), "eeag.sqlite3"
+    ),
+)
+
 # more useful dirs:
 # the web server's vhost root
 WEBROOT_DIR = os.path.join(ROOT_DIR, 'webroot')

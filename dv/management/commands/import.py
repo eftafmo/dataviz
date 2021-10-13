@@ -1,6 +1,7 @@
 import json
 import os.path
 import re
+import sys
 from contextlib import contextmanager
 from decimal import Decimal
 
@@ -15,8 +16,7 @@ from dv.models import (
     Allocation, BilateralInitiative, Indicator, OrganisationRole, Organisation, PrioritySector,
     Programme, ProgrammeAllocation, ProgrammeArea, Project, ProjectAllocation, State,
 )
-from dv.lib.utils import FM_EEA, FM_NORWAY, FM_REVERSED_DICT
-
+from dv.lib.utils import FM_EEA, FM_NORWAY, FM_REVERSED_DICT, FUNDING_PERIODS_DICT
 
 GRANT_SHORT_NAME_TO_FM = {
     'EEA': 'EEA',
@@ -51,45 +51,84 @@ def db_cursor():
 
 
 class Command(BaseCommand):
-    help = 'Import data for both periods'
+    help = 'Import data for all periods'
 
     def add_arguments(self, parser):
+        periods = list(FUNDING_PERIODS_DICT.keys())
         parser.add_argument(
-            '--period_id',
-            type=int,
-            choices=(1, 2, 3),
-            help='Run import for specific period; options: 2 (2009-2014); 3 (2014-2021).',
+            '--period',
+            choices=periods,
+            help=f'Run import for specific period. If not specified the import runs for all periods.',
         )
         parser.add_argument(
             '--directory',
-            help='A directory containing spreadsheet (xlsx) files. Required for period 2.',
+            help='A directory containing spreadsheet (xlsx) files. Required for period 2009-2014.',
         )
         parser.add_argument(
             '--json-path',
-            help='A JSON file with allocation for 2004-2009. Required for period 1.',
+            help='A JSON file with allocations (country, fm, allocation). Required for period 2004-2009.',
+        )
+        parser.add_argument(
+            '--noinput',
+            action="store_true",
+            default=False,
+            help='No prompts will be issued to the user and the data will be wiped out.'
         )
 
     def handle(self, *args, **options):
-        funding_period = options.get('period_id')
+        noinput = options.get("noinput")
+        funding_period = options.get('period')
+
         directory = options.get('directory')
         json_path = options.get('json_path')
 
-        if not funding_period or funding_period == 1:
+        if not funding_period or funding_period == "2004-2009":
             if json_path:
+                self.clean_for_period(funding_period, noinput)
                 self._import_2004_2009(json_path)
             else:
                 self.stdout.write(self.style.ERROR('A JSON file must be provided for '
                                                    '2004-2009 import.'))
 
-        if not funding_period or funding_period == 2:
+        if not funding_period or funding_period == "2009-2014":
             if directory:
+                self.clean_for_period(funding_period, noinput)
                 self._import_2009_2014(directory)
             else:
                 self.stdout.write(self.style.ERROR('A directory containing xlsx files must '
                                                    'be provided for 2009-2014 import.'))
 
-        if not funding_period or funding_period == 3:
+        if not funding_period or funding_period == "2014-2021":
+            self.clean_for_period(funding_period, noinput)
             self._import_2014_2021()
+
+    def clean_for_period(self, funding_period, noinput):
+        self.stdout.write(f'Removing data for period {funding_period} from {settings.DB_PATH}')
+        period_id = FUNDING_PERIODS_DICT[funding_period]
+
+        if not noinput:
+            self.stdout.write(self.style.NOTICE(
+                f"This will remove all data from {settings.DB_PATH} "
+                f"for period {funding_period}, are you sure?\n[Y/n] "
+            ))
+            if input() != "Y":
+                self.stdout.write("Aborting import")
+                sys.exit(1)
+
+        for model in (
+            ProgrammeArea,
+            Programme,
+            Allocation,
+            ProgrammeAllocation,
+            Project,
+            ProjectAllocation,
+            Indicator,
+            Organisation,
+            OrganisationRole,
+            BilateralInitiative,
+        ):
+            result = model.objects.filter(funding_period=period_id).delete()
+            self.stdout.write(f"Deleted {model}: {result})")
 
     def _import_2004_2009(self, json_path):
         self.stdout.write('Running import for 2004-2009.')
@@ -115,16 +154,17 @@ class Command(BaseCommand):
         count = 0
         for d in data:
             obj, created = Allocation.objects.update_or_create(
+                defaults={
+                    'gross_allocation': d['allocation'],
+                    'net_allocation': 0,
+                },
                 funding_period=1,
                 programme_area=area,
                 state_id=d['country'],
-                gross_allocation=d['allocation'],
-                net_allocation=0,
                 financial_mechanism=FM_REVERSED_DICT[d['fm']]
             )
             count += created
         self.stdout.write(self.style.SUCCESS(f'Imported {count} Allocation objects.'))
-
 
     def _import_2009_2014(self, directory_path):
         """Import data from Excel files for period 2009-2014"""
@@ -454,15 +494,25 @@ class Command(BaseCommand):
         a_count = Allocation.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {a_count} Allocation objects.'))
 
+        sddw_fake_programmes = []
+
         # Exclude programmes from Hungary
         programme_query = "SELECT * FROM fmo.TR_RDPProgramme WHERE Country != 'Hungary'"
         with db_cursor() as cursor:
             cursor.execute(programme_query)
             programmes = {}
             for row in cursor.fetchall():
+                programme_code = row['ProgrammeShortName']
+                if programme_code.endswith('-DECENTWORK'):
+                    # SDDW: Social Dialogue – Decent Work (Norway Grants)
+                    # Ignore country specific entries as these are added manually
+                    # to the main programme (see below)
+                    sddw_fake_programmes.append(row)
+                    continue
+
                 programme = Programme.objects.create(
                     funding_period=FUNDING_PERIOD,
-                    code=row['ProgrammeShortName'],
+                    code=programme_code,
                     name=row['Programme'],
                     summary=sanitize_html(row['ProgrammeSummary']),
                     status=row['ProgrammeStatus'] or '',
@@ -480,6 +530,11 @@ class Command(BaseCommand):
                 # For the moment, all programmes have one or zero (NULL/Non-country specific) states
                 self._add_m2m_entries(programme, row, 'Country', 'states',
                                       'State', states)
+
+        sddw_programme = Programme.objects.get(code="SDDW")
+        for row in sddw_fake_programmes:
+            self._add_m2m_entries(sddw_programme, row, 'Country', 'states',
+                                  'State', states)
 
         p_count = Programme.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {p_count} Programme objects.'))

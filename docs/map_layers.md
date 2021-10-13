@@ -89,4 +89,4 @@ npx geo2topo -o assets/data/nuts2016.topojson --id-property ID --properties name
 
 ## Use new layers
 
-Adjust [MapBase.vue](../js/components/includes/MapBase.vue) to use the new files as needed.
+Adjust [MapBase.vue](../assets/js/components/includes/MapBase.vue) to use the new files as needed.

@@ -1,20 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-date '+%Y-%m-%d %H:%M:%S'
-$PYTHONPATH/python /var/local/dataviz/manage.py import_news
-$PYTHONPATH/python /var/local/dataviz/manage.py update_index dv.news --remove
+set -ev
+date "+%Y-%m-%d %H:%M:%S"
 
-UPLOAD_DIR=/var/local/upload
-date '+%Y-%m-%d %H:%M:%S'
-output=$($PYTHONPATH/python /var/local/dataviz/manage.py import $UPLOAD_DIR 2>&1)
-if [ $? -eq 0 ]; then
-	DONE_DIR=`date '+%Y%m%d'`
-	mkdir $UPLOAD_DIR/$DONE_DIR
-	mv $UPLOAD_DIR/*.xlsx $UPLOAD_DIR/$DONE_DIR
-	date '+%Y-%m-%d %H:%M:%S'
-	$PYTHONPATH/python /var/local/dataviz/manage.py rebuild_index --noinput
-	date '+%Y-%m-%d %H:%M:%S'
-else
-	sentry-cli send-event -m "Import error: $output"
+manage="/var/local/dataviz/manage.py"
+tmp_db="/tmp/temp.eeag.sqlite3"
+
+app_db="$DJANGO_DB_PATH"
+if [ -z "$app_db" ]
+then
+  app_db="/var/local/db/eeag.sqlite3"
 fi
 
+# Clean up tmp path, in case there were some failed runs
+rm -f "$tmp_db" || true
+
+# Copy the current db as starting point
+cp "$app_db" "$tmp_db"
+
+# Import new data in the temporary db
+env DJANGO_DB_PATH="$tmp_db" python "$manage" import --period="2014-2021" --noinput
+env DJANGO_DB_PATH="$tmp_db" python "$manage" import_news
+
+# Replace the live db
+mv "$tmp_db" "$app_db"
+
+# Rebuild indexes from the live db
+python "$manage" rebuild_index --noinput
