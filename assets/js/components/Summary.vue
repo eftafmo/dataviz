@@ -3,6 +3,8 @@
     <transition name="fade">
       <div v-if="data.allocation > 0" :key="changed" class="allocation">
         <strong>{{ currency(data.allocation) }}</strong>
+        <span>&nbsp;</span>
+        <strong v-if="allocationType">{{ allocationType }} allocation </strong>
         <small v-if="data.bilateral_allocation">
           {{ currency(data.bilateral_allocation) }} for bilateral fund
         </small>
@@ -20,7 +22,13 @@ import Component from "./Component";
 export default {
   extends: Component,
   type: "summary",
-
+  props: {
+    allocationType: {
+      type: String,
+      required: false,
+      default: "",
+    },
+  },
   data() {
     return {
       transitioned: false,
