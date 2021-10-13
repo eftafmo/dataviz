@@ -334,11 +334,15 @@ def sdg(request):
     allocation_query = ProgrammeAllocation.objects.filter(
         funding_period=period_id,
         programme_area__isnull=False,
+        sdg_no__isnull=False
     ).exclude(
         allocation=0,
     ).select_related(
         'programme',
     ).order_by('state', 'financial_mechanism')
+
+    if period == '2014-2021':
+        allocation_query = allocation_query.exclude(state__name='Hungary')
 
     dataset = defaultdict(lambda: {
         'allocation': 0,
