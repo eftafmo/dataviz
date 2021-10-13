@@ -94,22 +94,6 @@ export default {
         };
       });
     },
-    programmesCount() {
-      return Array.from(this.aggregated.programmes).filter((programme) => {
-        const [country, code] = programme.split("-");
-
-        // Programme Area PA05 is excluded while not filtering by a country
-        // because SDDW already includes them.
-        if (
-          !this.filters.beneficiary &&
-          code === "DECENTWORK" &&
-          country !== "XX"
-        )
-          return false;
-
-        return true;
-      }).length;
-    },
     gridItems() {
       return [
         {
@@ -123,7 +107,7 @@ export default {
             ...this.allocationByFm,
             {
               id: "programmes",
-              amount: this.number(this.programmesCount),
+              amount: this.number(this.aggregated.programmes.size),
               name: "Programmes",
             },
             {

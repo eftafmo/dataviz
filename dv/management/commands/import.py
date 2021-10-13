@@ -103,7 +103,7 @@ class Command(BaseCommand):
             self._import_2014_2021()
 
     def clean_for_period(self, funding_period, noinput):
-        self.stdout.write(f'Removing data for period {funding_period}')
+        self.stdout.write(f'Removing data for period {funding_period} from {settings.DB_PATH}')
         period_id = FUNDING_PERIODS_DICT[funding_period]
 
         if not noinput:
@@ -492,15 +492,25 @@ class Command(BaseCommand):
         a_count = Allocation.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {a_count} Allocation objects.'))
 
+        sddw_fake_programmes = []
+
         # Exclude programmes from Hungary
         programme_query = "SELECT * FROM fmo.TR_RDPProgramme WHERE Country != 'Hungary'"
         with db_cursor() as cursor:
             cursor.execute(programme_query)
             programmes = {}
             for row in cursor.fetchall():
+                programme_code = row['ProgrammeShortName']
+                if programme_code.endswith('-DECENTWORK'):
+                    # SDDW: Social Dialogue – Decent Work (Norway Grants)
+                    # Ignore country specific entries as these are added manually
+                    # to the main programme (see below)
+                    sddw_fake_programmes.append(row)
+                    continue
+
                 programme = Programme.objects.create(
                     funding_period=FUNDING_PERIOD,
-                    code=row['ProgrammeShortName'],
+                    code=programme_code,
                     name=row['Programme'],
                     summary=sanitize_html(row['ProgrammeSummary']),
                     status=row['ProgrammeStatus'] or '',
@@ -518,6 +528,11 @@ class Command(BaseCommand):
                 # For the moment, all programmes have one or zero (NULL/Non-country specific) states
                 self._add_m2m_entries(programme, row, 'Country', 'states',
                                       'State', states)
+
+        sddw_programme = Programme.objects.get(code="SDDW")
+        for row in sddw_fake_programmes:
+            self._add_m2m_entries(sddw_programme, row, 'Country', 'states',
+                                  'State', states)
 
         p_count = Programme.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {p_count} Programme objects.'))
