@@ -20,9 +20,10 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join("/var/local/db/eeag.sqlite3"),
+        "NAME": env("DJANGO_DB_PATH", default=os.path.join("/var/local/db/eeag.sqlite3")),
     }
 }
+
 
 HAYSTACK_CONNECTIONS = {
     "default": {
