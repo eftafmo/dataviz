@@ -1,0 +1,2 @@
+0 0 * * * /bin/docker system prune -f >> /var/log/dataviz/docker-prune.log 2>&1
+0 4 * * * /bin/docker-compose exec web import.sh >> /var/log/dataviz/import.log 2>&1
