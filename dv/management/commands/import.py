@@ -154,11 +154,13 @@ class Command(BaseCommand):
         count = 0
         for d in data:
             obj, created = Allocation.objects.update_or_create(
+                defaults={
+                    'gross_allocation': d['allocation'],
+                    'net_allocation': 0,
+                },
                 funding_period=1,
                 programme_area=area,
                 state_id=d['country'],
-                gross_allocation=d['allocation'],
-                net_allocation=0,
                 financial_mechanism=FM_REVERSED_DICT[d['fm']]
             )
             count += created
