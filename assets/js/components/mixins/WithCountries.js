@@ -79,7 +79,6 @@ export default {
   },
 
   computed: {
-    // TODO: make the constants arrays, and the objects pre-computed
     allCountries() {
       const result = {};
       this.COUNTRY_ARRAY.forEach((country) => (result[country.id] = country));
@@ -109,6 +108,15 @@ export default {
           !country.periods ||
           !this.period ||
           country.periods.indexOf(this.period) !== -1
+      );
+    },
+    currentBeneficiary() {
+      return (
+        this.filters &&
+        this.filters.beneficiary &&
+        this.BENEFICIARY_ARRAY.find(
+          (country) => country.id === this.filters.beneficiary
+        )
       );
     },
   },

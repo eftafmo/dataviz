@@ -25,7 +25,11 @@
           :key="organization.id"
           class="section_item"
         >
-          <td colspan="2">{{ organization.name }}</td>
+          <td colspan="2">
+            <a :href="organization.url">
+              {{ organization.name }}
+            </a>
+          </td>
           <td>{{ organization.countries.size }}</td>
           <td>{{ organization.programmes.size }}</td>
           <td>{{ organization.projects }}</td>
@@ -72,6 +76,25 @@ export default {
   },
 
   computed: {
+    searchPageBaseUrl() {
+      const url = new URL("/search/project/", window.location);
+      if (this.period) {
+        url.searchParams.append("period", this.period);
+      }
+      if (this.filters.fm) {
+        url.searchParams.append("financial_mechanism_ss", this.filters.fm);
+      }
+      if (this.currentBeneficiary) {
+        url.searchParams.append("state_name", this.currentBeneficiary.name);
+      }
+      if (this.filters.sector) {
+        url.searchParams.append("priority_sector_ss", this.filters.sector);
+      }
+      if (this.filters.area) {
+        url.searchParams.append("programme_area_ss", this.filters.area);
+      }
+      return url;
+    },
     data() {
       if (!this.hasData) return [];
 
@@ -80,7 +103,7 @@ export default {
 
       for (let d of dataset) {
         // only count rows having donor project partners
-        if (Object.keys(d.PJDPP).length == 0) continue;
+        if (Object.keys(d.PJDPP).length === 0) continue;
         let item = out[d.donor];
         if (item === undefined) {
           item = out[d.donor] = {
@@ -98,13 +121,18 @@ export default {
         }
         for (let org_id in d.PJDPP) {
           let org = item.organizations[org_id];
-          if (org == undefined) {
+          if (!org) {
+            const orgName = d.PJDPP[org_id]["name"];
+            const url = new URL(this.searchPageBaseUrl, window.location);
+            url.searchParams.append("organisation", orgName);
+
             org = item.organizations[org_id] = {
               id: org_id,
               countries: new Set(),
               programmes: new Set(),
               projects: 0,
-              name: d.PJDPP[org_id]["name"],
+              name: orgName,
+              url: url.toString(),
             };
           }
           org.countries.add(d.beneficiary);
