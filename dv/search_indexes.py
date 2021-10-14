@@ -223,7 +223,6 @@ class ProjectIndex(SearchIndex, Indexable):
     outcome_ss = fields.FacetMultiValueField()
     outcome_ss_auto = fields.EdgeNgramField()
     organisation = fields.FacetMultiValueField()
-    organisation_auto = fields.EdgeNgramField()
 
     kind = fields.FacetCharField()
 
@@ -319,12 +318,6 @@ class ProjectIndex(SearchIndex, Indexable):
         self.prepared_data["geotarget_auto"] = (
             " ".join(self.prepared_data["geotarget"])
             if self.prepared_data["geotarget"]
-            else None
-        )
-
-        self.prepared_data["organisation_auto"] = (
-            " ".join(self.prepared_data["organisation"])
-            if self.prepared_data["organisation"]
             else None
         )
         return self.prepared_data
