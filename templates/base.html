@@ -34,48 +34,32 @@
 
       <nav class="header-menu">
         {% with current_view=request.resolver_match.view_name %}
-        {% with current_period=request.GET.period %}
+        {% firstof PERIOD request.GET.period "2014-2021" as current_period%}
           {% for period in MENU %}
-            <a href="{{ period.url }}" class="period-item {% if period.id == PERIOD or period.id == current_period %}active{% endif %}">
+            <a href="{{ period.url }}" class="period-item {% if period.id == current_period %}active{% endif %}">
               {{ period.id }}
             </a>
-              {% if PERIOD or current_period %}
-            <div class="period-sub-menu {% if period.id == PERIOD or period.id == current_period %}active{% endif %}">
+            <div class="period-sub-menu {% if period.id == current_period %}active{% endif %}">
 
               {% for scenario in period.scenarios %}
                 <a
                     href="{{ scenario.url }}"
-                    class="scenario-item {% if period.id == PERIOD and scenario.id == SCENARIO %}active{% endif %}"
+                    class="scenario-item {% if period.id == current_period and scenario.id == SCENARIO %}active{% endif %}"
                 >
                   {{ scenario.name }}
                 </a>
               {% endfor %}
-              {% else %}
-                  <div class="period-sub-menu {% if period.id == '2014-2021' %}active{% endif %}">
-                  {% for scenario in period.scenarios %}
-                  <a
-                    href="{{ scenario.url }}"
-                    class="scenario-item {% if period.id == '2014-2021' and scenario.id == SCENARIO %}active{% endif %}"
-                >
-                  {{ scenario.name }}
-                </a>
-                  {% endfor %}
-            {% endif %}
-
             </div>
           {% endfor %}
           <form class="header-search" action="{% url view|search_view_name:current_view %}">
             <input type="search" placeholder="Search" name="q">
-            {% if PERIOD and PERIOD != 'compare' %}
-              <input type="text" name="period" hidden value="{{ PERIOD }}" />
-            {% elif not PERIOD and current_period %}
-                <input type="text" name="period" hidden value="{{ current_period }}" />
+            {% if current_period != 'compare' %}
+              <input type="text" name="period" hidden value="{{ current_period }}" />
             {% endif %}
             <button type="submit" title="Search" name="page" value="1">
               <span class="icon icon-search"></span>
             </button>
           </form>
-        {% endwith %}
         {% endwith %}
       </nav>
 
