@@ -26,7 +26,7 @@
           class="section_item"
         >
           <td colspan="2">
-            <a :href="organization.url">
+            <a :href="organization.url" target="_blank">
               {{ organization.name }}
             </a>
           </td>
