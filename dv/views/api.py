@@ -1010,7 +1010,7 @@ class ProjectList(ListAPIView):
 
         period = self.request.GET.get('period', DEFAULT_PERIOD)  # used in FE
         period_id = FUNDING_PERIODS_DICT[period]  # used in queries
-        queryset = queryset.filter(projectallocation__funding_period=period_id)
+        queryset = queryset.filter(funding_period=period_id)
 
         programme = self.request.query_params.get('programme', None)
         if programme is not None:
@@ -1018,20 +1018,23 @@ class ProjectList(ListAPIView):
 
         beneficiary = self.request.query_params.get('beneficiary', None)
         if beneficiary is not None:
-            queryset = queryset.filter(projectallocation__state_id=beneficiary)
+            queryset = queryset.filter(state_id=beneficiary)
 
         fm = FM_REVERSED_DICT.get(self.request.query_params.get('fm', None))
         if fm:
-            queryset = queryset.filter(projectallocation__financial_mechanism=fm)
+            if fm == "EEA":
+                queryset = queryset.filter(is_eea=True)
+            elif fm == "NOR":
+                queryset = queryset.filter(is_norway=True)
 
         programme_area_name = self.request.query_params.get('area', None)
         if programme_area_name:
-            queryset = queryset.filter(projectallocation__programme_area__name=programme_area_name)
+            queryset = queryset.filter(programme_areas__name=programme_area_name)
         else:
             # Don't add sector name if programme area is present
             sector_name = self.request.query_params.get('sector', None)
             if sector_name:
-                queryset = queryset.filter(projectallocation__priority_sector__name=sector_name)
+                queryset = queryset.filter(priority_sectors__name=sector_name)
 
         nuts = self.request.query_params.get('nuts', None)
         if nuts:
