@@ -44,9 +44,6 @@ export default {
           <span class="donor-states">${d.donor_list}</span>
         </div>
         <ul>
-          <li>${this.currency(d.allocation)} ${
-          this.allocationType
-        } allocation</li>
           <li>${this.getBeneficiaryCount(d.beneficiaries)} ` +
         this.singularize(
           `Beneficiary States`,
