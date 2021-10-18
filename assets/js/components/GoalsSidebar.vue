@@ -1,7 +1,6 @@
 <template>
   <sidebar :class="classNames" :embedded="embedded">
     <embeddor :period="period" tag="sidebar" />
-    <xsummary :initial="dataset" :embedded="embedded" allocation-type="net" />
 
     <tabs cache-lifetime="">
       <tab name="Results">
@@ -26,7 +25,6 @@
 <script>
 import BaseSidebar from "./BaseSidebar";
 
-import Summary from "./Summary";
 import Programmes from "./Programmes";
 import Embeddor from "./includes/Embeddor";
 import Results from "./Results";
@@ -34,7 +32,6 @@ import Results from "./Results";
 export default {
   components: {
     Embeddor,
-    xsummary: Summary,
     results: Results,
     programmes: Programmes,
   },

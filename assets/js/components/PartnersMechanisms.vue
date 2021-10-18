@@ -67,7 +67,7 @@ export default {
         `</li>
         </ul>
         <span class="action">Click to filter by financial mechanism</span>
-      `
+        `
       );
     },
   },
