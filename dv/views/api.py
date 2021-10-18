@@ -1038,7 +1038,7 @@ class ProjectList(ListAPIView):
 
         nuts = self.request.query_params.get('nuts', None)
         if nuts:
-            queryset = queryset.filter(nuts__code__startwith=nuts)
+            queryset = queryset.filter(nuts__code__startswith=nuts)
 
         is_dpp = self.request.query_params.get('is_dpp', None)
         if is_dpp:
