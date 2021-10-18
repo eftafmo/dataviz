@@ -334,7 +334,6 @@ def sdg(request):
 
     allocation_query = ProgrammeAllocation.objects.filter(
         funding_period=period_id,
-        programme_area__isnull=False,
         sdg_no__isnull=False
     ).exclude(
         allocation=0,

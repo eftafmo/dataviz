@@ -6,6 +6,7 @@ export default {
   extends: Mechanisms,
   data() {
     return {
+      showTotals: false,
       allocationType: "net",
       aggregate_on: [
         "allocation",
@@ -31,6 +32,43 @@ export default {
         { source: "programmes", type: Object },
       ],
     };
+  },
+  methods: {
+    tooltipTemplate(ev, d) {
+      return (
+        `
+        <div class="title-container">
+          <span class="name">${d.name}</span>
+        </div>
+        <div class="subtitle-container">
+          <span class="donor-states">${d.donor_list}</span>
+        </div>
+        <ul>
+          <li>${this.currency(d.allocation)} ${
+          this.allocationType
+        } allocation</li>
+          <li>${this.getBeneficiaryCount(d.beneficiaries)} ` +
+        this.singularize(
+          `Beneficiary States`,
+          this.getBeneficiaryCount(d.beneficiaries)
+        ) +
+        `</li>
+          <li>${d.sectors.size} ` +
+        this.singularize(`sectors`, d.sectors.size) +
+        `</li>
+          <li>${d.areas.size} ` +
+        this.singularize(`programme areas`, d.areas.size) +
+        `</li>
+          <li>${d.programmes.size}  ` +
+        (d.programmes.size == 1
+          ? "programme/agreement"
+          : "programmes and agreements") +
+        `</li>
+        </ul>
+        <span class="action">Click to filter by financial mechanism</span>
+        `
+      );
+    },
   },
 };
 </script>
