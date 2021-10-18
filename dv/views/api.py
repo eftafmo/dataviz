@@ -1006,52 +1006,51 @@ class ProjectList(ListAPIView):
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
-        queryset = ProjectAllocation.objects.all()
+        queryset = Project.objects.all()
 
         period = self.request.GET.get('period', DEFAULT_PERIOD)  # used in FE
         period_id = FUNDING_PERIODS_DICT[period]  # used in queries
-        queryset = queryset.filter(funding_period=period_id)
+        queryset = queryset.filter(projectallocation__funding_period=period_id)
 
         programme = self.request.query_params.get('programme', None)
         if programme is not None:
-            queryset = queryset.filter(project__programme_id=programme)
+            queryset = queryset.filter(programme_id=programme)
 
         beneficiary = self.request.query_params.get('beneficiary', None)
         if beneficiary is not None:
-            queryset = queryset.filter(state_id=beneficiary)
+            queryset = queryset.filter(projectallocation__state_id=beneficiary)
 
         fm = FM_REVERSED_DICT.get(self.request.query_params.get('fm', None))
         if fm:
-            queryset = queryset.filter(financial_mechanism=fm)
+            queryset = queryset.filter(projectallocation__financial_mechanism=fm)
 
         programme_area_name = self.request.query_params.get('area', None)
         if programme_area_name:
-            queryset = queryset.filter(programme_area__name=programme_area_name)
+            queryset = queryset.filter(projectallocation__programme_area__name=programme_area_name)
         else:
             # Don't add sector name if programme area is present
             sector_name = self.request.query_params.get('sector', None)
             if sector_name:
-                queryset = queryset.filter(priority_sector__name=sector_name)
+                queryset = queryset.filter(projectallocation__priority_sector__name=sector_name)
 
         nuts = self.request.query_params.get('nuts', None)
         if nuts:
-            queryset = queryset.filter(project__nuts__code__startswith=nuts)
+            queryset = queryset.filter(nuts__code__startwith=nuts)
 
         is_dpp = self.request.query_params.get('is_dpp', None)
         if is_dpp:
-            queryset = queryset.filter(project__is_dpp=True)
+            queryset = queryset.filter(is_dpp=True)
 
         donor = self.request.query_params.get('donor', None)
         if is_dpp and donor:
             donor_name = DONOR_STATES_REVERSED.get(donor)
 
-            q = Q(project__organisation_roles__role_code='PJDPP')
+            q = Q(organisation_roles__role_code='PJDPP')
             if donor_name:
-                q &= Q(project__organisation_roles__organisation__country=donor_name)
+                q &= Q(organisation_roles__organisation__country=donor_name)
             else:
-                q &= ~Q(project__organisation_roles__organisation__country__in=EEA_DONOR_STATES.keys())
+                q &= ~Q(organisation_roles__organisation__country__in=EEA_DONOR_STATES.keys())
                 # Django ORM generates an unnecessary complicated query here
             queryset = queryset.filter(q)
 
-        project_list = queryset.values_list('project', flat=True).distinct()
-        return Project.objects.filter(code__in=project_list)
+        return queryset.distinct().order_by('code')
