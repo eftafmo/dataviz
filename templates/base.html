@@ -34,15 +34,17 @@
 
       <nav class="header-menu">
         {% with current_view=request.resolver_match.view_name %}
+        {% firstof PERIOD request.GET.period "2014-2021" as current_period%}
           {% for period in MENU %}
-            <a href="{{ period.url }}" class="period-item {% if period.id == PERIOD %}active{% endif %}">
+            <a href="{{ period.url }}" class="period-item {% if period.id == current_period %}active{% endif %}">
               {{ period.id }}
             </a>
-            <div class="period-sub-menu {% if period.id == PERIOD %}active{% endif %}">
+            <div class="period-sub-menu {% if period.id == current_period %}active{% endif %}">
+
               {% for scenario in period.scenarios %}
                 <a
                     href="{{ scenario.url }}"
-                    class="scenario-item {% if period.id == PERIOD and scenario.id == SCENARIO %}active{% endif %}"
+                    class="scenario-item {% if period.id == current_period and scenario.id == SCENARIO %}active{% endif %}"
                 >
                   {{ scenario.name }}
                 </a>
@@ -51,8 +53,8 @@
           {% endfor %}
           <form class="header-search" action="{% url view|search_view_name:current_view %}">
             <input type="search" placeholder="Search" name="q">
-            {% if PERIOD != 'compare' %}
-              <input type="text" name="period" hidden value="{{ PERIOD }}" />
+            {% if current_period != 'compare' %}
+              <input type="text" name="period" hidden value="{{ current_period }}" />
             {% endif %}
             <button type="submit" title="Search" name="page" value="1">
               <span class="icon icon-search"></span>
