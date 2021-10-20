@@ -25,7 +25,11 @@ function formatShort(value, formatInteger, formatFloat) {
   if (value >= 100 || Number.isInteger(value)) {
     return formatInteger(value) + suffix;
   } else {
-    return formatFloat(value) + suffix;
+    if (suffix) {
+      return formatFloat(value) + suffix;
+    } else {
+      return formatFloat(value) + "\xa0m";
+    }
   }
 }
 
@@ -50,7 +54,19 @@ export default {
       return formatShort(value, util.formatNumber, util.formatFloat);
     },
     shortCurrency(value) {
-      return formatShort(value, util.formatCurrency, util.formatCurrencyFloat);
+      if (value < 1) {
+        return formatShort(
+          value,
+          util.formatCurrency,
+          util.formatCurrencyFloatUnderOne
+        );
+      } else {
+        return formatShort(
+          value,
+          util.formatCurrency,
+          util.formatCurrencyFloat
+        );
+      }
     },
     singularize: util.singularize,
     pluralize: util.pluralize,
