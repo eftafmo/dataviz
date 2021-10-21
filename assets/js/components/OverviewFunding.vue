@@ -158,7 +158,7 @@ export default {
           link: `/${this.period}/projects/`,
           description:
             "Discover projects and initiatives, helping reduce social and economic " +
-            "disparities and strengthen bilateral relations",
+            "disparities and strengthen bilateral relations.",
           items: [
             {
               id: "proj",
