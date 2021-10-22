@@ -84,7 +84,7 @@ class Command(BaseCommand):
 
         if not funding_period or funding_period == "2004-2009":
             if json_path:
-                self.clean_for_period(funding_period, noinput)
+                self.clean_for_period("2004-2009", noinput)
                 self._import_2004_2009(json_path)
             else:
                 self.stdout.write(self.style.ERROR('A JSON file must be provided for '
@@ -92,14 +92,14 @@ class Command(BaseCommand):
 
         if not funding_period or funding_period == "2009-2014":
             if directory:
-                self.clean_for_period(funding_period, noinput)
+                self.clean_for_period("2009-2014", noinput)
                 self._import_2009_2014(directory)
             else:
                 self.stdout.write(self.style.ERROR('A directory containing xlsx files must '
                                                    'be provided for 2009-2014 import.'))
 
         if not funding_period or funding_period == "2014-2021":
-            self.clean_for_period(funding_period, noinput)
+            self.clean_for_period("2014-2021", noinput)
             self._import_2014_2021()
 
     def clean_for_period(self, funding_period, noinput):
