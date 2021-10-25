@@ -12,7 +12,7 @@ export default {
     return {
       hideIfEmpty: true,
       aggregate_by: ["beneficiary"],
-      aggregate_on: ["allocation"],
+      aggregate_on: ["allocation", "count"],
     };
   },
 
@@ -57,9 +57,10 @@ export default {
         </div>
         <ul>
           <li>
-            Bilateral Initiatives:
-            ${this.currency(value)}
-            net allocation
+            ${this.currency(value)} net allocation
+          </li>
+          <li>
+            ${d.count} ${this.singularize("Bilateral Initiatives", d.count)}
           </li>
         </ul>
         <span class="action">Click to filter by Beneficiary State</span>

@@ -7,7 +7,7 @@ from itertools import chain, product
 from django.views.decorators.http import require_GET
 from django.db.models import CharField, Q
 from django.db.models.expressions import F
-from django.db.models.aggregates import Sum
+from django.db.models.aggregates import Sum, Count
 from django.db.models.functions import Length
 from rest_framework.generics import ListAPIView
 
@@ -52,7 +52,11 @@ def bilateral_initiatives(request):
         list(
             BilateralInitiative.objects.filter(funding_period=period_id)
             .values('state_id')
-            .annotate(allocation=Sum('grant'), beneficiary=F('state_id'))
+            .annotate(
+                allocation=Sum('grant'),
+                count=Count(1),
+                beneficiary=F('state_id'),
+            )
         )
     )
 
