@@ -112,7 +112,11 @@ export default {
             },
             {
               id: "bilateral-fund",
-              amount: this.shortCurrency(this.aggregated.bilateral_fund),
+              amount: this.shortCurrency(
+                Math.trunc(this.aggregated.bilateral_fund).toString().length > 6
+                  ? this.aggregated.bilateral_fund
+                  : this.aggregated.bilateral_fund / 1000000
+              ),
               name: "Bilateral fund",
             },
           ],
@@ -154,7 +158,7 @@ export default {
           link: `/${this.period}/projects/`,
           description:
             "Discover projects and initiatives, helping reduce social and economic " +
-            "disparities and strengthen bilateral relations",
+            "disparities and strengthen bilateral relations.",
           items: [
             {
               id: "proj",

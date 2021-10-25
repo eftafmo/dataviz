@@ -18,7 +18,8 @@
                 class="filter-item"
                 @click="removeFilter(key)"
               >
-                {{ item.name }}: {{ item.value }}
+                {{ item.name == "SDG" ? item.name + ": " : "" }}
+                {{ item.name == "BS" ? getCountry(item.value) : item.value }}
                 <span class="icon icon-cross"></span>
               </div>
             </transition-group>
