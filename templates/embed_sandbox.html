@@ -46,7 +46,14 @@
       Component: <b>{{ selected_component }}</b>
     </li>
     <li>
-      Args: <b>{{ args }}</b>
+      Args:
+      <b>{{ args }}</b>
+      {% if not args %}
+        <b>no arguments</b>
+        <i>
+          (tip, any arguments you put in the URL of this page will be passed to the embed link)
+        </i>
+      {% endif %}
     </li>
   </ul>
   <div style="display: flex;">
