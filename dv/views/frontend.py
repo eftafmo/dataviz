@@ -114,6 +114,7 @@ def embed_sandbox(request, scenario=None, component=None, period="2014-2021"):
         except KeyError:
             raise Http404
 
+
     return render(
         request,
         "embed_sandbox.html",
@@ -125,6 +126,7 @@ def embed_sandbox(request, scenario=None, component=None, period="2014-2021"):
             "selected_period": period,
             "selected_scenario": scenario,
             "selected_component": component,
+            "args": request.GET.urlencode(),
         },
     )
 
@@ -605,6 +607,7 @@ class EmbedComponent(TemplateView):
             "datasource": self.request.build_absolute_uri(reverse(api_name)),
             "period": period,
             "origin": origin,
+            "embedScenario": scenario,
         }
 
         # this is ugly, nasty and not nice
@@ -622,7 +625,7 @@ class EmbedComponent(TemplateView):
             ]
         elif scenario == "goals" and component == "xmap":
             props["detailsDatasource"] = self.request.build_absolute_uri(
-                reverse("api:grants-beneficiary-detail", args=("XX",))
+                reverse("api:sdg-beneficiary-detail", args=("XX",))
             )
         elif scenario in ("grants", "projects") and component == "xmap":
             props["detailsDatasource"] = self.request.build_absolute_uri(

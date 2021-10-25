@@ -3,7 +3,7 @@ import debounce from "lodash.debounce";
 import Base from "./Base";
 
 // access filters directly before they get bound, to avoid triggering handlers
-import { FILTERS, SCENARIOFILTERS } from "./mixins/WithFilters";
+import { FILTERS, SCENARIOFILTERS, setFilters } from "./mixins/WithFilters";
 
 function getURL(obj) {
   // obj must have a .href property.
@@ -32,17 +32,6 @@ function getScenario(url) {
   return { period, scenario };
 }
 
-const hungaryAllowedScenarios = new Set([
-  "index",
-  // "funding",
-  // "global_goals",
-  // "cooperation",
-  // "projects",
-  "search",
-  "sectors",
-  "beneficiary_states",
-]);
-
 export default {
   extends: Base,
   props: {
@@ -50,28 +39,15 @@ export default {
   },
   beforeCreate() {
     // set filters from querystring.
-    const url = getURL(window.location),
-      params = url.searchParams,
-      { period, scenario } = getScenario(url);
+    const url = getURL(window.location);
+    const { period, scenario } = getScenario(url);
+    const params = Object.fromEntries(url.searchParams.entries());
 
-    const filters = SCENARIOFILTERS[scenario];
-
-    for (const name of filters) {
-      let param = params.get(name) || null;
-      if (param) {
-        param = param.replace(/\+/g, " ");
-      }
-
-      if (
-        name === "beneficiary" &&
-        period === "2014-2021" &&
-        param === "HU" &&
-        !hungaryAllowedScenarios.has(scenario)
-      )
-        continue;
-
-      FILTERS[name] = param;
-    }
+    setFilters(
+      scenario,
+      period,
+      Object.fromEntries(url.searchParams.entries())
+    );
 
     this.scenario = scenario;
   },

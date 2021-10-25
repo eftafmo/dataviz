@@ -21,7 +21,7 @@
           <optgroup label="{{ scenario }} ({{ period }})">
             {% for component in components.keys %}
               <option
-                  value="{% url 'frontend:embed_sandbox' scenario=scenario component=component period=period %}"
+                  value="{% url 'frontend:embed_sandbox' scenario=scenario component=component period=period %}?{{ args }}"
                   {% if component == selected_component and scenario == selected_scenario and period == selected_period %}
                   selected
                   {% endif %}
@@ -34,13 +34,26 @@
       {% endfor %}
     </select>
   </label>
-  <span>Currently selected:</span>
-  <b>{{ selected_scenario }} ({{ selected_period }}): {{ selected_component }}</b>
+  <p>Currently selected:</p>
+  <ul>
+    <li>
+      Scenario: <b>{{ selected_scenario }}</b>
+    </li>
+    <li>
+      Period: <b>{{ selected_period }}</b>
+    </li>
+    <li>
+      Component: <b>{{ selected_component }}</b>
+    </li>
+    <li>
+      Args: <b>{{ args }}</b>
+    </li>
+  </ul>
   <div style="display: flex;">
     {% if selected_scenario and selected_component %}
       <div style="margin-top: 20px; overflow: hidden; border: 1px solid; min-width: 500px; padding: 10px;">
         <script
-            src="{% url 'frontend:embed' scenario=selected_scenario component=selected_component period=selected_period %}"
+            src="{% url 'frontend:embed' scenario=selected_scenario component=selected_component period=selected_period %}?{{ args }}"
             async
         ></script>
       </div>

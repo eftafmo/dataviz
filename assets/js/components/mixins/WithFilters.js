@@ -23,6 +23,46 @@ export const SCENARIOFILTERS = {
   beneficiary_states: ["beneficiary"],
 };
 
+// aliases for the backend
+SCENARIOFILTERS.grants = SCENARIOFILTERS.funding;
+SCENARIOFILTERS.partners = SCENARIOFILTERS.cooperation;
+SCENARIOFILTERS.goals = SCENARIOFILTERS.global_goals;
+SCENARIOFILTERS.compare = SCENARIOFILTERS.sectors;
+
+const hungaryAllowedScenarios = new Set([
+  "index",
+  // "funding",
+  // "grants,
+  // "global_goals",
+  // "cooperation",
+  // "partners",
+  // "projects",
+  "search",
+  "sectors",
+  "beneficiary_states",
+]);
+
+export function setFilters(scenario, period, params) {
+  const filters = SCENARIOFILTERS[scenario];
+
+  for (const name of filters) {
+    let param = params[name] || null;
+    if (param) {
+      param = param.replace(/\+/g, " ");
+    }
+
+    if (
+      name === "beneficiary" &&
+      period === "2014-2021" &&
+      param === "HU" &&
+      !hungaryAllowedScenarios.has(scenario)
+    )
+      continue;
+
+    FILTERS[name] = param;
+  }
+}
+
 export default {
   data() {
     return {

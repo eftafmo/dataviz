@@ -36,10 +36,11 @@
 import { default as Popper } from "popper.js";
 import { default as Clipboard } from "clipboard";
 
-import { FILTERS } from "../mixins/WithFilters";
-import { downloadDataUrl, downloadFile } from "../../lib/util";
+import WithFilters from "../mixins/WithFilters";
+import { downloadFile } from "../../lib/util";
 
 export default {
+  mixins: [WithFilters],
   props: {
     tag: {
       type: String,
@@ -100,14 +101,10 @@ export default {
     url() {
       const url = new URL(this.path, window.location.href);
 
-      for (const f in FILTERS) {
-        const v = FILTERS[f];
-        if (v === null) continue;
-
-        url.searchParams.set(f, v);
-      }
-
-      return url.href;
+      Object.entries(this.filters).forEach(([k, v]) => {
+        if (v) url.searchParams.append(k, v);
+      });
+      return url.toString();
     },
     code() {
       if (this.target === null) return "";

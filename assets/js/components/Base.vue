@@ -5,7 +5,7 @@
 
 <script>
 import BaseMixin from "./mixins/Base";
-import WithFiltersMixin from "./mixins/WithFilters";
+import WithFiltersMixin, { setFilters } from "./mixins/WithFilters";
 import { getAssetUrl } from "../lib/util";
 
 export default {
@@ -19,6 +19,11 @@ export default {
     datasourcePeriods: {
       type: Array,
       default: () => [],
+      required: false,
+    },
+    embedScenario: {
+      type: String,
+      default: null,
       required: false,
     },
   },
@@ -114,7 +119,14 @@ export default {
       },
     },
   },
-
+  beforeCreate() {
+    // Set filters from the opts given by the generated JS
+    // file. As we don't have access to the URL where this
+    // was loaded from while embedded.
+    if (this.opts && this.period && this.embedScenario) {
+      setFilters(this.embedScenario, this.period, this.opts);
+    }
+  },
   created() {
     // fetch data only if no initial data provided,
     // and there is an external datasource
@@ -128,7 +140,7 @@ export default {
     },
     getBeneficiaryCount(beneficiaries) {
       // Exclude "Non-country specific"
-      return Array.from(beneficiaries).filter(
+      return Array.from(beneficiaries || []).filter(
         (countryCode) => countryCode !== "XX"
       ).length;
     },
