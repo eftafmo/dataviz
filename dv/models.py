@@ -128,6 +128,10 @@ class Programme(models.Model):
 
     @cached_property
     def url(self):
+        # https://helpdesk.eaudeweb.ro/issues/11345
+        # TA programmes (country-TA) don't have a web page in 2014-2021
+        if self.funding_period == 3 and self.is_tap:
+            return
         return f"https://eeagrants.org/archive/{self.get_funding_period_display()}/programmes/{self.code}"
 
 
