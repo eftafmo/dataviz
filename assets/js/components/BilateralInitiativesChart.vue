@@ -57,7 +57,7 @@ export default {
         </div>
         <ul>
           <li>
-            ${this.currency(value)} net allocation
+            ${this.currency(value)} contracted
           </li>
           <li>
             ${d.count} ${this.singularize("Bilateral Initiatives", d.count)}
