@@ -513,9 +513,13 @@ class _TypeaheadFacetedSearchView(object):
 
     def get_data(self, context):
         form = context["form"]
-        facets = self.queryset.facet_counts()["fields"][form.auto_name]
-        # facets format: [(value, count), ...]
-        facets.sort(key=lambda facet: facet[1], reverse=True)
+        facets = []
+        search_terms = form.auto_value.lower().split()
+        # all auto fields are collections and ES returns *all* the values in the collection
+        # corresponding to one document, if one of them matches the search term
+        for value, count in self.queryset.facet_counts()["fields"][form.auto_name]:
+            if all([term in value.lower() for term in search_terms]):
+                facets.append((value, count))
 
         paginator = Paginator(facets, self.results_limit)
         page = self.request.GET.get("page", 1)

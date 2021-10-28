@@ -121,6 +121,7 @@ class ProgrammeIndex(SearchIndex, Indexable):
     programme_name = fields.FacetMultiValueField()
     programme_status = fields.FacetMultiValueField(model_attr="status")
     organisation = fields.FacetMultiValueField()
+    organisation_auto = fields.EdgeNgramField()
 
     kind = fields.FacetCharField()
 
@@ -208,6 +209,11 @@ class ProgrammeIndex(SearchIndex, Indexable):
             if self.prepared_data["outcome_ss"]
             else None
         )
+        self.prepared_data["organisation_auto"] = (
+            " ".join(self.prepared_data["organisation"])
+            if self.prepared_data["organisation"]
+            else None
+        )
         return self.prepared_data
 
 
@@ -224,6 +230,7 @@ class ProjectIndex(SearchIndex, Indexable):
     outcome_ss_auto = fields.EdgeNgramField()
     organisation = fields.FacetMultiValueField()
     organisation_auto = fields.EdgeNgramField()
+
     kind = fields.FacetCharField()
 
     # specific facets
