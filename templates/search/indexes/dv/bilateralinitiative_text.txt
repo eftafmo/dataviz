@@ -1,0 +1,4 @@
+{{ object.title }}
+{{ object.initial_description }}
+{{ object.results_description }}
+{{ object.promoter_organization }}

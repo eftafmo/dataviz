@@ -1,0 +1,85 @@
+{% extends "dataviz.html" %}
+
+{% block top %}
+{% endblock %}
+
+{% block main %}
+
+  <h1 class="page-title">Global Goals</h1>
+
+  <div class="page-description">
+    The United Nations’ Sustainable Development Goals reflect a shared global vision for a peaceful and prosperous world
+    through sustainable and fair development. Through the Grants, the Donor States empower public authorities, civil
+    society, the private sector and academia in the Beneficiary States to take concrete actions to deliver on the shared
+    commitment to fulfilling the UN Sustainable Development Goals.
+  </div>
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="financial-mechanisms">
+      <mechanisms :initial="dataset" period="{{ PERIOD }}">
+        <template #title>
+          <h2>Funding by Financial Mechanism <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
+        </template>
+      </mechanisms>
+    </div>
+
+    <div class="grant-dataviz" id="priority-sectors">
+      <global_goals_chart :initial="dataset" period="{{ PERIOD }}"></global_goals_chart>
+    </div>
+
+  </div>
+
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="funding-map">
+      <xmap
+          :initial="dataset"
+          period="{{ PERIOD }}"
+          details-datasource="{% url "api:sdg-beneficiary-detail" "XX" %}"
+      >
+        <template #title>
+          <h2>Funding map</h2>
+        </template>
+      </xmap>
+    </div>
+
+    <div class="grant-dataviz" id="beneficiary-states">
+      <beneficiaries
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Funding across Beneficiary States</h2>
+        </template>
+      </beneficiaries>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block aside %}
+
+  <sidebar
+      class="sticky"
+      :initial="dataset"
+      period="{{ PERIOD }}"
+  >
+  </sidebar>
+
+{% endblock %}
+
+{% block finally %}
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.Goals,
+      {
+        datasource: "/api/sdg.json",
+        datasourcePeriods: ["{{ PERIOD }}"]
+      }
+    ).mount("#content");
+  });
+  </script>
+{% endblock %}

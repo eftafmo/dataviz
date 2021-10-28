@@ -1,30 +1,33 @@
 <li class="results-list">
   <div class="search-result search-result-news">
     <div class="news-container clearfix">
-    
+
       <div class="news-header clearfix">
         <div class="news-header-body">
           <div class="date_country">
             <span class="country_status">
-                            <span class="country">
-                            {% for state in news.state_name %}
-                              <img src="/assets/sprites/flags/flag-{{ state|lower|cut:" " }}.png"
-                                   alt="{{ state }} flag"
-                                   height="20px">&nbsp;{{ state }}
-                            {% endfor %}</span>
+                <span class="country">
+                {% for state in news.state_name %}
+                  {% if state in states_with_flags %}
+                    <img
+                        src="/assets/sprites/flags/flag-{{ state|lower|cut:" " }}.png"
+                        alt="{{ state }} flag"
+                        height="20px"
+                    >&nbsp;{{ state }}
+                  {% endif %}
+                {% endfor %}</span>
               </span>
-              <span>{{ news.created_dt | date:"d F Y" }}</span>
+            <span>{{ news.created_dt | date:"d F Y" }}</span>
           </div>
           <div>
-           <h4 class="title">
+            <h4 class="title">
               {% if news.url %}
                 <a href="{{ news.url }}" target="_blank">{{ news.name }}</a>
               {% else %}
                 <span>{{ news.name }}</span>
               {% endif %}
             </h4>
-         
-          
+
             <div class="news_summary">{{ news.summary }}</div>
           </div>
           <img src="{{ news.image }}" style="column-span: 1">

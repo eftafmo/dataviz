@@ -11,14 +11,17 @@
     </h3>
 
     <div class="country_status">
-              <span class="country">
-              {% for state in programme.state_name|sort %}
-                <img src="/assets/sprites/flags/flag-{{ state|lower|cut:" " }}.png"
-                     alt="{{ state }} flag"
-                     height="20px">
-                <span>{{ state }}</span>{% if not forloop.last %}, {% endif %}
-              {% endfor %}
-              </span>
+      <span class="country">
+      {% for state in programme.state_name|sort %}
+        {% if state in states_with_flags %}
+          <img
+              src="/assets/sprites/flags/flag-{{ state|lower|cut:" " }}.png"
+              alt="{{ state }} flag"
+          >
+          <span>{{ state }}</span>{% if not forloop.last %}, {% endif %}
+        {% endif %}
+      {% endfor %}
+      </span>
       {% if programme.state_name|length == 1 %} | {% else %}<br>
         <b>Status: </b>{% endif %}
       <span title="Programme status">{{ programme.programme_status.0 }}</span>
@@ -28,7 +31,7 @@
       <b>Funded by: </b>
       {% for fm in programme.financial_mechanism_ss %}
         <span>{{ fm }}</span>{% if not forloop.last %} and {% endif %}
-      {% endfor %}
+      {% endfor %} ({{ programme.period.0 }})
     </div>
     {% with programme.priority_sector_ss|length as num_sectors %}
       {% if num_sectors == 1 %}

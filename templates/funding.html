@@ -1,0 +1,91 @@
+{% extends "dataviz.html" %}
+
+{% block top %}
+{% endblock %}
+
+{% block main %}
+
+  <h1 class="page-title">Our Grants</h1>
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="financial-mechanisms">
+      <mechanisms :initial="dataset" period="{{ PERIOD }}">
+        <template #title>
+          <h2>Funding by Financial Mechanism <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
+        </template>
+      </mechanisms>
+    </div>
+
+    {% if PERIOD == "2014-2021" %}
+      <div class="grant-dataviz" id="thematic-chart">
+        <thematic_bar_chart :initial="dataset" period="{{ PERIOD }}"></thematic_bar_chart>
+      </div>
+    {% endif %}
+
+    <div class="grant-dataviz" id="priority-sectors">
+      <sectors
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Allocation by sector</h2>
+        </template>
+      </sectors>
+    </div>
+
+  </div>
+
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="funding-map">
+      <xmap
+          :initial="dataset"
+          period="{{ PERIOD }}"
+          details-datasource="{% url "api:grants-beneficiary-detail" "XX" %}"
+      >
+        <template #title>
+          <h2>Funding map</h2>
+        </template>
+      </xmap>
+    </div>
+
+    <div class="grant-dataviz" id="beneficiary-states">
+      <beneficiaries
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Funding across Beneficiary States</h2>
+        </template>
+      </beneficiaries>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block aside %}
+
+  <sidebar
+      class="sticky"
+      :initial="dataset"
+      period="{{ PERIOD }}"
+  >
+  </sidebar>
+
+{% endblock %}
+
+{% block finally %}
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.Grants,
+      {
+        datasource: "/api/grants.json",
+        datasourcePeriods: ["{{ PERIOD }}"]
+      }
+    ).mount("#content");
+  });
+  </script>
+{% endblock %}

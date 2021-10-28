@@ -1,99 +1,119 @@
-import io
+"""Import NUTS data into the DB"""
+
+import csv
 import logging
-import pickle
-import pyexcel
-import os.path
-import zipfile
-from functools import partial
-from itertools import cycle
-from urllib.parse import urlparse
-from urllib.request import urlopen
-from django.core.management.base import BaseCommand, CommandError
-from django.db import IntegrityError
+
+import requests
+from django.core.management.base import BaseCommand
 
 from dv.models import NUTS
-from dv.lib.utils import is_iter
+from dv.models import NUTSVersion
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
+API_BASE = "https://gisco-services.ec.europa.eu/distribution/v2/nuts"
 
-NUTS_FILE = "http://ec.europa.eu/eurostat/ramon/documents/nuts/NUTS_2006.zip"
+# Some Organisations have fake NUTS code, so include them here as well.
+FAKE_NUTS = {
+    "UA010": "Ukraine",
+    "MD010": "Moldova, Republic of",
+    "RS0GF": "Serbia",
+    "RS-061": "Serbia",
+    "RU010": "Russian Federation",
+}
+
+
+def get_file_list(year):
+    logger.debug("Getting dataset list for %s", year)
+    resp = requests.get(f"{API_BASE}/datasets.json")
+    resp.raise_for_status()
+    dataset = resp.json()
+
+    for key, values in dataset.items():
+        if key.split("-")[-1] == year:
+            files = values["files"]
+            break
+    else:
+        raise RuntimeError(f"Unable to find files for {year}")
+
+    logger.debug("Getting file list for %s", files)
+    resp = requests.get(f"{API_BASE}/{files}")
+    resp.raise_for_status()
+    return resp.json()
 
 
 class Command(BaseCommand):
-    help = 'Import the nuts file'
+    help = __doc__
 
-    def handle(self, *args, **options):
+    def add_arguments(self, parser):
+        parser.add_argument("year", help="NUTS version to import")
 
-        fname = os.path.join(
-            os.getcwd(),
-            os.path.basename(urlparse(NUTS_FILE).path)
-        )
-        cname = fname + '.cache'
-        if os.path.exists(cname):
-            with open(cname, 'rb') as cached:
-                nuts_book = pickle.load(cached)
-        else:
-            with urlopen(NUTS_FILE) as f:
-                with zipfile.ZipFile(io.BytesIO(f.read())) as z:
-                    zf = z.namelist()[0]
-                    nuts_book = pyexcel.get_book(file_content=z.open(zf).read(),
-                                                 file_type=zf.split('.')[-1])
-            with open(cname, 'wb') as cached:
-                pickle.dump(nuts_book, cached)
+    def handle(self, year, verbosity, **options):
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+        handler.setLevel(logging.DEBUG)
+        logger.addHandler(handler)
+        logger.setLevel(logging.WARNING)
 
+        if int(verbosity) > 0:
+            logger.setLevel(logging.INFO)
+        if int(verbosity) > 1:
+            logger.setLevel(logging.DEBUG)
 
-        self.stderr.style_func = None
-        def _write(*args, **kwargs):
-            self.stderr.write(*args, **kwargs)
-            self.stderr.flush()
-        _inline = partial(_write, ending='')
-        _back = chr(8)
-        throbber = cycle(_back + c for c in r'\|/-')
+        file_path = get_file_list(year)["csv"][f"NUTS_AT_{year}.csv"]
 
-        # column names for nuts
-        for sheet in nuts_book:
-            sheet.name_columns_by_row(0)
+        logger.info("Getting NUTS codes: %s", file_path)
+        resp = requests.get(f"{API_BASE}/{file_path}")
+        resp.raise_for_status()
+        lines = resp.content.decode("utf8").splitlines()
 
-        def _convert_nulls(record):
-            for k, v in record.items():
-                if v in ('NULL', 'None'):
-                    record[k] = None
+        nuts_version = NUTSVersion.objects.get_or_create(
+            year=year, defaults={"year": year}
+        )[0]
 
-        model = NUTS
+        nuts_0 = []
+        created_count = 0
+        reader = csv.DictReader(lines)
+        for line in reader:
+            if len(line["NUTS_ID"]) == 2:
+                nuts_0.append(line["NUTS_ID"])
 
-        for idx, import_src in enumerate(model.IMPORT_SOURCES):
-            sheet_name = import_src['src']
-            sheet = nuts_book[sheet_name]
+            name, latin_name = line["NUTS_NAME"], line["NAME_LATN"]
+            if name == latin_name:
+                label = name
+            else:
+                label = f"{name} / {latin_name}"
 
-            _inline('importing "%s" into %s …  ' % (sheet.name, model._meta.label))
+            obj, created = NUTS.objects.update_or_create(
+                {"label": label}, code=line["NUTS_ID"]
+            )
+            obj.nuts_versions.add(nuts_version)
+            created_count += created
+            logger.info("NUTS %s, created=%s", obj, created)
 
-            count = 0
+        logger.info("Created %s out of %s", created_count, len(lines) - 1)
 
-            def _save(obj):
-                nonlocal count
-                try:
-                    obj.save()
-                    count += 1
-                except IntegrityError as e:
-                    # NOTE This is backend specific; might change on switch, say, postgres
-                    if 'UNIQUE constraint failed:' in str(e):
-                        pass
-                    else:
-                        raise
+        # Extra-Regio codes are used to indicate there is no region.
+        # Add them as well to the DB for integrity checks.
+        created_count = 0
+        for country_code in nuts_0:
+            for level in (1, 2, 3):
+                code = country_code + "Z" * level
+                label = f"Extra-Regio NUTS {level}"
 
-            for record in sheet.records:
-                _inline(next(throbber))
-                _convert_nulls(record)
+                obj, created = NUTS.objects.update_or_create(
+                    {"label": label}, code=code
+                )
+                obj.nuts_versions.add(nuts_version)
+                created_count += created
+                logger.info("NUTS extra %s, created=%s", obj, created)
+        logger.info("Created Extra-Regio %s out of %s", created_count, len(nuts_0 * 3))
 
-                obj = model.from_data(record, idx)
-                if obj is None:
-                    # trust the class, it knows why it refused object creation
-                    continue
-
-                if is_iter(obj):
-                    for _obj in obj:
-                        _save(_obj)
-                else:
-                    _save(obj)
-
-            _write(_back + "done: %d" % count, self.style.SUCCESS)
+        created_count = 0
+        for code, label in FAKE_NUTS.items():
+            obj, created = NUTS.objects.update_or_create(
+                {"label": label}, code=code
+            )
+            obj.nuts_versions.add(nuts_version)
+            created_count += created
+            logger.info("NUTS extra %s, created=%s", obj, created)
+        logger.info("Created Fake NUTS codes %s out of %s", created_count, len(FAKE_NUTS))

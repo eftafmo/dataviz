@@ -1,0 +1,3691 @@
+[
+  {
+    "allocation": "5449061.00",
+    "project_count": 21,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "26230215.00",
+    "project_count": 8,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "10308080.00",
+    "project_count": 7,
+    "programmes": {
+      "PL17": "PL17"
+    },
+    "id": "PL",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2408551.00",
+    "project_count": 6,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1124662.00",
+    "project_count": 3,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "6831776.00",
+    "project_count": 2,
+    "programmes": {
+      "PL03": "PL03"
+    },
+    "id": "PL",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "17345000.00",
+    "project_count": 261,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2798100.00",
+    "project_count": 11,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "PL",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "10636624.00",
+    "project_count": 6,
+    "programmes": {
+      "PL16": "PL16"
+    },
+    "id": "PL",
+    "area": "Judicial capacity-building and cooperation",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2323390.00",
+    "project_count": 2,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2868318.00",
+    "project_count": 19,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5426075.00",
+    "project_count": 6,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12916552.00",
+    "project_count": 10,
+    "programmes": {
+      "PL07": "PL07",
+      "PL13": "PL13"
+    },
+    "id": "PL",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57351575.00",
+    "project_count": 106,
+    "programmes": {
+      "PL12": "PL12"
+    },
+    "id": "PL",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "6755357.00",
+    "project_count": 23,
+    "programmes": {
+      "PL15": "PL15"
+    },
+    "id": "PL",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "178448.00",
+    "project_count": 3,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6549137.00",
+    "project_count": 2,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL1",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "130820.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL1",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "63210.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL1",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2689922.00",
+    "project_count": 3,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL11",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4713621.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL11",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "523461.00",
+    "project_count": 1,
+    "programmes": {
+      "PL03": "PL03"
+    },
+    "id": "PL11",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "196791.00",
+    "project_count": 5,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL11",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "370571.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL11",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2813748.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL11",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "167279.00",
+    "project_count": 4,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL11",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "372961.00",
+    "project_count": 7,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL11",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "376259.00",
+    "project_count": 10,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL113",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL113",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "286593.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL113",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "344100.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL113",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "574959.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL113",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "272399.00",
+    "project_count": 5,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL113",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "288386.00",
+    "project_count": 5,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL113",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "114774.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL114",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2340001.00",
+    "project_count": 2,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL114",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "825589.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL114",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "104443.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL114",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "495900.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL115",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "88550.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL117",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1684185.00",
+    "project_count": 4,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL12",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4820295.00",
+    "project_count": 2,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL12",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5578511.00",
+    "project_count": 12,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL12",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6475536.00",
+    "project_count": 6,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL12",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "4308108.00",
+    "project_count": 2,
+    "programmes": {
+      "PL03": "PL03"
+    },
+    "id": "PL12",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "806297.00",
+    "project_count": 18,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL12",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "119023.00",
+    "project_count": 2,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL12",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "841366.00",
+    "project_count": 2,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL12",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "218068.00",
+    "project_count": 1,
+    "programmes": {
+      "PL15": "PL15"
+    },
+    "id": "PL12",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "328656.00",
+    "project_count": 14,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL12",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "928053.00",
+    "project_count": 19,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL12",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "182497.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL121",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "962500.00",
+    "project_count": 2,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL121",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "34280.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL122",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "318976.00",
+    "project_count": 1,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL127",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3890668.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL127",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "48981.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL127",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1407772.00",
+    "project_count": 27,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL127",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "950933.00",
+    "project_count": 6,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL127",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2929966.00",
+    "project_count": 2,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL127",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "160858.00",
+    "project_count": 1,
+    "programmes": {
+      "PL15": "PL15"
+    },
+    "id": "PL127",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "382820.00",
+    "project_count": 9,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL127",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "918648.00",
+    "project_count": 10,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL127",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "48509.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL128",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "17289.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL129",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "277438.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL129",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "828053.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL129",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "72809.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL12A",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "210000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL12A",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "211261.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL12A",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "655377.00",
+    "project_count": 2,
+    "programmes": {
+      "PL07": "PL07",
+      "PL13": "PL13"
+    },
+    "id": "PL12A",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1302199.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL2",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "260571.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL2",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "371034.00",
+    "project_count": 2,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL2",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1367638.00",
+    "project_count": 2,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL21",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2860757.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL21",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5396825.00",
+    "project_count": 11,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL21",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "10609646.00",
+    "project_count": 6,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL21",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "864213.00",
+    "project_count": 18,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL21",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "912001.00",
+    "project_count": 5,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL21",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "520650.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL21",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1656088.00",
+    "project_count": 2,
+    "programmes": {
+      "PL07": "PL07",
+      "PL13": "PL13"
+    },
+    "id": "PL21",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "258696.00",
+    "project_count": 9,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL21",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "919633.00",
+    "project_count": 14,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL21",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "903447.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL213",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "614001.00",
+    "project_count": 11,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL213",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1475004.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL213",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "469025.00",
+    "project_count": 3,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL213",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144647.00",
+    "project_count": 2,
+    "programmes": {
+      "PL12": "PL12"
+    },
+    "id": "PL213",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "165381.00",
+    "project_count": 5,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL213",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "385772.00",
+    "project_count": 6,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL213",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "43121.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL214",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "660592.00",
+    "project_count": 1,
+    "programmes": {
+      "PL03": "PL03"
+    },
+    "id": "PL214",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "164829.00",
+    "project_count": 5,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL214",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "438568.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL214",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4004957.00",
+    "project_count": 2,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL214",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "224790.00",
+    "project_count": 7,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL215",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "235000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL215",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2003302.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL215",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "162069.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL216",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "297000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL216",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "197510.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL216",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "914312.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL216",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "43299.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL217",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "181539.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL217",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2495030.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL22",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9058028.00",
+    "project_count": 14,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL22",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "203665.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL22",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "729418.00",
+    "project_count": 14,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL22",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "444344.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL22",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "121389.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL22",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "249950.00",
+    "project_count": 10,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL22",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "333636.00",
+    "project_count": 13,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL22",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "170000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL224",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "76280.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL224",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "119347.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL225",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "82911.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL225",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "82895.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL227",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "17769.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL227",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "45848.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL228",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "102299.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL228",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "881001.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL229",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "7900.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL229",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5015.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL229",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "55078.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL22A",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "89155.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL22A",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "246946.00",
+    "project_count": 5,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL22A",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "27356.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL22B",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1026501.00",
+    "project_count": 2,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL22B",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "212094.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL22C",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2630363.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL3",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "175289.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL3",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "207470.00",
+    "project_count": 1,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL31",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "38225.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL31",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1167671.00",
+    "project_count": 3,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL31",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "185766.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL31",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "489386.00",
+    "project_count": 8,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL31",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "161294.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL31",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "92324.00",
+    "project_count": 8,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL31",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "58605.00",
+    "project_count": 8,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL31",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "69056.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL311",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "44828.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL312",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "82514.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL312",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "306713.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL312",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "28096.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL314",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "625012.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL314",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "372297.00",
+    "project_count": 8,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL314",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "817500.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL314",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "418557.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL314",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136583.00",
+    "project_count": 5,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL314",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "519022.00",
+    "project_count": 7,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL314",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "61754.00",
+    "project_count": 2,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL315",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "45722.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL315",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "480764.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL315",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "948911.00",
+    "project_count": 4,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL32",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4113047.00",
+    "project_count": 8,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL32",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "426841.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL32",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "259958.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL32",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "28875.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL32",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "18330.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL32",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1100000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL323",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "87950.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL323",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4508.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL323",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "12468.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL325",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "676000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL325",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2381016.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL325",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "11120.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL325",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "125723.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL325",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "16575.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL326",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1315000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL326",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "274532.00",
+    "project_count": 1,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL33",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4488704.00",
+    "project_count": 6,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL33",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "33455.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL33",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "98204.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL33",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "345190.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL33",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "14898.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL331",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2509105.00",
+    "project_count": 10,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL34",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "23140.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL34",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "516285.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL34",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "73043.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL34",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "177496.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL34",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "81464.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL34",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "11506.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL34",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7304.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL34",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "145289.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL343",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "355475.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL343",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9274.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL343",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "43746.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL343",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "84167.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL344",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2142261.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL345",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "379325.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL345",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "83545.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL4",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3104474.00",
+    "project_count": 5,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL41",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3147116.00",
+    "project_count": 4,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL41",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "521053.00",
+    "project_count": 2,
+    "programmes": {
+      "PL03": "PL03"
+    },
+    "id": "PL41",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "219801.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL41",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "416537.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL41",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1134552.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL41",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6129725.00",
+    "project_count": 3,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL41",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "290543.00",
+    "project_count": 5,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL41",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "184432.00",
+    "project_count": 5,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL41",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "679197.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL411",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "468313.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL411",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "37111.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL414",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "315995.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL414",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "115759.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL414",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "267277.00",
+    "project_count": 5,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL415",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "301135.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL415",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "237347.00",
+    "project_count": 4,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL415",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "490333.00",
+    "project_count": 4,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL415",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "93138.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL416",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1274182.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL416",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "220000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL417",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "456758.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL417",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "98552.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL418",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "781000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL418",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "756309.00",
+    "project_count": 1,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL42",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4764659.00",
+    "project_count": 8,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL42",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5281330.00",
+    "project_count": 4,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL42",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "42823.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL42",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "90520.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL42",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2482894.00",
+    "project_count": 2,
+    "programmes": {
+      "PL07": "PL07",
+      "PL13": "PL13"
+    },
+    "id": "PL42",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "178404.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL42",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "88952.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL42",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "56466.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL42",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "123993.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL422",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1094500.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL422",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "416239.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL422",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1151876.00",
+    "project_count": 2,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL422",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "75597.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL424",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "38600.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL424",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131430.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL424",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34699.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL424",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "55644.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL425",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "201701.00",
+    "project_count": 1,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL43",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL43",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "8799497.00",
+    "project_count": 3,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL43",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "98790.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL43",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "374896.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL43",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "244914.00",
+    "project_count": 1,
+    "programmes": {
+      "PL15": "PL15"
+    },
+    "id": "PL43",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "77007.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL431",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "608504.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL431",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "101130.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL432",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1200000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL432",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "309237.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL432",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "117000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL5",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1981625.00",
+    "project_count": 6,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL51",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7005227.00",
+    "project_count": 3,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL51",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4124748.00",
+    "project_count": 9,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL51",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6145176.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL51",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "372184.00",
+    "project_count": 7,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL51",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "181401.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL51",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1196165.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL51",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1327970.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL51",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34216.00",
+    "project_count": 3,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL51",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "140875.00",
+    "project_count": 4,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL51",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "299355.00",
+    "project_count": 8,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL514",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "234225.00",
+    "project_count": 3,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL514",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "293138.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL514",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "110115.00",
+    "project_count": 3,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL514",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "276243.00",
+    "project_count": 4,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL514",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "16876.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL516",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "563595.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL516",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "28179.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL517",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "14885.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL517",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4710426.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL517",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "85625.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL518",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "370000.00",
+    "project_count": 2,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL518",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "793927.00",
+    "project_count": 2,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL518",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "829099.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL52",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "533549.00",
+    "project_count": 3,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL52",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "39121.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL52",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "182544.00",
+    "project_count": 1,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL52",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "8148.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL52",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5172.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL52",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "453312.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL521",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "10240.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL521",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6500.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL521",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "153108.00",
+    "project_count": 1,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL522",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1243438.00",
+    "project_count": 4,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL61",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "426538.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL61",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6780297.00",
+    "project_count": 4,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL61",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "308720.00",
+    "project_count": 6,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL61",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57678.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL61",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "508902.00",
+    "project_count": 6,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL61",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "25040.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL613",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "334838.00",
+    "project_count": 8,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL613",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "920001.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL613",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "448644.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL613",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "203450.00",
+    "project_count": 2,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL613",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "296381.00",
+    "project_count": 2,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL613",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "358000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL614",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "500000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL615",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "239274.00",
+    "project_count": 1,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL62",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2684203.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL62",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "86244.00",
+    "project_count": 2,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL62",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "6476393.00",
+    "project_count": 12,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL62",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "839437.00",
+    "project_count": 6,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL62",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "547294.00",
+    "project_count": 1,
+    "programmes": {
+      "PL03": "PL03"
+    },
+    "id": "PL62",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "296796.00",
+    "project_count": 6,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL62",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "350059.00",
+    "project_count": 2,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL62",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "161092.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL62",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "110389.00",
+    "project_count": 2,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL621",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "413703.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL621",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "220592.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL622",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12300.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL622",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1612338.00",
+    "project_count": 1,
+    "programmes": {
+      "PL07": "PL07"
+    },
+    "id": "PL622",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "301063.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL622",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "33642.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL622",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "41714.00",
+    "project_count": 3,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL623",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "783047.00",
+    "project_count": 1,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL623",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1195343.00",
+    "project_count": 4,
+    "programmes": {
+      "PL02": "PL02"
+    },
+    "id": "PL63",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3877467.00",
+    "project_count": 1,
+    "programmes": {
+      "PL08": "PL08"
+    },
+    "id": "PL63",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "27063.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL63",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2644043.00",
+    "project_count": 5,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL63",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4889188.00",
+    "project_count": 2,
+    "programmes": {
+      "PL04": "PL04"
+    },
+    "id": "PL63",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "310958.00",
+    "project_count": 7,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL63",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "418467.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL63",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "666374.00",
+    "project_count": 4,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL63",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1014358.00",
+    "project_count": 2,
+    "programmes": {
+      "PL13": "PL13"
+    },
+    "id": "PL63",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "388628.00",
+    "project_count": 7,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL63",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "246696.00",
+    "project_count": 7,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL63",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "46456.00",
+    "project_count": 1,
+    "programmes": {
+      "PL14": "PL14"
+    },
+    "id": "PL633",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "195176.00",
+    "project_count": 4,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL633",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "224662.00",
+    "project_count": 5,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL634",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "235000.00",
+    "project_count": 1,
+    "programmes": {
+      "PL18": "PL18"
+    },
+    "id": "PL634",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "140378.00",
+    "project_count": 2,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PL634",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "79132.00",
+    "project_count": 1,
+    "programmes": {
+      "PL12": "PL12"
+    },
+    "id": "PL634",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "69913.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL634",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "44260.00",
+    "project_count": 1,
+    "programmes": {
+      "PL10": "PL10"
+    },
+    "id": "PL634",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "70404.00",
+    "project_count": 1,
+    "programmes": {
+      "PL05": "PL05"
+    },
+    "id": "PL635",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "393941.00",
+    "project_count": 1,
+    "programmes": {
+      "PL06": "PL06"
+    },
+    "id": "PL635",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "224076.00",
+    "project_count": 1,
+    "programmes": {
+      "PL09": "PL09"
+    },
+    "id": "PLZ",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  }
+]

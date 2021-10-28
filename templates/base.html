@@ -1,86 +1,124 @@
 <!doctype html>
-{% load webpack_loader %}
 {% load tags %}
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% block title %}{% endblock %}</title>
-  {% render_bundle 'dataviz' 'css' %}
-  {% render_bundle 'site' 'css' %}
+  {% if settings.DEBUG %}
+    {% with host=request.META.HTTP_HOST|split:":"|first %}
+      <script type="module" src="//{{ host }}:3000/assets/entry.js"></script>
+      <script type="module" src="//{{ host }}:3000/assets/site.js"></script>
+    {% endwith %}
+  {% else %}
+    <script type="module" src="/{{ assets|value:"assets/entry.js" }}"></script>
+    <script type="module" src="/{{ assets|value:"assets/site.js" }}"></script>
+    <link rel="modulepreload" href="/{{ assets|value:"_vendor.js" }}">
+    <link rel="stylesheet" href="/{{ assets|value:"assets/entry.css" }}">
+    <link rel="stylesheet" href="/{{ assets|value:"assets/site.css" }}">
+  {% endif %}
+
+  {% block head %}{% endblock %}
 </head>
 <body class="dataviz">
-  <header class="header sticky">
-    <div class="container">
-      <div class="header-inner">
+<header class="header sticky">
+  <div class="container">
+    <div class="header-inner">
 
-        <div class="header-logo">
-          <a href="/">
-            <img src="/assets/imgs/eeaglogo.svg" alt="EEA Grants logo" width="139">
-          </a>
-        </div>
-
-{% with current_view=request.resolver_match.view_name %}
-        <nav class="header-menu">
-          <ul>
-            <li><a href="{% url 'frontend:grants' %}?{{ form.facets|scenario_urlparams:'grants'}}"{% if current_view == 'frontend:grants' %} class="active"{% endif %}>Grants</a></li>
-            <li><a href="{% url 'frontend:partners' %}?{{ form.facets|scenario_urlparams:'partners'}}"{% if current_view == 'frontend:partners' %} class="active"{% endif %}>Partners</a></li>
-            <li><a href="{% url 'frontend:projects' %}?{{ form.facets|scenario_urlparams:'projects'}}"{% if current_view == 'frontend:projects' %} class="active"{% endif %}>Projects</a></li>
-          </ul>
-        </nav>
-        <form action="{% url view|search_view_name:current_view %}" class="header-search">
-{% endwith %}
-          <input type="search" placeholder="Search" name="q">
-          <button type="submit" title="Search" name="page" value="1">
-            <span class="icon icon-search"></span>
-          </button>
-        </form>
-        <button type="button" class="header-toggle header-menu-toggle" title="Menu" onclick="Header.toggle('menu')">
-          <span class="icon icon-menu"></span>
-        </button>
+      <div class="header-logo">
+        <a href="/">
+          <img src="/assets/imgs/eeaglogo.svg" alt="EEA Grants logo" width="175">
+        </a>
       </div>
+
+      <nav class="header-menu">
+        {% with current_view=request.resolver_match.view_name %}
+        {% firstof PERIOD request.GET.period "2014-2021" as current_period%}
+          {% for period in MENU %}
+            <a href="{{ period.url }}" class="period-item {% if period.id == current_period %}active{% endif %}">
+              {{ period.id }}
+            </a>
+            <div class="period-sub-menu {% if period.id == current_period %}active{% endif %}">
+
+              {% for scenario in period.scenarios %}
+                <a
+                    href="{{ scenario.url }}"
+                    class="scenario-item {% if period.id == current_period and scenario.id == SCENARIO %}active{% endif %}"
+                >
+                  {{ scenario.name }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <form class="header-search" action="{% url view|search_view_name:current_view %}">
+            <input type="search" placeholder="Search" name="q">
+            {% if current_period != 'compare' %}
+              <input type="text" name="period" hidden value="{{ current_period }}" />
+            {% endif %}
+            <button type="submit" title="Search" name="page" value="1">
+              <span class="icon icon-search"></span>
+            </button>
+          </form>
+        {% endwith %}
+      </nav>
+
+      <button type="button" class="header-toggle header-menu-toggle" title="Menu" onclick="Header.toggle('menu')">
+        <span class="icon icon-menu"></span>
+      </button>
     </div>
-  </header>
+  </div>
+</header>
 
-  {% block top %}{% endblock %}
+{% block top %}{% endblock %}
 
-  <div id="content" class="page-body">
-      <globalfilters>
-      </globalfilters>
-    <div class="container">
-      <div class="page-body-inner">
-{% block content %}
-{% endblock %}
+<div id="content" class="page-body">
+  <globalfilters>
+  </globalfilters>
+  <div class="container">
+    <div class="page-body-inner">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+  {% block after_content %}
+  {% endblock after_content %}
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+        <div>
+            <p class="small">
+	    In the 2014-2021 funding period, the total allocations are €1.5 bn for the EEA Grants, and
+	    €1.3 bn for the Norway Grants. Due to pending programme modifications<br> in some programmes
+	    that have received additional funding from the reserve, some figures presented on the portal
+	    might not add up and are subject to change.
+            </p>
+        </div>
+      <div class="small muted">
+        <p>EEA Grants - Norway Grants, Financial Mechanism Office, Tel: 32 (0) 2 286 1701,
+           Email: <a href="mailto:info-fmo@efta.int" target="_self">info-fmo@efta.int</a></p>
+        <p>Postal address: EFTA House, Avenue des Arts 19H,
+           1000 Brussels, Belgium</p>
+        <p class="footer-links">
+          <a href="https://eeagrants.org/data-results-glossary" target="_blank">Glossary</a>
+          <a href="{% url 'frontend:disclaimer' %}" onclick="Footer.popup(event, this)">Disclaimer</a>
+          <a href="https://eeagrants.org/privacy-policy" target="_blank">Privacy policy</a>
+        </p>
       </div>
     </div>
   </div>
-  <footer class="footer">
-    <div class="container">
-        <div class="footer-inner">
-          <div class="small muted">
-            <p>EEA Grants - Norway Grants, Financial Mechanism Office, Tel: 32 (0) 2 286 1701, Email: <a href="mailto:info-fmo@efta.int" target="_self">info-fmo@efta.int</a></p>
-            <p>Postal address: EFTA House, Avenue des Arts 19H, 1000 Brussels, Belgium</p>
-            <p>
-                <a href="{% url 'frontend:disclaimer' %}" onclick="Footer.popup(event, this)">Disclaimer</a>
-                <a href="https://eeagrants.org/privacy-policy" target="_blank">Privacy policy</a>
-            </p>
-          </div>
-        </div>
-      </div>
-  </footer>
-  <script>
-    window._dv_sentry_config = {
-      dsn: "{{ settings.SENTRY_DSN|escapejs }}",
-      environment: "{{ settings.SENTRY_ENVIRONMENT|escapejs }}",
-    };
-  </script>
-  {% render_bundle 'dataviz' 'js' %}
-  {% render_bundle 'site' 'js' %}
+</footer>
+<script>
+window._dv_sentry_config = {
+  dsn: "{{ settings.SENTRY_DSN|escapejs }}",
+  environment: "{{ settings.SENTRY_ENVIRONMENT|escapejs }}"
+};
+</script>
 {% block finally %}
 {% endblock %}
-  {% if settings.GOOGLE_ANALYTICS_PROPERTY_ID %}
-    {% include "ga.html" %}
-  {% endif %}
+{% if settings.GOOGLE_ANALYTICS_PROPERTY_ID %}
+  {% include "ga.html" %}
+{% endif %}
 </body>
 </html>

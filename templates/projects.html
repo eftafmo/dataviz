@@ -5,69 +5,106 @@
 
 {% block main %}
 
-<h1 class="page-title">Our Projects</h1>
+  <h1 class="page-title">Our Projects</h1>
 
-<div class="lg-column">
+  <div class="lg-column">
 
-  <div class="grant-dataviz" id="financial-mechanisms">
-    <mechanisms
-      :initial="dataset"
-    >
-      <h2 slot="title">Projects by financial mechanism <span style="white-space:nowrap;">2009-2014</span></h2>
-    </mechanisms>
+    <div class="grant-dataviz" id="financial-mechanisms">
+      <mechanisms
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Funding by Financial Mechanism <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
+        </template>
+      </mechanisms>
+    </div>
+
+    {% if PERIOD == "2014-2021" %}
+      <div class="grant-dataviz" id="thematic-chart">
+        <thematic_bar_chart :initial="dataset" period="{{ PERIOD }}"></thematic_bar_chart>
+      </div>
+    {% endif %}
+
+    <div class="grant-dataviz" id="priority-sectors">
+      <sectors
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Projects by sector</h2>
+        </template>
+      </sectors>
+    </div>
+
+    {% if PERIOD == "2014-2021" %}
+      <div class="grant-dataviz" id="bilateral-initiatives-chart">
+        <bilateral_initiatives_chart
+            datasource="/api/bilateral-initiatives.json"
+            :datasource-periods="['{{ PERIOD }}']"
+            period="{{ PERIOD }}"
+        >
+          <template #title>
+            <h2>Bilateral Initiatives</h2>
+          </template>
+        </bilateral_initiatives_chart>
+      </div>
+    {% endif %}
+
   </div>
 
-  <div class="grant-dataviz" id="priority-sectors">
-    <sectors
-      :initial="dataset"
-    >
-      <h2 slot="title">Projects by sector</h2>
-    </sectors>
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="funding-map">
+      <xmap
+          :initial="dataset"
+          period="{{ PERIOD }}"
+          details-datasource="{% url "api:projects-beneficiary-detail" "XX" %}"
+      >
+        <template #title>
+          <h2>Projects map</h2>
+        </template>
+      </xmap>
+    </div>
+
+    <div class="grant-dataviz" id="beneficiary-states">
+      <beneficiaries
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Projects across Beneficiary States</h2>
+        </template>
+      </beneficiaries>
+    </div>
+
   </div>
-
-</div>
-
-
-<div class="lg-column">
-
-  <div class="grant-dataviz" id="funding-map">
-    <xmap
-        :initial="dataset"
-        details-datasource="{% url "api:projects-beneficiary-detail" "XX" %}"
-    >
-      <h2 slot="title">Projects map</h2>
-    </xmap>
-  </div>
-
-  <div class="grant-dataviz" id="beneficiary-states">
-    <beneficiaries
-        :initial="dataset"
-    >
-      <h2 slot="title">Projects across beneficiary states</h2>
-    </beneficiaries>
-  </div>
-
-</div>
 
 {% endblock %}
 
 {% block aside %}
 
-<sidebar class="sticky"
-         :initial="dataset"
-         projects-datasource="{% url "api:project-list" %}"
->
-</sidebar>
+  <sidebar
+      class="sticky"
+      :initial="dataset"
+      period="{{ PERIOD }}"
+      projects-datasource="{% url "api:project-list" %}"
+  >
+  </sidebar>
 
 {% endblock %}
 
 {% block finally %}
-<script>
-new root.Projects({
-  el: '#content',
-  data: {
-    datasource: "{% url "api:projects" %}"
-  },
-});
-</script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.Projects,
+      {
+        datasource: "/api/projects.json",
+        datasourcePeriods: ["{{ PERIOD }}"]
+      }
+    ).mount("#content");
+  });
+  </script>
 {% endblock %}

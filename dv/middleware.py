@@ -1,5 +1,6 @@
 from django.conf import settings
 
+
 class CORSMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -13,7 +14,7 @@ class CORSMiddleware:
                 allow = True
                 break
         if not allow:
-           return response
+            return response
 
         response["Access-Control-Allow-Origin"] = "*"
         return response

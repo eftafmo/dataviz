@@ -1,0 +1,114 @@
+{% extends "dataviz.html" %}
+
+{% block top %}
+{% endblock %}
+
+{% block main %}
+
+  <h1 class="page-title">Our Partners</h1>
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="financial-mechanisms">
+      <mechanisms :initial="dataset" period="{{ PERIOD }}">
+        <template #title>
+          <h2>Financial Mechanisms <span style="white-space:nowrap;">{{ PERIOD }}</span></h2>
+        </template>
+      </mechanisms>
+    </div>
+
+    <div class="grant-dataviz" id="priority-sectors">
+      <sectors :initial="dataset" period="{{ PERIOD }}">
+        <template #title>
+          <h2>Donor Partner Programmes by sector</h2>
+        </template>
+      </sectors>
+    </div>
+
+    <div class="grant-dataviz" id="donor-programme-partners">
+      <programme_partners
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Donor Programme Partners</h2>
+        </template>
+      </programme_partners>
+    </div>
+
+    <div class="grant-dataviz" id="donor-project-partners">
+      <project_partners
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Donor project partners</h2>
+        </template>
+      </project_partners>
+    </div>
+
+  </div>
+
+
+  <div class="lg-column">
+
+    <div class="grant-dataviz" id="network-map">
+      <xmap
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Network map</h2>
+        </template>
+      </xmap>
+    </div>
+
+    <div class="grant-dataviz" id="donor-states">
+      <donors
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Partners by Donor State</h2>
+        </template>
+      </donors>
+    </div>
+
+    <div class="grant-dataviz" id="beneficiary-states">
+      <beneficiaries
+          :initial="dataset"
+          period="{{ PERIOD }}"
+      >
+        <template #title>
+          <h2>Organisations with Donor Partner by Beneficiary State</h2>
+        </template>
+      </beneficiaries>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block aside %}
+  <sidebar
+      class="sticky"
+      :initial="dataset"
+      period="{{ PERIOD }}"
+      projects-datasource="{% url "api:project-list" %}"
+  >
+  </sidebar>
+
+{% endblock %}
+
+{% block finally %}
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.Partners,
+      {
+        datasource: "/api/partners.json",
+        datasourcePeriods: ["{{ PERIOD }}"],
+      }
+    ).mount("#content");
+  });
+  </script>
+{% endblock %}

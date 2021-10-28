@@ -1,0 +1,541 @@
+[
+  {
+    "allocation": "9630022.00",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2374525.00",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7217258.00",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "398425.00",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1812696.00",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "180899.00",
+    "project_count": 2,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES11",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "46063.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES111",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "75273.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES111",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "36820.00",
+    "project_count": 1,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES111",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54693.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES114",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "14065.00",
+    "project_count": 1,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES114",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "80804.00",
+    "project_count": 2,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES120",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "484487.00",
+    "project_count": 5,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES21",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "335436.00",
+    "project_count": 5,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES212",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "414924.00",
+    "project_count": 6,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES213",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "111167.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES213",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "176531.00",
+    "project_count": 5,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES220",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139480.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES220",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "328594.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES241",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "138782.00",
+    "project_count": 2,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES243",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "884253.00",
+    "project_count": 9,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES3",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "11515.00",
+    "project_count": 1,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES3",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "174185.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES30",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "329622.00",
+    "project_count": 4,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES30",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "33796.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES300",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "86700.00",
+    "project_count": 1,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES41",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139314.00",
+    "project_count": 2,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES412",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "24608.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES413",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "29700.00",
+    "project_count": 1,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES418",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "86690.00",
+    "project_count": 1,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES42",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "86700.00",
+    "project_count": 1,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES43",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "112006.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES51",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "127275.00",
+    "project_count": 2,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES511",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "285188.00",
+    "project_count": 3,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES511",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "249328.00",
+    "project_count": 3,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES511",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "18738.00",
+    "project_count": 1,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES514",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "84446.00",
+    "project_count": 2,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES521",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "77738.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES521",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "60565.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES523",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "219510.00",
+    "project_count": 1,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES523",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "81773.00",
+    "project_count": 1,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES53",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES61",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "113122.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES61",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "115600.00",
+    "project_count": 1,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES61",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "64326.00",
+    "project_count": 1,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES612",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3283687.00",
+    "project_count": 1,
+    "programmes": {
+      "ES05": "ES05"
+    },
+    "id": "ES614",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "115600.00",
+    "project_count": 1,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES62",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "120031.00",
+    "project_count": 1,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES620",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "441871.00",
+    "project_count": 2,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES7",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  }
+]

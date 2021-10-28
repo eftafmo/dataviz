@@ -1,0 +1,443 @@
+[
+  {
+    "allocation": "3083191.00",
+    "project_count": 35,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "15878049.00",
+    "project_count": 10,
+    "programmes": {
+      "GR05": "GR05",
+      "GR06": "GR06"
+    },
+    "id": "GR",
+    "area": "Institutional framework in the asylum and migration sector",
+    "sector": "Justice and Home Affairs",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4227236.00",
+    "project_count": 8,
+    "programmes": {
+      "GR02": "GR02"
+    },
+    "id": "GR",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3817134.00",
+    "project_count": 2,
+    "programmes": {
+      "GR08": "GR08"
+    },
+    "id": "GR",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2217325.00",
+    "project_count": 15,
+    "programmes": {
+      "GR07": "GR07"
+    },
+    "id": "GR",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "35507.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR11",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "162693.00",
+    "project_count": 1,
+    "programmes": {
+      "GR07": "GR07"
+    },
+    "id": "GR11",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "584686.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR111",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "44010.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR112",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1409829.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR113",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "27566.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR114",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "50069.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR12",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "107227.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR122",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "688422.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR131",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "41591.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR133",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1522037.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR133",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "49721.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR14",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "35524.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR213",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "130233.00",
+    "project_count": 1,
+    "programmes": {
+      "GR07": "GR07"
+    },
+    "id": "GR213",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "31561.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR231",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "207265.00",
+    "project_count": 6,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR232",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "486225.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR243",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "289562.00",
+    "project_count": 1,
+    "programmes": {
+      "GR02": "GR02"
+    },
+    "id": "GR244",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "52076.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR251",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR251",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "270401.00",
+    "project_count": 4,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR3",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "637078.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR3",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "717679.00",
+    "project_count": 10,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR30",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "473006.00",
+    "project_count": 7,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR300",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "748509.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR300",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "244169.00",
+    "project_count": 1,
+    "programmes": {
+      "GR02": "GR02"
+    },
+    "id": "GR4",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1242665.00",
+    "project_count": 1,
+    "programmes": {
+      "GR02": "GR02"
+    },
+    "id": "GR421",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "111839.00",
+    "project_count": 1,
+    "programmes": {
+      "GR07": "GR07"
+    },
+    "id": "GR421",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "424075.00",
+    "project_count": 2,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR422",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "590556.00",
+    "project_count": 1,
+    "programmes": {
+      "GR02": "GR02"
+    },
+    "id": "GR422",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "648199.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR422",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "710070.00",
+    "project_count": 2,
+    "programmes": {
+      "GR02": "GR02"
+    },
+    "id": "GR43",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "384710.00",
+    "project_count": 1,
+    "programmes": {
+      "GR03": "GR03"
+    },
+    "id": "GR43",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "110228.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR431",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "25965.00",
+    "project_count": 1,
+    "programmes": {
+      "GR04": "GR04"
+    },
+    "id": "GR433",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  }
+]

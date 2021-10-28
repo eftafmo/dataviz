@@ -1,11 +1,4 @@
-/*
- * First, import all country flags as svg sprites,
- * using webpack's svg-sprite-loader.
- */
-
-import * as d3 from 'd3';
-
-import _COUNTRIES from 'js/constants/countries.json5';
+import _COUNTRIES from "@js/constants/countries.json5";
 
 export const COUNTRIES = {};
 export const DONORS = _COUNTRIES.donors;
@@ -15,26 +8,41 @@ export const PARTNERS = _COUNTRIES.partners;
 const _types = {
   donor: DONORS,
   beneficiary: BENEFICIARIES,
-  partner: PARTNERS
+  partner: PARTNERS,
+};
+
+const flags = import.meta.globEager("../../../sprites/flags/*.png");
+
+function transformCountryName(name) {
+  return name.toLowerCase().replace(/ /g, "");
 }
-for (const t in _types) {
-  const source = _types[t]
 
-  for (const code in source) {
-    COUNTRIES[code] = Object.assign({type: t}, source[code])
-  }
-}
+Object.entries(_types).forEach(([type, source]) => {
+  Object.entries(source).forEach(([code, country], index) => {
+    const flagName = `flag-${transformCountryName(source[code].name)}.png`;
 
+    COUNTRIES[code] = {
+      type,
+      // In dev this will be the URL to the flag, however in prod this will
+      // be a DATA URI string. Making the sprites easily embeddable in SVG
+      // elements.
+      flag: flags["../../../sprites/flags/" + flagName].default,
+      flagName,
+      sortOrder: index + 1,
+      ...country,
+    };
+  });
+});
 
-export function get_flag_name(code) {
-  if ( code.length > 2 && code != 'Intl') {
+export function get_flag(code) {
+  if (code.length > 2 && code !== "Intl") {
     // because Intl is a country and has a flag
     code = code.substring(0, 2);
   }
   const country = COUNTRIES[code];
   if (!country) throw "Country not found: " + code;
-  const flag = country.name.toLowerCase().replace(/ /g, '');
-  return `flag-${flag}`;
+
+  return country.flag;
 }
 
 export function get_country_name(code) {
@@ -43,28 +51,16 @@ export function get_country_name(code) {
   return country_name;
 }
 
-export function get_country_alt_name(code) {
-  const country_name = COUNTRIES[code].alt_name;
-  if (!country_name) throw "Country not found: " + code;
-  return country_name;
-}
-
 export function get_sort_order(code) {
-  const sort_order = COUNTRIES[code].sort_order;
+  const sort_order = COUNTRIES[code].sortOrder;
   if (!sort_order) throw "Country not found: " + code;
   return sort_order;
 }
 
-// force-load all flags so they get bundled as sprites
-for (const code in COUNTRIES) {
-  require(`sprites/flags/${get_flag_name(code)}.png`);
-}
-
-
 function get_longest_name(obj) {
-  return d3.values(obj).reduce( (longest, item) => (
+  return Object.values(obj).reduce((longest, item) =>
     longest.length > item.name.length ? longest : item.name
-  ) );
+  );
 }
 
 export default {
@@ -83,15 +79,47 @@ export default {
   },
 
   computed: {
-    // TODO: make the constants arrays, and the objects pre-computed
+    allCountries() {
+      const result = {};
+      this.COUNTRY_ARRAY.forEach((country) => (result[country.id] = country));
+      return result;
+    },
     COUNTRY_ARRAY() {
-      return d3.values(this.COUNTRIES);
+      return Object.values(this.COUNTRIES).filter(
+        (country) =>
+          !country.periods ||
+          !this.period ||
+          country.periods.indexOf(this.period) !== -1
+      );
+    },
+    allBeneficiaries() {
+      const results = {};
+      Object.values(this.BENEFICIARIES).forEach((country, index) => {
+        results[country.name] = {
+          ...country,
+          sortOrder: index,
+        };
+      });
+      return Object.values(results);
     },
     BENEFICIARY_ARRAY() {
-      return d3.values(this.BENEFICIARIES);
+      return Object.values(this.BENEFICIARIES).filter(
+        (country) =>
+          !country.periods ||
+          !this.period ||
+          country.periods.indexOf(this.period) !== -1
+      );
+    },
+    currentBeneficiary() {
+      return (
+        this.filters &&
+        this.filters.beneficiary &&
+        this.BENEFICIARY_ARRAY.find(
+          (country) => country.id === this.filters.beneficiary
+        )
+      );
     },
   },
-
   methods: {
     isBeneficiary(d) {
       return this.BENEFICIARIES[d.id] !== undefined;
@@ -99,25 +127,22 @@ export default {
     isDonor(d) {
       return this.DONORS[d.id] !== undefined;
     },
-
-    toggleBeneficiary(b, etarget) {
+    toggleBeneficiary(b, allowHungary = false) {
+      if (!allowHungary && this.isHungaryException(b.id)) return;
       // don't filter by zero-valued items
-      if (b.total == 0) return;
+      if (b.total === 0) return;
 
-      this.filters.beneficiary = this.filters.beneficiary == b.id ?
-                                 null : b.id;
+      this.filters.beneficiary =
+        this.filters.beneficiary === b.id ? null : b.id;
     },
+    toggleDonor(d) {
+      if (d.total === 0) return;
 
-    toggleDonor(d, etarget) {
-      if (d.total == 0) return;
-
-      this.filters.donor = this.filters.donor == d.id ?
-                           null : d.id;
+      this.filters.donor = this.filters.donor === d.id ? null : d.id;
     },
-
-    get_flag_name(c) { return get_flag_name(c) },
-    get_country_name(c) { return get_country_name(c)},
-    get_country_alt_name(c) { return get_country_alt_name(c)},
-    get_sort_order(c) { return get_sort_order(c)},
+    // TODO: Refactor to use camelCase here.
+    get_flag,
+    get_country_name,
+    get_sort_order,
   },
 };

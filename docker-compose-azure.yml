@@ -1,22 +1,14 @@
 version: '2'
 services:
-  solr:
-    image: solr:6.6.4
-    user: root
+  elasticsearch:
+    image: elasticsearch:7.14.1
+    container_name: eeag_elasticsearch
     environment:
-      - TZ=Europe/Brussels
-      - SOLR_HOME=/solr_home
-      - SOLR_HEAP=256m
-      - SOLR_TIMEZONE=CET
-      - SOLR_LOG_LEVEL=CONFIG
-      - SOLR_LOGS_DIR=/solr_logs
-      - INIT_SOLR_HOME=yes
-      # LOG4J_PROPS=/var/solr/log4j.properties
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:
-      - solrhome:/solr_home
-      - solrlogs:/solr_logs
+      - elasticsearchdata:/usr/share/elasticsearch/data
     restart: unless-stopped
-    command: ["solr-precreate", "eeagrants"]
 
 
   web:
@@ -67,15 +59,10 @@ volumes:
     driver_opts:
       share_name: we-p-fmo-dockervolume-weblogs
       storage_account_name: wepfmodockerstorage
-  solrhome:
+  elasticsearchdata:
     driver: azure_file
     driver_opts:
-      share_name: we-p-fmo-dockervolume-solrhome
-      storage_account_name: wepfmodockerstorage
-  solrlogs:
-    driver: azure_file
-    driver_opts:
-      share_name: we-p-fmo-dockervolume-solrlogs
+      share_name: we-p-fmo-dockervolume-elasticsearchdata
       storage_account_name: wepfmodockerstorage
   nginxconfig:
     driver: azure_file

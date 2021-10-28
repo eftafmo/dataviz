@@ -3,7 +3,35 @@ import re
 import time
 from binascii import crc32
 from collections import Iterable
+
 from django.utils.baseconv import base62
+from django_countries import countries
+
+
+FM_EEA = 'EEA'
+FM_NORWAY = 'NOR'
+FINANCIAL_MECHANISMS = [
+    (FM_EEA, 'EEA Grants'),
+    (FM_NORWAY, 'Norway Grants'),
+]
+FM_DICT = dict(FINANCIAL_MECHANISMS)
+FM_REVERSED_DICT = {v: k for k, v in FM_DICT.items()}
+
+FUNDING_PERIODS = [
+    (1, '2004-2009'),
+    (2, '2009-2014'),
+    (3, '2014-2021'),
+]
+FUNDING_PERIODS_DICT = {v: k for k, v in FUNDING_PERIODS}
+DEFAULT_PERIOD = '2014-2021'
+
+NUTS_VERSION_BY_PERIOD = {
+    '2009-2014': 2006,
+    '2014-2021': 2016,
+}
+
+STATES = dict(countries)
+STATES["EL"] = "Greece"
 
 # Everything else is International
 EEA_DONOR_STATES = {
@@ -11,11 +39,26 @@ EEA_DONOR_STATES = {
     'Liechtenstein': 'LI',
     'Norway': 'NO',
 }
-
 DONOR_STATES = {'International': 'Intl'}
 DONOR_STATES.update(EEA_DONOR_STATES)
-
 DONOR_STATES_REVERSED = {v: k for k, v in EEA_DONOR_STATES.items()}
+
+OVERVIEW_INDICATORS = {
+    # FUNDING_PERIOD_ID
+    2: {
+        'Estimated CO2 reduction and/or avoidance in tonnes/year': 'annual_co2_emissions_reduced',
+        'Number of green jobs created': 'green_jobs_created',
+        'Number of NGOs/small organisations reporting strengthened capacity': 'ngos_small_organisations_supported',
+        'Number of beneficiaries reporting improved access to basic and welfare services': 'people_improved_access',
+    },
+    3: {
+        'Number of people engaged in civil society organisation activities': 'people_civil_society',
+        'Estimated annual CO2 emissions reductions': 'co2_emissions_reduction',
+        'Number of researchers supported': 'supported_researchers',
+        'Number of professional staff trained': 'staff_trained',
+        'Number of jobs created': 'jobs_created',
+    }
+}
 
 
 def camel_case_to__(txt):
@@ -30,6 +73,7 @@ def camel_case_to__(txt):
 
     return re.sub(cc_re, r'_\1', txt).lower()
 
+
 def str_to_constant_name(txt):
     """
     converts the string to something usable as a constant name
@@ -40,9 +84,11 @@ def str_to_constant_name(txt):
 
     return txt.upper()
 
+
 def is_iter(v):
     """Returns True only for non-string iterables."""
     return not isinstance(v, str) and isinstance(v, Iterable)
+
 
 def uniq_hash(s):
     """
@@ -54,6 +100,7 @@ def uniq_hash(s):
         s = s.encode('utf-8')
     crc = crc32(s)
     return base62.encode(crc)
+
 
 def mkrandstr():
     return (

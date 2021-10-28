@@ -1,24 +1,14 @@
 version: '2'
 services:
-  solr:
-    image: solr:6.6.4
-    container_name: eeag_solr
-    user: root
+  elasticsearch:
+    image: elasticsearch:7.14.1
+    container_name: eeag_elasticsearch
     environment:
-      - TZ=Europe/Brussels
-      - SOLR_HOME=/solr_home
-      - SOLR_HEAP=256m
-      - SOLR_TIMEZONE=CET
-      - SOLR_LOG_LEVEL=CONFIG
-      - SOLR_LOGS_DIR=/solr_logs
-      - INIT_SOLR_HOME=yes
-      # LOG4J_PROPS=/var/solr/log4j.properties
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:
-      - solr_home:/solr_home
-      - solr_logs:/solr_logs
-    command: ["bash", "-c", "chown solr: /solr_home /solr_logs && exec gosu solr docker-entrypoint.sh solr-precreate eeagrants"]
+      - elasticsearch_data:/usr/share/elasticsearch/data
     restart: "always"
-
 
   web:
     image: eftafmo/dataviz:latest
@@ -57,6 +47,16 @@ services:
             alias /var/local/webroot/static;
             add_header 'Access-Control-Allow-Origin' "*" always;
           }
+          location /search/export/ {
+            proxy_read_timeout 300;
+            proxy_pass http://djangoapp;
+            proxy_set_header Host $$host;
+            proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $$remote_addr;
+            gzip on;
+            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+            expires 1h;
+          }
           location / {
             proxy_pass http://djangoapp;
             proxy_set_header Host $$host;
@@ -78,5 +78,4 @@ volumes:
   webroot:
   web_db:
   web_logs:
-  solr_home:
-  solr_logs:
+  elasticsearch_data:

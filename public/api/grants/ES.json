@@ -1,0 +1,3258 @@
+[
+  {
+    "allocation": "209283.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES111",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES112",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES113",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "217913.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES114",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "244024.71",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES120",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES130",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "324716.38",
+    "project_count": 144,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES211",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "660152.38",
+    "project_count": 149,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES212",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "739640.38",
+    "project_count": 150,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES213",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "339751.71",
+    "project_count": 144,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES220",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES230",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "491814.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES241",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES242",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "302002.71",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES243",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1255454.71",
+    "project_count": 150,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES300",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES411",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "302534.71",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES412",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "187828.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES413",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES414",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES415",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES416",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES417",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES418",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES419",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES421",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES422",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES423",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES424",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES425",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES431",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES432",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "290495.71",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES511",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES512",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES513",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES514",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "247666.71",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES521",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES522",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES523",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES531",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES532",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES533",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES611",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "227546.71",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES612",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES613",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES614",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES615",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES616",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES617",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 140,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES618",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES620",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES630",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163220.71",
+    "project_count": 139,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES640",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226345.14",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES703",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226345.14",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES704",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226345.14",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES705",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226345.14",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES706",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226345.14",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES707",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226345.14",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES708",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226345.14",
+    "project_count": 141,
+    "programmes": {
+      "ES02": "ES02"
+    },
+    "id": "ES709",
+    "area": "Environmental and climate change-related research and technology",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "160743.94",
+    "project_count": 30,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES111",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "85470.94",
+    "project_count": 29,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES112",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "85470.94",
+    "project_count": 29,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES113",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "85470.94",
+    "project_count": 29,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES114",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES120",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES130",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES211",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES212",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "151413.19",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES213",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "179726.19",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES220",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES230",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES241",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES242",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES243",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES300",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES411",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES412",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES413",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES414",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES415",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES416",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES417",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES418",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES419",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES421",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES422",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES423",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES424",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES425",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES431",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES432",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "353435.69",
+    "project_count": 31,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES511",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "68247.69",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES512",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "68247.69",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES513",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "68247.69",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES514",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "117984.19",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES521",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES522",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "100811.19",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES523",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES531",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES532",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES533",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES611",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES612",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES613",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES614",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES615",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES616",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES617",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54386.44",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES618",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "160277.19",
+    "project_count": 28,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES620",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES630",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES640",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES703",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES704",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES705",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES706",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES707",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES708",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40246.19",
+    "project_count": 27,
+    "programmes": {
+      "ES03": "ES03"
+    },
+    "id": "ES709",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES111",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES112",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES113",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES114",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES120",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES130",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES211",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES212",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES213",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES220",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES230",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES241",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES242",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES243",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES300",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES411",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES412",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES413",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES414",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES415",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES416",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES417",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES418",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "131959.74",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES419",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139664.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES421",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139664.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES422",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139664.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES423",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139664.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES424",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139664.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES425",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "165676.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES431",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "165676.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES432",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES511",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES512",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES513",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES514",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES521",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES522",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES523",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "149584.07",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES531",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "149584.07",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES532",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "149584.07",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES533",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES611",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES612",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES613",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES614",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES615",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES616",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES617",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "136776.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES618",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "237926.41",
+    "project_count": 66,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES620",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES630",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES640",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES703",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES704",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES705",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES706",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES707",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES708",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "122326.41",
+    "project_count": 65,
+    "programmes": {
+      "ES04": "ES04"
+    },
+    "id": "ES709",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES111",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES112",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES113",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES114",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES120",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES130",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES211",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES212",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES213",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES220",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES230",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES241",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES242",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES243",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES300",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES411",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES412",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES413",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES414",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES415",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES416",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES417",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES418",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES419",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES421",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES422",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES423",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES424",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES425",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES431",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES432",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES511",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES512",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES513",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES514",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES521",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES522",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES523",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES531",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES532",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES533",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES611",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES612",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES613",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES614",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES615",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES616",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES617",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES618",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES620",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES630",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES640",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES703",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES704",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES705",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES706",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES707",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES708",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6752.97",
+    "project_count": 29,
+    "programmes": {
+      "ES06": "ES06"
+    },
+    "id": "ES709",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "67543.66",
+    "project_count": 104,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES111",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES112",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES113",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "44788.66",
+    "project_count": 104,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES114",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES120",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES130",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES211",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES212",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES213",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES220",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES230",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES241",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES242",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES243",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "371860.66",
+    "project_count": 108,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES300",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES411",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES412",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES413",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES414",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES415",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES416",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES417",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "60423.66",
+    "project_count": 104,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES418",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES419",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES421",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES422",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES423",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES424",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES425",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES431",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES432",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "280051.66",
+    "project_count": 106,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES511",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES512",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES513",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "49461.66",
+    "project_count": 104,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES514",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES521",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES522",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "250233.66",
+    "project_count": 104,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES523",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES531",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES532",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES533",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES611",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES612",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES613",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES614",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES615",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES616",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES617",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES618",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES620",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES630",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES640",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES703",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES704",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES705",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES706",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES707",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES708",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30723.66",
+    "project_count": 103,
+    "programmes": {
+      "ES07": "ES07"
+    },
+    "id": "ES709",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3283687.00",
+    "project_count": 1,
+    "programmes": {
+      "ES05": "ES05"
+    },
+    "id": "ES614",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  }
+]

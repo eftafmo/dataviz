@@ -4,6 +4,11 @@
 {% load tags %}
 {% load humanize %}
 
+{% block head %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+{% endblock %}
+
 {% block top %}
   <div class="search-top">
     <div class="container">
@@ -12,8 +17,10 @@
         <div class="search-form">
           <div class="clearfix">
             <span class="input-box">
-              <input type="search" placeholder="Search" class="visible-search-input"
-                     autofocus>
+              <input
+                  type="search" placeholder="Search" class="visible-search-input"
+                  autofocus
+              >
             </span>
             <button type="submit" class="btn btn-primary visible-search-submit">Search
             </button>
@@ -21,20 +28,29 @@
           <div class="search-tabs" id="search-tabs">
             <span class="muted">Search for:</span>
             <a
-              href="{% url 'frontend:search_programme' %}"
-              class="{% active 'Programme' kind %}">{{'Programme'|kind_label:2|capfirst}}
+                href="{% url 'frontend:search_programme' %}"
+                class="{% active 'Programme' kind %}"
+            >{{ 'Programme'|kind_label:2|capfirst }}
             </a>
             <a
-              href="{% url 'frontend:search_project' %}"
-              class="{% active 'Project' kind %}">{{'Project'|kind_label:2|capfirst}}
+                href="{% url 'frontend:search_project' %}"
+                class="{% active 'Project' kind %}"
+            >{{ 'Project'|kind_label:2|capfirst }}
             </a>
             <a
-              href="{% url 'frontend:search_organisation' %}"
-              class="{% active 'Organisation' kind %}">{{'Organisation'|kind_label:2|capfirst}}
+                href="{% url 'frontend:search_organisation' %}"
+                class="{% active 'Organisation' kind %}"
+            >{{ 'Organisation'|kind_label:2|capfirst }}
             </a>
             <a
-              href="{% url 'frontend:search_news' %}"
-              class="{% active 'News' kind %}">{{'News'|kind_label:2|capfirst}}
+                href="{% url 'frontend:search_news' %}"
+                class="{% active 'News' kind %}"
+            >{{ 'News'|kind_label:2|capfirst }}
+            </a>
+            <a
+                href="{% url 'frontend:search_bilateralinitiative' %}"
+                class="{% active 'BilateralInitiative' kind %}"
+            >{{ 'BilateralInitiative'|kind_label:2|capfirst }}
             </a>
           </div>
         </div>
@@ -50,22 +66,20 @@
         {{ paginator.count }} {{ kind|kind_label:paginator.count }} found
       </span>
       <span class="search-results-options">
-        <select name="paginate_by" id="" class="subtle-select main-auto-submit"
-                form="main-search-form">
+        <select
+            name="paginate_by" id="" class="subtle-select main-auto-submit"
+            form="main-search-form"
+        >
           {% for page_size in page_sizes %}
-            <option value="{{ page_size }}"
-                    {% if page_size == paginator.per_page %}selected{% endif %}>
+            <option
+                value="{{ page_size }}"
+                {% if page_size == paginator.per_page %}selected{% endif %}
+            >
               {{ page_size }} results per page
             </option>
           {% endfor %}
         </select>
-          <a rel="nofollow"
-             {# No pretty indent because Django can't strip spaces inside tags #}
-             href="
-               {% if kind == 'Programme' %}{% url 'frontend:programme_export' %}?{% elif kind == 'Project' %}
-                 {% url 'frontend:project_export' %}?{% elif kind == 'Organisation' %}
-                 {% url 'frontend:organisation_export' %}?{% elif kind == 'News' %}
-                 {% url 'frontend:news_export' %}?{% endif %}{% for item in query %}{{ item.0 }}={{ item.1 }}{% if not forloop.last %}&{% endif %}{% endfor %}">
+          <a rel="nofollow" href="{{ export_url }}">
             Export
           </a>
       </span>
@@ -81,6 +95,8 @@
           {% include 'search/results/organisation.html' with organisation=res %}
         {% elif kind == 'News' %}
           {% include 'search/results/news.html' with news=res %}
+        {% elif kind == 'BilateralInitiative' %}
+          {% include 'search/results/bilateralinitiatives.html' with obj=res %}
         {% else %}
           {{ res.text }}
         {% endif %}
@@ -92,13 +108,13 @@
       <div class="search-results-footer">
         <div class="pagination clearfix">
           <a
-                  class="btn btn-default pagination-previous link-page-button"
-                  {% if page_obj.has_previous %}
-                  name="page"
-                  href="{% url_replace request 'page' page_obj.previous_page_number %}"
-                  {% else %}
-                  disabled="disabled"
-                  {% endif %}
+              class="btn btn-default pagination-previous link-page-button"
+              {% if page_obj.has_previous %}
+              name="page"
+              href="{% url_replace request 'page' page_obj.previous_page_number %}"
+              {% else %}
+              disabled="disabled"
+              {% endif %}
           > &lt;
           </a>
 
@@ -106,27 +122,27 @@
             {% for page_num in paginator.page_range %}
               {% if page_num >= page_obj.number|add:"-1" and page_num <= page_obj.number|add:"1" or page_num == 1 or page_num == paginator.num_pages %}
                 <a
-                        name="page"
-                        class="btn btn-default link-page-button"
-                        {% if not page_obj.number == page_num %}
-                        href="{% url_replace request 'page' page_num %}"
-                        {% else %}
-                        class="is-current-page"
-                        disabled="disabled"
-                        {% endif %}
+                    name="page"
+                    class="btn btn-default link-page-button"
+                    {% if not page_obj.number == page_num %}
+                    href="{% url_replace request 'page' page_num %}"
+                    {% else %}
+                    class="is-current-page"
+                    disabled="disabled"
+                    {% endif %}
                 >{{ page_num }}</a>
               {% endif %}
             {% endfor %}
           </div>
 
           <a
-                  class="btn btn-default pagination-next link-page-button"
-                  {% if page_obj.has_next %}
-                  name="page"
-                  href="{% url_replace request 'page' page_obj.next_page_number %}"
-                  {% else %}
-                  disabled="disabled"
-                  {% endif %}
+              class="btn btn-default pagination-next link-page-button"
+              {% if page_obj.has_next %}
+              name="page"
+              href="{% url_replace request 'page' page_obj.next_page_number %}"
+              {% else %}
+              disabled="disabled"
+              {% endif %}
           > &gt;
           </a>
 
@@ -138,24 +154,31 @@
 {% endblock %}
 
 {% block aside %}
-  <sidebar id="sidebar-filters" class="search sidebar-filters">
+  <sidebar_filters id="sidebar-filters" class="search sidebar-filters">
     <div class="sidebar-header">
       <h3 class="sidebar-title">Search filters</h3>
-      <button id="main-reset" class="no-btn small muted" type="reset"
-              form="main-search-form">Reset
+      <button
+          id="main-reset" class="no-btn small muted" type="reset"
+          form="main-search-form"
+      >Reset
       </button>
     </div>
     <div class="sidebar-body">
       <form class="search-form" id="main-search-form">
 
         <div class="hidden-form">
-          <span class="input-box">
-            <input class="hidden-search-input" type="search" placeholder="Search"
-                   name="q" autofocus
-                   value="{{ form.q.data | default_if_none:"" }}">
-          </span>
-          <button class="hidden-search-submit" type="submit" class="btn btn-primary"
-                  name="page" value="1">Search
+          <label class="input-box">
+            <input
+                class="hidden-search-input" type="search" placeholder="Search"
+                name="q" autofocus
+                value="{{ form.q.data | default_if_none:"" }}"
+            >
+          </label>
+          <button
+              class="hidden-search-submit btn btn-primary" type="submit"
+              name="page" value="1"
+          >
+            Search
           </button>
 
         </div>
@@ -167,137 +190,134 @@
         {% endif %}
       </form>
     </div>
-  </sidebar>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function () {
-      function select2AjaxFactory(kind, facet) {
-        return {
-          ajax: {
-            url: function (params) {
-              var u = '/api/search_' + kind + '_typeahead/?';
-              return u + $("#main-search-form").serialize()
-            },
-            data: function (params) {
-              return {
-                auto_name: facet,
-                auto_value: params.term,
-                page: params.page || 1,
-              }
-            },
-            processResults: function (response, params) {
-              return {
-                results: response.results,
-                pagination: response.pagination,
-              }
-            },
-            delay: 300,
-          },
-        }
-      }
-
-      var all_select2 = [];
-      $("select.facet-select").each(function () {
-        var select = $(this);
-        if (select.data('kind') && select.data('field')) {
-          all_select2.push(
-            select.select2(
-              select2AjaxFactory(
-                select.data('kind'),
-                select.data('field')
-              )
-            )
-          );
-        }
-        else {
-          all_select2.push(select.select2());
-        }
-      });
-
-      $(".main-auto-submit").change(function () {
-        $("#main-search-form").submit();
-      });
-
-      $("#main-reset").click(function () {
-        all_select2.forEach(function (e) {
-          e.val(null).trigger("change");
-        })
-      });
-
-      var minimized_elements = $('.truncate');
-      var minimize_character_count = 500;
-
-      minimized_elements.each(function () {
-        var t = $(this).text();
-        if (t.length < minimize_character_count) return;
-
-        $(this).html(
-          t.slice(0, minimize_character_count) + '<span>... </span><a href="#" class="more">More</a>' +
-          '<span style="display:none;">' + t.slice(minimize_character_count, t.length) + ' <a href="#" class="less">Less</a></span>'
-        );
-      });
-
-      $('a.more', minimized_elements).click(function (event) {
-        event.preventDefault();
-        var $this = $(this);
-        $(this).next().animate({'height': 'show'}, {
-          duration: 300,
-          done: function () {
-            $this.animate({'width': 'hide'});
-            $this.prev().animate({'width': 'hide'});
-          }
-        });
-      });
-
-      $('a.less', minimized_elements).click(function (event) {
-        event.preventDefault();
-        $(this).parent().animate({'height': 'hide'}, {
-          duration: 300,
-          done: function () {
-            $(this).prev().animate({'opacity': 'show'}, 300)
-            $(this).prev().prev().animate({'opacity': 'show'}, 300)
-          }
-        })
-      });
-
-      //Fixing ie form attribute issue
-      $visible_input = $('.visible-search-input');
-      $hidden_input = $('.hidden-search-input');
-
-      //get initial value on page reload
-      $visible_input.val($hidden_input.val());
-
-      //sync the real input and submit with the fake ones
-      $visible_input.on('keyup', function () {
-        $hidden_input.val($(this).val())
-      });
-
-      $('.visible-search-submit').click(function () {
-        $('.hidden-search-submit').click()
-      });
-
-      $visible_input.keyup(function (event) {
-        if (event.keyCode == 13) {
-          $('.hidden-search-submit').click();
-        }
-      });
-
-      $('.search-tabs a').on('click', function (e) {
-        e.preventDefault();
-        $("#main-search-form").attr("action", this.href);
-        $("#main-search-form").submit();
-      })
-
-    });
-  </script>
+  </sidebar_filters>
 {% endblock %}
 
 {% block finally %}
   <script>
-    new search.SearchRoot({
-      el: '#sidebar-filters',
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.SearchRoot
+    ).mount("#content");
+  });
+
+  $(document).ready(function () {
+    function select2AjaxFactory(kind, facet) {
+      return {
+        ajax: {
+          url: function (params) {
+            var u = "/api/search_" + kind + "_typeahead/?";
+            return u + $("#main-search-form").serialize();
+          },
+          data: function (params) {
+            return {
+              auto_name: facet,
+              auto_value: params.term,
+              page: params.page || 1
+            };
+          },
+          processResults: function (response, params) {
+            return {
+              results: response.results,
+              pagination: response.pagination
+            };
+          },
+          delay: 300
+        }
+      };
+    }
+
+    var all_select2 = [];
+    $("select.facet-select").each(function () {
+      var select = $(this);
+      if (select.data("kind") && select.data("field")) {
+        all_select2.push(
+          select.select2(
+            select2AjaxFactory(
+              select.data("kind"),
+              select.data("field")
+            )
+          )
+        );
+      } else {
+        all_select2.push(select.select2());
+      }
     });
+
+    $(".main-auto-submit").change(function () {
+      $("#main-search-form").submit();
+    });
+
+    $("#main-reset").click(function () {
+      all_select2.forEach(function (e) {
+        e.val(null).trigger("change");
+      });
+    });
+
+    var minimized_elements = $(".truncate");
+    var minimize_character_count = 500;
+
+    minimized_elements.each(function () {
+      var t = $(this).text();
+      if (t.length < minimize_character_count) return;
+
+      $(this).html(
+        t.slice(0, minimize_character_count) + "<span>... </span><a href=\"#\" class=\"more\">More</a>" +
+        "<span style=\"display:none;\">" + t.slice(minimize_character_count, t.length) + " <a href=\"#\" class=\"less\">Less</a></span>"
+      );
+    });
+
+    $("a.more", minimized_elements).click(function (event) {
+      event.preventDefault();
+      var $this = $(this);
+      $(this).next().animate({ "height": "show" }, {
+        duration: 300,
+        done: function () {
+          $this.animate({ "width": "hide" });
+          $this.prev().animate({ "width": "hide" });
+        }
+      });
+    });
+
+    $("a.less", minimized_elements).click(function (event) {
+      event.preventDefault();
+      $(this).parent().animate({ "height": "hide" }, {
+        duration: 300,
+        done: function () {
+          $(this).prev().animate({ "opacity": "show" }, 300);
+          $(this).prev().prev().animate({ "opacity": "show" }, 300);
+        }
+      });
+    });
+
+    //Fixing ie form attribute issue
+    $visible_input = $(".visible-search-input");
+    $hidden_input = $(".hidden-search-input");
+
+    //get initial value on page reload
+    $visible_input.val($hidden_input.val());
+
+    //sync the real input and submit with the fake ones
+    $visible_input.on("change", function () {
+      $hidden_input.val($(this).val());
+    });
+
+    $(".visible-search-submit").click(function () {
+      $(".hidden-search-submit").click();
+    });
+
+    $visible_input.keyup(function (event) {
+      if (event.keyCode === 13) {
+        $(".hidden-search-submit").click();
+      }
+    });
+
+    $(".search-tabs a").on("click", function (e) {
+      e.preventDefault();
+      $("#main-search-form").attr("action", this.href);
+      $("#main-search-form").submit();
+    });
+
+  });
   </script>
 {% endblock %}

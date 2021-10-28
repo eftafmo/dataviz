@@ -1,18 +1,48 @@
 <template>
-<programmes :datasource="datasource" :initial="initial" class="projects">
-  <template slot="programme-content" scope="x">
-    <projects
+  <programmes :datasource="datasource" :initial="initial" class="projects">
+    <template #programme-content="x">
+      <projects
+        :id="x.programme.programme_code"
         :details-datasource="detailsDatasource"
         :country="x.beneficiary.id"
         :sector="x.programme.sector"
-        :id="x.programme.programme_code"
         :name="x.programme.programme_name"
         :extra="extra"
-    ></projects>
-  </template>
-</programmes>
+        :period="period"
+      ></projects>
+    </template>
+  </programmes>
 </template>
 
+<script>
+import Component from "./Component";
+
+import Programmes from "./Programmes";
+import Projects from "./includes/Projects";
+import ProjectsMixin from "./mixins/Projects";
+
+export default {
+  components: {
+    programmes: Programmes,
+    projects: Projects,
+  },
+  extends: Component,
+  mixins: [ProjectsMixin],
+
+  props: {
+    detailsDatasource: {
+      type: String,
+      default: null,
+    },
+  },
+
+  data() {
+    return {
+      extra: null,
+    };
+  },
+};
+</script>
 
 <style lang="less">
 .dataviz .viz.programmes.projects {
@@ -27,34 +57,3 @@
   }
 }
 </style>
-
-
-<script>
-import Component from './Component'
-
-import Programmes from './Programmes'
-import Projects from './includes/Projects'
-import ProjectsMixin from './mixins/Projects';
-
-
-export default Component.extend({
-  mixins: [
-    ProjectsMixin,
-  ],
-
-  components: {
-    programmes: Programmes,
-    projects: Projects,
-  },
-
-  props: {
-    detailsDatasource: String,
-  },
-
-  data() {
-    return {
-      extra: null,
-    }
-  },
-})
-</script>

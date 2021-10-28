@@ -9,10 +9,15 @@
       {% endif %}
     </h3>
     <div class="country_status">
-              <span class="country"><img
-                      src="/assets/sprites/flags/flag-{{ project.state_name.0|lower|cut:" " }}.png"
-                      alt="{{ project.state_name.0 }} flag"
-                      height="20px">&nbsp;{{ project.state_name.0 }}</span> |
+      {% if project.state_name.0 in states_with_flags %}
+        <span class="country">
+          <img
+              src="/assets/sprites/flags/flag-{{ project.state_name.0|lower|cut:" " }}.png"
+              alt="{{ project.state_name.0 }} flag"
+              height="20px"
+          >&nbsp;{{ project.state_name.0 }}
+        </span> |
+      {% endif %}
       <span>{{ project.project_status.0 }}</span>
     </div>
     <div><b>Programme:</b> {{ project.programme_name.0 }}</div>

@@ -1,0 +1,1113 @@
+[
+  {
+    "allocation": "5851742.00",
+    "project_count": 10,
+    "programmes": {
+      "HU04": "HU04"
+    },
+    "id": "HU",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2576164.00",
+    "project_count": 4,
+    "programmes": {
+      "HU11": "HU11"
+    },
+    "id": "HU",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "7544357.00",
+    "project_count": 229,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "774260.00",
+    "project_count": 5,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "HU",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2107877.00",
+    "project_count": 5,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "57959.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3101703.00",
+    "project_count": 1,
+    "programmes": {
+      "HU12": "HU12"
+    },
+    "id": "HU",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1328244.00",
+    "project_count": 22,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "77568.00",
+    "project_count": 5,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU1",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "160375.00",
+    "project_count": 1,
+    "programmes": {
+      "HU03": "HU03"
+    },
+    "id": "HU1",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "139682.00",
+    "project_count": 5,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU10",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1475244.00",
+    "project_count": 2,
+    "programmes": {
+      "HU11": "HU11"
+    },
+    "id": "HU101",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "802072.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU101",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "618531.00",
+    "project_count": 1,
+    "programmes": {
+      "HU02": "HU02"
+    },
+    "id": "HU101",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "806839.00",
+    "project_count": 53,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU101",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1490865.00",
+    "project_count": 5,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU101",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1074948.00",
+    "project_count": 12,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU101",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "137058.00",
+    "project_count": 2,
+    "programmes": {
+      "HU03": "HU03"
+    },
+    "id": "HU101",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "223968.00",
+    "project_count": 11,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU101",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "740656.00",
+    "project_count": 1,
+    "programmes": {
+      "HU11": "HU11"
+    },
+    "id": "HU102",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1405195.00",
+    "project_count": 3,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU102",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "127784.00",
+    "project_count": 11,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU102",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1365600.00",
+    "project_count": 2,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU102",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107158.00",
+    "project_count": 1,
+    "programmes": {
+      "HU03": "HU03"
+    },
+    "id": "HU102",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "103040.00",
+    "project_count": 2,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU102",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "29720.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU2",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "82189.00",
+    "project_count": 3,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU2",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "640582.00",
+    "project_count": 1,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU2",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "652570.00",
+    "project_count": 1,
+    "programmes": {
+      "HU11": "HU11"
+    },
+    "id": "HU211",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "35326.00",
+    "project_count": 3,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU211",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "226561.00",
+    "project_count": 1,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU211",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "379045.00",
+    "project_count": 1,
+    "programmes": {
+      "HU02": "HU02"
+    },
+    "id": "HU212",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40234.00",
+    "project_count": 4,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU212",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "392998.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU213",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "103254.00",
+    "project_count": 5,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU213",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "806232.00",
+    "project_count": 2,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU213",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "41249.00",
+    "project_count": 2,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU22",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "60842.00",
+    "project_count": 6,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU221",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "148182.00",
+    "project_count": 1,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU221",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "6923.00",
+    "project_count": 1,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU221",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "456030.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU222",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "5453.00",
+    "project_count": 1,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU222",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU222",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "95595.00",
+    "project_count": 6,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU223",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "126844.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU223",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7692.00",
+    "project_count": 1,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU23",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1705848.00",
+    "project_count": 2,
+    "programmes": {
+      "HU11": "HU11"
+    },
+    "id": "HU231",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "320980.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU231",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "267509.00",
+    "project_count": 17,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU231",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "542937.00",
+    "project_count": 2,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU231",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "168798.00",
+    "project_count": 2,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU231",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "HU02": "HU02"
+    },
+    "id": "HU231",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7359.00",
+    "project_count": 1,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU231",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "278561.00",
+    "project_count": 1,
+    "programmes": {
+      "HU02": "HU02"
+    },
+    "id": "HU232",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "33821.00",
+    "project_count": 4,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU232",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1952050.00",
+    "project_count": 1,
+    "programmes": {
+      "HU02": "HU02"
+    },
+    "id": "HU232",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "165687.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU233",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "72280.00",
+    "project_count": 3,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU233",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "37856.00",
+    "project_count": 3,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU3",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1893220.00",
+    "project_count": 1,
+    "programmes": {
+      "HU12": "HU12"
+    },
+    "id": "HU3",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "82799.00",
+    "project_count": 2,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU31",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "150394.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU31",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "758521.00",
+    "project_count": 30,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU311",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2371600.00",
+    "project_count": 4,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU311",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "92256.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU311",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "10710.00",
+    "project_count": 1,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU311",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "518000.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU312",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "172169.00",
+    "project_count": 11,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU312",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "435197.00",
+    "project_count": 1,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU312",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "10419.00",
+    "project_count": 1,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU312",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "303263.00",
+    "project_count": 2,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU313",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "97636.00",
+    "project_count": 4,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU313",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "60673.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU32",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "709542.00",
+    "project_count": 1,
+    "programmes": {
+      "HU11": "HU11"
+    },
+    "id": "HU321",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "750372.00",
+    "project_count": 2,
+    "programmes": {
+      "HU02": "HU02"
+    },
+    "id": "HU321",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "89735.00",
+    "project_count": 7,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU321",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "327127.00",
+    "project_count": 1,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU321",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "123444.00",
+    "project_count": 2,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU321",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "345337.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU322",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "20801.00",
+    "project_count": 2,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU322",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "692562.00",
+    "project_count": 3,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU322",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "162517.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU322",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "16830.00",
+    "project_count": 1,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU322",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "541680.00",
+    "project_count": 2,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU323",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57178.00",
+    "project_count": 7,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU323",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2033873.00",
+    "project_count": 4,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU323",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "196573.00",
+    "project_count": 3,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU323",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "70588.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU33",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "508320.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU331",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59706.00",
+    "project_count": 6,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU331",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3828423.00",
+    "project_count": 5,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU331",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1250821.00",
+    "project_count": 1,
+    "programmes": {
+      "HU03": "HU03"
+    },
+    "id": "HU331",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "74197.00",
+    "project_count": 8,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU332",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "365700.00",
+    "project_count": 1,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU332",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "933583.00",
+    "project_count": 1,
+    "programmes": {
+      "HU11": "HU11"
+    },
+    "id": "HU333",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1253562.00",
+    "project_count": 2,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU333",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "567227.00",
+    "project_count": 1,
+    "programmes": {
+      "HU02": "HU02"
+    },
+    "id": "HU333",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "200463.00",
+    "project_count": 10,
+    "programmes": {
+      "HU05": "HU05"
+    },
+    "id": "HU333",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "538257.00",
+    "project_count": 2,
+    "programmes": {
+      "HU09": "HU09"
+    },
+    "id": "HU333",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "20726.00",
+    "project_count": 1,
+    "programmes": {
+      "HU07": "HU07"
+    },
+    "id": "HU333",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "51163.00",
+    "project_count": 2,
+    "programmes": {
+      "HU08": "HU08"
+    },
+    "id": "HU333",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  }
+]

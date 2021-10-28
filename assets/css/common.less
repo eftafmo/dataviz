@@ -1,0 +1,50 @@
+a {
+  color: #3d90f3;
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+.btn-link,
+.btn-anchor,
+.no-btn {
+  font: inherit;
+  background: transparent;
+  padding: 0;
+  border: 0;
+}
+
+.btn-link,
+.btn-anchor {
+  color: #3d90f3;
+}
+
+.btn-link:hover,
+.btn-anchor:hover {
+  text-decoration: underline;
+}
+
+* html .clearfix {
+  zoom: 1;
+} /* IE6 */
+*:first-child + html .clearfix {
+  zoom: 1;
+} /* IE7 */
+
+.legend-heading {
+  color: #3b5998;
+  font-size: 3.6rem;
+}

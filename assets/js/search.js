@@ -1,10 +1,9 @@
-import Vue from 'vue'
+import { defineComponent } from "vue";
 
-import Sidebar from './components/includes/Sidebar'
+import Sidebar from "./components/includes/Sidebar";
 
-
-export const SearchRoot = Vue.extend({
+export const SearchRoot = defineComponent({
   components: {
     sidebar: Sidebar,
   },
-})
+});

@@ -1,0 +1,427 @@
+[
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "BG",
+    "allocation": 78600000.0,
+    "programmes": [
+      "BG02",
+      "BG03",
+      "BG04",
+      "BG05",
+      "BG06",
+      "BG07",
+      "BG08",
+      "BG09"
+    ],
+    "project_count": 774
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "BG",
+    "allocation": 48000000.0,
+    "programmes": [
+      "BG07",
+      "BG10",
+      "BG11",
+      "BG12",
+      "BG13",
+      "BG14",
+      "BG15",
+      "IN22"
+    ],
+    "project_count": 290
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "CY",
+    "allocation": 3850000.0,
+    "programmes": [
+      "CY02",
+      "CY03"
+    ],
+    "project_count": 23
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "CY",
+    "allocation": 3999999.99,
+    "programmes": [
+      "CY04",
+      "IN22"
+    ],
+    "project_count": 6
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "CZ",
+    "allocation": 61399999.99,
+    "programmes": [
+      "CZ02",
+      "CZ03",
+      "CZ04",
+      "CZ05",
+      "CZ06",
+      "CZ07"
+    ],
+    "project_count": 428
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "CZ",
+    "allocation": 70399999.99,
+    "programmes": [
+      "CZ07",
+      "CZ08",
+      "CZ09",
+      "CZ10",
+      "CZ11",
+      "CZ12",
+      "CZ13",
+      "CZ14",
+      "CZ15",
+      "IN22"
+    ],
+    "project_count": 476
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "EE",
+    "allocation": 23000000.02,
+    "programmes": [
+      "EE02",
+      "EE03",
+      "EE04",
+      "EE05",
+      "EE10"
+    ],
+    "project_count": 167
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "EE",
+    "allocation": 25599999.99,
+    "programmes": [
+      "EE06",
+      "EE07",
+      "EE08",
+      "EE09",
+      "EE10",
+      "EE11",
+      "IN22"
+    ],
+    "project_count": 132
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "ES",
+    "allocation": 45850000.01,
+    "programmes": [
+      "ES02",
+      "ES03",
+      "ES04",
+      "ES05",
+      "ES06",
+      "ES07"
+    ],
+    "project_count": 446
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "ES",
+    "allocation": 0.0,
+    "programmes": [],
+    "project_count": 0
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "GR",
+    "allocation": 63400000.01,
+    "programmes": [
+      "GR02",
+      "GR03",
+      "GR04",
+      "GR05",
+      "GR06",
+      "GR07",
+      "GR08"
+    ],
+    "project_count": 130
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "GR",
+    "allocation": 0.0,
+    "programmes": [],
+    "project_count": 0
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "HR",
+    "allocation": 5000000.01,
+    "programmes": [
+      "HR02",
+      "HR03"
+    ],
+    "project_count": 49
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "HR",
+    "allocation": 4600000.0,
+    "programmes": [
+      "HR02",
+      "HR04",
+      "IN22"
+    ],
+    "project_count": 7
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "HU",
+    "allocation": 70100000.01,
+    "programmes": [
+      "HU02",
+      "HU03",
+      "HU04",
+      "HU05",
+      "HU06",
+      "HU07",
+      "HU08"
+    ],
+    "project_count": 558
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "HU",
+    "allocation": 83200000.0,
+    "programmes": [
+      "HU09",
+      "HU10",
+      "HU11",
+      "HU12",
+      "IN22"
+    ],
+    "project_count": 60
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "LT",
+    "allocation": 38400000.0,
+    "programmes": [
+      "LT02",
+      "LT03",
+      "LT04",
+      "LT05",
+      "LT06",
+      "LT07",
+      "LT08"
+    ],
+    "project_count": 148
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "LT",
+    "allocation": 45600000.0,
+    "programmes": [
+      "IN22",
+      "LT09",
+      "LT10",
+      "LT11",
+      "LT12",
+      "LT13",
+      "LT14"
+    ],
+    "project_count": 75
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "LV",
+    "allocation": 34550000.0,
+    "programmes": [
+      "LV02",
+      "LV03",
+      "LV04",
+      "LV05"
+    ],
+    "project_count": 270
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "LV",
+    "allocation": 38400000.0,
+    "programmes": [
+      "IN22",
+      "LV05",
+      "LV06",
+      "LV07",
+      "LV08"
+    ],
+    "project_count": 77
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "MT",
+    "allocation": 2900000.0,
+    "programmes": [
+      "MT02",
+      "MT03"
+    ],
+    "project_count": 15
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "MT",
+    "allocation": 1600000.01,
+    "programmes": [
+      "IN22",
+      "MT04"
+    ],
+    "project_count": 3
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "PL",
+    "allocation": 266900000.0,
+    "programmes": [
+      "PL02",
+      "PL03",
+      "PL04",
+      "PL05",
+      "PL06",
+      "PL07",
+      "PL08",
+      "PL09",
+      "PL10"
+    ],
+    "project_count": 969
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "PL",
+    "allocation": 311199999.99,
+    "programmes": [
+      "IN22",
+      "PL04",
+      "PL07",
+      "PL08",
+      "PL10",
+      "PL12",
+      "PL13",
+      "PL14",
+      "PL15",
+      "PL16",
+      "PL17",
+      "PL18"
+    ],
+    "project_count": 453
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "PT",
+    "allocation": 57949999.98,
+    "programmes": [
+      "PT02",
+      "PT03",
+      "PT04",
+      "PT05",
+      "PT06",
+      "PT07",
+      "PT08",
+      "PT09"
+    ],
+    "project_count": 212
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "PT",
+    "allocation": 0.0,
+    "programmes": [],
+    "project_count": 0
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "RO",
+    "allocation": 190749999.99,
+    "programmes": [
+      "RO02",
+      "RO03",
+      "RO04",
+      "RO05",
+      "RO06",
+      "RO07",
+      "RO09",
+      "RO10",
+      "RO11",
+      "RO12",
+      "RO13",
+      "RO14",
+      "RO15"
+    ],
+    "project_count": 749
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "RO",
+    "allocation": 115200000.01,
+    "programmes": [
+      "IN22",
+      "RO17",
+      "RO18",
+      "RO19",
+      "RO20",
+      "RO21",
+      "RO23",
+      "RO24",
+      "RO25"
+    ],
+    "project_count": 105
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "SI",
+    "allocation": 12500000.01,
+    "programmes": [
+      "SI02",
+      "SI03",
+      "SI04"
+    ],
+    "project_count": 82
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "SI",
+    "allocation": 14400000.0,
+    "programmes": [
+      "IN22",
+      "SI04",
+      "SI05"
+    ],
+    "project_count": 47
+  },
+  {
+    "fm": "EEA Grants",
+    "beneficiary": "SK",
+    "allocation": 38349999.99,
+    "programmes": [
+      "SK02",
+      "SK03",
+      "SK04",
+      "SK05",
+      "SK06",
+      "SK10"
+    ],
+    "project_count": 304
+  },
+  {
+    "fm": "Norway Grants",
+    "beneficiary": "SK",
+    "allocation": 42400000.0,
+    "programmes": [
+      "IN22",
+      "SK07",
+      "SK08",
+      "SK09"
+    ],
+    "project_count": 78
+  }
+]

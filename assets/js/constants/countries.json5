@@ -1,31 +1,36 @@
 {
+  // XXX Order in the Objects, determines the sorting order in which
+  // XXX the country data is presented.
   donors: {
     IS: {
       id: "IS",
       name: "Iceland",
       alt_name: "Icelandic",
-      fms: ["eea-grants"],
-      sort_order: 1,
+      fms: [
+        "eea-grants"
+      ],
     },
     LI: {
       id: "LI",
       name: "Liechtenstein",
       alt_name: "Liechtenstein",
-      fms: ["eea-grants"],
-      sort_order: 2,
+      fms: [
+        "eea-grants"
+      ],
     },
     NO: {
       id: "NO",
       name: "Norway",
       alt_name: "Norwegian",
-      fms: ["norway-grants", "eea-grants"],
-      sort_order: 3,
+      fms: [
+        "norway-grants",
+        "eea-grants"
+      ],
     },
     Intl: {
       id: "Intl",
       name: "International",
       alt_name: "International",
-      sort_order: 4,
     },
   },
   beneficiaries: {
@@ -49,9 +54,19 @@
       id: "EE",
       name: "Estonia",
     },
+    EL: {
+      id: "EL",
+      name: "Greece",
+      periods: [
+        "2014-2021"
+      ]
+    },
     GR: {
       id: "GR",
       name: "Greece",
+      periods: [
+        "2009-2014"
+      ]
     },
     HU: {
       id: "HU",
@@ -92,7 +107,17 @@
     ES: {
       id: "ES",
       name: "Spain",
+      periods: [
+        "2009-2014",
+      ]
     },
+    "XX": {
+      id: "XX",
+      name: "Non-country specific",
+      periods: [
+        "2014-2021",
+      ]
+    }
   },
   partners: {
     BE: {

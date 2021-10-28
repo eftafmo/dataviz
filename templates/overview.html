@@ -1,0 +1,47 @@
+{% extends "_layout.html" %}
+
+
+{% block main %}
+  <div class="homepage_content_wrapper">
+    <overview
+        :initial="dataset"
+        period="{{ PERIOD }}"
+    ></overview>
+  </div>
+
+  <form class="homepage-search" action="{% url 'frontend:search_programme' %}">
+    <input
+        id="search_request_input" type="search" name="q"
+        placeholder="Search"
+    >
+    <input type="text" name="period" hidden value="{{ PERIOD }}"/>
+    <button type="submit" title="Search" name="page" value="1">
+      <span class="icon icon-search"></span>
+    </button>
+  </form>
+{% endblock %}
+
+{% block after_content %}
+  <overview_funding
+      :initial="dataset"
+      period="{{ PERIOD }}"
+  ></overview_funding>
+  <overview_results
+      :initial="dataset"
+      period="{{ PERIOD }}"
+  ></overview_results>
+{% endblock after_content %}
+
+{% block finally %}
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    _createApp(
+      Dataviz.Index,
+      {
+        datasource: "/api/overview.json",
+        datasourcePeriods: ["{{ PERIOD }}"]
+      }
+    ).mount("#content");
+  });
+  </script>
+{% endblock %}

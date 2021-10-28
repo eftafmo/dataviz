@@ -1,0 +1,79 @@
+/* form controls */
+.input-box input,
+.input-box textarea,
+.input-box select {
+  box-sizing: border-box;
+  padding: 0.53334em 0.66667em;
+  border: 2px solid #ddd;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: middle;
+}
+.input-box input:hover,
+.input-box input:focus,
+.input-box textarea:hover,
+.input-box textarea:focus,
+.input-box select:hover,
+.input-box select:focus {
+  border-color: #50b9ff;
+}
+
+.input-box input[disabled],
+.input-box textarea[disabled],
+.input-box select[disabled] {
+  border-color: transparent;
+  background-color: #ddd;
+  color: #898989;
+  cursor: default;
+}
+
+.input-box select {
+  -webkit-appearance: none;
+  padding-right: 2em;
+  border-radius: 0;
+  background: url(../imgs/icon-dropdown.svg) right center no-repeat;
+  background-size: 1.5em;
+}
+
+.input-block label {
+  display: block;
+  margin-bottom: 1rem;
+}
+.input-block input,
+.input-block textarea,
+.input-block select {
+  width: 100%;
+}
+
+/* subtle select */
+.subtle-select {
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: #898989;
+  border: 0;
+}
+.subtle-select:hover {
+  color: inherit;
+}
+
+.viz-select-title,
+.viz-select-heading {
+  margin: 0 1rem !important;
+  font-size: 3.6rem;
+  font-weight: bold;
+  background: none;
+  border: none;
+  outline: none;
+  color: #222222;
+
+  option {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.6rem;
+  }
+}
+
+.viz-select-title {
+  font-size: 3rem;
+}

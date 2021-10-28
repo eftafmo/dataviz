@@ -1,87 +1,155 @@
 <template>
-  <select class="viz-select clearfix" @change="setFilter">
+  <select class="viz-select clearfix" :style="{ width }" @change="setFilter">
     <option value="">
       {{ title }}
     </option>
     <option
-        v-for="(item, id, index) in items"
-        :value="getFilterName(item)"
-        :selected="getFilterName(item) == current"
+      v-for="item in items"
+      :key="getFilterName(item)"
+      :value="getFilterName(item)"
+      :selected="getFilterName(item) === current"
     >
-      {{item.name}}
+      {{ getFilterDisplayName(item) }}
     </option>
   </select>
 </template>
 
-<style lang="less">
-.dataviz .viz-select {
-    border-color: #fff;
-    background: #fff;
-    color: #aaa;
-    font-family: inherit;
-    max-width: 100%;
-    margin-bottom: 2rem!important;
-    &:focus {
-      outline: none;
-    }
-    option {
-      color: black;
-    }
-    @media(min-width: 780px) and (max-width: 1000px){
-      width: 100%;
-    }
-  }
-
-  .dropdown {
-    @media (max-width: 950px) {
-      width: 100%;
-    }
-  }
-
-</style>
-
 <script>
-import Vue from 'vue';
+import WithFiltersMixin from "../mixins/WithFilters";
 
-import WithFiltersMixin from '../mixins/WithFilters'
-
-export default Vue.extend({
-  mixins: [
-    WithFiltersMixin,
-  ],
+export default {
+  mixins: [WithFiltersMixin],
 
   props: {
     items: {
-      id: String,
-      name: String,
+      type: [Object, Array],
+      required: true,
     },
-    title: String,
-    filter: String,
+    title: {
+      type: String,
+      required: true,
+    },
+    filter: {
+      type: String,
+      required: true,
+    },
   },
-
-  computed : {
+  data() {
+    return {
+      width: "auto",
+    };
+  },
+  computed: {
+    itemArray() {
+      return Array.isArray(this.items) ? this.items : Object.values(this.items);
+    },
     current() {
       return this.filters[this.filter];
     },
+    currentItem() {
+      return this.itemArray.find(
+        (item) => this.getFilterName(item) === this.current
+      );
+    },
+    currentDisplayName() {
+      return (
+        (this.currentItem && this.getFilterDisplayName(this.currentItem)) ||
+        this.title
+      );
+    },
   },
-
+  mounted() {
+    this.$watch("filters", this.setWidth, {
+      deep: true,
+      initial: true,
+    });
+  },
   methods: {
+    measureText(text) {
+      const computedStyle = window.getComputedStyle(this.$el);
+      const el = document.createElement("span");
+      el.style.opacity = "0";
+      el.style.position = "absolute";
+      el.textContent = text;
+      [
+        "fontSize",
+        "fontFamily",
+        "fontWeight",
+        "fontStyle",
+        "lineHeight",
+      ].forEach((key) => {
+        el.style[key] = computedStyle[key];
+      });
+
+      document.body.appendChild(el);
+      const value = el.clientWidth;
+      document.body.removeChild(el);
+
+      return value;
+    },
+    setWidth() {
+      this.width = this.measureText(this.currentDisplayName) + 25 + "px";
+    },
     setFilter(e) {
       const select = e.target;
       this.filters[this.filter] = select.value || null;
     },
-
-    getFilterName(item){
-      // special case for country filters
-      if (this.filter == 'beneficiary' || this.filter == 'donor'){
-        return item.id
-      }
-      else {
-        return item.name
+    getFilterDisplayName(item) {
+      if (typeof item === "string") {
+        return item;
+      } else {
+        return item.name;
       }
     },
-
+    getFilterName(item) {
+      // XXX FM uses name instead of ID for filter for some reason.
+      switch (this.filter) {
+        case "fm":
+        case "sector":
+          return item.name;
+        default:
+          return item.id || item.name || item;
+      }
+    },
   },
-});
-
+};
 </script>
+
+<style lang="less">
+@import "@css/style";
+
+.dataviz .viz-select {
+  border-color: @bg_color;
+  background: @bg_color;
+  color: #aaa;
+  font-family: inherit;
+  max-width: 100%;
+  margin-bottom: 2rem !important;
+  &:focus {
+    outline: none;
+  }
+  option {
+    color: black;
+  }
+  @media (min-width: 780px) and (max-width: 1000px) {
+    width: 100%;
+  }
+}
+
+.dropdown {
+  @media (max-width: 950px) {
+    width: 100%;
+  }
+}
+
+body.dark.dataviz .viz-select {
+  border-color: @dark_bg_color;
+  background: @dark_bg_color;
+  color: #555;
+
+  option {
+    color: white;
+  }
+}
+</style>
+

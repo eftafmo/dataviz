@@ -1,0 +1,101 @@
+[
+  {
+    "allocation": "1127676.00",
+    "project_count": 1,
+    "programmes": {
+      "CY02": "CY02"
+    },
+    "id": "CY000",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "301659.00",
+    "project_count": 1,
+    "programmes": {
+      "CY02": "CY02"
+    },
+    "id": "CY000",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "666861.00",
+    "project_count": 1,
+    "programmes": {
+      "CY04": "CY04"
+    },
+    "id": "CY000",
+    "area": "Civil society support",
+    "sector": "Civil Society",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "613647.00",
+    "project_count": 1,
+    "programmes": {
+      "CY02": "CY02"
+    },
+    "id": "CY000",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "731518.00",
+    "project_count": 1,
+    "programmes": {
+      "CY04": "CY04"
+    },
+    "id": "CY000",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1074635.00",
+    "project_count": 20,
+    "programmes": {
+      "CY03": "CY03"
+    },
+    "id": "CY000",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "35865.00",
+    "project_count": 1,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "CY000",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "883724.00",
+    "project_count": 1,
+    "programmes": {
+      "CY04": "CY04"
+    },
+    "id": "CY000",
+    "area": "Justice and home affairs",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1168463.00",
+    "project_count": 2,
+    "programmes": {
+      "CY04": "CY04"
+    },
+    "id": "CY000",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  }
+]

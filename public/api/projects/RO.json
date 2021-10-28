@@ -1,0 +1,2411 @@
+[
+  {
+    "allocation": "3558498.00",
+    "project_count": 1,
+    "programmes": {
+      "RO07": "RO07"
+    },
+    "id": "RO",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7124860.00",
+    "project_count": 10,
+    "programmes": {
+      "RO02": "RO02"
+    },
+    "id": "RO",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "4755670.00",
+    "project_count": 2,
+    "programmes": {
+      "RO18": "RO18"
+    },
+    "id": "RO",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1607173.00",
+    "project_count": 6,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7380279.00",
+    "project_count": 8,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6086454.00",
+    "project_count": 6,
+    "programmes": {
+      "RO23": "RO23"
+    },
+    "id": "RO",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "941629.00",
+    "project_count": 6,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1308908.00",
+    "project_count": 1,
+    "programmes": {
+      "RO03": "RO03"
+    },
+    "id": "RO",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "11384262.00",
+    "project_count": 142,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "923389.00",
+    "project_count": 5,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "RO",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2540404.00",
+    "project_count": 3,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5097114.00",
+    "project_count": 3,
+    "programmes": {
+      "RO24": "RO24"
+    },
+    "id": "RO",
+    "area": "Judicial capacity-building and cooperation",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "565219.00",
+    "project_count": 3,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6948201.00",
+    "project_count": 4,
+    "programmes": {
+      "RO25": "RO25"
+    },
+    "id": "RO",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "3282942.00",
+    "project_count": 31,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "20182566.00",
+    "project_count": 8,
+    "programmes": {
+      "RO19": "RO19"
+    },
+    "id": "RO",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5009176.00",
+    "project_count": 6,
+    "programmes": {
+      "RO04": "RO04"
+    },
+    "id": "RO",
+    "area": "Reduction of hazardous substances",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 3,
+    "programmes": {
+      "RO06": "RO06"
+    },
+    "id": "RO",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9140078.00",
+    "project_count": 13,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "RO",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3134919.00",
+    "project_count": 6,
+    "programmes": {
+      "RO21": "RO21"
+    },
+    "id": "RO",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "241508.00",
+    "project_count": 9,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "300316.00",
+    "project_count": 2,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO1",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "363688.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO1",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "534313.00",
+    "project_count": 5,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO11",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1930605.00",
+    "project_count": 7,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO11",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "180387.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO11",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "143075.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO11",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2043248.00",
+    "project_count": 2,
+    "programmes": {
+      "RO04": "RO04"
+    },
+    "id": "RO11",
+    "area": "Reduction of hazardous substances",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "916087.00",
+    "project_count": 1,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "RO11",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2700.00",
+    "project_count": 2,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO11",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "309241.00",
+    "project_count": 1,
+    "programmes": {
+      "RO02": "RO02"
+    },
+    "id": "RO111",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "362205.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO111",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "279785.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO111",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "65555.00",
+    "project_count": 2,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO111",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3608708.00",
+    "project_count": 4,
+    "programmes": {
+      "RO06": "RO06"
+    },
+    "id": "RO111",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "625856.00",
+    "project_count": 3,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO112",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "343803.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO112",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "469545.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO112",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9489.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO112",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "705763.00",
+    "project_count": 3,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO113",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "885202.00",
+    "project_count": 3,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO113",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1082614.00",
+    "project_count": 16,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO113",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "317278.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO113",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3457555.00",
+    "project_count": 1,
+    "programmes": {
+      "RO25": "RO25"
+    },
+    "id": "RO113",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "380594.00",
+    "project_count": 6,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO113",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "335183.00",
+    "project_count": 5,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO113",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "331282.00",
+    "project_count": 1,
+    "programmes": {
+      "RO02": "RO02"
+    },
+    "id": "RO114",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "968344.00",
+    "project_count": 3,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO114",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "265457.00",
+    "project_count": 1,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO114",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "316573.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO114",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "547560.00",
+    "project_count": 2,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO114",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "411704.00",
+    "project_count": 5,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO115",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "41540.00",
+    "project_count": 1,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO116",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34580.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO116",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "441043.00",
+    "project_count": 5,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO12",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6367589.00",
+    "project_count": 12,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO12",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "150446.00",
+    "project_count": 4,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO12",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "768420.00",
+    "project_count": 4,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO121",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1022045.00",
+    "project_count": 2,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO121",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59002.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO121",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "153584.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO121",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "111510.00",
+    "project_count": 3,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO121",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "774250.00",
+    "project_count": 5,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO122",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1079229.00",
+    "project_count": 14,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO122",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "347047.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO122",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "161017.00",
+    "project_count": 3,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO122",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "10080.00",
+    "project_count": 1,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO122",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "216390.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO123",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "125069.00",
+    "project_count": 5,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO123",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "116229.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO123",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "296710.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO123",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "163211.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO124",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "127237.00",
+    "project_count": 4,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO124",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "393149.00",
+    "project_count": 6,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO124",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "10095.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO124",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1034992.00",
+    "project_count": 5,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO125",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "249126.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO125",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "84788.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO125",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "401019.00",
+    "project_count": 2,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO125",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "11437.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO125",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "808777.00",
+    "project_count": 4,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO126",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "191933.00",
+    "project_count": 1,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO126",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "348481.00",
+    "project_count": 5,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO126",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "120589.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO126",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "248250.00",
+    "project_count": 3,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO126",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34764.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO2",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "264558.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO2",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12604.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO2",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1134657.00",
+    "project_count": 12,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO21",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2885562.00",
+    "project_count": 7,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO21",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "759216.00",
+    "project_count": 4,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO211",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "515327.00",
+    "project_count": 9,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO211",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "397061.00",
+    "project_count": 3,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO211",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3281534.00",
+    "project_count": 1,
+    "programmes": {
+      "RO25": "RO25"
+    },
+    "id": "RO211",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "78672.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO212",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "93533.00",
+    "project_count": 2,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO212",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1336494.00",
+    "project_count": 4,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO213",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "153278.00",
+    "project_count": 1,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO213",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "815542.00",
+    "project_count": 10,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO213",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "127871.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO213",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "252138.00",
+    "project_count": 1,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO213",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19735.00",
+    "project_count": 3,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO213",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "267736.00",
+    "project_count": 1,
+    "programmes": {
+      "RO06": "RO06"
+    },
+    "id": "RO213",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "751238.00",
+    "project_count": 1,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "RO213",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "743400.00",
+    "project_count": 3,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO213",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "268190.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO214",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "256012.00",
+    "project_count": 6,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO214",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "820124.00",
+    "project_count": 1,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "RO214",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "52249.00",
+    "project_count": 2,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO215",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "174412.00",
+    "project_count": 1,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO215",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "31392.00",
+    "project_count": 3,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO215",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "273126.00",
+    "project_count": 1,
+    "programmes": {
+      "RO02": "RO02"
+    },
+    "id": "RO216",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "292882.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO216",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "214819.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO216",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "166658.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO22",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7522696.00",
+    "project_count": 11,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO22",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "288594.00",
+    "project_count": 1,
+    "programmes": {
+      "RO04": "RO04"
+    },
+    "id": "RO22",
+    "area": "Reduction of hazardous substances",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12825.00",
+    "project_count": 2,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO22",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "243957.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO221",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "78884.00",
+    "project_count": 1,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO221",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "72729.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO221",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "76958.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO221",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "328706.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO222",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "55637.00",
+    "project_count": 1,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO222",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "234517.00",
+    "project_count": 1,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO222",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "221436.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO222",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "104011.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO222",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "363165.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO223",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "219599.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO223",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO223",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11557.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO223",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "50310.00",
+    "project_count": 2,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO223",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "351384.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO224",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12195.00",
+    "project_count": 1,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO224",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1123857.00",
+    "project_count": 1,
+    "programmes": {
+      "RO02": "RO02"
+    },
+    "id": "RO225",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "301254.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO225",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "278048.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO225",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "297830.00",
+    "project_count": 1,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO225",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "566663.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO226",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "184137.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO226",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "138376.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO226",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "120070.00",
+    "project_count": 1,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO226",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "98613.00",
+    "project_count": 1,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO3",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "97940.00",
+    "project_count": 2,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO3",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "893526.00",
+    "project_count": 14,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO31",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1284705.00",
+    "project_count": 3,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO31",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "116442.00",
+    "project_count": 2,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO31",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "935775.00",
+    "project_count": 1,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "RO31",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "329545.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO311",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "266722.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO311",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO311",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12423.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO311",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "132621.00",
+    "project_count": 3,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO312",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "303819.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO313",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "417332.00",
+    "project_count": 1,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO313",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "102041.00",
+    "project_count": 2,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO313",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "174319.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO313",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "73400.00",
+    "project_count": 1,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO313",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "461444.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO314",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "67521.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO315",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "141034.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO315",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "885721.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO316",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "64316.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO316",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "179581.00",
+    "project_count": 1,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO316",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22610.00",
+    "project_count": 2,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO316",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "54310.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO317",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57226.00",
+    "project_count": 1,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO32",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "240607.00",
+    "project_count": 1,
+    "programmes": {
+      "RO05": "RO05"
+    },
+    "id": "RO32",
+    "area": "Energy efficiency",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "703574.00",
+    "project_count": 11,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO32",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2823309.00",
+    "project_count": 9,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO32",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "276481.00",
+    "project_count": 3,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO32",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1132656.00",
+    "project_count": 1,
+    "programmes": {
+      "RO04": "RO04"
+    },
+    "id": "RO32",
+    "area": "Reduction of hazardous substances",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1330084.00",
+    "project_count": 1,
+    "programmes": {
+      "RO06": "RO06"
+    },
+    "id": "RO32",
+    "area": "Renewable energy",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "43524.00",
+    "project_count": 3,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO32",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1204164.00",
+    "project_count": 4,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO321",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "125615.00",
+    "project_count": 3,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO321",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3064430.00",
+    "project_count": 43,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO321",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "668860.00",
+    "project_count": 5,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO321",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "608601.00",
+    "project_count": 3,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO321",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "313266.00",
+    "project_count": 13,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO321",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "3194440.00",
+    "project_count": 4,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "RO321",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "280297.00",
+    "project_count": 10,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO321",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "190889.00",
+    "project_count": 4,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO322",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "166671.00",
+    "project_count": 1,
+    "programmes": {
+      "RO02": "RO02"
+    },
+    "id": "RO4",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "193406.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO4",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "200365.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO411",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 2,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO411",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "409354.00",
+    "project_count": 6,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO411",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "402227.00",
+    "project_count": 2,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO411",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "918035.00",
+    "project_count": 1,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "RO411",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "148431.00",
+    "project_count": 4,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO411",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "90208.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO412",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "68050.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO412",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "53766.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO413",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "230326.00",
+    "project_count": 1,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO413",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12033.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO413",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "547776.00",
+    "project_count": 3,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO414",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "205722.00",
+    "project_count": 1,
+    "programmes": {
+      "RO20": "RO20"
+    },
+    "id": "RO414",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "112202.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO415",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "324318.00",
+    "project_count": 1,
+    "programmes": {
+      "RO02": "RO02"
+    },
+    "id": "RO42",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "112107.00",
+    "project_count": 2,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO42",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "148488.00",
+    "project_count": 1,
+    "programmes": {
+      "RO17": "RO17"
+    },
+    "id": "RO42",
+    "area": "Green Industry Innovation",
+    "sector": "Green Industry Innovation",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "9686.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO42",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "162595.00",
+    "project_count": 3,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO42",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "25200.00",
+    "project_count": 1,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO421",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "258307.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO422",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "31398.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO422",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "198593.00",
+    "project_count": 1,
+    "programmes": {
+      "RO11": "RO11"
+    },
+    "id": "RO422",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "129711.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO423",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "620265.00",
+    "project_count": 3,
+    "programmes": {
+      "RO12": "RO12"
+    },
+    "id": "RO423",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "115587.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO423",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "RO424",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "222842.00",
+    "project_count": 1,
+    "programmes": {
+      "RO09": "RO09"
+    },
+    "id": "RO424",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "12076.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "RO424",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "116951.00",
+    "project_count": 4,
+    "programmes": {
+      "RO15": "RO15"
+    },
+    "id": "RO424",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "301121.00",
+    "project_count": 1,
+    "programmes": {
+      "RO10": "RO10"
+    },
+    "id": "ROZ",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "165936.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "ROZ",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1081039.00",
+    "project_count": 1,
+    "programmes": {
+      "RO14": "RO14"
+    },
+    "id": "ROZZ",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "RO13": "RO13"
+    },
+    "id": "ROZZZ",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  }
+]

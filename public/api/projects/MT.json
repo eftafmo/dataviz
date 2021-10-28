@@ -1,0 +1,79 @@
+[
+  {
+    "allocation": "361452.00",
+    "project_count": 1,
+    "programmes": {
+      "MT02": "MT02"
+    },
+    "id": "MT",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "160206.00",
+    "project_count": 1,
+    "programmes": {
+      "MT04": "MT04"
+    },
+    "id": "MT",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "829175.00",
+    "project_count": 1,
+    "programmes": {
+      "MT02": "MT02"
+    },
+    "id": "MT",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1049106.00",
+    "project_count": 1,
+    "programmes": {
+      "MT04": "MT04"
+    },
+    "id": "MT",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "353045.00",
+    "project_count": 12,
+    "programmes": {
+      "MT03": "MT03"
+    },
+    "id": "MT",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "15760.00",
+    "project_count": 1,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "MT",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "702750.00",
+    "project_count": 1,
+    "programmes": {
+      "MT02": "MT02"
+    },
+    "id": "MT",
+    "area": "Integrated marine and inland water management",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  }
+]

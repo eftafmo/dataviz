@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Embed Sandbox</title>
+</head>
+<body>
+<div style="padding: 20px; font-size: 16px;">
+  <label>
+    Embed Component:
+    <select onchange="location = this.value;">
+      <option
+          value="{% url 'frontend:embed_sandbox' %}"
+          {% if not selected_component or not selected_scenario %}selected{% endif %}
+      >
+        -- select an option --
+      </option>
+      {% for period, embed_components in available_periods.items %}
+        {% for scenario, components in embed_components.items %}
+          <optgroup label="{{ scenario }} ({{ period }})">
+            {% for component in components.keys %}
+              <option
+                  value="{% url 'frontend:embed_sandbox' scenario=scenario component=component period=period %}?{{ args }}"
+                  {% if component == selected_component and scenario == selected_scenario and period == selected_period %}
+                  selected
+                  {% endif %}
+              >
+                {{ component }}
+              </option>
+            {% endfor %}
+          </optgroup>
+        {% endfor %}
+      {% endfor %}
+    </select>
+  </label>
+  <p>Currently selected:</p>
+  <ul>
+    <li>
+      Scenario: <b>{{ selected_scenario }}</b>
+    </li>
+    <li>
+      Period: <b>{{ selected_period }}</b>
+    </li>
+    <li>
+      Component: <b>{{ selected_component }}</b>
+    </li>
+    <li>
+      Args:
+      <b>{{ args }}</b>
+      {% if not args %}
+        <b>no arguments</b>
+        <i>
+          (tip, any arguments you put in the URL of this page will be passed to the embed link)
+        </i>
+      {% endif %}
+    </li>
+  </ul>
+  <div style="display: flex;">
+    {% if selected_scenario and selected_component %}
+      <div style="margin-top: 20px; overflow: hidden; border: 1px solid; min-width: 500px; padding: 10px;">
+        <script
+            src="{% url 'frontend:embed' scenario=selected_scenario component=selected_component period=selected_period %}?{{ args }}"
+            async
+        ></script>
+      </div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

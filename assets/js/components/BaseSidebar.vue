@@ -1,15 +1,16 @@
 <script>
-import Component from './Component'
+import Component from "./Component";
 
-import Sidebar from './includes/Sidebar'
-import {Tabs, Tab} from 'vue-tabs-component'
+import Sidebar from "./includes/Sidebar";
+// !!!
+//import {Tabs, Tab} from 'vue-tabs-component'
 
-
-export default Component.extend({
+export default {
   components: {
     sidebar: Sidebar,
-    tabs: Tabs,
-    tab: Tab,
+    //    tabs: Tabs,
+    //    tab: Tab,
   },
-})
+  extends: Component,
+};
 </script>

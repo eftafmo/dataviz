@@ -8,8 +8,8 @@ from . import api, frontend
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(api, namespace="api")),
-    url(r'^', include(frontend, namespace="frontend")),
+    url(r'^api/', include((api, 'api'))),
+    url(r'^', include((frontend, 'frontend'))),
 ]
 
 if settings.DEBUG:

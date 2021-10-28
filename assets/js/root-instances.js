@@ -4,42 +4,45 @@
  *          embedding code still works.
  */
 
-import {default as Root} from './components/Root';
-import * as components from './components';
+import { default as Root } from "./components/Root";
+import * as components from "./components";
+import Sidebar from "./components/includes/Sidebar";
 
+const _Base = {
+  extends: Root,
 
-const Base = Root.extend({
   components: {
     globalfilters: components.GlobalFilters,
   },
-});
+};
 
-
-export const Index = Base.extend({
+export const Index = {
+  extends: _Base,
   name: "Index",
 
   components: {
     overview: components.Overview,
+    overview_funding: components.OverviewFunding,
+    overview_results: components.OverviewResults,
   },
-});
+};
 
-
-export const Grants = Base.extend({
+export const Grants = {
+  extends: _Base,
   name: "Grants",
 
   components: {
     mechanisms: components.Mechanisms,
+    thematic_bar_chart: components.ThematicBarChart,
     sectors: components.Sectors,
     xmap: components.GrantsMap,
     beneficiaries: components.Beneficiaries,
-    xsummary: components.Summary,
-    programmes: components.Programmes,
-    results: components.Results,
     sidebar: components.GrantsSidebar,
   },
-});
+};
 
-export const Partners = Base.extend({
+export const Partners = {
+  extends: _Base,
   name: "Partners",
 
   components: {
@@ -48,27 +51,57 @@ export const Partners = Base.extend({
     xmap: components.PartnersMap,
     donors: components.PartnersDonors,
     beneficiaries: components.PartnersBeneficiaries,
-    news: components.PartnersNews,
     programme_partners: components.PartnersDonorProgrammes,
     project_partners: components.PartnersDonorProjects,
-    xsummary: components.PartnersSummary,
-    results: components.PartnersResults,
-    projects: components.PartnersProjects,
     sidebar: components.PartnersSidebar,
   },
-});
+};
 
-export const Projects = Base.extend({
+export const Projects = {
+  extends: _Base,
   name: "Projects",
 
   components: {
     mechanisms: components.ProjectsMechanisms,
+    thematic_bar_chart: components.ThematicBarChart,
     sectors: components.ProjectsSectors,
     xmap: components.ProjectsMap,
     beneficiaries: components.ProjectsBeneficiaries,
-    xsummary: components.ProjectsSummary,
-    news: components.ProjectsNews,
-    projects: components.Projects,
     sidebar: components.ProjectsSidebar,
+    bilateral_initiatives_chart: components.BilateralInitiativesChart,
   },
-});
+};
+
+export const Goals = {
+  extends: _Base,
+  name: "Goals",
+
+  components: {
+    mechanisms: components.GlobalGoalsMechanism,
+    global_goals_chart: components.GlobalGoalsChart,
+    xmap: components.GlobalGoalsMap,
+    beneficiaries: components.GlobalGoalsBeneficiaries,
+    sidebar: components.GoalsSidebar,
+  },
+};
+
+export const Compare = {
+  extends: _Base,
+  name: "Compare",
+
+  components: {
+    compare_sectors_view: components.CompareSectorsView,
+    compare_beneficiaries_view: components.CompareBeneficiariesView,
+
+    funding_by_sector_chart: components.FundingBySectorChart,
+    funding_by_period_chart: components.FundingByPeriodChart,
+    beneficiaries: components.Beneficiaries,
+  },
+};
+
+export const SearchRoot = {
+  name: "SearchRoot",
+  components: {
+    sidebar_filters: Sidebar,
+  },
+};

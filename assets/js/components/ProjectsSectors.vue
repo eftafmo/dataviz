@@ -1,72 +1,90 @@
 <script>
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
-import Sectors from './Sectors';
-import ProjectsMixin from './mixins/Projects';
+import Sectors from "./Sectors";
+import ProjectsMixin from "./mixins/Projects";
+import { slugify } from "../lib/util";
 
+export default {
+  extends: Sectors,
+  mixins: [ProjectsMixin],
 
-export default Sectors.extend({
-  mixins: [
-    ProjectsMixin,
-  ],
-
-  data(){
-    return {}
+  data() {
+    return {
+      legendTitle: "",
+    };
   },
 
   computed: {
     filtered() {
-      // exclude technical assistance sectors from project
-      return this.filter(this.dataset, this.filter_by).filter(x => !x.is_ta);
+      // - exclude technical assistance sectors from project
+      // - exclude fake sector "allocation-to-hungary" as it will
+      //   always have 0 projects
+      return this.filter(this.dataset, this.filter_by).filter(
+        (x) => !x.is_ta && slugify(x.sector) !== "allocation-to-hungary"
+      );
     },
   },
 
   methods: {
     display(item) {
-      const count = item.depth == 2 ? item.data.project_count :
-                    d3.sum(item.children, x => x.data.project_count);
+      let count;
+      if (item.depth === 2) {
+        count = item.data.projects.size;
+      } else {
+        count = new Set(
+          item.children
+            .filter((child) => !!child.data.projects)
+            .map((child) => Array.from(child.data.projects))
+            .flat()
+        ).size;
+      }
 
-      return this.number(count) + "\u00a0" +
-             this.singularize("projects", count);
+      return (
+        this.number(count) + "\u00a0" + this.singularize("projects", count)
+      );
     },
-
-    tooltipTemplate(d) {
+    tooltipTemplate(ev, d) {
       // TODO: such horribleness. sad face.
       let thing = "programme area",
-          bss = d.data.beneficiaries,
-          prgs = d.data.programmes;
+        bss = d.data.beneficiaries,
+        prgs = d.data.programmes;
 
-      if(d.depth == 1) {
+      if (d.depth === 1) {
         thing = "sector";
-        bss = d3.set();
-        prgs = d3.set();
+        bss = new Set();
+        prgs = new Set();
 
         for (const c of d.children) {
           if (c.data.beneficiaries)
-            for (const bs of c.data.beneficiaries.values())
-              bss.add(bs);
+            for (const bs of c.data.beneficiaries.values()) bss.add(bs);
           if (c.data.programmes)
-            for (const prg of c.data.programmes.values())
-              prgs.add(prg);
+            for (const prg of c.data.programmes.values()) prgs.add(prg);
         }
       }
 
-      const num_bs = bss.size();
-      const num_prg = prgs.size();
+      const num_bs = bss.size;
+      const num_prg = prgs.size;
 
-      return `
+      return (
+        `
         <div class="title-container">
-          <span>${ d.data.name }</span>
+          <span>${d.data.name}</span>
         </div>
         <ul>
-          <li>${ this.display(d) }</li>
-          <li>${ this.currency(d.value) } net allocation</li>
-          <li>${num_bs} `+  this.singularize(`beneficiary states`, num_bs) + `</li>
-          <li>${num_prg}  `+  this.singularize(`programmes`, num_prg) + `</li>
+          <li>${this.display(d)}</li>
+          <li>${this.currency(d.value)} net allocation</li>
+          <li>${num_bs} ` +
+        this.singularize(`Beneficiary States`, num_bs) +
+        `</li>
+          <li>${num_prg}  ` +
+        this.singularize(`programmes`, num_prg) +
+        `</li>
         </ul>
-        <span class="action">Click to filter by ${ thing }</span>
-      `;
+        <span class="action">Click to filter by ${thing}</span>
+      `
+      );
     },
-  }
-});
+  },
+};
 </script>

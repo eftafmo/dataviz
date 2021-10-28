@@ -1,12 +1,9 @@
-import debounce from 'lodash.debounce';
+import debounce from "lodash.debounce";
 
-import Base from './Base';
-
-import Embeddor from './includes/Embeddor'
+import Base from "./Base";
 
 // access filters directly before they get bound, to avoid triggering handlers
-import {FILTERS, SCENARIOFILTERS} from './mixins/WithFilters'
-
+import { FILTERS, SCENARIOFILTERS, setFilters } from "./mixins/WithFilters";
 
 function getURL(obj) {
   // obj must have a .href property.
@@ -18,84 +15,58 @@ function getURL(obj) {
   return url;
 }
 
-function getScenario(url) {
-  const match = url.pathname.match(/^\/(\w+)?\/?$/)
-  if (!match) return null
+const _scenario_url = new RegExp(
+  "^/(\\d{4}-\\d{4}|compare)/(\\w+)?(/|.html)?$"
+);
 
-  const scenario = match[1]
-  if (scenario === undefined) return "index"
+function getScenario(url) {
+  const match = url.pathname.match(_scenario_url);
+  if (!match) return {};
+
+  const period = match[1];
+  let scenario = match[2];
+  if (scenario === undefined) scenario = "index";
   // test if this is a known scenario
-  if (SCENARIOFILTERS[scenario] === undefined) return null
-  return scenario
+  if (SCENARIOFILTERS[scenario] === undefined) return {};
+
+  return { period, scenario };
 }
 
-
-export default Base.extend({
-  components: {
-    embeddor: Embeddor,
+export default {
+  extends: Base,
+  props: {
+    datasource: String,
   },
-
-  data() {
-    return {
-      datasource: null,
-      vizcomponents: [],
-    };
-  },
-
   beforeCreate() {
     // set filters from querystring.
-    const url = getURL(window.location),
-          params = url.searchParams,
-          scenario = getScenario(url)
-    const filters = SCENARIOFILTERS[scenario]
-    for (const name of filters) {
-      let param = params.get(name) || null
-      if (param) {
-        param = param.replace(/\+/g, ' ')
-      }
-      FILTERS[name] = param
-    }
+    const url = getURL(window.location);
+    const { period, scenario } = getScenario(url);
+    const params = Object.fromEntries(url.searchParams.entries());
 
-    this.scenario = scenario
+    setFilters(
+      scenario,
+      period,
+      Object.fromEntries(url.searchParams.entries())
+    );
+
+    this.scenario = scenario;
   },
-
   created() {
     // don't rely on the backend to serve updated anchors
     this.updateAnchors();
   },
-
-  mounted() {
-    const vizcomps = []
-    // recurse through all children to find those that are dataviz
-    let parent = this
-
-    const recurse = (current) => {
-      for (const comp of current.$children) {
-        if (comp.$options.isDataviz)
-          vizcomps.push(comp) // end of the road
-        else
-          recurse(comp) // not end of the road
-      }
-    }
-
-    recurse(this)
-
-    this.vizcomponents = vizcomps
-  },
-
-
   methods: {
     updateAnchors() {
       // we can run this async
       let updater = this._debouncedUpdateAnchors;
       if (updater === undefined)
         updater = this._debouncedUpdateAnchors = debounce(
-          this._updateAnchors, 100
+          this._updateAnchors,
+          100
         );
 
       updater();
     },
-
     _updateAnchors() {
       const location = getURL(window.location);
 
@@ -105,15 +76,14 @@ export default Base.extend({
 
         const url = getURL(a);
         if (url.origin !== location.origin) continue;
-        const scenario = getScenario(url)
-        if (!scenario) continue
+        const { period, scenario } = getScenario(url);
+        if (!scenario) continue;
 
-        this._updateURL(url, SCENARIOFILTERS[scenario])
+        this._updateURL(url, SCENARIOFILTERS[scenario]);
 
         a.href = url.href;
       }
     },
-
     _updateURL(url, filters) {
       const params = url.searchParams;
 
@@ -123,11 +93,9 @@ export default Base.extend({
         // remove the param and add it back if necessary
         // (so we have a nice, predictable order. not OCD at all.)
         params.delete(name);
-        if (value)
-          params.set(name, value);
+        if (value) params.set(name, value);
       }
     },
-
     handleFilter(type, val, old) {
       const location = getURL(window.location);
       this._updateURL(location, SCENARIOFILTERS[this.scenario]);
@@ -137,4 +105,4 @@ export default Base.extend({
       this.updateAnchors();
     },
   },
-});
+};

@@ -1,0 +1,1190 @@
+[
+  {
+    "allocation": "603518.08",
+    "project_count": 3,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI011",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI012",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI013",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI014",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI015",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI016",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI017",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI018",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "498751.08",
+    "project_count": 3,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI021",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI022",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI023",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "59977.08",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI024",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "125693.92",
+    "project_count": 29,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI011",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "225292.92",
+    "project_count": 29,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI012",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "106393.92",
+    "project_count": 28,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI013",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "123718.92",
+    "project_count": 29,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI014",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "106393.92",
+    "project_count": 28,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI015",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "106393.92",
+    "project_count": 28,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI016",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "135597.92",
+    "project_count": 30,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI017",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "106393.92",
+    "project_count": 28,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI018",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "146340.92",
+    "project_count": 30,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI021",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "124353.92",
+    "project_count": 29,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI022",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "126182.92",
+    "project_count": 29,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI023",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "125715.92",
+    "project_count": 29,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI024",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI011",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI012",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI013",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI014",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI015",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI016",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI017",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI018",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI021",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI022",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI023",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11766.08",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI024",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI011",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI012",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI013",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI014",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI015",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI016",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI017",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI018",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI021",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI022",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI023",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "107211.00",
+    "project_count": 6,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI024",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "971921.08",
+    "project_count": 15,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI011",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "538269.08",
+    "project_count": 14,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI012",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "538269.08",
+    "project_count": 14,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI013",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "538269.08",
+    "project_count": 14,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI014",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "538269.08",
+    "project_count": 14,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI015",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "736444.08",
+    "project_count": 15,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI016",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "874741.08",
+    "project_count": 15,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI017",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "538269.08",
+    "project_count": 14,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI018",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1125715.08",
+    "project_count": 15,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI021",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "938867.08",
+    "project_count": 16,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI022",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "538269.08",
+    "project_count": 14,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI023",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "538269.08",
+    "project_count": 14,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI024",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "32630.33",
+    "project_count": 18,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI011",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "26820.33",
+    "project_count": 17,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI012",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "26820.33",
+    "project_count": 17,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI013",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34027.33",
+    "project_count": 18,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI014",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "26820.33",
+    "project_count": 17,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI015",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "26820.33",
+    "project_count": 18,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI016",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "36178.33",
+    "project_count": 19,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI017",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "34014.33",
+    "project_count": 18,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI018",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "196926.33",
+    "project_count": 24,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI021",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57420.33",
+    "project_count": 18,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI022",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "57420.33",
+    "project_count": 18,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI023",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "36646.33",
+    "project_count": 19,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI024",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "36619.08",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI011",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "171816.08",
+    "project_count": 9,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI012",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "36619.08",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI013",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "76870.08",
+    "project_count": 9,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI014",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "36619.08",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI015",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "36619.08",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI016",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "36619.08",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI017",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "36619.08",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI018",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "124941.08",
+    "project_count": 11,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI021",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "47567.08",
+    "project_count": 8,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI022",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "36619.08",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI023",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "171486.08",
+    "project_count": 10,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI024",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI011",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI012",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI013",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI014",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI015",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI016",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI017",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI018",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "741122.92",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI021",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22186.92",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI022",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1703257.92",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI023",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1699923.92",
+    "project_count": 3,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI024",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI011",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI012",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI013",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI014",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI015",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI016",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI017",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI018",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI021",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI022",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI023",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "144129.08",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI024",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  }
+]

@@ -1,6 +1,15 @@
 import csv
 import io
+
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse, JsonResponse
+
+
+class SetEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return sorted(list(obj))
+        return super().default(obj)
 
 
 class JsonResponse(JsonResponse):
@@ -26,7 +35,7 @@ class CsvResponse(HttpResponse):
     """
     def __init__(self, data, fieldnames=None, csv_writer_params=None, **kwargs):
         # TODO: set this as default
-        #kwargs.setdefault('content_type', 'text/csv')
+        # kwargs.setdefault('content_type', 'text/csv')
         kwargs.setdefault('content_type', 'text/plain')
         output = io.StringIO()
 

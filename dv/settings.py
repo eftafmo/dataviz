@@ -11,9 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 import environ
 
 env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
@@ -23,10 +22,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # root directory, where project is deployed
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
+DB_PATH = env(
+    "DJANGO_DB_PATH",
+    default=os.path.join(
+       os.path.join(os.path.dirname(BASE_DIR), "db"), "eeag.sqlite3"
+    ),
+)
+
 # more useful dirs:
 # the web server's vhost root
 WEBROOT_DIR = os.path.join(ROOT_DIR, 'webroot')
-# used for building webpack bundles for now
+# where asset bundling happens
 BUILD_DIR = os.path.join(ROOT_DIR, 'build')
 
 # TODO: handle this nicely
@@ -50,7 +56,6 @@ INSTALLED_APPS = [
     'django_countries',
     'haystack',
     'rest_framework',
-    'webpack_loader',
     'dv',
     'ckeditor',
     'django.contrib.staticfiles',
@@ -151,8 +156,8 @@ STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(WEBROOT_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
-    # include webpack output
-    (os.path.join(BUILD_DIR, 'webpack-bundles')),
+    # include the bundle dir
+    os.path.join(BUILD_DIR, 'assets'),
 )
 
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
@@ -160,8 +165,10 @@ CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar_bdr': [
-            ['Format', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'Undo', 'Redo', 'RemoveFormat'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Format', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-',
+             'Undo', 'Redo', 'RemoveFormat'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote', '-',
+             'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Unlink', 'Anchor'],
             ['Image', 'Flash', 'Table', 'Smiley', 'SpecialChar', 'HorizontalRule'],
             ['TextColor', 'BGColor'],
@@ -172,23 +179,13 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/',
-        'STATS_FILE': os.path.join(BUILD_DIR, 'webpack-stats.json'),
-        'POLL_INTERVAL': 10,
-        'CACHE': not DEBUG,
-    }
-}
-
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://localhost:8983/solr/eeagrants',
-        'BATCH_SIZE': 999,
+        'ENGINE': 'dv.lib.es7.CustomES7SearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'eeagrants',
         'SILENTLY_FAIL': False,
-        'TIMEOUT': env("HAYSTACK_SOLR_TIMEOUT", cast=int, default=60),
+        'TIMEOUT': env("HAYSTACK_TIMEOUT", cast=int, default=60),
     },
 }
 
@@ -203,12 +200,21 @@ CACHES = {
 
 API_CACHE_SECONDS = 60 * 60 * 24  # 1 day
 
-SENTRY_DSN = env('SENTRY_DSN')
-SENTRY_ENVIRONMENT = env('SENTRY_ENVIRONMENT')
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-sentry_sdk.init(
-    dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration()],
-)
+try:
+    # this is stupid, the settings file is no place for startup code
+    SENTRY_DSN = env('SENTRY_DSN')
+    SENTRY_ENVIRONMENT = env('SENTRY_ENVIRONMENT')
+except ImproperlyConfigured:
+    pass
+else:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
 
-from .localsettings import *
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+    )
+
+from .localsettings import *  # noqa: E402, F401, F403

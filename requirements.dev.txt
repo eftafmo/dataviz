@@ -4,4 +4,4 @@ django-debug-toolbar
 django-extensions
 ipython
 ipdb
-lxml
+flake8

@@ -1,0 +1,86 @@
+/* Filters */
+.global-filters {
+  color: #fff;
+  font-size: 14px;
+  position: sticky;
+  top: 0;
+}
+
+button#reset-filters {
+  color: inherit;
+  border: none;
+  margin: 0;
+  border-left: 1px solid @border-normal;
+  padding: 0.5rem;
+}
+
+.global-filters-inner {
+  background-color: @background-blue;
+
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 4px;
+
+  & > * {
+    padding: 0.6rem;
+
+    .icon {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.global-filters .tag {
+  background: transparent;
+  color: #fff;
+  line-height: 1;
+}
+
+.global-filters .clip-tag {
+  display: inline-block;
+  max-width: 8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.global-filters .muted {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+  #global-filters {
+    position: sticky;
+    top: 86px !important;
+  }
+
+  .global-filters-label {
+    width: 5em;
+  }
+
+  .global-filters .tag .muted {
+    display: block;
+  }
+
+  #reset-filters {
+    /*display: none;*/
+  }
+}
+
+#global-filters {
+  position: sticky;
+  top: 0;
+  min-height: 40px;
+  overflow-x: hidden;
+  pointer-events: none;
+
+  .global-filters-inner {
+    pointer-events: all;
+  }
+}
+
+#global-filters.visible {
+  z-index: 1;
+}

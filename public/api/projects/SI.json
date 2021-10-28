@@ -1,0 +1,497 @@
+[
+  {
+    "allocation": "719725.00",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1274727.00",
+    "project_count": 27,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "141193.00",
+    "project_count": 2,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "SI",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1100081.00",
+    "project_count": 5,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "3581828.00",
+    "project_count": 7,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "321844.00",
+    "project_count": 17,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "159048.00",
+    "project_count": 4,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "266243.00",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI0",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1729549.00",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI0",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2000.00",
+    "project_count": 1,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI0",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "186451.00",
+    "project_count": 1,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI0",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2877401.00",
+    "project_count": 7,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI0",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "280381.00",
+    "project_count": 3,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI0",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "543541.00",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI011",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19300.00",
+    "project_count": 1,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI011",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "433652.00",
+    "project_count": 1,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI011",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5810.00",
+    "project_count": 1,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI011",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "118899.00",
+    "project_count": 1,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI012",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "135197.00",
+    "project_count": 2,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI012",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "17325.00",
+    "project_count": 1,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI014",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7207.00",
+    "project_count": 1,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI014",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "40251.00",
+    "project_count": 2,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI014",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "198175.00",
+    "project_count": 1,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI016",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "0.00",
+    "project_count": 1,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI016",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "29204.00",
+    "project_count": 2,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI017",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "336472.00",
+    "project_count": 1,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI017",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "9358.00",
+    "project_count": 2,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI017",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "7194.00",
+    "project_count": 1,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI018",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "438774.00",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI021",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "718936.00",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI021",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "39947.00",
+    "project_count": 2,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI021",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "587446.00",
+    "project_count": 1,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI021",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "170106.00",
+    "project_count": 7,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI021",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "88322.00",
+    "project_count": 4,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI021",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "17960.00",
+    "project_count": 1,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI022",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "400598.00",
+    "project_count": 2,
+    "programmes": {
+      "SI05": "SI05"
+    },
+    "id": "SI022",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "30600.00",
+    "project_count": 1,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI022",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "10948.00",
+    "project_count": 1,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI022",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1681071.00",
+    "project_count": 1,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI023",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19789.00",
+    "project_count": 1,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI023",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "30600.00",
+    "project_count": 1,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI023",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1677737.00",
+    "project_count": 2,
+    "programmes": {
+      "SI02": "SI02"
+    },
+    "id": "SI024",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "19322.00",
+    "project_count": 1,
+    "programmes": {
+      "SI03": "SI03"
+    },
+    "id": "SI024",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9826.00",
+    "project_count": 2,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI024",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "134867.00",
+    "project_count": 3,
+    "programmes": {
+      "SI04": "SI04"
+    },
+    "id": "SI024",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  }
+]

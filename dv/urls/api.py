@@ -8,12 +8,18 @@ from dv.views import frontend as front_views
 
 urlpatterns = [
     url(r'^test-sentry', views.test_sentry),
+    url(r'^bilateral-initiatives.json',
+        cache_page(settings.API_CACHE_SECONDS)(views.bilateral_initiatives),
+        name='bilateral-initiatives'),
     url(r'^overview.json',
         cache_page(settings.API_CACHE_SECONDS)(views.overview),
         name='index'),
     url(r'^grants.json',
         cache_page(settings.API_CACHE_SECONDS)(views.grants),
         name='grants'),
+    url(r'^sdg.json',
+        cache_page(settings.API_CACHE_SECONDS)(views.sdg),
+        name='goals'),
     url(r'^projects.json',
         cache_page(settings.API_CACHE_SECONDS)(views.projects),
         name='projects'),
@@ -26,6 +32,9 @@ urlpatterns = [
     url(r'^projects/(?P<beneficiary>[A-Z]{2}).json',
         cache_page(settings.API_CACHE_SECONDS)(views.projects_beneficiary_detail),
         name='projects-beneficiary-detail'),
+    url(r'^sdg/(?P<beneficiary>[A-Z]{2}).json',
+        cache_page(settings.API_CACHE_SECONDS)(views.sdg_beneficiary_detail),
+        name='sdg-beneficiary-detail'),
 
     url(r'^projects/',
         views.ProjectList.as_view(),

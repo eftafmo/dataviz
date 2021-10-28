@@ -1,0 +1,1345 @@
+[
+  {
+    "allocation": "2903486.00",
+    "project_count": 7,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9207535.00",
+    "project_count": 54,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "816347.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ10": "CZ10"
+    },
+    "id": "CZ",
+    "area": "Capacity-building and institutional cooperation between beneficiary state and Norwegian public institutions, local and regional authorities",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "4126585.00",
+    "project_count": 4,
+    "programmes": {
+      "CZ08": "CZ08"
+    },
+    "id": "CZ",
+    "area": "Carbon capture and storage (CCS)",
+    "sector": "Climate Change and Energy",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "796473.00",
+    "project_count": 9,
+    "programmes": {
+      "CZ04": "CZ04"
+    },
+    "id": "CZ",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9938862.00",
+    "project_count": 16,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "418685.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ15": "CZ15"
+    },
+    "id": "CZ",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "3238574.00",
+    "project_count": 26,
+    "programmes": {
+      "CZ12": "CZ12",
+      "CZ13": "CZ13"
+    },
+    "id": "CZ",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1540216.00",
+    "project_count": 5,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ",
+    "area": "Environmental monitoring and integrated planning and control",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "783843.00",
+    "project_count": 25,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "676472.00",
+    "project_count": 4,
+    "programmes": {
+      "IN22": "IN22"
+    },
+    "id": "CZ",
+    "area": "Global fund for decent work and tripartite dialogue",
+    "sector": "Decent Work and Tripartite Dialogue",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2007753.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ15": "CZ15"
+    },
+    "id": "CZ",
+    "area": "Judicial capacity-building and cooperation",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "943882.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ05": "CZ05"
+    },
+    "id": "CZ",
+    "area": "Local and regional initiatives to reduce national inequalities and to promote social inclusion",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "2079244.00",
+    "project_count": 20,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1791298.00",
+    "project_count": 21,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6661846.00",
+    "project_count": 32,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "5550458.00",
+    "project_count": 6,
+    "programmes": {
+      "CZ14": "CZ14"
+    },
+    "id": "CZ",
+    "area": "Schengen cooperation and combating cross-border and organised crime, including trafficking and itinerant criminal groups",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "117788.00",
+    "project_count": 16,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1107289.00",
+    "project_count": 93,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "330967.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ0",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "123639.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ04": "CZ04"
+    },
+    "id": "CZ0",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "811783.00",
+    "project_count": 15,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ0",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "272234.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ0",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "749743.00",
+    "project_count": 9,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ0",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "30525.00",
+    "project_count": 6,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ0",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "270278.00",
+    "project_count": 32,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ0",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2544693.00",
+    "project_count": 57,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ01",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "17471.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ01",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "443834.00",
+    "project_count": 7,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ01",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "601435.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ09": "CZ09"
+    },
+    "id": "CZ01",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1609346.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ010",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "14202.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ010",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "406434.00",
+    "project_count": 11,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ010",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "466642.00",
+    "project_count": 5,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ010",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1828309.00",
+    "project_count": 7,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ010",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "7299943.00",
+    "project_count": 14,
+    "programmes": {
+      "CZ09": "CZ09"
+    },
+    "id": "CZ010",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "11311.00",
+    "project_count": 4,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ010",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "205015.00",
+    "project_count": 49,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ010",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "73164.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ020",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1571009.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ020",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "410342.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ15": "CZ15"
+    },
+    "id": "CZ020",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "537256.00",
+    "project_count": 13,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ020",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "158020.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ020",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "572021.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ09": "CZ09"
+    },
+    "id": "CZ020",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "66544.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ03",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "268936.00",
+    "project_count": 4,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ031",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "119290.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ04": "CZ04"
+    },
+    "id": "CZ031",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "967281.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ031",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "22768.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ031",
+    "area": "Domestic and gender-based violence",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "283840.00",
+    "project_count": 11,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ031",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "51589.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ031",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "397169.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ031",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "560496.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ09": "CZ09"
+    },
+    "id": "CZ031",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1862.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ031",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "21051.00",
+    "project_count": 7,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ031",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "93477.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ032",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1024525.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ032",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "677056.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ09": "CZ09"
+    },
+    "id": "CZ032",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "24771.00",
+    "project_count": 7,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ032",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "153573.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ041",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "185894.00",
+    "project_count": 5,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ041",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "76913.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ041",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "60979.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ042",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "385515.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ15": "CZ15"
+    },
+    "id": "CZ042",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "445601.00",
+    "project_count": 12,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ042",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "143865.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ042",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "506118.00",
+    "project_count": 6,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ042",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "470966.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ09": "CZ09"
+    },
+    "id": "CZ042",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "31145.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ042",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "41613.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ042",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "561865.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ051",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "235105.00",
+    "project_count": 6,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ051",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "35567.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ051",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "16266.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ051",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "69188.00",
+    "project_count": 7,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ051",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "214082.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ052",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "72293.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ052",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "126871.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ052",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "296196.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ052",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "59458.00",
+    "project_count": 8,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ052",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "283034.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ04": "CZ04"
+    },
+    "id": "CZ053",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "531194.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ053",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "340464.00",
+    "project_count": 9,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ053",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "689013.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ053",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "4214.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ053",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "41302.00",
+    "project_count": 6,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ053",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "119303.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ06",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "23829.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ06",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "393012.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ063",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "96261.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ04": "CZ04"
+    },
+    "id": "CZ063",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "375073.00",
+    "project_count": 8,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ063",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "887.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ063",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "845246.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ064",
+    "area": "Adaptation to climate change",
+    "sector": "Climate Change and Energy",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "52368.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ064",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "175642.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ064",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "416782.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ15": "CZ15"
+    },
+    "id": "CZ064",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1076984.00",
+    "project_count": 25,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ064",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "15775.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ064",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "359078.00",
+    "project_count": 5,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ064",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "2270527.00",
+    "project_count": 4,
+    "programmes": {
+      "CZ09": "CZ09"
+    },
+    "id": "CZ064",
+    "area": "Research",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "10417.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ064",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "418114.00",
+    "project_count": 48,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ064",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "60189.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ02": "CZ02"
+    },
+    "id": "CZ071",
+    "area": "Biodiversity and ecosystem services",
+    "sector": "Environmental Protection and Management",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "158102.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ071",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "350991.00",
+    "project_count": 9,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ071",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1252879.00",
+    "project_count": 6,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ071",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "1638.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ071",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "33684.00",
+    "project_count": 9,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ071",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "246846.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ04": "CZ04"
+    },
+    "id": "CZ072",
+    "area": "Children and youth at risk",
+    "sector": "Human and Social Development",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "621314.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ072",
+    "area": "Conservation and revitalisation of cultural and natural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "65255.00",
+    "project_count": 2,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ072",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "6411.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ072",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "213052.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ072",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "86605.00",
+    "project_count": 8,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ072",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "30978.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ08",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "332613.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ15": "CZ15"
+    },
+    "id": "CZ080",
+    "area": "Correctional services, including non-custodial sanctions",
+    "sector": "Justice and Home Affairs",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "422339.00",
+    "project_count": 12,
+    "programmes": {
+      "CZ03": "CZ03"
+    },
+    "id": "CZ080",
+    "area": "Funds for non-governmental organisations",
+    "sector": "Civil Society",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "36029.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ12": "CZ12"
+    },
+    "id": "CZ080",
+    "area": "Mainstreaming gender equality and promoting work-life balance",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "44947.00",
+    "project_count": 1,
+    "programmes": {
+      "CZ06": "CZ06"
+    },
+    "id": "CZ080",
+    "area": "Promotion of diversity in culture and arts within European cultural heritage",
+    "sector": "Protecting Cultural Heritage",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "1695255.00",
+    "project_count": 4,
+    "programmes": {
+      "CZ11": "CZ11"
+    },
+    "id": "CZ080",
+    "area": "Public health initiatives",
+    "sector": "Human and Social Development",
+    "fm": "Norway Grants"
+  },
+  {
+    "allocation": "3599.00",
+    "project_count": 3,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ080",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "EEA Grants"
+  },
+  {
+    "allocation": "9300.00",
+    "project_count": 6,
+    "programmes": {
+      "CZ07": "CZ07"
+    },
+    "id": "CZ080",
+    "area": "Scholarships",
+    "sector": "Research and Scholarship",
+    "fm": "Norway Grants"
+  }
+]

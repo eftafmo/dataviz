@@ -6,12 +6,13 @@ from dv.models import (
     GRANT_TYPE, State, PrioritySector, ProgrammeArea, Programme,
     Programme_ProgrammeArea, Outcome, ProgrammeOutcome,
     Project, Indicator, ProgrammeIndicator,
-    OrganisationType, Organisation, OrganisationRole,
+    OrganisationType, Organisation,
 )
 
 
 FIXTURES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'import_fixture.yaml')
+
 
 class ImportTest(TestCase):
     def __init__(self, *args, **kwargs):
@@ -92,9 +93,9 @@ class ImportTest(TestCase):
 
         self.assertEqual(programme.state,
                          State.objects.get(name=data['BeneficiaryState']))
-        #pa_code = data['PAListWithShortName'].split()[0]
-        #self.assertEqual(programme.programme_area,
-        #                 ProgrammeArea.objects.get_by_natural_key(pa_code))
+        # pa_code = data['PAListWithShortName'].split()[0]
+        # self.assertEqual(programme.programme_area,
+        #                  ProgrammeArea.objects.get_by_natural_key(pa_code))
         self.assertEqual(programme.code,
                          data['ProgrammeCode'])
         self.assertEqual(programme.name,
@@ -122,10 +123,10 @@ class ImportTest(TestCase):
                     for p in data['PAListWithShortName'].split(',')]
         pas = ProgrammeArea.objects.filter_by_natural_keys(pa_codes)
 
-        #self.assertEqual(len(p_pas), len(pas))
-        #for p_pa in p_pas:
-        #    self.assertEqual(p_pa.programme, programme)
-        #    self.assertIn(p_pa.programme_area, pas)
+        # self.assertEqual(len(p_pas), len(pas))
+        # for p_pa in p_pas:
+        #     self.assertEqual(p_pa.programme, programme)
+        #     self.assertIn(p_pa.programme_area, pas)
 
         # or simply: (assertItemsEqual)
         self.assertCountEqual(programme.programme_areas.all(), pas)
@@ -213,7 +214,7 @@ class ImportTest(TestCase):
                          data['Achievement'])
 
         # TODO: this isn't finished
-        #self.assertFalse(True, "must.. implement..")
+        # self.assertFalse(True, "must.. implement..")
 
     def _test_organisation_types(self):
         data = self.DATA[OrganisationType.IMPORT_SOURCE]
