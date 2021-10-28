@@ -1,10 +1,9 @@
-import os.path
 import environ
 
 try:
     BASE_DIR, INSTALLED_APPS, DB_PATH
 except NameError:
-    from .settings import BASE_DIR, INSTALLED_APPS, DB_PATH # noqa: F401
+    from .settings import BASE_DIR, INSTALLED_APPS, DB_PATH  # noqa: F401
 
 root = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env(

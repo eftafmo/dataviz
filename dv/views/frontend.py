@@ -114,7 +114,6 @@ def embed_sandbox(request, scenario=None, component=None, period="2014-2021"):
         except KeyError:
             raise Http404
 
-
     return render(
         request,
         "embed_sandbox.html",

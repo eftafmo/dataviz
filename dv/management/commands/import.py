@@ -58,7 +58,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--period',
             choices=periods,
-            help=f'Run import for specific period. If not specified the import runs for all periods.',
+            help='Run import for specific period. If not specified the import runs for all periods.',
         )
         parser.add_argument(
             '--directory',
