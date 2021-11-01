@@ -7,7 +7,7 @@ from django.core.cache import cache
 from pytz import timezone
 
 from django.core.management.base import BaseCommand
-from dv.models import News
+from dv.models import News, Project
 
 ENDPOINT = 'https://eeagrants.org/rest/articles?page={}'
 
@@ -43,11 +43,14 @@ class Command(BaseCommand):
             news.image = item['image'].replace('http://', 'https://')
             news.is_partnership = item['is_partnership'] == 'yes'
             if item['project_id']:
-                news.project_id = item['project_id'].strip()
+                project = Project.objects.filter(code=item['project_id']).exists()
+                if project:
+                    news.project_id = item['project_id'].strip()
             news.save()
 
-            for prg in item['programme_id'].split(', '):
-                news.programmes.add(prg.upper().strip())
+            if item["programme_id"]:
+                for prg in item['programme_id'].split(', '):
+                    news.programmes.add(prg.upper().strip())
 
         except Exception as err:
             self.stderr.write(('ERROR: %s' % repr(err)))
