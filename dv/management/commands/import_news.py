@@ -41,24 +41,22 @@ class Command(BaseCommand):
             news.summary = item['summary']
             news.image = item['image'].replace('http://', 'https://')
             news.is_partnership = item['is_partnership'] == 'yes'
-            project_id = item.get("project_id")
+            project_id = item.get("project_id").strip()
             if project_id:
-                project = Project.objects.filter(code=project_id).exists()
-                if project:
-                    news.project_id = project_id.strip()
+                if Project.objects.filter(code=project_id).exists():
+                    news.project_id = project_id
                 else:
                     self.stderr.write(f"Project code: {project_id} doesn't exist!")
             news.save()
 
-            item_programmes = item.get("programme_id")
-            if item_programmes:
-                item_programmes = item_programmes.split(", ")
-                programme = Programme.objects.filter(code__in=item_programmes)
-                for prg in programme:
-                    news.programmes.add(prg)
-                    item_programmes.remove(prg.code)
-                if len(item_programmes) >= 1:
-                    self.stderr.write(f"Programme {item_programmes} doesn't exist!")
+            programme_ids = item.get("programme_id")
+            if programme_ids:
+                programme_ids = programme_ids.split(", ")
+                for programme in Programme.objects.filter(code__in=programme_ids):
+                    news.programmes.add(programme)
+                    programme_ids.remove(programme.code)
+                if len(programme_ids) >= 1:
+                    self.stderr.write(f"Programmes with codes {programme_ids} not found.")
 
         except Exception as err:
             self.stderr.write('ERROR: %s' % repr(err))
