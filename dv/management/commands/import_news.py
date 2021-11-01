@@ -1,13 +1,12 @@
 import json
-
-from urllib.request import urlopen
 from datetime import datetime
+from urllib.request import urlopen
 
 from django.core.cache import cache
+from django.core.management.base import BaseCommand
 from pytz import timezone
 
-from django.core.management.base import BaseCommand
-from dv.models import News, Project
+from dv.models import News, Programme, Project
 
 ENDPOINT = 'https://eeagrants.org/rest/articles?page={}'
 
@@ -42,15 +41,24 @@ class Command(BaseCommand):
             news.summary = item['summary']
             news.image = item['image'].replace('http://', 'https://')
             news.is_partnership = item['is_partnership'] == 'yes'
-            if item['project_id']:
-                project = Project.objects.filter(code=item['project_id']).exists()
+            project_id = item.get("project_id")
+            if project_id:
+                project = Project.objects.filter(code=project_id).exists()
                 if project:
-                    news.project_id = item['project_id'].strip()
+                    news.project_id = project_id.strip()
+                else:
+                    self.stderr.write(f"Project code: {project_id} doesn't exist!")
             news.save()
 
-            if item["programme_id"]:
-                for prg in item['programme_id'].split(', '):
-                    news.programmes.add(prg.upper().strip())
+            item_programmes = item.get("programme_id")
+            if item_programmes:
+                item_programmes = item_programmes.split(", ")
+                programme = Programme.objects.filter(code__in=item_programmes)
+                for prg in programme:
+                    news.programmes.add(prg)
+                    item_programmes.remove(prg.code)
+                if len(item_programmes) >= 1:
+                    self.stderr.write(f"Programme {item_programmes} doesn't exist!")
 
         except Exception as err:
-            self.stderr.write(('ERROR: %s' % repr(err)))
+            self.stderr.write('ERROR: %s' % repr(err))
