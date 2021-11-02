@@ -226,8 +226,8 @@ export default {
       height: 10rem;
 
       &.is-expanded-on-mobile {
-        height: 100%;
-        width: 100%;
+        height: 100vh;
+        width: 100vw;
         bottom: 0;
         right: 0;
         border: none;
@@ -263,7 +263,7 @@ export default {
       }
 
       .sidebar-content > div {
-        max-height: 80%;
+        max-height: 100%;
         overflow: auto;
       }
     }
