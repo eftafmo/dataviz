@@ -1,12 +1,12 @@
 # Docker-compose override for https://eeagrants.edw.ro/
 version: '2'
 services:
-  nginx:
-    ports:
-      - "127.0.0.1:8888:8888"
   web:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8000:8000"
     volumes:
       - /home/dataviz/upload:/var/local/upload
+      - /var/www/html:/var/local/webroot

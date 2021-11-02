@@ -23,57 +23,6 @@ services:
       - webroot:/var/local/webroot
     restart: "always"
 
-  nginx:
-    image: nginx:1.21.1-alpine
-    container_name: eeag_nginx
-    environment:
-      NGINX_CONF: |-
-        types {
-          application/json topojson;
-        }
-        upstream djangoapp {
-          server web:8000 fail_timeout=1s;
-        }
-        server {
-          listen 8888;
-          access_log /var/log/nginx/access.log main;
-
-          location /assets {
-            sendfile on;
-            tcp_nopush on;
-            gzip on;
-            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
-            expires 1d;
-            alias /var/local/webroot/static;
-            add_header 'Access-Control-Allow-Origin' "*" always;
-          }
-          location /search/export/ {
-            proxy_read_timeout 300;
-            proxy_pass http://djangoapp;
-            proxy_set_header Host $$host;
-            proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
-            proxy_set_header X-Real-IP $$remote_addr;
-            gzip on;
-            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
-            expires 1h;
-          }
-          location / {
-            proxy_pass http://djangoapp;
-            proxy_set_header Host $$host;
-            proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
-            proxy_set_header X-Real-IP $$remote_addr;
-            gzip on;
-            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
-            expires 1h;
-          }
-        }
-    depends_on:
-    - web
-    volumes:
-    - webroot:/var/local/webroot:ro
-    command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/conf.d/default.conf && exec nginx -g "daemon off;"'
-    restart: "always"
-
 volumes:
   webroot:
   web_db:
