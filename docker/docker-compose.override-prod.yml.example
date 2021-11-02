@@ -1,9 +1,8 @@
 version: '2'
 services:
   web:
-    image: eftafmo/dataviz:20191210
-    volumes:
-    - /home/dataviz/upload:/var/local/upload
-  nginx:
+    image: eftafmo/dataviz:20211102
     ports:
-    - "127.0.0.1:8888:8888"
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - /var/www/html:/var/local/webroot
