@@ -1,13 +1,12 @@
 import json
-
-from urllib.request import urlopen
 from datetime import datetime
+from urllib.request import urlopen
 
 from django.core.cache import cache
+from django.core.management.base import BaseCommand
 from pytz import timezone
 
-from django.core.management.base import BaseCommand
-from dv.models import News
+from dv.models import News, Programme, Project
 
 ENDPOINT = 'https://eeagrants.org/rest/articles?page={}'
 
@@ -42,12 +41,22 @@ class Command(BaseCommand):
             news.summary = item['summary']
             news.image = item['image'].replace('http://', 'https://')
             news.is_partnership = item['is_partnership'] == 'yes'
-            if item['project_id']:
-                news.project_id = item['project_id'].strip()
+            project_id = item.get("project_id").strip()
+            if project_id:
+                if Project.objects.filter(code=project_id).exists():
+                    news.project_id = project_id
+                else:
+                    self.stderr.write(f"Project code: {project_id} doesn't exist!")
             news.save()
 
-            for prg in item['programme_id'].split(', '):
-                news.programmes.add(prg.upper().strip())
+            programme_ids = item.get("programme_id")
+            if programme_ids:
+                programme_ids = programme_ids.split(", ")
+                for programme in Programme.objects.filter(code__in=programme_ids):
+                    news.programmes.add(programme)
+                    programme_ids.remove(programme.code)
+                if len(programme_ids) >= 1:
+                    self.stderr.write(f"Programmes with codes {programme_ids} not found.")
 
         except Exception as err:
-            self.stderr.write(('ERROR: %s' % repr(err)))
+            self.stderr.write('ERROR: %s' % repr(err))
