@@ -27,3 +27,9 @@ mv "$tmp_db" "$app_db"
 
 # Rebuild indexes from the live db
 python "$manage" rebuild_index --noinput
+
+# clear cached views
+rm -rf /var/tmp/django_cache/*
+
+# echo date finished
+date "+%Y-%m-%d %H:%M:%S"
