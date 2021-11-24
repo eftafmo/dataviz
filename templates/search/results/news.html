@@ -28,7 +28,7 @@
               {% endif %}
             </h4>
 
-            <div class="news_summary">{{ news.summary }}</div>
+            <div class="news_summary">{{ news.summary|safe }}</div>
           </div>
           <img src="{{ news.image }}" style="column-span: 1">
         </div>
