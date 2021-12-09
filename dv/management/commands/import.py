@@ -381,6 +381,8 @@ class Command(BaseCommand):
 
         sheet = sheets['ProgrammeIndicators']
         for record in sheet.records:
+            achievement_eea = record['Achievement'] if record['FMCode'] == 'EEA FM' else 0
+            achievement_norway = record['Achievement'] if record['FMCode'] == 'N FM' else 0
             Indicator.objects.create(
                 funding_period=FUNDING_PERIOD,
                 programme_id=record['ProgrammeCode'],
@@ -388,8 +390,9 @@ class Command(BaseCommand):
                 state_id=states[record['BeneficiaryState']],
                 indicator=record['Indicator'],
                 header=record['ResultText'],
-                achievement_eea=record['Achievement'] if record['FMCode'] == 'EEA FM' else 0,
-                achievement_norway=record['Achievement'] if record['FMCode'] == 'N FM' else 0,
+                achievement_eea=achievement_eea,
+                achievement_norway=achievement_norway,
+                achievement_total=achievement_eea + achievement_norway,
                 order=record['SortOrder'],
             )
 
