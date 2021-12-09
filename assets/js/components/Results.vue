@@ -64,11 +64,17 @@ export default {
           if (!values) continue;
 
           for (let indicator in values) {
-            const value = +values[indicator]["achievement"];
+            const priority = values[indicator]["order"];
+            // If there is a FM set the data is already filtered so, the value is
+            // achievement is already the total and correct one that needs to be displayed.
+            // Otherwise, use the `achievement_total` from the backend as that
+            // will include results that cannot be allocated to either EEA or Norway
+            const value = this.filters.fm
+              ? +values[indicator]["achievement"]
+              : +values[indicator]["achievement_total"];
 
             if (value === 0) continue;
 
-            const priority = values[indicator]["order"];
             if (results[priority] === undefined) {
               results[priority] = {};
             }
@@ -78,12 +84,9 @@ export default {
             if (results[priority][o][sector] === undefined) {
               results[priority][o][sector] = {};
             }
-            let outcome = results[priority][o][sector];
-
+            const outcome = results[priority][o][sector];
             indicator = indicator.replace(/^Number of /, "");
-
-            let sum = outcome[indicator] || 0;
-            outcome[indicator] = sum + value;
+            outcome[indicator] = value;
           }
         }
       }
