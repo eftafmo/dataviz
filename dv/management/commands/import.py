@@ -649,6 +649,7 @@ class Command(BaseCommand):
                     unit_of_measurement=row['UnitOfMeasurement'],
                     achievement_eea=row['Achievement_EEA'] or 0,
                     achievement_norway=row['Achievement_Norway'] or 0,
+                    achievement_total=row['AchievementDecimal'] or 0,
                     order=row['CoreIndicatorCode'],
                     is_core=bool(row['IsCore']),
                     is_common=bool(row['IsCommon']),
