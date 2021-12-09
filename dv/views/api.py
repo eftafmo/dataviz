@@ -267,22 +267,27 @@ def grants(request):
     ).annotate(
         achievement_eea=Sum('achievement_eea'),
         achievement_norway=Sum('achievement_norway'),
+        achievement_total=Sum('achievement_total'),
     ).order_by(F('order').asc(nulls_last=True))
 
     results = defaultdict(lambda: defaultdict(dict))
     for indicator in indicators:
-        if indicator['achievement_eea']:
-            key = (FM_EEA, indicator['state_id'], indicator['programme_area_id'])
+        for fm, attr_name in (
+            (FM_EEA, 'achievement_eea'),
+            (FM_NORWAY, 'achievement_norway')
+        ):
+
+            value = indicator[attr_name]
+            total = indicator['achievement_total']
+
+            if not value and not total:
+                continue
+
+            key = (fm, indicator['state_id'], indicator['programme_area_id'])
             results[key][indicator['header']].update({
                 indicator['indicator']: {
-                    'achievement': indicator['achievement_eea'],
-                }
-            })
-        if indicator['achievement_norway']:
-            key = (FM_NORWAY, indicator['state_id'], indicator['programme_area_id'])
-            results[key][indicator['header']].update({
-                indicator['indicator']: {
-                    'achievement': indicator['achievement_norway'],
+                    'achievement': value,
+                    'achievement_total': total,
                 }
             })
 
@@ -377,22 +382,27 @@ def sdg(request):
     ).annotate(
         achievement_eea=Sum('achievement_eea'),
         achievement_norway=Sum('achievement_norway'),
+        achievement_total=Sum('achievement_total'),
     ).order_by(F('order').asc(nulls_last=True))
 
     results = defaultdict(lambda: defaultdict(dict))
     for indicator in indicators:
-        if indicator['achievement_eea']:
-            key = (FM_EEA, indicator['state_id'], indicator['sdg_no'])
+        for fm, attr_name in (
+            (FM_EEA, 'achievement_eea'),
+            (FM_NORWAY, 'achievement_norway')
+        ):
+
+            value = indicator[attr_name]
+            total = indicator['achievement_total']
+
+            if not value and not total:
+                continue
+
+            key = (fm, indicator['state_id'], indicator['sdg_no'])
             results[key][indicator['header']].update({
                 indicator['indicator']: {
-                    'achievement': indicator['achievement_eea'],
-                }
-            })
-        if indicator['achievement_norway']:
-            key = (FM_EEA, indicator['state_id'], indicator['sdg_no'])
-            results[key][indicator['header']].update({
-                indicator['indicator']: {
-                    'achievement': indicator['achievement_eea'],
+                    'achievement': value,
+                    'achievement_total': total,
                 }
             })
 
