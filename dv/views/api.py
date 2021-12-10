@@ -15,7 +15,7 @@ from dv.lib.http import JsonResponse, SetEncoder
 from dv.lib.utils import (
     DONOR_STATES, EEA_DONOR_STATES, DONOR_STATES_REVERSED, DEFAULT_PERIOD,
     FUNDING_PERIODS_DICT, FM_DICT, FM_REVERSED_DICT, FM_EEA, FM_NORWAY,
-    NUTS_VERSION_BY_PERIOD, OVERVIEW_INDICATORS
+    NUTS_VERSION_BY_PERIOD
 )
 from dv.models import (
     Allocation, BilateralInitiative, Indicator, News, NUTS, OrganisationRole,
@@ -178,26 +178,12 @@ def overview(request):
         if bi.programme.is_norway:
             bilateral_initiatives[(FM_NORWAY, bi.state_id)].append(bi.code)
 
-    relevant_indicators = OVERVIEW_INDICATORS[period_id]
-    indicator_query = Indicator.objects.filter(
-        Q(achievement_eea__gt=0) | Q(achievement_norway__gt=0),
-        funding_period=period_id,
-        indicator__in=relevant_indicators.keys(),
-    )
-    indicators = defaultdict(lambda: defaultdict(int))
-    for indicator in indicator_query:
-        key = indicators[relevant_indicators[indicator.indicator]]
-        if indicator.is_eea:
-            key[(FM_EEA, indicator.state_id)] += indicator.achievement_eea
-        if indicator.is_norway:
-            key[(FM_NORWAY, indicator.state_id)] += indicator.achievement_norway
-
     out = []
     for allocation in allocations:
         state = allocation['state']
         financial_mechanism = allocation['financial_mechanism']
         key = (financial_mechanism, state)
-        element = {
+        out.append({
             'period': period,
             'fm': FM_DICT[financial_mechanism],
             'beneficiary': state,
@@ -210,11 +196,41 @@ def overview(request):
             'projects': projects.get(key, []),
             'bilateral_initiatives': bilateral_initiatives.get(key, []),
             'positive_fx': positive_fx.get(key, []),
-        }
-        for indicator in relevant_indicators.values():
-            element[indicator] = indicators[indicator].get(key, 0)
-        out.append(element)
+        })
     return JsonResponse(out)
+
+
+@require_GET
+def indicators(request):
+    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
+    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+
+    return JsonResponse(
+        list(
+            Indicator.objects.filter(
+                funding_period=period_id,
+                programme__is_tap=False,
+                programme__is_bfp=False,
+            )
+            .values(
+                "indicator",
+                "header",
+                "thematic",
+                "sdg_no",
+            )
+            .annotate(
+                beneficiary=F("state_id"),
+                area=F("programme_area__name"),
+                area_code=F("programme_area__code"),
+                sector=F("programme_area__priority_sector__name"),
+                sector_code=F("programme_area__priority_sector__code"),
+                achievement_eea=Sum("achievement_eea"),
+                achievement_norway=Sum("achievement_norway"),
+                achievement_total=Sum("achievement_total"),
+            )
+            .order_by(F("order").asc(nulls_last=True), F("beneficiary"))
+        )
+    )
 
 
 @require_GET
@@ -256,36 +272,6 @@ def grants(request):
             for bf in allocations.filter(programme_area__code__in=('TA02', 'TA04', 'OTBF'))
         }
 
-    indicators = Indicator.objects.filter(
-        funding_period=period_id,
-        programme__is_tap=False,
-    ).values(
-        'indicator',
-        'header',
-        'state_id',
-        'programme_area_id'
-    ).annotate(
-        achievement_eea=Sum('achievement_eea'),
-        achievement_norway=Sum('achievement_norway'),
-    ).order_by(F('order').asc(nulls_last=True))
-
-    results = defaultdict(lambda: defaultdict(dict))
-    for indicator in indicators:
-        if indicator['achievement_eea']:
-            key = (FM_EEA, indicator['state_id'], indicator['programme_area_id'])
-            results[key][indicator['header']].update({
-                indicator['indicator']: {
-                    'achievement': indicator['achievement_eea'],
-                }
-            })
-        if indicator['achievement_norway']:
-            key = (FM_NORWAY, indicator['state_id'], indicator['programme_area_id'])
-            results[key][indicator['header']].update({
-                indicator['indicator']: {
-                    'achievement': indicator['achievement_norway'],
-                }
-            })
-
     programmes = defaultdict(dict)
     programme_query = Programme.objects.filter(
         funding_period=period_id,
@@ -323,7 +309,6 @@ def grants(request):
             'allocation': allocation.gross_allocation,
             'net_allocation': allocation.net_allocation,
             'bilateral_allocation': bilateral_fund.get((financial_mechanism, state, programme_area), 0),
-            'results': results[(financial_mechanism, state, programme_area)],
             'programmes': programmes[(financial_mechanism, state, programme_area)],
             'thematic': allocation.thematic,
         })
@@ -366,36 +351,6 @@ def sdg(request):
             'url': allocation.programme.url,
         }
 
-    indicators = Indicator.objects.filter(
-        funding_period=period_id,
-        programme__is_tap=False,
-    ).values(
-        'indicator',
-        'header',
-        'state_id',
-        'sdg_no'
-    ).annotate(
-        achievement_eea=Sum('achievement_eea'),
-        achievement_norway=Sum('achievement_norway'),
-    ).order_by(F('order').asc(nulls_last=True))
-
-    results = defaultdict(lambda: defaultdict(dict))
-    for indicator in indicators:
-        if indicator['achievement_eea']:
-            key = (FM_EEA, indicator['state_id'], indicator['sdg_no'])
-            results[key][indicator['header']].update({
-                indicator['indicator']: {
-                    'achievement': indicator['achievement_eea'],
-                }
-            })
-        if indicator['achievement_norway']:
-            key = (FM_EEA, indicator['state_id'], indicator['sdg_no'])
-            results[key][indicator['header']].update({
-                indicator['indicator']: {
-                    'achievement': indicator['achievement_eea'],
-                }
-            })
-
     out = []
     for key, value in dataset.items():
         financial_mechanism, state, sdg_no = key
@@ -406,7 +361,6 @@ def sdg(request):
             'areas': list(value['areas']),
             'beneficiary': state,
             'allocation': value['allocation'],
-            'results': results[key],
             'programmes': value['programmes'],
             'sdg_no': sdg_no,
         })

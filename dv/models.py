@@ -241,6 +241,11 @@ class Indicator(models.Model):
 
     achievement_eea = models.DecimalField(max_digits=9, decimal_places=2)
     achievement_norway = models.DecimalField(max_digits=9, decimal_places=2)
+    achievement_total = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        help_text="Total results including some that cannot be allocated to either EEA or Norway.",
+    )
     order = models.SmallIntegerField(null=True)
 
     is_core = models.BooleanField(default=False)

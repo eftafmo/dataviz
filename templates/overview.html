@@ -27,7 +27,8 @@
       period="{{ PERIOD }}"
   ></overview_funding>
   <overview_results
-      :initial="dataset"
+      datasource="/api/indicators.json"
+      :datasource-periods="['{{ PERIOD }}']"
       period="{{ PERIOD }}"
   ></overview_results>
 {% endblock after_content %}

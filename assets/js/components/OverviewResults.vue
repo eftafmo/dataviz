@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="hasData && aggregated.allocation && gridItems.length > 0"
-    class="overview-results"
-  >
+  <div v-if="hasData && gridItems.length > 0" class="overview-results">
     <embeddor :period="period" tag="overview_results" />
     <div class="overview-heading extra-bold">
       <span class="muted">The</span>
@@ -50,28 +47,19 @@ export default {
   mixins: [WithFMsMixin, WithCountriesMixin],
   data() {
     return {
-      filter_by: ["fm", "beneficiary"],
+      filter_by: ["beneficiary"],
     };
   },
   computed: {
+    filtered() {
+      return this.filter(this.dataset, this.filter_by);
+    },
+
     aggregated() {
       return this.aggregate(
         this.filtered,
-        [],
-        [
-          "allocation",
-          // 2014-2021
-          "people_civil_society",
-          "jobs_created",
-          "supported_researchers",
-          "staff_trained",
-          "co2_emissions_reduction",
-          // 2009-2014
-          "annual_co2_emissions_reduced",
-          "green_jobs_created",
-          "ngos_small_organisations_supported",
-          "people_improved_access",
-        ],
+        ["indicator"],
+        ["achievement_eea", "achievement_norway", "achievement_total"],
         false
       );
     },
@@ -81,62 +69,85 @@ export default {
         {
           id: "civil-soa",
           image: "imgs/results/icon_people.svg",
-          amount: this.aggregated.people_civil_society,
+          amount: this.getAmount(
+            "Number of people engaged in civil society organisation activities"
+          ),
           description:
             "people involved in civil society organisation activities",
         },
         {
           id: "co2-reduction",
           image: "imgs/results/icon_emissions.svg",
-          amount: this.aggregated.co2_emissions_reduction,
+          amount: this.getAmount("Estimated annual CO2 emissions reductions"),
           description: "tons of est. annual CO2 emissions reduction",
         },
-        this.aggregated.supported_researchers > 0
+        this.getAmount("Number of researchers supported") > 0
           ? {
               id: "researchers",
               image: "imgs/results/icon_researchers.svg",
-              amount: this.aggregated.supported_researchers,
+              amount: this.getAmount("Number of researchers supported"),
               description: "supported researchers",
             }
           : {
               id: "staff-trained",
               image: "imgs/results/icon_researchers.svg",
-              amount: this.aggregated.staff_trained,
+              amount: this.getAmount("Number of professional staff trained"),
               description: "professional staff trained",
             },
         {
           id: "jobs",
           image: "imgs/results/icon_jobs.svg",
-          amount: this.aggregated.jobs_created,
+          amount: this.getAmount("Number of jobs created"),
           description: "jobs created",
         },
         // 2009-2014
         {
           id: "anual-co2-reduction",
           image: "imgs/results/icon_emissions.svg",
-          amount: this.aggregated.annual_co2_emissions_reduced,
+          amount: this.getAmount(
+            "Estimated CO2 reduction and/or avoidance in tonnes/year"
+          ),
           description: "tons of est. annual CO2 emissions reduced",
         },
         {
           id: "green-jobs",
           image: "imgs/results/icon_jobs.svg",
-          amount: this.aggregated.green_jobs_created,
+          amount: this.getAmount("Number of green jobs created"),
           description: "green jobs created",
         },
         {
           id: "ngos-supported",
           image: "imgs/results/icon_researchers.svg",
-          amount: this.aggregated.ngos_small_organisations_supported,
+          amount: this.getAmount(
+            "Number of NGOs/small organisations reporting strengthened capacity"
+          ),
           description: "ngos and small organisations supported",
         },
         {
           id: "basic-welfare",
           image: "imgs/results/icon_people.svg",
-          amount: this.aggregated.people_improved_access,
+          amount: this.getAmount(
+            "Number of beneficiaries reporting improved access to basic and welfare services"
+          ),
           description:
             "people with improved access to basic and welfare services",
         },
       ].filter((item) => item.amount > 0);
+    },
+  },
+  methods: {
+    getAmount(key) {
+      const values = this.aggregated[key];
+      if (!values) return 0;
+
+      switch (this.filters.fm) {
+        case "EEA Grants":
+          return values.achievement_eea;
+        case "Norway Grants":
+          return values.achievement_norway;
+        default:
+          return values.achievement_total;
+      }
     },
   },
 };
