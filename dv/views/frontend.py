@@ -618,6 +618,11 @@ class EmbedComponent(TemplateView):
             props["datasource"] = self.request.build_absolute_uri(
                 reverse("api:bilateral-initiatives")
             )
+        elif component == "overview_results":
+            props["datasource"] = self.request.build_absolute_uri(
+                reverse("api:indicators")
+            )
+
         if component == "funding_by_period_chart" or (
             scenario == "compare" and component == "beneficiaries"
         ):
