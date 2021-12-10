@@ -211,6 +211,7 @@ def indicators(request):
                 funding_period=period_id,
                 programme__is_tap=False,
                 programme__is_bfp=False,
+                achievement_total__gt=0,
             )
             .values(
                 "indicator",
