@@ -648,6 +648,11 @@ class EmbedComponent(TemplateView):
                 reverse("api:project-list")
             )
 
+        if component == "sidebar":
+            props["indicatorsDatasource"] = self.request.build_absolute_uri(
+                reverse("api:indicators")
+            )
+
         context.update(
             {
                 "jsfiles": jsfiles,

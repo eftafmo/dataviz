@@ -7,7 +7,8 @@
       <tab name="Results">
         <results
           class="sidebar-content"
-          :initial="dataset"
+          :datasource="indicatorsDatasource"
+          :datasource-periods="[period]"
           :embedded="embedded"
         ></results>
       </tab>
@@ -38,5 +39,11 @@ export default {
     programmes: Programmes,
   },
   extends: BaseSidebar,
+  props: {
+    indicatorsDatasource: {
+      type: String,
+      default: null,
+    },
+  },
 };
 </script>
