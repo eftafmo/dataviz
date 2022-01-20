@@ -5,13 +5,13 @@
     "color": "#6D983B",
   },
   {
-    "id": "Inclusive",
-    "name": "an Inclusive Europe",
+    "id": "Competitive",
+    "name": "a Competitive Europe",
     "color": "#DC7A44",
   },
   {
-    "id": "Competitive",
-    "name": "a Competitive Europe",
-    "color": "#44A5DC",
-  },
+    "id": "Inclusive",
+    "name": "an Inclusive Europe",
+    "color": "#44A5DC"
+  }
 ]
