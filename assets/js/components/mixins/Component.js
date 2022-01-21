@@ -50,6 +50,12 @@ export default {
   methods: {
     currency: util.formatCurrency,
     number: util.formatNumber,
+    formatPercent(value, total, fractionDigits = 0) {
+      const result = (Number(value) / Number(total)) * 100;
+      if (isNaN(result)) return "-";
+
+      return result.toFixed(fractionDigits) + "%";
+    },
     shortNumber(value) {
       return formatShort(value, util.formatNumber, util.formatFloat);
     },

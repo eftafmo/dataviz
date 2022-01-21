@@ -140,23 +140,23 @@ def overview(request):
         'is_continued_coop',
         'is_positive_fx',
         'state',
+        'has_ended',
     ).order_by('code')
+
     projects = defaultdict(list)
     dpp_projects = defaultdict(list)
     continued_coop = defaultdict(list)
     positive_fx = defaultdict(list)
+    completed_projects = defaultdict(list)
+
     for project in project_query:
+        keys = []
         if project['is_eea']:
-            key = (FM_EEA, project['state'])
-            projects[key].append(project['code'])
-            if project['is_dpp']:
-                dpp_projects[key].append(project['code'])
-            if project['is_continued_coop']:
-                continued_coop[key].append(project['code'])
-            if project['is_positive_fx']:
-                positive_fx[key].append(project['code'])
+            keys.append((FM_EEA, project['state']))
         if project['is_norway']:
-            key = (FM_NORWAY, project['state'])
+            keys.append((FM_NORWAY, project['state']))
+
+        for key in keys:
             projects[key].append(project['code'])
             if project['is_dpp']:
                 dpp_projects[key].append(project['code'])
@@ -164,6 +164,8 @@ def overview(request):
                 continued_coop[key].append(project['code'])
             if project['is_positive_fx']:
                 positive_fx[key].append(project['code'])
+            if project['has_ended']:
+                completed_projects[key].append(project['code'])
 
     bilateral_initiative_query = BilateralInitiative.objects.filter(
         funding_period=period_id,
@@ -196,6 +198,7 @@ def overview(request):
             'projects': projects.get(key, []),
             'bilateral_initiatives': bilateral_initiatives.get(key, []),
             'positive_fx': positive_fx.get(key, []),
+            'completed_projects': completed_projects.get(key, []),
         })
     return JsonResponse(out)
 

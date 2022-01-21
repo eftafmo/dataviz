@@ -72,6 +72,7 @@ export default {
           { source: "dpp_projects", type: Array },
           { source: "bilateral_initiatives", type: Array },
           { source: "continued_coop", type: Array },
+          { source: "completed_projects", type: Array },
           { source: "beneficiary", type: String },
         ],
         false
@@ -147,8 +148,11 @@ export default {
             },
             {
               id: "part-cont",
-              name: "Partnerships likely to continue",
-              amount: this.number(this.aggregated.continued_coop.size),
+              name: "Completed partnerships likely to continue",
+              amount: this.formatPercent(
+                this.aggregated.continued_coop.size,
+                this.aggregated.completed_projects.size
+              ),
             },
           ],
         },
@@ -175,8 +179,11 @@ export default {
             },
             {
               id: "proj-pos",
-              name: "Projects with lasting effect",
-              amount: this.number(this.aggregated.positive_fx.size),
+              name: "Completed projects with lasting effect",
+              amount: this.formatPercent(
+                this.aggregated.positive_fx.size,
+                this.aggregated.completed_projects.size
+              ),
             },
           ],
         },
