@@ -48,6 +48,7 @@ import WithCountriesMixin from "./mixins/WithCountries";
 import DropdownFilter from "./includes/DropdownFilter";
 import Embeddor from "./includes/Embeddor";
 import { sum } from "../lib/util";
+import { intersection } from "../lib/setUtils";
 
 export default {
   components: { Embeddor, DropdownFilter },
@@ -94,6 +95,18 @@ export default {
           hidden: allocation <= 0,
         };
       });
+    },
+    completedDppProjects() {
+      return intersection(
+        this.aggregated.completed_projects,
+        this.aggregated.dpp_projects
+      );
+    },
+    continuedCoopDppProjects() {
+      return intersection(
+        this.aggregated.continued_coop,
+        this.aggregated.dpp_projects
+      );
     },
     gridItems() {
       return [
@@ -150,8 +163,8 @@ export default {
               id: "part-cont",
               name: "Completed partnerships likely to continue",
               amount: this.formatPercent(
-                this.aggregated.continued_coop.size,
-                this.aggregated.completed_projects.size
+                this.continuedCoopDppProjects.size,
+                this.completedDppProjects.size
               ),
             },
           ],
