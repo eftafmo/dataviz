@@ -554,8 +554,9 @@ export default {
       transitionConnections(connexit, false);
     },
 
-    _domouse(over, d, i, group) {
-      const self = this.$super()._domouse(over, d, i, group);
+    _domouse(over, ev, d) {
+      const $super = BaseMap.methods._domouse.bind(this)
+      const self = $super(over, ev, d)
       if (!self) return;
       if (self.classed("zero")) return;
 
