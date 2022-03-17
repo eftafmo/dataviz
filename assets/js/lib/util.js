@@ -48,9 +48,6 @@ const _locale = {
 };
 // currency, separators, float
 export const formatCurrencyFloat = d3.formatLocale(_locale).format("$,.1f");
-export const formatCurrencyFloatUnderOne = d3
-  .formatLocale(_locale)
-  .format("$,.2f");
 // currency, separators, int
 export const formatCurrency = d3.formatLocale(_locale).format("$,d");
 export const formatNumber = d3.formatLocale(_locale).format(",d");

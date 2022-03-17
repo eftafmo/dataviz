@@ -126,11 +126,7 @@ export default {
             },
             {
               id: "bilateral-fund",
-              amount: this.shortCurrency(
-                Math.trunc(this.aggregated.bilateral_fund).toString().length > 6
-                  ? this.aggregated.bilateral_fund
-                  : this.aggregated.bilateral_fund / 1000000
-              ),
+              amount: this.shortCurrency(this.aggregated.bilateral_fund),
               name: "Bilateral fund",
             },
           ],
