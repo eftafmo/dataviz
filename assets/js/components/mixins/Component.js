@@ -1,25 +1,32 @@
 import * as util from "../../lib/util.js";
 
-const shortNumberValues = [
-  {
-    value: Math.pow(10, 9),
-    suffix: "\xa0bn",
-  },
-  {
-    value: Math.pow(10, 6),
-    suffix: "\xa0m",
-  },
-  {
-    value: Math.pow(10, 3),
-    suffix: "\xa0K",
-  },
-];
+export const shortKilo = {
+  value: Math.pow(10, 3),
+  suffix: "\xa0K",
+};
+export const shortMillion = {
+  value: Math.pow(10, 6),
+  suffix: "\xa0m",
+};
+export const shortBillion = {
+  value: Math.pow(10, 9),
+  suffix: "\xa0bn",
+};
+const shortNumberValues = [shortBillion, shortMillion, shortKilo];
 
-function formatShort(value, formatInteger, formatFloat) {
+function formatShort(
+  value,
+  formatInteger,
+  formatFloat,
+  force_short = null,
+  decimals = 1
+) {
   let suffix = "";
-  const short = shortNumberValues.find((short) => value >= short.value);
+  const short = force_short
+    ? force_short
+    : shortNumberValues.find((short) => value >= short.value);
   if (short) {
-    value = parseFloat((value / short.value).toFixed(1));
+    value = parseFloat((value / short.value).toFixed(decimals));
     suffix = short.suffix;
   }
   if (value >= 100 || Number.isInteger(value)) {
@@ -57,6 +64,17 @@ export default {
     },
     shortCurrency(value) {
       return formatShort(value, util.formatCurrency, util.formatCurrencyFloat);
+    },
+    shortCurrencyBF(value) {
+      return value >= 1000000
+        ? this.shortCurrency(value)
+        : formatShort(
+            value,
+            util.formatCurrency,
+            util.formatCurrencyFloat2,
+            shortMillion,
+            2
+          );
     },
     singularize: util.singularize,
     pluralize: util.pluralize,

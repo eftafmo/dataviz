@@ -126,7 +126,7 @@ export default {
             },
             {
               id: "bilateral-fund",
-              amount: this.shortCurrency(this.aggregated.bilateral_fund),
+              amount: this.shortCurrencyBF(this.aggregated.bilateral_fund),
               name: "Bilateral fund",
             },
           ],
