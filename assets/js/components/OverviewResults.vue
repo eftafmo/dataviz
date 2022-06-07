@@ -73,7 +73,7 @@ export default {
             "Number of people engaged in civil society organisation activities (including online)"
           ),
           description:
-            "people involved in civil society organisation activities (including online)",
+            "people involved in civil society organisation activities",
         },
         {
           id: "co2-reduction",
