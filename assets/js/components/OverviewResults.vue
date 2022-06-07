@@ -70,10 +70,10 @@ export default {
           id: "civil-soa",
           image: "imgs/results/icon_people.svg",
           amount: this.getAmount(
-            "Number of people engaged in civil society organisation activities"
+            "Number of people engaged in civil society organisation activities (including online)"
           ),
           description:
-            "people involved in civil society organisation activities",
+            "people involved in civil society organisation activities (including online)",
         },
         {
           id: "co2-reduction",
