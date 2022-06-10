@@ -909,6 +909,7 @@ def project_nuts(request, state_id, force_nuts3):
             code = code[:2]
 
         key = (
+            pa.project.thematic,
             pa.project.nuts_id,
             pa.programme_area_id,
             pa.priority_sector_id,
@@ -923,6 +924,7 @@ def project_nuts(request, state_id, force_nuts3):
             row['allocation'] += pa.allocation
             row['projects'].add(pa.project_id)
             row['programmes'][pa.project.programme_id] = pa.project.programme_id
+            row['thematic'] = pa.project.thematic
             continue
 
         # else split allocation among children, and add project count to all children
@@ -937,6 +939,7 @@ def project_nuts(request, state_id, force_nuts3):
 
         for nuts in children:
             childkey = (
+                pa.project.thematic,
                 nuts,
                 pa.programme_area_id,
                 pa.priority_sector_id,
@@ -950,6 +953,7 @@ def project_nuts(request, state_id, force_nuts3):
             row['allocation'] += allocation
             row['projects'].add(pa.project_id)
             row['programmes'][pa.project.programme_id] = pa.project.programme_id
+            row['thematic'] = pa.project.thematic
 
     out = []
 

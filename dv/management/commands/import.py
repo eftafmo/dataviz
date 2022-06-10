@@ -585,6 +585,7 @@ class Command(BaseCommand):
                     is_continued_coop=bool(row['CooperationContinue']),
                     initial_description=sanitize_html(row['ProjectInitialDescriptionHtml']),
                     results_description=sanitize_html(row['ProjectResultsDescriptionHtml']),
+                    thematic=row['Thematic'] or '',
                 )
                 projects[project.code] = project
 
