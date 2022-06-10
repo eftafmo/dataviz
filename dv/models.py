@@ -165,6 +165,7 @@ class Project(models.Model):
     priority_sectors = models.ManyToManyField(PrioritySector)
     nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
     sdg_no = models.IntegerField(null=True)
+    thematic = models.CharField(max_length=16, blank=True)
 
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
