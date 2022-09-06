@@ -270,10 +270,10 @@ class Indicator(models.Model):
 class Organisation(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
     name = models.CharField(max_length=256)
-    city = models.CharField(max_length=256)
-    country = models.CharField(max_length=64)
-    category = models.CharField(max_length=256)
-    subcategory = models.CharField(max_length=256)
+    city = models.CharField(max_length=256, null=True, blank=True)
+    country = models.CharField(max_length=64, null=True, blank=True)
+    category = models.CharField(max_length=256, null=True, blank=True)
+    subcategory = models.CharField(max_length=256, null=True, blank=True)
     nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
 
     @property

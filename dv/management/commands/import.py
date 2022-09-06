@@ -14,7 +14,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from dv.models import (
     Allocation, BilateralInitiative, Indicator, OrganisationRole, Organisation, PrioritySector,
-    Programme, ProgrammeAllocation, ProgrammeArea, Project, ProjectAllocation, State,
+    Programme, ProgrammeAllocation, ProgrammeArea, Project, ProjectAllocation, State, NUTS,
 )
 from dv.lib.utils import FM_EEA, FM_NORWAY, FM_REVERSED_DICT, FUNDING_PERIODS_DICT
 
@@ -560,6 +560,7 @@ class Command(BaseCommand):
 
         pa_count = ProgrammeAllocation.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {pa_count} ProgrammeAllocation objects.'))
+        ALL_MY_NUTS = set(NUTS.objects.values_list('code', flat=True))
 
         project_query = 'SELECT * FROM fmo.TR_RDPProject'
         with db_cursor() as cursor:
@@ -573,7 +574,7 @@ class Command(BaseCommand):
                     status=row['ProjectContractStatus'],
                     state=states.get(row['Country']),
                     programme=programmes.get(row['ProgrammeShortName']),
-                    nuts_id=row['ProjectLocation'] or None,
+                    nuts_id=row['ProjectLocation'] if row['ProjectLocation'] in ALL_MY_NUTS else None,
                     sdg_no=row['SDGno'],
                     allocation=row['ProjectGrant'],
                     is_eea=bool(row['IdFinancialMechanismEEA']),
@@ -679,16 +680,22 @@ class Command(BaseCommand):
             cursor.execute(organisation_query)
             organisations = {}
             for row in cursor.fetchall():
-                organisation = Organisation.objects.create(
-                    funding_period=FUNDING_PERIOD,
-                    name=row['Organisation'],
-                    city=row['City'],
-                    country=row['CountryOrganisation'],
-                    category=row['OrganisationClassificationSector'],
-                    subcategory=row['OrganisationClassification'],
-                    nuts_id=row['NUTSCode'] or None,
-                )
-                organisations[row['IdOrganisation']] = organisation.id
+                try:
+                    organisation = Organisation.objects.create(
+                        funding_period=FUNDING_PERIOD,
+                        name=row['Organisation'],
+                        city=row['City'],
+                        country=row['CountryOrganisation'],
+                        category=row['OrganisationClassificationSector'],
+                        subcategory=row['OrganisationClassification'],
+                        nuts_id=row['NUTSCode'] if row['NUTSCode'] in ALL_MY_NUTS else None,
+                    )
+                    organisations[row['IdOrganisation']] = organisation.id
+                except IntegrityError:
+                    self.stdout.write(
+                        self.style.ERROR(f"Error importing organisation {row['Organisation']}.")
+                    )
+
         o_count = Organisation.objects.filter(funding_period=FUNDING_PERIOD).count()
         self.stdout.write(self.style.SUCCESS(f'Imported {o_count} Organisation objects.'))
 
