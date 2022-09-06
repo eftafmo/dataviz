@@ -32,6 +32,7 @@ NUTS_VERSION_BY_PERIOD = {
 
 STATES = dict(countries)
 STATES["EL"] = "Greece"
+STATES["UK"] = "United Kingdom"
 
 # Everything else is International
 EEA_DONOR_STATES = {
