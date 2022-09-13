@@ -41,7 +41,8 @@ const _locale = {
   // TODO: derive and extend the browser locale?
   // useful characters: nbsp: "\u00a0", narrow nbsp: "\u202f"
   decimal: ".",
-  thousands: "\u00a0", // nbsp
+  //thousands: "\u00a0", // nbsp
+  thousands: ",",
   grouping: [3],
   currency: ["€", ""],
   percent: "%",
