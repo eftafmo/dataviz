@@ -11,7 +11,7 @@ services:
     restart: "always"
 
   web:
-    image: eftafmo/dataviz:latest
+    image: ghcr.io/eftafmo/dataviz:master
     container_name: eeag_web
     environment:
       - NUM_WORKERS=3

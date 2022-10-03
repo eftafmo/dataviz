@@ -1,7 +1,7 @@
 version: '2'
 services:
   web:
-    image: eftafmo/dataviz:20211102
+    image: ghcr.io/eftafmo/dataviz:master
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
