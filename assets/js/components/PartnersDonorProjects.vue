@@ -15,10 +15,10 @@
       <tbody v-for="item in data" :key="item.donor">
         <tr class="section_header" @click="show_items($event)">
           <td>{{ get_country_name(item.donor) }}</td>
-          <td>{{ item.organizations.length }}</td>
+          <td>{{ number(item.organizations.length) }}</td>
           <td>{{ item.countries.size }}</td>
           <td>{{ item.programmes.size }}</td>
-          <td>{{ item.projects.size }}</td>
+          <td>{{ number(item.projects.size) }}</td>
         </tr>
         <tr
           v-for="organization in item.organizations"
@@ -39,7 +39,7 @@
         <tr>
           <th>Total</th>
           <th>
-            {{ allOrganizations.size }}
+            {{ number(allOrganizations.size) }}
           </th>
           <th>
             {{ allCountries.size }}
@@ -48,7 +48,7 @@
             {{ allProgrammes.size }}
           </th>
           <th>
-            {{ allProjects.size }}
+            {{ number(allProjects.size) }}
           </th>
         </tr>
       </tfoot>

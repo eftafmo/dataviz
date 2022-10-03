@@ -3,15 +3,23 @@ name: Update test instance
 on:
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
-  build:
+  deploy:
     runs-on: [self-hosted, test]
-
     steps:
+      - name: Extract version info
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-    - name: Update docker-compose.override.yml
-      run: |
-        cd /var/local/eeag
-        sed -i "/image/c\    image: ghcr.io\/eftafmo\/dataviz:${GITHUB_REF##*/}" docker-compose.override.yml
-        docker-compose pull web
-        docker-compose up -d web
+      - name: Update docker-compose.override.yml
+        run: |
+          cd /var/local/eeag
+          sed -i "/image/c\    image: ${{ steps.meta.outputs.tags }}" docker-compose.override.yml
+          docker-compose pull web
+          docker-compose up -d web
