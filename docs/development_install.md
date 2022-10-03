@@ -1,14 +1,13 @@
+# Developer documentation
 
-## Development installation guide
+## Local installation guide using Docker
 
 ### Prerequisites
 
 * Install [Docker](https://docs.docker.com/engine/installation/)
 * Install [Docker Compose](https://docs.docker.com/compose/install/)
 
-
 ### Installing the application
-
 
 1. Get the docker installation repository and the source code:
 
@@ -31,7 +30,7 @@
 
 1. Replace database file with the latest version from production
 
-        $ scp edwsys@data.eeagrants.org:/var/local/eeag.docker/db/eeag.sqlite3 /tmp/eeag.sqlite3
+        $ scp dataviz@data.eeagrants.org:eeag.sqlite3 /tmp/eeag.sqlite3
         $ docker cp /tmp/eeag.sqlite3 eeag_web:/var/local/db/eeag.sqlite3
 
 1. Step in the container, install requirements and rebuild indexes.
@@ -49,3 +48,24 @@
 
         $ docker-compose exec web bash
         $ python manage.py runserver 0.0.0.0:8000
+
+## Local installation without Docker
+
+```shell
+python3.9 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.dev.txt
+nvm use 16
+npm install
+cp dv/localsettings.py.example dv/localsettings.py
+
+# Copy data file from prod/test
+mkdir -p ../db
+scp dataviz@data.eeagrants.org:eeag.sqlite3 ../db
+
+# TODO: run Elastic Search
+
+# start Django and frontend server
+python manage.py runserver 0:8000
+npm run dev
+```

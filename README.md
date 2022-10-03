@@ -1,9 +1,6 @@
 Data and results portal for EEA & Norway Grants - data.eeagrants.org
 =========================================
 
-
-[![Updates](https://pyup.io/repos/github/eftafmo/dataviz/shield.svg)](https://pyup.io/repos/github/eftafmo/dataviz/)
-
 Documentation:
 
 * [Installation](docs/installation.md)
