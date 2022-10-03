@@ -193,6 +193,7 @@ export default {
                 this.aggregated.positive_fx.size,
                 this.aggregated.completed_projects.size
               ),
+              hidden: this.period == "2014-2021",
             },
           ],
         },
