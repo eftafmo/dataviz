@@ -11,43 +11,42 @@
 
 1. Get the docker installation repository and the source code:
 
-        $ git clone git@github.com:eftafmo/dataviz.git
-        $ cd dataviz
+        git clone git@github.com:eftafmo/dataviz.git
+        cd dataviz
 
 1. Prepare environment:
 
-        $ cp docker/docker-compose.override-dev.yml.example docker-compose.override.yml
-        $ cp docker/web.dev.env.example docker/web.env
-
+        cp docker/docker-compose.override-dev.yml.example docker-compose.override.yml
+        cp docker/web.dev.env.example docker/web.env
 
 1. Create local settings:
 
-        $ cp dv/localsettings.py.example dv/localsettings.py
+        cp dv/localsettings.py.example dv/localsettings.py
 
 1. Start services:
 
-        $ docker-compose up -d
+        docker-compose up -d
 
 1. Replace database file with the latest version from production
 
-        $ scp dataviz@data.eeagrants.org:eeag.sqlite3 /tmp/eeag.sqlite3
-        $ docker cp /tmp/eeag.sqlite3 eeag_web:/var/local/db/eeag.sqlite3
+        scp dataviz@data.eeagrants.org:eeag.sqlite3 /tmp/eeag.sqlite3
+        docker cp /tmp/eeag.sqlite3 eeag_web:/var/local/db/eeag.sqlite3
 
 1. Step in the container, install requirements and rebuild indexes.
 
-        $ docker-compose exec web bash
-        $ pip install -r requirements.dev.txt
-        $ python manage.py rebuild_index --noinput
+        docker-compose exec web bash
+        pip install -r requirements.dev.txt
+        python manage.py rebuild_index --noinput
 
 1. Install npm and start webpack dev server(*leave this container open*):
 
-        $ npm install
-        $ npm run dev
+        npm install
+        npm run dev
 
 1. Open another web container and start the django server:
 
-        $ docker-compose exec web bash
-        $ python manage.py runserver 0.0.0.0:8000
+        docker-compose exec web bash
+        python manage.py runserver 0.0.0.0:8000
 
 ## Local installation without Docker
 
@@ -63,9 +62,10 @@ cp dv/localsettings.py.example dv/localsettings.py
 mkdir -p ../db
 scp dataviz@data.eeagrants.org:eeag.sqlite3 ../db
 
-# TODO: run Elastic Search
+# See es_local.md if you also need Elasticsearch
 
 # start Django and frontend server
 python manage.py runserver 0:8000
+# in a new terminal
 npm run dev
 ```

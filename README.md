@@ -3,7 +3,7 @@ Data and results portal for EEA & Norway Grants - data.eeagrants.org
 
 Documentation:
 
-* [Installation](docs/installation.md)
+* [Server deployment](docs/installation.md)
 * [Importing data](docs/import.md)
 
 Developer documentation:
