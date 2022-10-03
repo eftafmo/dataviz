@@ -555,8 +555,8 @@ export default {
     },
 
     _domouse(over, ev, d) {
-      const $super = BaseMap.methods._domouse.bind(this)
-      const self = $super(over, ev, d)
+      const $super = BaseMap.methods._domouse.bind(this);
+      const self = $super(over, ev, d);
       if (!self) return;
       if (self.classed("zero")) return;
 
