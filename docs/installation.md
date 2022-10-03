@@ -1,96 +1,50 @@
-# EEA Grants Dataviz installation
+# Server deployment using Docker
 
-These instructions assume you're deploying to Azure Containers, and have already set up an account on the Azure portal.
+## Prerequisites
 
-1. Install Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-    ```shell
-    az login --tenant fdf06eeb-4370-4758-bad3-26541c642925
-    ```
+* Install [Docker](https://docs.docker.com/engine/installation/)
+* Install [Docker Compose](https://docs.docker.com/compose/install/)
 
-1. Log into Azure
-    ```shell
-    docker login azure
+## Initial setup
 
-    # for production, make sure you're using the correct tenant-id and subscription-id:
-    #docker login azure --tenant-id fdf06eeb-4370-4758-bad3-26541c642925
-    #az account set --subscription d0c8e6b7-00d8-49e3-bb85-7a0467fc4dcc
-    ```
+```shell
+mkdir -p /var/local/eeag/docker
+cd /var/local/eeag
 
-1. Set up shell variables and Docker context:
-    ```shell
-    # deploy to staging:
-    source docker/set_context_staging.sh
+curl -o docker-compose.yml https://raw.githubusercontent.com/eftafmo/dataviz/master/docker-compose.yml
+# Use docker-compose.override-prod.yml.example when deploying on prod
+curl -o docker-compose.override.yml https://raw.githubusercontent.com/eftafmo/dataviz/master/docker/docker-compose.override-staging.yml.example
 
-    # deploy to production:
-    #source docker/set_context_production.sh
-    ```
+# Use web.prod.env.example when deploying on prod
+curl -o docker/web.env https://raw.githubusercontent.com/eftafmo/dataviz/master/docker/web.staging.env.example
+# edit secrets
+vim docker/web.env
 
-1. Set up secrets
+# update docker image version
+vim docker-compose.override.yml
 
-    1. If it's a first-time deployment, set up a Key Vault:
+# start containers
+docker-compose up -d
 
-        ```shell
-        az keyvault create --location $EEAG_REGION --name $EEAG_VAULT --resource-group $EEAG_RESOURCE_GROUP
-        ```
+# copy data file
+scp dataviz@data.eeagrants.org:eeag.sqlite3 /tmp/eeag.sqlite3
+docker cp /tmp/eeag.sqlite3 eeag_web:/var/local/db/eeag.sqlite3
 
-       Then enter secrets:
+# clear cache and restart
+docker exec eeag_web rm -rf /var/tmp/django_cache/
+docker-compose restart web
 
-        ```shell
-        az keyvault secret set --vault-name $EEAG_VAULT --name secret-key --value 'not-so-secret'
-        ```
+# rebuild ES indexes
+docker-compose exec web bash
+python manage.py rebuild_index --noinput
+exit
 
-       The following secrets are required:
+# Setup cron
+# 0 0 * * * /bin/docker system prune -f >> /var/log/dataviz/docker-prune.log 2>&1
+# 0 4 * * * /bin/docker exec eeag_web import.sh >> /var/log/dataviz/import.log 2>&1
+crontab -e
 
-       * `allowed-hosts`: Domain name for the site. _(Set `*` to allow cron scripts to do their job. Remote requests come in via the load balancer, therefore this doesn't open up a security hole.)_
-       * `secret-key`: A random string for Django's `SECRET_KEY` setting.
-       * `sentry-dsn`: Sentry DSN for the back-end.
-       * `sentry-environment`: Sentry environment name.
-       * `google-analytics-property-id`: Google Analytics tracking ID, e.g. `UA-12345-1`.
-       * `fqdn`: Domain name for the site.
-       * `certbot-email`: Email to use when requesting a certificate from Let's Encrypt. Used for [Expiration Emails](https://letsencrypt.org/docs/expiration-emails/).
+# Setup nginx
+curl -o /etc/nginx/conf.d/eeagrants.edw.ro.conf https://raw.githubusercontent.com/eftafmo/dataviz/master/docker/nginx.conf.staging.example
 
-    1. Download secrets and generate a configuration file:
-
-        ```shell
-        docker/azure-get-secrets.py $EEAG_VAULT web > docker/azure-web.env
-        docker/azure-get-secrets.py $EEAG_VAULT nginx > docker/azure-nginx.env
-        ```
-
-1. Create volumes:
-    ```shell
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-elasticsearchdata
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-webdb
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-weblogs
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-webroot
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-nginxconfig
-    docker volume create --storage-account $EEAG_STORAGE_ACCOUNT we-p-fmo-dockervolume-upload
-    ```
-
-1. Upload nginx configuration:
-    ```shell
-    az storage copy -s docker/azure-nginx.conf -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-nginxconfig/nginx.conf"
-    az storage copy -s docker/azure-entrypoint.sh -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-nginxconfig/entrypoint.sh"
-    ```
-
-1. Prepare the database file to work on Azure persistent volumes:
-    ```shell
-    sqlite3 eeag.sqlite3
-    sqlite> PRAGMA journal_mode=wal;
-    ```
-
-1. Upload the database file:
-    ```shell
-    az storage copy -s eeag.sqlite3 -d "https://$EEAG_STORAGE_ACCOUNT.file.core.windows.net/we-p-fmo-dockervolume-webdb/eeag.sqlite3"
-    ```
-
-1. Deploy the app:
-    ```shell
-    docker compose -f docker-compose-azure.yml up
-    ```
-
-1. Rebuild indexes:
-    ```shell
-    docker exec -it we-p-fmo-docker-dataeeagrantsorg-cg_web bash  # log in to web container
-    ./manage.py rebuild_index --noinput
-    exit  # log out of web container
-    ```
+```

@@ -1,12 +1,10 @@
 # Docker-compose override for https://eeagrants.edw.ro/
+# See https://github.com/eftafmo/dataviz/pkgs/container/dataviz
 version: '2'
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/eftafmo/dataviz:test
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
-      - /home/dataviz/upload:/var/local/upload
       - /var/www/html:/var/local/webroot

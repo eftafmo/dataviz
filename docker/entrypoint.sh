@@ -13,15 +13,6 @@ wait_elasticsearch() {
 
 }
 
-install_crontab() {
-    echo "Installing crontab"
-    printenv | sed 's/^\(.*\)$/export \1/g' &> ~/.bashrc
-    crontab /etc/crontab.dataviz
-}
-
-/usr/sbin/cron
-install_crontab
-
 if [ -z "$1" ]; then
   init &&
   wait_elasticsearch &&
