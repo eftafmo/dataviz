@@ -1,0 +1,17 @@
+name: Update test instance
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, test]
+
+    steps:
+
+    - name: Update docker-compose.override.yml
+      run: |
+        cd /var/local/eeag
+        sed -i "/image/c\    image: ghcr.io\/eftafmo\/dataviz:${GITHUB_REF##*/}" docker-compose.override.yml
+        docker-compose pull web
+        docker-compose up -d web
