@@ -1,28 +1,15 @@
 <template>
   <div :class="classNames">
-    <div v-for="(sectors, outcome) in data" :key="outcome">
-      <div class="content-item results_content">
-        <div class="body">
-          <h4 class="title">{{ outcome }}</h4>
-          <div v-for="(indicators, sector) in sectors" :key="sector">
-            <small v-show="!filters.sector && !hideSector">
-              {{ sector }}
-            </small>
-            <ul class="indicators">
-              <li
-                v-for="(value, indicator) in indicators"
-                :key="indicator"
-                class="indicator clearfix"
-                :style="{ borderColor: getColor(sector) }"
-              >
-                <div class="indicator-achievement">{{ number(value) }}</div>
-                <div class="indicator-name">{{ indicator }}</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ul class="indicators">
+      <li
+        v-for="(value, indicator) in data"
+        :key="indicator"
+        class="indicator clearfix"
+      >
+        <div class="indicator-achievement">{{ number(value) }}</div>
+        <div class="indicator-name">{{ indicator }}</div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -35,13 +22,6 @@ export default {
   extends: Component,
   type: "results",
   mixins: [WithSectorsMixin],
-  props: {
-    hideSector: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
   data() {
     return {
       // Don't filter by FM, as that is handled via getValue
@@ -54,22 +34,12 @@ export default {
 
       const results = {};
       this.filtered.forEach((d) => {
-        const sector = this.hideSector ? "" : d.sector;
-        const header = d.header;
-        const indicator = d.indicator.replace(/^Number of /, "");
         const value = this.getValue(d);
+        const indicator = d.indicator.replace(/^Number of /, "");
 
         if (value === 0) return;
 
-        if (results[header] === undefined) {
-          results[header] = {};
-        }
-        if (results[header][sector] === undefined) {
-          results[header][sector] = {};
-        }
-
-        const currentValue = results[header][sector][indicator] || 0;
-        results[header][sector][indicator] = currentValue + value;
+        results[indicator] = (results[indicator] || 0) + value;
       });
 
       return results;
@@ -89,10 +59,6 @@ export default {
     }
   },
   methods: {
-    getColor(sector) {
-      if (!sector) return "#3b5998";
-      return this.sectorcolor(sector);
-    },
     getValue(d) {
       switch (this.filters.fm) {
         case "EEA Grants":
@@ -126,7 +92,7 @@ export default {
   }
 
   .indicator {
-    border-left: 3px solid red;
+    border-left: 3px solid #3b5998;
     margin-bottom: 0.5rem;
     padding-left: 0.5rem;
   }
