@@ -2,7 +2,7 @@
   <div :class="classNames">
     <ul class="indicators">
       <li
-        v-for="(value, indicator) in data"
+        v-for="[indicator, value] in data"
         :key="indicator"
         class="indicator clearfix"
       >
@@ -42,7 +42,9 @@ export default {
         results[indicator] = (results[indicator] || 0) + value;
       });
 
-      return results;
+      return Object.entries(results).sort(
+        ([, value1], [, value2]) => value2 - value1
+      );
     },
   },
   updated() {
