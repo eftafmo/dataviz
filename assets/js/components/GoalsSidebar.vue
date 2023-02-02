@@ -9,7 +9,6 @@
           :datasource="indicatorsDatasource"
           :datasource-periods="[period]"
           :embedded="embedded"
-          hide-sector
         ></results>
       </tab>
       <tab name="Programmes">
