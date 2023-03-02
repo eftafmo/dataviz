@@ -590,9 +590,18 @@ class Command(BaseCommand):
                 )
                 projects[project.code] = project
 
-                self._add_m2m_entries(project, row, 'ProgrammeAreaCodesList', 'programme_areas',
+                # See https://helpdesk.eaudeweb.ro/issues/17315 for explanations
+                programme_area_column = 'ProgrammeAreaCodesList'
+                priority_sector_column = 'PrioritySectorCodesList'
+
+                if ',' in (row[programme_area_column] or ''):
+                    programme_area_column = 'HostPA'
+                if ',' in (row[priority_sector_column] or ''):
+                    priority_sector_column = 'HostPS'
+
+                self._add_m2m_entries(project, row, programme_area_column, 'programme_areas',
                                       'ProgrammeArea', programme_areas)
-                self._add_m2m_entries(project, row, 'PrioritySectorCodesList', 'priority_sectors',
+                self._add_m2m_entries(project, row, priority_sector_column, 'priority_sectors',
                                       'PrioritySector', priority_sectors)
 
         p_count = Project.objects.filter(funding_period=FUNDING_PERIOD).count()
