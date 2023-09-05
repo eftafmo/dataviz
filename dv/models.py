@@ -240,10 +240,10 @@ class Indicator(models.Model):
 
     unit_of_measurement = models.CharField(max_length=8)
 
-    achievement_eea = models.DecimalField(max_digits=9, decimal_places=2)
-    achievement_norway = models.DecimalField(max_digits=9, decimal_places=2)
+    achievement_eea = models.DecimalField(max_digits=15, decimal_places=2)
+    achievement_norway = models.DecimalField(max_digits=15, decimal_places=2)
     achievement_total = models.DecimalField(
-        max_digits=9,
+        max_digits=15,
         decimal_places=2,
         help_text="Total results including some that cannot be allocated to either EEA or Norway.",
     )
