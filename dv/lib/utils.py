@@ -2,7 +2,10 @@ import random
 import re
 import time
 from binascii import crc32
-from collections import Iterable
+try:
+    from collections import Iterable
+except ImportError:
+    from collections.abc import Iterable
 
 from django.utils.baseconv import base62
 from django_countries import countries
