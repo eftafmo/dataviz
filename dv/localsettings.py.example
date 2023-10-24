@@ -42,6 +42,15 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+from .settings import INSTALLED_APPS
+from .settings import MIDDLEWARE
+
+INSTALLED_APPS += ("django_extensions", "debug_toolbar")
+MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 # TODO use env variables instead of localsettings.py
 MSSQL_SERVER = ""
 MSSQL_USERNAME = ""
