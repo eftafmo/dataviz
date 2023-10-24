@@ -56,13 +56,16 @@ source .venv/bin/activate
 pip install -r requirements.dev.txt
 nvm use 16
 npm install
+# Copy settings and adjust as necessary
 cp dv/localsettings.py.example dv/localsettings.py
 
 # Copy data file from prod/test
 mkdir -p ../db
 scp dataviz@data.eeagrants.org:eeag.sqlite3 ../db
 
-# See es_local.md if you also need Elasticsearch
+# See es_local.md if you also need Elasticsearch and 
+# build search indexes
+python manage.py rebuild_index --noinput
 
 # start Django and frontend server
 python manage.py runserver 0:8000
