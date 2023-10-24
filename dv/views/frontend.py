@@ -371,15 +371,19 @@ class FacetedExportView(FacetedSearchView):
         return self.type_format_field(raw_field)
 
     def get_export_data(self, form):
-        queryset = form.search()
-        result = queryset.values_list(*self.export_fields.keys())
-        for row in result:
+        count = form.search().count()
+        queryset = form.search().values_list(*self.export_fields.keys())
+
+        # XXX Manually execute the query and get the results as Haystack will
+        # XXX default to paginating the responses (in batches of 10)
+        # XXX See undocumented setting haystack.constants.ITERATOR_LOAD_PER_QUERY
+        queryset.query.set_limits(0, count)
+        results = queryset.post_process_results(queryset.query.get_results())
+
+        for row in results:
             for i in range(len(row)):
                 row[i] = self.format_field(row[i])
-        return result
-
-    def get_paginate_by(self, queryset):
-        return queryset.count()
+        return results
 
     def form_valid(self, form):
         data = self.get_export_data(form)
