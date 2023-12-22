@@ -334,7 +334,7 @@ class BilateralInitiative(models.Model):
     results_description = models.TextField()
 
     promoter_state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
-    promoter_organization = models.CharField(max_length=256, blank=True)
+    promoter_organization = models.CharField(max_length=256, blank=True, null=True)
 
     @cached_property
     def display_name(self):

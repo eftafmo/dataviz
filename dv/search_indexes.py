@@ -38,7 +38,7 @@ class BilateralInitiativeIndex(SearchIndex, Indexable):
     title = fields.CharField(indexed=False)
     url = fields.CharField(indexed=False, model_attr="url", null=True)
     promoter_organization = fields.CharField(
-        indexed=False, model_attr="promoter_organization"
+        indexed=False, model_attr="promoter_organization", null=True
     )
     grant = fields.DecimalField()
 
