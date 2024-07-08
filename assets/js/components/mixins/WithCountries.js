@@ -11,7 +11,7 @@ const _types = {
   partner: PARTNERS,
 };
 
-const flags = import.meta.globEager("../../../sprites/flags/*.png");
+const flags = import.meta.glob("../../../sprites/flags/*.png", { eager: true });
 
 function transformCountryName(name) {
   return name.toLowerCase().replace(/ /g, "");
@@ -59,7 +59,7 @@ export function get_sort_order(code) {
 
 function get_longest_name(obj) {
   return Object.values(obj).reduce((longest, item) =>
-    longest.length > item.name.length ? longest : item.name
+    longest.length > item.name.length ? longest : item.name,
   );
 }
 
@@ -89,7 +89,7 @@ export default {
         (country) =>
           !country.periods ||
           !this.period ||
-          country.periods.indexOf(this.period) !== -1
+          country.periods.indexOf(this.period) !== -1,
       );
     },
     allBeneficiaries() {
@@ -107,7 +107,7 @@ export default {
         (country) =>
           !country.periods ||
           !this.period ||
-          country.periods.indexOf(this.period) !== -1
+          country.periods.indexOf(this.period) !== -1,
       );
     },
     currentBeneficiary() {
@@ -115,7 +115,7 @@ export default {
         this.filters &&
         this.filters.beneficiary &&
         this.BENEFICIARY_ARRAY.find(
-          (country) => country.id === this.filters.beneficiary
+          (country) => country.id === this.filters.beneficiary,
         )
       );
     },

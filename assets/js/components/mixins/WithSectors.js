@@ -1,7 +1,9 @@
 import { slugify } from "@js/lib/util";
 import _SECTORS from "@js/constants/priority-sectors.json5";
 
-const sectorImages = import.meta.globEager("../../../sprites/sectors/*.png");
+const sectorImages = import.meta.glob("../../../sprites/sectors/*.png", {
+  eager: true,
+});
 
 const SECTORS = {};
 _SECTORS.forEach((sector, index) => {
@@ -39,7 +41,7 @@ export default {
     },
     sectorUrl(sectorname) {
       return this.getAssetUrl(
-        `sprites/sectors/${this.SECTORS[slugify(sectorname)].icon}`
+        `sprites/sectors/${this.SECTORS[slugify(sectorname)].icon}`,
       );
     },
     sectorImage(sectorname) {
