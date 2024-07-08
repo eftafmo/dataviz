@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dv', '0004_update_achievement_total'),
+        ("dv", "0004_update_achievement_total"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='thematic',
+            model_name="project",
+            name="thematic",
             field=models.CharField(blank=True, max_length=16),
         ),
     ]

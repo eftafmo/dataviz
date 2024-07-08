@@ -2,7 +2,14 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils.functional import cached_property
 
-from dv.lib.utils import FM_EEA, FM_NORWAY, FINANCIAL_MECHANISMS, FM_DICT, FUNDING_PERIODS, STATES
+from dv.lib.utils import (
+    FM_EEA,
+    FM_NORWAY,
+    FINANCIAL_MECHANISMS,
+    FM_DICT,
+    FUNDING_PERIODS,
+    STATES,
+)
 
 
 class NUTSVersion(models.Model):
@@ -18,7 +25,7 @@ class NUTS(models.Model):
     nuts_versions = models.ManyToManyField(NUTSVersion)
 
     class Meta:
-        ordering = ['code']
+        ordering = ["code"]
         verbose_name_plural = "NUTS"
 
     @property
@@ -55,7 +62,7 @@ class ProgrammeArea(models.Model):
     objective = models.TextField()
 
     class Meta:
-        unique_together = ('funding_period', 'code')
+        unique_together = ("funding_period", "code")
 
     def __str__(self):
         return self.name
@@ -66,7 +73,9 @@ class Allocation(models.Model):
     financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
 
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
-    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE, null=True, related_name="allocations")
+    programme_area = models.ForeignKey(
+        ProgrammeArea, on_delete=models.CASCADE, null=True, related_name="allocations"
+    )
 
     gross_allocation = models.DecimalField(max_digits=15, decimal_places=2)
     net_allocation = models.DecimalField(max_digits=15, decimal_places=2)
@@ -74,7 +83,12 @@ class Allocation(models.Model):
     thematic = models.CharField(max_length=16, blank=True)
 
     class Meta:
-        unique_together = ('funding_period', 'state', 'programme_area', 'financial_mechanism')
+        unique_together = (
+            "funding_period",
+            "state",
+            "programme_area",
+            "financial_mechanism",
+        )
 
 
 class Programme(models.Model):
@@ -94,8 +108,8 @@ class Programme(models.Model):
     allocation_norway = models.DecimalField(max_digits=15, decimal_places=2)
     co_financing = models.DecimalField(max_digits=15, decimal_places=2)
 
-    is_tap = models.BooleanField(help_text='Technical Assistance Programme')
-    is_bfp = models.BooleanField(default=False, help_text='Bilateral Fund Programme')
+    is_tap = models.BooleanField(help_text="Technical Assistance Programme")
+    is_bfp = models.BooleanField(default=False, help_text="Bilateral Fund Programme")
 
     @property
     def allocation(self):
@@ -140,8 +154,12 @@ class ProgrammeAllocation(models.Model):
     financial_mechanism = models.CharField(max_length=3, choices=FINANCIAL_MECHANISMS)
 
     state = models.ForeignKey(State, on_delete=models.CASCADE)
-    programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE, null=True)
-    priority_sector = models.ForeignKey(PrioritySector, on_delete=models.CASCADE, null=True)
+    programme_area = models.ForeignKey(
+        ProgrammeArea, on_delete=models.CASCADE, null=True
+    )
+    priority_sector = models.ForeignKey(
+        PrioritySector, on_delete=models.CASCADE, null=True
+    )
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE, null=True)
 
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
@@ -202,7 +220,9 @@ class Project(models.Model):
         if not self.nuts:
             return []
         elif len(self.nuts.code) > 2:
-            return [f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"]
+            return [
+                f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"
+            ]
         else:
             return [f"{self.nuts.code}: {self.nuts.label}"]
 
@@ -224,13 +244,17 @@ class ProjectAllocation(models.Model):
 
 
 class ProjectTheme(models.Model):
-    project = models.ForeignKey(Project, related_name='themes', on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        Project, related_name="themes", on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=512)  # not unique
 
 
 class Indicator(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
-    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name="indicators")
+    programme = models.ForeignKey(
+        Programme, on_delete=models.CASCADE, related_name="indicators"
+    )
     programme_area = models.ForeignKey(ProgrammeArea, on_delete=models.CASCADE)
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
 
@@ -289,7 +313,9 @@ class Organisation(models.Model):
         if not self.nuts:
             return []
         elif len(self.nuts.code) > 2:
-            return [f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"]
+            return [
+                f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"
+            ]
         else:
             return [f"{self.nuts.code}: {self.nuts.label}"]
 
@@ -300,14 +326,20 @@ class OrganisationRole(models.Model):
     role_code = models.CharField(max_length=8)
     role_name = models.CharField(max_length=64)
 
-    organisation = models.ForeignKey(Organisation, related_name='roles',
-                                     on_delete=models.CASCADE)
+    organisation = models.ForeignKey(
+        Organisation, related_name="roles", on_delete=models.CASCADE
+    )
 
     # programme and project are denormalised to include BS
-    programme = models.ForeignKey(Programme, null=True, related_name='organisation_roles',
-                                  on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, null=True, related_name='organisation_roles',
-                                on_delete=models.CASCADE)
+    programme = models.ForeignKey(
+        Programme,
+        null=True,
+        related_name="organisation_roles",
+        on_delete=models.CASCADE,
+    )
+    project = models.ForeignKey(
+        Project, null=True, related_name="organisation_roles", on_delete=models.CASCADE
+    )
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
 
 
@@ -319,12 +351,18 @@ class BilateralInitiative(models.Model):
     url = models.CharField(max_length=256, blank=True)
 
     grant = models.DecimalField(max_digits=15, decimal_places=2)
-    programme = models.ForeignKey(Programme, related_name='bilateral_initiatives',
-                                  on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, null=True, related_name='bilateral_initiatives',
-                                on_delete=models.CASCADE)
-    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True,
-                              related_name='bilateral_initiatives')
+    programme = models.ForeignKey(
+        Programme, related_name="bilateral_initiatives", on_delete=models.CASCADE
+    )
+    project = models.ForeignKey(
+        Project,
+        null=True,
+        related_name="bilateral_initiatives",
+        on_delete=models.CASCADE,
+    )
+    state = models.ForeignKey(
+        State, on_delete=models.CASCADE, null=True, related_name="bilateral_initiatives"
+    )
     programme_areas = models.ManyToManyField(ProgrammeArea)
 
     level = models.CharField(max_length=16)
@@ -347,9 +385,10 @@ class News(models.Model):
     created = models.DateTimeField(null=True)
     updated = models.DateTimeField(null=True)
 
-    programmes = models.ManyToManyField(Programme, related_name='news')
-    project = models.ForeignKey(Project, null=True, default=None, related_name='news',
-                                on_delete=models.CASCADE)
+    programmes = models.ManyToManyField(Programme, related_name="news")
+    project = models.ForeignKey(
+        Project, null=True, default=None, related_name="news", on_delete=models.CASCADE
+    )
     summary = models.TextField(blank=True)
     image = models.URLField(max_length=2000)
     is_partnership = models.BooleanField(default=False)
@@ -358,7 +397,7 @@ class News(models.Model):
         return self.link
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ("-created",)
         verbose_name_plural = "news"
 
 

@@ -17,10 +17,11 @@ class JsonResponse(JsonResponse):
     Like Django's JsonResponse, but serializes "unsafe" data by default
     and sets other defaults.
     """
+
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('safe', False)
-        kwargs.setdefault('json_dumps_params', {})
-        kwargs['json_dumps_params'].setdefault('indent', 2)
+        kwargs.setdefault("safe", False)
+        kwargs.setdefault("json_dumps_params", {})
+        kwargs["json_dumps_params"].setdefault("indent", 2)
 
         super(JsonResponse, self).__init__(*args, **kwargs)
 
@@ -33,10 +34,11 @@ class CsvResponse(HttpResponse):
     :param fieldnames: The field names used in the CSV header.
     :param csv_writer_params: Dict of params passed to the csv writer class.
     """
+
     def __init__(self, data, fieldnames=None, csv_writer_params=None, **kwargs):
         # TODO: set this as default
         # kwargs.setdefault('content_type', 'text/csv')
-        kwargs.setdefault('content_type', 'text/plain')
+        kwargs.setdefault("content_type", "text/plain")
         output = io.StringIO()
 
         try:
@@ -49,13 +51,14 @@ class CsvResponse(HttpResponse):
 
             if isinstance(first, dict):
                 self.write_csv_from_dicts(
-                    output, data, fieldnames=fieldnames, **csv_writer_params)
+                    output, data, fieldnames=fieldnames, **csv_writer_params
+                )
             else:
                 self.write_csv_from_sequences(
-                    output, data, fieldnames=fieldnames, **csv_writer_params)
+                    output, data, fieldnames=fieldnames, **csv_writer_params
+                )
 
-        super().__init__(content=output.getvalue().encode('utf-8'),
-                         **kwargs)
+        super().__init__(content=output.getvalue().encode("utf-8"), **kwargs)
 
     @staticmethod
     def write_csv_from_dicts(stream, data, fieldnames=None, **writer_params):
