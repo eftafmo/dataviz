@@ -142,7 +142,7 @@ export default {
         .selectAll("g.bar-chart, g.y-axis")
         .attr(
           "transform",
-          "translate(" + this.margin.left + "," + this.margin.top + ")"
+          "translate(" + this.margin.left + "," + this.margin.top + ")",
         );
 
       this.renderYAxis();
@@ -192,7 +192,7 @@ export default {
         .attr("width", this.xScale.bandwidth())
         .attr(
           "height",
-          (d) => this.barChartHeight - this.yScale(d.net_allocation)
+          (d) => this.barChartHeight - this.yScale(d.net_allocation),
         )
         .attr("fill", (d) => d.sector.color)
         .attr("stroke", "none");
@@ -232,7 +232,7 @@ export default {
         .attr("x", xOffset + this.legendPadding)
         .attr(
           "y",
-          (d, i) => yOffset + i * this.legendItemHeight + this.legendPadding
+          (d, i) => yOffset + i * this.legendItemHeight + this.legendPadding,
         )
         .attr("width", this.legendSquareSize)
         .attr("height", this.legendSquareSize)
@@ -253,7 +253,7 @@ export default {
           xOffset +
             this.legendPadding +
             this.legendSquareSize +
-            this.legendPadding
+            this.legendPadding,
         )
         .attr(
           "y",
@@ -262,7 +262,7 @@ export default {
             i * this.legendItemHeight +
             this.legendPadding +
             this.legendSquareSize / 2 +
-            1
+            1,
         )
         .attr("line-height", 1)
         .attr("font-size", 16)
@@ -293,7 +293,7 @@ export default {
             !(
               item.name === "programme areas" &&
               d.sector.id === "allocation-to-hungary"
-            )
+            ),
         )
         .filter((item) => item.value > 0)
         .map(
@@ -302,7 +302,7 @@ export default {
               ${item.value}
               ${this.singularize(item.name, item.value)}
             </li>
-        `
+        `,
         )
         .join("");
 

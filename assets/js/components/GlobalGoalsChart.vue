@@ -43,7 +43,7 @@ export default {
       return (
         this.filters.sdg_no &&
         sdgArray.find(
-          (item) => item.id.toString() === this.filters.sdg_no.toString()
+          (item) => item.id.toString() === this.filters.sdg_no.toString(),
         )
       );
     },

@@ -334,7 +334,7 @@ export default {
         containers.attr(
           "transform",
           (d) =>
-            `translate(${_c(d).x * (1 - k)},${_c(d).y * (1 - k)}) scale(${k})`
+            `translate(${_c(d).x * (1 - k)},${_c(d).y * (1 - k)}) scale(${k})`,
         );
       }
 
@@ -382,7 +382,7 @@ export default {
         regions.filter(function (d) {
           const oldv = this._value;
           return oldv != 0 && $this.getprojectcount(d) == 0;
-        })
+        }),
       );
 
       // update gets the circle dimension transitioned
@@ -397,7 +397,7 @@ export default {
         .each(function () {
           // clone the old text and fade it out
           const clone = d3.select(
-            this.parentNode.appendChild(this.cloneNode(true))
+            this.parentNode.appendChild(this.cloneNode(true)),
           );
           clone
             .attr("opacity", 1)
@@ -449,7 +449,7 @@ export default {
       // the mouse events happen
       const mapregions = this.chart
         .selectAll(
-          `.regions > ${this._getRegionSelector(parentid)} > path.beneficiary`
+          `.regions > ${this._getRegionSelector(parentid)} > path.beneficiary`,
         )
         .data(dataset, (d) => d.id);
 
@@ -474,7 +474,7 @@ export default {
         .attr("fill", (d) =>
           this.getRegionLevel(d.id) == 0
             ? this.beneficiary_color_zero
-            : this.region_color_zero
+            : this.region_color_zero,
         );
 
       // we only go this far if this isn't the current region

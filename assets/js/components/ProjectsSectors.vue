@@ -21,7 +21,7 @@ export default {
       // - exclude fake sector "allocation-to-hungary" as it will
       //   always have 0 projects
       return this.filter(this.dataset, this.filter_by).filter(
-        (x) => !x.is_ta && slugify(x.sector) !== "allocation-to-hungary"
+        (x) => !x.is_ta && slugify(x.sector) !== "allocation-to-hungary",
       );
     },
   },
@@ -36,7 +36,7 @@ export default {
           item.children
             .filter((child) => !!child.data.projects)
             .map((child) => Array.from(child.data.projects))
-            .flat()
+            .flat(),
         ).size;
       }
 

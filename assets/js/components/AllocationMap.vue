@@ -121,7 +121,7 @@ const AllocationMap = {
       all_states: Object.keys(this.COUNTRIES).filter(
         (id) =>
           ["donor", "beneficiary"].indexOf(this.COUNTRIES[id].type) !== -1 &&
-          id != "Intl" // let's not forget about that :)
+          id != "Intl", // let's not forget about that :)
       ),
 
       current_region: null,
@@ -268,7 +268,7 @@ const AllocationMap = {
         // fetch the data, fill the cache, render
         const url = new URL(
           this.detailsDatasource.replace("XX", state),
-          window.location
+          window.location,
         );
         url.searchParams.append("period", this.period);
 

@@ -29,7 +29,7 @@ export default {
   created() {
     // programmes, PO and PJPT are already in aggregate_on
     this.aggregate_on = this.aggregate_on.filter(
-      (item) => item.source !== "programme" && item.source !== "programmes"
+      (item) => item.source !== "programme" && item.source !== "programmes",
     );
     this.aggregate_on.push({
       source: "programme",

@@ -48,7 +48,7 @@ export default {
     },
     currentItem() {
       return this.itemArray.find(
-        (item) => this.getFilterName(item) === this.current
+        (item) => this.getFilterName(item) === this.current,
       );
     },
     currentDisplayName() {

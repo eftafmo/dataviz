@@ -17,7 +17,7 @@ export default {
       const aggregated = this.aggregate(
         this.filtered,
         this.aggregate_by,
-        this.aggregate_on
+        this.aggregate_on,
       );
       for (const k in aggregated) {
         aggregated[k].allocation = 0;
@@ -38,7 +38,7 @@ export default {
     // allocation amounts are duplicated sometimes by donors,
     // so we need to overwrite it.
     this.aggregate_on = this.aggregate_on.filter(
-      (item) => item !== "allocation"
+      (item) => item !== "allocation",
     );
   },
 
@@ -56,7 +56,7 @@ export default {
           <li>${this.getBeneficiaryCount(d.beneficiaries)} ` +
         this.singularize(
           `Beneficiary States`,
-          this.getBeneficiaryCount(d.beneficiaries)
+          this.getBeneficiaryCount(d.beneficiaries),
         ) +
         `</li>
           <li>${d.sectors.size} ` +

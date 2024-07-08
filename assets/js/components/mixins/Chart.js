@@ -35,7 +35,7 @@ export default {
     // (but allow it to be delayed indefinitely)
     this.computeDimensions = debounce(
       this.computeDimensions,
-      this.renderWait.min
+      this.renderWait.min,
     );
   },
 

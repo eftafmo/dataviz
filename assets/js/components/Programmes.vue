@@ -54,7 +54,7 @@ export default {
     dppProjects() {
       const result = {};
       Object.keys(this.COUNTRIES).forEach(
-        (countryId) => (result[countryId] = new Set())
+        (countryId) => (result[countryId] = new Set()),
       );
 
       this.filtered.forEach((d) => {
@@ -94,7 +94,7 @@ export default {
           else if (programme.nuts) {
             // need to merge their nuts
             programme.nuts = Array.from(
-              new Set(programme.nuts.concat(Object.keys(programmes[p].nuts)))
+              new Set(programme.nuts.concat(Object.keys(programmes[p].nuts))),
             );
           }
         }
@@ -126,8 +126,8 @@ export default {
         beneficiary.programmes.sort((a, b) =>
           d3.ascending(
             a.programme_code.replace("IN22", "ZZZZ"),
-            b.programme_code.replace("IN22", "ZZZZ")
-          )
+            b.programme_code.replace("IN22", "ZZZZ"),
+          ),
         );
       }
 
@@ -143,7 +143,7 @@ export default {
     if (window.matchMedia("(max-width: 800px)").matches) {
       const parent_nav =
         this.$el.parentNode.parentNode.parentNode.querySelector(
-          '[aria-controls="#programmes"]'
+          '[aria-controls="#programmes"]',
         );
       if (!parent_nav) return;
       parent_nav.innerHTML = "Programmes (" + this.data.projectcount + ")";
@@ -165,7 +165,7 @@ export default {
       if (e.target.parentNode.classList.contains("flag"))
         target =
           e.target.parentNode.parentNode.parentNode.querySelector(
-            ".programme-list"
+            ".programme-list",
           );
       else
         target =

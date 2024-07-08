@@ -124,8 +124,8 @@ export default {
       donors.sort((a, b) =>
         d3.ascending(
           $this.get_sort_order(a.donor),
-          $this.get_sort_order(b.donor)
-        )
+          $this.get_sort_order(b.donor),
+        ),
       );
       return donors;
     },
@@ -144,17 +144,17 @@ export default {
       return new Set(
         this.data
           .map((item) => item.organizations.map((org) => org.name))
-          .flat()
+          .flat(),
       );
     },
     allCountries() {
       return new Set(
-        this.data.map((item) => Array.from(item.countries)).flat()
+        this.data.map((item) => Array.from(item.countries)).flat(),
       );
     },
     allProgrammes() {
       return new Set(
-        this.data.map((item) => Array.from(item.programmes)).flat()
+        this.data.map((item) => Array.from(item.programmes)).flat(),
       );
     },
   },

@@ -200,7 +200,7 @@ export default {
       return this.nonzero.reduce(
         (result, current) =>
           current.name.length > result.length ? current.name : result,
-        ""
+        "",
       );
     },
 
@@ -257,7 +257,7 @@ export default {
             total: 0,
           },
           state,
-          data
+          data,
         );
 
         // build series data
@@ -273,8 +273,8 @@ export default {
                 value: current,
                 d: [oldend, newend],
               },
-              type
-            )
+              type,
+            ),
           );
 
           oldend = newend;
@@ -319,7 +319,7 @@ export default {
           {
             value: this.totals[t],
           },
-          this.types[t]
+          this.types[t],
         );
       }
 
@@ -390,7 +390,7 @@ export default {
       // the real deal
       const divs = selection.selectAll("g.div").data(
         (b) => b.data,
-        (d) => d.id
+        (d) => d.id,
       );
 
       const g = divs
@@ -401,7 +401,7 @@ export default {
           this.filters[this.state_type] === null ||
           this.filters[this.state_type] == d[this.state_type]
             ? d.stripesFill || d.color
-            : this.inactivecolor(d.color)
+            : this.inactivecolor(d.color),
         );
       this.createStateFmRect(g);
 
@@ -435,7 +435,7 @@ export default {
         .html((ev, d) =>
           this.isHungaryException(d.id)
             ? this.hungaryTooltipTemplate(ev, d)
-            : this.tooltipTemplate(ev, d)
+            : this.tooltipTemplate(ev, d),
         )
         .direction("n")
         .offset(function (ev, d) {
@@ -449,7 +449,7 @@ export default {
               ev.clientX -
                 $this.chart.node().getBoundingClientRect().left +
                 zeroed -
-                $this.legendWidth
+                $this.legendWidth,
             ),
           ];
         });
@@ -600,7 +600,7 @@ export default {
           .transition(t)
           .attr(
             "fill",
-            yes ? this.label_color : this.inactivecolor(this.label_color)
+            yes ? this.label_color : this.inactivecolor(this.label_color),
           );
 
         // the flag
@@ -624,18 +624,18 @@ export default {
           .on("end", function () {
             d3.select(this).style(
               "filter",
-              `url('#${yes ? "active" : "inactive"}')`
+              `url('#${yes ? "active" : "inactive"}')`,
             );
           });
 
         // the filters' matrices used by the flags
         const interpolateActivating = d3.interpolateArray(
             this.grayscaleMatrix,
-            this.normalMatrix
+            this.normalMatrix,
           ),
           interpolateInactivating = d3.interpolateArray(
             this.normalMatrix,
-            this.grayscaleMatrix
+            this.grayscaleMatrix,
           );
 
         this.chart
@@ -664,7 +664,7 @@ export default {
           .selectAll(".div")
           .transition(t)
           .attr("fill", (d) =>
-            yes ? d.stripesFill || d.color : this.inactivecolor(d.color)
+            yes ? d.stripesFill || d.color : this.inactivecolor(d.color),
           );
       };
 

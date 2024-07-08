@@ -54,7 +54,7 @@ export default {
     if (this.datasource) {
       const host = this.datasource.replace(
         /^(https?:)?\/\/([^\/]+)\/.*$/,
-        "$2"
+        "$2",
       );
     }
 
@@ -202,7 +202,7 @@ export default {
         .transition(t)
         .attr(
           "fill",
-          with_eea ? this.fmcolor("eea-grants") : this.donor_color_inactive
+          with_eea ? this.fmcolor("eea-grants") : this.donor_color_inactive,
         );
 
       // Norway donors are handled via the pattern fill

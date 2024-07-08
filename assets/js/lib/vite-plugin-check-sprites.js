@@ -10,7 +10,7 @@ export default function checkSprites(pathGlob, maxSize) {
           const stat = fs.statSync(file);
           if (stat.isFile() && stat.size >= maxSize) {
             this.error(
-              `Sprite size too large, ${stat.size} >= ${maxSize} bytes: ${file}`
+              `Sprite size too large, ${stat.size} >= ${maxSize} bytes: ${file}`,
             );
           }
         });

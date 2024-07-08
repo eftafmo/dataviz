@@ -221,7 +221,9 @@ export default {
 
       width: 220px;
       /*min-width: 200px;*/
-      transition: width 0.3s, height 0.3s;
+      transition:
+        width 0.3s,
+        height 0.3s;
       overflow: hidden;
       height: 10rem;
 

@@ -64,7 +64,7 @@ export default {
       };
       if (out.project_count_ended)
         out.project_percent_positive = Math.round(
-          (out.project_count_positive / out.project_count_ended) * 100
+          (out.project_count_positive / out.project_count_ended) * 100,
         );
 
       return out;

@@ -17,7 +17,7 @@ export default {
             pattern: this.patternColors[k],
             stripesFill: `url(#stripes-pattern-${k})`,
           },
-          col
+          col,
         );
       }
 
@@ -46,10 +46,10 @@ export default {
         .map(
           (x) => `
             <li>${this.number(x.value)} ${this.singularize(
-            x.name,
-            x.value
-          )}</li>
-        `
+              x.name,
+              x.value,
+            )}</li>
+        `,
         )
         .join("");
 

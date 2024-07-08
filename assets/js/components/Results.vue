@@ -43,7 +43,7 @@ export default {
       });
 
       return Object.entries(results).sort(
-        ([, value1], [, value2]) => value2 - value1
+        ([, value1], [, value2]) => value2 - value1,
       );
     },
   },
@@ -54,7 +54,7 @@ export default {
       if (!results_count) return;
       const parent_nav =
         this.$el.parentNode.parentNode.parentNode.querySelector(
-          '[aria-controls="#results"]'
+          '[aria-controls="#results"]',
         );
       if (!parent_nav) return;
       parent_nav.innerHTML = "Results (" + results_count + ")";

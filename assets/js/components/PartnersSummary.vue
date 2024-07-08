@@ -44,7 +44,7 @@ export default {
           { source: "DPP", destination: "DPP", type: String },
           { source: "PJDPP", destination: "dpp", type: Object },
         ],
-        false
+        false,
       );
 
       // we'll compute these here,

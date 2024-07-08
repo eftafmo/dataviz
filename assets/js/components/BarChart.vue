@@ -275,12 +275,12 @@ export default {
         .attr("width", (d) => this.barHeight + this.xScale(d.allocation))
         .attr("height", this.barHeight)
         .attr("stroke", (d) =>
-          this.isDisabled(d) ? this.disabledColor : d.color
+          this.isDisabled(d) ? this.disabledColor : d.color,
         )
         .attr("stroke-width", 1)
         .attr("stroke-opacity", 0.25)
         .attr("fill", (d) =>
-          this.getStripeUrl(this.isDisabled(d) ? "disabled" : d.id)
+          this.getStripeUrl(this.isDisabled(d) ? "disabled" : d.id),
         );
       bars.exit().remove();
     },
@@ -300,7 +300,7 @@ export default {
         .attr("x", this.barHeight + 10)
         .attr("y", (d) => this.yScaleMiddle(d))
         .attr("fill", (d) =>
-          this.isDisabled(d) ? this.disabledTextColor : this.textColor
+          this.isDisabled(d) ? this.disabledTextColor : this.textColor,
         )
         .attr("font-size", "14px")
         .attr("font-weight", (d) => (this.isSelected(d) ? "bold" : "normal"))
@@ -321,7 +321,7 @@ export default {
         .attr("x", this.width - 10)
         .attr("y", (d) => this.yScaleMiddle(d))
         .attr("fill", (d) =>
-          this.isDisabled(d) ? this.disabledTextColor : this.textColor
+          this.isDisabled(d) ? this.disabledTextColor : this.textColor,
         )
         .attr("font-size", "14px")
         .attr("font-weight", (d) => (this.isSelected(d) ? "bold" : "normal"))
@@ -367,7 +367,7 @@ export default {
             ${this.getBeneficiaryCount(d.beneficiaries)}
             ${this.singularize(
               "Beneficiary States",
-              this.getBeneficiaryCount(d.beneficiaries)
+              this.getBeneficiaryCount(d.beneficiaries),
             )}
           </li>
           <li>
