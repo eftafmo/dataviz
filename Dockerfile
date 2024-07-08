@@ -11,7 +11,7 @@ ADD . $APP_HOME
 RUN NODE_ENV=production npm run build
 
 
-FROM python:3.9-slim-buster
+FROM python:3.12-slim-buster
 
 # roles:
 #   front - publishes ports to the world; this depends on run/docker-compose though...
