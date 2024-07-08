@@ -16,3 +16,4 @@ docker-compose.override.yml
 .vscode
 .venv
 eeag.sqlite3
+.idea
