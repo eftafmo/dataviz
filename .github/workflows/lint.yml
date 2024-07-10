@@ -1,0 +1,19 @@
+name: "Code Style"
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  lint-python:
+    uses: ./.github/workflows/lint-python.yml
+  lint-npm:
+    uses: ./.github/workflows/lint-npm.yml

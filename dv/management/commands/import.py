@@ -659,9 +659,11 @@ class Command(BaseCommand):
                     status=row["ProjectContractStatus"],
                     state=states.get(row["Country"]),
                     programme=programmes.get(row["ProgrammeShortName"]),
-                    nuts_id=row["ProjectLocation"]
-                    if row["ProjectLocation"] in ALL_MY_NUTS
-                    else None,
+                    nuts_id=(
+                        row["ProjectLocation"]
+                        if row["ProjectLocation"] in ALL_MY_NUTS
+                        else None
+                    ),
                     sdg_no=row["SDGno"],
                     allocation=row["ProjectGrant"],
                     is_eea=bool(row["IdFinancialMechanismEEA"]),
@@ -808,9 +810,9 @@ class Command(BaseCommand):
                         country=row["CountryOrganisation"],
                         category=row["OrganisationClassificationSector"],
                         subcategory=row["OrganisationClassification"],
-                        nuts_id=row["NUTSCode"]
-                        if row["NUTSCode"] in ALL_MY_NUTS
-                        else None,
+                        nuts_id=(
+                            row["NUTSCode"] if row["NUTSCode"] in ALL_MY_NUTS else None
+                        ),
                     )
                     organisations[row["IdOrganisation"]] = organisation.id
                 except IntegrityError:

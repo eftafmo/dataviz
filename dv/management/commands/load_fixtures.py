@@ -6,7 +6,12 @@ from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
 from django.core.management import call_command
 
-from dv.models import *
+from dv.models import (
+    State,
+    NUTSVersion,
+    NUTS,
+    StaticContent,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +29,7 @@ class Command(BaseCommand):
             NUTS,
             StaticContent,
         ),
-        "test": (
-            User,
-        ),
+        "test": (User,),
     }
 
     def add_arguments(self, parser):

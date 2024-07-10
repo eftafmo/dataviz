@@ -1,8 +1,15 @@
 -r base.txt
 
 black[d]
+coverage
 django-debug-toolbar
 django-extensions
 flake8
-ipython
 ipdb
+ipython
+ipython
+ipython-autotime
+pytest
+pytest-cov
+pytest-django
+pytest-subtests

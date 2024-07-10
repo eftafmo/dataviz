@@ -226,7 +226,7 @@ class FacetedSearchView(BaseFacetedSearchView):
 
         # Add donor and beneficiary states - need to check if show flag
         states = list(
-            State.objects.exclude(code__in=("IN", "XX"),).values_list(
+            State.objects.exclude(code__in=("IN", "XX")).values_list(
                 "name",
                 flat=True,
             )

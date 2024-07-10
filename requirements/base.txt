@@ -17,6 +17,9 @@ pyexcel-io
 pyexcel-xls
 pyexcel-xlsx
 pymssql
+# See upstream compatibility issue.
+# https://github.com/pyexcel/pyexcel-xlsx/issues/52
+openpyxl<3.1
 requests
 sentry-sdk
 wait-for-it

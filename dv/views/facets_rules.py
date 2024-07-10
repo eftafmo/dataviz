@@ -209,7 +209,7 @@ class ModelFacetRules:
             "priority_sector_ss": sectors_sort,
             "role_ss": ORG_ROLE_SORT,
         }
-        states = State.objects.exclude(code="IN",).values(
+        states = State.objects.exclude(code="IN").values(
             "code",
             "name",
         )
