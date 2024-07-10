@@ -392,9 +392,9 @@ class FacetedExportView(FacetedSearchView):
         stream = io.BytesIO()
         stream = sheet.save_to_memory("xlsx", stream)
         response = HttpResponse(stream.read())
-        response[
-            "Content-Type"
-        ] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        response["Content-Type"] = (
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
         response["Content-Disposition"] = 'attachment; filename="{0}.xlsx"'.format(name)
         return response
 

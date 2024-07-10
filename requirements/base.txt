@@ -17,6 +17,7 @@ pyexcel-io
 pyexcel-xls
 pyexcel-xlsx
 pymssql
+pytz
 # See upstream compatibility issue.
 # https://github.com/pyexcel/pyexcel-xlsx/issues/52
 openpyxl<3.1

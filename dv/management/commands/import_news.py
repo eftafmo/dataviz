@@ -9,6 +9,19 @@ from pytz import timezone
 from dv.models import News, Programme, Project
 
 ENDPOINT = "https://eeagrants.org/rest/articles?page={}"
+TZ = timezone("Europe/Brussels")
+
+
+def parse_time(value: str) -> datetime:
+    try:
+        # Check if value is already a timestamp
+        timestamp = int(value)
+    except (ValueError, TypeError):
+        # Value may look like:
+        # <time datetime="2024-07-05T13:15:40+02:00">1720178140</time>
+        timestamp = int(value.split(">")[1].split("<")[0].strip())
+
+    return TZ.localize(datetime.fromtimestamp(timestamp))
 
 
 class Command(BaseCommand):
@@ -35,9 +48,8 @@ class Command(BaseCommand):
             # self.stdout.write('Importing post %s' % link)
             news, created = News.objects.get_or_create(link=link)
             news.title = item["title"]
-            tz = timezone("Europe/Brussels")
-            news.created = tz.localize(datetime.fromtimestamp(int(item["created"])))
-            news.updated = tz.localize(datetime.fromtimestamp(int(item["updated"])))
+            news.created = parse_time(item["created"])
+            news.updated = parse_time(item["updated"])
             news.summary = item["summary"]
             news.image = item["image"].replace("http://", "https://")
             news.is_partnership = item["is_partnership"] == "yes"
