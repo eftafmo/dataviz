@@ -39,7 +39,7 @@
 docker-compuse up -d
 ```
 
-1. Check if you get a response when hit [localhost:9200](http://localhost:9200):, if you get a response, that means EC is running.
+1. Check if you get a response when hit [localhost:9200](http://localhost:9200):, if you get a response, that means ES is running.
 
 1. Install the requirements or check if you have the latest version of django-haystack
 
