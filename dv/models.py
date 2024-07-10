@@ -1,6 +1,7 @@
-from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils.functional import cached_property
+from django_ckeditor_5.fields import CKEditor5Field
+
 
 from dv.lib.utils import (
     FM_EEA,
@@ -403,7 +404,7 @@ class News(models.Model):
 
 class StaticContent(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    body = RichTextField()
+    body = CKEditor5Field()
 
     def __str__(self):
         return self.name
