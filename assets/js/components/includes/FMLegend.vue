@@ -27,6 +27,7 @@ export default {
     fms: {
       type: Array,
       required: false,
+      default: () => [],
     },
   },
   methods: {

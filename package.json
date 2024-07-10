@@ -13,8 +13,11 @@
   "scripts": {
     "dev": "vite",
     "lint": "run-s lint:css lint:js",
+    "lint:check": "run-s lint:css:check lint:js:check",
     "lint:js": "eslint --fix \"assets/**/*.js\" \"assets/**/*.vue\"",
+    "lint:js:check": "eslint \"assets/**/*.js\" \"assets/**/*.vue\"",
     "lint:css": "prettier --write -c assets/css/",
+    "lint:css:check": "prettier --check -c assets/css/",
     "build": "vite build",
     "serve": "vite preview"
   },
