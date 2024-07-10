@@ -1,7 +1,8 @@
--r requirements.txt
+-r base.txt
 
+black[d]
 django-debug-toolbar
 django-extensions
+flake8
 ipython
 ipdb
-flake8

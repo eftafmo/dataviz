@@ -32,10 +32,10 @@
         scp dataviz@data.eeagrants.org:eeag.sqlite3 /tmp/eeag.sqlite3
         docker cp /tmp/eeag.sqlite3 eeag_web:/var/local/db/eeag.sqlite3
 
-1. Step in the container, install requirements and rebuild indexes.
+1. Step in the container, install requirements, and rebuild indexes.
 
         docker-compose exec web bash
-        pip install -r requirements.dev.txt
+        pip install -r requirements/dev.txt -c requirements/constraints.txt
         python manage.py rebuild_index --noinput
 
 1. Install npm and start webpack dev server(*leave this container open*):
@@ -51,10 +51,10 @@
 ## Local installation without Docker
 
 ```shell
-python3.9 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.dev.txt
-nvm use 16
+pip install -r requirements/dev.txt -c requirements/constraints.txt
+nvm use 20
 npm install
 # Copy settings and adjust as necessary
 cp dv/localsettings.py.example dv/localsettings.py
@@ -63,7 +63,7 @@ cp dv/localsettings.py.example dv/localsettings.py
 mkdir -p ../db
 scp dataviz@data.eeagrants.org:eeag.sqlite3 ../db
 
-# See es_local.md if you also need Elasticsearch and 
+# See es_local.md if you also need Elasticsearch and
 # build search indexes
 python manage.py rebuild_index --noinput
 

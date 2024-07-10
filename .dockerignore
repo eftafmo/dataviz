@@ -5,3 +5,5 @@ node_modules
 localsettings.py
 __pycache__
 .vagrant
+.venv
+.github

@@ -1,0 +1,21 @@
+bleach
+# Stick to LTS for easier upgrades
+Django>=4.2,<4.3
+django-ckeditor
+django-countries
+django-enumfields
+django-environ
+django-haystack
+djangorestframework
+# Haystack doesn't support ES8 yet
+elasticsearch>=7,<8
+gunicorn
+Jinja2
+lxml
+pyexcel
+pyexcel-io
+pyexcel-xls
+pyexcel-xlsx
+pymssql
+requests
+sentry-sdk

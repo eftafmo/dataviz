@@ -1,17 +1,21 @@
-FROM node:20 AS frontend
+FROM node:20 AS frontend-builder
 
 ENV APP_HOME=/var/local/dataviz
 
 RUN mkdir -p $APP_HOME
 
 WORKDIR $APP_HOME
-ADD package.json package-lock.json postcss.config.js ./
-RUN npm install --no-optional
-ADD . $APP_HOME
+
+ADD package.json package-lock.json postcss.config.js vite.config.mjs ./
+RUN npm install
+
+COPY assets/ assets/
+COPY public/ public/
+
 RUN NODE_ENV=production npm run build
 
 
-FROM python:3.12-slim-buster
+FROM python:3.12-slim
 
 # roles:
 #   front - publishes ports to the world; this depends on run/docker-compose though...
@@ -20,10 +24,10 @@ LABEL maintainer="andrei.melis@eaudeweb.ro" \
       roles="front" \
       name="web"
 
-#RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
-
 ENV APP_HOME=/var/local/dataviz \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 RUN runDeps="netcat-traditional" \
  && apt-get update -y \
@@ -34,10 +38,16 @@ RUN runDeps="netcat-traditional" \
  && touch ~/.bashrc
 
 WORKDIR $APP_HOME
+
+COPY requirements/ requirements/
+RUN pip install -r requirements/base.txt -c requirements/constraints.txt
+
+COPY dv/ dv/
+COPY templates/ templates/
+COPY manage.py manage.py
+
+COPY ./docker/localsettings.py dv/
 COPY ./docker/entrypoint.sh ./docker/import.sh /bin/
-ADD requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-ADD . $APP_HOME
-COPY ./docker/localsettings.py $APP_HOME/dv/
-COPY --from=frontend /var/local/build /var/local/build
+
+COPY --from=frontend-builder /var/local/build /var/local/build
 ENTRYPOINT ["entrypoint.sh"]
