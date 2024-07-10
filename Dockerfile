@@ -29,11 +29,7 @@ ENV APP_HOME=/var/local/dataviz \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-RUN runDeps="netcat-traditional" \
- && apt-get update -y \
- && apt-get install -y --no-install-recommends $runDeps \
- && rm -rf /var/lib/apt/lists/* \
- && mkdir -p $APP_HOME \
+RUN mkdir -p $APP_HOME \
  && mkdir -p /var/local/logs \
  && touch ~/.bashrc
 

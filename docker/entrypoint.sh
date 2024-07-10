@@ -6,11 +6,7 @@ init() {
 }
 
 wait_elasticsearch() {
-    while ! nc -z elasticsearch 9200; do
-        echo "Waiting for ES server elasticsearch:9200 ..."
-        sleep 1
-    done
-
+  wait-for-it --timeout 60 --service "elasticsearch:9200"
 }
 
 if [ -z "$1" ]; then

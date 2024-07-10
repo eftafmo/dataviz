@@ -59,12 +59,12 @@ requests==2.32.3
 sentry-sdk==2.8.0
 six==1.16.0
 sqlparse==0.5.0
-
 stack-data==0.6.3
 texttable==1.7.0
 traitlets==5.14.3
 typing_extensions==4.12.2
 urllib3==1.26.19
+wait-for-it==2.2.2
 wcwidth==0.2.13
 webencodings==0.5.1
 xlrd==2.0.1
