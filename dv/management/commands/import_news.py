@@ -1,6 +1,5 @@
-import json
 from datetime import datetime
-from urllib.request import urlopen
+import requests
 
 from django.core.cache import cache
 from django.core.management.base import BaseCommand
@@ -31,14 +30,15 @@ class Command(BaseCommand):
         page = 0
         data = []
         while page == 0 or data:
-            with urlopen(ENDPOINT.format(page)) as url:
-                data = json.loads(url.read().decode())["posts"]
-                if page == 0:
-                    News.objects.all().delete()
-                self.stdout.write(f"Importing {len(data)} news from page {page}")
-                for item in data:
-                    self._save(item)
-                page += 1
+            resp = requests.get(ENDPOINT.format(page))
+            resp.raise_for_status()
+            data = resp.json()["posts"]
+            if page == 0:
+                News.objects.all().delete()
+            self.stdout.write(f"Importing {len(data)} news from page {page}")
+            for item in data:
+                self._save(item)
+            page += 1
         cache.clear()
         self.stdout.write("Cache cleared")
 
