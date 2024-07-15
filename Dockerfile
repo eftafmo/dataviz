@@ -41,6 +41,7 @@ RUN pip install -r requirements/base.txt -c requirements/constraints.txt
 COPY pytest.ini pytest.ini
 COPY .coveragerc .coveragerc
 COPY dv/ dv/
+COPY assets/ assets/
 COPY templates/ templates/
 COPY manage.py manage.py
 
