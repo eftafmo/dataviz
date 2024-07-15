@@ -44,7 +44,7 @@ jobs:
           docker compose exec -T web pytest --cov
       - name: "Seed DB"
         run: |
-          docker compose exec -T app ./manage.py seed_db --no-input
+          docker compose exec -T web ./manage.py seed_db --no-input
       - name: "E2E tests"
         id: "e2eTests"
         run: |
