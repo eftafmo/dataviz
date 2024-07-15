@@ -2,8 +2,6 @@ services:
   web:
     build:
       context: .
-    expose:
-      - 8000
 
   nginx:
     image: nginx:1.27-alpine
