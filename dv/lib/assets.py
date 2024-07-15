@@ -13,7 +13,7 @@ from django.conf import settings
 # TODO: cache in production, don't cache during debug
 # @lru_cache(maxsize=None)
 def load_manifest():
-    manifest = os.path.join(settings.BUILD_DIR, "manifest.json")
+    manifest = os.path.join(settings.BUILD_DIR, ".vite", "manifest.json")
 
     _entries = {}
     assets = {}
