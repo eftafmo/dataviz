@@ -2,5 +2,13 @@ services:
   web:
     build:
       context: .
+    expose:
+      - 8000
+
+  nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./docker/test-nginx:/etc/nginx/templates
+      - webroot:/var/www/html
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8000:80"

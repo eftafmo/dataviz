@@ -25,7 +25,7 @@ jobs:
           cache-dependency-path: "package-lock.json"
       - name: "Configure env"
         run: |
-          cp docker/web.dev.env.example docker/web.env
+          cp docker/web.test.env.example docker/web.env
           cp docker/docker-compose.override-tests.yml.example docker-compose.override.yml
       - name: "Start services"
         run: |
