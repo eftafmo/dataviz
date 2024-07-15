@@ -7,6 +7,7 @@ from django.core.management import BaseCommand
 from django.core.management import call_command
 
 from dv.models import (
+    OrganisationRole,
     State,
     NUTSVersion,
     NUTS,
@@ -50,6 +51,7 @@ class Command(BaseCommand):
             Indicator,
             News,
             Organisation,
+            OrganisationRole,
             ProgrammeAllocation,
         ),
     }
