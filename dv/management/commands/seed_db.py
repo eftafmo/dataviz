@@ -1,3 +1,4 @@
+import shutil
 import sys
 
 from django.core.management import BaseCommand
@@ -26,6 +27,9 @@ class Command(BaseCommand):
             if input("[Y/n] ") != "Y":
                 sys.exit(1)
 
+        # Remove cache
+        shutil.rmtree("/var/tmp/django_cache", ignore_errors=True)
+        # Flush db
         call_command("flush", "--noinput")
         # Load initial fixtures
         call_command("load_fixtures", "initial")
