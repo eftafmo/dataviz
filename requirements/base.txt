@@ -7,7 +7,8 @@ django-enumfields
 django-environ
 django-haystack
 djangorestframework
-# Haystack doesn't support ES8 yet
+# Haystack doesn't support ES8 yet, upstream issue:
+# https://github.com/django-haystack/django-haystack/issues/1980
 elasticsearch>=7,<8
 gunicorn
 Jinja2
