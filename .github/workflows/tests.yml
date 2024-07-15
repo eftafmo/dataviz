@@ -1,0 +1,56 @@
+name: "Test Suite"
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: "package-lock.json"
+      - name: "Configure env"
+        run: |
+          cp docker/web.dev.env.example docker/web.env
+          cp docker/docker-compose.override-tests.yml.example docker-compose.override.yml
+      - name: "Start services"
+        run: |
+          docker compose build --pull
+          docker compose up -d
+          docker compose exec -T web wait_for_app.sh
+      - name: "Top"
+        run: |
+          docker compose top
+      - name: "Install dev dependencies"
+        run: |
+          docker compose exec -T web pip install -c requirements/constraints.txt -r requirements/dev.txt
+          npm ci
+      - name: "Backend tests"
+        run: |
+          docker compose exec -T web pytest --cov
+      - name: "Seed DB"
+        run: |
+          docker compose exec -T app ./manage.py seed_db --no-input
+      - name: "E2E tests"
+        id: "e2eTests"
+        run: |
+          npm run test
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() && steps.e2eTests.conclusion == 'failure' }}
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots/
