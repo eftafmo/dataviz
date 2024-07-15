@@ -14,7 +14,6 @@
   {% else %}
     <script type="module" src="/{{ assets|value:"assets/entry.js" }}"></script>
     <script type="module" src="/{{ assets|value:"assets/site.js" }}"></script>
-    <link rel="modulepreload" href="/{{ assets|value:"_vendor.js" }}">
     <link rel="stylesheet" href="/{{ assets|value:"assets/entry.css" }}">
     <link rel="stylesheet" href="/{{ assets|value:"assets/site.css" }}">
   {% endif %}
