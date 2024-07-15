@@ -1,0 +1,5 @@
+[run]
+omit =
+    dv/localsettings.py
+    */tests/*
+    */migrations/*

@@ -4,6 +4,7 @@ black[d]
 coverage
 django-debug-toolbar
 django-extensions
+factory-boy
 flake8
 ipdb
 ipython

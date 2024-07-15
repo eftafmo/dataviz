@@ -38,12 +38,14 @@ WORKDIR $APP_HOME
 COPY requirements/ requirements/
 RUN pip install -r requirements/base.txt -c requirements/constraints.txt
 
+COPY pytest.ini pytest.ini
+COPY .coveragerc .coveragerc
 COPY dv/ dv/
 COPY templates/ templates/
 COPY manage.py manage.py
 
 COPY ./docker/localsettings.py dv/
-COPY ./docker/entrypoint.sh ./docker/import.sh /bin/
+COPY ./docker/entrypoint.sh ./docker/import.sh ./docker/wait_for_app.sh /bin/
 
 COPY --from=frontend-builder /var/local/build /var/local/build
 ENTRYPOINT ["entrypoint.sh"]
