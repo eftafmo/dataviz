@@ -226,7 +226,7 @@ class FacetedSearchView(BaseFacetedSearchView):
 
         # Add donor and beneficiary states - need to check if show flag
         states = list(
-            State.objects.exclude(code__in=("IN", "XX"),).values_list(
+            State.objects.exclude(code__in=("IN", "XX")).values_list(
                 "name",
                 flat=True,
             )
@@ -392,9 +392,9 @@ class FacetedExportView(FacetedSearchView):
         stream = io.BytesIO()
         stream = sheet.save_to_memory("xlsx", stream)
         response = HttpResponse(stream.read())
-        response[
-            "Content-Type"
-        ] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        response["Content-Type"] = (
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
         response["Content-Disposition"] = 'attachment; filename="{0}.xlsx"'.format(name)
         return response
 

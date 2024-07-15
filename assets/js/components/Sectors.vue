@@ -255,7 +255,7 @@ export default {
         { children: sectors },
         // the default accessor function looks for arrays of children,
         // but we have an object tree
-        (d) => (d.children === undefined ? [] : Object.values(d.children))
+        (d) => (d.children === undefined ? [] : Object.values(d.children)),
       );
 
       // tell the hierarchy object how to calculate sums
@@ -283,7 +283,7 @@ export default {
     _arcLarge() {
       return this._mkarc(
         this.radius + this.margin,
-        this.radius * this.inner_radius
+        this.radius * this.inner_radius,
       );
     },
   },
@@ -421,7 +421,7 @@ export default {
         .arc()
         // the Math.min/max part  is needed to avoid funkiness for edge items
         .startAngle((d) =>
-          Math.max(0, Math.min(2 * Math.PI, this._angle(d.x0)))
+          Math.max(0, Math.min(2 * Math.PI, this._angle(d.x0))),
         )
         .endAngle((d) => Math.max(0, Math.min(2 * Math.PI, this._angle(d.x1))))
         .outerRadius(outerradius);
@@ -584,7 +584,7 @@ export default {
         areas
           .attr("opacity", (d) => (this.isSelectedSector(d.parent) ? 1 : 0))
           .style("display", (d) =>
-            this.isSelectedSector(d.parent) ? null : "none"
+            this.isSelectedSector(d.parent) ? null : "none",
           );
 
         if (this.filters.area === null) {
@@ -628,7 +628,7 @@ export default {
         .attrTween("d", function (d) {
           const interpolate = d3.interpolate(
             this._prev,
-            $this._extract_coords(d)
+            $this._extract_coords(d),
           );
           this._prev = interpolate(0);
 
@@ -647,7 +647,7 @@ export default {
         renderer = this._areaStuffRenderer = debounce(
           this._renderAreasStuff,
           this.renderWait.min,
-          { maxWait: this.renderWait.max }
+          { maxWait: this.renderWait.max },
         );
       renderer();
     },
@@ -950,7 +950,9 @@ export default {
             height: 1.8rem;
             margin-left: 0;
             margin-right: 0.6rem;
-            transition: width @short_duration, height @short_duration,
+            transition:
+              width @short_duration,
+              height @short_duration,
               flex @short_duration;
           }
           & > *:last-child {
@@ -1005,7 +1007,9 @@ export default {
     .areas-enter-active,
     .areas-leave-active {
       overflow: hidden;
-      transition: height @duration, opacity @duration;
+      transition:
+        height @duration,
+        opacity @duration;
     }
     /*
     // things seem to look better without opacity

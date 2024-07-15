@@ -19,7 +19,7 @@ export default {
       const news_for_nuts = this.getSortedNewsForRegion(
         all_news,
         this.filters.region || "",
-        deep_search
+        deep_search,
       );
 
       return news_for_nuts;
@@ -59,7 +59,7 @@ export default {
           ...filtered_news,
           ...this.getSortedNewsForRegion(
             all_news,
-            region.substr(0, region.length - 1, deep_search)
+            region.substr(0, region.length - 1, deep_search),
           ),
         ];
       }

@@ -1,7 +1,7 @@
 import re
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.http import urlencode
 
 from dv.views import frontend as views
@@ -13,7 +13,7 @@ register = template.Library()
 @register.filter(is_safe=True)
 @stringfilter
 def currency(value):
-    orig = force_text(value)
+    orig = force_str(value)
     new = re.sub(r"^(-?\d+)(\d{3})", "\\g<1>\xa0\\g<2>", orig)
     if orig == new:
         return "€" + new

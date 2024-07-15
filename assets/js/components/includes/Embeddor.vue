@@ -147,11 +147,11 @@ export default {
     this.target = this.$el.parentElement;
     this.target.addEventListener(
       "mouseenter",
-      () => (this.target_hovered = true)
+      () => (this.target_hovered = true),
     );
     this.target.addEventListener(
       "mouseleave",
-      () => (this.target_hovered = false)
+      () => (this.target_hovered = false),
     );
 
     const clipboard = new Clipboard(this.$refs.btn, {

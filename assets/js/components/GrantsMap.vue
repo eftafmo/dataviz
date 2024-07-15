@@ -134,7 +134,7 @@ export default {
         // TODO: log this in production
         //throw new Error(
         console.error(
-          "Unknown NUTS codes: " + _badregions.map((d) => d.id).join(", ")
+          "Unknown NUTS codes: " + _badregions.map((d) => d.id).join(", "),
         );
 
       regions

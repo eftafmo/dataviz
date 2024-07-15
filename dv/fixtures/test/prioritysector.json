@@ -1,0 +1,9 @@
+[
+{
+  "model": "dv.prioritysector",
+  "pk": "PS-1",
+  "fields": {
+    "name": "Innovation, research, education and competitiveness"
+  }
+}
+]

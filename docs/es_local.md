@@ -5,7 +5,7 @@
 * Install [Docker](https://docs.docker.com/engine/installation/)
 * Install [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Install EC on Docker
+## Install ES on Docker
 
 1. Create a new docker-compose.yml using the following lines
 
@@ -33,13 +33,13 @@
       elastic:
    ```
 
-1. Install and start EC service:
+1. Install and start ES service:
 
 ```shell
 docker-compuse up -d
 ```
 
-1. Check if you get a response when hit [localhost:9200](http://localhost:9200):, if you get a response, that means EC is running.
+1. Check if you get a response when hit [localhost:9200](http://localhost:9200):, if you get a response, that means ES is running.
 
 1. Install the requirements or check if you have the latest version of django-haystack
 

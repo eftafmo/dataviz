@@ -1,0 +1,15 @@
+[
+{
+  "model": "dv.organisation",
+  "pk": 1,
+  "fields": {
+    "funding_period": 3,
+    "name": "Organizationn 1",
+    "city": null,
+    "country": null,
+    "category": null,
+    "subcategory": null,
+    "nuts": "RO"
+  }
+}
+]

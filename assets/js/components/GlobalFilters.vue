@@ -12,7 +12,7 @@
             <transition-group name="list">
               <div
                 v-for="(item, key) in Object.fromEntries(
-                  Object.entries(data).filter((v) => v != null)
+                  Object.entries(data).filter((v) => v != null),
                 )"
                 :key="key"
                 class="filter-item"

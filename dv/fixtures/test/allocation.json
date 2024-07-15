@@ -1,0 +1,15 @@
+[
+{
+  "model": "dv.allocation",
+  "pk": 1,
+  "fields": {
+    "funding_period": 3,
+    "financial_mechanism": "NOR",
+    "state": "RO",
+    "programme_area": 1,
+    "gross_allocation": "32000.00",
+    "net_allocation": "28000.00",
+    "thematic": "Inclusive"
+  }
+}
+]

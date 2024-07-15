@@ -1,0 +1,19 @@
+[
+{
+  "model": "dv.news",
+  "pk": 1,
+  "fields": {
+    "title": "The news hasn't happened yet",
+    "link": "https://example.com",
+    "created": null,
+    "updated": null,
+    "project": "PJ-1",
+    "summary": "",
+    "image": "https://example.com",
+    "is_partnership": false,
+    "programmes": [
+      "PR-1"
+    ]
+  }
+}
+]

@@ -1,0 +1,16 @@
+[
+{
+  "model": "dv.nutsversion",
+  "pk": 1,
+  "fields": {
+    "year": 2006
+  }
+},
+{
+  "model": "dv.nutsversion",
+  "pk": 2,
+  "fields": {
+    "year": 2016
+  }
+}
+]

@@ -92,14 +92,14 @@ export default {
       if (num_prj_ended) {
         results.push({
           achievement: Math.round(
-            (100 * aggregated.dpp_projects_coop.size) / num_prj_ended
+            (100 * aggregated.dpp_projects_coop.size) / num_prj_ended,
           ),
           unit: "%",
           indicator: "of partnership projects will continue the cooperation.",
         });
         results.push({
           achievement: Math.round(
-            (100 * aggregated.dpp_projects_improved.size) / num_prj_ended
+            (100 * aggregated.dpp_projects_improved.size) / num_prj_ended,
           ),
           unit: "%",
           indicator:

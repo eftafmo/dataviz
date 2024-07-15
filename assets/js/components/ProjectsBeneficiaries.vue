@@ -24,8 +24,8 @@ export default {
       return this.isDisabledFm(fm)
         ? 0
         : item[fm.name]
-        ? item[fm.name].project_allocation
-        : 0;
+          ? item[fm.name].project_allocation
+          : 0;
     },
 
     totalvaluefunc(v) {
@@ -39,9 +39,9 @@ export default {
         .map(
           (x) => `
             <ul>${x.name} : ${this.number(
-            d[x.name].projects.size
-          )} projects</ul>
-        `
+              d[x.name].projects.size,
+            )} projects</ul>
+        `,
         )
         .join("");
 

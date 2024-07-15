@@ -6,14 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dv', '0002_auto_20211012_1007'),
+        ("dv", "0002_auto_20211012_1007"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='indicator',
-            name='achievement_total',
-            field=models.DecimalField(decimal_places=2, default=0, help_text='Total results including some that cannot be allocated to either EEA or Norway.', max_digits=9),
+            model_name="indicator",
+            name="achievement_total",
+            field=models.DecimalField(
+                decimal_places=2,
+                default=0,
+                help_text="Total results including some that cannot be allocated to either EEA or Norway.",
+                max_digits=9,
+            ),
             preserve_default=False,
         ),
     ]

@@ -7,7 +7,7 @@ docker/azure-nginx.env
 ### generic stuff
 __pycache__/
 node_modules/
-
+compose.override.yml
 docker-compose.override.yml
 
 ### dev stuff
@@ -16,3 +16,11 @@ docker-compose.override.yml
 .vscode
 .venv
 eeag.sqlite3
+.idea
+.coverage
+cypress/screenshots/
+
+### Import files
+
+allocation_2004-2009.json
+2009-2014

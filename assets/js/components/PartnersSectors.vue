@@ -105,7 +105,7 @@ export default {
       // sort donor states
       const ds_sorted = Array.from(dss.values())
         .sort((a, b) =>
-          d3.ascending(COUNTRIES[a].sort_order, COUNTRIES[b].sort_order)
+          d3.ascending(COUNTRIES[a].sort_order, COUNTRIES[b].sort_order),
         )
         .map((code) => COUNTRIES[code].name)
         .join(", ");

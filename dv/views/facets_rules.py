@@ -60,7 +60,9 @@ NEWS_CUSTOM_FACETS = [
     ("geotarget", "OR"),
 ]
 
-BILATERAL_INITIATIVE_FACETS = OrderedDict(BASE_FACETS + BILATERAL_INITIATIVE_CUSTOM_FACETS)
+BILATERAL_INITIATIVE_FACETS = OrderedDict(
+    BASE_FACETS + BILATERAL_INITIATIVE_CUSTOM_FACETS
+)
 PROGRAMME_FACETS = OrderedDict(BASE_FACETS + PROGRAMME_CUSTOM_FACETS)
 PROJECT_FACETS = OrderedDict(BASE_FACETS + PROJECT_CUSTOM_FACETS)
 ORGANISATION_FACETS = OrderedDict(ORGANISATION_CUSTOM_FACETS)
@@ -207,7 +209,7 @@ class ModelFacetRules:
             "priority_sector_ss": sectors_sort,
             "role_ss": ORG_ROLE_SORT,
         }
-        states = State.objects.exclude(code="IN",).values(
+        states = State.objects.exclude(code="IN").values(
             "code",
             "name",
         )

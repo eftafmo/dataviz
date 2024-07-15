@@ -1,0 +1,23 @@
+[
+{
+  "model": "dv.programme",
+  "pk": "PR-1",
+  "fields": {
+    "funding_period": 3,
+    "name": "Programme 1",
+    "status": "Completed",
+    "summary": "It's something",
+    "allocation_eea": "10000.00",
+    "allocation_norway": "20000.00",
+    "co_financing": "15000.00",
+    "is_tap": false,
+    "is_bfp": false,
+    "states": [
+      "RO"
+    ],
+    "programme_areas": [
+      1
+    ]
+  }
+}
+]

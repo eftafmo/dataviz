@@ -15,7 +15,9 @@ from django.core.exceptions import ImproperlyConfigured
 
 import environ
 
-env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
+env = environ.Env(
+    DEBUG=(bool, False),
+)  # set default values and casting
 
 # project's base directory (the repo root)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,19 +26,17 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 
 DB_PATH = env(
     "DJANGO_DB_PATH",
-    default=os.path.join(
-       os.path.join(os.path.dirname(BASE_DIR), "db"), "eeag.sqlite3"
-    ),
+    default=os.path.join(os.path.join(os.path.dirname(BASE_DIR), "db"), "eeag.sqlite3"),
 )
 
 # more useful dirs:
 # the web server's vhost root
-WEBROOT_DIR = os.path.join(ROOT_DIR, 'webroot')
+WEBROOT_DIR = os.path.join(ROOT_DIR, "webroot")
 # where asset bundling happens
-BUILD_DIR = os.path.join(ROOT_DIR, 'build')
+BUILD_DIR = os.path.join(ROOT_DIR, "build")
 
 # TODO: handle this nicely
-DEBUG = bool(os.environ.get('DEBUG'))
+DEBUG = bool(os.environ.get("DEBUG"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -47,91 +47,88 @@ INSTALLED_APPS = [
     # The django-material theme breaks ck editor.
     # 'material',
     # 'material.admin',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.humanize',
-    'django_countries',
-    'haystack',
-    'rest_framework',
-    'dv',
-    'ckeditor',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.humanize",
+    "django_countries",
+    "haystack",
+    "rest_framework",
+    "dv",
+    "django_ckeditor_5",
+    "django.contrib.staticfiles",
 ]
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': (
     #     'rest_framework.pagination.CursorPagination',
     # ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
 }
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-
-    'dv.middleware.CORSMiddleware',
-
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "dv.middleware.CORSMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",
 ]
 
-ROOT_URLCONF = 'dv.urls'
+ROOT_URLCONF = "dv.urls"
 # Why fonts need CORS?
-CORS_ALLOW_PATHS = ('/api/', '/assets/data/', '/assets/fonts/')
+CORS_ALLOW_PATHS = ("/api/", "/assets/data/", "/assets/fonts/")
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            os.path.join(BASE_DIR, "templates"),
         ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'dv.context.get_context'
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "dv.context.get_context",
             ],
         },
     },
     {
-        'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
+        "BACKEND": "django.template.backends.jinja2.Jinja2",
+        "DIRS": [
+            os.path.join(BASE_DIR, "templates"),
         ],
     },
 ]
 
-WSGI_APPLICATION = 'dv.wsgi.application'
+WSGI_APPLICATION = "dv.wsgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -139,9 +136,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -152,60 +149,200 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-STATIC_URL = '/assets/'
-STATIC_ROOT = os.path.join(WEBROOT_DIR, 'static')
+STATIC_URL = "/assets/"
+STATIC_ROOT = os.path.join(WEBROOT_DIR, "static")
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR, "assets"),
     # include the bundle dir
-    os.path.join(BUILD_DIR, 'assets'),
+    os.path.join(BUILD_DIR, "assets"),
 )
 
-CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar_bdr': [
-            ['Format', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-',
-             'Undo', 'Redo', 'RemoveFormat'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote', '-',
-             'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink', 'Anchor'],
-            ['Image', 'Flash', 'Table', 'Smiley', 'SpecialChar', 'HorizontalRule'],
-            ['TextColor', 'BGColor'],
-            ['Maximize', 'ShowBlocks', '-', 'Source'],
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "toolbar": [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "blockQuote",
         ],
-        'toolbar': 'bdr',
-        'width': '100%',
+    },
+    "extends": {
+        "blockToolbar": [
+            "paragraph",
+            "heading1",
+            "heading2",
+            "heading3",
+            "|",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "blockQuote",
+        ],
+        "toolbar": [
+            "heading",
+            "|",
+            "outdent",
+            "indent",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "underline",
+            "strikethrough",
+            "code",
+            "subscript",
+            "superscript",
+            "highlight",
+            "|",
+            "codeBlock",
+            "sourceEditing",
+            "insertImage",
+            "bulletedList",
+            "numberedList",
+            "todoList",
+            "|",
+            "blockQuote",
+            "imageUpload",
+            "|",
+            "fontSize",
+            "fontFamily",
+            "fontColor",
+            "fontBackgroundColor",
+            "mediaEmbed",
+            "removeFormat",
+            "insertTable",
+        ],
+        "image": {
+            "toolbar": [
+                "imageTextAlternative",
+                "|",
+                "imageStyle:alignLeft",
+                "imageStyle:alignRight",
+                "imageStyle:alignCenter",
+                "imageStyle:side",
+                "|",
+            ],
+            "styles": [
+                "full",
+                "side",
+                "alignLeft",
+                "alignRight",
+                "alignCenter",
+            ],
+        },
+        "table": {
+            "contentToolbar": [
+                "tableColumn",
+                "tableRow",
+                "mergeTableCells",
+                "tableProperties",
+                "tableCellProperties",
+            ],
+        },
+        "heading": {
+            "options": [
+                {
+                    "model": "paragraph",
+                    "title": "Paragraph",
+                    "class": "ck-heading_paragraph",
+                },
+                {
+                    "model": "heading1",
+                    "view": "h1",
+                    "title": "Heading 1",
+                    "class": "ck-heading_heading1",
+                },
+                {
+                    "model": "heading2",
+                    "view": "h2",
+                    "title": "Heading 2",
+                    "class": "ck-heading_heading2",
+                },
+                {
+                    "model": "heading3",
+                    "view": "h3",
+                    "title": "Heading 3",
+                    "class": "ck-heading_heading3",
+                },
+            ]
+        },
+    },
+    "list": {
+        "properties": {
+            "styles": "true",
+            "startIndex": "true",
+            "reversed": "true",
+        }
     },
 }
 
 HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'dv.lib.es7.CustomES7SearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'eeagrants',
-        'SILENTLY_FAIL': False,
-        'TIMEOUT': env("HAYSTACK_TIMEOUT", cast=int, default=60),
+    "default": {
+        "ENGINE": "dv.lib.es7.CustomES7SearchEngine",
+        "URL": "http://127.0.0.1:9200/",
+        "INDEX_NAME": "eeagrants",
+        "SILENTLY_FAIL": False,
+        "TIMEOUT": env("HAYSTACK_TIMEOUT", cast=int, default=60),
     },
 }
 
 # Caching system
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/var/tmp/django_cache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
     }
 }
 
 API_CACHE_SECONDS = 60 * 60 * 24  # 1 day
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+
+# Logging
+# https://docs.djangoproject.com/en/4.2/topics/logging/
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
+        "require_debug_true": {"()": "django.utils.log.RequireDebugTrue"},
+    },
+    "formatters": {
+        "main_formatter": {
+            "format": (
+                "[%(asctime)s] %(levelname)s %(name)s: %(message)s "
+                "(%(filename)s:%(lineno)d)"
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG" if DEBUG else "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "main_formatter",
+        },
+        "null": {"class": "logging.NullHandler"},
+    },
+    "loggers": {
+        "": {
+            "handlers": ["console"],
+            "level": "INFO" if DEBUG else "WARNING",
+            "propagate": False,
+        },
+    },
+}
 
 try:
     # this is stupid, the settings file is no place for startup code
-    SENTRY_DSN = env('SENTRY_DSN')
-    SENTRY_ENVIRONMENT = env('SENTRY_ENVIRONMENT')
+    SENTRY_DSN = env("SENTRY_DSN")
+    SENTRY_ENVIRONMENT = env("SENTRY_ENVIRONMENT")
 except ImproperlyConfigured:
     pass
 else:

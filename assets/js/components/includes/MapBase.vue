@@ -419,7 +419,7 @@ export default {
         .attr("cy", geo.center.y)
         .attr(
           "r",
-          (Math.max(geo.width, geo.height) / 2) * scale * frame_padding
+          (Math.max(geo.width, geo.height) / 2) * scale * frame_padding,
         );
 
       d3.selectAll(".base .frames").attr("fill", "#d9f1f6");
@@ -570,7 +570,7 @@ export default {
             };
             return topojson.feature(geodata, objects).features;
           },
-          (d) => d.id || d.properties.id
+          (d) => d.id || d.properties.id,
         )
         .enter()
         .append("path")
@@ -661,23 +661,23 @@ export default {
 
       d3.selectAll(".dataviz .viz.map .chart .terrain").attr(
         "stroke-width",
-        terrain_stroke
+        terrain_stroke,
       );
       d3.selectAll(".dataviz .viz.map .chart .regions").attr(
         "stroke-width",
-        region_stroke
+        region_stroke,
       );
       d3.selectAll(".dataviz .viz.map .chart .regions .level0").attr(
         "stroke-width",
-        terrain_stroke
+        terrain_stroke,
       );
       d3.selectAll(".dataviz .viz.map .chart .regions .LI").attr(
         "stroke-width",
-        LI_stroke
+        LI_stroke,
       );
       d3.selectAll(".dataviz .viz.map .chart .base .graticule").attr(
         "stroke-width",
-        graticule_stroke
+        graticule_stroke,
       );
     },
 

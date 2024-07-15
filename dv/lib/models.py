@@ -12,11 +12,11 @@ logger = logging.getLogger()
 class ImportableModelMixin(object):
     IMPORT_SOURCES = [
         {
-            'src': None,
+            "src": None,
             #: a dictionary of either
             #: <model field name>: <imported column name>, in which case 'code' will be looked up, or
             #: <model field name>: (<related-model lookup field name>, <imported column name>)
-            'map': {}
+            "map": {},
         }
     ]
 
@@ -27,19 +27,16 @@ class ImportableModelMixin(object):
         Column mapping can be overriden using `cls.IMPORT_SOURCES`.
         Default values can be specified as **kwargs.
         """
-        sheet_name = cls.IMPORT_SOURCES[src_idx]['src']
-        mapping = cls.IMPORT_SOURCES[src_idx]['map']
+        sheet_name = cls.IMPORT_SOURCES[src_idx]["src"]
+        mapping = cls.IMPORT_SOURCES[src_idx]["map"]
         kernel_keys = set()
 
-        fields = {
-            f.name: f
-            for f in cls._meta.fields
-        }
+        fields = {f.name: f for f in cls._meta.fields}
 
         # Detect a 2nd pass when we should update a row rather than insert it
         if src_idx > 0:
             current_keys = set(mapping.keys())
-            initial_insert_keys = set(cls.IMPORT_SOURCES[0]['map'].keys())
+            initial_insert_keys = set(cls.IMPORT_SOURCES[0]["map"].keys())
 
             kernel_keys = initial_insert_keys & current_keys
             extra_keys = current_keys - initial_insert_keys
@@ -60,8 +57,9 @@ class ImportableModelMixin(object):
 
                     # TODO: this is pretty. pretty ugly.
                     try:
-                        val = getattr(type(field.choices[0][0]),
-                                      utils.str_to_constant_name(val))
+                        val = getattr(
+                            type(field.choices[0][0]), utils.str_to_constant_name(val)
+                        )
                     except AttributeError:
                         logger.error("Invalid value %s for field %s", val, field)
                         raise
@@ -69,13 +67,15 @@ class ImportableModelMixin(object):
                     # this logic is based on the assumption that the choices are
                     # a `model_utils.Choices` instance, and on the convention
                     # that the choices' "constant name" is derived from the data
-                    val = getattr(field.choices,
-                                  utils.str_to_constant_name(val))
+                    val = getattr(field.choices, utils.str_to_constant_name(val))
                 else:
                     # avoid writing nulls in fields that don't support it
-                    if val is None and not field.null and isinstance(
-                            field, (models.CharField, models.TextField)):
-                        val = ''
+                    if (
+                        val is None
+                        and not field.null
+                        and isinstance(field, (models.CharField, models.TextField))
+                    ):
+                        val = ""
                 values[fld] = val
                 return
 
@@ -110,7 +110,7 @@ class ImportableModelMixin(object):
             try:
                 if isinstance(column, list):
                     # concatenate several columns into one field
-                    val = ''.join([str(data[c]) for c in column])
+                    val = "".join([str(data[c]) for c in column])
                 else:
                     val = data[column]
             except KeyError:
@@ -122,7 +122,9 @@ class ImportableModelMixin(object):
                 except ObjectDoesNotExist as e:
                     logger.warning(
                         "Error while assigning {}.{}={}, rel_field: {} ({})".format(
-                            cls.__name__, field, val, rel_field, e))
+                            cls.__name__, field, val, rel_field, e
+                        )
+                    )
                     return
 
         # if we have kernel_keys then identify an object already in db and update it
@@ -132,9 +134,11 @@ class ImportableModelMixin(object):
                 obj = cls.objects.get(**identity_values)
                 [setattr(obj, k, values[k]) for k in values if k in extra_keys]
             except (KeyError, ObjectDoesNotExist):
-                logger.warning("Error while grabbing {} instance with identity: {}".format(
-                    cls.__name__, identity_values
-                ))
+                logger.warning(
+                    "Error while grabbing {} instance with identity: {}".format(
+                        cls.__name__, identity_values
+                    )
+                )
                 return
             return obj
         # otherwise create a new row

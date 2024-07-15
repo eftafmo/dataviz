@@ -89,7 +89,7 @@ export default {
       return this.aggregate(
         this.filtered,
         this.aggregate_by,
-        this.aggregate_on
+        this.aggregate_on,
       );
     },
 
@@ -141,14 +141,14 @@ export default {
     getBeneficiaryCount(beneficiaries) {
       // Exclude "Non-country specific"
       return Array.from(beneficiaries || []).filter(
-        (countryCode) => countryCode !== "XX"
+        (countryCode) => countryCode !== "XX",
       ).length;
     },
     async fetchData() {
       if (!this.datasource) throw "Base.fetchData(): Missing datasource.";
 
       const responses = await Promise.all(
-        this.datasourcePeriods.map(this.loadPeriod)
+        this.datasourcePeriods.map(this.loadPeriod),
       );
       const data = [].concat(...responses);
       this.dataset = Object.freeze(data);
@@ -197,7 +197,7 @@ export default {
           // (until we switch to using ids)
           (item) =>
             item[f] &&
-            item[f].toString().toLowerCase() == val.toString().toLowerCase()
+            item[f].toString().toLowerCase() == val.toString().toLowerCase(),
         );
       }
 
@@ -263,7 +263,7 @@ export default {
 
         if (!src)
           throw new Error(
-            "`by` column source not provided: " + JSON.stringify(col)
+            "`by` column source not provided: " + JSON.stringify(col),
           );
 
         if (final) {
@@ -297,7 +297,7 @@ export default {
 
         if (!src)
           throw new Error(
-            "`on` column source not provided: " + JSON.stringify(col)
+            "`on` column source not provided: " + JSON.stringify(col),
           );
 
         oncols[src] = {

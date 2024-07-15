@@ -33,7 +33,7 @@ export default {
             selected: this.isSelectedFm(fm),
             disabled: this.isDisabledFm(fm),
           },
-          fm
+          fm,
         );
       }
 
@@ -95,7 +95,7 @@ export default {
               ${this.currency(x.value)}
               ${this.allocationType} allocation
             </li>
-        `
+        `,
         )
         .join("");
 

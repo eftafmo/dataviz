@@ -1,0 +1,32 @@
+[
+{
+  "model": "dv.project",
+  "pk": "PJ-1",
+  "fields": {
+    "funding_period": 3,
+    "name": "Project 1",
+    "status": "Completed",
+    "state": "RO",
+    "programme": "PR-1",
+    "nuts": "RO",
+    "sdg_no": 15,
+    "thematic": "",
+    "allocation": "12000.00",
+    "is_eea": false,
+    "is_norway": true,
+    "has_ended": false,
+    "is_dpp": false,
+    "is_positive_fx": false,
+    "is_improved_knowledge": false,
+    "is_continued_coop": false,
+    "initial_description": "Starts here",
+    "results_description": "Ends here",
+    "programme_areas": [
+      1
+    ],
+    "priority_sectors": [
+      "PS-1"
+    ]
+  }
+}
+]

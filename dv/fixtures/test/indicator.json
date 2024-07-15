@@ -1,0 +1,24 @@
+[
+{
+  "model": "dv.indicator",
+  "pk": 1,
+  "fields": {
+    "funding_period": 3,
+    "programme": "PR-1",
+    "programme_area": 1,
+    "state": "RO",
+    "indicator": "Indicator 1",
+    "outcome": "Yes",
+    "header": "Indicator 1 Header",
+    "unit_of_measurement": "nr",
+    "achievement_eea": "20000.00",
+    "achievement_norway": "30000.00",
+    "achievement_total": "50000.00",
+    "order": 1,
+    "is_core": false,
+    "is_common": false,
+    "thematic": "Competitive",
+    "sdg_no": 15
+  }
+}
+]

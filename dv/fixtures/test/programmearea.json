@@ -1,0 +1,15 @@
+[
+{
+  "model": "dv.programmearea",
+  "pk": 1,
+  "fields": {
+    "funding_period": 3,
+    "priority_sector": "PS-1",
+    "code": "PA-1",
+    "name": "Programme Area 1",
+    "short_name": "Area 1",
+    "order": 1,
+    "objective": "Something"
+  }
+}
+]

@@ -16,7 +16,7 @@ function getURL(obj) {
 }
 
 const _scenario_url = new RegExp(
-  "^/(\\d{4}-\\d{4}|compare)/(\\w+)?(/|.html)?$"
+  "^/(\\d{4}-\\d{4}|compare)/(\\w+)?(/|.html)?$",
 );
 
 function getScenario(url) {
@@ -46,7 +46,7 @@ export default {
     setFilters(
       scenario,
       period,
-      Object.fromEntries(url.searchParams.entries())
+      Object.fromEntries(url.searchParams.entries()),
     );
 
     this.scenario = scenario;
@@ -62,7 +62,7 @@ export default {
       if (updater === undefined)
         updater = this._debouncedUpdateAnchors = debounce(
           this._updateAnchors,
-          100
+          100,
         );
 
       updater();

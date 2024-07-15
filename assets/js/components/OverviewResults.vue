@@ -60,7 +60,7 @@ export default {
         this.filtered,
         ["indicator"],
         ["achievement_eea", "achievement_norway", "achievement_total"],
-        false
+        false,
       );
     },
     gridItems() {
@@ -70,7 +70,7 @@ export default {
           id: "civil-soa",
           image: "imgs/results/icon_people.svg",
           amount: this.getAmount(
-            "Number of people engaged in civil society organisation activities (including online)"
+            "Number of people engaged in civil society organisation activities (including online)",
           ),
           description:
             "people involved in civil society organisation activities",
@@ -105,7 +105,7 @@ export default {
           id: "anual-co2-reduction",
           image: "imgs/results/icon_emissions.svg",
           amount: this.getAmount(
-            "Estimated CO2 reduction and/or avoidance in tonnes/year"
+            "Estimated CO2 reduction and/or avoidance in tonnes/year",
           ),
           description: "tons of est. annual CO2 emissions reduced",
         },
@@ -119,7 +119,7 @@ export default {
           id: "ngos-supported",
           image: "imgs/results/icon_researchers.svg",
           amount: this.getAmount(
-            "Number of NGOs/small organisations reporting strengthened capacity"
+            "Number of NGOs/small organisations reporting strengthened capacity",
           ),
           description: "ngos and small organisations supported",
         },
@@ -127,7 +127,7 @@ export default {
           id: "basic-welfare",
           image: "imgs/results/icon_people.svg",
           amount: this.getAmount(
-            "Number of beneficiaries reporting improved access to basic and welfare services"
+            "Number of beneficiaries reporting improved access to basic and welfare services",
           ),
           description:
             "people with improved access to basic and welfare services",

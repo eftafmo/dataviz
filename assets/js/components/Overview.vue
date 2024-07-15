@@ -230,11 +230,11 @@ export default {
           const center = (d.startAngle + d.endAngle) / 2;
           coords.startAngle = Math.min(
             d.startAngle + txtrads / 2,
-            center - txtrads / 2
+            center - txtrads / 2,
           );
           coords.endAngle = Math.max(
             d.endAngle - txtrads / 2,
-            center + txtrads / 2
+            center + txtrads / 2,
           );
         }
         return arcfunc(coords);
@@ -254,7 +254,7 @@ export default {
         this.filtered,
         [],
         ["allocation", { source: "programmes", type: Array }],
-        false
+        false,
       );
     },
 
@@ -264,7 +264,7 @@ export default {
           this.filtered,
           ["fm", "beneficiary"],
           ["allocation"],
-          false
+          false,
         );
 
       // base the dataset on the constant list of FMs and beneficiaries,
@@ -317,7 +317,7 @@ export default {
 
       const stdev = Math.sqrt(
         _totals.map((x) => (x - avg) * (x - avg)).reduce((a, b) => a + b) /
-          (_totals.length - 1)
+          (_totals.length - 1),
       );
 
       // this is where the magic happens:
@@ -326,7 +326,7 @@ export default {
       const minweight = Math.min.apply(Math, weights); // this corresponds to minval
 
       const deltas = totals.map((x, i) =>
-        x === 0 ? 0 : (weights[i] * basedelta) / minweight
+        x === 0 ? 0 : (weights[i] * basedelta) / minweight,
       );
 
       for (const row of matrix) {
@@ -379,7 +379,7 @@ export default {
       // avoid other transitions while this runs ¬
       t.on("start", () => (this._transitioning = true)).on(
         "end",
-        () => (this._transitioning = false)
+        () => (this._transitioning = false),
       );
 
       const fms = this.chart
@@ -463,7 +463,7 @@ export default {
           })
           .attr("d", this.arc)
           .attr("stroke-opacity", (d) =>
-            d.value === 0 ? 0 : this[type + "_stroke_opacity"]
+            d.value === 0 ? 0 : this[type + "_stroke_opacity"],
           );
 
         // blank stuff so the area behind the text reacts to mouse events
@@ -536,7 +536,7 @@ export default {
                 this.text_spacing *
                 (i - (data.length - 1) / 2) *
                 opts.direction
-              })`
+              })`,
           )
           .text((d) => d)
           .call(_textProps, opts);
@@ -560,7 +560,7 @@ export default {
           // show / hide the items at the beginning / end of transitions
           // (because even if 0-width their stroke keeps them visible)
           .attr("stroke-opacity", (d) =>
-            d.value === 0 ? 0 : this[type + "_stroke_opacity"]
+            d.value === 0 ? 0 : this[type + "_stroke_opacity"],
           )
           .on("start", function (d) {
             if (d.value !== 0) d3.select(this).style("display", null);

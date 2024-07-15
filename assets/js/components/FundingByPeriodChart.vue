@@ -118,7 +118,7 @@ export default {
             id: period,
             period: period,
           };
-        }
+        },
       );
     },
     width() {
@@ -149,7 +149,7 @@ export default {
     renderChart() {
       this.chart.attr(
         "transform",
-        "translate(" + this.margin.left + "," + this.margin.top + ")"
+        "translate(" + this.margin.left + "," + this.margin.top + ")",
       );
       this.updateChart();
       this.chart
@@ -303,7 +303,7 @@ export default {
             ${this.getBeneficiaryCount(d.beneficiaries)}
             ${this.singularize(
               "Beneficiary States",
-              this.getBeneficiaryCount(d.beneficiaries)
+              this.getBeneficiaryCount(d.beneficiaries),
             )}
           </li>
           ${details}

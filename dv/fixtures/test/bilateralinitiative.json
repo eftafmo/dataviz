@@ -1,0 +1,24 @@
+[
+{
+  "model": "dv.bilateralinitiative",
+  "pk": "BI-1",
+  "fields": {
+    "funding_period": 3,
+    "title": "Billateral Initiative 1",
+    "url": "",
+    "grant": "32000.00",
+    "programme": "PR-1",
+    "project": "PJ-1",
+    "state": "RO",
+    "level": "1",
+    "status": "Completed",
+    "initial_description": "Initials",
+    "results_description": "Results",
+    "promoter_state": "RO",
+    "promoter_organization": null,
+    "programme_areas": [
+      1
+    ]
+  }
+}
+]

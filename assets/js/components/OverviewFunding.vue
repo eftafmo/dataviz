@@ -76,7 +76,7 @@ export default {
           { source: "completed_projects", type: Array },
           { source: "beneficiary", type: String },
         ],
-        false
+        false,
       );
     },
     allocationByFm() {
@@ -84,7 +84,7 @@ export default {
         const allocation = sum(
           this.filtered
             .filter((item) => item.fm === fm.name)
-            .map((item) => parseFloat(item.allocation))
+            .map((item) => parseFloat(item.allocation)),
         );
         return {
           id: fm.id,
@@ -99,13 +99,13 @@ export default {
     completedDppProjects() {
       return intersection(
         this.aggregated.completed_projects,
-        this.aggregated.dpp_projects
+        this.aggregated.dpp_projects,
       );
     },
     continuedCoopDppProjects() {
       return intersection(
         this.aggregated.continued_coop,
-        this.aggregated.dpp_projects
+        this.aggregated.dpp_projects,
       );
     },
     gridItems() {
@@ -160,7 +160,7 @@ export default {
               name: "Completed partnerships likely to continue",
               amount: this.formatPercent(
                 this.continuedCoopDppProjects.size,
-                this.completedDppProjects.size
+                this.completedDppProjects.size,
               ),
             },
           ],
@@ -182,7 +182,7 @@ export default {
               id: "bs",
               name: "Beneficiary States",
               amount: this.number(
-                this.getBeneficiaryCount(this.aggregated.beneficiary)
+                this.getBeneficiaryCount(this.aggregated.beneficiary),
               ),
               hidden: this.aggregated.beneficiary.size <= 1,
             },
@@ -191,7 +191,7 @@ export default {
               name: "Completed projects with lasting effect",
               amount: this.formatPercent(
                 this.aggregated.positive_fx.size,
-                this.aggregated.completed_projects.size
+                this.aggregated.completed_projects.size,
               ),
               hidden: this.period == "2014-2021",
             },

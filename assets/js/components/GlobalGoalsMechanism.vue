@@ -47,7 +47,7 @@ export default {
           <li>${this.getBeneficiaryCount(d.beneficiaries)} ` +
         this.singularize(
           `Beneficiary States`,
-          this.getBeneficiaryCount(d.beneficiaries)
+          this.getBeneficiaryCount(d.beneficiaries),
         ) +
         `</li>
           <li>${d.sectors.size} ` +

@@ -169,7 +169,7 @@ export default {
         .attr("fill", (d) =>
           this.isDisabledFm(d)
             ? color2gray(d.color, this.inactiveOpacity)
-            : d.stripesFill
+            : d.stripesFill,
         );
       this.chart
         .selectAll("rect.fm-slice")
@@ -188,12 +188,12 @@ export default {
         </div>
         <ul>
           <li>${this.currency(d.allocation)} ${
-          this.allocationType
-        } allocation</li>
+            this.allocationType
+          } allocation</li>
           <li>${this.getBeneficiaryCount(d.beneficiaries)} ` +
         this.singularize(
           `Beneficiary States`,
-          this.getBeneficiaryCount(d.beneficiaries)
+          this.getBeneficiaryCount(d.beneficiaries),
         ) +
         `</li>
           <li>${d.sectors.size} ` +

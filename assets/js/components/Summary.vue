@@ -42,7 +42,7 @@ export default {
         this.filtered,
         [],
         ["allocation", "bilateral_allocation"],
-        false
+        false,
       );
     },
   },

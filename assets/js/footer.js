@@ -52,7 +52,7 @@ window.Footer = (function () {
         elBackdrop,
         function () {
           this.hide(target, modal);
-        }.bind(this)
+        }.bind(this),
       );
 
       target.style.overflow = "hidden";

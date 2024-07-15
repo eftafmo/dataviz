@@ -12,7 +12,8 @@ https://google-webfonts-helper.herokuapp.com/fonts/source-sans-pro?subsets=cyril
   font-style: normal;
   font-weight: 400;
   src: url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-regular.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-regular.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */
@@ -34,7 +35,8 @@ https://google-webfonts-helper.herokuapp.com/fonts/source-sans-pro?subsets=cyril
   font-style: italic;
   font-weight: 400;
   src: url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-italic.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-italic.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */
@@ -56,7 +58,8 @@ https://google-webfonts-helper.herokuapp.com/fonts/source-sans-pro?subsets=cyril
   font-style: normal;
   font-weight: 700;
   src: url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */
@@ -78,7 +81,8 @@ https://google-webfonts-helper.herokuapp.com/fonts/source-sans-pro?subsets=cyril
   font-style: italic;
   font-weight: 700;
   src: url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700italic.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("../fonts/source-sans-pro-v14-latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700italic.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */

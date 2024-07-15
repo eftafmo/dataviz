@@ -1,0 +1,18 @@
+[
+{
+  "model": "dv.programmeallocation",
+  "pk": 1,
+  "fields": {
+    "funding_period": 3,
+    "financial_mechanism": "NOR",
+    "state": "RO",
+    "programme_area": 1,
+    "priority_sector": "PS-1",
+    "programme": "PR-1",
+    "allocation": "42000.00",
+    "outcome": "30000",
+    "thematic": "",
+    "sdg_no": 15
+  }
+}
+]

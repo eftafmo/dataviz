@@ -110,10 +110,10 @@ class Command(BaseCommand):
 
         created_count = 0
         for code, label in FAKE_NUTS.items():
-            obj, created = NUTS.objects.update_or_create(
-                {"label": label}, code=code
-            )
+            obj, created = NUTS.objects.update_or_create({"label": label}, code=code)
             obj.nuts_versions.add(nuts_version)
             created_count += created
             logger.info("NUTS extra %s, created=%s", obj, created)
-        logger.info("Created Fake NUTS codes %s out of %s", created_count, len(FAKE_NUTS))
+        logger.info(
+            "Created Fake NUTS codes %s out of %s", created_count, len(FAKE_NUTS)
+        )

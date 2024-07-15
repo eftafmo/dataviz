@@ -291,7 +291,7 @@ export default {
           _plm("programme", "operator", d.programmes.bs_orgs.size),
           _plm("Donor", "partner", d.programmes.ds_orgs.size),
           _plm("", "programme", d.programmes.programmes.size),
-          is_ds
+          is_ds,
         );
       }
       if (d.projects) {
@@ -299,7 +299,7 @@ export default {
           _plm("project", "promoter", d.projects.bs_orgs.size),
           _plm("Donor", "partner", d.projects.ds_orgs.size),
           _plm("", "project", d.projects.projects.size),
-          is_ds
+          is_ds,
         );
       }
 
@@ -389,7 +389,7 @@ export default {
         .selectAll("path")
         .data(
           (d) => d.connections,
-          (d) => d.source + "-" + d.target
+          (d) => d.source + "-" + d.target,
         );
 
       const _badids = new Set();
@@ -479,7 +479,7 @@ export default {
         // or after if the stuff is new
         baselayer.parentNode.insertBefore(
           newlayer,
-          newstuff ? baselayer.nextSibling : baselayer
+          newstuff ? baselayer.nextSibling : baselayer,
         );
 
         // if exiting, this is a good time to add the fully-removed regions
@@ -545,7 +545,7 @@ export default {
             .classed(newstuff ? "new" : "old", true)
             .transition(t)
             .attr("opacity", newstuff ? this.default_opacity : 0)
-            .on("end", newstuff ? enterfunc : exitfunc)
+            .on("end", newstuff ? enterfunc : exitfunc),
         );
       };
 
@@ -641,7 +641,9 @@ export default {
           .transition(t)
           .attr(
             "opacity",
-            this.visible_layers.indexOf(layer) === -1 ? 0 : this.default_opacity
+            this.visible_layers.indexOf(layer) === -1
+              ? 0
+              : this.default_opacity,
           );
       }
     },

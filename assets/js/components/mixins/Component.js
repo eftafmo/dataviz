@@ -19,7 +19,7 @@ function formatShort(
   formatInteger,
   formatFloat,
   force_short = null,
-  decimals = 1
+  decimals = 1,
 ) {
   let suffix = "";
   const short = force_short
@@ -73,7 +73,7 @@ export default {
             util.formatCurrency,
             util.formatCurrencyFloat2,
             shortMillion,
-            2
+            2,
           );
     },
     singularize: util.singularize,

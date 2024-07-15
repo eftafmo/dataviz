@@ -1,0 +1,15 @@
+[
+{
+  "model": "dv.organisationrole",
+  "pk": 1,
+  "fields": {
+    "funding_period": 3,
+    "role_code": "DPP",
+    "role_name": "DPP",
+    "organisation": 1,
+    "programme": "PR-1",
+    "project": "PJ-1",
+    "state": "RO"
+  }
+}
+]

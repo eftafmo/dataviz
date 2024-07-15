@@ -314,10 +314,10 @@ if (!Array.prototype.findIndex) {
       if (!watchArray[i].inited) continue;
 
       var deltaTop = Math.abs(
-          getDocOffsetTop(watchArray[i].clone) - watchArray[i].docOffsetTop
+          getDocOffsetTop(watchArray[i].clone) - watchArray[i].docOffsetTop,
         ),
         deltaHeight = Math.abs(
-          watchArray[i].parent.node.offsetHeight - watchArray[i].parent.height
+          watchArray[i].parent.node.offsetHeight - watchArray[i].parent.height,
         );
 
       if (deltaTop >= 2 || deltaHeight >= 2) return false;
@@ -503,7 +503,7 @@ if (!Array.prototype.findIndex) {
           borderRightWidth: parseNumeric(parentComputedStyle.borderRightWidth),
           borderTopWidth: parseNumeric(parentComputedStyle.borderTopWidth),
           borderBottomWidth: parseNumeric(
-            parentComputedStyle.borderBottomWidth
+            parentComputedStyle.borderBottomWidth,
           ),
         },
       },
@@ -634,7 +634,7 @@ if (!Array.prototype.findIndex) {
     win.removeEventListener("orientationchange", rebuild);
     doc.removeEventListener(
       visibilityChangeEventName,
-      handlePageVisibilityChange
+      handlePageVisibilityChange,
     );
 
     stopFastCheckTimer();
@@ -750,7 +750,7 @@ if (!Array.from) {
       // 3. ReturnIfAbrupt(items).
       if (arrayLike == null) {
         throw new TypeError(
-          "Array.from requires an array-like object - not null or undefined"
+          "Array.from requires an array-like object - not null or undefined",
         );
       }
 
@@ -762,7 +762,7 @@ if (!Array.from) {
         // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
         if (!isCallable(mapFn)) {
           throw new TypeError(
-            "Array.from: when provided, the second argument must be a function"
+            "Array.from: when provided, the second argument must be a function",
           );
         }
 

@@ -1,0 +1,16 @@
+-r base.txt
+
+black[d]
+coverage
+django-debug-toolbar
+django-extensions
+factory-boy
+flake8
+ipdb
+ipython
+ipython
+ipython-autotime
+pytest
+pytest-cov
+pytest-django
+pytest-subtests
