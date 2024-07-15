@@ -303,6 +303,42 @@ API_CACHE_SECONDS = 60 * 60 * 24  # 1 day
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
+
+# Logging
+# https://docs.djangoproject.com/en/4.2/topics/logging/
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
+        "require_debug_true": {"()": "django.utils.log.RequireDebugTrue"},
+    },
+    "formatters": {
+        "main_formatter": {
+            "format": (
+                "[%(asctime)s] %(levelname)s %(name)s: %(message)s "
+                "(%(filename)s:%(lineno)d)"
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG" if DEBUG else "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "main_formatter",
+        },
+        "null": {"class": "logging.NullHandler"},
+    },
+    "loggers": {
+        "": {
+            "handlers": ["console"],
+            "level": "INFO" if DEBUG else "WARNING",
+            "propagate": False,
+        },
+    },
+}
+
 try:
     # this is stupid, the settings file is no place for startup code
     SENTRY_DSN = env("SENTRY_DSN")
