@@ -11,6 +11,16 @@ from dv.models import (
     NUTSVersion,
     NUTS,
     StaticContent,
+    Allocation,
+    BilateralInitiative,
+    Indicator,
+    News,
+    Organisation,
+    PrioritySector,
+    Programme,
+    ProgrammeAllocation,
+    ProgrammeArea,
+    Project,
 )
 
 logger = logging.getLogger(__name__)
@@ -29,7 +39,19 @@ class Command(BaseCommand):
             NUTS,
             StaticContent,
         ),
-        "test": (User,),
+        "test": (
+            User,
+            PrioritySector,
+            ProgrammeArea,
+            Programme,
+            Project,
+            Allocation,
+            BilateralInitiative,
+            Indicator,
+            News,
+            Organisation,
+            ProgrammeAllocation,
+        ),
     }
 
     def add_arguments(self, parser):
