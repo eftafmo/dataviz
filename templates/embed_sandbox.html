@@ -9,7 +9,7 @@
 <div style="padding: 20px; font-size: 16px;">
   <label>
     Embed Component:
-    <select onchange="location = this.value;">
+    <select onchange="window.location.href = new window.URL(this.value, window.location).toString();">
       <option
           value="{% url 'frontend:embed_sandbox' %}"
           {% if not selected_component or not selected_scenario %}selected{% endif %}

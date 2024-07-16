@@ -50,7 +50,7 @@
               {% endfor %}
             </div>
           {% endfor %}
-          <form class="header-search" action="{% url view|search_view_name:current_view %}">
+          <form class="header-search" action="{% url view|search_view_name:current_view %}" role="search">
             <input type="search" placeholder="Search" name="q">
             {% if current_period != 'compare' %}
               <input type="text" name="period" hidden value="{{ current_period }}" />
