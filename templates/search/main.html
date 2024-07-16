@@ -5,8 +5,18 @@
 {% load humanize %}
 
 {% block head %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+  ></script>
+  <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+      integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+  ></script>
 {% endblock %}
 
 {% block top %}
@@ -79,9 +89,9 @@
             </option>
           {% endfor %}
         </select>
-          <a rel="nofollow" href="{{ export_url }}">
-            Export
-          </a>
+        <a rel="nofollow" href="{{ export_url }}">
+          Export
+        </a>
       </span>
     </div>
 
@@ -197,7 +207,7 @@
   <script>
   document.addEventListener("DOMContentLoaded", () => {
     _createApp(
-      Dataviz.SearchRoot
+        Dataviz.SearchRoot
     ).mount("#content");
   });
 
@@ -232,12 +242,12 @@
       var select = $(this);
       if (select.data("kind") && select.data("field")) {
         all_select2.push(
-          select.select2(
-            select2AjaxFactory(
-              select.data("kind"),
-              select.data("field")
+            select.select2(
+                select2AjaxFactory(
+                    select.data("kind"),
+                    select.data("field")
+                )
             )
-          )
         );
       } else {
         all_select2.push(select.select2());
@@ -262,8 +272,8 @@
       if (t.length < minimize_character_count) return;
 
       $(this).html(
-        t.slice(0, minimize_character_count) + "<span>... </span><a href=\"#\" class=\"more\">More</a>" +
-        "<span style=\"display:none;\">" + t.slice(minimize_character_count, t.length) + " <a href=\"#\" class=\"less\">Less</a></span>"
+          t.slice(0, minimize_character_count) + "<span>... </span><a href=\"#\" class=\"more\">More</a>" +
+          "<span style=\"display:none;\">" + t.slice(minimize_character_count, t.length) + " <a href=\"#\" class=\"less\">Less</a></span>"
       );
     });
 
