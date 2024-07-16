@@ -264,42 +264,6 @@
       });
     });
 
-    var minimized_elements = $(".truncate");
-    var minimize_character_count = 500;
-
-    minimized_elements.each(function () {
-      var t = $(this).text();
-      if (t.length < minimize_character_count) return;
-
-      $(this).html(
-          t.slice(0, minimize_character_count) + "<span>... </span><a href=\"#\" class=\"more\">More</a>" +
-          "<span style=\"display:none;\">" + t.slice(minimize_character_count, t.length) + " <a href=\"#\" class=\"less\">Less</a></span>"
-      );
-    });
-
-    $("a.more", minimized_elements).click(function (event) {
-      event.preventDefault();
-      var $this = $(this);
-      $(this).next().animate({ "height": "show" }, {
-        duration: 300,
-        done: function () {
-          $this.animate({ "width": "hide" });
-          $this.prev().animate({ "width": "hide" });
-        }
-      });
-    });
-
-    $("a.less", minimized_elements).click(function (event) {
-      event.preventDefault();
-      $(this).parent().animate({ "height": "hide" }, {
-        duration: 300,
-        done: function () {
-          $(this).prev().animate({ "opacity": "show" }, 300);
-          $(this).prev().prev().animate({ "opacity": "show" }, 300);
-        }
-      });
-    });
-
     //Fixing ie form attribute issue
     $visible_input = $(".visible-search-input");
     $hidden_input = $(".hidden-search-input");
