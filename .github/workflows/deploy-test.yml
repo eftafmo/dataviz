@@ -20,6 +20,6 @@ jobs:
       - name: Update docker-compose.override.yml
         run: |
           cd /var/local/eeag
-          sed -i "/image/c\    image: ${{ steps.meta.outputs.tags[0] }}" docker-compose.override.yml
+          sed -i "/image/c\    image: ${{ steps.meta.outputs.tags }}" docker-compose.override.yml
           docker-compose pull web
           docker-compose up -d web
