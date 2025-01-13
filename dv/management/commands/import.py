@@ -515,7 +515,7 @@ class Command(BaseCommand):
         # GR country code used in 2009-2014; for 2014-2021 we use EL
         states = {state.name: state for state in State.objects.exclude(code="GR")}
 
-        programme_area_query = "SELECT * FROM fmo.TR_RDPProgrammeArea"
+        programme_area_query = "SELECT * FROM fmo.TR_RDPProgrammeArea where FundingPeriod='2014-2021'"
         ps_count = 0
         with db_cursor() as cursor:
             cursor.execute(programme_area_query)
