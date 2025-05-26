@@ -15,6 +15,7 @@ docker-compose.override.yml
 .env
 .vscode
 .venv
+.envrc
 eeag.sqlite3
 .idea
 .coverage
@@ -24,3 +25,4 @@ cypress/screenshots/
 
 allocation_2004-2009.json
 2009-2014
+.data

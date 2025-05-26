@@ -60,8 +60,8 @@ npm install
 cp dv/localsettings.py.example dv/localsettings.py
 
 # Copy data file from prod/test
-mkdir -p ../db
-scp dataviz@data.eeagrants.org:eeag.sqlite3 ../db
+mkdir -p .data
+scp dataviz@data.eeagrants.org:eeag.sqlite3 .data
 
 # See es_local.md if you also need Elasticsearch and
 # build search indexes
@@ -71,4 +71,9 @@ python manage.py rebuild_index --noinput
 python manage.py runserver 0:8000
 # in a new terminal
 npm run dev
+
+# refresh data locally
+cp .data/eeag.sqlite3 .data/tmp.eeag.sqlite3
+env DJANGO_DB_PATH=".data/tmp.eeag.sqlite3" python manage.py import --period="2014-2021" --noinput
+
 ```

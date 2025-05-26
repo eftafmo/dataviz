@@ -515,7 +515,9 @@ class Command(BaseCommand):
         # GR country code used in 2009-2014; for 2014-2021 we use EL
         states = {state.name: state for state in State.objects.exclude(code="GR")}
 
-        programme_area_query = "SELECT * FROM fmo.TR_RDPProgrammeArea where FundingPeriod='2014-2021'"
+        programme_area_query = (
+            "SELECT * FROM fmo.TR_RDPProgrammeArea where FundingPeriod='2014-2021'"
+        )
         ps_count = 0
         with db_cursor() as cursor:
             cursor.execute(programme_area_query)
@@ -549,7 +551,7 @@ class Command(BaseCommand):
             self.style.SUCCESS(f"Imported {pa_count} ProgrammeArea objects.")
         )
 
-        allocation_query = "SELECT * FROM fmo.TR_RDPCountryProgrammeArea"
+        allocation_query = "SELECT * FROM fmo.TR_RDPCountryProgrammeArea where FundingPeriod='2014-2021'"
         with db_cursor() as cursor:
             cursor.execute(allocation_query)
             for row in cursor.fetchall():
@@ -573,7 +575,7 @@ class Command(BaseCommand):
         sddw_fake_programmes = []
 
         # Exclude programmes from Hungary
-        programme_query = "SELECT * FROM fmo.TR_RDPProgramme WHERE Country != 'Hungary'"
+        programme_query = "SELECT * FROM fmo.TR_RDPProgramme WHERE FundingPeriod='2014-2021' AND Country != 'Hungary'"
         with db_cursor() as cursor:
             cursor.execute(programme_query)
             programmes = {}
