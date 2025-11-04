@@ -6,7 +6,7 @@ RUN mkdir -p $APP_HOME
 
 WORKDIR $APP_HOME
 
-ADD package.json package-lock.json postcss.config.js vite.config.mjs ./
+ADD package.json package-lock.json postcss.config.cjs vite.config.mjs ./
 RUN npm install
 
 COPY assets/ assets/
