@@ -143,13 +143,17 @@ class ProgrammeIndex(SearchIndex, Indexable):
             self.get_model()
             .objects.filter(is_tap=False, is_bfp=False)
             .prefetch_related(
+                # XXX While it would be great to prefetch everything here, these are
+                # XXX reaching SQLite's limit and will raise the following error:
+                # XXX Expression tree is too large (maximum depth 1000)
+                # XXX https://code.djangoproject.com/ticket/36707
                 "indicators",
-                "indicators__state",
+                # "indicators__state",
                 "states",
                 "programme_areas",
-                "programme_areas__priority_sector",
+                # "programme_areas__priority_sector",
                 "organisation_roles",
-                "organisation_roles__organisation",
+                # "organisation_roles__organisation",
             )
         )
 
@@ -558,14 +562,18 @@ class OrganisationIndex(SearchIndex, Indexable):
     def index_queryset(self, using=None):
         return self.get_model().objects.prefetch_related(
             "roles",
-            "roles__state",
-            "roles__project",
-            "roles__project__state",
-            "roles__project__programme",
-            "roles__project__programme_areas",
-            "roles__programme",
-            "roles__programme__states",
-            "roles__programme__programme_areas",
+            # XXX While it would be great to prefetch everything here, these are
+            # XXX reaching SQLite's limit and will raise the following error:
+            # XXX Expression tree is too large (maximum depth 1000)
+            # XXX https://code.djangoproject.com/ticket/36707
+            # "roles__state",
+            # "roles__project",
+            # "roles__project__state",
+            # "roles__project__programme",
+            # "roles__project__programme_areas",
+            # "roles__programme",
+            # "roles__programme__states",
+            # "roles__programme__programme_areas",
         )
 
     def get_model(self):
