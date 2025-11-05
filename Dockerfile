@@ -1,4 +1,4 @@
-FROM node:20 AS frontend-builder
+FROM node:22 AS frontend-builder
 
 ENV APP_HOME=/var/local/dataviz
 
@@ -6,7 +6,7 @@ RUN mkdir -p $APP_HOME
 
 WORKDIR $APP_HOME
 
-ADD package.json package-lock.json postcss.config.js vite.config.mjs ./
+ADD package.json package-lock.json postcss.config.cjs vite.config.mjs ./
 RUN npm install
 
 COPY assets/ assets/
@@ -15,7 +15,7 @@ COPY public/ public/
 RUN NODE_ENV=production npm run build
 
 
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 # roles:
 #   front - publishes ports to the world; this depends on run/docker-compose though...

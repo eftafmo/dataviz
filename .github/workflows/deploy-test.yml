@@ -6,6 +6,8 @@ on:
 jobs:
   deploy:
     runs-on: [self-hosted, test]
+    permissions:
+      contents: read
     steps:
       - name: Update docker-compose.override.yml
         run: |

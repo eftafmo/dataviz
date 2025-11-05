@@ -1,15 +1,8 @@
-import random
 import re
-import time
-from binascii import crc32
+from collections.abc import Iterable
 
-try:
-    from collections import Iterable
-except ImportError:
-    from collections.abc import Iterable
-
-from django.utils.baseconv import base62
 from django_countries import countries
+from django.utils.crypto import get_random_string
 
 
 FM_EEA = "EEA"
@@ -79,17 +72,5 @@ def is_iter(v):
     return not isinstance(v, str) and isinstance(v, Iterable)
 
 
-def uniq_hash(s):
-    """
-    Create a short hash from a given string.
-    Be warned, this function is a liar: it's not really a hash as it's CRC-based,
-    and as such it has a high collision potential!
-    """
-    if not isinstance(s, bytes):
-        s = s.encode("utf-8")
-    crc = crc32(s)
-    return base62.encode(crc)
-
-
-def mkrandstr():
-    return base62.encode(int(time.time())) + base62.encode(random.randint(0, 61))
+def mkrandstr(length=7):
+    return get_random_string(length)
