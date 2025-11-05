@@ -15,7 +15,7 @@ COPY public/ public/
 RUN NODE_ENV=production npm run build
 
 
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 # roles:
 #   front - publishes ports to the world; this depends on run/docker-compose though...

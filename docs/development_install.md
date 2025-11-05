@@ -51,10 +51,10 @@
 ## Local installation without Docker
 
 ```shell
-python3.12 -m venv .venv
+python3.13 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements/dev.txt -c requirements/constraints.txt
-nvm use 20
+nvm use 22
 npm install
 # Copy settings and adjust as necessary
 cp dv/localsettings.py.example dv/localsettings.py
