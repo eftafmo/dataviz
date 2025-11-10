@@ -744,15 +744,19 @@ def partners(request):
                     donor_project_partners[key][org_role.organisation_id] = {
                         "name": org_role.organisation.name,
                         "nuts": org_role.organisation.nuts_id,
-                        # 'projects': [],
+                        "projects": [],
                         # project_count should be enough, trying to save 90KB
                         "prj": 0,
                     }
                 # donor_project_partners[key][pp['organisation_id']]['projects'].append(pp['project_id'])
                 donor_project_partners[key][org_role.organisation_id]["prj"] += 1
+                donor_project_partners[key][org_role.organisation_id][
+                    "projects"
+                ].append(project_code)
                 # projects with dpp are stored for bilateral indicators
                 if project_code not in projects[key]:
                     projects[key][project_code] = {
+                        "org_id": org_role.organisation_id,
                         "is_dpp": org_role.project.is_dpp,
                         "has_ended": org_role.project.has_ended,
                         "continued_coop": org_role.project.is_continued_coop,

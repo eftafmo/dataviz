@@ -32,7 +32,7 @@
           </td>
           <td>{{ organization.countries.size }}</td>
           <td>{{ organization.programmes.size }}</td>
-          <td>{{ organization.projects }}</td>
+          <td>{{ number(organization.projects.size) }}</td>
         </tr>
       </tbody>
       <tfoot>
@@ -130,14 +130,18 @@ export default {
               id: org_id,
               countries: new Set(),
               programmes: new Set(),
-              projects: 0,
+              projects: new Set(),
               name: orgName,
               url: url.toString(),
             };
           }
           org.countries.add(d.beneficiary);
           org.programmes.add(d.programme);
-          org.projects += d.PJDPP[org_id]["prj"];
+          for (const prj_code in d.projects) {
+            if (d.PJDPP[org_id].projects.includes(prj_code)) {
+              org.projects.add(prj_code)
+            }
+          }
         }
       }
 
