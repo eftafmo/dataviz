@@ -97,11 +97,27 @@ TITLES = {
 }
 DESCRIPTIONS = {
     "overview": "",
-    "funding": "Learn more about allocations to the Beneficiary States and priority sectors.",
-    "cooperation": "Partnerships are at the centre of the EEA and Norway Grants. Discover our partnership network.",
-    "projects": "Discover projects and initiatives, helping reduce social and economic disparities and strengthen bilateral relations.",
-    "global_goals": "The United Nations’ Sustainable Development Goals reflect a shared global vision for a peaceful and prosperous world through sustainable and fair development.",
-    "beneficiary_states": "Compare funding periods allocation by financial mechanism and beneficiary state",
+    "funding": (
+        "Learn more about allocations to the Beneficiary States and priority "
+        "sectors."
+    ),
+    "cooperation": (
+        "Partnerships are at the centre of the EEA and Norway Grants. "
+        "Discover our partnership network."
+    ),
+    "projects": (
+        "Discover projects and initiatives, helping reduce social and "
+        "economic disparities and strengthen bilateral relations."
+    ),
+    "global_goals": (
+        "The United Nations’ Sustainable Development Goals reflect a "
+        "shared global vision for a peaceful and prosperous world through "
+        "sustainable and fair development."
+    ),
+    "beneficiary_states": (
+        "Compare funding periods allocation by financial mechanism "
+        "and beneficiary state"
+    ),
     "sectors": "Compare funding periods allocation by sectors",
 }
 
