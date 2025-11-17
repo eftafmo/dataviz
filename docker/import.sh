@@ -20,7 +20,8 @@ cp "$app_db" "$tmp_db"
 
 # Import new data in the temporary db
 env DJANGO_DB_PATH="$tmp_db" python "$manage" import --period="2014-2021" --noinput
-env DJANGO_DB_PATH="$tmp_db" python "$manage" import_news
+# XXX News import is disabled because the API used for import no longer exists
+#env DJANGO_DB_PATH="$tmp_db" python "$manage" import_news
 
 # Replace the live db
 mv "$tmp_db" "$app_db"
