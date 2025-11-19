@@ -38,6 +38,7 @@ from dv.views.facets_rules import (
     ORG_ROLE_SORT,
     ModelFacetRules,
 )
+from .dataviz import get_seo_context
 
 from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 from ..lib.assets import load_manifest
@@ -96,8 +97,13 @@ def _parse_js_root_instances():
 
 
 def disclaimer(request):
-    content = StaticContent.objects.filter(name="Disclaimer")
-    context = dict(body=content[0].body if content else None)
+    content = StaticContent.objects.get(name="Disclaimer")
+    context = dict(
+        body=content.body if content else None,
+        seo=get_seo_context(
+            request, title=content.seo_title, description=content.seo_description
+        ),
+    )
     return render(request, "disclaimer.html", context)
 
 
@@ -138,6 +144,7 @@ class FacetedSearchView(BaseFacetedSearchView):
     template_name = "search/main.html"
     paginate_by = 10
     context_object_name = "object_list"
+    title = "Search"
 
     def __init__(self):
         super().__init__()
@@ -253,6 +260,7 @@ class FacetedSearchView(BaseFacetedSearchView):
 
         export_url = reverse(f"frontend:{self.facet_kind.lower()}_export")
         ctx["export_url"] = export_url + "?" + self.request.GET.urlencode()
+        ctx["seo"] = get_seo_context(self.request, title=self.title)
 
         return ctx
 
@@ -274,12 +282,14 @@ class BilateralInitiativesSearchView(FacetedSearchView):
     facet_rules = BILATERAL_INITIATIVE_FACETS
     facet_kind = "BilateralInitiative"
     order_field = "code"
+    title = "Search Bilateral Initiatives"
 
 
 class ProgrammeFacetedSearchView(FacetedSearchView):
     facet_rules = PROGRAMME_FACETS
     facet_kind = "Programme"
     order_field = "code"
+    title = "Search Programmes"
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
@@ -303,12 +313,14 @@ class ProjectFacetedSearchView(FacetedSearchView):
     facet_rules = PROJECT_FACETS
     facet_kind = "Project"
     order_field = "code"
+    title = "Search Projects"
 
 
 class OrganisationFacetedSearchView(FacetedSearchView):
     facet_rules = ORGANISATION_FACETS
     facet_kind = "Organisation"
     order_field = "-role_max_priority_code"
+    title = "Search Organisations"
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
@@ -349,6 +361,7 @@ class NewsFacetedSearchView(FacetedSearchView):
     facet_rules = NEWS_FACETS
     facet_kind = "News"
     order_field = "-created_dt"
+    title = "Search News"
 
 
 class FacetedExportView(FacetedSearchView):
