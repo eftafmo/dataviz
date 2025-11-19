@@ -60,7 +60,7 @@
     "eslint-plugin-prettier-vue": "^5.0.0",
     "eslint-plugin-vue": "^10.5.1",
     "form-association-polyfill": "^2.0.3",
-    "glob": "^11.0.3",
+    "glob": "^11.1.0",
     "json5": "^2.2.3",
     "less": "^4.4.2",
     "lint-staged": "^16.2.6",
