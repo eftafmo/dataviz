@@ -65,6 +65,63 @@ def get_menu(request):
     return menu_items
 
 
+def get_seo_context(request, title="", description=""):
+    result = {
+        "title": "EEA and Norway Grants",
+        "description": "Working together for a green, democratic and resilient Europe",
+        "keywords": "",
+        "keywords_list": [],
+        "full_url": request.build_absolute_uri(request.path),
+        "domain": request.get_host(),
+        "img": {
+            "full_url": request.build_absolute_uri("/assets/imgs/eeaglogo.png"),
+            "width": 715,
+            "height": 294,
+        },
+    }
+    if title:
+        result["title"] += f"- {title}"
+    if description:
+        result["description"] = description
+    return result
+
+
+TITLES = {
+    "overview": "",
+    "funding": "Our Grants",
+    "cooperation": "Our Partners",
+    "projects": "Our Projects",
+    "global_goals": "Global Goals",
+    "beneficiary_states": "Compare funding by beneficiary states",
+    "sectors": "Compare funding by sectors",
+}
+DESCRIPTIONS = {
+    "overview": "",
+    "funding": (
+        "Learn more about allocations to the Beneficiary States and priority "
+        "sectors."
+    ),
+    "cooperation": (
+        "Partnerships are at the centre of the EEA and Norway Grants. "
+        "Discover our partnership network."
+    ),
+    "projects": (
+        "Discover projects and initiatives, helping reduce social and "
+        "economic disparities and strengthen bilateral relations."
+    ),
+    "global_goals": (
+        "The United Nations’ Sustainable Development Goals reflect a "
+        "shared global vision for a peaceful and prosperous world through "
+        "sustainable and fair development."
+    ),
+    "beneficiary_states": (
+        "Compare funding periods allocation by financial mechanism "
+        "and beneficiary state"
+    ),
+    "sectors": "Compare funding periods allocation by sectors",
+}
+
+
 def render(request, period, scenario=None):
     """
     Renders the data visualisation template
@@ -79,11 +136,15 @@ def render(request, period, scenario=None):
     if scenario not in ALLOCATION_PERIODS[period]:
         raise Http404()
 
-    context = {
-        "PERIOD": period,
-        "SCENARIO": scenario,
-    }
-
     template = "%s.html" % scenario
-
-    return _render(request, template, context)
+    return _render(
+        request,
+        template,
+        {
+            "PERIOD": period,
+            "SCENARIO": scenario,
+            "seo": get_seo_context(
+                request, title=TITLES[scenario], description=DESCRIPTIONS[scenario]
+            ),
+        },
+    )

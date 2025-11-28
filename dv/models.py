@@ -405,6 +405,8 @@ class News(models.Model):
 class StaticContent(models.Model):
     name = models.CharField(max_length=64, unique=True)
     body = CKEditor5Field()
+    seo_title = models.TextField(default="")
+    seo_description = models.TextField(default="", blank=True)
 
     def __str__(self):
         return self.name

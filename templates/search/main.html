@@ -89,7 +89,7 @@
             </option>
           {% endfor %}
         </select>
-        <a rel="nofollow" href="{{ export_url }}">
+        <a rel="noindex, nofollow" href="{{ export_url }}">
           Export
         </a>
       </span>
@@ -119,6 +119,7 @@
         <div class="pagination clearfix">
           <a
               class="btn btn-default pagination-previous link-page-button"
+              rel="noindex, nofollow"
               {% if page_obj.has_previous %}
               name="page"
               href="{% url_replace request 'page' page_obj.previous_page_number %}"
@@ -134,6 +135,7 @@
                 <a
                     name="page"
                     class="btn btn-default link-page-button"
+                    rel="noindex, nofollow"
                     {% if not page_obj.number == page_num %}
                     href="{% url_replace request 'page' page_num %}"
                     {% else %}
@@ -147,6 +149,7 @@
 
           <a
               class="btn btn-default pagination-next link-page-button"
+              rel="noindex, nofollow"
               {% if page_obj.has_next %}
               name="page"
               href="{% url_replace request 'page' page_obj.next_page_number %}"

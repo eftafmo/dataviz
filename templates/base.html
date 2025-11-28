@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{% block title %}{% endblock %}</title>
+  {% include "_seo.html" %}
+
   {% if settings.DEBUG %}
     {% with host=request.META.HTTP_HOST|split:":"|first %}
       <script type="module" src="//{{ host }}:3000/assets/entry.js"></script>
@@ -100,9 +101,9 @@
         <p>Postal address: EFTA House, Avenue des Arts 19H,
            1000 Brussels, Belgium</p>
         <p class="footer-links">
-          <a href="https://eeagrants.org/data-results-glossary" target="_blank">Glossary</a>
+          <a href="https://eeagrants.org/en/fmo/documents-library/archive/2014-2021-results-guideline" target="_blank">Glossary</a>
           <a href="{% url 'frontend:disclaimer' %}" onclick="Footer.popup(event, this)">Disclaimer</a>
-          <a href="https://eeagrants.org/privacy-policy" target="_blank">Privacy policy</a>
+          <a href="https://eeagrants.org/en/fmo/about/privacy-policy" target="_blank">Privacy policy</a>
         </p>
       </div>
     </div>
