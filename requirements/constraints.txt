@@ -77,7 +77,7 @@ texttable==1.7.0
 traitlets==5.14.3
 typing_extensions==4.15.0
 tzdata==2025.2
-urllib3==1.26.20
+urllib3==2.6.3
 wait-for-it==2.3.0
 wcwidth==0.2.14
 webencodings==0.5.1
