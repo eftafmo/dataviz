@@ -43,8 +43,6 @@ ADD pyproject.toml .
 ADD uv.lock .
 RUN uv sync --locked --no-default-groups $UV_ARGS
 
-COPY pytest.ini pytest.ini
-COPY .coveragerc .coveragerc
 COPY dv/ dv/
 COPY assets/ assets/
 COPY templates/ templates/
