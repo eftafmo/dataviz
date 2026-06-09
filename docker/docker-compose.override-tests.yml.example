@@ -2,6 +2,8 @@ services:
   web:
     build:
       context: .
+      args:
+        UV_ARGS: "--group dev"
 
   nginx:
     image: nginx:1.27-alpine
