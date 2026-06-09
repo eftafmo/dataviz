@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 from django.core.cache import cache
 from django.core.management.base import BaseCommand
-from pytz import UTC, timezone
+from pytz import timezone
 
 from dv.models import News, Programme, Project
 
@@ -22,7 +22,7 @@ def parse_time(value: str) -> datetime:
         # <time datetime="2024-07-05T13:15:40+02:00">1720178140</time>
         timestamp = int(value.split(">")[1].split("<")[0].strip())
 
-    return TZ.localize(datetime.fromtimestamp(timestamp, tz=UTC))
+    return datetime.fromtimestamp(timestamp, tz=TZ)
 
 
 class Command(BaseCommand):
