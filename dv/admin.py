@@ -83,7 +83,7 @@ class CountryFilter(admin.SimpleListFilter):
         )
 
         for nn in nuts0:
-            yield nn["code"], f'{nn["code"]} ({nn["label"]})'
+            yield nn["code"], f"{nn['code']} ({nn['label']})"
 
     def queryset(self, request, queryset):
         if self.value():

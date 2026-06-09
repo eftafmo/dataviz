@@ -5,7 +5,6 @@ import django_ckeditor_5.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("dv", "0008_alter_bilateralinitiative_promoter_organization"),
     ]

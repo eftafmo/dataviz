@@ -133,7 +133,7 @@ class ImportableModelMixin(object):
                 identity_values = {k: values[k] for k in kernel_keys}
                 obj = cls.objects.get(**identity_values)
                 [setattr(obj, k, values[k]) for k in values if k in extra_keys]
-            except (KeyError, ObjectDoesNotExist):
+            except KeyError, ObjectDoesNotExist:
                 logger.warning(
                     "Error while grabbing {} instance with identity: {}".format(
                         cls.__name__, identity_values

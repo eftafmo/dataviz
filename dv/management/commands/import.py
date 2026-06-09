@@ -100,7 +100,7 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(
                     self.style.ERROR(
-                        "A JSON file must be provided for " "2004-2009 import."
+                        "A JSON file must be provided for 2004-2009 import."
                     )
                 )
 

@@ -17,7 +17,6 @@ def reverse_func(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("dv", "0003_indicator_achievement_total"),
     ]

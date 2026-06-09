@@ -15,7 +15,7 @@ def parse_time(value: str) -> datetime:
     try:
         # Check if value is already a timestamp
         timestamp = int(value)
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         # Value may look like:
         # <time datetime="2024-07-05T13:15:40+02:00">1720178140</time>
         timestamp = int(value.split(">")[1].split("<")[0].strip())

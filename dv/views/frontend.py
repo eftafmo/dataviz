@@ -178,7 +178,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         if "country" in facets:
             facets["country"] = sorted(
                 facets["country"],
-                key=lambda x: (COUNTRY_SORT_BOOST.get(x[0], 10) * 255 + ord(x[0][0])),
+                key=lambda x: COUNTRY_SORT_BOOST.get(x[0], 10) * 255 + ord(x[0][0]),
             )
 
     def filter_facets(self, facet_fields, form_facets):

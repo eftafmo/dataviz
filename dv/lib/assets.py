@@ -30,7 +30,7 @@ def load_manifest():
         # add css
         try:
             css = v["css"][0]
-        except (KeyError, IndexError):
+        except KeyError, IndexError:
             pass
         else:
             assets[re.sub(r"\.js$", ".css", k)] = css

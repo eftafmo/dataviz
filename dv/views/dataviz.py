@@ -98,8 +98,7 @@ TITLES = {
 DESCRIPTIONS = {
     "overview": "",
     "funding": (
-        "Learn more about allocations to the Beneficiary States and priority "
-        "sectors."
+        "Learn more about allocations to the Beneficiary States and priority sectors."
     ),
     "cooperation": (
         "Partnerships are at the centre of the EEA and Norway Grants. "
