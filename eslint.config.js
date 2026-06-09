@@ -1,6 +1,6 @@
 import prettierSkipFormatting from "@vue/eslint-config-prettier/skip-formatting";
 import pluginPrettier from "eslint-config-prettier";
-import pluginCypress from "eslint-plugin-cypress/flat";
+import pluginCypress from "eslint-plugin-cypress";
 import mocha from "eslint-plugin-mocha";
 import pluginVue from "eslint-plugin-vue";
 import globals from "globals";
