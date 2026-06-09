@@ -88,3 +88,18 @@ ignore = [
     # Allow NULL values for text fields, not the best practice but a pain to migrate
     "DJ001",
 ]
+
+[tool.coverage.run]
+omit = [
+    "dv/localsettings.py",
+    "*/tests/*",
+    "*/management/*",
+    "**/migrations/*",
+]
+relative_files = true
+
+[tool.pytest.ini_options]
+addopts = [
+    "--ds=dv.settings",
+    "--pdbcls=IPython.terminal.debugger:Pdb",
+]
