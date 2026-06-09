@@ -163,7 +163,6 @@ COUNTRY_SORT_BOOST = {
 
 
 class ModelFacetRules:
-
     REORDER_FACETS = {}
     STATES_BY_NAME = {}
 

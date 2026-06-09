@@ -2,7 +2,6 @@ from django.http import Http404
 from django.shortcuts import render as _render
 from django.urls import reverse
 
-
 ALLOCATION_PERIODS = {
     "2014-2021": [
         "overview",
@@ -98,8 +97,7 @@ TITLES = {
 DESCRIPTIONS = {
     "overview": "",
     "funding": (
-        "Learn more about allocations to the Beneficiary States and priority "
-        "sectors."
+        "Learn more about allocations to the Beneficiary States and priority sectors."
     ),
     "cooperation": (
         "Partnerships are at the centre of the EEA and Norway Grants. "
@@ -134,7 +132,7 @@ def render(request, period, scenario=None):
         scenario = "overview"
 
     if scenario not in ALLOCATION_PERIODS[period]:
-        raise Http404()
+        raise Http404
 
     template = "%s.html" % scenario
     return _render(

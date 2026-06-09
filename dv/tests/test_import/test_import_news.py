@@ -1,8 +1,9 @@
 from unittest.mock import patch
+
 from django.core.management import call_command
 from django.test import TestCase
-from dv.models import News
 
+from dv.models import News
 from dv.tests.factories.project_factory import ProjectFactory
 
 

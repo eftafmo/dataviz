@@ -1,15 +1,10 @@
 import itertools
 from functools import reduce
 
-from haystack.indexes import SearchIndex, Indexable
-from haystack import fields
-from haystack import exceptions
+from haystack import exceptions, fields
+from haystack.indexes import Indexable, SearchIndex
 
-from dv.models import News
-from dv.models import Project
-from dv.models import Programme
-from dv.models import Organisation
-from dv.models import BilateralInitiative
+from dv.models import BilateralInitiative, News, Organisation, Programme, Project
 
 
 class BilateralInitiativeIndex(SearchIndex, Indexable):
@@ -80,9 +75,7 @@ class BilateralInitiativeIndex(SearchIndex, Indexable):
         return [area.name for area in obj.programme_areas.all()]
 
     def prepare_priority_sector_ss(self, obj):
-        return list(
-            set(area.priority_sector.name for area in obj.programme_areas.all())
-        )
+        return list({area.priority_sector.name for area in obj.programme_areas.all()})
 
     def prepare_project_name(self, obj):
         return obj.project and [obj.project.display_name]
@@ -172,7 +165,7 @@ class ProgrammeIndex(SearchIndex, Indexable):
     def prepare_state_name(self, obj):
         # Get this from ProgrammeOutcome, because of IN22
         return list(
-            set(indicator.state.name for indicator in self.indicators_query(obj)).union(
+            {indicator.state.name for indicator in self.indicators_query(obj)}.union(
                 state.name for state in obj.states.all()
             )
         )
@@ -181,11 +174,11 @@ class ProgrammeIndex(SearchIndex, Indexable):
         return [obj.display_name]
 
     def prepare_programme_area_ss(self, obj):
-        return list(set([area.name for area in self.programme_area_query(obj)]))
+        return list({area.name for area in self.programme_area_query(obj)})
 
     def prepare_priority_sector_ss(self, obj):
         return list(
-            set([area.priority_sector.name for area in self.programme_area_query(obj)])
+            {area.priority_sector.name for area in self.programme_area_query(obj)}
         )
 
     def prepare_financial_mechanism_ss(self, obj):
@@ -193,18 +186,14 @@ class ProgrammeIndex(SearchIndex, Indexable):
 
     def prepare_outcome_ss(self, obj):
         return list(
-            set(
-                " ".join(indicator.header.split()) for indicator in obj.indicators.all()
-            )
+            {" ".join(indicator.header.split()) for indicator in obj.indicators.all()}
         )
 
     def prepare_grant(self, obj):
         return obj.allocation_eea + obj.allocation_norway
 
     def prepare_organisation(self, obj):
-        return list(
-            set(role.organisation.name for role in obj.organisation_roles.all())
-        )
+        return list({role.organisation.name for role in obj.organisation_roles.all()})
 
     def prepare(self, obj):
         self.prepared_data = super().prepare(obj)
@@ -305,19 +294,17 @@ class ProjectIndex(SearchIndex, Indexable):
 
     def prepare_outcome_ss(self, obj):
         return list(
-            set(
+            {
                 " ".join(indicator.header.split())
                 for indicator in self.indicator_query(obj)
-            )
+            }
         )
 
     def prepare_theme_ss(self, obj):
-        return list(set(theme.name for theme in self.themes_query(obj)))
+        return list({theme.name for theme in self.themes_query(obj)})
 
     def prepare_organisation(self, obj):
-        return list(
-            set(role.organisation.name for role in obj.organisation_roles.all())
-        )
+        return list({role.organisation.name for role in obj.organisation_roles.all()})
 
     def prepare(self, obj):
         self.prepared_data = super().prepare(obj)
@@ -397,35 +384,34 @@ class NewsIndex(SearchIndex, Indexable):
         if obj.project:
             return [obj.project.get_funding_period_display()]
         return list(
-            set(
+            {
                 programme.get_funding_period_display()
                 for programme in obj.programmes.all()
-            )
+            }
         )
 
     def prepare_state_name(self, obj):
         if obj.project:
             return [obj.project.state.name]
-        else:
-            # Get this from ProgrammeOutcome, because of IN22
-            return list(
-                set(
-                    state.name
-                    for programme in obj.programmes.all()
-                    for state in programme.states.all()
-                )
-            )
+        # Get this from ProgrammeOutcome, because of IN22
+        return list(
+            {
+                state.name
+                for programme in obj.programmes.all()
+                for state in programme.states.all()
+            }
+        )
 
     def prepare_financial_mechanism_ss(self, obj):
         if obj.project:
             return obj.project.financial_mechanisms_display
 
         return list(
-            set(
+            {
                 fm
                 for programme in obj.programmes.all()
                 for fm in programme.financial_mechanisms_display
-            )
+            }
         )
 
     def prepare_programme_area_ss(self, obj):
@@ -436,11 +422,11 @@ class NewsIndex(SearchIndex, Indexable):
             ]
 
         return list(
-            set(
+            {
                 area.name
                 for programme in obj.programmes.all()
                 for area in programme.programme_areas.all()
-            )
+            }
         )
 
     def prepare_priority_sector_ss(self, obj):
@@ -448,17 +434,17 @@ class NewsIndex(SearchIndex, Indexable):
             return [sector.name for sector in obj.project.priority_sectors.all()]
 
         return list(
-            set(
+            {
                 area.priority_sector.name
                 for programme in obj.programmes.all()
                 for area in programme.programme_areas.all()
-            )
+            }
         )
 
     def prepare_programme_name(self, obj):
         if obj.project:
             return [obj.project.programme.display_name]
-        return list(set([programme.display_name for programme in obj.programmes.all()]))
+        return list({programme.display_name for programme in obj.programmes.all()})
 
     def prepare_project_name(self, obj):
         return obj.project and obj.project.display_name
@@ -466,22 +452,22 @@ class NewsIndex(SearchIndex, Indexable):
     def prepare_programme_status(self, obj):
         if obj.project:
             return [obj.project.programme.status]
-        return list(set([programme.status for programme in obj.programmes.all()]))
+        return list({programme.status for programme in obj.programmes.all()})
 
     def prepare_outcome_ss(self, obj):
         if obj.project:
             return list(
-                set(
+                {
                     " ".join(indicator.header.split())
                     for indicator in obj.project.programme.indicators.all()
-                )
+                }
             )
         return list(
-            set(
+            {
                 " ".join(indicator.header.split())
                 for programme in obj.programmes.all()
                 for indicator in programme.indicators.all()
-            )
+            }
         )
 
     def prepare_project_status(self, obj):
@@ -494,7 +480,7 @@ class NewsIndex(SearchIndex, Indexable):
 
     def prepare_theme_ss(self, obj):
         if obj.project:
-            return list(set([theme.name for theme in obj.project.themes.all()]))
+            return list({theme.name for theme in obj.project.themes.all()})
         return None
 
     def prepare(self, obj):
@@ -587,11 +573,11 @@ class OrganisationIndex(SearchIndex, Indexable):
 
     def prepare_financial_mechanism_ss(self, obj):
         return list(
-            set(
+            {
                 fm
                 for item in itertools.chain(obj.projects, obj.programmes)
                 for fm in item.financial_mechanisms_display
-            )
+            }
         )
 
     def prepare_state_name(self, obj):
@@ -609,14 +595,14 @@ class OrganisationIndex(SearchIndex, Indexable):
         return list(states)
 
     def prepare_programme_status(self, obj):
-        statuses = set(programme.status for programme in obj.programmes)
+        statuses = {programme.status for programme in obj.programmes}
         # Add programme status from projects also
         return list(
             statuses.union(project.programme.status for project in obj.projects)
         )
 
     def prepare_project_status(self, obj):
-        return list(set(project.status for project in obj.projects))
+        return list({project.status for project in obj.projects})
 
     def prepare_programme_area_ss(self, obj):
         areas = set()
@@ -650,10 +636,10 @@ class OrganisationIndex(SearchIndex, Indexable):
         return list(names)
 
     def prepare_project_name(self, obj):
-        return list(set(project.display_name for project in obj.projects))
+        return list({project.display_name for project in obj.projects})
 
     def prepare_role_ss(self, obj):
-        return list(set(role.role_name for role in obj.roles.all()))
+        return list({role.role_name for role in obj.roles.all()})
 
     def prepare_geotarget(self, obj):
         return obj.geotarget

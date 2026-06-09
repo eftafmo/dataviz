@@ -2,12 +2,11 @@ from django.db import models
 from django.utils.functional import cached_property
 from django_ckeditor_5.fields import CKEditor5Field
 
-
 from dv.lib.utils import (
-    FM_EEA,
-    FM_NORWAY,
     FINANCIAL_MECHANISMS,
     FM_DICT,
+    FM_EEA,
+    FM_NORWAY,
     FUNDING_PERIODS,
     STATES,
 )
@@ -29,13 +28,13 @@ class NUTS(models.Model):
         ordering = ["code"]
         verbose_name_plural = "NUTS"
 
+    def __str__(self):
+        return self.code
+
     @property
     def level(self):
         """The NUTS level."""
         return len(self.code) - 2
-
-    def __str__(self):
-        return self.code
 
 
 class State(models.Model):
@@ -50,6 +49,9 @@ class State(models.Model):
 class PrioritySector(models.Model):
     code = models.CharField(max_length=32, primary_key=True)
     name = models.CharField(max_length=64)  # not unique
+
+    def __str__(self):
+        return self.code
 
 
 class ProgrammeArea(models.Model):
@@ -91,6 +93,9 @@ class Allocation(models.Model):
             "financial_mechanism",
         )
 
+    def __str__(self):
+        return f"{self.state} - {self.programme_area} - {self.financial_mechanism}"
+
 
 class Programme(models.Model):
     funding_period = models.IntegerField(choices=FUNDING_PERIODS)
@@ -111,6 +116,9 @@ class Programme(models.Model):
 
     is_tap = models.BooleanField(help_text="Technical Assistance Programme")
     is_bfp = models.BooleanField(default=False, help_text="Bilateral Fund Programme")
+
+    def __str__(self):
+        return self.code
 
     @property
     def allocation(self):
@@ -146,7 +154,7 @@ class Programme(models.Model):
         # https://helpdesk.eaudeweb.ro/issues/11345
         # TA programmes (country-TA) don't have a web page in 2014-2021
         if self.funding_period == 3 and self.is_tap:
-            return
+            return None
         return f"https://eeagrants.org/archive/{self.get_funding_period_display()}/programmes/{self.code}"
 
 
@@ -169,6 +177,9 @@ class ProgrammeAllocation(models.Model):
 
     thematic = models.CharField(max_length=16, blank=True)
     sdg_no = models.IntegerField(null=True)
+
+    def __str__(self):
+        return f"{self.state} - {self.programme_area} - {self.financial_mechanism}"
 
 
 class Project(models.Model):
@@ -199,6 +210,9 @@ class Project(models.Model):
     initial_description = models.TextField()
     results_description = models.TextField()
 
+    def __str__(self):
+        return self.code
+
     @cached_property
     def url(self):
         return f"https://eeagrants.org/archive/{self.get_funding_period_display()}/projects/{self.code}"
@@ -220,12 +234,11 @@ class Project(models.Model):
     def geotarget(self):
         if not self.nuts:
             return []
-        elif len(self.nuts.code) > 2:
+        if len(self.nuts.code) > 2:
             return [
                 f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"
             ]
-        else:
-            return [f"{self.nuts.code}: {self.nuts.label}"]
+        return [f"{self.nuts.code}: {self.nuts.label}"]
 
     @cached_property
     def display_name(self):
@@ -243,12 +256,18 @@ class ProjectAllocation(models.Model):
 
     allocation = models.DecimalField(max_digits=15, decimal_places=2)
 
+    def __str__(self):
+        return f"{self.state} - {self.programme_area} - {self.financial_mechanism}"
+
 
 class ProjectTheme(models.Model):
     project = models.ForeignKey(
         Project, related_name="themes", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=512)  # not unique
+
+    def __str__(self):
+        return self.name
 
 
 class Indicator(models.Model):
@@ -301,6 +320,9 @@ class Organisation(models.Model):
     subcategory = models.CharField(max_length=256, null=True, blank=True)
     nuts = models.ForeignKey(NUTS, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return self.name
+
     @property
     def projects(self):
         return [role.project for role in self.roles.all() if role.project]
@@ -313,12 +335,11 @@ class Organisation(models.Model):
     def geotarget(self):
         if not self.nuts:
             return []
-        elif len(self.nuts.code) > 2:
+        if len(self.nuts.code) > 2:
             return [
                 f"{self.nuts.code}: {self.nuts.label}, {STATES[self.nuts.code[:2]]}"
             ]
-        else:
-            return [f"{self.nuts.code}: {self.nuts.label}"]
+        return [f"{self.nuts.code}: {self.nuts.label}"]
 
 
 class OrganisationRole(models.Model):
@@ -342,6 +363,9 @@ class OrganisationRole(models.Model):
         Project, null=True, related_name="organisation_roles", on_delete=models.CASCADE
     )
     state = models.ForeignKey(State, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "%s - %s" % (self.organisation.name, self.role_name)
 
 
 class BilateralInitiative(models.Model):
@@ -375,6 +399,9 @@ class BilateralInitiative(models.Model):
     promoter_state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
     promoter_organization = models.CharField(max_length=256, blank=True, null=True)
 
+    def __str__(self):
+        return self.code
+
     @cached_property
     def display_name(self):
         return f"{self.code}: {' '.join(self.title.split())}"
@@ -394,12 +421,12 @@ class News(models.Model):
     image = models.URLField(max_length=2000)
     is_partnership = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.link
-
     class Meta:
         ordering = ("-created",)
         verbose_name_plural = "news"
+
+    def __str__(self):
+        return self.link
 
 
 class StaticContent(models.Model):

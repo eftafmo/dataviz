@@ -3,45 +3,44 @@ import io
 import logging
 import os.path
 import re
-from collections import defaultdict
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from datetime import datetime
 
 from django.conf import settings
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404, JsonResponse, HttpResponse
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView
-from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from haystack.generic_views import FacetedSearchMixin as BaseFacetedSearchMixin
+from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 from pyexcel import Sheet
 
 # from webpack_loader import utils as webpack
 from dv.lib import utils
 from dv.models import (
-    StaticContent,
     ProgrammeArea,
     State,
+    StaticContent,
 )
 from dv.views.facets_rules import (
     BASE_FACETS,
     BILATERAL_INITIATIVE_FACETS,
+    COUNTRY_SORT_BOOST,
+    FACET_LIMIT,
+    FACET_MIN_COUNT,
+    NEWS_FACETS,
+    ORG_ROLE_SORT,
+    ORGANISATION_FACETS,
     PROGRAMME_FACETS,
     PROJECT_FACETS,
-    ORGANISATION_FACETS,
-    NEWS_FACETS,
-    FACET_MIN_COUNT,
-    FACET_LIMIT,
-    COUNTRY_SORT_BOOST,
-    ORG_ROLE_SORT,
     ModelFacetRules,
 )
-from .dataviz import get_seo_context
 
-from .search_form import EeaFacetedSearchForm, EeaAutoFacetedSearchForm
 from ..lib.assets import load_manifest
+from .dataviz import get_seo_context
+from .search_form import EeaAutoFacetedSearchForm, EeaFacetedSearchForm
 
 SCENARIOS = (
     "index",
@@ -98,12 +97,12 @@ def _parse_js_root_instances():
 
 def disclaimer(request):
     content = StaticContent.objects.get(name="Disclaimer")
-    context = dict(
-        body=content.body if content else None,
-        seo=get_seo_context(
+    context = {
+        "body": content.body if content else None,
+        "seo": get_seo_context(
             request, title=content.seo_title, description=content.seo_description
         ),
-    )
+    }
     return render(request, "disclaimer.html", context)
 
 
@@ -117,8 +116,8 @@ def embed_sandbox(request, scenario=None, component=None, period="2014-2021"):
     if scenario or component:
         try:
             components[scenario][component]
-        except KeyError:
-            raise Http404
+        except KeyError as e:
+            raise Http404 from e
 
     return render(
         request,
@@ -178,7 +177,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         if "country" in facets:
             facets["country"] = sorted(
                 facets["country"],
-                key=lambda x: (COUNTRY_SORT_BOOST.get(x[0], 10) * 255 + ord(x[0][0])),
+                key=lambda x: COUNTRY_SORT_BOOST.get(x[0], 10) * 255 + ord(x[0][0]),
             )
 
     def filter_facets(self, facet_fields, form_facets):
@@ -246,7 +245,7 @@ class FacetedSearchView(BaseFacetedSearchView):
 
         ctx["query"] = [
             (key, value)
-            for key in self.request.GET.keys()
+            for key in self.request.GET
             for value in self.request.GET.getlist(key)
         ]
         ctx["kind"] = self.facet_kind
@@ -330,7 +329,7 @@ class OrganisationFacetedSearchView(FacetedSearchView):
             d = defaultdict(list)
             if not res.object:
                 # inconsistent index, obj deleted from db but present in the index
-                logger.warning("Inconsistent object in index: %s" % (res.id,))
+                logger.warning("Inconsistent object in index: %s", res.id)
                 continue
             org_roles = res.object.roles.all()
             for org_role in org_roles:
@@ -534,14 +533,14 @@ class _TypeaheadFacetedSearchView(object):
         # all auto fields are collections and ES returns *all* the values in the collection
         # corresponding to one document, if one of them matches the search term
         for value, count in self.queryset.facet_counts()["fields"][form.auto_name]:
-            if all([term in value.lower() for term in search_terms]):
+            if all(term in value.lower() for term in search_terms):
                 facets.append((value, count))
 
         paginator = Paginator(facets, self.results_limit)
         page = self.request.GET.get("page", 1)
         try:
             facets = paginator.page(page)
-        except PageNotAnInteger or EmptyPage:
+        except PageNotAnInteger, EmptyPage:
             page = 1
             facets = paginator.page(1)
 
@@ -608,10 +607,7 @@ class EmbedComponent(TemplateView):
             origin = f"{self.request.scheme}://{self.request.get_host()}"
 
         for name, asset in assets.items():
-            if settings.DEBUG:
-                url = f"{origin}/{name}"
-            else:
-                url = f"{origin}/{asset}"
+            url = f"{origin}/{name}" if settings.DEBUG else f"{origin}/{asset}"
 
             if name.endswith(".js"):
                 jsfiles.append(url)
@@ -622,7 +618,7 @@ class EmbedComponent(TemplateView):
         if scenario == "compare":
             api_name = "api:grants"
 
-        datasourcePeriods = [period]
+        datasource_periods = [period]
         props = {
             "datasource": self.request.build_absolute_uri(reverse(api_name)),
             "period": period,
@@ -643,7 +639,7 @@ class EmbedComponent(TemplateView):
         if component == "funding_by_period_chart" or (
             scenario == "compare" and component == "beneficiaries"
         ):
-            datasourcePeriods = [
+            datasource_periods = [
                 "2004-2009",
                 "2009-2014",
                 "2014-2021",
@@ -676,8 +672,8 @@ class EmbedComponent(TemplateView):
                 "cssfiles": cssfiles,
                 "object": obj,
                 "props": props,
-                "datasourcePeriods": datasourcePeriods,
-                "opts": {k: v for k, v in self.request.GET.items()},
+                "datasourcePeriods": datasource_periods,
+                "opts": dict(self.request.GET.items()),
                 "embedurl": self.request.build_absolute_uri(),
                 "randomness": utils.mkrandstr(),
             }

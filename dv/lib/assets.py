@@ -2,9 +2,10 @@
 helper stuff for handling vite manifest
 """
 
+import contextlib
 import json
-import re
 import os.path
+import re
 
 # from functools import lru_cache
 from django.conf import settings
@@ -30,16 +31,14 @@ def load_manifest():
         # add css
         try:
             css = v["css"][0]
-        except (KeyError, IndexError):
+        except KeyError, IndexError:
             pass
         else:
             assets[re.sub(r"\.js$", ".css", k)] = css
 
         # register deps
-        try:
+        with contextlib.suppress(KeyError):
             deps.update(v["imports"])
-        except KeyError:
-            pass
 
     # register deps, replace their hash
     for dep in deps:

@@ -11,9 +11,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from django.core.exceptions import ImproperlyConfigured
 
 import environ
+from django.core.exceptions import ImproperlyConfigured
 
 env = environ.Env(
     DEBUG=(bool, False),
@@ -295,7 +295,7 @@ HAYSTACK_CONNECTIONS = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": "/var/tmp/django_cache",
+        "LOCATION": "/var/tmp/django_cache",  # noqa: S108
     }
 }
 

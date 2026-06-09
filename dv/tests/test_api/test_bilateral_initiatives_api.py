@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+
 from dv.models import State
 from dv.tests.factories.bilateral_initiative_factory import BilateralInitiativeFactory
 

@@ -5,7 +5,6 @@ from django.views.decorators.cache import cache_page
 from dv.views import api as views
 from dv.views import frontend as front_views
 
-
 urlpatterns = [
     re_path(r"^test-sentry", views.test_sentry),
     re_path(

@@ -4,32 +4,32 @@ from collections import defaultdict
 from decimal import Decimal
 from itertools import chain, product
 
-from django.views.decorators.http import require_GET
 from django.db.models import CharField, Q
+from django.db.models.aggregates import Count, Sum
 from django.db.models.expressions import F
-from django.db.models.aggregates import Sum, Count
 from django.db.models.functions import Length
+from django.views.decorators.http import require_GET
 from rest_framework.generics import ListAPIView
 
 from dv.lib.http import JsonResponse, SetEncoder
 from dv.lib.utils import (
-    DONOR_STATES,
-    EEA_DONOR_STATES,
-    DONOR_STATES_REVERSED,
     DEFAULT_PERIOD,
-    FUNDING_PERIODS_DICT,
+    DONOR_STATES,
+    DONOR_STATES_REVERSED,
+    EEA_DONOR_STATES,
     FM_DICT,
-    FM_REVERSED_DICT,
     FM_EEA,
     FM_NORWAY,
+    FM_REVERSED_DICT,
+    FUNDING_PERIODS_DICT,
     NUTS_VERSION_BY_PERIOD,
 )
 from dv.models import (
+    NUTS,
     Allocation,
     BilateralInitiative,
     Indicator,
     News,
-    NUTS,
     OrganisationRole,
     Programme,
     ProgrammeAllocation,
@@ -83,7 +83,7 @@ def bilateral_initiatives(request):
 def overview(request):
     period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
     period_id = FUNDING_PERIODS_DICT[period]  # used in queries
-
+    bilateral_fund = {}
     allocations = (
         Allocation.objects.filter(
             funding_period=period_id,
@@ -803,7 +803,7 @@ def partners(request):
 
     def nuts_in_state(nuts, state_id):
         if not nuts:
-            return
+            return None
         if state_id == "Intl":
             return not re.match("IS|LI|NO", nuts)
         return nuts.startswith(state_id)
@@ -865,13 +865,11 @@ def partners(request):
                     }
                     if donor_programme_partners[(prg, donor)]:
                         # This project has DPP, duplicate it for each partner from the current donor
-                        for DPP_code, DPP_data in donor_programme_partners[
-                            (prg, donor)
-                        ].items():
+                        for dpp_data in donor_programme_partners[(prg, donor)].values():
                             copy = dict(row)
                             # Assumption: name of DPP are unique
-                            copy["DPP"] = DPP_data["name"]
-                            copy["DPP_nuts"] = DPP_data["nuts"]
+                            copy["DPP"] = dpp_data["name"]
+                            copy["DPP_nuts"] = dpp_data["nuts"]
                             out.append(copy)
                     else:
                         # Still need to add rows without DPP if they have project partners
@@ -978,7 +976,7 @@ def sdg_beneficiary_detail(request, beneficiary):
 
     out = []
 
-    for key, row in dataset.items():
+    for row in dataset.values():
         # strip away some of that crazy precision
         row["allocation"] = row["allocation"].quantize(Decimal("1.00"))
         row["areas"] = list(row["areas"])
@@ -1093,7 +1091,7 @@ def project_nuts(request, state_id, force_nuts3):
 
     out = []
 
-    for key, row in dataset.items():
+    for row in dataset.values():
         # strip away some of that crazy precision
         row["allocation"] = row["allocation"].quantize(Decimal("1.00"))
         row["project_count"] = len(row["projects"])

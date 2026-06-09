@@ -1,3 +1,5 @@
+# ruff: noqa N999
+
 import json
 import os.path
 import re
@@ -8,16 +10,18 @@ from decimal import Decimal
 import bleach
 import pyexcel
 import pymssql
-from django.db.utils import IntegrityError
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+from django.db.utils import IntegrityError
 
+from dv.lib.utils import FM_EEA, FM_NORWAY, FM_REVERSED_DICT, FUNDING_PERIODS_DICT
 from dv.models import (
+    NUTS,
     Allocation,
     BilateralInitiative,
     Indicator,
-    OrganisationRole,
     Organisation,
+    OrganisationRole,
     PrioritySector,
     Programme,
     ProgrammeAllocation,
@@ -25,9 +29,7 @@ from dv.models import (
     Project,
     ProjectAllocation,
     State,
-    NUTS,
 )
-from dv.lib.utils import FM_EEA, FM_NORWAY, FM_REVERSED_DICT, FUNDING_PERIODS_DICT
 
 GRANT_SHORT_NAME_TO_FM = {
     "EEA": "EEA",
@@ -38,6 +40,19 @@ GRANT_CODE_TO_FM = {
     "N FM": "NOR",
 }
 COMMENTS_PATTERN = re.compile(r"&lt;!--.*--&gt;")
+
+
+EXCEL_FILES = (
+    "BeneficiaryState",
+    "BeneficiaryStatePrioritySector",
+    "Programme",
+    "ProgrammeOutcome",
+    "ProgrammeIndicators",
+    "Project",
+    "ProjectThemes",
+    "Organisation",
+    "OrganisationRoles",
+)
 
 
 def sanitize_html(text):
@@ -100,7 +115,7 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(
                     self.style.ERROR(
-                        "A JSON file must be provided for " "2004-2009 import."
+                        "A JSON file must be provided for 2004-2009 import."
                     )
                 )
 
@@ -199,18 +214,6 @@ class Command(BaseCommand):
         """Import data from Excel files for period 2009-2014"""
         self.stdout.write("Running import for 2009-2014.")
 
-        EXCEL_FILES = (
-            "BeneficiaryState",
-            "BeneficiaryStatePrioritySector",
-            "Programme",
-            "ProgrammeOutcome",
-            "ProgrammeIndicators",
-            "Project",
-            "ProjectThemes",
-            "Organisation",
-            "OrganisationRoles",
-        )
-
         if not os.path.exists(directory_path):
             raise CommandError(f"Cannot open directory {directory_path}.")
 
@@ -240,10 +243,10 @@ class Command(BaseCommand):
             name = next(f for f in EXCEL_FILES if f.lower() == name.lower())
             try:
                 sheets[name] = book[name]
-            except KeyError:
+            except KeyError as e:
                 # if book name different than file name just load the first one
                 if len(book.sheet_names()) == 0:
-                    raise CommandError(f"No worksheets found in {name}.")
+                    raise CommandError(f"No worksheets found in {name}.") from e
                 sheet_names = ", ".join(book.sheet_names())
                 self.stdout.write(f"Assuming first worksheet of {sheet_names}.")
                 sheets[name] = book.sheet_by_index(0)
@@ -258,15 +261,15 @@ class Command(BaseCommand):
                 elif hasattr(record[k], "strip"):
                     record[k] = record[k].strip()
 
-        FUNDING_PERIOD = 2  # 2009-2014
+        funding_period = 2  # 2009-2014
 
         # GR country code used in 2009-2014; for 2014-2021 we use EL
         states = {state.name: state.pk for state in State.objects.exclude(code="EL")}
 
         sheet = sheets["BeneficiaryStatePrioritySector"]
         priority_sectors = set()
-        programme_areas = dict()
-        pa_to_ps = dict()
+        programme_areas = {}
+        pa_to_ps = {}
 
         ps_count = 0
         for record in sheet.records:
@@ -283,7 +286,7 @@ class Command(BaseCommand):
 
             if record["PACode"] not in programme_areas:
                 programme_area = ProgrammeArea.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     code=record["PACode"],
                     name=record["ProgrammeArea"],
                     short_name=record["ProgrammeAreaShortName"],
@@ -295,7 +298,7 @@ class Command(BaseCommand):
                 pa_to_ps[programme_area.code] = programme_area.priority_sector_id
 
             Allocation.objects.create(
-                funding_period=FUNDING_PERIOD,
+                funding_period=funding_period,
                 financial_mechanism=FM_REVERSED_DICT[record["GrantName"]],
                 state_id=states[record["BeneficiaryState"]],
                 programme_area_id=programme_areas[record["PACode"]],
@@ -307,12 +310,12 @@ class Command(BaseCommand):
             self.style.SUCCESS(f"Imported {ps_count} PrioritySector objects.")
         )
 
-        pa_count = ProgrammeArea.objects.filter(funding_period=FUNDING_PERIOD).count()
+        pa_count = ProgrammeArea.objects.filter(funding_period=funding_period).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {pa_count} ProgrammeArea objects.")
         )
 
-        a_count = Allocation.objects.filter(funding_period=FUNDING_PERIOD).count()
+        a_count = Allocation.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {a_count} Allocation objects."))
 
         sheet = sheets["Programme"]
@@ -320,7 +323,7 @@ class Command(BaseCommand):
             _convert_nulls(record)
 
             programme = Programme.objects.create(
-                funding_period=FUNDING_PERIOD,
+                funding_period=funding_period,
                 code=record["ProgrammeCode"],
                 name=record["Programme"],
                 summary=sanitize_html(record["ProgrammeSummary"]),
@@ -358,7 +361,7 @@ class Command(BaseCommand):
                 ]:
                     programme.states.add(code)
 
-        p_count = Programme.objects.filter(funding_period=FUNDING_PERIOD).count()
+        p_count = Programme.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {p_count} Programme objects."))
 
         sheet = sheets["ProgrammeOutcome"]
@@ -371,7 +374,7 @@ class Command(BaseCommand):
             if record["PSCode"] in ("PS13", "PS14"):
                 record["PSCode"] = pa_to_ps[record["PACode"]]
             ProgrammeAllocation.objects.create(
-                funding_period=FUNDING_PERIOD,
+                funding_period=funding_period,
                 financial_mechanism=GRANT_CODE_TO_FM[record["FMCode"]],
                 state_id=states[record["BeneficiaryState"]],
                 programme_area_id=programme_areas[record["PACode"]],
@@ -382,7 +385,7 @@ class Command(BaseCommand):
             )
 
         pa_count = ProgrammeAllocation.objects.filter(
-            funding_period=FUNDING_PERIOD
+            funding_period=funding_period
         ).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {pa_count} ProgrammeAllocation objects.")
@@ -391,7 +394,7 @@ class Command(BaseCommand):
         sheet = sheets["Project"]
         for record in sheet.records:
             project = Project.objects.create(
-                funding_period=FUNDING_PERIOD,
+                funding_period=funding_period,
                 code=record["ProjectCode"],
                 name=record["Project"],
                 status=record["ProjectStatus"],
@@ -413,7 +416,7 @@ class Command(BaseCommand):
             project.priority_sectors.add(record["PSCode"])
 
             ProjectAllocation.objects.create(
-                funding_period=FUNDING_PERIOD,
+                funding_period=funding_period,
                 financial_mechanism=GRANT_CODE_TO_FM[record["FMCode"]],
                 state_id=states[record["BeneficiaryState"]],
                 programme_area_id=programme_areas[record["PACode"]],
@@ -422,11 +425,11 @@ class Command(BaseCommand):
                 allocation=record["GrantAmount"],
             )
 
-        p_count = Project.objects.filter(funding_period=FUNDING_PERIOD).count()
+        p_count = Project.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {p_count} Project objects."))
 
         pa_count = ProjectAllocation.objects.filter(
-            funding_period=FUNDING_PERIOD
+            funding_period=funding_period
         ).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {pa_count} ProjectAllocation objects.")
@@ -441,7 +444,7 @@ class Command(BaseCommand):
                 record["Achievement"] if record["FMCode"] == "N FM" else 0
             )
             Indicator.objects.create(
-                funding_period=FUNDING_PERIOD,
+                funding_period=funding_period,
                 programme_id=record["ProgrammeCode"],
                 programme_area_id=programme_areas[record["ProgrammeAreaCode"]],
                 state_id=states[record["BeneficiaryState"]],
@@ -453,14 +456,14 @@ class Command(BaseCommand):
                 order=record["SortOrder"],
             )
 
-        i_count = Indicator.objects.filter(funding_period=FUNDING_PERIOD).count()
+        i_count = Indicator.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {i_count} Indicator objects."))
 
         sheet = sheets["Organisation"]
         organisations = {}
         for record in sheet.records:
             organisation = Organisation.objects.create(
-                funding_period=FUNDING_PERIOD,
+                funding_period=funding_period,
                 name=record["Organisation"],
                 city=record["City"],
                 country=record["Country"],
@@ -470,7 +473,7 @@ class Command(BaseCommand):
             )
             organisations[record["IdOrganisation"]] = organisation.id
 
-        o_count = Organisation.objects.filter(funding_period=FUNDING_PERIOD).count()
+        o_count = Organisation.objects.filter(funding_period=funding_period).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {o_count} Organisation objects.")
         )
@@ -479,7 +482,7 @@ class Command(BaseCommand):
         for record in sheet.records:
             try:
                 OrganisationRole.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     organisation_id=organisations[record["IdOrganisation"]],
                     role_code=record["OrganisationRoleCode"],
                     role_name=record["OrganisationRole"],
@@ -500,7 +503,7 @@ class Command(BaseCommand):
                     )
                 )
         or_count = OrganisationRole.objects.filter(
-            funding_period=FUNDING_PERIOD
+            funding_period=funding_period
         ).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {or_count} OrganisationRole objects.")
@@ -510,7 +513,7 @@ class Command(BaseCommand):
         """Import data from grACE db for period 2014-2021"""
         self.stdout.write("Running import for 2014-2021.")
 
-        FUNDING_PERIOD = 3  # 2014-2021
+        funding_period = 3  # 2014-2021
 
         # GR country code used in 2009-2014; for 2014-2021 we use EL
         states = {state.name: state for state in State.objects.exclude(code="GR")}
@@ -532,7 +535,7 @@ class Command(BaseCommand):
                     ps_count += 1
                 priority_sectors[priority_sector.code] = priority_sector
                 programme_area = ProgrammeArea.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     code=row["PACode"],
                     name=row["ProgrammeArea"],
                     short_name=row["ProgrammeAreaShortName"],
@@ -546,7 +549,7 @@ class Command(BaseCommand):
             self.style.SUCCESS(f"Imported {ps_count} PrioritySector objects.")
         )
 
-        pa_count = ProgrammeArea.objects.filter(funding_period=FUNDING_PERIOD).count()
+        pa_count = ProgrammeArea.objects.filter(funding_period=funding_period).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {pa_count} ProgrammeArea objects.")
         )
@@ -560,7 +563,7 @@ class Command(BaseCommand):
                 if row["Country"] == "Hungary" and row["PACode"] != "HHHH":
                     continue
                 Allocation.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     financial_mechanism=GRANT_SHORT_NAME_TO_FM[row["GrantShortName"]],
                     state=states.get(row["Country"]),
                     programme_area=programme_areas.get(row["PACode"]),
@@ -569,7 +572,7 @@ class Command(BaseCommand):
                     thematic=row["Thematic"] or "",
                 )
 
-        a_count = Allocation.objects.filter(funding_period=FUNDING_PERIOD).count()
+        a_count = Allocation.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {a_count} Allocation objects."))
 
         sddw_fake_programmes = []
@@ -589,7 +592,7 @@ class Command(BaseCommand):
                     continue
 
                 programme = Programme.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     code=programme_code,
                     name=row["Programme"],
                     summary=sanitize_html(row["ProgrammeSummary"]),
@@ -622,7 +625,7 @@ class Command(BaseCommand):
                 sddw_programme, row, "Country", "states", "State", states
             )
 
-        p_count = Programme.objects.filter(funding_period=FUNDING_PERIOD).count()
+        p_count = Programme.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {p_count} Programme objects."))
 
         programme_allocation_query = "SELECT * FROM fmo.TR_RDPProgrammeBudgetHeading"
@@ -630,7 +633,7 @@ class Command(BaseCommand):
             cursor.execute(programme_allocation_query)
             for row in cursor.fetchall():
                 ProgrammeAllocation.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     financial_mechanism=GRANT_SHORT_NAME_TO_FM[row["GrantShortName"]],
                     state=states[row["Country"]],
                     programme_area=programme_areas.get(row["PACode"]),
@@ -642,12 +645,12 @@ class Command(BaseCommand):
                 )
 
         pa_count = ProgrammeAllocation.objects.filter(
-            funding_period=FUNDING_PERIOD
+            funding_period=funding_period
         ).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {pa_count} ProgrammeAllocation objects.")
         )
-        ALL_MY_NUTS = set(NUTS.objects.values_list("code", flat=True))
+        all_my_nuts = set(NUTS.objects.values_list("code", flat=True))
 
         project_query = "SELECT * FROM fmo.TR_RDPProject"
         with db_cursor() as cursor:
@@ -655,7 +658,7 @@ class Command(BaseCommand):
             projects = {}
             for row in cursor.fetchall():
                 project = Project.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     code=row["ProjectCode"],
                     name=row["Project"],
                     status=row["ProjectContractStatus"],
@@ -663,7 +666,7 @@ class Command(BaseCommand):
                     programme=programmes.get(row["ProgrammeShortName"]),
                     nuts_id=(
                         row["ProjectLocation"]
-                        if row["ProjectLocation"] in ALL_MY_NUTS
+                        if row["ProjectLocation"] in all_my_nuts
                         else None
                     ),
                     sdg_no=row["SDGno"],
@@ -711,11 +714,11 @@ class Command(BaseCommand):
                     priority_sectors,
                 )
 
-        p_count = Project.objects.filter(funding_period=FUNDING_PERIOD).count()
+        p_count = Project.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {p_count} Project objects."))
 
         project_query = Project.objects.filter(
-            funding_period=FUNDING_PERIOD,
+            funding_period=funding_period,
         ).prefetch_related(
             "programme_areas",
             "priority_sectors",
@@ -723,7 +726,7 @@ class Command(BaseCommand):
         for project in project_query:
             if project.is_eea and project.is_norway:
                 ProjectAllocation.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     financial_mechanism=FM_EEA,
                     state_id=project.state_id,
                     programme_area=project.programme_areas.get(),
@@ -732,7 +735,7 @@ class Command(BaseCommand):
                     allocation=Decimal("0.5525") * project.allocation,
                 )
                 ProjectAllocation.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     financial_mechanism=FM_NORWAY,
                     state=project.state,
                     programme_area=project.programme_areas.get(),
@@ -745,9 +748,10 @@ class Command(BaseCommand):
                     range(3),
                     project.programme_areas.all(),
                     project.priority_sectors.all(),
+                    strict=False,
                 ):
                     ProjectAllocation.objects.create(
-                        funding_period=FUNDING_PERIOD,
+                        funding_period=funding_period,
                         financial_mechanism=FM_EEA if project.is_eea else FM_NORWAY,
                         state_id=project.state_id,
                         programme_area=pa,
@@ -757,7 +761,7 @@ class Command(BaseCommand):
                     )
 
         pa_count = ProjectAllocation.objects.filter(
-            funding_period=FUNDING_PERIOD
+            funding_period=funding_period
         ).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {pa_count} ProjectAllocation objects.")
@@ -768,7 +772,7 @@ class Command(BaseCommand):
             cursor.execute(indicator_query)
             for row in cursor.fetchall():
                 Indicator.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     programme=programmes.get(row["ProgrammeShortName"]),
                     programme_area=programme_areas.get(row["PACode"]),
                     state=states.get(row["Country"]),
@@ -786,7 +790,7 @@ class Command(BaseCommand):
                     sdg_no=row["SDGno"],
                 )
 
-        i_count = Indicator.objects.filter(funding_period=FUNDING_PERIOD).count()
+        i_count = Indicator.objects.filter(funding_period=funding_period).count()
         self.stdout.write(self.style.SUCCESS(f"Imported {i_count} Indicator objects."))
 
         organisation_query = """
@@ -806,14 +810,14 @@ class Command(BaseCommand):
             for row in cursor.fetchall():
                 try:
                     organisation = Organisation.objects.create(
-                        funding_period=FUNDING_PERIOD,
+                        funding_period=funding_period,
                         name=row["Organisation"],
                         city=row["City"],
                         country=row["CountryOrganisation"],
                         category=row["OrganisationClassificationSector"],
                         subcategory=row["OrganisationClassification"],
                         nuts_id=(
-                            row["NUTSCode"] if row["NUTSCode"] in ALL_MY_NUTS else None
+                            row["NUTSCode"] if row["NUTSCode"] in all_my_nuts else None
                         ),
                     )
                     organisations[row["IdOrganisation"]] = organisation.id
@@ -824,7 +828,7 @@ class Command(BaseCommand):
                         )
                     )
 
-        o_count = Organisation.objects.filter(funding_period=FUNDING_PERIOD).count()
+        o_count = Organisation.objects.filter(funding_period=funding_period).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {o_count} Organisation objects.")
         )
@@ -834,7 +838,7 @@ class Command(BaseCommand):
             cursor.execute(organisation_role_query)
             for row in cursor.fetchall():
                 OrganisationRole.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     organisation_id=organisations[row["IdOrganisation"]],
                     role_code=row["OrganisationRoleCode"],
                     role_name=row["OrganisationRole"],
@@ -843,7 +847,7 @@ class Command(BaseCommand):
                     state=states.get(row["CountryRole"]),
                 )
         or_count = OrganisationRole.objects.filter(
-            funding_period=FUNDING_PERIOD
+            funding_period=funding_period
         ).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {or_count} OrganisationRole objects.")
@@ -854,7 +858,7 @@ class Command(BaseCommand):
             cursor.execute(bilateral_initiative_query)
             for row in cursor.fetchall():
                 bilateral_initiative = BilateralInitiative.objects.create(
-                    funding_period=FUNDING_PERIOD,
+                    funding_period=funding_period,
                     code=row["BICode"],
                     title=row["BITitle"],
                     url=row["BIURL"] or "",
@@ -879,7 +883,7 @@ class Command(BaseCommand):
                 )
 
         bi_count = BilateralInitiative.objects.filter(
-            funding_period=FUNDING_PERIOD
+            funding_period=funding_period
         ).count()
         self.stdout.write(
             self.style.SUCCESS(f"Imported {bi_count} BilateralInitiative objects.")

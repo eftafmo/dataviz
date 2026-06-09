@@ -1,6 +1,6 @@
 from datetime import datetime
-import requests
 
+import requests
 from django.core.cache import cache
 from django.core.management.base import BaseCommand
 from pytz import timezone
@@ -10,17 +10,19 @@ from dv.models import News, Programme, Project
 ENDPOINT = "https://eeagrants.org/rest/articles?page={}"
 TZ = timezone("Europe/Brussels")
 
+TIMEOUT = 120
+
 
 def parse_time(value: str) -> datetime:
     try:
         # Check if value is already a timestamp
         timestamp = int(value)
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         # Value may look like:
         # <time datetime="2024-07-05T13:15:40+02:00">1720178140</time>
         timestamp = int(value.split(">")[1].split("<")[0].strip())
 
-    return TZ.localize(datetime.fromtimestamp(timestamp))
+    return datetime.fromtimestamp(timestamp, tz=TZ)
 
 
 class Command(BaseCommand):
@@ -30,7 +32,7 @@ class Command(BaseCommand):
         page = 0
         data = []
         while page == 0 or data:
-            resp = requests.get(ENDPOINT.format(page))
+            resp = requests.get(ENDPOINT.format(page), timeout=TIMEOUT)
             resp.raise_for_status()
             data = resp.json()["posts"]
             if page == 0:
