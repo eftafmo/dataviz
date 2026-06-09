@@ -1,4 +1,4 @@
-FROM node:22 AS frontend-builder
+FROM node:24-slim AS frontend-builder
 
 ENV APP_HOME=/var/local/dataviz
 
