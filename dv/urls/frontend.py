@@ -1,8 +1,8 @@
-from django.urls import re_path
 from django.shortcuts import redirect
-from dv.views import frontend as views
-from dv.views import dataviz
+from django.urls import re_path
 
+from dv.views import dataviz
+from dv.views import frontend as views
 
 _periods = "|".join(dataviz.ALLOCATION_PERIODS.keys())
 # this is imprecise, but it's just a helper to do early 404

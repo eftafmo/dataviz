@@ -1,8 +1,9 @@
 from copy import deepcopy
 
-from haystack.backends.elasticsearch7_backend import Elasticsearch7SearchBackend
-from haystack.backends.elasticsearch7_backend import Elasticsearch7SearchEngine
-
+from haystack.backends.elasticsearch7_backend import (
+    Elasticsearch7SearchBackend,
+    Elasticsearch7SearchEngine,
+)
 
 _custom_settings = deepcopy(Elasticsearch7SearchBackend.DEFAULT_SETTINGS)
 # For Organisation export, which has more than 10K entries

@@ -6,11 +6,11 @@ import logging
 import requests
 from django.core.management.base import BaseCommand
 
-from dv.models import NUTS
-from dv.models import NUTSVersion
+from dv.models import NUTS, NUTSVersion
 
 logger = logging.getLogger(__name__)
 API_BASE = "https://gisco-services.ec.europa.eu/distribution/v2/nuts"
+TIMEOUT = 120
 
 # Some Organisations have fake NUTS code, so include them here as well.
 FAKE_NUTS = {
@@ -24,7 +24,7 @@ FAKE_NUTS = {
 
 def get_file_list(year):
     logger.debug("Getting dataset list for %s", year)
-    resp = requests.get(f"{API_BASE}/datasets.json")
+    resp = requests.get(f"{API_BASE}/datasets.json", timeout=TIMEOUT)
     resp.raise_for_status()
     dataset = resp.json()
 
@@ -36,7 +36,7 @@ def get_file_list(year):
         raise RuntimeError(f"Unable to find files for {year}")
 
     logger.debug("Getting file list for %s", files)
-    resp = requests.get(f"{API_BASE}/{files}")
+    resp = requests.get(f"{API_BASE}/{files}", timeout=TIMEOUT)
     resp.raise_for_status()
     return resp.json()
 
@@ -62,7 +62,7 @@ class Command(BaseCommand):
         file_path = get_file_list(year)["csv"][f"NUTS_AT_{year}.csv"]
 
         logger.info("Getting NUTS codes: %s", file_path)
-        resp = requests.get(f"{API_BASE}/{file_path}")
+        resp = requests.get(f"{API_BASE}/{file_path}", timeout=TIMEOUT)
         resp.raise_for_status()
         lines = resp.content.decode("utf8").splitlines()
 
@@ -78,10 +78,7 @@ class Command(BaseCommand):
                 nuts_0.append(line["NUTS_ID"])
 
             name, latin_name = line["NUTS_NAME"], line["NAME_LATN"]
-            if name == latin_name:
-                label = name
-            else:
-                label = f"{name} / {latin_name}"
+            label = name if name == latin_name else f"{name} / {latin_name}"
 
             obj, created = NUTS.objects.update_or_create(
                 {"label": label}, code=line["NUTS_ID"]

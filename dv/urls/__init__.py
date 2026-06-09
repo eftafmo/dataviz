@@ -6,7 +6,6 @@ from django.urls import path
 
 from . import api, frontend
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include((api, "api"))),

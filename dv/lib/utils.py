@@ -1,9 +1,8 @@
 import re
 from collections.abc import Iterable
 
-from django_countries import countries
 from django.utils.crypto import get_random_string
-
+from django_countries import countries
 
 FM_EEA = "EEA"
 FM_NORWAY = "NOR"

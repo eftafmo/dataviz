@@ -1,4 +1,5 @@
 import re
+
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import force_str
@@ -17,8 +18,7 @@ def currency(value):
     new = re.sub(r"^(-?\d+)(\d{3})", "\\g<1>\xa0\\g<2>", orig)
     if orig == new:
         return "€" + new
-    else:
-        return currency(new)
+    return currency(new)
 
 
 @register.filter(is_safe=False)

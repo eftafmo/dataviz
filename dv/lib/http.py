@@ -2,17 +2,18 @@ import csv
 import io
 
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
+from django.http import JsonResponse as DjangoJsonResponse
 
 
 class SetEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, set):
-            return sorted(list(obj))
+            return sorted(obj)
         return super().default(obj)
 
 
-class JsonResponse(JsonResponse):
+class JsonResponse(DjangoJsonResponse):
     """
     Like Django's JsonResponse, but serializes "unsafe" data by default
     and sets other defaults.

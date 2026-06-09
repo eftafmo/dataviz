@@ -3,8 +3,8 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from enumfields import EnumField
-from dv.lib import utils
 
+from dv.lib import utils
 
 logger = logging.getLogger()
 
@@ -32,6 +32,7 @@ class ImportableModelMixin(object):
         kernel_keys = set()
 
         fields = {f.name: f for f in cls._meta.fields}
+        extra_keys = set()
 
         # Detect a 2nd pass when we should update a row rather than insert it
         if src_idx > 0:
@@ -121,26 +122,29 @@ class ImportableModelMixin(object):
                     _assign(field, val, rel_field)
                 except ObjectDoesNotExist as e:
                     logger.warning(
-                        "Error while assigning {}.{}={}, rel_field: {} ({})".format(
-                            cls.__name__, field, val, rel_field, e
-                        )
+                        "Error while assigning %s.%s=%s, rel_field: %s (%s)",
+                        cls.__name__,
+                        field,
+                        val,
+                        rel_field,
+                        e,
                     )
-                    return
+                    return None
 
         # if we have kernel_keys then identify an object already in db and update it
         if kernel_keys:
+            identity_values = {}
             try:
                 identity_values = {k: values[k] for k in kernel_keys}
                 obj = cls.objects.get(**identity_values)
                 [setattr(obj, k, values[k]) for k in values if k in extra_keys]
             except KeyError, ObjectDoesNotExist:
                 logger.warning(
-                    "Error while grabbing {} instance with identity: {}".format(
-                        cls.__name__, identity_values
-                    )
+                    "Error while grabbing %s instance with identity: %s",
+                    cls.__name__,
+                    identity_values,
                 )
-                return
+                return None
             return obj
         # otherwise create a new row
-        else:
-            return cls(**values)
+        return cls(**values)

@@ -3,25 +3,24 @@ from pathlib import Path
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.management import BaseCommand
-from django.core.management import call_command
+from django.core.management import BaseCommand, call_command
 
 from dv.models import (
-    OrganisationRole,
-    State,
-    NUTSVersion,
     NUTS,
-    StaticContent,
     Allocation,
     BilateralInitiative,
     Indicator,
     News,
+    NUTSVersion,
     Organisation,
+    OrganisationRole,
     PrioritySector,
     Programme,
     ProgrammeAllocation,
     ProgrammeArea,
     Project,
+    State,
+    StaticContent,
 )
 
 logger = logging.getLogger(__name__)

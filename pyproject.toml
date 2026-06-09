@@ -36,6 +36,7 @@ dev = [
     "coverage>=7.14.0",
     "django-debug-toolbar>=6.3.0",
     "django-extensions>=4.1",
+    "django-stubs==5.2.*",
     "factory-boy>=3.3.3",
     "ipdb>=0.13.13",
     "ipython>=9.13.0",

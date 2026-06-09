@@ -8,7 +8,7 @@ class EeaFacetedSearchForm(FacetedSearchForm):
 
         data = dict(kwargs.get("data", initial))
         self.facets = {"kind": [kwargs.pop("facet_kind", "Programme")]}
-        for facet_name in self.facet_rules.keys():
+        for facet_name in self.facet_rules:
             self.facets[facet_name] = data.get(facet_name, [])
         super().__init__(*args, **kwargs)
 

@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.db.models.functions import Length
+
 from dv.models import (
+    NUTS,
     Allocation,
     BilateralInitiative,
     Indicator,
     News,
-    NUTS,
     NUTSVersion,
     Organisation,
     OrganisationRole,
@@ -88,8 +89,7 @@ class CountryFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value():
             return queryset.filter(code__startswith=self.value())
-        else:
-            return queryset
+        return queryset
 
 
 @admin.register(NUTS)

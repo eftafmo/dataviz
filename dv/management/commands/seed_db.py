@@ -1,8 +1,7 @@
 import shutil
 import sys
 
-from django.core.management import BaseCommand
-from django.core.management import call_command
+from django.core.management import BaseCommand, call_command
 
 
 class Command(BaseCommand):
@@ -19,16 +18,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, noinput=False, **options):
         if not noinput:
-            print(
+            self.stdout.write(
                 "This will IRREVERSIBLY DESTROY all data currently in the  database! "
                 "Are you sure you want to continue?",
-                end=" ",
+                ending=" ",
             )
             if input("[Y/n] ") != "Y":
                 sys.exit(1)
 
         # Remove cache
-        shutil.rmtree("/var/tmp/django_cache", ignore_errors=True)
+        shutil.rmtree("/var/tmp/django_cache", ignore_errors=True)  # noqa: S108
         # Flush db
         call_command("flush", "--noinput")
         # Load initial fixtures

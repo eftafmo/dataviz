@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from dv.lib.assets import load_manifest
 from dv.views.dataviz import get_menu
 
