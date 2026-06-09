@@ -1,0 +1,52 @@
+[project]
+name = "dataviz"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "bleach>=6.3.0",
+    # Stick to LTS for easier upgrades
+    "django==5.2.*",
+    "django-ckeditor-5>=0.2.20",
+    "django-countries>=8.2.0",
+    "django-enumfields>=2.1.1",
+    "django-environ>=0.13.0",
+    "django-haystack>=3.3.0",
+    "djangorestframework>=3.17.1",
+    # Haystack doesn't support ES8 yet, upstream issue:
+    # https://github.com/django-haystack/django-haystack/issues/1980
+    "elasticsearch==7.*",
+    "gunicorn>=26.0.0",
+    "jinja2>=3.1.6",
+    "lxml>=6.1.1",
+    "pyexcel>=0.7.4",
+    "pyexcel-io>=0.6.7",
+    "pyexcel-xls>=0.7.1",
+    "pyexcel-xlsx>=0.6.1",
+    "pymssql>=2.3.13",
+    "pytz>=2026.2",
+    "requests>=2.34.2",
+    "sentry-sdk>=2.60.0",
+    "wait-for-it>=2.3.0",
+]
+
+[dependency-groups]
+dev = [
+    "black[d]>=26.5.1",
+    "coverage>=7.14.0",
+    "django-debug-toolbar>=6.3.0",
+    "django-extensions>=4.1",
+    "factory-boy>=3.3.3",
+    "flake8>=7.3.0",
+    "ipdb>=0.13.13",
+    "ipython>=9.13.0",
+    "ipython-autotime>=0.3.2",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "pytest-django>=4.12.0",
+    "pytest-subtests>=0.15.0",
+]
+
+[tool.uv]
+exclude-newer = "14 days"

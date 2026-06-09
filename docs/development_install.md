@@ -51,9 +51,7 @@
 ## Local installation without Docker
 
 ```shell
-python3.13 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements/dev.txt -c requirements/constraints.txt
+uv sync
 nvm use 22
 npm install
 # Copy settings and adjust as necessary
@@ -65,15 +63,15 @@ scp dataviz@data.eeagrants.org:eeag.sqlite3 .data
 
 # See es_local.md if you also need Elasticsearch and
 # build search indexes
-python manage.py rebuild_index --noinput
+uv run ./manage.py rebuild_index --noinput
 
 # start Django and frontend server
-python manage.py runserver 0:8000
+uv run ./manage.py runserver 0:8000
 # in a new terminal
 npm run dev
 
 # refresh data locally
 cp .data/eeag.sqlite3 .data/tmp.eeag.sqlite3
-env DJANGO_DB_PATH=".data/tmp.eeag.sqlite3" python manage.py import --period="2014-2021" --noinput
+env DJANGO_DB_PATH=".data/tmp.eeag.sqlite3" uv run ./manage.py import --period="2014-2021" --noinput
 
 ```
