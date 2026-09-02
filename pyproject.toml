@@ -13,7 +13,7 @@ dependencies = [
     "django-enumfields>=2.1.1",
     "django-environ>=0.13.0",
     "django-haystack>=3.3.0",
-    "djangorestframework>=3.17.1",
+    "djangorestframework>=3.17.2",
     # Haystack doesn't support ES8 yet, upstream issue:
     # https://github.com/django-haystack/django-haystack/issues/1980
     "elasticsearch==7.*",
