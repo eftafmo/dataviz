@@ -258,7 +258,12 @@ class FacetedSearchView(BaseFacetedSearchView):
         self.filter_facets(facet_fields, kwargs["form"].facets)
 
         export_url = reverse(f"frontend:{self.facet_kind.lower()}_export")
-        ctx["export_url"] = export_url + "?" + self.request.GET.urlencode()
+        # Exports always contain the full result set, so leave out pagination.
+        # Otherwise crawlers trigger an expensive export from every results page.
+        export_params = self.request.GET.copy()
+        export_params.pop("page", None)
+        export_params.pop("paginate_by", None)
+        ctx["export_url"] = export_url + "?" + export_params.urlencode()
         ctx["seo"] = get_seo_context(self.request, title=self.title)
 
         return ctx
@@ -693,6 +698,7 @@ class RobotsView(View):
             "Disallow: /assets/",
             "Disallow: /api/",
             "Disallow: /embed/",
+            "Disallow: /search/export/",
         ]
 
         if settings.DEBUG:
