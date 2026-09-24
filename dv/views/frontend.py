@@ -142,6 +142,7 @@ class FacetedSearchView(BaseFacetedSearchView):
     order_field = None
     template_name = "search/main.html"
     paginate_by = 10
+    page_sizes = (10, 25, 50, 100)
     context_object_name = "object_list"
     title = "Search"
 
@@ -165,7 +166,12 @@ class FacetedSearchView(BaseFacetedSearchView):
         return super().form_invalid(form)
 
     def get_paginate_by(self, queryset):
-        return self.request.GET.get("paginate_by", self.paginate_by)
+        # Only allow the sizes offered in the UI, anything else would error out
+        try:
+            paginate_by = int(self.request.GET.get("paginate_by", self.paginate_by))
+        except ValueError:
+            return self.paginate_by
+        return paginate_by if paginate_by in self.page_sizes else self.paginate_by
 
     def reorder_facets(self, facets):
         for facet, order in ModelFacetRules.REORDER_FACETS.items():
@@ -241,7 +247,7 @@ class FacetedSearchView(BaseFacetedSearchView):
         states.extend(utils.EEA_DONOR_STATES.keys())
         ctx["states_with_flags"] = states
 
-        ctx["page_sizes"] = [10, 25, 50, 100]
+        ctx["page_sizes"] = self.page_sizes
 
         ctx["query"] = [
             (key, value)
