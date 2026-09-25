@@ -34,10 +34,8 @@ class EeaFacetedSearchForm(FacetedSearchForm):
         return sqs
 
     def search(self):
-        try:
-            q = self.cleaned_data.pop("q")
-        except KeyError:
-            q = None
+        # Unbound forms (e.g. on POST requests) never get cleaned_data
+        q = getattr(self, "cleaned_data", {}).pop("q", None)
         sqs = super().search()
         if q:
             sqs = sqs.filter(content=q)
