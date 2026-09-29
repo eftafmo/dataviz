@@ -4,6 +4,7 @@ from collections import defaultdict
 from decimal import Decimal
 from itertools import chain, product
 
+from django.core.exceptions import BadRequest
 from django.db.models import CharField, Q
 from django.db.models.aggregates import Count, Sum
 from django.db.models.expressions import F
@@ -57,14 +58,25 @@ TA_CODES = frozenset(
 )
 
 
+def get_period(request):
+    """
+    Returns the (period, period_id) pair requested through the `period` GET param.
+    Raises BadRequest (HTTP 400) for unknown periods instead of a KeyError.
+    """
+    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
+    try:
+        return period, FUNDING_PERIODS_DICT[period]  # period_id is used in queries
+    except KeyError:
+        raise BadRequest(f"Invalid period: {period!r}") from None
+
+
 def test_sentry(request):
     raise Exception("Testing sentry...")
 
 
 @require_GET
 def bilateral_initiatives(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
 
     return JsonResponse(
         list(
@@ -81,8 +93,7 @@ def bilateral_initiatives(request):
 
 @require_GET
 def overview(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
     bilateral_fund = {}
     allocations = (
         Allocation.objects.filter(
@@ -246,8 +257,7 @@ def overview(request):
 
 @require_GET
 def indicators(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
 
     return JsonResponse(
         list(
@@ -280,8 +290,7 @@ def indicators(request):
 
 @require_GET
 def grants(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
 
     allocations = (
         Allocation.objects.filter(
@@ -389,8 +398,7 @@ def grants(request):
 
 @require_GET
 def sdg(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
 
     allocation_query = (
         ProgrammeAllocation.objects.filter(
@@ -449,8 +457,7 @@ def sdg(request):
 
 @require_GET
 def projects(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
 
     allocations = (
         Allocation.objects.filter(
@@ -570,8 +577,7 @@ def projects(request):
 
 @require_GET
 def partners(request):
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
 
     # List of programmes having DPP or dpp
     # Everything else will be grouped by these
@@ -892,8 +898,7 @@ def projects_beneficiary_detail(request, beneficiary):
 
 def sdg_beneficiary_detail(request, beneficiary):
     # TODO This is very similar to project_nuts; refactor to reduce code duplication
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
     state_id = beneficiary
 
     try:
@@ -991,8 +996,7 @@ def project_nuts(request, state_id, force_nuts3):
     Returns NUTS3-level allocations for the given state.
     """
 
-    period = request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-    period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+    period, period_id = get_period(request)
 
     try:
         state = State.objects.get(pk=state_id)
@@ -1107,8 +1111,7 @@ class ProjectList(ListAPIView):
     def get_queryset(self):
         queryset = Project.objects.all()
 
-        period = self.request.GET.get("period", DEFAULT_PERIOD)  # used in FE
-        period_id = FUNDING_PERIODS_DICT[period]  # used in queries
+        period, period_id = get_period(self.request)
         queryset = queryset.filter(funding_period=period_id)
 
         programme = self.request.query_params.get("programme", None)
